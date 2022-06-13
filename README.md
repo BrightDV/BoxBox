@@ -1,3 +1,6 @@
+# EARLY STAGES OF THE APP
+The code will be pushed soon.
+
 # Box, Box!
 
 Box, Box! is a new way to follow Formula 1.
