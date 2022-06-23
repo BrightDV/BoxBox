@@ -25,6 +25,8 @@
 
 *You need to have Internet connection in order to refresh the data.
 
+See the live demo [here.](https://brightdv.github.io)
+
 ## Services
 | Screen  | Service          | Base URL |
 | :---------------: |:---------------:| :---------------:|
