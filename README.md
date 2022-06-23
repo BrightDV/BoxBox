@@ -28,6 +28,8 @@ Coming soon...
 ## Note
 I'm doing this app in my spare time, so I will appreciate the feedbacks and the PRs, but I can't do everyting ;).
 
+Box, Box! is unofficial software and in no way associated with the Formula 1 group of companies.
+
 ## License
 [![GNU GPLv3 Image](https://www.gnu.org/graphics/gplv3-127x51.png)](https://www.gnu.org/licenses/gpl-3.0.en.html)  
 
