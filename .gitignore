@@ -1,2 +1,4 @@
 build/
 key.properties
+.dart_tools
+android/.gradle
