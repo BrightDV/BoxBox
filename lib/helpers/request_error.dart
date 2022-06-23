@@ -1,0 +1,73 @@
+/*
+ *  This file is part of BoxBox (https://github.com/BrightDV/BoxBox).
+ * 
+ * BoxBox is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * BoxBox is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with BoxBox.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * Copyright (c) 2022, BrightDV
+ */
+
+import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+
+class RequestErrorWidget extends StatelessWidget {
+  final String snapshotError;
+
+  RequestErrorWidget(this.snapshotError);
+  @override
+  Widget build(BuildContext context) {
+    bool useDarkMode = Hive.box('settings').get('darkMode', defaultValue: false) as bool;
+    return Padding(
+      padding: EdgeInsets.all(
+        10,
+      ),
+      child: Column(
+        children: [
+          Center(
+            child: Text(
+              "Une erreur est survenue lors de la récupération des données.",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 16,
+                color: useDarkMode ? Colors.white : Colors.black,
+              ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 20),
+            child: Center(
+              child: Text(
+                "Crash Error:",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.grey[500],
+                ),
+              ),
+            ),
+          ),
+          Center(
+            child: Text(
+              snapshotError,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.grey[500],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
