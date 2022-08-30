@@ -157,10 +157,14 @@ class Article {
 }
 
 class NewsItem extends StatelessWidget {
-  NewsItem(this.item, this.inRelated);
-
   final News item;
   final bool inRelated;
+
+  NewsItem(
+    this.item,
+    this.inRelated,
+  );
+
   final String endpoint = 'https://formula1.com';
   final String articleLink = '/en/latest/article.';
 
@@ -174,26 +178,28 @@ class NewsItem extends StatelessWidget {
     if (item.imageUrl.startsWith('https://www.formula1.com/')) {
       imageUrl = '${item.imageUrl}.transform/6col/image.jpg';
     }
-    return SizedBox(
-      width: inRelated ? width / 2.1 : width,
-      child: Padding(
-        padding: EdgeInsets.only(top: 5),
-        child: GestureDetector(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => ArticleScreen(item.newsId, item.title),
-              ),
-            );
-          },
-          child: Card(
-            elevation: 5.0,
-            color: useDarkMode ? Color(0xff1d1d28) : Colors.white,
-            child: Column(
-              children: [
-                newsLayout != 'condensed' && newsLayout != 'small'
-                    ? Container(
+    return inRelated
+        ? Container(
+            width: width / 2.1,
+            height: 210,
+            child: Padding(
+              padding: EdgeInsets.only(top: 5),
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          ArticleScreen(item.newsId, item.title),
+                    ),
+                  );
+                },
+                child: Card(
+                  elevation: 5.0,
+                  color: useDarkMode ? Color(0xff1d1d28) : Colors.white,
+                  child: Column(
+                    children: [
+                      Container(
                         child: CachedNetworkImage(
                           imageUrl: imageUrl,
                           placeholder: (context, url) => LoadingIndicatorUtil(),
@@ -202,41 +208,87 @@ class NewsItem extends StatelessWidget {
                           fadeOutDuration: Duration(seconds: 1),
                           fadeInDuration: Duration(seconds: 1),
                         ),
-                      )
-                    : Container(
-                        height: 0.0,
-                        width: 0.0,
                       ),
-                ListTile(
-                  title: Text(
-                    item.title,
-                    style: TextStyle(
-                      color: useDarkMode ? Colors.white : Colors.black,
-                      fontSize: inRelated ? 14 : 18,
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 5,
-                    textAlign: TextAlign.justify,
+                      ListTile(
+                        title: Text(
+                          item.title,
+                          style: TextStyle(
+                            color: useDarkMode ? Colors.white : Colors.black,
+                            fontSize: inRelated ? 14 : 18,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 5,
+                          textAlign: TextAlign.justify,
+                        ),
+                      ),
+                    ],
                   ),
-                  subtitle: inRelated ||
-                          newsLayout != 'big' && newsLayout != 'condensed'
-                      ? null
-                      : item.subtitle != null
-                          ? Text(
-                              item.subtitle,
-                              style: TextStyle(
-                                color: Colors.grey[500],
-                              ),
-                              textAlign: TextAlign.justify,
-                            )
-                          : Container(height: 0.0, width: 0.0),
                 ),
-              ],
+              ),
             ),
-          ),
-        ),
-      ),
-    );
+          )
+        : Padding(
+            padding: EdgeInsets.only(top: 5),
+            child: GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        ArticleScreen(item.newsId, item.title),
+                  ),
+                );
+              },
+              child: Card(
+                elevation: 5.0,
+                color: useDarkMode ? Color(0xff1d1d28) : Colors.white,
+                child: Column(
+                  children: [
+                    newsLayout != 'condensed' && newsLayout != 'small'
+                        ? Container(
+                            child: CachedNetworkImage(
+                              imageUrl: imageUrl,
+                              placeholder: (context, url) =>
+                                  LoadingIndicatorUtil(),
+                              errorWidget: (context, url, error) =>
+                                  Icon(Icons.error_outlined),
+                              fadeOutDuration: Duration(seconds: 1),
+                              fadeInDuration: Duration(seconds: 1),
+                            ),
+                          )
+                        : Container(
+                            height: 0.0,
+                            width: 0.0,
+                          ),
+                    ListTile(
+                      title: Text(
+                        item.title,
+                        style: TextStyle(
+                          color: useDarkMode ? Colors.white : Colors.black,
+                          fontSize: inRelated ? 14 : 18,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 5,
+                        textAlign: TextAlign.justify,
+                      ),
+                      subtitle: inRelated ||
+                              newsLayout != 'big' && newsLayout != 'condensed'
+                          ? null
+                          : item.subtitle != null
+                              ? Text(
+                                  item.subtitle,
+                                  style: TextStyle(
+                                    color: Colors.grey[500],
+                                  ),
+                                  textAlign: TextAlign.justify,
+                                )
+                              : Container(height: 0.0, width: 0.0),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
   }
 }
 
@@ -439,43 +491,29 @@ class JoinArticlesParts extends StatelessWidget {
       ),
     );
 
-    articleContent.forEach((element) {
-      if (element['contentType'] == 'atomRichText') {
-        widgetsList.add(
-          TextParagraphRenderer(element['fields']['richTextBlock']),
-        );
-      } else if (element['contentType'] == 'atomVideo') {
-        widgetsList.add(
-          VideoRenderer(
-            element['fields']['videoId'],
-          ),
-        );
-      } else if (element['contentType'] == 'atomImage') {
-        widgetsList.add(
-          ImageRenderer(
-            element['fields']['image']['url'],
-            caption: element['fields']['caption'],
-          ),
-        );
-      }
-    });
-    List<Widget> relatedArticles = [];
-    article.relatedArticles.forEach(
-      (article) => relatedArticles.add(
-        NewsItem(
-          News(
-            article['id'],
-            article['articleType'],
-            article['slug'],
-            article['title'],
-            article['metaDescription'],
-            article['updatedAt'],
-            article['thumbnail']['image']['url'],
-          ),
-          true,
-        ),
-      ),
+    articleContent.forEach(
+      (element) {
+        if (element['contentType'] == 'atomRichText') {
+          widgetsList.add(
+            TextParagraphRenderer(element['fields']['richTextBlock']),
+          );
+        } else if (element['contentType'] == 'atomVideo') {
+          widgetsList.add(
+            VideoRenderer(
+              element['fields']['videoId'],
+            ),
+          );
+        } else if (element['contentType'] == 'atomImage') {
+          widgetsList.add(
+            ImageRenderer(
+              element['fields']['image']['url'],
+              caption: element['fields']['caption'],
+            ),
+          );
+        }
+      },
     );
+
     widgetsList.add(
       Padding(
         padding: EdgeInsets.all(5),
@@ -541,10 +579,28 @@ class JoinArticlesParts extends StatelessWidget {
         ),
       ),
     );
+    List<NewsItem> relatedArticles = [];
+    article.relatedArticles.forEach(
+      (article) => relatedArticles.add(
+        NewsItem(
+          News(
+            article['id'],
+            article['articleType'],
+            article['slug'],
+            article['title'],
+            article['metaDescription'],
+            article['updatedAt'],
+            article['thumbnail']['image']['url'],
+          ),
+          true,
+        ),
+      ),
+    );
     widgetsList.add(
       SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(
+          mainAxisSize: MainAxisSize.min,
           children: relatedArticles,
         ),
       ),
