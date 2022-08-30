@@ -1,6 +1,7 @@
 build/
-key.properties
 .dart_tool/
-android/.gradle
 .flutter-plugins
 .flutter-plugins-dependencies
+key.properties
+.packages
+pubspec.lock
