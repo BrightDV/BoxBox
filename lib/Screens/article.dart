@@ -17,13 +17,14 @@
  * Copyright (c) 2022, BrightDV
  */
 
+import 'package:boxbox/helpers/request_error.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:marquee/marquee.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/api/news.dart';
 
-class ArticleScreen extends StatelessWidget {
+class ArticleScreen extends StatefulWidget {
   final String articleId;
   final String articleName;
 
@@ -31,16 +32,23 @@ class ArticleScreen extends StatelessWidget {
     this.articleId,
     this.articleName,
   );
+
+  @override
+  _ArticleScreenState createState() => _ArticleScreenState();
+}
+
+class _ArticleScreenState extends State<ArticleScreen> {
   @override
   Widget build(BuildContext context) {
-    bool useDarkMode = Hive.box('settings').get('darkMode', defaultValue: false) as bool;
+    bool useDarkMode =
+        Hive.box('settings').get('darkMode', defaultValue: false) as bool;
     return Scaffold(
       appBar: AppBar(
         title: SizedBox(
           height: AppBar().preferredSize.height,
           width: AppBar().preferredSize.width,
           child: Marquee(
-            text: '$articleName',
+            text: '${widget.articleName}',
             style: TextStyle(
               fontWeight: FontWeight.w600,
             ),
@@ -51,9 +59,15 @@ class ArticleScreen extends StatelessWidget {
           ),
         ),
       ),
-      backgroundColor: useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
-      body: ArticleProvider(articleId),
+      backgroundColor:
+          useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
+      body: ArticleProvider(widget.articleId),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 }
 
@@ -69,8 +83,12 @@ class ArticleProvider extends StatelessWidget {
     return FutureBuilder(
       future: getArticleData(this.articleId),
       builder: (context, snapshot) {
-        if (snapshot.hasError) print("${snapshot.error}\nSnapshot Error :/ : $snapshot.data");
-        return snapshot.hasData ? ArticleRenderer(snapshot.data) : LoadingIndicatorUtil();
+        if (snapshot.hasError) {
+          return RequestErrorWidget(snapshot.error.toString());
+        }
+        return snapshot.hasData
+            ? ArticleRenderer(snapshot.data)
+            : LoadingIndicatorUtil();
       },
     );
   }

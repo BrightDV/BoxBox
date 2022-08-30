@@ -25,7 +25,8 @@ import 'package:url_launcher/url_launcher.dart';
 class AboutScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    bool useDarkMode = Hive.box('settings').get('darkMode', defaultValue: false) as bool;
+    bool useDarkMode =
+        Hive.box('settings').get('darkMode', defaultValue: false) as bool;
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -35,7 +36,8 @@ class AboutScreen extends StatelessWidget {
           ),
         ),
       ),
-      backgroundColor: useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
+      backgroundColor:
+          useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
@@ -93,7 +95,7 @@ class AboutScreen extends StatelessWidget {
           Padding(
             padding: EdgeInsets.all(20),
             child: Text(
-              'Application développée par @BrightDV',
+              'Application développée par BrightDV',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 11,

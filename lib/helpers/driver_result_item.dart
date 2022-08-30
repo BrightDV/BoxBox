@@ -18,17 +18,17 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:boxbox/api/driver_components.dart';
-import 'package:boxbox/helpers/driver_image.dart';
-import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/team_background_color.dart';
 
 class DriverResultItem extends StatelessWidget {
-  DriverResultItem({this.item, this.isRaceWinner});
-
   final DriverResult item;
-  final bool isRaceWinner;
+  final int index;
+
+  DriverResultItem(
+    this.item,
+    this.index,
+  );
 
   Color getTeamColors(String teamId) {
     Color tC = TeamBackgroundColor().getTeamColors(teamId);
@@ -36,240 +36,14 @@ class DriverResultItem extends StatelessWidget {
   }
 
   Widget build(BuildContext context) {
-    Color finalTeamColors = getTeamColors(this.item.team);
-    bool useDarkMode = Hive.box('settings').get('darkMode', defaultValue: false) as bool;
+    Color finalTeamColors = getTeamColors(item.team);
     return Container(
-      height: isRaceWinner ? 140 : 60,
-      decoration: BoxDecoration(
-        border: Border(
-          top: BorderSide(
-            color: useDarkMode ? Color(0xff343434) : Colors.grey[200],
-            width: 0.5,
-          ),
-          bottom: BorderSide(
-            color: useDarkMode ? Color(0xff343434) : Colors.grey[200],
-            width: 0.5,
-          ),
-        ),
-      ),
-      child: isRaceWinner
-          ? Row(
-              children: <Widget>[
-                DriverImageProvider(
-                  this.item.driverId,
-                ),
-                Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Expanded(
-                            child: Container(
-                              height: 80,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(5.0),
-                                ),
-                              ),
-                              padding: EdgeInsets.all(5),
-                              child: Row(
-                                children: <Widget>[
-                                  Expanded(
-                                    child: VerticalDivider(
-                                      color: finalTeamColors,
-                                      thickness: 8,
-                                      width: 30,
-                                      endIndent: 10,
-                                    ),
-                                  ),
-                                  Expanded(
-                                    flex: 4,
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          this.item.givenName,
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                            color: useDarkMode ? Colors.white54 : Colors.black54,
-                                            fontSize: 20,
-                                          ),
-                                        ),
-                                        Text(
-                                          this.item.familyName,
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 20,
-                                            color: useDarkMode ? Colors.white : Colors.black,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      Text(
-                        this.item.time,
-                        style: TextStyle(
-                          fontSize: 20,
-                          color: useDarkMode ? Colors.white : Colors.black,
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ],
-            )
-          : Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                Expanded(
-                  child: Container(
-                    height: 60,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(5.0),
-                      ),
-                    ),
-                    padding: EdgeInsets.all(5),
-                    child: Row(
-                      children: <Widget>[
-                        Expanded(
-                          flex: 2,
-                          child: Center(
-                            child: Text(
-                              this.item.position,
-                              style: TextStyle(
-                                color: useDarkMode ? Colors.white : Colors.black,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          flex: 1,
-                          child: VerticalDivider(
-                            color: finalTeamColors,
-                            thickness: 7,
-                            width: 30,
-                            indent: 5,
-                            endIndent: 5,
-                          ),
-                        ),
-                        Expanded(
-                          flex: 1,
-                          child: VerticalDivider(
-                            color: Colors.transparent,
-                            thickness: 7,
-                            width: 30,
-                          ),
-                        ),
-                        Expanded(
-                          flex: 7,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                this.item.givenName,
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  color: useDarkMode ? Colors.white54 : Colors.black54,
-                                  fontSize: 16,
-                                ),
-                              ),
-                              Text(
-                                this.item.familyName,
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  color: useDarkMode ? Colors.white : Colors.black,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 18,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Expanded(
-                          flex: 5,
-                          child: Text(
-                            this.item.time,
-                            style: TextStyle(
-                              color: useDarkMode ? Colors.white : Colors.black,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-    );
-  }
-}
-
-class RaceDriversResultsList extends StatelessWidget {
-  final List<DriverResult> items;
-
-  RaceDriversResultsList(this.items);
-  @override
-  Widget build(BuildContext context) {
-    bool isRaceWinner = true;
-    return ListView.builder(
-      scrollDirection: Axis.vertical,
-      shrinkWrap: true,
-      itemCount: items.length,
-      physics: ClampingScrollPhysics(),
-      itemBuilder: (context, index) {
-        if (index != 0 && index != 1 && index != 2) {
-          isRaceWinner = false;
-        } else {
-          isRaceWinner = true;
-        }
-        return DriverResultItem(
-          item: items[index],
-          isRaceWinner: isRaceWinner,
-        );
-      },
-    );
-  }
-}
-
-class QualificationResultsItem extends StatelessWidget {
-  final DriverQualificationResult item;
-  QualificationResultsItem(this.item);
-
-  Color getTeamColors(String teamId) {
-    Color tC = TeamBackgroundColor().getTeamColors(teamId);
-    return tC;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    Color finalTeamColors = getTeamColors(this.item.team);
-    bool useDarkMode = Hive.box('settings').get('darkMode', defaultValue: false) as bool;
-    return Container(
-      decoration: BoxDecoration(
-        border: Border(
-          top: BorderSide(
-            color: useDarkMode ? Color(0xff343434) : Colors.grey[200],
-          ),
-          bottom: BorderSide(
-            color: useDarkMode ? Color(0xff343434) : Colors.grey[200],
-          ),
-        ),
-      ),
-      height: 55,
+      color: item.isFastest
+          ? Color(0xffff00ff)
+          : index % 2 == 1
+              ? Color(0xff22222c)
+              : Color(0xff15151f),
+      height: 45,
       child: Padding(
         padding: EdgeInsets.all(5),
         child: Row(
@@ -279,7 +53,7 @@ class QualificationResultsItem extends StatelessWidget {
               child: Text(
                 item.position,
                 style: TextStyle(
-                  color: useDarkMode ? Colors.white : Colors.black,
+                  color: Colors.white,
                   fontWeight: FontWeight.w600,
                 ),
                 textAlign: TextAlign.center,
@@ -290,9 +64,9 @@ class QualificationResultsItem extends StatelessWidget {
               child: VerticalDivider(
                 color: finalTeamColors,
                 thickness: 8,
-                width: 30,
-                indent: 10,
-                endIndent: 10,
+                width: 25,
+                indent: 7,
+                endIndent: 7,
               ),
             ),
             Expanded(
@@ -300,61 +74,318 @@ class QualificationResultsItem extends StatelessWidget {
               child: Text(
                 item.code,
                 style: TextStyle(
-                  color: useDarkMode ? Colors.white : Colors.black,
+                  color: Colors.white,
                 ),
               ),
             ),
             Expanded(
-              flex: 5,
+              flex: 6,
               child: Padding(
-                padding: EdgeInsets.only(left: 2, right: 2),
+                padding: EdgeInsets.only(left: 5, right: 5),
                 child: Container(
                   decoration: BoxDecoration(
-                    color: useDarkMode ? Color(0xff343434) : Colors.grey[300],
-                    borderRadius: BorderRadius.circular(5),
+                    color:
+                        item.isFastest ? Color(0xffab01ab) : Color(0xff383840),
+                    borderRadius: BorderRadius.circular(7),
                   ),
-                  child: Text(
-                    item.timeq1,
-                    style: TextStyle(
-                      color: useDarkMode ? Colors.white : Colors.black,
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 7, bottom: 7),
+                    child: Text(
+                      item.time,
+                      style: TextStyle(
+                        color: item.isFastest || item.time == 'Abandon'
+                            ? Colors.white
+                            : Color(0xff00ff00),
+                      ),
+                      textAlign: TextAlign.center,
                     ),
-                    textAlign: TextAlign.center,
                   ),
                 ),
               ),
             ),
             Expanded(
-              flex: 5,
+              flex: 3,
               child: Padding(
-                padding: EdgeInsets.only(left: 2, right: 2),
+                padding: EdgeInsets.only(left: 5, right: 5),
                 child: Container(
                   decoration: BoxDecoration(
-                    color: useDarkMode ? Color(0xff343434) : Colors.grey[300],
-                    borderRadius: BorderRadius.circular(5),
+                    color:
+                        item.isFastest ? Color(0xffab01ab) : Color(0xff383840),
+                    borderRadius: BorderRadius.circular(7),
                   ),
-                  child: Text(
-                    item.timeq2,
-                    style: TextStyle(
-                      color: useDarkMode ? Colors.white : Colors.black,
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 5, bottom: 5),
+                    child: Text(
+                      item.lapsDone,
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                      textAlign: TextAlign.center,
                     ),
-                    textAlign: TextAlign.center,
                   ),
                 ),
               ),
             ),
             Expanded(
-              flex: 5,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: useDarkMode ? Color(0xff343434) : Colors.grey[300],
-                  borderRadius: BorderRadius.circular(5),
+              flex: 3,
+              child: Padding(
+                padding: EdgeInsets.only(left: 5, right: 5),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color:
+                        item.isFastest ? Color(0xffab01ab) : Color(0xff383840),
+                    borderRadius: BorderRadius.circular(7),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 5, bottom: 5),
+                    child: Text(
+                      item.points,
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class RaceDriversResultsList extends StatelessWidget {
+  final List<DriverResult> items;
+
+  RaceDriversResultsList(this.items);
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      scrollDirection: Axis.vertical,
+      shrinkWrap: true,
+      itemCount: items.length + 1,
+      physics: ClampingScrollPhysics(),
+      itemBuilder: (context, index) => index == 0
+          ? Container(
+              color: Color(0xff383840),
+              height: 45,
+              child: Padding(
+                padding: EdgeInsets.all(5),
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 2,
+                      child: Text(
+                        'POS',
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    Expanded(
+                      flex: 2,
+                      child: Text(''),
+                    ),
+                    Expanded(
+                      flex: 3,
+                      child: Text(
+                        'PIL',
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 6,
+                      child: Text(
+                        'TEMPS',
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    Expanded(
+                      flex: 3,
+                      child: Text(
+                        'TOURS',
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    Expanded(
+                      flex: 3,
+                      child: Text(
+                        'PTS',
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            )
+          : DriverResultItem(
+              items[index - 1],
+              index - 1,
+            ),
+    );
+  }
+}
+
+class QualificationResultsItem extends StatelessWidget {
+  final DriverQualificationResult item;
+  final int index;
+  final String winningTimeQOne;
+  final String winningTimeQTwo;
+  QualificationResultsItem(
+    this.item,
+    this.index,
+    this.winningTimeQOne,
+    this.winningTimeQTwo,
+  );
+
+  Color getTeamColors(String teamId) {
+    Color tC = TeamBackgroundColor().getTeamColors(teamId);
+    return tC;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    Color finalTeamColors = getTeamColors(this.item.team);
+    return Container(
+      color: index % 2 == 1 ? Color(0xff22222c) : Color(0xff15151f),
+      height: 45,
+      child: Padding(
+        padding: EdgeInsets.all(5),
+        child: Row(
+          children: [
+            Expanded(
+              flex: 2,
+              child: Padding(
+                padding: EdgeInsets.only(
+                  right: 7,
                 ),
                 child: Text(
-                  item.timeq3,
+                  item.position,
                   style: TextStyle(
-                    color: useDarkMode ? Colors.white : Colors.black,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
                   ),
                   textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+            Expanded(
+              flex: 1,
+              child: VerticalDivider(
+                color: finalTeamColors,
+                thickness: 8,
+                width: 25,
+                indent: 7,
+                endIndent: 7,
+              ),
+            ),
+            Expanded(
+              flex: 4,
+              child: Padding(
+                padding: EdgeInsets.only(
+                  left: 7,
+                ),
+                child: Text(
+                  item.code,
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+            Expanded(
+              flex: 6,
+              child: Padding(
+                padding: EdgeInsets.only(left: 5, right: 5),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: winningTimeQOne == item.timeq1
+                        ? Color(0xffff00ff)
+                        : Color(0xff383840),
+                    borderRadius: BorderRadius.circular(7),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 5, bottom: 5),
+                    child: Text(
+                      item.timeq1,
+                      style: TextStyle(
+                        color: winningTimeQOne == item.timeq1
+                            ? Colors.white
+                            : item.timeq1 != '- -' && item.timeq1 != 'DNF'
+                                ? Color(0xff00ff00)
+                                : Colors.white,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Expanded(
+              flex: 6,
+              child: Padding(
+                padding: EdgeInsets.only(left: 5, right: 5),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: winningTimeQTwo == item.timeq2
+                        ? Color(0xffff00ff)
+                        : Color(0xff383840),
+                    borderRadius: BorderRadius.circular(7),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 5, bottom: 5),
+                    child: Text(
+                      item.timeq2,
+                      style: TextStyle(
+                        color: winningTimeQTwo == item.timeq2
+                            ? Colors.white
+                            : item.timeq2 != '--'
+                                ? Color(0xff00ff00)
+                                : Colors.white,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Expanded(
+              flex: 6,
+              child: Padding(
+                padding: EdgeInsets.only(left: 5, right: 5),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: index == 0 ? Color(0xffff00ff) : Color(0xff383840),
+                    borderRadius: BorderRadius.circular(7),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 5, bottom: 5),
+                    child: Text(
+                      item.timeq3,
+                      style: TextStyle(
+                        color: index == 0
+                            ? Colors.white
+                            : item.timeq3 != '--'
+                                ? Color(0xff00ff00)
+                                : Colors.white,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -371,16 +402,106 @@ class QualificationDriversResultsList extends StatelessWidget {
   QualificationDriversResultsList(this.items);
   @override
   Widget build(BuildContext context) {
+    List resultsQOne = [];
+    List resultsQTwo = [];
+    items.forEach(
+      (element) {
+        if (element.timeq1 != '' && element.timeq1 != 'DNF') {
+          resultsQOne.add(element.timeq1);
+        }
+        if (element.timeq2 != '' && element.timeq2 != '--') {
+          resultsQTwo.add(element.timeq2);
+        }
+      },
+    );
+    resultsQOne.sort((a, b) => a.compareTo(b));
+    resultsQTwo.sort((a, b) => a.compareTo(b));
     return ListView.builder(
       scrollDirection: Axis.vertical,
       shrinkWrap: true,
-      itemCount: items.length,
+      itemCount: items.length + 1,
       physics: ClampingScrollPhysics(),
-      itemBuilder: (context, index) {
-        return QualificationResultsItem(
-          items[index],
-        );
-      },
+      itemBuilder: (context, index) => index == 0
+          ? Container(
+              color: Color(0xff383840),
+              height: 45,
+              child: Padding(
+                padding: EdgeInsets.all(5),
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 2,
+                      child: Padding(
+                        padding: EdgeInsets.only(
+                          right: 7,
+                        ),
+                        child: Text(
+                          'P.',
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: Text(''),
+                    ),
+                    Expanded(
+                      flex: 3,
+                      child: Padding(
+                        padding: EdgeInsets.only(
+                          left: 7,
+                        ),
+                        child: Text(
+                          'PIL',
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 6,
+                      child: Text(
+                        'Q1',
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    Expanded(
+                      flex: 6,
+                      child: Text(
+                        'Q2',
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    Expanded(
+                      flex: 6,
+                      child: Text(
+                        'Q3',
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            )
+          : QualificationResultsItem(
+              items[index - 1],
+              index - 1,
+              resultsQOne[0],
+              resultsQTwo[0],
+            ),
     );
   }
 }

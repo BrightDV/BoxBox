@@ -21,6 +21,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
+import 'package:boxbox/helpers/request_error.dart';
 import 'package:boxbox/helpers/team_background_color.dart';
 import 'package:boxbox/helpers/team_car_image.dart';
 
@@ -39,17 +40,23 @@ class Team {
     this.wins,
   );
   factory Team.fromMap(Map<String, dynamic> json) {
-    return Team(json['constructorId'], json['position'], json['name'], json['points'], json['wins']);
+    return Team(json['constructorId'], json['position'], json['name'],
+        json['points'], json['wins']);
   }
   factory Team.fromJson(Map<String, dynamic> json) {
-    return Team(json['constructorId'], json['position'], json['name'], json['points'], json['wins']);
+    return Team(json['constructorId'], json['position'], json['name'],
+        json['points'], json['wins']);
   }
 }
 
 class TeamItem extends StatelessWidget {
-  TeamItem({this.item});
-
   final Team item;
+  final int index;
+
+  TeamItem(
+    this.item,
+    this.index,
+  );
 
   Color getTeamColors(String teamId) {
     Color tC = TeamBackgroundColor().getTeamColors(teamId);
@@ -58,21 +65,11 @@ class TeamItem extends StatelessWidget {
 
   Widget build(BuildContext context) {
     Color finalTeamColors = getTeamColors(this.item.constructorId);
-    bool useDarkMode = Hive.box('settings').get('darkMode', defaultValue: false) as bool;
+    bool useDarkMode =
+        Hive.box('settings').get('darkMode', defaultValue: false) as bool;
     return Container(
       height: 120,
-      decoration: BoxDecoration(
-        border: Border(
-          top: BorderSide(
-            color: useDarkMode ? Color(0xff343434) : Colors.grey[200],
-            width: 0.5,
-          ),
-          bottom: BorderSide(
-            color: useDarkMode ? Color(0xff343434) : Colors.grey[200],
-            width: 0.5,
-          ),
-        ),
-      ),
+      color: index % 2 == 1 ? Color(0xff22222c) : Color(0xff15151f),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
@@ -114,7 +111,8 @@ class TeamItem extends StatelessWidget {
                     color: useDarkMode ? Colors.white : Colors.black,
                   ),
                 ),
-                int.parse(this.item.points) == 0 || int.parse(this.item.points) == 1
+                int.parse(this.item.points) == 0 ||
+                        int.parse(this.item.points) == 1
                     ? Text(
                         "${this.item.points} Point",
                         style: TextStyle(
@@ -131,7 +129,8 @@ class TeamItem extends StatelessWidget {
                       ),
                 Padding(
                   padding: EdgeInsets.only(top: 5),
-                  child: int.parse(this.item.wins) == 0 || int.parse(this.item.wins) == 1
+                  child: int.parse(this.item.wins) == 0 ||
+                          int.parse(this.item.wins) == 1
                       ? Text(
                           "${this.item.wins} Victoire",
                           style: TextStyle(
@@ -174,7 +173,9 @@ class TeamCarImageProvider extends StatelessWidget {
     return FutureBuilder(
       future: getCircuitImageUrl(this.teamId),
       builder: (context, snapshot) {
-        if (snapshot.hasError) print("${snapshot.error}\nSnapshot Error :/ : $snapshot.data");
+        if (snapshot.hasError) {
+          return RequestErrorWidget(snapshot.error.toString());
+        }
         return snapshot.hasData
             ? AspectRatio(
                 aspectRatio: 200 / 100,
@@ -211,7 +212,10 @@ class TeamsList extends StatelessWidget {
       shrinkWrap: true,
       itemCount: items.length,
       itemBuilder: (context, index) {
-        return TeamItem(item: items[index]);
+        return TeamItem(
+          items[index],
+          index,
+        );
       },
     );
   }

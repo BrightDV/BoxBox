@@ -18,6 +18,7 @@
  */
 
 import 'package:boxbox/helpers/loading_indicator_util.dart';
+import 'package:boxbox/helpers/request_error.dart';
 import 'package:boxbox/helpers/schedule_lands.dart';
 import 'package:boxbox/helpers/racetracks_url.dart';
 import 'package:boxbox/Screens/race_details.dart';
@@ -48,14 +49,20 @@ class Race {
 }
 
 class RaceItem extends StatelessWidget {
-  RaceItem(this.item, this.isFirst);
-
   final Race item;
   final bool isFirst;
+  final int index;
+
+  RaceItem(
+    this.item,
+    this.isFirst,
+    this.index,
+  );
 
   Widget build(BuildContext context) {
     String finalDate = this.item.date.split("-").reversed.toList().join("/");
-    bool useDarkMode = Hive.box('settings').get('darkMode', defaultValue: false) as bool;
+    bool useDarkMode =
+        Hive.box('settings').get('darkMode', defaultValue: false) as bool;
     return GestureDetector(
       onTap: () => Navigator.push(
         context,
@@ -68,18 +75,7 @@ class RaceItem extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.all(2),
         height: isFirst ? 280 : 80,
-        decoration: BoxDecoration(
-          border: Border(
-            top: BorderSide(
-              color: useDarkMode ? Color(0xff343434) : Colors.grey[200],
-              width: 0.5,
-            ),
-            bottom: BorderSide(
-              color: useDarkMode ? Color(0xff343434) : Colors.grey[200],
-              width: 0.5,
-            ),
-          ),
-        ),
+        color: index % 2 == 1 ? Color(0xff22222c) : Color(0xff15151f),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
@@ -152,6 +148,7 @@ class RacesList extends StatelessWidget {
         return RaceItem(
           items[index],
           isUpNext ? index == 0 : false,
+          index,
         );
       },
       physics: ClampingScrollPhysics(),
@@ -172,10 +169,12 @@ class RaceImageProvider extends StatelessWidget {
     return FutureBuilder(
       future: getCircuitImageUrl(this.race),
       builder: (context, snapshot) {
-        if (snapshot.hasError) print("${snapshot.error}\nSnapshot Error :/ : $snapshot.data");
+        if (snapshot.hasError) {
+          return RequestErrorWidget(snapshot.error.toString());
+        }
         return snapshot.hasData
             ? Container(
-                height: 200,
+                height: MediaQuery.of(context).size.width / (16 / 9),
                 decoration: BoxDecoration(
                   image: DecorationImage(
                     image: CachedNetworkImageProvider(

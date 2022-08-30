@@ -38,12 +38,14 @@ class StandingsScreen extends StatefulWidget {
 class _StandingsScreenState extends State<StandingsScreen> {
   @override
   Widget build(BuildContext context) {
-    bool useDarkMode = Hive.box('settings').get('darkMode', defaultValue: false) as bool;
+    bool useDarkMode =
+        Hive.box('settings').get('darkMode', defaultValue: false) as bool;
     return DefaultTabController(
       length: 2,
       initialIndex: widget.switchToTeamStandings != null ? 1 : 0,
       child: Scaffold(
-        backgroundColor: useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
+        backgroundColor:
+            useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
         body: TabBarView(
           children: [
             DriversStandingsWidget(),
@@ -89,7 +91,8 @@ class DriversStandingsWidget extends StatelessWidget {
   DriversStandingsWidget({Key key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    Map driversStandings = Hive.box('requests').get('driversStandings', defaultValue: {}) as Map;
+    Map driversStandings =
+        Hive.box('requests').get('driversStandings', defaultValue: {}) as Map;
     return FutureBuilder<List<Driver>>(
       future: getDriversList(),
       builder: (context, snapshot) {
@@ -119,7 +122,8 @@ class TeamsStandingsWidget extends StatelessWidget {
   TeamsStandingsWidget({Key key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    Map teamsStandings = Hive.box('requests').get('teamsStandings', defaultValue: {}) as Map;
+    Map teamsStandings =
+        Hive.box('requests').get('teamsStandings', defaultValue: {}) as Map;
     return FutureBuilder<List<Team>>(
       future: getLastTeamsStandings(),
       builder: (context, snapshot) {

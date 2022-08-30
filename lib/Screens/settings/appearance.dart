@@ -23,6 +23,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 class AppearanceScreen extends StatefulWidget {
   final Function update;
   const AppearanceScreen(this.update);
+
   @override
   State<AppearanceScreen> createState() => _AppearanceScreenState();
 }
@@ -30,7 +31,17 @@ class AppearanceScreen extends StatefulWidget {
 class _AppearanceScreenState extends State<AppearanceScreen> {
   @override
   Widget build(BuildContext context) {
-    bool useDarkMode = Hive.box('settings').get('darkMode', defaultValue: false) as bool;
+    bool useDarkMode =
+        Hive.box('settings').get('darkMode', defaultValue: false) as bool;
+    String newsLayout =
+        Hive.box('settings').get('newsLayout', defaultValue: 'big') as String;
+    Map valueToString = {
+      'big': 'Complet',
+      'medium': 'Titre et Image',
+      'condensed': 'Titre et Description',
+      'small': 'Titre',
+    };
+    String newsLayoutFormated = valueToString[newsLayout];
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -40,7 +51,8 @@ class _AppearanceScreenState extends State<AppearanceScreen> {
           ),
         ),
       ),
-      backgroundColor: useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
+      backgroundColor:
+          useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
       body: Column(
         children: [
           SwitchListTile(
@@ -57,6 +69,57 @@ class _AppearanceScreenState extends State<AppearanceScreen> {
               setState(() {});
               widget.update();
             },
+          ),
+          ListTile(
+            title: Text(
+              'Disposition des actualités',
+              style: TextStyle(
+                color: useDarkMode ? Colors.white : Colors.black,
+              ),
+            ),
+            onTap: () {},
+            trailing: DropdownButton(
+              value: newsLayoutFormated,
+              dropdownColor: useDarkMode
+                  ? Theme.of(context).backgroundColor
+                  : Colors.white,
+              onChanged: (newValue) {
+                if (newValue != null) {
+                  setState(
+                    () {
+                      Map stringToValue = {
+                        'Complet': 'big',
+                        'Titre et Image': 'medium',
+                        'Titre et Description': 'condensed',
+                        'Titre': 'small',
+                      };
+                      newsLayout = stringToValue[newValue];
+                      Hive.box('settings').put('newsLayout', newsLayout);
+                    },
+                  );
+                  widget.update();
+                }
+              },
+              items: <String>[
+                'Complet',
+                'Titre et Image',
+                'Titre et Description',
+                'Titre',
+              ].map<DropdownMenuItem<String>>(
+                (String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(
+                      value,
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: useDarkMode ? Colors.white : Colors.black,
+                      ),
+                    ),
+                  );
+                },
+              ).toList(),
+            ),
           ),
         ],
       ),

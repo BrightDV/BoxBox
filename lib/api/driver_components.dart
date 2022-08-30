@@ -17,6 +17,7 @@
  * Copyright (c) 2022, BrightDV
  */
 
+import 'package:boxbox/helpers/request_error.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -57,6 +58,12 @@ class DriverResult {
   final String team;
   final String time;
 
+  final bool isFastest;
+  final String fastestLapTime;
+  final String fastestLap;
+  final String lapsDone;
+  final String points;
+
   DriverResult(
     this.driverId,
     this.position,
@@ -66,7 +73,12 @@ class DriverResult {
     this.code,
     this.team,
     this.time,
-  );
+    this.isFastest,
+    this.fastestLapTime,
+    this.fastestLap, {
+    this.lapsDone,
+    this.points,
+  });
 }
 
 class DriverQualificationResult {
@@ -106,16 +118,23 @@ class DriversList extends StatelessWidget {
       shrinkWrap: true,
       itemCount: items.length,
       itemBuilder: (context, index) {
-        return DriverItem(item: items[index]);
+        return DriverItem(
+          items[index],
+          index,
+        );
       },
     );
   }
 }
 
 class DriverItem extends StatelessWidget {
-  DriverItem({this.item});
-
   final Driver item;
+  final int index;
+
+  DriverItem(
+    this.item,
+    this.index,
+  );
 
   Color getTeamColors(String teamId) {
     Color tC = TeamBackgroundColor().getTeamColors(teamId);
@@ -123,8 +142,7 @@ class DriverItem extends StatelessWidget {
   }
 
   Widget build(BuildContext context) {
-    Color finalTeamColors = getTeamColors(this.item.team);
-    bool useDarkMode = Hive.box('settings').get('darkMode', defaultValue: false) as bool;
+    Color finalTeamColor = getTeamColors(this.item.team);
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -140,18 +158,7 @@ class DriverItem extends StatelessWidget {
       },
       child: Container(
         height: 120,
-        decoration: BoxDecoration(
-          border: Border(
-            top: BorderSide(
-              color: useDarkMode ? Color(0xff343434) : Colors.grey[200],
-              width: 0.5,
-            ),
-            bottom: BorderSide(
-              color: useDarkMode ? Color(0xff343434) : Colors.grey[200],
-              width: 0.5,
-            ),
-          ),
-        ),
+        color: index % 2 == 1 ? Color(0xff22222c) : Color(0xff15151f),
         child: Row(
           children: <Widget>[
             Expanded(
@@ -177,7 +184,7 @@ class DriverItem extends StatelessWidget {
                               style: TextStyle(
                                 fontWeight: FontWeight.w600,
                                 fontSize: 20,
-                                color: useDarkMode ? Colors.white : Colors.black,
+                                color: Colors.white,
                               ),
                               textAlign: TextAlign.center,
                             ),
@@ -185,7 +192,7 @@ class DriverItem extends StatelessWidget {
                           Expanded(
                             flex: 1,
                             child: VerticalDivider(
-                              color: finalTeamColors,
+                              color: finalTeamColor,
                               thickness: 9,
                               width: 30,
                               //endIndent: 20,
@@ -204,7 +211,7 @@ class DriverItem extends StatelessWidget {
                                   Text(
                                     this.item.givenName,
                                     style: TextStyle(
-                                      color: useDarkMode ? Colors.white54 : Colors.black54,
+                                      color: Colors.white54,
                                       fontSize: 18,
                                     ),
                                   ),
@@ -213,17 +220,18 @@ class DriverItem extends StatelessWidget {
                                     style: TextStyle(
                                       fontWeight: FontWeight.w600,
                                       fontSize: 19,
-                                      color: useDarkMode ? Colors.white : Colors.black,
+                                      color: Colors.white,
                                     ),
                                   ),
                                   Padding(
                                     padding: EdgeInsets.only(top: 5),
-                                    child: int.parse(this.item.points) == 0 || int.parse(this.item.points) == 1
+                                    child: int.parse(this.item.points) == 0 ||
+                                            int.parse(this.item.points) == 1
                                         ? Text(
                                             "${this.item.points} Point",
                                             style: TextStyle(
                                               fontSize: 20,
-                                              color: useDarkMode ? Colors.white : Colors.black,
+                                              color: Colors.white,
                                             ),
                                             textAlign: TextAlign.center,
                                           )
@@ -231,7 +239,7 @@ class DriverItem extends StatelessWidget {
                                             "${this.item.points} Points",
                                             style: TextStyle(
                                               fontSize: 20,
-                                              color: useDarkMode ? Colors.white : Colors.black,
+                                              color: Colors.white,
                                             ),
                                             textAlign: TextAlign.center,
                                           ),
@@ -269,12 +277,15 @@ class DriverImageProvider extends StatelessWidget {
     return FutureBuilder(
       future: getDriverImageUrl(this.driverId),
       builder: (context, snapshot) {
-        if (snapshot.hasError) print("${snapshot.error}\nSnapshot Error :/ : $snapshot.data");
+        if (snapshot.hasError) {
+          RequestErrorWidget(snapshot.error.toString());
+        }
         return snapshot.hasData
             ? CachedNetworkImage(
                 imageUrl: snapshot.data,
                 placeholder: (context, url) => LoadingIndicatorUtil(),
-                errorWidget: (context, url, error) => Icon(Icons.error_outlined),
+                errorWidget: (context, url, error) =>
+                    Icon(Icons.error_outlined),
                 fadeOutDuration: Duration(milliseconds: 500),
                 fadeInDuration: Duration(milliseconds: 500),
               )

@@ -28,7 +28,8 @@ class MainBottomNavigationBar extends StatefulWidget {
   MainBottomNavigationBar({Key key}) : super(key: key);
 
   @override
-  _MainBottomNavigationBarState createState() => _MainBottomNavigationBarState();
+  _MainBottomNavigationBarState createState() =>
+      _MainBottomNavigationBarState();
 }
 
 class _MainBottomNavigationBarState extends State<MainBottomNavigationBar> {
@@ -46,7 +47,8 @@ class _MainBottomNavigationBarState extends State<MainBottomNavigationBar> {
 
   @override
   Widget build(BuildContext context) {
-    bool useDarkMode = Hive.box('settings').get('darkMode', defaultValue: false) as bool;
+    bool useDarkMode =
+        Hive.box('settings').get('darkMode', defaultValue: false) as bool;
     List<Widget> _screens = [
       HomeScreen(),
       StandingsScreen(),
@@ -65,10 +67,12 @@ class _MainBottomNavigationBarState extends State<MainBottomNavigationBar> {
       drawer: MainDrawer(_homeSetState),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
-        backgroundColor: useDarkMode ? Color(0xff202020) : Colors.white,
+        backgroundColor:
+            useDarkMode ? Color.fromARGB(255, 16, 16, 24) : Colors.white,
         selectedItemColor: Theme.of(context).primaryColor,
         unselectedItemColor: useDarkMode ? Colors.white : Colors.grey[600],
         currentIndex: _selectedIndex,
+        elevation: 10.0,
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(
@@ -101,7 +105,8 @@ class _MainBottomNavigationBarState extends State<MainBottomNavigationBar> {
         onTap: _onItemTapped,
       ),
       body: _screens.elementAt(_selectedIndex),
-      backgroundColor: useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
+      backgroundColor:
+          useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
     );
   }
 }

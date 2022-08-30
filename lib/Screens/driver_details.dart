@@ -21,6 +21,7 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:boxbox/helpers/driver_image.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
+import 'package:boxbox/helpers/request_error.dart';
 
 class DriverDetailsScreen extends StatelessWidget {
   final String driverId;
@@ -34,7 +35,8 @@ class DriverDetailsScreen extends StatelessWidget {
   );
   @override
   Widget build(BuildContext context) {
-    bool useDarkMode = Hive.box('settings').get('darkMode', defaultValue: false) as bool;
+    bool useDarkMode =
+        Hive.box('settings').get('darkMode', defaultValue: false) as bool;
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -44,7 +46,8 @@ class DriverDetailsScreen extends StatelessWidget {
           ),
         ),
       ),
-      backgroundColor: useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
+      backgroundColor:
+          useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
       body: Padding(
         padding: EdgeInsets.all(5),
         child: SingleChildScrollView(
@@ -58,7 +61,9 @@ class DriverDetailsScreen extends StatelessWidget {
                 child: Text(
                   '$givenName $familyName',
                   style: TextStyle(
-                    color: useDarkMode ? Colors.white : Theme.of(context).primaryColor,
+                    color: useDarkMode
+                        ? Colors.white
+                        : Theme.of(context).primaryColor,
                     fontSize: 20,
                   ),
                 ),
@@ -91,7 +96,9 @@ class DriverImageProvider extends StatelessWidget {
     return FutureBuilder(
       future: getImageURL(this.driverId, this.idOfImage),
       builder: (context, snapshot) {
-        if (snapshot.hasError) print("${snapshot.error}\nSnapshot Error :/ : $snapshot.data");
+        if (snapshot.hasError) {
+          return RequestErrorWidget(snapshot.error.toString());
+        }
         return snapshot.hasData
             ? Image.network(
                 snapshot.data,

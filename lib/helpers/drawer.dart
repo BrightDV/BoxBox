@@ -31,13 +31,15 @@ class MainDrawer extends StatefulWidget {
 }
 
 class _MainDrawerState extends State<MainDrawer> {
-  bool useDarkMode = Hive.box('settings').get('darkMode', defaultValue: false) as bool;
+  bool useDarkMode =
+      Hive.box('settings').get('darkMode', defaultValue: false) as bool;
 
   @override
   Widget build(BuildContext context) {
     return Theme(
       data: Theme.of(context).copyWith(
-        canvasColor: useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
+        canvasColor:
+            useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
       ),
       child: Drawer(
         child: Column(
@@ -58,47 +60,49 @@ class _MainDrawerState extends State<MainDrawer> {
               ),
             ),
             ListTile(
-                title: Text(
-                  'Paramètres',
-                  style: TextStyle(
-                    color: useDarkMode ? Colors.white : Colors.black,
-                  ),
-                ),
-                leading: Icon(
-                  Icons.settings_outlined,
+              title: Text(
+                'Paramètres',
+                style: TextStyle(
                   color: useDarkMode ? Colors.white : Colors.black,
                 ),
-                onTap: () {
-                  Navigator.of(context).pop();
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => SettingsScreen(
-                        widget.homeSetState,
-                      ),
+              ),
+              leading: Icon(
+                Icons.settings_outlined,
+                color: useDarkMode ? Colors.white : Colors.black,
+              ),
+              onTap: () {
+                Navigator.of(context).pop();
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => SettingsScreen(
+                      widget.homeSetState,
                     ),
-                  );
-                }),
+                  ),
+                );
+              },
+            ),
             ListTile(
-                title: Text(
-                  'À propos',
-                  style: TextStyle(
-                    color: useDarkMode ? Colors.white : Colors.black,
-                  ),
-                ),
-                leading: Icon(
-                  Icons.info_outlined,
+              title: Text(
+                'À propos',
+                style: TextStyle(
                   color: useDarkMode ? Colors.white : Colors.black,
                 ),
-                onTap: () {
-                  Navigator.of(context).pop();
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => AboutScreen(),
-                    ),
-                  );
-                }),
+              ),
+              leading: Icon(
+                Icons.info_outlined,
+                color: useDarkMode ? Colors.white : Colors.black,
+              ),
+              onTap: () {
+                Navigator.of(context).pop();
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AboutScreen(),
+                  ),
+                );
+              },
+            ),
           ],
         ),
       ),

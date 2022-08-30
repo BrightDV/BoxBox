@@ -19,6 +19,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:boxbox/Screens/settings/appearance.dart';
+import 'package:boxbox/Screens/settings/player.dart';
 
 class SettingsScreen extends StatefulWidget {
   final Function update;
@@ -71,6 +72,27 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         builder: (context) => AppearanceScreen(
                           _settingsSetState,
                         ),
+                      ),
+                    );
+                    // video.id.value,
+                  },
+                ),
+                ListTile(
+                  title: Text(
+                    'Lecteur',
+                    style: TextStyle(
+                      color: useDarkMode ? Colors.white : Colors.black,
+                    ),
+                  ),
+                  leading: Icon(
+                    Icons.play_arrow_outlined,
+                    color: useDarkMode ? Colors.white : Colors.black,
+                  ),
+                  onTap: () async {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => PlayerScreen(),
                       ),
                     );
                     // video.id.value,

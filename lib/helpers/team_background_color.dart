@@ -27,7 +27,7 @@ class TeamBackgroundColor {
       Color(0xffffffff),
     ],
     "red_bull": [
-      Color(0xff001a31),
+      Color(0xff1e5bc6),
       Color(0xffec1848),
       Color(0xffffffff),
     ],

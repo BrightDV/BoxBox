@@ -17,49 +17,77 @@
  * Copyright (c) 2022, BrightDV
  */
 
+import 'package:boxbox/api/event_tracker.dart';
+import 'package:boxbox/Screens/grand_prix_running_details.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_indicator/loading_indicator.dart';
-import 'package:boxbox/api/live_feed.dart';
-import 'package:boxbox/Screens/live_feed.dart';
+import 'package:marquee/marquee.dart';
 
 class LiveSessionStatusIndicator extends StatelessWidget {
   LiveSessionStatusIndicator({Key key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: LiveFeedFetcher().getSessionStatus(),
+    return FutureBuilder<Event>(
+      future: EventTracker().parseEvent(),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
+          print("Live Session Status Indicator Error");
+          print(snapshot.error);
           return Container(
             height: 0.0,
             width: 0.0,
           );
         }
         return snapshot.hasData
-            ? "have to" == "migrate to event-tracker" //snapshot.data
+            ? snapshot.data.isRunning
                 ? GestureDetector(
                     child: Container(
-                      height: 40,
+                      height: 50,
                       color: Theme.of(context).primaryColor,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          LoadingIndicator(
-                            indicatorType: Indicator.values[17],
-                            colors: [
-                              Colors.white,
-                            ],
-                            strokeWidth: 2.0,
-                          ),
                           Padding(
-                            padding: EdgeInsets.only(left: 10),
-                            child: Text(
-                              'Session en cours',
-                              style: TextStyle(
-                                color: Colors.white,
-                              ),
+                            padding: EdgeInsets.only(
+                              right: 5,
+                              left: 5,
                             ),
+                            child: LoadingIndicator(
+                              indicatorType: Indicator.values[17],
+                              colors: [
+                                Colors.white,
+                              ],
+                              strokeWidth: 2.0,
+                            ),
+                          ),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                '${snapshot.data.meetingName}',
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width - 60,
+                                height: 20,
+                                child: Marquee(
+                                  text: '${snapshot.data.mettingOfficialName}',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.white,
+                                  ),
+                                  pauseAfterRound: Duration(seconds: 1),
+                                  startAfter: Duration(seconds: 1),
+                                  velocity: 85,
+                                  blankSpace: 100,
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
@@ -67,7 +95,8 @@ class LiveSessionStatusIndicator extends StatelessWidget {
                     onTap: () => Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => LiveFeedScreen(),
+                        builder: (context) =>
+                            GrandPrixRunningScreen(snapshot.data),
                       ),
                     ),
                   )

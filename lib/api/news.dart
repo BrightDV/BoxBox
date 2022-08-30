@@ -20,17 +20,21 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:boxbox/api/brightcove.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/news_feed_widget.dart';
+import 'package:boxbox/helpers/request_error.dart';
 import 'package:boxbox/Screens/article.dart';
 import 'package:boxbox/Screens/standings.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
-import 'package:lazy_loading_list/lazy_loading_list.dart';
+import 'package:lottie/lottie.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:video_player/video_player.dart';
 
 class F1NewsFetcher {
   final String endpoint = "https://api.formula1.com";
@@ -42,7 +46,8 @@ class F1NewsFetcher {
     finalJson.forEach((element) {
       element['title'] = element['title'].replaceAll("\n", "");
       if (element['metaDescription'] != null) {
-        element['metaDescription'] = element['metaDescription'].replaceAll("\n", "");
+        element['metaDescription'] =
+            element['metaDescription'].replaceAll("\n", "");
       }
       newsList.add(
         News(
@@ -62,9 +67,9 @@ class F1NewsFetcher {
   Future<List> getLatestNews({String tagId}) async {
     Uri url;
     if (tagId != null) {
-      url = Uri.parse('$endpoint/v1/editorial/articles?limit=40&tags=$tagId');
+      url = Uri.parse('$endpoint/v1/editorial/articles?limit=200&tags=$tagId');
     } else {
-      url = Uri.parse('$endpoint/v1/editorial/articles?limit=40');
+      url = Uri.parse('$endpoint/v1/editorial/articles?limit=200');
     }
     var response = await http.get(url, headers: {
       "Accept": "application/json",
@@ -72,7 +77,9 @@ class F1NewsFetcher {
       "locale": "en",
     });
 
-    Map<String, dynamic> responseAsJson = json.decode(utf8.decode(response.bodyBytes));
+    Map<String, dynamic> responseAsJson =
+        json.decode(utf8.decode(response.bodyBytes));
+
     if (tagId == null) {
       Hive.box('requests').put('news', responseAsJson);
     }
@@ -86,13 +93,18 @@ class F1NewsFetcher {
       "apikey": apikey,
       "locale": "en",
     });
-    Map<String, dynamic> responseAsJson = json.decode(utf8.decode(response.bodyBytes));
+    Map<String, dynamic> responseAsJson =
+        json.decode(utf8.decode(response.bodyBytes));
 
     Article article = Article(
       responseAsJson['id'],
       responseAsJson['slug'],
       responseAsJson['title'],
-      responseAsJson['createdAt'].substring(0, 10).split('-').reversed.join('-'),
+      responseAsJson['createdAt']
+          .substring(0, 10)
+          .split('-')
+          .reversed
+          .join('-'),
       responseAsJson['articleTags'],
       responseAsJson['hero'],
       responseAsJson['body'],
@@ -154,7 +166,10 @@ class NewsItem extends StatelessWidget {
 
   Widget build(BuildContext context) {
     String imageUrl = item.imageUrl;
-    bool useDarkMode = Hive.box('settings').get('darkMode', defaultValue: false) as bool;
+    bool useDarkMode =
+        Hive.box('settings').get('darkMode', defaultValue: false) as bool;
+    String newsLayout =
+        Hive.box('settings').get('newsLayout', defaultValue: 'big') as String;
     double width = MediaQuery.of(context).size.width;
     if (item.imageUrl.startsWith('https://www.formula1.com/')) {
       imageUrl = '${item.imageUrl}.transform/6col/image.jpg';
@@ -174,18 +189,24 @@ class NewsItem extends StatelessWidget {
           },
           child: Card(
             elevation: 5.0,
-            color: useDarkMode ? Color(0xff343434) : Colors.white,
+            color: useDarkMode ? Color(0xff1d1d28) : Colors.white,
             child: Column(
               children: [
-                Container(
-                  child: CachedNetworkImage(
-                    imageUrl: imageUrl,
-                    placeholder: (context, url) => LoadingIndicatorUtil(),
-                    errorWidget: (context, url, error) => Icon(Icons.error_outlined),
-                    fadeOutDuration: Duration(seconds: 1),
-                    fadeInDuration: Duration(seconds: 1),
-                  ),
-                ),
+                newsLayout != 'condensed' && newsLayout != 'small'
+                    ? Container(
+                        child: CachedNetworkImage(
+                          imageUrl: imageUrl,
+                          placeholder: (context, url) => LoadingIndicatorUtil(),
+                          errorWidget: (context, url, error) =>
+                              Icon(Icons.error_outlined),
+                          fadeOutDuration: Duration(seconds: 1),
+                          fadeInDuration: Duration(seconds: 1),
+                        ),
+                      )
+                    : Container(
+                        height: 0.0,
+                        width: 0.0,
+                      ),
                 ListTile(
                   title: Text(
                     item.title,
@@ -197,8 +218,9 @@ class NewsItem extends StatelessWidget {
                     maxLines: 5,
                     textAlign: TextAlign.justify,
                   ),
-                  subtitle: inRelated
-                      ? Text('')
+                  subtitle: inRelated ||
+                          newsLayout != 'big' && newsLayout != 'condensed'
+                      ? null
                       : item.subtitle != null
                           ? Text(
                               item.subtitle,
@@ -218,28 +240,85 @@ class NewsItem extends StatelessWidget {
   }
 }
 
-class NewsList extends StatelessWidget {
+class NewsList extends StatefulWidget {
   final List items;
 
   NewsList({Key key, this.items});
   @override
+  _NewsListState createState() => _NewsListState();
+}
+
+class _NewsListState extends State<NewsList> {
+  int perPage = 15;
+  int present = 0;
+  List items = [];
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      items.addAll(widget.items.getRange(present, present + perPage));
+      present = present + perPage;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    bool useDarkMode =
+        Hive.box('settings').get('darkMode', defaultValue: false) as bool;
+
+    List originalItems = widget.items;
     return ListView.builder(
       scrollDirection: Axis.vertical,
       shrinkWrap: true,
-      itemCount: items.length,
+      itemCount:
+          (present <= originalItems.length) ? items.length + 1 : items.length,
       physics: ClampingScrollPhysics(),
       itemBuilder: (context, index) {
-        return LazyLoadingList(
-          initialSizeOfItems: 10,
-          index: index,
-          hasMore: true,
-          loadMore: () {},
-          child: NewsItem(
-            items[index],
-            false,
-          ),
-        );
+        return index == items.length
+            ? TextButton(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Lottie.asset(
+                      'animations/loading_more_animation.json',
+                      height: 40,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 7, right: 7),
+                      child: Text(
+                        'Charger Plus',
+                        style: TextStyle(
+                          color: useDarkMode ? Colors.white : Colors.black,
+                          fontSize: 18,
+                        ),
+                      ),
+                    ),
+                    Lottie.asset(
+                      'animations/loading_more_animation.json',
+                      height: 40,
+                    ),
+                  ],
+                ),
+                onPressed: (() {
+                  setState(
+                    () {
+                      if ((present + perPage) > originalItems.length) {
+                        items.addAll(originalItems.getRange(
+                            present, originalItems.length));
+                      } else {
+                        items.addAll(
+                            originalItems.getRange(present, present + perPage));
+                      }
+                      present = present + perPage;
+                    },
+                  );
+                }),
+              )
+            : NewsItem(
+                items[index],
+                false,
+              );
       },
     );
   }
@@ -277,13 +356,14 @@ class JoinArticlesParts extends StatelessWidget {
   JoinArticlesParts(this.article);
 
   Widget build(BuildContext context) {
-    bool useDarkMode = Hive.box('settings').get('darkMode', defaultValue: false) as bool;
+    bool useDarkMode =
+        Hive.box('settings').get('darkMode', defaultValue: false) as bool;
     List articleContent = article.articleContent;
     List<Widget> widgetsList = [];
     if (article.articleHero['contentType'] == 'atomVideo') {
       widgetsList.add(
-        ImageRenderer(
-          article.articleHero['fields']['thumbnail']['url'],
+        VideoRenderer(
+          article.articleHero['fields']['videoId'],
         ),
       );
     } else {
@@ -316,7 +396,9 @@ class JoinArticlesParts extends StatelessWidget {
                         ),
                       ),
                     ),
-                    backgroundColor: useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
+                    backgroundColor: useDarkMode
+                        ? Theme.of(context).backgroundColor
+                        : Colors.white,
                     body: NewsFeedWidget(tagId: tag['id']),
                   ),
                 ),
@@ -325,7 +407,7 @@ class JoinArticlesParts extends StatelessWidget {
             child: Container(
               decoration: BoxDecoration(
                 border: Border.all(
-                  color: Color.fromRGBO(255, 6, 0, .8),
+                  color: Theme.of(context).primaryColor,
                   width: 2.0,
                 ),
                 borderRadius: BorderRadius.circular(10),
@@ -335,7 +417,7 @@ class JoinArticlesParts extends StatelessWidget {
                 child: Text(
                   tag['fields']['tagName'],
                   style: TextStyle(
-                    color: Color.fromRGBO(255, 6, 0, .8),
+                    color: Theme.of(context).primaryColor,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -364,7 +446,9 @@ class JoinArticlesParts extends StatelessWidget {
         );
       } else if (element['contentType'] == 'atomVideo') {
         widgetsList.add(
-          ImageRenderer(element['fields']['thumbnail']['url']),
+          VideoRenderer(
+            element['fields']['videoId'],
+          ),
         );
       } else if (element['contentType'] == 'atomImage') {
         widgetsList.add(
@@ -415,7 +499,8 @@ class JoinArticlesParts extends StatelessWidget {
                           color: useDarkMode ? Colors.white : Colors.black,
                         ),
                         onPressed: () async => await launchUrl(
-                          Uri.parse("https://www.formula1.com/en/latest/article.${article.articleSlug}.${article.articleId}.html"),
+                          Uri.parse(
+                              "https://www.formula1.com/en/latest/article.${article.articleSlug}.${article.articleId}.html"),
                           mode: LaunchMode.externalApplication,
                         ),
                       ),
@@ -477,7 +562,8 @@ class TextParagraphRenderer extends StatelessWidget {
   TextParagraphRenderer(this.text);
 
   Widget build(BuildContext context) {
-    bool useDarkMode = Hive.box('settings').get('darkMode', defaultValue: false) as bool;
+    bool useDarkMode =
+        Hive.box('settings').get('darkMode', defaultValue: false) as bool;
     return Padding(
       padding: EdgeInsets.only(
         left: 10,
@@ -499,7 +585,8 @@ class TextParagraphRenderer extends StatelessWidget {
               ),
             );
           } else if (url.startsWith('https://www.formula1.com/en/results')) {
-            String standingsType = url.substring(0, url.length - 5).split('/')[5];
+            String standingsType =
+                url.substring(0, url.length - 5).split('/')[5];
             if (standingsType == "driver-standings") {
               Navigator.push(
                 context,
@@ -538,7 +625,8 @@ class TextParagraphRenderer extends StatelessWidget {
                   ),
                 ),
               );
-            } else if (url.startsWith("https://www.formula1.com/en/racing/${RegExp(r'\d{4}')}/")) {
+            } else if (url.startsWith(
+                "https://www.formula1.com/en/racing/${RegExp(r'\d{4}')}/")) {
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -607,7 +695,8 @@ class ImageRenderer extends StatelessWidget {
   ImageRenderer(this.imageUrl, {this.caption});
 
   Widget build(BuildContext context) {
-    bool useDarkMode = Hive.box('settings').get('darkMode', defaultValue: false) as bool;
+    bool useDarkMode =
+        Hive.box('settings').get('darkMode', defaultValue: false) as bool;
     return Padding(
       padding: EdgeInsets.only(bottom: 10),
       child: GestureDetector(
@@ -645,13 +734,14 @@ class ImageRenderer extends StatelessWidget {
                               clipBehavior: Clip.antiAlias,
                               child: CachedNetworkImage(
                                 imageUrl: imageUrl,
-                                placeholder: (context, url) => LoadingIndicatorUtil(),
+                                placeholder: (context, url) =>
+                                    LoadingIndicatorUtil(),
                                 errorWidget: (context, url, error) => Icon(
                                   Icons.error_outlined,
                                 ),
                                 fadeOutDuration: Duration(seconds: 1),
                                 fadeInDuration: Duration(seconds: 1),
-                                fit: BoxFit.cover,
+                                fit: BoxFit.scaleDown,
                               ),
                             ),
                             Align(
@@ -660,7 +750,8 @@ class ImageRenderer extends StatelessWidget {
                                 onPressed: () => Navigator.pop(context),
                                 icon: Icon(
                                   Icons.close_rounded,
-                                  color: useDarkMode ? Colors.white : Colors.black,
+                                  color:
+                                      useDarkMode ? Colors.white : Colors.black,
                                 ),
                               ),
                             ),
@@ -674,33 +765,139 @@ class ImageRenderer extends StatelessWidget {
             },
           );
         },
-        child: Container(
-          height: MediaQuery.of(context).size.height * 0.3,
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              fit: BoxFit.cover,
-              image: CachedNetworkImageProvider(
-                imageUrl,
-              ),
-            ),
-          ),
+        child: Stack(
           alignment: Alignment.bottomCenter,
-          child: caption != null
-              ? Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.all(4),
-                  color: Colors.black.withOpacity(0.7),
-                  child: Text(
-                    caption,
-                    style: TextStyle(
-                      color: Colors.white,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                )
-              : Container(),
+          children: [
+            CachedNetworkImage(
+              imageUrl: imageUrl,
+              placeholder: (context, url) => LoadingIndicatorUtil(),
+              errorWidget: (context, url, error) => Icon(Icons.error_outlined),
+              fadeOutDuration: Duration(seconds: 1),
+              fadeInDuration: Duration(seconds: 1),
+            ),
+            Container(
+              alignment: Alignment.bottomCenter,
+              child: caption != null
+                  ? Container(
+                      width: double.infinity,
+                      padding: EdgeInsets.all(4),
+                      color: Colors.black.withOpacity(0.7),
+                      child: Text(
+                        caption,
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    )
+                  : Container(),
+            ),
+          ],
         ),
+
+        //child: Container(
+        //  height: MediaQuery.of(context).size.height * 0.3,
+        //  decoration: BoxDecoration(
+        //    image: DecorationImage(
+        //      fit: BoxFit.contain,
+        //      image: CachedNetworkImageProvider(
+        //        imageUrl,
+        //      ),
+        //    ),
+        //  ),
+        //  alignment: Alignment.bottomCenter,
+        //  child: caption != null
+        //      ? Container(
+        //          width: double.infinity,
+        //          padding: EdgeInsets.all(4),
+        //          color: Colors.black.withOpacity(0.7),
+        //          child: Text(
+        //            caption,
+        //            style: TextStyle(
+        //              color: Colors.white,
+        //            ),
+        //           textAlign: TextAlign.center,
+        //          ),
+        //        )
+        //      : Container(),
+        //),
       ),
     );
+  }
+}
+
+class VideoRenderer extends StatefulWidget {
+  final String videoId;
+
+  VideoRenderer(
+    this.videoId,
+  );
+  @override
+  _VideoRendererState createState() => _VideoRendererState();
+}
+
+class _VideoRendererState extends State<VideoRenderer> {
+  ChewieController chewieController;
+  VideoPlayerController videoPlayerController;
+  bool isLoaded;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  //@override
+  Widget build(BuildContext build) {
+    bool useDarkMode =
+        Hive.box('settings').get('darkMode', defaultValue: false) as bool;
+    return FutureBuilder(
+      future: BrightCove().getVideoLink(widget.videoId),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          chewieController = ChewieController(
+            videoPlayerController: VideoPlayerController.network(
+              snapshot.data,
+            ),
+            autoInitialize: true,
+            aspectRatio: 16 / 9,
+            autoPlay: false,
+            looping: false,
+            errorBuilder: (context, errorMessage) {
+              return Center(
+                child: Text(
+                  errorMessage,
+                  style: TextStyle(
+                    color: useDarkMode ? Colors.white : Colors.black,
+                  ),
+                ),
+              );
+            },
+          );
+          return Padding(
+            padding: EdgeInsets.only(bottom: 5),
+            child: Container(
+              height: MediaQuery.of(context).size.width / (16 / 9),
+              child: Chewie(
+                controller: chewieController,
+              ),
+            ),
+          );
+        } else {
+          return snapshot.hasError
+              ? RequestErrorWidget(
+                  snapshot.error.toString(),
+                )
+              : LoadingIndicatorUtil();
+        }
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    videoPlayerController.dispose();
+    chewieController.pause();
+    chewieController.dispose();
+    super.dispose();
   }
 }

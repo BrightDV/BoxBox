@@ -1,4 +1,6 @@
 build/
 key.properties
-.dart_tools
+.dart_tool/
 android/.gradle
+.flutter-plugins
+.flutter-plugins-dependencies
