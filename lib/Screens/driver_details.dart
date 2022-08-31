@@ -86,6 +86,7 @@ class DriverImageProvider extends StatelessWidget {
     } else if (idOfImage == 'flag') {
       return await DriverFlagImage().getDriverFlagImage(driverId);
     }
+    return "none";
   }
 
   final String driverId;

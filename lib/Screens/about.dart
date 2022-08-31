@@ -83,11 +83,15 @@ class AboutScreen extends StatelessWidget {
                 label: Text(
                   "GitHub - Box, Box!",
                 ),
-                style: TextButton.styleFrom(
-                  primary: Colors.white,
-                  backgroundColor: Colors.black,
-                  onSurface: Colors.grey,
-                  elevation: 5,
+                style: ButtonStyle(
+                  foregroundColor: MaterialStateProperty.all<Color>(
+                    Colors.white,
+                  ),
+                  backgroundColor: MaterialStateProperty.all<Color>(
+                    Colors.black,
+                  ),
+                  //onSurface: Colors.grey,
+                  elevation: MaterialStateProperty.all<double>(5),
                 ),
               ),
             ),

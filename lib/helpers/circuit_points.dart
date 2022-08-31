@@ -50,20 +50,23 @@ class GetTrackGeoJSONPoints {
     String encodedCircuitName = circuitIdEncoder[circuitId];
     Uri url;
     if (circuitId == 'miami') {
-      url = Uri.parse('https://raw.githubusercontent.com/eribradl/f1-circuits/master/circuits/mi-2022.geojson');
+      url = Uri.parse(
+        'https://raw.githubusercontent.com/eribradl/f1-circuits/master/circuits/mi-2022.geojson',
+      );
     } else {
-      url = Uri.parse('https://raw.githubusercontent.com/bacinger/f1-circuits/master/circuits/${encodedCircuitName}.geojson');
+      url = Uri.parse(
+        'https://raw.githubusercontent.com/bacinger/f1-circuits/master/circuits/$encodedCircuitName.geojson',
+      );
     }
     var response = await http.get(url);
     Map<String, dynamic> responseAsJson = jsonDecode(response.body);
     List trackPoints = responseAsJson["features"][0]["geometry"]["coordinates"];
     List _tempMapCenter = responseAsJson["features"][0]["bbox"];
-    double latitude = _tempMapCenter[1] - (_tempMapCenter[1] - _tempMapCenter[3]) / 2;
-    double longitude = _tempMapCenter[0] - (_tempMapCenter[0] - _tempMapCenter[2]) / 2;
-    List mapCenter = [
-      latitude,
-      longitude
-    ];
+    double latitude =
+        _tempMapCenter[1] - (_tempMapCenter[1] - _tempMapCenter[3]) / 2;
+    double longitude =
+        _tempMapCenter[0] - (_tempMapCenter[0] - _tempMapCenter[2]) / 2;
+    List mapCenter = [latitude, longitude];
     List<List> circuitPoints = [
       trackPoints,
       mapCenter,

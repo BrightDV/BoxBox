@@ -17,8 +17,6 @@
  * Copyright (c) 2022, BrightDV
  */
 
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 import 'package:signalr_netcore/ihub_protocol.dart';

@@ -18,7 +18,6 @@
  */
 
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:boxbox/api/driver_components.dart';
 import 'package:boxbox/api/livetiming.dart';
@@ -175,14 +174,10 @@ class SessionFeed extends StatefulWidget {
   _SessionFeedState createState() => _SessionFeedState();
 }
 
-class _SessionFeedState extends State<SessionFeed>
-    with AutomaticKeepAliveClientMixin<SessionFeed> {
+class _SessionFeedState extends State<SessionFeed> {
   Future<Map> getSessionInfo() async {
     return await LiveTiming().sessionInfo();
   }
-
-  @override
-  bool get wantKeepAlive => false;
 
   @override
   void initState() {

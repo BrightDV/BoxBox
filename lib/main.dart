@@ -27,7 +27,9 @@ void main() async {
   //WidgetsFlutterBinding.ensureInitialized();
   //await FlutLabLogcat.init();
   await Hive.initFlutter();
+  // ignore: unused_local_variable
   final settingsBox = await Hive.openBox('settings');
+  // ignore: unused_local_variable
   final requestsBox = await Hive.openBox('requests');
   runApp(
     MyApp(),

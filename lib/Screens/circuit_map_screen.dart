@@ -32,7 +32,8 @@ class CircuitMapScreen extends StatelessWidget {
   const CircuitMapScreen(this.circuitId);
   @override
   Widget build(BuildContext context) {
-    bool useDarkMode = Hive.box('settings').get('darkMode', defaultValue: false) as bool;
+    bool useDarkMode =
+        Hive.box('settings').get('darkMode', defaultValue: false) as bool;
     return AlertDialog(
       title: Text(
         'Carte du Grand Prix',
@@ -40,7 +41,8 @@ class CircuitMapScreen extends StatelessWidget {
           color: Theme.of(context).primaryColor,
         ),
       ),
-      backgroundColor: useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
+      backgroundColor:
+          useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
       content: Builder(
         builder: (context) {
           var height = MediaQuery.of(context).size.height;
@@ -59,11 +61,15 @@ class CircuitMapScreen extends StatelessWidget {
         },
       ),
       actions: <Widget>[
-        FlatButton(
+        TextButton(
           onPressed: () {
             Navigator.of(context).pop();
           },
-          textColor: Theme.of(context).primaryColor,
+          style: ButtonStyle(
+            foregroundColor: MaterialStateProperty.all<Color>(
+              Theme.of(context).primaryColor,
+            ),
+          ),
           child: const Text('Fermer'),
         ),
       ],
@@ -90,7 +96,8 @@ class _MarkersPageState extends State<MarkersPage> {
   StreamSubscription<StatefulMapControllerStateChange> sub;
 
   Future<void> addPoints(String circuitId) async {
-    List<List> circuitPointsData = await GetTrackGeoJSONPoints().getCircuitPoints(
+    List<List> circuitPointsData =
+        await GetTrackGeoJSONPoints().getCircuitPoints(
       circuitId,
     );
     List trackPoints = circuitPointsData[0];
@@ -144,11 +151,7 @@ class _MarkersPageState extends State<MarkersPage> {
       layers: [
         TileLayerOptions(
           urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-          subdomains: [
-            'a',
-            'b',
-            'c'
-          ],
+          subdomains: ['a', 'b', 'c'],
         ),
         PolylineLayerOptions(
           polylines: statefulMapController.lines,
