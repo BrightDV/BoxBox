@@ -29,12 +29,14 @@ import 'package:hive_flutter/hive_flutter.dart';
 class ScheduleScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    bool useDarkMode = Hive.box('settings').get('darkMode', defaultValue: false) as bool;
+    bool useDarkMode =
+        Hive.box('settings').get('darkMode', defaultValue: false) as bool;
     return DefaultTabController(
       length: 2,
       initialIndex: 1,
       child: Scaffold(
-        backgroundColor: useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
+        backgroundColor:
+            useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
         body: TabBarView(
           children: [
             ScheduleWidget(false),
@@ -82,7 +84,8 @@ class ScheduleWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Map schedule = Hive.box('requests').get('schedule', defaultValue: {}) as Map;
+    Map schedule =
+        Hive.box('requests').get('schedule', defaultValue: {}) as Map;
     return FutureBuilder<List<Race>>(
       future: getRacesList(toCome),
       builder: (context, snapshot) {

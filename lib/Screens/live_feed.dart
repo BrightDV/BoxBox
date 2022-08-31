@@ -25,7 +25,8 @@ import 'package:boxbox/api/live_feed.dart';
 class LiveFeedScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    bool useDarkMode = Hive.box('settings').get('darkMode', defaultValue: false) as bool;
+    bool useDarkMode =
+        Hive.box('settings').get('darkMode', defaultValue: false) as bool;
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -35,7 +36,8 @@ class LiveFeedScreen extends StatelessWidget {
           ),
         ),
       ),
-      backgroundColor: useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
+      backgroundColor:
+          useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -59,7 +61,8 @@ class SessionInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool useDarkMode = Hive.box('settings').get('darkMode', defaultValue: false) as bool;
+    bool useDarkMode =
+        Hive.box('settings').get('darkMode', defaultValue: false) as bool;
     return FutureBuilder(
       future: getSessionInfo(),
       builder: (context, snapshot) {

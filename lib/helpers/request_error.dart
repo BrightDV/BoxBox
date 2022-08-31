@@ -26,7 +26,8 @@ class RequestErrorWidget extends StatelessWidget {
   RequestErrorWidget(this.snapshotError);
   @override
   Widget build(BuildContext context) {
-    bool useDarkMode = Hive.box('settings').get('darkMode', defaultValue: false) as bool;
+    bool useDarkMode =
+        Hive.box('settings').get('darkMode', defaultValue: false) as bool;
     return Padding(
       padding: EdgeInsets.all(
         10,

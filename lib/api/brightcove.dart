@@ -30,7 +30,8 @@ class BrightCove {
     Response res = await get(
       uri,
       headers: {
-        'Accept': ' application/json;pk=BCpkADawqM1hQVBuXkSlsl6hUsBZQMmrLbIfOjJQ3_n8zmPOhlNSwZhQBF6d5xggxm0t052lQjYyhqZR3FW2eP03YGOER9ihJkUnIhRZGBxuLhnL-QiFpvcDWIh_LvwN5j8zkjTtGKarhsdV',
+        'Accept':
+            ' application/json;pk=BCpkADawqM1hQVBuXkSlsl6hUsBZQMmrLbIfOjJQ3_n8zmPOhlNSwZhQBF6d5xggxm0t052lQjYyhqZR3FW2eP03YGOER9ihJkUnIhRZGBxuLhnL-QiFpvcDWIh_LvwN5j8zkjTtGKarhsdV',
       },
     );
     Map responseAsJson = jsonDecode(res.body);
@@ -38,7 +39,8 @@ class BrightCove {
   }
 
   Future<String> getVideoLink(String videoId) async {
-    int playerQuality = Hive.box('settings').get('playerQuality', defaultValue: 360) as int;
+    int playerQuality =
+        Hive.box('settings').get('playerQuality', defaultValue: 360) as int;
     Map streamsData = await fetchStreamData(videoId);
     String streamUrl = '';
     for (var element in streamsData['sources']) {

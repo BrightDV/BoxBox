@@ -24,9 +24,11 @@ import 'package:http/http.dart' as http;
 
 class LiveFeedFetcher {
   Future<bool> getSessionStatus() async {
-    var url = Uri.parse('https://livetiming.formula1.com/static/StreamingStatus.json');
+    var url = Uri.parse(
+        'https://livetiming.formula1.com/static/StreamingStatus.json');
     var response = await http.get(url);
-    Map<String, dynamic> responseAsJson = json.decode(utf8.decode(response.bodyBytes));
+    Map<String, dynamic> responseAsJson =
+        json.decode(utf8.decode(response.bodyBytes));
     String sessionStatus = responseAsJson['Status'];
     if (sessionStatus == "Available") {
       return true;
@@ -36,17 +38,21 @@ class LiveFeedFetcher {
   }
 
   Future<Map> getSessionInfo() async {
-    var url = Uri.parse('https://livetiming.formula1.com/static/SessionInfo.json');
+    var url =
+        Uri.parse('https://livetiming.formula1.com/static/SessionInfo.json');
     var response = await http.get(url);
-    Map<String, dynamic> responseAsJson = json.decode(utf8.decode(response.bodyBytes));
+    Map<String, dynamic> responseAsJson =
+        json.decode(utf8.decode(response.bodyBytes));
     return responseAsJson;
   }
 
   Future<Map> getSessionData(Map sessionInfo) async {
     String sessionDataPath = sessionInfo['Path'];
-    var url = Uri.parse('https://livetiming.formula1.com/static/${sessionDataPath}SPFeed.json');
+    var url = Uri.parse(
+        'https://livetiming.formula1.com/static/${sessionDataPath}SPFeed.json');
     var response = await http.get(url);
-    Map<String, dynamic> responseAsJson = json.decode(utf8.decode(response.bodyBytes));
+    Map<String, dynamic> responseAsJson =
+        json.decode(utf8.decode(response.bodyBytes));
     return responseAsJson;
   }
 }
