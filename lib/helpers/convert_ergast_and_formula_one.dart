@@ -117,4 +117,31 @@ class Converter {
     };
     return ergastToFormulaOne[circuitId];
   }
+
+  String driverIdFromErgast(String driverId) {
+    Map ergastToFormulaOne = {
+      "leclerc": "charles-leclerc",
+      "sainz": "carlos-sainz",
+      "max_verstappen": "max-verstappen",
+      "russell": "george-russell",
+      "hamilton": "lewis-hamilton",
+      "ocon": "esteban-ocon",
+      "perez": "sergio-perez",
+      "kevin_magnussen": "kevin-magnussen",
+      "bottas": "valtteri-bottas",
+      "norris": "lando-norris",
+      "tsunoda": "yuki-tsunoda",
+      "gasly": "pierre-gasly",
+      "alonso": "fernando-alonso",
+      "zhou": "guanyu-zhou",
+      "mick_schumacher": "mick-schumacher",
+      "stroll": "lance-stroll",
+      "hulkenberg": "nico-hulkenberg",
+      "albon": "alexander-albon",
+      "ricciardo": "daniel-ricciardo",
+      "latifi": "nicholas-latifi",
+      "vettel": "sebastian-vettel",
+    };
+    return ergastToFormulaOne[driverId];
+  }
 }

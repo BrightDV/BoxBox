@@ -17,6 +17,8 @@
  * Copyright (c) 2022, BrightDV
  */
 
+import 'package:boxbox/helpers/convert_ergast_and_formula_one.dart';
+
 class DriverResultsImage {
   Map<String, String> driverDecoder = {
     "leclerc":
@@ -68,40 +70,9 @@ class DriverResultsImage {
   }
 }
 
-class DriverWebsiteName {
-  Map<String, String> driverDecoder = {
-    "leclerc": "charles-leclerc",
-    "sainz": "carlos-sainz",
-    "max_verstappen": "max-verstappen",
-    "russell": "george-russell",
-    "hamilton": "lewis-hamilton",
-    "ocon": "esteban-ocon",
-    "perez": "sergio-perez",
-    "kevin_magnussen": "kevin-magnussen",
-    "bottas": "valtteri-bottas",
-    "norris": "lando-norris",
-    "tsunoda": "yuki-tsunoda",
-    "gasly": "pierre-gasly",
-    "alonso": "fernando-alonso",
-    "zhou": "guanyu-zhou",
-    "mick_schumacher": "mick-schumacher",
-    "stroll": "lance-stroll",
-    "hulkenberg": "nico-hulkenberg",
-    "albon": "alexander-albon",
-    "ricciardo": "daniel-ricciardo",
-    "latifi": "nicholas-latifi",
-    "vettel": "sebastian-vettel",
-  };
-  String getDriverWebsiteName(String driverId) {
-    String driverName = driverDecoder[driverId];
-
-    return driverName;
-  }
-}
-
 class DriverStatsImage {
   Future<String> getDriverImage(String driverId) async {
-    String driverPath = DriverWebsiteName().getDriverWebsiteName(driverId);
+    String driverPath = Converter().driverIdFromErgast(driverId);
     String driverImageUrl =
         "https://www.formula1.com/content/fom-website/en/drivers/$driverPath/_jcr_content/image.img.1920.medium.jpg/1646818893219.jpg";
     return driverImageUrl;
@@ -110,7 +81,7 @@ class DriverStatsImage {
 
 class DriverHelmetImage {
   Future<String> getDriverHelmetImage(String driverId) async {
-    String driverPath = DriverWebsiteName().getDriverWebsiteName(driverId);
+    String driverPath = Converter().driverIdFromErgast(driverId);
     String driverImageUrl =
         "https://www.formula1.com/content/fom-website/en/drivers/$driverPath/_jcr_content/helmet.img.png";
     return driverImageUrl;
@@ -119,7 +90,7 @@ class DriverHelmetImage {
 
 class DriverFlagImage {
   Future<String> getDriverFlagImage(String driverId) async {
-    String driverPath = DriverWebsiteName().getDriverWebsiteName(driverId);
+    String driverPath = Converter().driverIdFromErgast(driverId);
     String driverImageUrl =
         "https://www.formula1.com/content/fom-website/en/drivers/$driverPath/_jcr_content/countryFlag.img.jpg";
     return driverImageUrl;

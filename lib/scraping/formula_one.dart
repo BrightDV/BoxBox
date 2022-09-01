@@ -17,13 +17,15 @@
  * Copyright (c) 2022, BrightDV
  */
 
+import 'dart:convert';
+
 import 'package:boxbox/helpers/convert_ergast_and_formula_one.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' as parser;
 import 'package:html/dom.dart' as dom;
 
 class FormulaOneScraper {
-  Future<List<ScraperRaceResult>> scrape(
+  Future<List<ScraperRaceResult>> scrapeResults(
     String originalCircuitId,
     int practiceSession,
     String sessionName,
@@ -68,6 +70,88 @@ class FormulaOneScraper {
         );
       },
     );
+    return results;
+  }
+
+  Future<List<List>> scrapeDriversDetails(
+    String ergastDriverId,
+  ) async {
+    final String driverId = Converter().driverIdFromErgast(ergastDriverId);
+    final Uri driverDetailsUrl =
+        Uri.parse('https://www.formula1.com/en/drivers/$driverId.html');
+    http.Response response = await http.get(driverDetailsUrl);
+    List<List> results = [
+      [],
+      [],
+      [],
+      [
+        [],
+        [],
+      ],
+    ];
+    dom.Document document = parser.parse(
+      utf8.decode(response.bodyBytes),
+    );
+
+    List<dom.Element> _tempDetails = document.getElementsByTagName('tr');
+    for (int i = 0; i < 10; i++) {
+      results[0].add(_tempDetails[i].children[1].text);
+    }
+
+    List<dom.Element> _tempDriverArticles = document
+        .getElementsByClassName('articles')[0]
+        .getElementsByClassName('article-teaser-link');
+    _tempDriverArticles.forEach(
+      (element) => results[1].add(
+        [
+          element.attributes['href'].split('.')[2],
+          element.children[0].children[0].attributes['style']
+              .split('(')[1]
+              .split(')')[0],
+          element.children[0].children[1].children[1].text,
+          element.children[0].children[1].children[0].text,
+        ],
+      ),
+    );
+
+    List<dom.Element> _tempBiography = document
+        .getElementsByClassName('biography')[0]
+        .children[
+            document.getElementsByClassName('biography')[0].children.length - 1]
+        .children;
+    _tempBiography.forEach(
+      (element) {
+        results[2].add(element.text);
+      },
+    );
+
+    List<dom.Element> _tempDriverMedias =
+        document.getElementsByClassName('swiper-slide');
+    _tempDriverMedias.forEach(
+      (element) {
+        String imageUrl;
+        if (!element.children[0].children[0].attributes['data-path'].startsWith(
+          ('https://'),
+        )) {
+          imageUrl = 'https://formula1.com' +
+              element.children[0].children[0].attributes['data-path'];
+        } else {
+          imageUrl = element.children[0].children[0].attributes['data-path'];
+        }
+        imageUrl += '.img.640.medium.' +
+            element.children[0].children[0].attributes['data-extension'] +
+            element.children[0].children[0].attributes['data-suffix'];
+        results[3][0].add(imageUrl);
+      },
+    );
+
+    _tempDriverMedias = document.getElementsByClassName('gallery-description');
+    _tempDriverMedias.forEach(
+      (element) {
+        results[3][1].add(element.text);
+      },
+    );
+
     return results;
   }
 }

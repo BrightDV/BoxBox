@@ -50,7 +50,7 @@ class FreePracticeScreen extends StatelessWidget {
       backgroundColor:
           useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
       body: FutureBuilder(
-        future: FormulaOneScraper().scrape(
+        future: FormulaOneScraper().scrapeResults(
           race.circuitId,
           sessionIndex,
           'practice-$sessionIndex',

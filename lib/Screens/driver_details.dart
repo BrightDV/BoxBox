@@ -17,6 +17,9 @@
  * Copyright (c) 2022, BrightDV
  */
 
+import 'package:boxbox/api/news.dart';
+import 'package:boxbox/scraping/formula_one.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:boxbox/helpers/driver_image.dart';
@@ -55,20 +58,21 @@ class DriverDetailsScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              DriverImageProvider(this.driverId, 'driver'),
-              Padding(
-                padding: EdgeInsets.all(10),
-                child: Text(
-                  '$givenName $familyName',
-                  style: TextStyle(
-                    color: useDarkMode
-                        ? Colors.white
-                        : Theme.of(context).primaryColor,
-                    fontSize: 20,
-                  ),
-                ),
+              Center(
+                child: DriverImageProvider(driverId, 'driver'),
               ),
-              DriverImageProvider(this.driverId, 'helmet'),
+              FutureBuilder(
+                future: FormulaOneScraper().scrapeDriversDetails(driverId),
+                builder: (context, snapshot) => snapshot.hasError
+                    ? RequestErrorWidget(
+                        snapshot.error.toString(),
+                      )
+                    : snapshot.hasData
+                        ? DriverDetailsFragment(
+                            snapshot.data,
+                          )
+                        : LoadingIndicatorUtil(),
+              ),
             ],
           ),
         ),
@@ -108,6 +112,188 @@ class DriverImageProvider extends StatelessWidget {
               )
             : LoadingIndicatorUtil();
       },
+    );
+  }
+}
+
+class DriverDetailsFragment extends StatelessWidget {
+  final List<List> driverDetails;
+  const DriverDetailsFragment(this.driverDetails, {Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    bool useDarkMode =
+        Hive.box('settings').get('darkMode', defaultValue: false) as bool;
+    final List<String> driverInfosLabels = [
+      'Équipe',
+      'Pays',
+      'Podiums',
+      'Points',
+      'Grand-Prix',
+      'Champion du monde',
+      'Meilleur résultat (course)',
+      'Meilleur résultat (grille)',
+      'Date de naissance',
+      'Lieu de naissance',
+    ];
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Padding(
+          padding: EdgeInsets.all(15),
+          child: Column(
+            children: [
+              for (int i = 0; i < driverDetails[0].length; i++)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        driverInfosLabels[i],
+                        textAlign: TextAlign.start,
+                        style: TextStyle(
+                          color: useDarkMode ? Colors.white : Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Text(
+                        driverDetails[0][i],
+                        textAlign: TextAlign.start,
+                        style: TextStyle(
+                          color: useDarkMode ? Colors.white : Colors.black,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+            ],
+          ),
+        ),
+        Column(
+          children: [
+            Text(
+              'Articles',
+              style: TextStyle(
+                color: useDarkMode ? Colors.white : Colors.black,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  for (var item in driverDetails[1])
+                    FutureBuilder(
+                      future: F1NewsFetcher().getArticleData(item[0]),
+                      builder: (context, snapshot) {
+                        Article sd = snapshot.data;
+                        return snapshot.hasError
+                            ? RequestErrorWidget(
+                                snapshot.error.toString(),
+                              )
+                            : snapshot.hasData
+                                ? NewsItem(
+                                    News(
+                                      sd.articleId,
+                                      'News',
+                                      sd.articleSlug,
+                                      sd.articleName,
+                                      '',
+                                      sd.publishedDate,
+                                      sd.articleHero['contentType'] ==
+                                              'atomVideo'
+                                          ? sd.articleHero['fields']
+                                              ['thumbnail']['url']
+                                          : sd.articleHero['fields']['image']
+                                              ['url'],
+                                    ),
+                                    true,
+                                  )
+                                : Container(
+                                    height: 200,
+                                    child: LoadingIndicatorUtil(),
+                                  );
+                      },
+                    ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        Padding(
+          padding: EdgeInsets.all(15),
+          child: Column(
+            children: [
+              Text(
+                'Biographie',
+                style: TextStyle(
+                  color: useDarkMode ? Colors.white : Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              for (String biographyParagraph in driverDetails[2])
+                Text(
+                  '\n' + biographyParagraph,
+                  style: TextStyle(
+                    color: useDarkMode ? Colors.white : Colors.black,
+                  ),
+                  textAlign: TextAlign.justify,
+                )
+            ],
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.only(left: 5, right: 5),
+          child: Column(
+            children: [
+              Padding(
+                padding: EdgeInsets.only(bottom: 15),
+                child: Text(
+                  'Galerie',
+                  style: TextStyle(
+                    color: useDarkMode ? Colors.white : Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              CarouselSlider(
+                items: [
+                  for (int i = 0; i < driverDetails[3][0].length; i++)
+                    Column(
+                      children: [
+                        Image.network(driverDetails[3][0][i]),
+                        Padding(
+                          padding: EdgeInsets.only(
+                            top: 10,
+                          ),
+                          child: Text(
+                            driverDetails[3][1][i].toString(),
+                            style: TextStyle(
+                              color: useDarkMode ? Colors.white : Colors.black,
+                              fontSize: 12,
+                            ),
+                            textAlign: TextAlign.justify,
+                          ),
+                        ),
+                      ],
+                    ),
+                ],
+                options: CarouselOptions(
+                  height: 350,
+                  autoPlay: true,
+                  viewportFraction: 0.85,
+                  autoPlayInterval: Duration(seconds: 7),
+                  enlargeCenterPage: true,
+                  aspectRatio: 16 / 9,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
