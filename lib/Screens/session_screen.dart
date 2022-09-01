@@ -19,7 +19,6 @@
 
 import 'dart:async';
 
-import 'package:boxbox/Screens/free_practice_screen.dart';
 import 'package:boxbox/api/driver_components.dart';
 import 'package:boxbox/api/livetiming.dart';
 import 'package:boxbox/helpers/driver_result_item.dart';
