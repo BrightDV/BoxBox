@@ -45,7 +45,7 @@ class _GrandPrixRunningScreenState extends State<GrandPrixRunningScreen> {
           height: AppBar().preferredSize.height,
           width: AppBar().preferredSize.width,
           child: Marquee(
-            text: widget.event.mettingOfficialName,
+            text: widget.event.meetingOfficialName,
             style: TextStyle(
               fontWeight: FontWeight.w600,
             ),
@@ -116,7 +116,7 @@ class SessionItem extends StatefulWidget {
 }
 
 class _SessionItemState extends State<SessionItem> {
-  Map sessionsAbreviations = {
+  Map sessionsAbbreviations = {
     'r': 'Course',
     'q': 'Qualifications',
     's': 'Sprint',
@@ -206,7 +206,7 @@ class _SessionItemState extends State<SessionItem> {
               child: Column(
                 children: [
                   Text(
-                    sessionsAbreviations[widget.session.sessionAbreviation],
+                    sessionsAbbreviations[widget.session.sessionsAbbreviation],
                     style: TextStyle(
                       color: useDarkMode ? Colors.white : Colors.black,
                       fontSize: 20,
@@ -290,7 +290,7 @@ class _SessionItemState extends State<SessionItem> {
         context,
         MaterialPageRoute(
           builder: (context) => SessionScreen(
-            sessionsAbreviations[widget.session.sessionAbreviation],
+            sessionsAbbreviations[widget.session.sessionsAbbreviation],
             widget.session,
           ),
         ),

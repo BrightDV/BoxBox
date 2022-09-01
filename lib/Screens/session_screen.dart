@@ -19,6 +19,7 @@
 
 import 'dart:async';
 
+import 'package:boxbox/Screens/free_practice_screen.dart';
 import 'package:boxbox/api/driver_components.dart';
 import 'package:boxbox/api/livetiming.dart';
 import 'package:boxbox/helpers/driver_result_item.dart';
@@ -31,11 +32,11 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class SessionScreen extends StatefulWidget {
-  final String sessionAbreviation;
+  final String sessionsAbbreviation;
   final Session session;
 
   const SessionScreen(
-    this.sessionAbreviation,
+    this.sessionsAbbreviation,
     this.session,
   );
   _SessionScreenState createState() => _SessionScreenState();
@@ -63,7 +64,7 @@ class _SessionScreenState extends State<SessionScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          widget.sessionAbreviation,
+          widget.sessionsAbbreviation,
           style: TextStyle(
             fontWeight: FontWeight.w600,
           ),
@@ -149,7 +150,7 @@ class _SessionScreenState extends State<SessionScreen> {
                                 ),
                               ),
                               Text(
-                                "Evènements",
+                                "Évènements",
                                 style: TextStyle(
                                   fontWeight: FontWeight.w600,
                                 ),
@@ -166,6 +167,22 @@ class _SessionScreenState extends State<SessionScreen> {
                   ),
                 ),
     );
+  }
+}
+
+class CompletedSessionScreen extends StatelessWidget {
+  final String sessionType;
+  final List sessionDetails;
+  const CompletedSessionScreen(this.sessionType, this.sessionDetails, {Key key})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return sessionType == 'free-practice'
+        ? Text('Free Practice Finished!')
+        : sessionType == 'qualifying'
+            ? Text('Qualifying!')
+            : Text('Race!');
   }
 }
 

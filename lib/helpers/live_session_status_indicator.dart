@@ -76,7 +76,7 @@ class LiveSessionStatusIndicator extends StatelessWidget {
                                 width: MediaQuery.of(context).size.width - 60,
                                 height: 20,
                                 child: Marquee(
-                                  text: '${snapshot.data.mettingOfficialName}',
+                                  text: '${snapshot.data.meetingOfficialName}',
                                   style: TextStyle(
                                     fontSize: 12,
                                     color: Colors.white,

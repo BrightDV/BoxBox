@@ -24,7 +24,7 @@ import 'package:http/http.dart';
 class Event {
   final String raceId;
   final String meetingName;
-  final String mettingOfficialName;
+  final String meetingOfficialName;
   final String meetingCountryName;
   final DateTime meetingStartDate;
   final DateTime meetingEndDate;
@@ -39,7 +39,7 @@ class Event {
   Event(
     this.raceId,
     this.meetingName,
-    this.mettingOfficialName,
+    this.meetingOfficialName,
     this.meetingCountryName,
     this.meetingStartDate,
     this.meetingEndDate,
@@ -54,13 +54,13 @@ class Event {
 
 class Session {
   final String state;
-  final String sessionAbreviation;
+  final String sessionsAbbreviation;
   final DateTime endTime;
   final DateTime startTime;
 
   const Session(
     this.state,
-    this.sessionAbreviation,
+    this.sessionsAbbreviation,
     this.endTime,
     this.startTime,
   );

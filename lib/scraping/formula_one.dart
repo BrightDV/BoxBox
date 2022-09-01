@@ -34,6 +34,7 @@ class FormulaOneScraper {
   }) async {
     String circuitId;
     String circuitName;
+
     if (fromErgast) {
       circuitId =
           Converter().circuitIdFromErgastToFormulaOne(originalCircuitId);
@@ -43,12 +44,13 @@ class FormulaOneScraper {
       circuitId = originalCircuitId;
       circuitName = originalCircuitName;
     }
+
     final Uri resultsUrl = Uri.parse(
         'https://www.formula1.com/en/results.html/2022/races/$circuitId/$circuitName/$sessionName.html');
-    List<ScraperRaceResult> results = [];
-    http.Response response = await http.get(resultsUrl);
 
+    http.Response response = await http.get(resultsUrl);
     dom.Document document = parser.parse(response.body);
+    List<ScraperRaceResult> results = [];
     List<dom.Element> _tempResults = document.getElementsByTagName('tr');
     _tempResults.removeAt(0);
     _tempResults.forEach(
@@ -66,6 +68,57 @@ class FormulaOneScraper {
             result.children[5].text,
             result.children[6].text,
             result.children[7].text,
+          ),
+        );
+      },
+    );
+    return results;
+  }
+
+  Future<List<ScraperQualifyingResult>> scrapeQualifyingResults(
+    String originalCircuitId,
+    int practiceSession,
+    String sessionName,
+    bool fromErgast, {
+    String originalCircuitName,
+  }) async {
+    String circuitId;
+    String circuitName;
+
+    if (fromErgast) {
+      circuitId =
+          Converter().circuitIdFromErgastToFormulaOne(originalCircuitId);
+      circuitName =
+          Converter().circuitNameFromErgastToFormulaOne(originalCircuitId);
+    } else {
+      circuitId = originalCircuitId;
+      circuitName = originalCircuitName;
+    }
+
+    final Uri resultsUrl = Uri.parse(
+        'https://www.formula1.com/en/results.html/2022/races/$circuitId/$circuitName/$sessionName.html');
+
+    http.Response response = await http.get(resultsUrl);
+    dom.Document document = parser.parse(response.body);
+    List<dom.Element> _tempResults = document.getElementsByTagName('tr');
+    List<ScraperQualifyingResult> results = [];
+    _tempResults.removeAt(0);
+    _tempResults.forEach(
+      (result) {
+        results.add(
+          ScraperQualifyingResult(
+            result.children[1].text,
+            result.children[2].text,
+            [
+              result.children[3].children[0].text,
+              result.children[3].children[1].text,
+              result.children[3].children[2].text,
+            ],
+            result.children[4].text,
+            result.children[5].text,
+            result.children[6].text,
+            result.children[7].text,
+            result.children[8].text,
           ),
         );
       },
@@ -172,6 +225,28 @@ class ScraperRaceResult {
     this.car,
     this.time,
     this.gap,
+    this.laps,
+  );
+}
+
+class ScraperQualifyingResult {
+  final String position;
+  final String number;
+  final List driver;
+  final String car;
+  final String timeq1;
+  final String timeq2;
+  final String timeq3;
+  final String laps;
+
+  ScraperQualifyingResult(
+    this.position,
+    this.number,
+    this.driver,
+    this.car,
+    this.timeq1,
+    this.timeq2,
+    this.timeq3,
     this.laps,
   );
 }
