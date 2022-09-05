@@ -80,7 +80,6 @@ class EventTracker {
       return true;
     } else {
       return false;
-      //return true;
     }
   }
 
@@ -94,9 +93,9 @@ class EventTracker {
         'locale': 'fr',
       },
     );
-    Map formatedResponse = jsonDecode(res.body);
+    Map formattedResponse = jsonDecode(res.body);
 
-    return formatedResponse;
+    return formattedResponse;
   }
 
   Future<Event> parseEvent() async {
@@ -107,16 +106,13 @@ class EventTracker {
     );
     List<Session> sessions = [
       Session(
-        //eventAsJson['seasonContext']['timetables'][0]['state'],
-        'started',
+        eventAsJson['seasonContext']['timetables'][0]['state'],
         eventAsJson['seasonContext']['timetables'][0]['session'],
         DateTime.parse(
           eventAsJson['seasonContext']['timetables'][0]['endTime'],
         ),
         DateTime.parse(
           eventAsJson['seasonContext']['timetables'][0]['startTime'],
-        ).add(
-          Duration(days: -10),
         ),
       ),
       Session(

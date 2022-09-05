@@ -130,40 +130,9 @@ class _SessionScreenState extends State<SessionScreen> {
                     ),
                   ),
                 )
-              : DefaultTabController(
-                  length: 2,
-                  child: Scaffold(
-                    appBar: PreferredSize(
-                      preferredSize: Size(200, 60),
-                      child: Container(
-                        height: 50,
-                        child: Card(
-                          elevation: 3,
-                          color: Theme.of(context).primaryColor,
-                          child: TabBar(
-                            tabs: [
-                              Text(
-                                "Tours",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              Text(
-                                "Évènements",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    body: WebView(
-                      initialUrl:
-                          'https://www.formula1.com/en/live-experience-webview.html',
-                    ),
-                  ),
+              : WebView(
+                  initialUrl:
+                      'https://www.formula1.com/en/live-experience-webview.html',
                 ),
     );
   }
