@@ -177,6 +177,7 @@ class DriverDetailsFragment extends StatelessWidget {
               'Articles',
               style: TextStyle(
                 color: useDarkMode ? Colors.white : Colors.black,
+                fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -231,6 +232,7 @@ class DriverDetailsFragment extends StatelessWidget {
                 'Biographie',
                 style: TextStyle(
                   color: useDarkMode ? Colors.white : Colors.black,
+                  fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -255,6 +257,7 @@ class DriverDetailsFragment extends StatelessWidget {
                   'Galerie',
                   style: TextStyle(
                     color: useDarkMode ? Colors.white : Colors.black,
+                    fontSize: 18,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
