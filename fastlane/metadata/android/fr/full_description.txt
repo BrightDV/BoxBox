@@ -1,0 +1,9 @@
+Avec Box, box! suivez les dernières actualités de vos pilotes et équipes favoris.
+Soyez au courant de toutes les batailles, sur et en dehors de la piste !
+Fonctionnalités:
+- Lisez tous les articles du site officiel avec son lecteur intégré (même les vidéos !).
+- Les derniers classements (pilotes et équipes)
+- Le calendrier avec les résultats des précédents Grand-Prix de la saison (essais libres, qualifications et courses) 
+- Pendant un Grand-Prix, suivez les horaires des différentes sessions
+
+Soyez dans l'action même sans publicité ni traceur ;)

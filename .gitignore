@@ -5,4 +5,3 @@ build/
 key.properties
 .packages
 pubspec.lock
-fastlane/
