@@ -6,3 +6,4 @@ key.properties
 .packages
 pubspec.lock
 .packages
+fastlane/

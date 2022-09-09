@@ -131,6 +131,7 @@ class _SessionScreenState extends State<SessionScreen> {
                   ),
                 )
               : WebView(
+                  javascriptMode: JavascriptMode.unrestricted,
                   initialUrl:
                       'https://www.formula1.com/en/live-experience-webview.html',
                 ),
