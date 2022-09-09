@@ -14,7 +14,7 @@
 
 [<img src="https://img.shields.io/badge/GitHub-181717?logo=github&logoColor=white"
      alt="Download from GitHub"
-     height="60">](https://github.com/BrightDV/BoxBpx/releases)
+     height="60">](https://github.com/BrightDV/BoxBox/releases)
 
 ## Screenshots
 
