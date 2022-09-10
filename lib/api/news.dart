@@ -916,6 +916,7 @@ class _VideoRendererState extends State<VideoRenderer> {
             ),
             autoInitialize: true,
             aspectRatio: 16 / 9,
+            allowedScreenSleep: false,
             autoPlay: false,
             looping: false,
             errorBuilder: (context, errorMessage) {
