@@ -18,6 +18,7 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class AppearanceScreen extends StatefulWidget {
@@ -36,16 +37,16 @@ class _AppearanceScreenState extends State<AppearanceScreen> {
     String newsLayout =
         Hive.box('settings').get('newsLayout', defaultValue: 'big') as String;
     Map valueToString = {
-      'big': 'Complet',
-      'medium': 'Titre et Image',
-      'condensed': 'Titre et Description',
-      'small': 'Titre',
+      'big': AppLocalizations.of(context).articleFull,
+      'medium': AppLocalizations.of(context).articleTitleAndImage,
+      'condensed': AppLocalizations.of(context).articleTitleAndDescription,
+      'small': AppLocalizations.of(context).articleTitle,
     };
     String newsLayoutFormated = valueToString[newsLayout];
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Apparence',
+          AppLocalizations.of(context).appearance,
           style: TextStyle(
             fontWeight: FontWeight.w600,
           ),
@@ -57,7 +58,7 @@ class _AppearanceScreenState extends State<AppearanceScreen> {
         children: [
           SwitchListTile(
             title: Text(
-              'Thème sombre',
+              AppLocalizations.of(context).darkMode,
               style: TextStyle(
                 color: useDarkMode ? Colors.white : Colors.black,
               ),
@@ -72,7 +73,7 @@ class _AppearanceScreenState extends State<AppearanceScreen> {
           ),
           ListTile(
             title: Text(
-              'Disposition des actualités',
+              AppLocalizations.of(context).newsLayout,
               style: TextStyle(
                 color: useDarkMode ? Colors.white : Colors.black,
               ),
@@ -88,10 +89,12 @@ class _AppearanceScreenState extends State<AppearanceScreen> {
                   setState(
                     () {
                       Map stringToValue = {
-                        'Complet': 'big',
-                        'Titre et Image': 'medium',
-                        'Titre et Description': 'condensed',
-                        'Titre': 'small',
+                        AppLocalizations.of(context).articleFull: 'big',
+                        AppLocalizations.of(context).articleTitleAndImage:
+                            'medium',
+                        AppLocalizations.of(context).articleTitleAndDescription:
+                            'condensed',
+                        AppLocalizations.of(context).articleTitle: 'small',
                       };
                       newsLayout = stringToValue[newValue];
                       Hive.box('settings').put('newsLayout', newsLayout);
@@ -101,10 +104,10 @@ class _AppearanceScreenState extends State<AppearanceScreen> {
                 }
               },
               items: <String>[
-                'Complet',
-                'Titre et Image',
-                'Titre et Description',
-                'Titre',
+                AppLocalizations.of(context).articleFull,
+                AppLocalizations.of(context).articleTitleAndImage,
+                AppLocalizations.of(context).articleTitleAndDescription,
+                AppLocalizations.of(context).articleTitle,
               ].map<DropdownMenuItem<String>>(
                 (String value) {
                   return DropdownMenuItem<String>(

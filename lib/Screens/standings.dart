@@ -25,6 +25,7 @@ import 'package:boxbox/api/driver_components.dart';
 import 'package:boxbox/api/ergast.dart';
 import 'package:boxbox/api/team_components.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class StandingsScreen extends StatefulWidget {
@@ -62,13 +63,13 @@ class _StandingsScreenState extends State<StandingsScreen> {
               child: TabBar(
                 tabs: [
                   Text(
-                    "PILOTES",
+                    AppLocalizations.of(context).drivers,
                     style: TextStyle(
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                   Text(
-                    "ÉQUIPES",
+                    AppLocalizations.of(context).teams,
                     style: TextStyle(
                       fontWeight: FontWeight.w600,
                     ),

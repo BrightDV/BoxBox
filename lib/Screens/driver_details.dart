@@ -21,6 +21,7 @@ import 'package:boxbox/api/news.dart';
 import 'package:boxbox/scraping/formula_one.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:boxbox/helpers/driver_image.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
@@ -125,22 +126,22 @@ class DriverDetailsFragment extends StatelessWidget {
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: false) as bool;
     final List<String> driverInfosLabels = [
-      'Équipe',
-      'Pays',
-      'Podiums',
-      'Points',
-      'Grand-Prix',
-      'Champion du monde',
-      'Meilleur résultat (course)',
-      'Meilleur résultat (grille)',
-      'Date de naissance',
-      'Lieu de naissance',
+      AppLocalizations.of(context).team,
+      AppLocalizations.of(context).country,
+      AppLocalizations.of(context).podiums,
+      AppLocalizations.of(context).grandsPrix,
+      AppLocalizations.of(context).points,
+      AppLocalizations.of(context).worldChampionships,
+      AppLocalizations.of(context).highestRaceFinish,
+      AppLocalizations.of(context).highestGridPosition,
+      AppLocalizations.of(context).dateOfBirth,
+      AppLocalizations.of(context).placeOfBirth,
     ];
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Padding(
-          padding: EdgeInsets.all(15),
+          padding: EdgeInsets.all(5),
           child: Column(
             children: [
               for (int i = 0; i < driverDetails[0].length; i++)
@@ -148,16 +149,19 @@ class DriverDetailsFragment extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Expanded(
+                      flex: 3,
                       child: Text(
                         driverInfosLabels[i],
                         textAlign: TextAlign.start,
                         style: TextStyle(
                           color: useDarkMode ? Colors.white : Colors.black,
                           fontWeight: FontWeight.bold,
+                          fontSize: 14,
                         ),
                       ),
                     ),
                     Expanded(
+                      flex: 2,
                       child: Text(
                         driverDetails[0][i],
                         textAlign: TextAlign.start,
@@ -174,7 +178,7 @@ class DriverDetailsFragment extends StatelessWidget {
         Column(
           children: [
             Text(
-              'Articles',
+              AppLocalizations.of(context).news,
               style: TextStyle(
                 color: useDarkMode ? Colors.white : Colors.black,
                 fontSize: 18,
@@ -229,7 +233,7 @@ class DriverDetailsFragment extends StatelessWidget {
           child: Column(
             children: [
               Text(
-                'Biographie',
+                AppLocalizations.of(context).biography,
                 style: TextStyle(
                   color: useDarkMode ? Colors.white : Colors.black,
                   fontSize: 18,
@@ -254,7 +258,7 @@ class DriverDetailsFragment extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.only(bottom: 15),
                 child: Text(
-                  'Galerie',
+                  AppLocalizations.of(context).gallery,
                   style: TextStyle(
                     color: useDarkMode ? Colors.white : Colors.black,
                     fontSize: 18,

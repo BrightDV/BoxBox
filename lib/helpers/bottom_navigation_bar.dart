@@ -18,6 +18,7 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:boxbox/helpers/drawer.dart';
 import 'package:boxbox/Screens/home.dart';
@@ -81,7 +82,7 @@ class _MainBottomNavigationBarState extends State<MainBottomNavigationBar> {
             activeIcon: Icon(
               Icons.feed,
             ),
-            label: 'Actualités',
+            label: AppLocalizations.of(context).news,
           ),
           BottomNavigationBarItem(
             icon: Icon(
@@ -90,7 +91,7 @@ class _MainBottomNavigationBarState extends State<MainBottomNavigationBar> {
             activeIcon: Icon(
               Icons.emoji_events,
             ),
-            label: 'Classements',
+            label: AppLocalizations.of(context).standings,
           ),
           BottomNavigationBarItem(
             icon: Icon(
@@ -99,7 +100,7 @@ class _MainBottomNavigationBarState extends State<MainBottomNavigationBar> {
             activeIcon: Icon(
               Icons.calendar_today,
             ),
-            label: 'Calendrier',
+            label: AppLocalizations.of(context).schedule,
           ),
         ],
         onTap: _onItemTapped,

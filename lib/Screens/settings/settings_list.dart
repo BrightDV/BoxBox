@@ -17,6 +17,7 @@
  * Copyright (c) 2022, BrightDV
  */
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:boxbox/Screens/settings/appearance.dart';
 import 'package:boxbox/Screens/settings/player.dart';
@@ -44,7 +45,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
       appBar: AppBar(
         title: Text(
-          'Paramètres',
+          AppLocalizations.of(context).settings,
           style: TextStyle(
             fontWeight: FontWeight.w600,
           ),
@@ -58,7 +59,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               children: [
                 ListTile(
                   title: Text(
-                    'Apparence',
+                    AppLocalizations.of(context).appearance,
                     style: TextStyle(
                       color: useDarkMode ? Colors.white : Colors.black,
                     ),
@@ -81,7 +82,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
                 ListTile(
                   title: Text(
-                    'Lecteur',
+                    AppLocalizations.of(context).player,
                     style: TextStyle(
                       color: useDarkMode ? Colors.white : Colors.black,
                     ),

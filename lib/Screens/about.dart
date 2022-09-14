@@ -18,6 +18,7 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -30,7 +31,7 @@ class AboutScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'À propos',
+          AppLocalizations.of(context).about,
           style: TextStyle(
             fontWeight: FontWeight.w600,
           ),
@@ -60,7 +61,7 @@ class AboutScreen extends StatelessWidget {
           Padding(
             padding: EdgeInsets.all(10),
             child: Text(
-              'Box, Box! est une application open-source disponible sur GitHub. Elle a pour but de permettre de suivre la Formule 1 plus simplement, sans pubs et sans traqueurs !',
+              AppLocalizations.of(context).aboutDescription,
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 20,
@@ -99,7 +100,7 @@ class AboutScreen extends StatelessWidget {
           Padding(
             padding: EdgeInsets.all(20),
             child: Text(
-              'Application développée par BrightDV',
+              AppLocalizations.of(context).aboutBottomLine,
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 11,

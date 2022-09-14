@@ -18,6 +18,7 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class PlayerScreen extends StatefulWidget {
@@ -36,7 +37,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Lecteur',
+          AppLocalizations.of(context).player,
           style: TextStyle(
             fontWeight: FontWeight.w600,
           ),
@@ -52,13 +53,13 @@ class _PlayerScreenState extends State<PlayerScreen> {
           children: [
             ListTile(
               title: Text(
-                'Qualité du lecteur',
+                AppLocalizations.of(context).playerQuality,
                 style: TextStyle(
                   color: useDarkMode ? Colors.white : Colors.black,
                 ),
               ),
               subtitle: Text(
-                'Qualité du lecteur utilisée pour les vidéos dans les actualités..',
+                AppLocalizations.of(context).playerQualitySub,
                 style: TextStyle(
                   color: useDarkMode ? Colors.white : Colors.black,
                   fontSize: 13,

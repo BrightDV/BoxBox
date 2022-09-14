@@ -24,6 +24,7 @@ import 'package:boxbox/helpers/request_error.dart';
 import 'package:boxbox/api/ergast.dart';
 import 'package:boxbox/api/race_components.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class ScheduleScreen extends StatelessWidget {
@@ -53,13 +54,13 @@ class ScheduleScreen extends StatelessWidget {
               child: TabBar(
                 tabs: [
                   Text(
-                    "PASSÉS",
+                    AppLocalizations.of(context).previous,
                     style: TextStyle(
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                   Text(
-                    "À VENIR",
+                    AppLocalizations.of(context).next,
                     style: TextStyle(
                       fontWeight: FontWeight.w600,
                     ),
