@@ -62,10 +62,7 @@ class MyApp extends StatelessWidget {
         backgroundColor: Color(0xff12121a),
       ),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
-      //supportedLocales: AppLocalizations.supportedLocales,
-      supportedLocales: [
-        Locale('en', ''),
-      ],
+      supportedLocales: AppLocalizations.supportedLocales,
       home: MainBottomNavigationBar(),
     );
   }
