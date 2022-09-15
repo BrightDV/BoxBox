@@ -63,6 +63,8 @@ class DriverResultsImage {
         "https://www.formula1.com/content/dam/fom-website/drivers/N/NICLAF01_Nicholas_Latifi/niclaf01.png",
     "vettel":
         "https://www.formula1.com/content/dam/fom-website/drivers/S/SEBVET01_Sebastian_Vettel/sebvet01.png",
+    "de_vries":
+        "https://www.formula1.com/content/dam/fom-website/drivers/N/NYCDEV01_Nyck_De%20Vries/nycdev01.png.transform/2col/image.png",
   };
   Future<String> getDriverImageURL(String driverId) async {
     String driverImageUrl = driverDecoder[driverId];
