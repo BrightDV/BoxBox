@@ -50,7 +50,11 @@ See the live demo [here. (Be aware that the live demo can be outdated)](https://
 | Live Timing |  Formula 1 |  https://formula1.com/ |
 
 ## Translation
-For the moment, the app is only available in french, but it will be available in other languages, such as english.
+- Create a file named **[your language ISO code, like en, fr, etc].arb**
+
+Theses files are used by Flutter to provide you the translation.
+- Translate [this file](lib/l10n/app_en.arb) to your language (only the text between the quotes).
+- Finally, make a Pull Request or an Issue and attach the code to it!
 
 ## License
 [![GNU GPLv3 Image](https://www.gnu.org/graphics/gplv3-127x51.png)](https://www.gnu.org/licenses/gpl-3.0.en.html)  
