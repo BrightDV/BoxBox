@@ -23,6 +23,7 @@ import 'package:boxbox/Screens/session_screen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:loading_indicator/loading_indicator.dart';
@@ -38,7 +39,7 @@ class _GrandPrixRunningScreenState extends State<GrandPrixRunningScreen> {
   @override
   Widget build(BuildContext context) {
     bool useDarkMode =
-        Hive.box('settings').get('darkMode', defaultValue: false) as bool;
+        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     return Scaffold(
       appBar: AppBar(
         title: SizedBox(
@@ -116,34 +117,33 @@ class SessionItem extends StatefulWidget {
 }
 
 class _SessionItemState extends State<SessionItem> {
-  Map sessionsAbbreviations = {
-    'r': 'Course',
-    'q': 'Qualifications',
-    's': 'Sprint',
-    'sq': 'Qualifications Sprint',
-    'p3': 'Essais Libres 3',
-    'p2': 'Essais Libres 2',
-    'p1': 'Essais Libres 1',
-  };
-  List months = [
-    'JANV',
-    'FEV',
-    'MARS',
-    'AVR',
-    'MAI',
-    'JUIN',
-    'JUIL',
-    'AOÛT',
-    'SEPT',
-    'OCT',
-    'NOV',
-    'DEC',
-  ];
-
   @override
   Widget build(BuildContext context) {
+    Map sessionsAbbreviations = {
+      'r': AppLocalizations.of(context).race,
+      'q': AppLocalizations.of(context).qualifyings,
+      's': AppLocalizations.of(context).sprint,
+      'sq': AppLocalizations.of(context).sprintQualifyings,
+      'p1': AppLocalizations.of(context).freePracticeOne,
+      'p2': AppLocalizations.of(context).freePracticeTwo,
+      'p3': AppLocalizations.of(context).freePracticeThree,
+    };
+    List months = [
+      AppLocalizations.of(context).monthAbbreviationJanuary,
+      AppLocalizations.of(context).monthAbbreviationFebruary,
+      AppLocalizations.of(context).monthAbbreviationMarch,
+      AppLocalizations.of(context).monthAbbreviationApril,
+      AppLocalizations.of(context).monthAbbreviationMay,
+      AppLocalizations.of(context).monthAbbreviationJune,
+      AppLocalizations.of(context).monthAbbreviationJuly,
+      AppLocalizations.of(context).monthAbbreviationAugust,
+      AppLocalizations.of(context).monthAbbreviationSeptember,
+      AppLocalizations.of(context).monthAbbreviationOctober,
+      AppLocalizations.of(context).monthAbbreviationNovember,
+      AppLocalizations.of(context).monthAbbreviationDecember,
+    ];
     bool useDarkMode =
-        Hive.box('settings').get('darkMode', defaultValue: false) as bool;
+        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     String startTimeHour = widget.session.startTime.hour.toString();
     String startTimeMinute = widget.session.startTime.minute.toString();
     String endTimeHour = widget.session.endTime.hour.toString();

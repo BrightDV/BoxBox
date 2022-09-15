@@ -40,7 +40,7 @@ class _StandingsScreenState extends State<StandingsScreen> {
   @override
   Widget build(BuildContext context) {
     bool useDarkMode =
-        Hive.box('settings').get('darkMode', defaultValue: false) as bool;
+        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     return DefaultTabController(
       length: 2,
       initialIndex: widget.switchToTeamStandings != null ? 1 : 0,

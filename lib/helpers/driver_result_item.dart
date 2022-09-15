@@ -17,9 +17,10 @@
  * Copyright (c) 2022, BrightDV
  */
 
-import 'package:flutter/material.dart';
 import 'package:boxbox/api/driver_components.dart';
 import 'package:boxbox/helpers/team_background_color.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class DriverResultItem extends StatelessWidget {
   final DriverResult item;
@@ -178,7 +179,7 @@ class RaceDriversResultsList extends StatelessWidget {
                     Expanded(
                       flex: 2,
                       child: Text(
-                        'POS',
+                        AppLocalizations.of(context).positionAbbreviation,
                         style: TextStyle(
                           color: Colors.white,
                         ),
@@ -192,7 +193,7 @@ class RaceDriversResultsList extends StatelessWidget {
                     Expanded(
                       flex: 3,
                       child: Text(
-                        'PIL',
+                        AppLocalizations.of(context).driverAbbreviation,
                         style: TextStyle(
                           color: Colors.white,
                         ),
@@ -201,7 +202,7 @@ class RaceDriversResultsList extends StatelessWidget {
                     Expanded(
                       flex: 6,
                       child: Text(
-                        'TEMPS',
+                        AppLocalizations.of(context).time,
                         style: TextStyle(
                           color: Colors.white,
                         ),
@@ -211,7 +212,7 @@ class RaceDriversResultsList extends StatelessWidget {
                     Expanded(
                       flex: 3,
                       child: Text(
-                        'TOURS',
+                        AppLocalizations.of(context).laps,
                         style: TextStyle(
                           color: Colors.white,
                         ),
@@ -221,7 +222,7 @@ class RaceDriversResultsList extends StatelessWidget {
                     Expanded(
                       flex: 3,
                       child: Text(
-                        'PTS',
+                        AppLocalizations.of(context).pointsAbbreviation,
                         style: TextStyle(
                           color: Colors.white,
                         ),
@@ -436,7 +437,9 @@ class QualificationDriversResultsList extends StatelessWidget {
                           right: 7,
                         ),
                         child: Text(
-                          'P.',
+                          AppLocalizations.of(context)
+                              .positionAbbreviation
+                              .substring(0, 1),
                           style: TextStyle(
                             color: Colors.white,
                           ),
@@ -455,7 +458,7 @@ class QualificationDriversResultsList extends StatelessWidget {
                           left: 7,
                         ),
                         child: Text(
-                          'PIL',
+                          AppLocalizations.of(context).driverAbbreviation,
                           style: TextStyle(
                             color: Colors.white,
                           ),
@@ -465,7 +468,7 @@ class QualificationDriversResultsList extends StatelessWidget {
                     Expanded(
                       flex: 6,
                       child: Text(
-                        'Q1',
+                        "${AppLocalizations.of(context).qualifyings.substring(0, 1)}1",
                         style: TextStyle(
                           color: Colors.white,
                         ),
@@ -475,7 +478,7 @@ class QualificationDriversResultsList extends StatelessWidget {
                     Expanded(
                       flex: 6,
                       child: Text(
-                        'Q2',
+                        "${AppLocalizations.of(context).qualifyings.substring(0, 1)}2",
                         style: TextStyle(
                           color: Colors.white,
                         ),
@@ -485,7 +488,7 @@ class QualificationDriversResultsList extends StatelessWidget {
                     Expanded(
                       flex: 6,
                       child: Text(
-                        'Q3',
+                        "${AppLocalizations.of(context).qualifyings.substring(0, 1)}3",
                         style: TextStyle(
                           color: Colors.white,
                         ),

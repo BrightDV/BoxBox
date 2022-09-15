@@ -33,7 +33,7 @@ class MainDrawer extends StatefulWidget {
 
 class _MainDrawerState extends State<MainDrawer> {
   bool useDarkMode =
-      Hive.box('settings').get('darkMode', defaultValue: false) as bool;
+      Hive.box('settings').get('darkMode', defaultValue: true) as bool;
 
   @override
   Widget build(BuildContext context) {

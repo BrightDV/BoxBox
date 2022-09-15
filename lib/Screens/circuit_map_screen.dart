@@ -20,6 +20,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:latlong2/latlong.dart';
@@ -33,10 +34,10 @@ class CircuitMapScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool useDarkMode =
-        Hive.box('settings').get('darkMode', defaultValue: false) as bool;
+        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     return AlertDialog(
       title: Text(
-        'Carte du Grand Prix',
+        AppLocalizations.of(context).grandPrixMap,
         style: TextStyle(
           color: Theme.of(context).primaryColor,
         ),
@@ -70,7 +71,9 @@ class CircuitMapScreen extends StatelessWidget {
               Theme.of(context).primaryColor,
             ),
           ),
-          child: const Text('Fermer'),
+          child: Text(
+            AppLocalizations.of(context).close,
+          ),
         ),
       ],
       shape: RoundedRectangleBorder(

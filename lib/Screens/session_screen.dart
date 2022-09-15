@@ -20,12 +20,13 @@
 import 'dart:async';
 
 import 'package:boxbox/api/driver_components.dart';
+import 'package:boxbox/api/event_tracker.dart';
 import 'package:boxbox/api/livetiming.dart';
 import 'package:boxbox/helpers/driver_result_item.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/request_error.dart';
 import 'package:flutter/material.dart';
-import 'package:boxbox/api/event_tracker.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_timer_countdown/flutter_timer_countdown.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -45,7 +46,7 @@ class _SessionScreenState extends State<SessionScreen> {
   @override
   Widget build(BuildContext context) {
     bool useDarkMode =
-        Hive.box('settings').get('darkMode', defaultValue: false) as bool;
+        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     int timeBetween(DateTime from, DateTime to) {
       return to.difference(from).inSeconds;
     }
@@ -80,7 +81,7 @@ class _SessionScreenState extends State<SessionScreen> {
                   padding: EdgeInsets.all(10),
                   child: Center(
                     child: Text(
-                      "La séance commence dans :",
+                      AppLocalizations.of(context).sessionStartsIn,
                       style: TextStyle(
                         fontSize: 20,
                         color: useDarkMode ? Colors.white : Colors.black,
@@ -111,10 +112,13 @@ class _SessionScreenState extends State<SessionScreen> {
                     fontSize: 20,
                   ),
                   spacerWidth: 15,
-                  daysDescription: "J",
-                  hoursDescription: "H",
-                  minutesDescription: "MIN",
-                  secondsDescription: "SEC",
+                  daysDescription: AppLocalizations.of(context).dayFirstLetter,
+                  hoursDescription:
+                      AppLocalizations.of(context).hourFirstLetter,
+                  minutesDescription:
+                      AppLocalizations.of(context).minuteAbbreviation,
+                  secondsDescription:
+                      AppLocalizations.of(context).secondAbbreviation,
                   onEnd: () {
                     setState(() {});
                   },
@@ -124,7 +128,7 @@ class _SessionScreenState extends State<SessionScreen> {
           : widget.session.state == 'completed'
               ? Center(
                   child: Text(
-                    'La séance est terminée',
+                    AppLocalizations.of(context).sessionCompleted,
                     style: TextStyle(
                       color: useDarkMode ? Colors.white : Colors.black,
                     ),
@@ -136,22 +140,6 @@ class _SessionScreenState extends State<SessionScreen> {
                       'https://www.formula1.com/en/live-experience-webview.html',
                 ),
     );
-  }
-}
-
-class CompletedSessionScreen extends StatelessWidget {
-  final String sessionType;
-  final List sessionDetails;
-  const CompletedSessionScreen(this.sessionType, this.sessionDetails, {Key key})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return sessionType == 'free-practice'
-        ? Text('Free Practice Finished!')
-        : sessionType == 'qualifying'
-            ? Text('Qualifying!')
-            : Text('Race!');
   }
 }
 

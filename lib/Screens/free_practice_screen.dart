@@ -24,6 +24,7 @@ import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/team_background_color.dart';
 import 'package:boxbox/scraping/formula_one.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -42,7 +43,7 @@ class FreePracticeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool useDarkMode =
-        Hive.box('settings').get('darkMode', defaultValue: false) as bool;
+        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     return Scaffold(
       appBar: AppBar(
         title: Text(sessionTitle),
@@ -60,7 +61,7 @@ class FreePracticeScreen extends StatelessWidget {
             ? snapshot.error.toString() == 'RangeError: Value not in range: 0'
                 ? Center(
                     child: Text(
-                      'Les données ne sont pas disponibles actuellement.',
+                      AppLocalizations.of(context).dataNotAvailable,
                       style: TextStyle(
                         color: useDarkMode ? Colors.white : Colors.black,
                       ),
@@ -103,7 +104,7 @@ class FreePracticeResultsList extends StatelessWidget {
                 color: Colors.white,
               ),
               title: Text(
-                'Voir le résumé sur YouTube',
+                AppLocalizations.of(context).watchOnYoutube,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Colors.white,
@@ -136,18 +137,21 @@ class FreePracticeResultsList extends StatelessWidget {
                         Expanded(
                           flex: 2,
                           child: Text(
-                            'POS',
+                            AppLocalizations.of(context).positionAbbreviation,
                             style: TextStyle(
                               color: Colors.white,
                             ),
                             textAlign: TextAlign.center,
                           ),
                         ),
-                        Expanded(flex: 2, child: Text('')),
+                        Expanded(
+                          flex: 2,
+                          child: Text(''),
+                        ),
                         Expanded(
                           flex: 3,
                           child: Text(
-                            'PIL',
+                            AppLocalizations.of(context).driverAbbreviation,
                             style: TextStyle(
                               color: Colors.white,
                             ),
@@ -156,7 +160,7 @@ class FreePracticeResultsList extends StatelessWidget {
                         Expanded(
                           flex: 5,
                           child: Text(
-                            'TEMPS',
+                            AppLocalizations.of(context).time,
                             style: TextStyle(
                               color: Colors.white,
                             ),
@@ -166,7 +170,7 @@ class FreePracticeResultsList extends StatelessWidget {
                         Expanded(
                           flex: 5,
                           child: Text(
-                            'ÉCART',
+                            AppLocalizations.of(context).gap,
                             style: TextStyle(
                               color: Colors.white,
                             ),
@@ -176,7 +180,7 @@ class FreePracticeResultsList extends StatelessWidget {
                         Expanded(
                           flex: 4,
                           child: Text(
-                            'TOURS',
+                            AppLocalizations.of(context).laps,
                             style: TextStyle(
                               color: Colors.white,
                             ),

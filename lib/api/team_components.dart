@@ -17,13 +17,14 @@
  * Copyright (c) 2022, BrightDV
  */
 
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/request_error.dart';
 import 'package:boxbox/helpers/team_background_color.dart';
 import 'package:boxbox/helpers/team_car_image.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 class Team {
   final String constructorId;
@@ -66,7 +67,7 @@ class TeamItem extends StatelessWidget {
   Widget build(BuildContext context) {
     Color finalTeamColors = getTeamColors(this.item.constructorId);
     bool useDarkMode =
-        Hive.box('settings').get('darkMode', defaultValue: false) as bool;
+        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     return Container(
       height: 120,
       color: index % 2 == 1 ? Color(0xff22222c) : Color(0xff15151f),
@@ -111,17 +112,16 @@ class TeamItem extends StatelessWidget {
                     color: useDarkMode ? Colors.white : Colors.black,
                   ),
                 ),
-                int.parse(this.item.points) == 0 ||
-                        int.parse(this.item.points) == 1
+                int.parse(this.item.points) == 1
                     ? Text(
-                        "${this.item.points} Point",
+                        "${this.item.points} ${AppLocalizations.of(context).point}",
                         style: TextStyle(
                           fontSize: 18,
                           color: useDarkMode ? Colors.white : Colors.black,
                         ),
                       )
                     : Text(
-                        "${this.item.points} Points",
+                        "${this.item.points} ${AppLocalizations.of(context).points}",
                         style: TextStyle(
                           fontSize: 18,
                           color: useDarkMode ? Colors.white : Colors.black,
@@ -129,17 +129,16 @@ class TeamItem extends StatelessWidget {
                       ),
                 Padding(
                   padding: EdgeInsets.only(top: 5),
-                  child: int.parse(this.item.wins) == 0 ||
-                          int.parse(this.item.wins) == 1
+                  child: int.parse(this.item.wins) == 1
                       ? Text(
-                          "${this.item.wins} Victoire",
+                          "${this.item.wins} ${AppLocalizations.of(context).victory}",
                           style: TextStyle(
                             fontSize: 17,
                             color: useDarkMode ? Colors.white : Colors.black,
                           ),
                         )
                       : Text(
-                          "${this.item.wins} Victoires",
+                          "${this.item.wins} ${AppLocalizations.of(context).victories}",
                           style: TextStyle(
                             fontSize: 17,
                             color: useDarkMode ? Colors.white : Colors.black,

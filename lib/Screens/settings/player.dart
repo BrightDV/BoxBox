@@ -31,7 +31,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
   @override
   Widget build(BuildContext context) {
     bool useDarkMode =
-        Hive.box('settings').get('darkMode', defaultValue: false) as bool;
+        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     int playerQuality =
         Hive.box('settings').get('playerQuality', defaultValue: 360) as int;
     return Scaffold(

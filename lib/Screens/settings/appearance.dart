@@ -33,7 +33,7 @@ class _AppearanceScreenState extends State<AppearanceScreen> {
   @override
   Widget build(BuildContext context) {
     bool useDarkMode =
-        Hive.box('settings').get('darkMode', defaultValue: false) as bool;
+        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     String newsLayout =
         Hive.box('settings').get('newsLayout', defaultValue: 'big') as String;
     Map valueToString = {

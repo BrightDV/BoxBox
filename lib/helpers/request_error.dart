@@ -18,6 +18,7 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class RequestErrorWidget extends StatelessWidget {
@@ -27,7 +28,7 @@ class RequestErrorWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool useDarkMode =
-        Hive.box('settings').get('darkMode', defaultValue: false) as bool;
+        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     return Padding(
       padding: EdgeInsets.all(
         10,
@@ -36,7 +37,7 @@ class RequestErrorWidget extends StatelessWidget {
         children: [
           Center(
             child: Text(
-              "Une erreur est survenue lors de la récupération des données.",
+              AppLocalizations.of(context).requestError,
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 16,
@@ -48,7 +49,7 @@ class RequestErrorWidget extends StatelessWidget {
             padding: EdgeInsets.only(top: 20),
             child: Center(
               child: Text(
-                "Crash Error:",
+                AppLocalizations.of(context).crashError,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 16,

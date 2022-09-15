@@ -39,7 +39,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     bool useDarkMode =
-        Hive.box('settings').get('darkMode', defaultValue: false) as bool;
+        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     return Scaffold(
       backgroundColor:
           useDarkMode ? Theme.of(context).backgroundColor : Colors.white,

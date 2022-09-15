@@ -29,10 +29,10 @@ import 'package:boxbox/Screens/standings.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
-import 'package:lottie/lottie.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
 
@@ -171,7 +171,7 @@ class NewsItem extends StatelessWidget {
   Widget build(BuildContext context) {
     String imageUrl = item.imageUrl;
     bool useDarkMode =
-        Hive.box('settings').get('darkMode', defaultValue: false) as bool;
+        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     String newsLayout =
         Hive.box('settings').get('newsLayout', defaultValue: 'big') as String;
     double width = MediaQuery.of(context).size.width;
@@ -317,7 +317,7 @@ class _NewsListState extends State<NewsList> {
   @override
   Widget build(BuildContext context) {
     bool useDarkMode =
-        Hive.box('settings').get('darkMode', defaultValue: false) as bool;
+        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
 
     List originalItems = widget.items;
     return ListView.builder(
@@ -329,28 +329,15 @@ class _NewsListState extends State<NewsList> {
       itemBuilder: (context, index) {
         return index == items.length
             ? TextButton(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Lottie.asset(
-                      'animations/loading_more_animation.json',
-                      height: 40,
+                child: Padding(
+                  padding: EdgeInsets.only(left: 7, right: 7),
+                  child: Text(
+                    AppLocalizations.of(context).loadMore,
+                    style: TextStyle(
+                      color: useDarkMode ? Colors.white : Colors.black,
+                      fontSize: 18,
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 7, right: 7),
-                      child: Text(
-                        'Charger Plus',
-                        style: TextStyle(
-                          color: useDarkMode ? Colors.white : Colors.black,
-                          fontSize: 18,
-                        ),
-                      ),
-                    ),
-                    Lottie.asset(
-                      'animations/loading_more_animation.json',
-                      height: 40,
-                    ),
-                  ],
+                  ),
                 ),
                 onPressed: (() {
                   setState(
@@ -409,7 +396,7 @@ class JoinArticlesParts extends StatelessWidget {
 
   Widget build(BuildContext context) {
     bool useDarkMode =
-        Hive.box('settings').get('darkMode', defaultValue: false) as bool;
+        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     List articleContent = article.articleContent;
     List<Widget> widgetsList = [];
     if (article.articleHero['contentType'] == 'atomVideo') {
@@ -543,7 +530,7 @@ class JoinArticlesParts extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        'Ouvrir',
+                        AppLocalizations.of(context).open,
                         style: TextStyle(
                           color: useDarkMode ? Colors.white : Colors.black,
                         ),
@@ -619,7 +606,7 @@ class TextParagraphRenderer extends StatelessWidget {
 
   Widget build(BuildContext context) {
     bool useDarkMode =
-        Hive.box('settings').get('darkMode', defaultValue: false) as bool;
+        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     return Padding(
       padding: EdgeInsets.only(
         left: 10,
@@ -651,7 +638,7 @@ class TextParagraphRenderer extends StatelessWidget {
                     appBar: AppBar(
                       centerTitle: true,
                       title: Text(
-                        'Classements',
+                        AppLocalizations.of(context).standings,
                         style: TextStyle(
                           fontWeight: FontWeight.w600,
                         ),
@@ -669,7 +656,7 @@ class TextParagraphRenderer extends StatelessWidget {
                     appBar: AppBar(
                       centerTitle: true,
                       title: Text(
-                        'Classements',
+                        AppLocalizations.of(context).standings,
                         style: TextStyle(
                           fontWeight: FontWeight.w600,
                         ),
@@ -752,7 +739,7 @@ class ImageRenderer extends StatelessWidget {
 
   Widget build(BuildContext context) {
     bool useDarkMode =
-        Hive.box('settings').get('darkMode', defaultValue: false) as bool;
+        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     return Padding(
       padding: EdgeInsets.only(bottom: 10),
       child: GestureDetector(
@@ -905,7 +892,7 @@ class _VideoRendererState extends State<VideoRenderer> {
   //@override
   Widget build(BuildContext build) {
     bool useDarkMode =
-        Hive.box('settings').get('darkMode', defaultValue: false) as bool;
+        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     return FutureBuilder(
       future: BrightCove().getVideoLink(widget.videoId),
       builder: (context, snapshot) {

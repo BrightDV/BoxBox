@@ -30,6 +30,7 @@ import 'package:boxbox/Screens/circuit_map_screen.dart';
 import 'package:boxbox/Screens/free_practice_screen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_timer_countdown/flutter_timer_countdown.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -50,7 +51,7 @@ class _RaceDetailsScreenState extends State<RaceDetailsScreen> {
   Widget build(BuildContext context) {
     final Race race = widget.race;
     bool useDarkMode =
-        Hive.box('settings').get('darkMode', defaultValue: false) as bool;
+        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     return DefaultTabController(
       length: 3,
       child: Scaffold(
@@ -65,7 +66,7 @@ class _RaceDetailsScreenState extends State<RaceDetailsScreen> {
                     icon: Icon(
                       Icons.map_outlined,
                     ),
-                    tooltip: 'Carte',
+                    tooltip: AppLocalizations.of(context).grandPrixMap,
                     onPressed: () {
                       showDialog(
                         context: context,
@@ -93,9 +94,15 @@ class _RaceDetailsScreenState extends State<RaceDetailsScreen> {
                 delegate: _SliverAppBarDelegate(
                   TabBar(
                     tabs: [
-                      Tab(text: 'E. LIBRES'),
-                      Tab(text: 'QUALIFS'),
-                      Tab(text: 'COURSE'),
+                      Tab(
+                        text: AppLocalizations.of(context).freePracticeShort,
+                      ),
+                      Tab(
+                        text: AppLocalizations.of(context).qualifyingsShort,
+                      ),
+                      Tab(
+                        text: AppLocalizations.of(context).race.toUpperCase(),
+                      ),
                     ],
                     labelColor: useDarkMode
                         ? Colors.white
@@ -137,7 +144,7 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
     bool useDarkMode =
-        Hive.box('settings').get('darkMode', defaultValue: false) as bool;
+        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     return new Container(
       color: useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
       child: _tabBar,
@@ -157,11 +164,11 @@ class FreePracticesResultsProvider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool useDarkMode =
-        Hive.box('settings').get('darkMode', defaultValue: false) as bool;
+        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     final List<String> sessionsTitle = [
-      'Essais Libres 1',
-      'Essais Libres 2',
-      'Essais Libres 3'
+      AppLocalizations.of(context).freePracticeOne,
+      AppLocalizations.of(context).freePracticeTwo,
+      AppLocalizations.of(context).freePracticeThree,
     ];
     return ListView.builder(
       itemCount: 3,
@@ -203,7 +210,7 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
   Widget build(BuildContext context) {
     final Race race = widget.race;
     bool useDarkMode =
-        Hive.box('settings').get('darkMode', defaultValue: false) as bool;
+        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     Map savedData =
         Hive.box('requests').get('race-${race.round}', defaultValue: {}) as Map;
     String raceFullDate = "${race.date} ${race.raceHour}";
@@ -230,7 +237,7 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
           Padding(
             padding: EdgeInsets.all(10),
             child: Text(
-              "La course commence dans :",
+              AppLocalizations.of(context).raceStartsIn,
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 20,
@@ -261,10 +268,10 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
               fontSize: 20,
             ),
             spacerWidth: 15,
-            daysDescription: "J",
-            hoursDescription: "H",
-            minutesDescription: "MIN",
-            secondsDescription: "SEC",
+            daysDescription: AppLocalizations.of(context).dayFirstLetter,
+            hoursDescription: AppLocalizations.of(context).hourFirstLetter,
+            minutesDescription: AppLocalizations.of(context).minuteAbbreviation,
+            secondsDescription: AppLocalizations.of(context).secondAbbreviation,
             onEnd: () {
               setState(() {});
             },
@@ -286,7 +293,7 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
                             color: useDarkMode ? Colors.white : Colors.black,
                           ),
                           title: Text(
-                            'Indisponible hors-ligne',
+                            AppLocalizations.of(context).unavailableOffline,
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               color: useDarkMode ? Colors.white : Colors.black,
@@ -304,7 +311,7 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
                     padding: EdgeInsets.all(10),
                     child: Center(
                       child: Text(
-                        "Les données ne sont pas disponibles actuellement.",
+                        AppLocalizations.of(context).dataNotAvailable,
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: useDarkMode ? Colors.white : Colors.black,
@@ -324,7 +331,7 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
                           color: Colors.white,
                         ),
                         title: Text(
-                          'Voir le résumé sur YouTube',
+                          AppLocalizations.of(context).watchOnYoutube,
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: Colors.white,
@@ -361,7 +368,7 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
                               color: useDarkMode ? Colors.white : Colors.black,
                             ),
                             title: Text(
-                              'Indisponible hors-ligne',
+                              AppLocalizations.of(context).unavailableOffline,
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 color:
@@ -394,7 +401,7 @@ class QualificationResultsProvider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool useDarkMode =
-        Hive.box('settings').get('darkMode', defaultValue: false) as bool;
+        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
 
     return FutureBuilder(
       future: getQualificationStandings(this.race.round),
@@ -404,7 +411,7 @@ class QualificationResultsProvider extends StatelessWidget {
             padding: EdgeInsets.all(15),
             child: Center(
               child: Text(
-                "Les données ne sont pas disponibles actuellement.",
+                AppLocalizations.of(context).dataNotAvailable,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: useDarkMode ? Colors.white : Colors.black,
@@ -424,7 +431,7 @@ class QualificationResultsProvider extends StatelessWidget {
                         color: Colors.white,
                       ),
                       title: Text(
-                        'Voir le résumé sur YouTube',
+                        AppLocalizations.of(context).watchOnYoutube,
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: Colors.white,

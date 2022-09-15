@@ -50,7 +50,7 @@ class _ErgastApiCalls {
           if (element['status'].endsWith('Lap')) {
             time = element['status'];
           } else {
-            time = "Abandon";
+            time = "DNF";
           }
         } else {
           time = element["Time"]["time"];
@@ -189,7 +189,7 @@ class _ErgastApiCalls {
     } else {
       finalJson.forEach((element) {
         List dateParts = element['date'].split('-');
-        DateTime raceDate = new DateTime(
+        DateTime raceDate = DateTime(
           int.parse(dateParts[0]),
           int.parse(dateParts[1]),
           int.parse(dateParts[2]),

@@ -62,7 +62,7 @@ class RaceItem extends StatelessWidget {
   Widget build(BuildContext context) {
     String finalDate = this.item.date.split("-").reversed.toList().join("/");
     bool useDarkMode =
-        Hive.box('settings').get('darkMode', defaultValue: false) as bool;
+        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     return GestureDetector(
       onTap: () => Navigator.push(
         context,

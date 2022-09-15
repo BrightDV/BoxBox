@@ -17,13 +17,14 @@
  * Copyright (c) 2022, BrightDV
  */
 
-import 'package:boxbox/helpers/request_error.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/material.dart';
 import 'package:boxbox/helpers/driver_image.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
+import 'package:boxbox/helpers/request_error.dart';
 import 'package:boxbox/helpers/team_background_color.dart';
 import 'package:boxbox/Screens/driver_details.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class Driver {
   final String driverId;
@@ -224,10 +225,9 @@ class DriverItem extends StatelessWidget {
                                   ),
                                   Padding(
                                     padding: EdgeInsets.only(top: 5),
-                                    child: int.parse(this.item.points) == 0 ||
-                                            int.parse(this.item.points) == 1
+                                    child: int.parse(this.item.points) == 1
                                         ? Text(
-                                            "${this.item.points} Point",
+                                            "${this.item.points} ${AppLocalizations.of(context).point}",
                                             style: TextStyle(
                                               fontSize: 20,
                                               color: Colors.white,
@@ -235,7 +235,7 @@ class DriverItem extends StatelessWidget {
                                             textAlign: TextAlign.center,
                                           )
                                         : Text(
-                                            "${this.item.points} Points",
+                                            "${this.item.points} ${AppLocalizations.of(context).points}",
                                             style: TextStyle(
                                               fontSize: 20,
                                               color: Colors.white,

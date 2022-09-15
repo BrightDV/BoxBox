@@ -17,13 +17,13 @@
  * Copyright (c) 2022, BrightDV
  */
 
-import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:boxbox/helpers/drawer.dart';
 import 'package:boxbox/Screens/home.dart';
 import 'package:boxbox/Screens/schedule.dart';
 import 'package:boxbox/Screens/standings.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 class MainBottomNavigationBar extends StatefulWidget {
   MainBottomNavigationBar({Key key}) : super(key: key);
@@ -49,7 +49,7 @@ class _MainBottomNavigationBarState extends State<MainBottomNavigationBar> {
   @override
   Widget build(BuildContext context) {
     bool useDarkMode =
-        Hive.box('settings').get('darkMode', defaultValue: false) as bool;
+        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     List<Widget> _screens = [
       HomeScreen(),
       StandingsScreen(),

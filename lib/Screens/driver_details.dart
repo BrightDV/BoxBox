@@ -40,7 +40,7 @@ class DriverDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool useDarkMode =
-        Hive.box('settings').get('darkMode', defaultValue: false) as bool;
+        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -124,7 +124,7 @@ class DriverDetailsFragment extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool useDarkMode =
-        Hive.box('settings').get('darkMode', defaultValue: false) as bool;
+        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     final List<String> driverInfosLabels = [
       AppLocalizations.of(context).team,
       AppLocalizations.of(context).country,

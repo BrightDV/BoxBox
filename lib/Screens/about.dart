@@ -27,7 +27,7 @@ class AboutScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool useDarkMode =
-        Hive.box('settings').get('darkMode', defaultValue: false) as bool;
+        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     return Scaffold(
       appBar: AppBar(
         title: Text(
