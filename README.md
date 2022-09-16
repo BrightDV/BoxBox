@@ -33,12 +33,12 @@
 - In-app reader for all the editorial articles with markdown!
 - Enjoy the app even the night with its dark mode.
 - Link to the highlights on YouTube of the qualifications and the race.
-- Wait 'till the next race with its countdown
-- Follow all the action on track with its integrated WebView (live leaderboard)
+- Wait 'till the next race with its countdown.
+- Follow all the action on track with its integrated WebView (live leaderboard).
 
 *You need to have Internet connection in order to refresh the data.
 
-See the live demo [here. (Be aware that the live demo can be outdated)](https://brightdv.github.io)
+See the live demo [here (outdated).](https://brightdv.github.io)
 
 ## Services
 | Screen  | Service          | Base URL |
@@ -68,6 +68,6 @@ published by the Free Software Foundation, either version 3 of the License, or
 ```
 
 ## Note
-I'm doing this app in my spare time, so I will appreciate feedbacks and PRs, but I can't do everyting ;).
+I'm doing this app in my spare time, so I will appreciate feedbacks and PRs. (I can't do everyting ;).
 
 Box, Box! is unofficial software and in no way associated with the Formula 1 group of companies.
