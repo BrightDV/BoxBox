@@ -2,7 +2,7 @@
 <h2 align="center"><b>Box, Box!</b></h2>
 <h4 align="center">A new way to follow Formula 1.</h4>
 
-[![GitHub releases](https://img.shields.io/github/release/BrightDV/BoxBox?style=for-the-badge)](https://github.com/BrightDV/BoxBox/blob/main/LICENSE)
+[![GitHub releases](https://img.shields.io/github/release/BrightDV/BoxBox?style=for-the-badge)](https://github.com/BrightDV/BoxBox/releases/latest)
 [![GitHub issues](https://img.shields.io/github/issues/BrightDV/BoxBox?style=for-the-badge)](https://github.com/BrightDV/BoxBox/issues)
 [![GitHub forks](https://img.shields.io/github/forks/BrightDV/BoxBox?style=for-the-badge)](https://github.com/BrightDV/BoxBox/network)
 [![GitHub stars](https://img.shields.io/github/stars/BrightDV/BoxBox?style=for-the-badge)](https://github.com/BrightDV/BoxBox/stargazers)
