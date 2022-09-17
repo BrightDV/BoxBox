@@ -48,6 +48,16 @@ class _MainBottomNavigationBarState extends State<MainBottomNavigationBar> {
 
   @override
   Widget build(BuildContext context) {
+    int themeMode =
+        Hive.box('settings').get('themeMode', defaultValue: 0) as int;
+    final Brightness brightnessValue =
+        MediaQuery.of(context).platformBrightness;
+    bool isDark = brightnessValue == Brightness.dark;
+    themeMode == 0
+        ? Hive.box('settings').put('darkMode', isDark)
+        : themeMode == 1
+            ? Hive.box('settings').put('darkMode', false)
+            : Hive.box('settings').put('darkMode', true);
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     List<Widget> _screens = [
@@ -55,6 +65,7 @@ class _MainBottomNavigationBarState extends State<MainBottomNavigationBar> {
       StandingsScreen(),
       ScheduleScreen(),
     ];
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,

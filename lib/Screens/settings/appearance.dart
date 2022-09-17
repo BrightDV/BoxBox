@@ -36,12 +36,19 @@ class _AppearanceScreenState extends State<AppearanceScreen> {
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     String newsLayout =
         Hive.box('settings').get('newsLayout', defaultValue: 'big') as String;
+    int themeMode =
+        Hive.box('settings').get('themeMode', defaultValue: 0) as int;
     Map valueToString = {
       'big': AppLocalizations.of(context).articleFull,
       'medium': AppLocalizations.of(context).articleTitleAndImage,
       'condensed': AppLocalizations.of(context).articleTitleAndDescription,
       'small': AppLocalizations.of(context).articleTitle,
     };
+    List themeOptions = <String>[
+      AppLocalizations.of(context).followSystem,
+      AppLocalizations.of(context).lightMode,
+      AppLocalizations.of(context).darkMode,
+    ];
     String newsLayoutFormated = valueToString[newsLayout];
     return Scaffold(
       appBar: AppBar(
@@ -56,20 +63,60 @@ class _AppearanceScreenState extends State<AppearanceScreen> {
           useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
       body: Column(
         children: [
-          SwitchListTile(
+          ListTile(
             title: Text(
-              AppLocalizations.of(context).darkMode,
+              AppLocalizations.of(context).theme,
               style: TextStyle(
                 color: useDarkMode ? Colors.white : Colors.black,
               ),
             ),
-            value: useDarkMode,
-            onChanged: (bool value) {
-              Hive.box('settings').put('darkMode', value);
-              useDarkMode = value;
-              setState(() {});
-              widget.update();
-            },
+            onTap: () {},
+            trailing: DropdownButton(
+              value: themeMode,
+              dropdownColor: useDarkMode
+                  ? Theme.of(context).backgroundColor
+                  : Colors.white,
+              onChanged: (int newThemeMode) {
+                if (newThemeMode != null) {
+                  setState(
+                    () {
+                      bool newValue;
+                      setState(() {
+                        if (newThemeMode == 0) {
+                          final Brightness brightnessValue =
+                              MediaQuery.of(context).platformBrightness;
+                          bool isDark = brightnessValue == Brightness.dark;
+                          newValue = isDark;
+                        } else if (newThemeMode == 1) {
+                          newValue = false;
+                        } else {
+                          newValue = true;
+                        }
+                        Hive.box('settings').put('darkMode', newValue);
+                        Hive.box('settings').put('themeMode', newThemeMode);
+                        themeMode = newThemeMode;
+                        useDarkMode = newValue;
+                      });
+                      widget.update();
+                    },
+                  );
+                }
+              },
+              items: <int>[0, 1, 2].map<DropdownMenuItem<int>>(
+                (int value) {
+                  return DropdownMenuItem<int>(
+                    value: value,
+                    child: Text(
+                      themeOptions[value],
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: useDarkMode ? Colors.white : Colors.black,
+                      ),
+                    ),
+                  );
+                },
+              ).toList(),
+            ),
           ),
           ListTile(
             title: Text(
