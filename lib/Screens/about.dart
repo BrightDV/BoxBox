@@ -21,6 +21,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AboutScreen extends StatelessWidget {
@@ -48,7 +49,7 @@ class AboutScreen extends StatelessWidget {
             height: 200,
           ),
           Padding(
-            padding: EdgeInsets.all(30),
+            padding: EdgeInsets.only(top: 30),
             child: Text(
               'Box, Box!',
               style: TextStyle(
@@ -57,6 +58,23 @@ class AboutScreen extends StatelessWidget {
                 fontWeight: FontWeight.w700,
               ),
             ),
+          ),
+          FutureBuilder(
+            future: PackageInfo.fromPlatform(),
+            builder: (context, snapshot) => snapshot.hasData
+                ? Padding(
+                    padding: EdgeInsets.only(
+                      top: 10,
+                      bottom: 30,
+                    ),
+                    child: Text(
+                      'v${snapshot.data.version}',
+                      style: TextStyle(
+                        color: useDarkMode ? Colors.white : Colors.black,
+                      ),
+                    ),
+                  )
+                : Text(''),
           ),
           Padding(
             padding: EdgeInsets.all(10),

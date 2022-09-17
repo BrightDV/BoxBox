@@ -17,11 +17,12 @@
  * Copyright (c) 2022, BrightDV
  */
 
+import 'package:boxbox/Screens/about.dart';
+import 'package:boxbox/Screens/settings/settings_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:boxbox/Screens/about.dart';
-import 'package:boxbox/Screens/settings/settings_list.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class MainDrawer extends StatefulWidget {
   final Function homeSetState;
@@ -37,6 +38,12 @@ class _MainDrawerState extends State<MainDrawer> {
 
   @override
   Widget build(BuildContext context) {
+    String version;
+    String buildNumber;
+    PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
+      version = packageInfo.version;
+      buildNumber = packageInfo.buildNumber;
+    });
     return Theme(
       data: Theme.of(context).copyWith(
         canvasColor:
@@ -103,6 +110,25 @@ class _MainDrawerState extends State<MainDrawer> {
                   ),
                 );
               },
+            ),
+            Expanded(
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: FutureBuilder(
+                  future: PackageInfo.fromPlatform(),
+                  builder: (context, snapshot) => snapshot.hasData
+                      ? Padding(
+                          padding: EdgeInsets.only(bottom: 10),
+                          child: Text(
+                            snapshot.data.version,
+                            style: TextStyle(
+                              color: useDarkMode ? Colors.white : Colors.black,
+                            ),
+                          ),
+                        )
+                      : Text(''),
+                ),
+              ),
             ),
           ],
         ),
