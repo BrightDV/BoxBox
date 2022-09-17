@@ -38,12 +38,6 @@ class _MainDrawerState extends State<MainDrawer> {
 
   @override
   Widget build(BuildContext context) {
-    String version;
-    String buildNumber;
-    PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
-      version = packageInfo.version;
-      buildNumber = packageInfo.buildNumber;
-    });
     return Theme(
       data: Theme.of(context).copyWith(
         canvasColor:
