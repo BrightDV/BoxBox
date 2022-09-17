@@ -70,7 +70,13 @@ class TeamItem extends StatelessWidget {
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     return Container(
       height: 120,
-      color: index % 2 == 1 ? Color(0xff22222c) : Color(0xff15151f),
+      color: index % 2 == 1
+          ? useDarkMode
+              ? Color(0xff22222c)
+              : Color(0xffffffff)
+          : useDarkMode
+              ? Color(0xff15151f)
+              : Color(0xfff4f4f4),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
@@ -82,7 +88,7 @@ class TeamItem extends StatelessWidget {
                 style: TextStyle(
                   fontWeight: FontWeight.w600,
                   fontSize: 18,
-                  color: useDarkMode ? Colors.white : Colors.black,
+                  color: useDarkMode ? Colors.white : Color(0xff171717),
                 ),
               ),
             ),
@@ -109,7 +115,7 @@ class TeamItem extends StatelessWidget {
                   style: TextStyle(
                     fontWeight: FontWeight.w600,
                     fontSize: 18,
-                    color: useDarkMode ? Colors.white : Colors.black,
+                    color: useDarkMode ? Colors.white : Color(0xff171717),
                   ),
                 ),
                 int.parse(this.item.points) == 1
@@ -117,14 +123,14 @@ class TeamItem extends StatelessWidget {
                         "${this.item.points} ${AppLocalizations.of(context).point}",
                         style: TextStyle(
                           fontSize: 18,
-                          color: useDarkMode ? Colors.white : Colors.black,
+                          color: useDarkMode ? Colors.white : Color(0xff171717),
                         ),
                       )
                     : Text(
                         "${this.item.points} ${AppLocalizations.of(context).points}",
                         style: TextStyle(
                           fontSize: 18,
-                          color: useDarkMode ? Colors.white : Colors.black,
+                          color: useDarkMode ? Colors.white : Color(0xff171717),
                         ),
                       ),
                 Padding(
@@ -134,14 +140,16 @@ class TeamItem extends StatelessWidget {
                           "${this.item.wins} ${AppLocalizations.of(context).victory}",
                           style: TextStyle(
                             fontSize: 17,
-                            color: useDarkMode ? Colors.white : Colors.black,
+                            color:
+                                useDarkMode ? Colors.white : Color(0xff171717),
                           ),
                         )
                       : Text(
                           "${this.item.wins} ${AppLocalizations.of(context).victories}",
                           style: TextStyle(
                             fontSize: 17,
-                            color: useDarkMode ? Colors.white : Colors.black,
+                            color:
+                                useDarkMode ? Colors.white : Color(0xff171717),
                           ),
                         ),
                 ),

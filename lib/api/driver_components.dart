@@ -25,6 +25,7 @@ import 'package:boxbox/Screens/driver_details.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 class Driver {
   final String driverId;
@@ -143,6 +144,8 @@ class DriverItem extends StatelessWidget {
 
   Widget build(BuildContext context) {
     Color finalTeamColor = getTeamColors(this.item.team);
+    bool useDarkMode =
+        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -158,7 +161,13 @@ class DriverItem extends StatelessWidget {
       },
       child: Container(
         height: 120,
-        color: index % 2 == 1 ? Color(0xff22222c) : Color(0xff15151f),
+        color: index % 2 == 1
+            ? useDarkMode
+                ? Color(0xff22222c)
+                : Color(0xffffffff)
+            : useDarkMode
+                ? Color(0xff15151f)
+                : Color(0xfff4f4f4),
         child: Row(
           children: <Widget>[
             Expanded(
@@ -184,7 +193,9 @@ class DriverItem extends StatelessWidget {
                               style: TextStyle(
                                 fontWeight: FontWeight.w600,
                                 fontSize: 20,
-                                color: Colors.white,
+                                color: useDarkMode
+                                    ? Colors.white
+                                    : Color(0xff171717),
                               ),
                               textAlign: TextAlign.center,
                             ),
@@ -211,7 +222,9 @@ class DriverItem extends StatelessWidget {
                                   Text(
                                     this.item.givenName,
                                     style: TextStyle(
-                                      color: Colors.white54,
+                                      color: useDarkMode
+                                          ? Colors.white54
+                                          : Color(0xff171717),
                                       fontSize: 18,
                                     ),
                                   ),
@@ -220,7 +233,9 @@ class DriverItem extends StatelessWidget {
                                     style: TextStyle(
                                       fontWeight: FontWeight.w600,
                                       fontSize: 19,
-                                      color: Colors.white,
+                                      color: useDarkMode
+                                          ? Colors.white
+                                          : Color(0xff171717),
                                     ),
                                   ),
                                   Padding(
@@ -230,7 +245,9 @@ class DriverItem extends StatelessWidget {
                                             "${this.item.points} ${AppLocalizations.of(context).point}",
                                             style: TextStyle(
                                               fontSize: 20,
-                                              color: Colors.white,
+                                              color: useDarkMode
+                                                  ? Colors.white
+                                                  : Color(0xff171717),
                                             ),
                                             textAlign: TextAlign.center,
                                           )
@@ -238,7 +255,9 @@ class DriverItem extends StatelessWidget {
                                             "${this.item.points} ${AppLocalizations.of(context).points}",
                                             style: TextStyle(
                                               fontSize: 20,
-                                              color: Colors.white,
+                                              color: useDarkMode
+                                                  ? Colors.white
+                                                  : Color(0xff171717),
                                             ),
                                             textAlign: TextAlign.center,
                                           ),

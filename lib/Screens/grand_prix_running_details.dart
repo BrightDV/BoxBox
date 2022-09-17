@@ -175,14 +175,14 @@ class _SessionItemState extends State<SessionItem> {
                   Text(
                     widget.session.startTime.day.toString(),
                     style: TextStyle(
-                      color: useDarkMode ? Colors.white : Colors.black,
+                      color: useDarkMode ? Colors.white : Color(0xff171717),
                       fontSize: 18,
                     ),
                   ),
                   Text(
                     months[widget.session.startTime.month - 1],
                     style: TextStyle(
-                      color: useDarkMode ? Colors.white : Colors.black,
+                      color: useDarkMode ? Colors.white : Color(0xff171717),
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
                     ),
@@ -208,7 +208,7 @@ class _SessionItemState extends State<SessionItem> {
                   Text(
                     sessionsAbbreviations[widget.session.sessionsAbbreviation],
                     style: TextStyle(
-                      color: useDarkMode ? Colors.white : Colors.black,
+                      color: useDarkMode ? Colors.white : Color(0xff171717),
                       fontSize: 20,
                       fontWeight: FontWeight.w600,
                     ),
@@ -226,16 +226,18 @@ class _SessionItemState extends State<SessionItem> {
                                 width: 25,
                                 child: FaIcon(
                                   FontAwesomeIcons.flagCheckered,
-                                  color:
-                                      useDarkMode ? Colors.white : Colors.black,
+                                  color: useDarkMode
+                                      ? Colors.white
+                                      : Color(0xff171717),
                                 ),
                               ),
                             ),
                             Text(
                               'Séance terminée',
                               style: TextStyle(
-                                color:
-                                    useDarkMode ? Colors.white : Colors.black,
+                                color: useDarkMode
+                                    ? Colors.white
+                                    : Color(0xff171717),
                               ),
                             ),
                           ],
@@ -267,7 +269,7 @@ class _SessionItemState extends State<SessionItem> {
                                   style: TextStyle(
                                     color: useDarkMode
                                         ? Colors.white
-                                        : Colors.black,
+                                        : Color(0xff171717),
                                   ),
                                 ),
                               ],
@@ -275,8 +277,9 @@ class _SessionItemState extends State<SessionItem> {
                           : Text(
                               '$startTime - $endTime',
                               style: TextStyle(
-                                color:
-                                    useDarkMode ? Colors.white : Colors.black,
+                                color: useDarkMode
+                                    ? Colors.white
+                                    : Color(0xff171717),
                                 fontSize: 17,
                               ),
                             ),

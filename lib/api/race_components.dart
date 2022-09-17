@@ -75,7 +75,13 @@ class RaceItem extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.all(2),
         height: isFirst ? 280 : 80,
-        color: index % 2 == 1 ? Color(0xff22222c) : Color(0xff15151f),
+        color: index % 2 == 1
+            ? useDarkMode
+                ? Color(0xff22222c)
+                : Color(0xffffffff)
+            : useDarkMode
+                ? Color(0xff15151f)
+                : Color(0xfff4f4f4),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
@@ -93,7 +99,7 @@ class RaceItem extends StatelessWidget {
                       child: Text(
                         this.item.round,
                         style: TextStyle(
-                          color: useDarkMode ? Colors.white : Colors.black,
+                          color: useDarkMode ? Colors.white : Color(0xff171717),
                         ),
                       ),
                     ),
@@ -108,7 +114,9 @@ class RaceItem extends StatelessWidget {
                           Text(
                             this.item.raceName,
                             style: TextStyle(
-                              color: useDarkMode ? Colors.white : Colors.black,
+                              color: useDarkMode
+                                  ? Colors.white
+                                  : Color(0xff171717),
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -116,7 +124,9 @@ class RaceItem extends StatelessWidget {
                             "${ScheduleLands().getLandName(this.item.country)} - $finalDate",
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              color: useDarkMode ? Colors.white : Colors.black,
+                              color: useDarkMode
+                                  ? Colors.white
+                                  : Color(0xff171717),
                             ),
                           ),
                         ],
