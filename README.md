@@ -56,6 +56,11 @@ Theses files are used by Flutter to provide you the translation.
 - Translate [this file](lib/l10n/app_en.arb) to your language (only the text between the quotes).
 - Finally, make a Pull Request or an Issue and attach the code to it!
 
+Currently, the app is available in:
+
+- 🇫🇷 French
+- 🇬🇧 English
+
 ## License
 [![GNU GPLv3 Image](https://www.gnu.org/graphics/gplv3-127x51.png)](https://www.gnu.org/licenses/gpl-3.0.en.html)  
 
