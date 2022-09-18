@@ -880,6 +880,40 @@ class VideoRenderer extends StatefulWidget {
 }
 
 class _VideoRendererState extends State<VideoRenderer> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext build) {
+    return FutureBuilder(
+        future: BrightCove().getVideoLink(widget.videoId),
+        builder: (context, snapshot) => snapshot.hasError
+            ? RequestErrorWidget(
+                snapshot.error.toString(),
+              )
+            : snapshot.hasData
+                ? VideoPlayer(snapshot.data)
+                : LoadingIndicatorUtil());
+  }
+
+  void dispose() {
+    super.dispose();
+  }
+}
+
+class VideoPlayer extends StatefulWidget {
+  final String videoUrl;
+
+  VideoPlayer(
+    this.videoUrl,
+  );
+  @override
+  _VideoPlayerState createState() => _VideoPlayerState();
+}
+
+class _VideoPlayerState extends State<VideoPlayer> {
   ChewieController chewieController;
   VideoPlayerController videoPlayerController;
   bool isLoaded;
@@ -889,59 +923,46 @@ class _VideoRendererState extends State<VideoRenderer> {
     super.initState();
   }
 
-  //@override
+  @override
   Widget build(BuildContext build) {
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
-    return FutureBuilder(
-      future: BrightCove().getVideoLink(widget.videoId),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          chewieController = ChewieController(
-            videoPlayerController: VideoPlayerController.network(
-              snapshot.data,
+
+    chewieController = ChewieController(
+      videoPlayerController: VideoPlayerController.network(
+        widget.videoUrl,
+      ),
+      autoInitialize: true,
+      aspectRatio: 16 / 9,
+      allowedScreenSleep: false,
+      autoPlay: false,
+      looping: false,
+      errorBuilder: (context, errorMessage) {
+        return Center(
+          child: Text(
+            errorMessage,
+            style: TextStyle(
+              color: useDarkMode ? Colors.white : Colors.black,
             ),
-            autoInitialize: true,
-            aspectRatio: 16 / 9,
-            allowedScreenSleep: false,
-            autoPlay: false,
-            looping: false,
-            errorBuilder: (context, errorMessage) {
-              return Center(
-                child: Text(
-                  errorMessage,
-                  style: TextStyle(
-                    color: useDarkMode ? Colors.white : Colors.black,
-                  ),
-                ),
-              );
-            },
-          );
-          return Padding(
-            padding: EdgeInsets.only(bottom: 5),
-            child: Container(
-              height: MediaQuery.of(context).size.width / (16 / 9),
-              child: Chewie(
-                controller: chewieController,
-              ),
-            ),
-          );
-        } else {
-          return snapshot.hasError
-              ? RequestErrorWidget(
-                  snapshot.error.toString(),
-                )
-              : LoadingIndicatorUtil();
-        }
+          ),
+        );
       },
+    );
+    return Padding(
+      padding: EdgeInsets.only(bottom: 5),
+      child: Container(
+        height: MediaQuery.of(context).size.width / (16 / 9),
+        child: Chewie(
+          controller: chewieController,
+        ),
+      ),
     );
   }
 
   @override
   void dispose() {
-    videoPlayerController.dispose();
-    chewieController.pause();
-    chewieController.dispose();
     super.dispose();
+    videoPlayerController.dispose();
+    chewieController.dispose();
   }
 }
