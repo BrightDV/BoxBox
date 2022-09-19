@@ -897,10 +897,6 @@ class _VideoRendererState extends State<VideoRenderer> {
                 ? VideoPlayer(snapshot.data)
                 : LoadingIndicatorUtil());
   }
-
-  void dispose() {
-    super.dispose();
-  }
 }
 
 class VideoPlayer extends StatefulWidget {
@@ -917,10 +913,15 @@ class _VideoPlayerState extends State<VideoPlayer> {
   ChewieController chewieController;
   VideoPlayerController videoPlayerController;
   bool isLoaded;
+  Future<void> _initializeVideoPlayerFuture;
 
   @override
   void initState() {
     super.initState();
+    videoPlayerController = new VideoPlayerController.network(widget.videoUrl);
+    _initializeVideoPlayerFuture = videoPlayerController.initialize().then((_) {
+      setState(() {});
+    });
   }
 
   @override
@@ -929,9 +930,7 @@ class _VideoPlayerState extends State<VideoPlayer> {
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
 
     chewieController = ChewieController(
-      videoPlayerController: VideoPlayerController.network(
-        widget.videoUrl,
-      ),
+      videoPlayerController: videoPlayerController,
       autoInitialize: true,
       aspectRatio: 16 / 9,
       allowedScreenSleep: false,
@@ -948,14 +947,24 @@ class _VideoPlayerState extends State<VideoPlayer> {
         );
       },
     );
-    return Padding(
-      padding: EdgeInsets.only(bottom: 5),
-      child: Container(
-        height: MediaQuery.of(context).size.width / (16 / 9),
-        child: Chewie(
-          controller: chewieController,
-        ),
-      ),
+    return FutureBuilder(
+      future: _initializeVideoPlayerFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          return Padding(
+            key: new PageStorageKey(widget.videoUrl),
+            padding: EdgeInsets.only(bottom: 5),
+            child: Container(
+              height: MediaQuery.of(context).size.width / (16 / 9),
+              child: Chewie(
+                controller: chewieController,
+              ),
+            ),
+          );
+        } else {
+          return LoadingIndicatorUtil();
+        }
+      },
     );
   }
 
