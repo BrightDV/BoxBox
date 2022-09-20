@@ -291,6 +291,8 @@ class NewsItem extends StatelessWidget {
                               Text(
                                 timeago.format(
                                   item.datePosted,
+                                  locale: Localizations.localeOf(context)
+                                      .toString(),
                                 ),
                                 style: TextStyle(
                                   color:
@@ -360,10 +362,6 @@ class _NewsListState extends State<NewsList> {
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     List originalItems = widget.items;
-    timeago.setLocaleMessages(
-      Localizations.localeOf(context).toString(),
-      timeago.FrMessages(),
-    );
 
     return ListView.builder(
       scrollDirection: Axis.vertical,
