@@ -33,6 +33,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
+import 'package:timeago/timeago.dart' as timeago;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
 
@@ -56,7 +58,7 @@ class F1NewsFetcher {
           element['slug'],
           element['title'],
           element['metaDescription'],
-          element['updatedAt'],
+          DateTime.parse(element['updatedAt']),
           element['thumbnail']['image']['url'],
         ),
       );
@@ -100,11 +102,7 @@ class F1NewsFetcher {
       responseAsJson['id'],
       responseAsJson['slug'],
       responseAsJson['title'],
-      responseAsJson['createdAt']
-          .substring(0, 10)
-          .split('-')
-          .reversed
-          .join('-'),
+      DateTime.parse(responseAsJson['createdAt']),
       responseAsJson['articleTags'],
       responseAsJson['hero'],
       responseAsJson['body'],
@@ -120,7 +118,7 @@ class News {
   final String slug;
   final String title;
   final String subtitle;
-  final String datePosted;
+  final DateTime datePosted;
   final String imageUrl;
 
   News(
@@ -138,7 +136,7 @@ class Article {
   final String articleId;
   final String articleSlug;
   final String articleName;
-  final String publishedDate;
+  final DateTime publishedDate;
   final List articleTags;
   final Map articleHero;
   final List articleContent;
@@ -253,8 +251,8 @@ class NewsItem extends StatelessWidget {
                               imageUrl: imageUrl,
                               placeholder: (context, url) => Container(
                                 height: MediaQuery.of(context).size.width /
-                                        (16 / 9) -
-                                    4.5,
+                                        (16 / 9) +
+                                    22,
                                 child: LoadingIndicatorUtil(),
                               ),
                               errorWidget: (context, url, error) =>
@@ -267,19 +265,55 @@ class NewsItem extends StatelessWidget {
                             height: 0.0,
                             width: 0.0,
                           ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 16, right: 16, top: 5),
+                      child: Row(
+                        children: [
+                          Text(
+                            item.newsType.toUpperCase(),
+                            style: TextStyle(
+                              color: useDarkMode ? Colors.white : Colors.black,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Spacer(),
+                          Row(
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.only(right: 8),
+                                child: Icon(
+                                  Icons.schedule,
+                                  color:
+                                      useDarkMode ? Colors.white : Colors.black,
+                                  size: 20.0,
+                                ),
+                              ),
+                              Text(
+                                timeago.format(
+                                  item.datePosted,
+                                ),
+                                style: TextStyle(
+                                  color:
+                                      useDarkMode ? Colors.white : Colors.black,
+                                ),
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
                     ListTile(
                       title: Text(
                         item.title,
                         style: TextStyle(
                           color: useDarkMode ? Colors.white : Colors.black,
-                          fontSize: inRelated ? 14 : 18,
+                          fontSize: 18,
                         ),
                         overflow: TextOverflow.ellipsis,
                         maxLines: 5,
                         textAlign: TextAlign.justify,
                       ),
-                      subtitle: inRelated ||
-                              newsLayout != 'big' && newsLayout != 'condensed'
+                      subtitle: newsLayout != 'big' && newsLayout != 'condensed'
                           ? null
                           : item.subtitle != null
                               ? Text(
@@ -325,8 +359,12 @@ class _NewsListState extends State<NewsList> {
   Widget build(BuildContext context) {
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
-
     List originalItems = widget.items;
+    timeago.setLocaleMessages(
+      Localizations.localeOf(context).toString(),
+      timeago.FrMessages(),
+    );
+
     return ListView.builder(
       scrollDirection: Axis.vertical,
       shrinkWrap: true,
@@ -354,7 +392,8 @@ class _NewsListState extends State<NewsList> {
                             present, originalItems.length));
                       } else {
                         items.addAll(
-                            originalItems.getRange(present, present + perPage));
+                          originalItems.getRange(present, present + perPage),
+                        );
                       }
                       present = present + perPage;
                     },
@@ -406,6 +445,7 @@ class JoinArticlesParts extends StatelessWidget {
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     List articleContent = article.articleContent;
     List<Widget> widgetsList = [];
+
     if (article.articleHero['contentType'] == 'atomVideo') {
       widgetsList.add(
         VideoRenderer(
@@ -559,7 +599,9 @@ class JoinArticlesParts extends StatelessWidget {
                         onPressed: () {},
                       ),
                       Text(
-                        article.publishedDate,
+                        DateFormat('kk:mm\nyyyy-MM-dd')
+                            .format(article.publishedDate),
+                        textAlign: TextAlign.center,
                         style: TextStyle(
                           color: useDarkMode ? Colors.white : Colors.black,
                         ),
@@ -583,7 +625,7 @@ class JoinArticlesParts extends StatelessWidget {
             article['slug'],
             article['title'],
             article['metaDescription'],
-            article['updatedAt'],
+            DateTime.parse(article['updatedAt']),
             article['thumbnail']['image']['url'],
           ),
           true,

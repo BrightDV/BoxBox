@@ -53,6 +53,7 @@ class MyApp extends StatelessWidget {
       900: Color.fromRGBO(255, 6, 0, 1),
     };
     MaterialColor colorCustom = MaterialColor(0xffe10600, color);
+
     return MaterialApp(
       title: 'Box, Box!',
       theme: ThemeData(
