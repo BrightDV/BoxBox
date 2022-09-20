@@ -202,7 +202,10 @@ class NewsItem extends StatelessWidget {
                       Container(
                         child: CachedNetworkImage(
                           imageUrl: imageUrl,
-                          placeholder: (context, url) => LoadingIndicatorUtil(),
+                          placeholder: (context, url) => Container(
+                            height: 90,
+                            child: LoadingIndicatorUtil(),
+                          ),
                           errorWidget: (context, url, error) =>
                               Icon(Icons.error_outlined),
                           fadeOutDuration: Duration(seconds: 1),
@@ -248,8 +251,12 @@ class NewsItem extends StatelessWidget {
                         ? Container(
                             child: CachedNetworkImage(
                               imageUrl: imageUrl,
-                              placeholder: (context, url) =>
-                                  LoadingIndicatorUtil(),
+                              placeholder: (context, url) => Container(
+                                height: MediaQuery.of(context).size.width /
+                                        (16 / 9) -
+                                    4.5,
+                                child: LoadingIndicatorUtil(),
+                              ),
                               errorWidget: (context, url, error) =>
                                   Icon(Icons.error_outlined),
                               fadeOutDuration: Duration(seconds: 1),
@@ -777,8 +784,11 @@ class ImageRenderer extends StatelessWidget {
                               clipBehavior: Clip.antiAlias,
                               child: CachedNetworkImage(
                                 imageUrl: imageUrl,
-                                placeholder: (context, url) =>
-                                    LoadingIndicatorUtil(),
+                                placeholder: (context, url) => Container(
+                                  height: MediaQuery.of(context).size.width /
+                                      (16 / 9),
+                                  child: LoadingIndicatorUtil(),
+                                ),
                                 errorWidget: (context, url, error) => Icon(
                                   Icons.error_outlined,
                                 ),
@@ -813,7 +823,10 @@ class ImageRenderer extends StatelessWidget {
           children: [
             CachedNetworkImage(
               imageUrl: imageUrl,
-              placeholder: (context, url) => LoadingIndicatorUtil(),
+              placeholder: (context, url) => Container(
+                height: MediaQuery.of(context).size.width / (16 / 9),
+                child: LoadingIndicatorUtil(),
+              ),
               errorWidget: (context, url, error) => Icon(Icons.error_outlined),
               fadeOutDuration: Duration(seconds: 1),
               fadeInDuration: Duration(seconds: 1),
@@ -888,14 +901,18 @@ class _VideoRendererState extends State<VideoRenderer> {
   @override
   Widget build(BuildContext build) {
     return FutureBuilder(
-        future: BrightCove().getVideoLink(widget.videoId),
-        builder: (context, snapshot) => snapshot.hasError
-            ? RequestErrorWidget(
-                snapshot.error.toString(),
-              )
-            : snapshot.hasData
-                ? VideoPlayer(snapshot.data)
-                : LoadingIndicatorUtil());
+      future: BrightCove().getVideoLink(widget.videoId),
+      builder: (context, snapshot) => snapshot.hasError
+          ? RequestErrorWidget(
+              snapshot.error.toString(),
+            )
+          : snapshot.hasData
+              ? VideoPlayer(snapshot.data)
+              : Container(
+                  height: MediaQuery.of(context).size.width / (16 / 9),
+                  child: LoadingIndicatorUtil(),
+                ),
+    );
   }
 }
 
@@ -962,7 +979,10 @@ class _VideoPlayerState extends State<VideoPlayer> {
             ),
           );
         } else {
-          return LoadingIndicatorUtil();
+          return Container(
+            height: MediaQuery.of(context).size.width / (16 / 9) - 4.5,
+            child: LoadingIndicatorUtil(),
+          );
         }
       },
     );
