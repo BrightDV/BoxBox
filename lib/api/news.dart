@@ -188,7 +188,7 @@ class NewsItem extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                       builder: (context) =>
-                          ArticleScreen(item.newsId, item.title),
+                          ArticleScreen(item.newsId, item.title, false),
                     ),
                   );
                 },
@@ -204,8 +204,10 @@ class NewsItem extends StatelessWidget {
                             height: 90,
                             child: LoadingIndicatorUtil(),
                           ),
-                          errorWidget: (context, url, error) =>
-                              Icon(Icons.error_outlined),
+                          errorWidget: (context, url, error) => Icon(
+                            Icons.error_outlined,
+                            color: useDarkMode ? Colors.white : Colors.black,
+                          ),
                           fadeOutDuration: Duration(seconds: 1),
                           fadeInDuration: Duration(seconds: 1),
                         ),
@@ -236,7 +238,7 @@ class NewsItem extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                     builder: (context) =>
-                        ArticleScreen(item.newsId, item.title),
+                        ArticleScreen(item.newsId, item.title, false),
                   ),
                 );
               },
@@ -251,12 +253,16 @@ class NewsItem extends StatelessWidget {
                               imageUrl: imageUrl,
                               placeholder: (context, url) => Container(
                                 height: MediaQuery.of(context).size.width /
-                                        (16 / 9) +
-                                    22,
+                                        (16 / 9) -
+                                    5,
                                 child: LoadingIndicatorUtil(),
                               ),
-                              errorWidget: (context, url, error) =>
-                                  Icon(Icons.error_outlined),
+                              errorWidget: (context, url, error) => Icon(
+                                Icons.error_outlined,
+                                color: useDarkMode
+                                    ? Color(0xff1d1d28)
+                                    : Colors.white,
+                              ),
                               fadeOutDuration: Duration(seconds: 1),
                               fadeInDuration: Duration(seconds: 1),
                             ),
@@ -665,13 +671,14 @@ class TextParagraphRenderer extends StatelessWidget {
         onTapLink: (text, url, title) {
           if (url.startsWith('https://www.formula1.com/en/latest/article.')) {
             String articleId = url.substring(43, url.length - 5).split('.')[1];
-            if (text.startsWith('READ MORE:')) {
-              text = text.substring(10);
-            }
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => ArticleScreen(articleId, text),
+                builder: (context) => ArticleScreen(
+                  articleId,
+                  text,
+                  true,
+                ),
               ),
             );
           } else if (url.startsWith('https://www.formula1.com/en/results')) {

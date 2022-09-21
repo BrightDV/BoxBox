@@ -17,20 +17,23 @@
  * Copyright (c) 2022, BrightDV
  */
 
+import 'package:boxbox/api/news.dart';
+import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/request_error.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:marquee/marquee.dart';
-import 'package:boxbox/helpers/loading_indicator_util.dart';
-import 'package:boxbox/api/news.dart';
 
 class ArticleScreen extends StatefulWidget {
   final String articleId;
   final String articleName;
+  final bool isFromLink;
 
   const ArticleScreen(
     this.articleId,
     this.articleName,
+    this.isFromLink,
   );
 
   @override
@@ -38,6 +41,12 @@ class ArticleScreen extends StatefulWidget {
 }
 
 class _ArticleScreenState extends State<ArticleScreen> {
+  ValueNotifier<String> articleTitle = ValueNotifier(' ');
+
+  void updateTitle(String title) {
+    articleTitle.value = title;
+  }
+
   @override
   Widget build(BuildContext context) {
     bool useDarkMode =
@@ -47,21 +56,37 @@ class _ArticleScreenState extends State<ArticleScreen> {
         title: SizedBox(
           height: AppBar().preferredSize.height,
           width: AppBar().preferredSize.width,
-          child: Marquee(
-            text: '${widget.articleName}',
-            style: TextStyle(
-              fontWeight: FontWeight.w600,
-            ),
-            pauseAfterRound: Duration(seconds: 1),
-            startAfter: Duration(seconds: 1),
-            velocity: 85,
-            blankSpace: 100,
-          ),
+          child: widget.isFromLink
+              ? ValueListenableBuilder(
+                  valueListenable: articleTitle,
+                  builder: (context, value, widget) {
+                    return Marquee(
+                      text: value.toString(),
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                      ),
+                      pauseAfterRound: Duration(seconds: 1),
+                      startAfter: Duration(seconds: 1),
+                      velocity: 85,
+                      blankSpace: 100,
+                    );
+                  },
+                )
+              : Marquee(
+                  text: '${widget.articleName}',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                  ),
+                  pauseAfterRound: Duration(seconds: 1),
+                  startAfter: Duration(seconds: 1),
+                  velocity: 85,
+                  blankSpace: 100,
+                ),
         ),
       ),
       backgroundColor:
           useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
-      body: ArticleProvider(widget.articleId),
+      body: ArticleProvider(widget.articleId, updateTitle),
     );
   }
 
@@ -72,16 +97,20 @@ class _ArticleScreenState extends State<ArticleScreen> {
 }
 
 class ArticleProvider extends StatelessWidget {
-  Future<Article> getArticleData(String articleId) async {
-    return await F1NewsFetcher().getArticleData(articleId);
+  Future<Article> getArticleData(
+      String articleId, Function updateArticleTitle) async {
+    Article article = await F1NewsFetcher().getArticleData(articleId);
+    updateArticleTitle(article.articleName);
+    return article;
   }
 
   final String articleId;
-  ArticleProvider(this.articleId);
+  final Function updateArticleTitle;
+  ArticleProvider(this.articleId, this.updateArticleTitle);
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: getArticleData(this.articleId),
+      future: getArticleData(this.articleId, updateArticleTitle),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return RequestErrorWidget(snapshot.error.toString());
