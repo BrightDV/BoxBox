@@ -939,6 +939,11 @@ class _VideoRendererState extends State<VideoRenderer> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext build) {
     return FutureBuilder(
       future: BrightCove().getVideoLink(widget.videoId),
@@ -975,7 +980,7 @@ class _VideoPlayerState extends State<VideoPlayer> {
   @override
   void initState() {
     super.initState();
-    videoPlayerController = new VideoPlayerController.network(widget.videoUrl);
+    videoPlayerController = VideoPlayerController.network(widget.videoUrl);
     _initializeVideoPlayerFuture = videoPlayerController.initialize().then((_) {
       setState(() {});
     });
@@ -989,7 +994,7 @@ class _VideoPlayerState extends State<VideoPlayer> {
     chewieController = ChewieController(
       videoPlayerController: videoPlayerController,
       autoInitialize: true,
-      aspectRatio: 16 / 9,
+      aspectRatio: videoPlayerController.value.aspectRatio,
       allowedScreenSleep: false,
       autoPlay: false,
       looping: false,
@@ -1012,7 +1017,8 @@ class _VideoPlayerState extends State<VideoPlayer> {
             key: new PageStorageKey(widget.videoUrl),
             padding: EdgeInsets.only(bottom: 5),
             child: Container(
-              height: MediaQuery.of(context).size.width / (16 / 9),
+              height: MediaQuery.of(context).size.width /
+                  (videoPlayerController.value.aspectRatio),
               child: Chewie(
                 controller: chewieController,
               ),
@@ -1020,7 +1026,7 @@ class _VideoPlayerState extends State<VideoPlayer> {
           );
         } else {
           return Container(
-            height: MediaQuery.of(context).size.width / (16 / 9) - 4.5,
+            height: MediaQuery.of(context).size.width / (16 / 9),
             child: LoadingIndicatorUtil(),
           );
         }
