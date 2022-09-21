@@ -991,17 +991,12 @@ class _VideoPlayerState extends State<VideoPlayer> {
     _initializeVideoPlayerFuture = videoPlayerController.initialize().then((_) {
       setState(() {});
     });
-  }
-
-  @override
-  Widget build(BuildContext build) {
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
-
     chewieController = ChewieController(
       videoPlayerController: videoPlayerController,
       autoInitialize: true,
-      aspectRatio: videoPlayerController.value.aspectRatio,
+      aspectRatio: 16 / 9,
       allowedScreenSleep: false,
       autoPlay: false,
       looping: false,
@@ -1016,27 +1011,27 @@ class _VideoPlayerState extends State<VideoPlayer> {
         );
       },
     );
+  }
+
+  @override
+  Widget build(BuildContext build) {
     return FutureBuilder(
       future: _initializeVideoPlayerFuture,
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
-          return Padding(
-            key: new PageStorageKey(widget.videoUrl),
-            padding: EdgeInsets.only(bottom: 5),
-            child: Container(
-              height: MediaQuery.of(context).size.width /
-                  (videoPlayerController.value.aspectRatio),
-              child: Chewie(
-                controller: chewieController,
-              ),
-            ),
-          );
-        } else {
-          return Container(
-            height: MediaQuery.of(context).size.width / (16 / 9),
-            child: LoadingIndicatorUtil(),
-          );
-        }
+        return snapshot.connectionState == ConnectionState.done
+            ? SafeArea(
+                child: AspectRatio(
+                  aspectRatio: videoPlayerController.value.aspectRatio,
+                  child: Chewie(
+                    key: new PageStorageKey(widget.videoUrl),
+                    controller: chewieController,
+                  ),
+                ),
+              )
+            : Container(
+                height: MediaQuery.of(context).size.width / (16 / 9),
+                child: LoadingIndicatorUtil(),
+              );
       },
     );
   }
