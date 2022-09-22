@@ -16,11 +16,13 @@
  * 
  * Copyright (c) 2022, BrightDV
  */
+
+import 'package:boxbox/Screens/settings/appearance.dart';
+import 'package:boxbox/Screens/settings/player.dart';
+import 'package:boxbox/Screens/settings/updates.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:boxbox/Screens/settings/appearance.dart';
-import 'package:boxbox/Screens/settings/player.dart';
 
 class SettingsScreen extends StatefulWidget {
   final Function update;
@@ -96,6 +98,27 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       context,
                       MaterialPageRoute(
                         builder: (context) => PlayerScreen(),
+                      ),
+                    );
+                    // video.id.value,
+                  },
+                ),
+                ListTile(
+                  title: Text(
+                    AppLocalizations.of(context).updates,
+                    style: TextStyle(
+                      color: useDarkMode ? Colors.white : Colors.black,
+                    ),
+                  ),
+                  leading: Icon(
+                    Icons.update_outlined,
+                    color: useDarkMode ? Colors.white : Colors.black,
+                  ),
+                  onTap: () async {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => UpdatesScreen(),
                       ),
                     );
                     // video.id.value,

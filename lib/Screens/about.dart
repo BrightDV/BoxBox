@@ -40,93 +40,98 @@ class AboutScreen extends StatelessWidget {
       ),
       backgroundColor:
           useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Image.asset(
-            'assets/images/icon.png',
-            height: 200,
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: 30),
-            child: Text(
-              'Box, Box!',
-              style: TextStyle(
-                color: Theme.of(context).primaryColor,
-                fontSize: 40,
-                fontWeight: FontWeight.w700,
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Padding(
+              padding: EdgeInsets.only(top: 10),
+              child: Image.asset(
+                'assets/images/icon.png',
+                height: 200,
               ),
             ),
-          ),
-          FutureBuilder(
-            future: PackageInfo.fromPlatform(),
-            builder: (context, snapshot) => snapshot.hasData
-                ? Padding(
-                    padding: EdgeInsets.only(
-                      top: 10,
-                      bottom: 30,
-                    ),
-                    child: Text(
-                      'v${snapshot.data.version}',
-                      style: TextStyle(
-                        color: useDarkMode ? Colors.white : Colors.black,
+            Padding(
+              padding: EdgeInsets.only(top: 30),
+              child: Text(
+                'Box, Box!',
+                style: TextStyle(
+                  color: Theme.of(context).primaryColor,
+                  fontSize: 40,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
+            FutureBuilder(
+              future: PackageInfo.fromPlatform(),
+              builder: (context, snapshot) => snapshot.hasData
+                  ? Padding(
+                      padding: EdgeInsets.only(
+                        top: 10,
+                        bottom: 30,
                       ),
+                      child: Text(
+                        'v${snapshot.data.version}',
+                        style: TextStyle(
+                          color: useDarkMode ? Colors.white : Colors.black,
+                        ),
+                      ),
+                    )
+                  : Text(''),
+            ),
+            Padding(
+              padding: EdgeInsets.all(10),
+              child: Text(
+                AppLocalizations.of(context).aboutDescription,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 20,
+                  color: useDarkMode ? Colors.white : Colors.black,
+                ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.all(10),
+              child: SizedBox(
+                height: 40,
+                child: TextButton.icon(
+                  onPressed: () async => await launchUrl(
+                    Uri.parse("https://github.com/BrightDV/BoxBox"),
+                    mode: LaunchMode.externalApplication,
+                  ),
+                  icon: FaIcon(
+                    FontAwesomeIcons.github,
+                  ),
+                  label: Text(
+                    "GitHub - Box, Box!",
+                  ),
+                  style: ButtonStyle(
+                    foregroundColor: MaterialStateProperty.all<Color>(
+                      Colors.white,
                     ),
-                  )
-                : Text(''),
-          ),
-          Padding(
-            padding: EdgeInsets.all(10),
-            child: Text(
-              AppLocalizations.of(context).aboutDescription,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 20,
-                color: useDarkMode ? Colors.white : Colors.black,
-              ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.all(10),
-            child: SizedBox(
-              height: 40,
-              child: TextButton.icon(
-                onPressed: () async => await launchUrl(
-                  Uri.parse("https://github.com/BrightDV/BoxBox"),
-                  mode: LaunchMode.externalApplication,
-                ),
-                icon: FaIcon(
-                  FontAwesomeIcons.github,
-                ),
-                label: Text(
-                  "GitHub - Box, Box!",
-                ),
-                style: ButtonStyle(
-                  foregroundColor: MaterialStateProperty.all<Color>(
-                    Colors.white,
+                    backgroundColor: MaterialStateProperty.all<Color>(
+                      Colors.black,
+                    ),
+                    //onSurface: Colors.grey,
+                    elevation: MaterialStateProperty.all<double>(5),
                   ),
-                  backgroundColor: MaterialStateProperty.all<Color>(
-                    Colors.black,
-                  ),
-                  //onSurface: Colors.grey,
-                  elevation: MaterialStateProperty.all<double>(5),
                 ),
               ),
             ),
-          ),
-          Padding(
-            padding: EdgeInsets.all(20),
-            child: Text(
-              AppLocalizations.of(context).aboutBottomLine,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 11,
-                color: useDarkMode ? Colors.white : Colors.black,
+            Padding(
+              padding: EdgeInsets.all(20),
+              child: Text(
+                AppLocalizations.of(context).aboutBottomLine,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 11,
+                  color: useDarkMode ? Colors.white : Colors.black,
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
