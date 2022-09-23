@@ -17,8 +17,6 @@
  * Copyright (c) 2022, BrightDV
  */
 
-//import 'package:flutlab_logcat/flutlab_logcat.dart';
-
 import 'package:boxbox/helpers/bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -26,8 +24,6 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 void main() async {
-  //WidgetsFlutterBinding.ensureInitialized();
-  //await FlutLabLogcat.init();
   await Hive.initFlutter();
   // ignore: unused_local_variable
   final settingsBox = await Hive.openBox('settings');
