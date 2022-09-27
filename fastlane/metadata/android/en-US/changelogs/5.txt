@@ -1,0 +1,9 @@
+- Save the player when exiting from fullscreen.
+- Fix the controls of the player hidden or duplicated in fullscreen.
+- Load article's title when coming from another article.
+- Check for new update of the app with a button inside the settings.
+- Follow theme mode (light/dark).
+- Better light mode.
+- Show type and time of post of each article.
+- Show the version of the app inside the Drawer and the About page.
+- Better view of the About page on small screens.
