@@ -38,7 +38,9 @@ class _AppearanceScreenState extends State<AppearanceScreen> {
         Hive.box('settings').get('newsLayout', defaultValue: 'big') as String;
     int themeMode =
         Hive.box('settings').get('themeMode', defaultValue: 0) as int;
-    Map valueToString = {
+    String teamTheme = Hive.box('settings')
+        .get('teamTheme', defaultValue: 'default') as String;
+    Map layoutValueToString = {
       'big': AppLocalizations.of(context).articleFull,
       'medium': AppLocalizations.of(context).articleTitleAndImage,
       'condensed': AppLocalizations.of(context).articleTitleAndDescription,
@@ -49,7 +51,38 @@ class _AppearanceScreenState extends State<AppearanceScreen> {
       AppLocalizations.of(context).lightMode,
       AppLocalizations.of(context).darkMode,
     ];
-    String newsLayoutFormated = valueToString[newsLayout];
+    String newsLayoutFormated = layoutValueToString[newsLayout];
+
+    List<String> teamThemeOptions = [
+      AppLocalizations.of(context).defaultValue,
+      'Alfa Romeo',
+      'Alpha Tauri',
+      'Alpine',
+      'Aston Martin',
+      'Ferrari',
+      'Haas',
+      'McLaren',
+      'Mercedes',
+      'Red Bull',
+      'Williams',
+    ];
+
+    Map teamNameToString = {
+      "default": AppLocalizations.of(context).defaultValue,
+      "alfa": 'Alfa Romeo',
+      "alphatauri": 'Alpha Tauri',
+      "alpine": 'Alpine',
+      "aston_martin": 'Aston Martin',
+      "ferrari": 'Ferrari',
+      "haas": 'Haas',
+      "mclaren": 'McLaren',
+      "mercedes": 'Mercedes',
+      "red_bull": 'Red Bull',
+      "williams": 'Williams',
+    };
+
+    teamTheme = teamNameToString[teamTheme];
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -108,6 +141,66 @@ class _AppearanceScreenState extends State<AppearanceScreen> {
                     value: value,
                     child: Text(
                       themeOptions[value],
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: useDarkMode ? Colors.white : Colors.black,
+                      ),
+                    ),
+                  );
+                },
+              ).toList(),
+            ),
+          ),
+          ListTile(
+            title: Text(
+              AppLocalizations.of(context).teamColors,
+              style: TextStyle(
+                color: useDarkMode ? Colors.white : Colors.black,
+              ),
+            ),
+            subtitle: Text(
+              AppLocalizations.of(context).needsRestart,
+              style: TextStyle(
+                color: useDarkMode ? Colors.white : Colors.black,
+                fontSize: 13,
+              ),
+            ),
+            onTap: () {},
+            trailing: DropdownButton(
+              value: teamTheme,
+              dropdownColor: useDarkMode
+                  ? Theme.of(context).backgroundColor
+                  : Colors.white,
+              onChanged: (String newTeamTheme) {
+                if (newTeamTheme != null) {
+                  setState(
+                    () {
+                      Map stringToValue = {
+                        AppLocalizations.of(context).defaultValue: 'default',
+                        'Alfa Romeo': 'alfa',
+                        'Alpha Tauri': 'alphatauri',
+                        'Alpine': 'alpine',
+                        'Aston Martin': 'aston_martin',
+                        'Ferrari': 'ferrari',
+                        'Haas': 'haas',
+                        'McLaren': 'mclaren',
+                        'Mercedes': 'mercedes',
+                        'Red Bull': 'red_bull',
+                        'Williams': 'williams',
+                      };
+                      Hive.box('settings')
+                          .put('teamTheme', stringToValue[newTeamTheme]);
+                      teamTheme = newTeamTheme;
+                    },
+                  );
+                }
+              },
+              items: teamThemeOptions.map<DropdownMenuItem<String>>(
+                (String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(
+                      value,
                       style: TextStyle(
                         fontSize: 12,
                         color: useDarkMode ? Colors.white : Colors.black,

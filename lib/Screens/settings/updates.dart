@@ -63,6 +63,7 @@ class _UpdatesScreenState extends State<UpdatesScreen> {
               AppLocalizations.of(context).tapToCheckForUpdate,
               style: TextStyle(
                 color: useDarkMode ? Colors.white : Colors.black,
+                fontSize: 13,
               ),
             ),
             onTap: () async {
@@ -73,7 +74,6 @@ class _UpdatesScreenState extends State<UpdatesScreen> {
               String remoteVersion = responseAsJson['tag_name'].substring(1);
               PackageInfo versionOfAppInstalled =
                   await PackageInfo.fromPlatform();
-              print(responseAsJson['assets'][0]['browser_download_url']);
               if (versionOfAppInstalled.version != remoteVersion) {
                 showDialog(
                   barrierDismissible: true,
