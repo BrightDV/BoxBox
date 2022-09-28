@@ -18,7 +18,6 @@
  */
 
 import 'package:boxbox/helpers/bottom_navigation_bar.dart';
-import 'package:boxbox/helpers/team_background_color.dart';
 import 'package:boxbox/theme/teams_themes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
