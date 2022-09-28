@@ -780,6 +780,9 @@ class TextParagraphRenderer extends StatelessWidget {
           h4: TextStyle(
             color: useDarkMode ? Colors.white : Colors.black,
           ),
+          listBullet: TextStyle(
+            color: useDarkMode ? Colors.white : Colors.black,
+          ),
         ),
       ),
     );
