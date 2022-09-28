@@ -217,7 +217,7 @@ class NewsItem extends StatelessWidget {
                           item.title,
                           style: TextStyle(
                             color: useDarkMode ? Colors.white : Colors.black,
-                            fontSize: inRelated ? 14 : 18,
+                            fontSize: 14,
                           ),
                           overflow: TextOverflow.ellipsis,
                           maxLines: 5,
@@ -279,7 +279,6 @@ class NewsItem extends StatelessWidget {
                             item.newsType.toUpperCase(),
                             style: TextStyle(
                               color: useDarkMode ? Colors.white : Colors.black,
-                              fontWeight: FontWeight.bold,
                             ),
                           ),
                           Spacer(),
@@ -752,7 +751,7 @@ class TextParagraphRenderer extends StatelessWidget {
           strong: TextStyle(
             color: Theme.of(context).primaryColor,
             fontSize: 16,
-            fontWeight: FontWeight.w600,
+            fontWeight: FontWeight.normal,
           ),
           p: TextStyle(
             fontSize: 14,
@@ -764,18 +763,17 @@ class TextParagraphRenderer extends StatelessWidget {
           ),
           a: TextStyle(
             color: Theme.of(context).primaryColor,
+            decoration: TextDecoration.underline,
+            fontWeight: FontWeight.normal,
           ),
           h1: TextStyle(
             color: useDarkMode ? Colors.white : Colors.black,
-            fontWeight: FontWeight.w600,
           ),
           h2: TextStyle(
             color: useDarkMode ? Colors.white : Colors.black,
-            fontWeight: FontWeight.w600,
           ),
           h3: TextStyle(
             color: useDarkMode ? Colors.white : Colors.black,
-            fontWeight: FontWeight.w600,
           ),
           h4: TextStyle(
             color: useDarkMode ? Colors.white : Colors.black,
