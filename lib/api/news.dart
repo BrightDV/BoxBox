@@ -38,6 +38,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 class F1NewsFetcher {
   final String endpoint = "https://api.formula1.com";
@@ -445,6 +446,7 @@ class JoinArticlesParts extends StatelessWidget {
   JoinArticlesParts(this.article);
 
   Widget build(BuildContext context) {
+    WebViewController _controller;
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     List articleContent = article.articleContent;
@@ -548,6 +550,32 @@ class JoinArticlesParts extends StatelessWidget {
               caption: element['fields']['caption'],
             ),
           );
+        } else if (element['contentType'] == 'atomQuiz') {
+          widgetsList.add(
+            WebView(
+              javascriptMode: JavascriptMode.unrestricted,
+              initialUrl: 'about:blank',
+              onWebViewCreated: (WebViewController webViewController) {
+                _controller = webViewController;
+                _controller
+                    .loadHtmlString(element['element']['riddleEmbedCode']);
+              },
+            ),
+          );
+        } else {
+          widgetsList.add(
+            Container(
+              height: 100,
+              child: Center(
+                child: Text(
+                  'Unsupported widget ¯\\_(ツ)_/¯',
+                  style: TextStyle(
+                    color: useDarkMode ? Colors.white : Colors.black,
+                  ),
+                ),
+              ),
+            ),
+          );
         }
       },
     );
@@ -571,7 +599,7 @@ class JoinArticlesParts extends StatelessWidget {
                     children: [
                       IconButton(
                         icon: Icon(
-                          Icons.share,
+                          Icons.share_outlined,
                           color: useDarkMode ? Colors.white : Colors.black,
                         ),
                         onPressed: () => Share.share(
