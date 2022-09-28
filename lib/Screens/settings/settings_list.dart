@@ -103,27 +103,27 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     // video.id.value,
                   },
                 ),
-                ListTile(
-                  title: Text(
-                    AppLocalizations.of(context).updates,
-                    style: TextStyle(
-                      color: useDarkMode ? Colors.white : Colors.black,
-                    ),
-                  ),
-                  leading: Icon(
-                    Icons.update_outlined,
-                    color: useDarkMode ? Colors.white : Colors.black,
-                  ),
-                  onTap: () async {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => UpdatesScreen(),
-                      ),
-                    );
-                    // video.id.value,
-                  },
-                ),
+                //ListTile(
+                //  title: Text(
+                //    AppLocalizations.of(context).updates,
+                //    style: TextStyle(
+                //      color: useDarkMode ? Colors.white : Colors.black,
+                //    ),
+                //  ),
+                //  leading: Icon(
+                //    Icons.update_outlined,
+                //    color: useDarkMode ? Colors.white : Colors.black,
+                //  ),
+                //  onTap: () async {
+                //    Navigator.push(
+                //      context,
+                //      MaterialPageRoute(
+                //        builder: (context) => UpdatesScreen(),
+                //      ),
+                //    );
+                //    // video.id.value,
+                //  },
+                //),
               ],
             ),
           ],
