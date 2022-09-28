@@ -34,6 +34,7 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
@@ -570,17 +571,15 @@ class JoinArticlesParts extends StatelessWidget {
                     children: [
                       IconButton(
                         icon: Icon(
-                          Icons.language,
+                          Icons.share,
                           color: useDarkMode ? Colors.white : Colors.black,
                         ),
-                        onPressed: () async => await launchUrl(
-                          Uri.parse(
-                              "https://www.formula1.com/en/latest/article.${article.articleSlug}.${article.articleId}.html"),
-                          mode: LaunchMode.externalApplication,
+                        onPressed: () => Share.share(
+                          "https://www.formula1.com/en/latest/article.${article.articleSlug}.${article.articleId}.html",
                         ),
                       ),
                       Text(
-                        AppLocalizations.of(context).open,
+                        AppLocalizations.of(context).share,
                         style: TextStyle(
                           color: useDarkMode ? Colors.white : Colors.black,
                         ),
