@@ -17,13 +17,9 @@
  * Copyright (c) 2022, BrightDV
  */
 
-import 'package:boxbox/helpers/loading_indicator_util.dart';
-import 'package:boxbox/helpers/request_error.dart';
-import 'package:boxbox/helpers/schedule_lands.dart';
-import 'package:boxbox/helpers/racetracks_url.dart';
 import 'package:boxbox/Screens/race_details.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class Race {
@@ -50,19 +46,32 @@ class Race {
 
 class RaceItem extends StatelessWidget {
   final Race item;
-  final bool isFirst;
   final int index;
 
   RaceItem(
     this.item,
-    this.isFirst,
     this.index,
   );
 
   Widget build(BuildContext context) {
-    String finalDate = this.item.date.split("-").reversed.toList().join("/");
+    int month = int.parse(this.item.date.split("-")[1]);
+    String day = this.item.date.split("-")[2];
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
+    List months = [
+      AppLocalizations.of(context).monthAbbreviationJanuary,
+      AppLocalizations.of(context).monthAbbreviationFebruary,
+      AppLocalizations.of(context).monthAbbreviationMarch,
+      AppLocalizations.of(context).monthAbbreviationApril,
+      AppLocalizations.of(context).monthAbbreviationMay,
+      AppLocalizations.of(context).monthAbbreviationJune,
+      AppLocalizations.of(context).monthAbbreviationJuly,
+      AppLocalizations.of(context).monthAbbreviationAugust,
+      AppLocalizations.of(context).monthAbbreviationSeptember,
+      AppLocalizations.of(context).monthAbbreviationOctober,
+      AppLocalizations.of(context).monthAbbreviationNovember,
+      AppLocalizations.of(context).monthAbbreviationDecember,
+    ];
     return GestureDetector(
       onTap: () => Navigator.push(
         context,
@@ -74,7 +83,7 @@ class RaceItem extends StatelessWidget {
       ),
       child: Container(
         padding: EdgeInsets.all(2),
-        height: isFirst ? 280 : 80,
+        height: 80,
         color: index % 2 == 1
             ? useDarkMode
                 ? Color(0xff22222c)
@@ -85,51 +94,37 @@ class RaceItem extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            if (isFirst)
-              RaceImageProvider(
-                this.item,
-              ),
-            Expanded(
+            Container(
+              padding: EdgeInsets.all(10),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
-                  Expanded(
-                    flex: 1,
-                    child: Center(
-                      child: Text(
-                        this.item.round,
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        this.item.country,
                         style: TextStyle(
                           color: useDarkMode ? Colors.white : Color(0xff171717),
                         ),
                       ),
-                    ),
-                  ),
-                  Expanded(
-                    flex: 10,
-                    child: Container(
-                      padding: EdgeInsets.all(5),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: <Widget>[
-                          Text(
-                            this.item.raceName,
-                            style: TextStyle(
-                              color: useDarkMode
-                                  ? Colors.white
-                                  : Color(0xff171717),
-                            ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 5),
+                        child: Text(
+                          this.item.circuitName,
+                          style: TextStyle(
+                            color: Color.fromARGB(255, 136, 135, 135),
+                            fontSize: 12,
                           ),
-                          Text(
-                            "${ScheduleLands().getLandName(this.item.country)} - $finalDate",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: useDarkMode
-                                  ? Colors.white
-                                  : Color(0xff171717),
-                            ),
-                          ),
-                        ],
+                        ),
                       ),
+                    ],
+                  ),
+                  Spacer(), // TODO: container background
+                  Text(
+                    '$day ${months[month - 1].toLowerCase()} ',
+                    style: TextStyle(
+                      color: useDarkMode ? Colors.white : Color(0xff171717),
                     ),
                   ),
                 ],
@@ -156,45 +151,10 @@ class RacesList extends StatelessWidget {
       itemBuilder: (context, index) {
         return RaceItem(
           items[index],
-          isUpNext ? index == 0 : false,
           index,
         );
       },
       physics: ClampingScrollPhysics(),
-    );
-  }
-}
-
-class RaceImageProvider extends StatelessWidget {
-  final Race race;
-  RaceImageProvider(this.race);
-
-  Future<String> getCircuitImageUrl(Race race) async {
-    return await RaceTracksUrls().getRaceTrackUrl(race.circuitId);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: getCircuitImageUrl(this.race),
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return RequestErrorWidget(snapshot.error.toString());
-        }
-        return snapshot.hasData
-            ? Container(
-                height: MediaQuery.of(context).size.width / (16 / 9),
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: CachedNetworkImageProvider(
-                      snapshot.data,
-                    ),
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              )
-            : LoadingIndicatorUtil();
-      },
     );
   }
 }

@@ -163,7 +163,10 @@ class _ErgastApiCalls {
           races.add(
             Race(
               element['round'],
-              element['raceName'],
+              element['raceName'].substring(
+                0,
+                element['raceName'].indexOf(' Grand Prix'),
+              ),
               element['date'],
               element['time'],
               element['Circuit']['circuitId'],
@@ -194,7 +197,10 @@ class _ErgastApiCalls {
           races.add(
             Race(
               element['round'],
-              element['raceName'],
+              element['raceName'].substring(
+                0,
+                element['raceName'].indexOf(' Grand Prix'),
+              ),
               element['date'],
               element['time'],
               element['Circuit']['circuitId'],

@@ -84,9 +84,7 @@ class _RaceDetailsScreenState extends State<RaceDetailsScreen> {
                 flexibleSpace: FlexibleSpaceBar(
                   background: RaceImageProvider(race),
                   title: Text(
-                    race.raceName,
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
+                    race.country,
                   ),
                 ),
               ),
