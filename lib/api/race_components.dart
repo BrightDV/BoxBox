@@ -117,7 +117,6 @@ class RaceItem extends StatelessWidget {
                               color: useDarkMode
                                   ? Colors.white
                                   : Color(0xff171717),
-                              fontWeight: FontWeight.w600,
                             ),
                           ),
                           Text(

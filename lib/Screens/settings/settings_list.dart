@@ -19,7 +19,7 @@
 
 import 'package:boxbox/Screens/settings/appearance.dart';
 import 'package:boxbox/Screens/settings/player.dart';
-import 'package:boxbox/Screens/settings/updates.dart';
+//import 'package:boxbox/Screens/settings/updates.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';

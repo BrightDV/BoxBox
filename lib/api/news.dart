@@ -483,9 +483,6 @@ class JoinArticlesParts extends StatelessWidget {
                     appBar: AppBar(
                       title: Text(
                         tag['fields']['tagName'],
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                        ),
                       ),
                     ),
                     backgroundColor: useDarkMode
@@ -500,7 +497,7 @@ class JoinArticlesParts extends StatelessWidget {
               decoration: BoxDecoration(
                 border: Border.all(
                   color: Theme.of(context).primaryColor,
-                  width: 2.0,
+                  width: 1.0,
                 ),
                 borderRadius: BorderRadius.circular(10),
               ),
@@ -510,7 +507,6 @@ class JoinArticlesParts extends StatelessWidget {
                   tag['fields']['tagName'],
                   style: TextStyle(
                     color: Theme.of(context).primaryColor,
-                    fontWeight: FontWeight.w600,
                   ),
                 ),
               ),
@@ -757,13 +753,13 @@ class TextParagraphRenderer extends StatelessWidget {
                     appBar: AppBar(
                       centerTitle: true,
                       title: Text(
-                        'Circuit...',
+                        'Dead end',
                         style: TextStyle(
                           fontWeight: FontWeight.w600,
                         ),
                       ),
                     ),
-                    body: Text('Circuit!'),
+                    body: Text('This should not be possible... but it is...'),
                   ),
                 ),
               );
