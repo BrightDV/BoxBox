@@ -99,32 +99,67 @@ class RaceItem extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        this.item.country,
-                        style: TextStyle(
-                          color: useDarkMode ? Colors.white : Color(0xff171717),
+                  Expanded(
+                    flex: 1,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(7),
+                        color: useDarkMode
+                            ? index % 2 == 0
+                                ? Color.fromARGB(255, 36, 36, 48)
+                                : Color.fromARGB(255, 23, 23, 34)
+                            : Color.fromARGB(255, 136, 135, 135),
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.all(5),
+                        child: Column(
+                          children: [
+                            Text(
+                              day,
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                            Text(
+                              months[month - 1].toLowerCase(),
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      Padding(
-                        padding: EdgeInsets.only(top: 5),
-                        child: Text(
-                          this.item.circuitName,
-                          style: TextStyle(
-                            color: Color.fromARGB(255, 136, 135, 135),
-                            fontSize: 12,
-                          ),
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
-                  Spacer(), // TODO: container background
-                  Text(
-                    '$day ${months[month - 1].toLowerCase()} ',
-                    style: TextStyle(
-                      color: useDarkMode ? Colors.white : Color(0xff171717),
+                  Expanded(
+                    flex: 5,
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                        left: 10,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            this.item.country,
+                            style: TextStyle(
+                              color: useDarkMode
+                                  ? Colors.white
+                                  : Color(0xff171717),
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(top: 5),
+                            child: Text(
+                              this.item.circuitName,
+                              style: TextStyle(
+                                color: Color.fromARGB(255, 136, 135, 135),
+                                fontSize: 12,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],

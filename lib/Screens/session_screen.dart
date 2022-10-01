@@ -55,7 +55,6 @@ class _SessionScreenState extends State<SessionScreen> {
       DateTime.now(),
       widget.session.startTime,
     );
-    print(widget.session.startTime);
     int days = (timeToRace / 60 / 60 / 24).round();
     int hours = (timeToRace / 60 / 60 - days * 24 - 1).round();
     int minutes = (timeToRace / 60 - days * 24 * 60 - hours * 60 + 60).round();
