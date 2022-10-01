@@ -47,9 +47,6 @@ class _GrandPrixRunningScreenState extends State<GrandPrixRunningScreen> {
           width: AppBar().preferredSize.width,
           child: Marquee(
             text: widget.event.meetingOfficialName,
-            style: TextStyle(
-              fontWeight: FontWeight.w600,
-            ),
             pauseAfterRound: Duration(seconds: 1),
             startAfter: Duration(seconds: 1),
             velocity: 85,
@@ -165,7 +162,7 @@ class _SessionItemState extends State<SessionItem> {
     return GestureDetector(
       child: Container(
         padding: EdgeInsets.only(top: 10),
-        height: 60,
+        height: 70,
         child: Row(
           children: [
             Expanded(
@@ -210,7 +207,6 @@ class _SessionItemState extends State<SessionItem> {
                     style: TextStyle(
                       color: useDarkMode ? Colors.white : Color(0xff171717),
                       fontSize: 20,
-                      fontWeight: FontWeight.w600,
                     ),
                   ),
                   widget.session.endTime.isBefore(DateTime.now())
@@ -220,6 +216,7 @@ class _SessionItemState extends State<SessionItem> {
                             Padding(
                               padding: EdgeInsets.only(
                                 right: 10,
+                                top: 5,
                               ),
                               child: SizedBox(
                                 height: 25,
@@ -249,6 +246,7 @@ class _SessionItemState extends State<SessionItem> {
                                 Padding(
                                   padding: EdgeInsets.only(
                                     right: 5,
+                                    top: 5,
                                   ),
                                   child: SizedBox(
                                     height: 20,
