@@ -27,6 +27,7 @@ import 'package:boxbox/helpers/request_error.dart';
 import 'package:boxbox/Screens/article.dart';
 import 'package:boxbox/Screens/standings.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -554,8 +555,33 @@ class JoinArticlesParts extends StatelessWidget {
               onWebViewCreated: (WebViewController webViewController) {
                 _controller = webViewController;
                 _controller
-                    .loadHtmlString(element['element']['riddleEmbedCode']);
+                    .loadHtmlString(element['fields']['riddleEmbedCode']);
               },
+            ),
+          );
+        } else if (element['contentType'] == 'atomImageGallery') {
+          List<Widget> galleryWidgets = [];
+          element['fields']['imageGallery'].forEach(
+            (element) => galleryWidgets.add(
+              Container(
+                width: MediaQuery.of(context).size.width,
+                child: ImageRenderer(
+                  element['url'],
+                ),
+              ),
+            ),
+          );
+          widgetsList.add(
+            CarouselSlider(
+              items: galleryWidgets,
+              options: CarouselOptions(
+                viewportFraction: 1,
+                aspectRatio: 16 / 9,
+                enableInfiniteScroll: false,
+                enlargeCenterPage: true,
+                autoPlay: true,
+                autoPlayInterval: Duration(seconds: 7),
+              ),
             ),
           );
         } else {
@@ -684,6 +710,7 @@ class TextParagraphRenderer extends StatelessWidget {
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     return Padding(
       padding: EdgeInsets.only(
+        top: 10,
         left: 10,
         right: 10,
       ),
