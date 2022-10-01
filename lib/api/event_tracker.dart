@@ -70,13 +70,9 @@ class EventTracker {
   final String endpoint = "https://api.formula1.com";
   final String apikey = "qPgPPRJyGCIPxFT3el4MF7thXHyJCzAP";
 
-  bool isEventRunning(String meetingStartDate, String meetingEndDate) {
-    DateTime startDate = DateTime.parse(meetingStartDate);
-    DateTime endDate = DateTime.parse(meetingEndDate).add(
-      Duration(hours: 3),
-    );
+  bool isEventRunning(DateTime meetingStartDate, DateTime meetingEndDate) {
     DateTime now = DateTime.now();
-    if (startDate.isBefore(now) && endDate.isAfter(now)) {
+    if (meetingStartDate.isBefore(now) && meetingEndDate.isAfter(now)) {
       return true;
     } else {
       return false;
@@ -100,60 +96,78 @@ class EventTracker {
 
   Future<Event> parseEvent() async {
     Map eventAsJson = await fetchEvent();
+    String gmtOffset =
+        eventAsJson['seasonContext']['timetables'][0]['gmtOffset'];
+    DateTime meetingStartDate = DateTime.parse(
+      eventAsJson['race']['meetingStartDate'].substring(0, 23),
+    ).toLocal();
+    DateTime meetingEndDate = DateTime.parse(
+      eventAsJson['race']['meetingEndDate'].substring(0, 23),
+    ).toLocal().add(
+          Duration(
+            hours: 4,
+          ),
+        );
+
     bool isRunning = isEventRunning(
-      eventAsJson['race']['meetingStartDate'],
-      eventAsJson['race']['meetingEndDate'],
+      meetingStartDate,
+      meetingEndDate,
     );
     List<Session> sessions = [
       Session(
         eventAsJson['seasonContext']['timetables'][0]['state'],
         eventAsJson['seasonContext']['timetables'][0]['session'],
         DateTime.parse(
-          eventAsJson['seasonContext']['timetables'][0]['endTime'],
-        ),
+          eventAsJson['seasonContext']['timetables'][0]['endTime'] + gmtOffset,
+        ).toLocal(),
         DateTime.parse(
-          eventAsJson['seasonContext']['timetables'][0]['startTime'],
-        ),
+          eventAsJson['seasonContext']['timetables'][0]['startTime'] +
+              gmtOffset,
+        ).toLocal(),
       ),
       Session(
         eventAsJson['seasonContext']['timetables'][1]['state'],
         eventAsJson['seasonContext']['timetables'][1]['session'],
         DateTime.parse(
-          eventAsJson['seasonContext']['timetables'][1]['endTime'],
-        ),
+          eventAsJson['seasonContext']['timetables'][1]['endTime'] + gmtOffset,
+        ).toLocal(),
         DateTime.parse(
-          eventAsJson['seasonContext']['timetables'][1]['startTime'],
-        ),
+          eventAsJson['seasonContext']['timetables'][1]['startTime'] +
+              gmtOffset,
+        ).toLocal(),
       ),
       Session(
         eventAsJson['seasonContext']['timetables'][2]['state'],
         eventAsJson['seasonContext']['timetables'][2]['session'],
         DateTime.parse(
-          eventAsJson['seasonContext']['timetables'][2]['endTime'],
-        ),
+          eventAsJson['seasonContext']['timetables'][2]['endTime'] + gmtOffset,
+        ).toLocal(),
         DateTime.parse(
-          eventAsJson['seasonContext']['timetables'][2]['startTime'],
-        ),
+          eventAsJson['seasonContext']['timetables'][2]['startTime'] +
+              gmtOffset,
+        ).toLocal(),
       ),
       Session(
         eventAsJson['seasonContext']['timetables'][3]['state'],
         eventAsJson['seasonContext']['timetables'][3]['session'],
         DateTime.parse(
-          eventAsJson['seasonContext']['timetables'][3]['endTime'],
-        ),
+          eventAsJson['seasonContext']['timetables'][3]['endTime'] + gmtOffset,
+        ).toLocal(),
         DateTime.parse(
-          eventAsJson['seasonContext']['timetables'][3]['startTime'],
-        ),
+          eventAsJson['seasonContext']['timetables'][3]['startTime'] +
+              gmtOffset,
+        ).toLocal(),
       ),
       Session(
         eventAsJson['seasonContext']['timetables'][4]['state'],
         eventAsJson['seasonContext']['timetables'][4]['session'],
         DateTime.parse(
-          eventAsJson['seasonContext']['timetables'][4]['endTime'],
-        ),
+          eventAsJson['seasonContext']['timetables'][4]['endTime'] + gmtOffset,
+        ).toLocal(),
         DateTime.parse(
-          eventAsJson['seasonContext']['timetables'][4]['startTime'],
-        ),
+          eventAsJson['seasonContext']['timetables'][4]['startTime'] +
+              gmtOffset,
+        ).toLocal(),
       ),
     ];
     sessions.sort(
@@ -169,12 +183,8 @@ class EventTracker {
       eventAsJson['race']['meetingCountryName'],
       eventAsJson['race']['meetingOfficialName'],
       eventAsJson['race']['meetingCountryName'],
-      DateTime.parse(
-        eventAsJson['race']['meetingStartDate'],
-      ),
-      DateTime.parse(
-        eventAsJson['race']['meetingEndDate'],
-      ),
+      meetingStartDate,
+      meetingEndDate,
       isRunning,
       sessions[0],
       sessions[1],
