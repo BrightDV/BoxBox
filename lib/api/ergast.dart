@@ -157,22 +157,22 @@ class _ErgastApiCalls {
           int.parse(dateParts[0]),
           int.parse(dateParts[1]),
           int.parse(dateParts[2]),
+        ).add(
+          Duration(days: 1),
         );
         DateTime now = new DateTime.now();
         if (now.compareTo(raceDate) < 0) {
           races.add(
             Race(
               element['round'],
-              element['raceName'].substring(
-                0,
-                element['raceName'].indexOf(' Grand Prix'),
-              ),
+              element['raceName'],
               element['date'],
               element['time'],
               element['Circuit']['circuitId'],
               element['Circuit']['circuitName'],
               element['Circuit']['url'],
               element['Circuit']['Location']['country'],
+              isFirst: races.length == 0,
             ),
           );
         }
@@ -184,16 +184,13 @@ class _ErgastApiCalls {
           int.parse(dateParts[0]),
           int.parse(dateParts[1]),
           int.parse(dateParts[2]),
+        ).add(
+          Duration(
+            days: 1,
+          ),
         );
         DateTime now = new DateTime.now();
-        if (now.compareTo(
-              raceDate.add(
-                Duration(
-                  hours: 3,
-                ),
-              ),
-            ) >
-            0) {
+        if (now.compareTo(raceDate) > 0) {
           races.add(
             Race(
               element['round'],

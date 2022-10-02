@@ -840,86 +840,22 @@ class TextParagraphRenderer extends StatelessWidget {
 class ImageRenderer extends StatelessWidget {
   final String imageUrl;
   final String caption;
-  ImageRenderer(this.imageUrl, {this.caption});
+  final bool inSchedule;
+  ImageRenderer(
+    this.imageUrl, {
+    this.caption,
+    this.inSchedule,
+  });
 
   Widget build(BuildContext context) {
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     return Padding(
-      padding: EdgeInsets.only(bottom: 10),
-      child: GestureDetector(
-        onTap: () {
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                contentPadding: EdgeInsets.only(
-                  top: 52,
-                  bottom: 50,
-                ),
-                insetPadding: EdgeInsets.zero,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-                backgroundColor: Colors.transparent,
-                content: Builder(
-                  builder: (context) {
-                    return Container(
-                      width: double.infinity - 10,
-                      child: InteractiveViewer(
-                        minScale: 0.1,
-                        maxScale: 6,
-                        child: Stack(
-                          children: [
-                            GestureDetector(
-                              onTap: () => Navigator.pop(context),
-                            ),
-                            Card(
-                              elevation: 5.0,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                              clipBehavior: Clip.antiAlias,
-                              child: CachedNetworkImage(
-                                imageUrl: imageUrl,
-                                placeholder: (context, url) => Container(
-                                  height: MediaQuery.of(context).size.width /
-                                      (16 / 9),
-                                  child: LoadingIndicatorUtil(),
-                                ),
-                                errorWidget: (context, url, error) => Icon(
-                                  Icons.error_outlined,
-                                ),
-                                fadeOutDuration: Duration(seconds: 1),
-                                fadeInDuration: Duration(seconds: 1),
-                                fit: BoxFit.scaleDown,
-                              ),
-                            ),
-                            Align(
-                              alignment: Alignment.topRight,
-                              child: IconButton(
-                                onPressed: () => Navigator.pop(context),
-                                icon: Icon(
-                                  Icons.close_rounded,
-                                  color:
-                                      useDarkMode ? Colors.white : Colors.black,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              );
-            },
-          );
-        },
-        child: Stack(
-          alignment: Alignment.bottomCenter,
-          children: [
-            CachedNetworkImage(
+      padding: EdgeInsets.only(
+        bottom: inSchedule != null ? 0 : 10,
+      ),
+      child: inSchedule != null
+          ? CachedNetworkImage(
               imageUrl: imageUrl,
               placeholder: (context, url) => Container(
                 height: MediaQuery.of(context).size.width / (16 / 9),
@@ -928,54 +864,140 @@ class ImageRenderer extends StatelessWidget {
               errorWidget: (context, url, error) => Icon(Icons.error_outlined),
               fadeOutDuration: Duration(seconds: 1),
               fadeInDuration: Duration(seconds: 1),
-            ),
-            Container(
-              alignment: Alignment.bottomCenter,
-              child: caption != null
-                  ? Container(
-                      width: double.infinity,
-                      padding: EdgeInsets.all(4),
-                      color: Colors.black.withOpacity(0.7),
-                      child: Text(
-                        caption,
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                        textAlign: TextAlign.center,
+            )
+          : GestureDetector(
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      contentPadding: EdgeInsets.only(
+                        top: 52,
+                        bottom: 50,
                       ),
-                    )
-                  : Container(),
-            ),
-          ],
-        ),
+                      insetPadding: EdgeInsets.zero,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      backgroundColor: Colors.transparent,
+                      content: Builder(
+                        builder: (context) {
+                          return Container(
+                            width: double.infinity - 10,
+                            child: InteractiveViewer(
+                              minScale: 0.1,
+                              maxScale: 6,
+                              child: Stack(
+                                children: [
+                                  GestureDetector(
+                                    onTap: () => Navigator.pop(context),
+                                  ),
+                                  Card(
+                                    elevation: 5.0,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                    clipBehavior: Clip.antiAlias,
+                                    child: CachedNetworkImage(
+                                      imageUrl: imageUrl,
+                                      placeholder: (context, url) => Container(
+                                        height:
+                                            MediaQuery.of(context).size.width /
+                                                (16 / 9),
+                                        child: LoadingIndicatorUtil(),
+                                      ),
+                                      errorWidget: (context, url, error) =>
+                                          Icon(
+                                        Icons.error_outlined,
+                                      ),
+                                      fadeOutDuration: Duration(seconds: 1),
+                                      fadeInDuration: Duration(seconds: 1),
+                                      fit: BoxFit.scaleDown,
+                                    ),
+                                  ),
+                                  Align(
+                                    alignment: Alignment.topRight,
+                                    child: IconButton(
+                                      onPressed: () => Navigator.pop(context),
+                                      icon: Icon(
+                                        Icons.close_rounded,
+                                        color: useDarkMode
+                                            ? Colors.white
+                                            : Colors.black,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    );
+                  },
+                );
+              },
+              child: Stack(
+                alignment: Alignment.bottomCenter,
+                children: [
+                  CachedNetworkImage(
+                    imageUrl: imageUrl,
+                    placeholder: (context, url) => Container(
+                      height: MediaQuery.of(context).size.width / (16 / 9),
+                      child: LoadingIndicatorUtil(),
+                    ),
+                    errorWidget: (context, url, error) =>
+                        Icon(Icons.error_outlined),
+                    fadeOutDuration: Duration(seconds: 1),
+                    fadeInDuration: Duration(seconds: 1),
+                  ),
+                  Container(
+                    alignment: Alignment.bottomCenter,
+                    child: caption != null
+                        ? Container(
+                            width: double.infinity,
+                            padding: EdgeInsets.all(4),
+                            color: Colors.black.withOpacity(0.7),
+                            child: Text(
+                              caption,
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          )
+                        : Container(),
+                  ),
+                ],
+              ),
 
-        //child: Container(
-        //  height: MediaQuery.of(context).size.height * 0.3,
-        //  decoration: BoxDecoration(
-        //    image: DecorationImage(
-        //      fit: BoxFit.contain,
-        //      image: CachedNetworkImageProvider(
-        //        imageUrl,
-        //      ),
-        //    ),
-        //  ),
-        //  alignment: Alignment.bottomCenter,
-        //  child: caption != null
-        //      ? Container(
-        //          width: double.infinity,
-        //          padding: EdgeInsets.all(4),
-        //          color: Colors.black.withOpacity(0.7),
-        //          child: Text(
-        //            caption,
-        //            style: TextStyle(
-        //              color: Colors.white,
-        //            ),
-        //           textAlign: TextAlign.center,
-        //          ),
-        //        )
-        //      : Container(),
-        //),
-      ),
+              //child: Container(
+              //  height: MediaQuery.of(context).size.height * 0.3,
+              //  decoration: BoxDecoration(
+              //    image: DecorationImage(
+              //      fit: BoxFit.contain,
+              //      image: CachedNetworkImageProvider(
+              //        imageUrl,
+              //      ),
+              //    ),
+              //  ),
+              //  alignment: Alignment.bottomCenter,
+              //  child: caption != null
+              //      ? Container(
+              //          width: double.infinity,
+              //          padding: EdgeInsets.all(4),
+              //          color: Colors.black.withOpacity(0.7),
+              //          child: Text(
+              //            caption,
+              //            style: TextStyle(
+              //              color: Colors.white,
+              //            ),
+              //           textAlign: TextAlign.center,
+              //          ),
+              //        )
+              //      : Container(),
+              //),
+            ),
     );
   }
 }

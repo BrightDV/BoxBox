@@ -18,6 +18,9 @@
  */
 
 import 'package:boxbox/Screens/race_details.dart';
+import 'package:boxbox/api/news.dart';
+import 'package:boxbox/helpers/loading_indicator_util.dart';
+import 'package:boxbox/helpers/racetracks_url.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -31,6 +34,7 @@ class Race {
   final String circuitName;
   final String circuitUrl;
   final String country;
+  final bool isFirst;
 
   Race(
     this.round,
@@ -40,15 +44,67 @@ class Race {
     this.circuitId,
     this.circuitName,
     this.circuitUrl,
-    this.country,
-  );
+    this.country, {
+    this.isFirst,
+  });
 }
 
 class RaceItem extends StatelessWidget {
   final Race item;
   final int index;
+  final bool isUpNext;
 
   RaceItem(
+    this.item,
+    this.index,
+    this.isUpNext,
+  );
+
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () => Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => RaceDetailsScreen(
+            item,
+          ),
+        ),
+      ),
+      child: GestureDetector(
+        onTap: () => Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => RaceDetailsScreen(
+              item,
+            ),
+          ),
+        ),
+        child: index == 0 && isUpNext
+            ? Column(
+                children: [
+                  FutureBuilder(
+                    future: RaceTracksUrls().getRaceTrackUrl(item.circuitId),
+                    builder: (context, snapshot) => snapshot.hasData
+                        ? ImageRenderer(
+                            snapshot.data,
+                            inSchedule: true,
+                          )
+                        : LoadingIndicatorUtil(),
+                  ),
+                  RaceListItem(item, index),
+                ],
+              )
+            : RaceListItem(item, index),
+      ),
+    );
+  }
+}
+
+class RaceListItem extends StatelessWidget {
+  final Race item;
+  final int index;
+
+  RaceListItem(
     this.item,
     this.index,
   );
@@ -72,101 +128,92 @@ class RaceItem extends StatelessWidget {
       AppLocalizations.of(context).monthAbbreviationNovember,
       AppLocalizations.of(context).monthAbbreviationDecember,
     ];
-    return GestureDetector(
-      onTap: () => Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => RaceDetailsScreen(
-            item,
-          ),
-        ),
-      ),
-      child: Container(
-        padding: EdgeInsets.all(2),
-        height: 80,
-        color: index % 2 == 1
-            ? useDarkMode
-                ? Color(0xff22222c)
-                : Color(0xffffffff)
-            : useDarkMode
-                ? Color(0xff15151f)
-                : Color(0xfff4f4f4),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Container(
-              padding: EdgeInsets.all(10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  Expanded(
-                    flex: 1,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(7),
-                        color: useDarkMode
-                            ? index % 2 == 0
-                                ? Color.fromARGB(255, 36, 36, 48)
-                                : Color.fromARGB(255, 23, 23, 34)
-                            : Color.fromARGB(255, 136, 135, 135),
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.all(5),
-                        child: Column(
-                          children: [
-                            Text(
-                              day,
-                              style: TextStyle(
-                                color: Colors.white,
-                              ),
-                            ),
-                            Text(
-                              months[month - 1].toLowerCase(),
-                              style: TextStyle(
-                                color: Colors.white,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+    return Container(
+      padding: EdgeInsets.all(2),
+      height: 80,
+      color: index % 2 == 1
+          ? useDarkMode
+              ? Color(0xff22222c)
+              : Color(0xffffffff)
+          : useDarkMode
+              ? Color(0xff15151f)
+              : Color(0xfff4f4f4),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Container(
+            padding: index == 0
+                ? EdgeInsets.fromLTRB(10, 0, 10, 10)
+                : EdgeInsets.all(10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Expanded(
+                  flex: 1,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(7),
+                      color: useDarkMode
+                          ? index % 2 == 0
+                              ? Color.fromARGB(255, 36, 36, 48)
+                              : Color.fromARGB(255, 23, 23, 34)
+                          : Color.fromARGB(255, 136, 135, 135),
                     ),
-                  ),
-                  Expanded(
-                    flex: 5,
                     child: Padding(
-                      padding: EdgeInsets.only(
-                        left: 10,
-                      ),
+                      padding: EdgeInsets.all(5),
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            this.item.country,
+                            day,
                             style: TextStyle(
-                              color: useDarkMode
-                                  ? Colors.white
-                                  : Color(0xff171717),
+                              color: Colors.white,
                             ),
                           ),
-                          Padding(
-                            padding: EdgeInsets.only(top: 5),
-                            child: Text(
-                              this.item.circuitName,
-                              style: TextStyle(
-                                color: Color.fromARGB(255, 136, 135, 135),
-                                fontSize: 12,
-                              ),
+                          Text(
+                            months[month - 1].toLowerCase(),
+                            style: TextStyle(
+                              color: Colors.white,
                             ),
                           ),
                         ],
                       ),
                     ),
                   ),
-                ],
-              ),
+                ),
+                Expanded(
+                  flex: 5,
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                      left: 10,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          this.item.country,
+                          style: TextStyle(
+                            color:
+                                useDarkMode ? Colors.white : Color(0xff171717),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 5),
+                          child: Text(
+                            this.item.circuitName,
+                            style: TextStyle(
+                              color: Color.fromARGB(255, 136, 135, 135),
+                              fontSize: 12,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -187,6 +234,7 @@ class RacesList extends StatelessWidget {
         return RaceItem(
           items[index],
           index,
+          isUpNext,
         );
       },
       physics: ClampingScrollPhysics(),
