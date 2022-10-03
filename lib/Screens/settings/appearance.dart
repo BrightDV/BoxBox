@@ -40,6 +40,9 @@ class _AppearanceScreenState extends State<AppearanceScreen> {
         Hive.box('settings').get('themeMode', defaultValue: 0) as int;
     String teamTheme = Hive.box('settings')
         .get('teamTheme', defaultValue: 'default') as String;
+    bool useDefaultFontForArticles = Hive.box('settings')
+        .get('useDefaultFontForArticles', defaultValue: false) as bool;
+
     Map layoutValueToString = {
       'big': AppLocalizations.of(context).articleFull,
       'medium': AppLocalizations.of(context).articleTitleAndImage,
@@ -52,7 +55,6 @@ class _AppearanceScreenState extends State<AppearanceScreen> {
       AppLocalizations.of(context).darkMode,
     ];
     String newsLayoutFormated = layoutValueToString[newsLayout];
-
     List<String> teamThemeOptions = [
       AppLocalizations.of(context).defaultValue,
       'Alfa Romeo',
@@ -264,6 +266,28 @@ class _AppearanceScreenState extends State<AppearanceScreen> {
               ).toList(),
             ),
           ),
+          SwitchListTile(
+            title: Text(
+              AppLocalizations.of(context).font,
+              style: TextStyle(
+                color: useDarkMode ? Colors.white : Colors.black,
+              ),
+            ),
+            subtitle: Text(
+              AppLocalizations.of(context).fontDescription,
+              style: TextStyle(
+                color: useDarkMode ? Colors.white : Colors.black,
+                fontSize: 13,
+              ),
+            ),
+            value: useDefaultFontForArticles,
+            onChanged: (bool value) {
+              setState(() {
+                useDefaultFontForArticles = value;
+                Hive.box('settings').put('useDefaultFontForArticles', value);
+              });
+            },
+          )
         ],
       ),
     );

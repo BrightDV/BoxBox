@@ -708,6 +708,8 @@ class TextParagraphRenderer extends StatelessWidget {
   Widget build(BuildContext context) {
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
+    bool useDefaultFontForArticles = Hive.box('settings')
+        .get('useDefaultFontForArticles', defaultValue: false) as bool;
     return Padding(
       padding: EdgeInsets.only(
         top: 10,
@@ -806,6 +808,7 @@ class TextParagraphRenderer extends StatelessWidget {
           p: TextStyle(
             fontSize: 14,
             color: useDarkMode ? Colors.white : Colors.black,
+            fontFamily: useDefaultFontForArticles ? 'Roboto' : 'Formula1',
           ),
           pPadding: EdgeInsets.only(
             top: 10,
@@ -815,21 +818,27 @@ class TextParagraphRenderer extends StatelessWidget {
             color: Theme.of(context).primaryColor,
             decoration: TextDecoration.underline,
             fontWeight: FontWeight.normal,
+            fontFamily: useDefaultFontForArticles ? 'Roboto' : 'Formula1',
           ),
           h1: TextStyle(
             color: useDarkMode ? Colors.white : Colors.black,
+            fontFamily: useDefaultFontForArticles ? 'Roboto' : 'Formula1',
           ),
           h2: TextStyle(
             color: useDarkMode ? Colors.white : Colors.black,
+            fontFamily: useDefaultFontForArticles ? 'Roboto' : 'Formula1',
           ),
           h3: TextStyle(
             color: useDarkMode ? Colors.white : Colors.black,
+            fontFamily: useDefaultFontForArticles ? 'Roboto' : 'Formula1',
           ),
           h4: TextStyle(
             color: useDarkMode ? Colors.white : Colors.black,
+            fontFamily: useDefaultFontForArticles ? 'Roboto' : 'Formula1',
           ),
           listBullet: TextStyle(
             color: useDarkMode ? Colors.white : Colors.black,
+            fontFamily: useDefaultFontForArticles ? 'Roboto' : 'Formula1',
           ),
         ),
       ),
