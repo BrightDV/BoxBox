@@ -129,8 +129,8 @@ class DriverDetailsFragment extends StatelessWidget {
       AppLocalizations.of(context).team,
       AppLocalizations.of(context).country,
       AppLocalizations.of(context).podiums,
-      AppLocalizations.of(context).grandsPrix,
       AppLocalizations.of(context).points,
+      AppLocalizations.of(context).grandsPrix,
       AppLocalizations.of(context).worldChampionships,
       AppLocalizations.of(context).highestRaceFinish,
       AppLocalizations.of(context).highestGridPosition,
@@ -155,7 +155,6 @@ class DriverDetailsFragment extends StatelessWidget {
                         textAlign: TextAlign.start,
                         style: TextStyle(
                           color: useDarkMode ? Colors.white : Colors.black,
-                          fontWeight: FontWeight.bold,
                           fontSize: 14,
                         ),
                       ),
@@ -182,7 +181,6 @@ class DriverDetailsFragment extends StatelessWidget {
               style: TextStyle(
                 color: useDarkMode ? Colors.white : Colors.black,
                 fontSize: 18,
-                fontWeight: FontWeight.bold,
               ),
             ),
             SingleChildScrollView(
@@ -237,7 +235,6 @@ class DriverDetailsFragment extends StatelessWidget {
                 style: TextStyle(
                   color: useDarkMode ? Colors.white : Colors.black,
                   fontSize: 18,
-                  fontWeight: FontWeight.bold,
                 ),
               ),
               for (String biographyParagraph in driverDetails[2])
@@ -262,7 +259,6 @@ class DriverDetailsFragment extends StatelessWidget {
                   style: TextStyle(
                     color: useDarkMode ? Colors.white : Colors.black,
                     fontSize: 18,
-                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
