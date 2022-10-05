@@ -12,9 +12,12 @@
 
 ## Download
 
+[<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
+     alt="Get it on F-Droid"
+     height="80">](https://f-droid.org/packages/org.brightdv.boxbox/)
 [<img src="https://img.shields.io/badge/GitHub-181717?logo=github&logoColor=white"
      alt="Download from GitHub"
-     height="60">](https://github.com/BrightDV/BoxBox/releases)
+     height="60">](https://github.com/BrightDV/BoxBox/releases/latest)
 
 ## Screenshots
 
