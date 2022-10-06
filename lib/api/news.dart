@@ -69,7 +69,7 @@ class F1NewsFetcher {
     return newsList;
   }
 
-  Future<List> getLatestNews({String tagId}) async {
+  FutureOr<List> getLatestNews({String tagId}) async {
     Uri url;
     if (tagId != null) {
       url = Uri.parse('$endpoint/v1/editorial/articles?limit=200&tags=$tagId');
@@ -376,7 +376,7 @@ class _NewsListState extends State<NewsList> {
       shrinkWrap: true,
       itemCount:
           (present <= originalItems.length) ? items.length + 1 : items.length,
-      physics: ClampingScrollPhysics(),
+      physics: AlwaysScrollableScrollPhysics(),
       itemBuilder: (context, index) {
         return index == items.length
             ? TextButton(
@@ -549,14 +549,17 @@ class JoinArticlesParts extends StatelessWidget {
           );
         } else if (element['contentType'] == 'atomQuiz') {
           widgetsList.add(
-            WebView(
-              javascriptMode: JavascriptMode.unrestricted,
-              initialUrl: 'about:blank',
-              onWebViewCreated: (WebViewController webViewController) {
-                _controller = webViewController;
-                _controller
-                    .loadHtmlString(element['fields']['riddleEmbedCode']);
-              },
+            Container(
+              height: 400,
+              child: WebView(
+                javascriptMode: JavascriptMode.unrestricted,
+                initialUrl: 'about:blank',
+                onWebViewCreated: (WebViewController webViewController) {
+                  _controller = webViewController;
+                  _controller
+                      .loadHtmlString(element['fields']['riddleEmbedCode']);
+                },
+              ),
             ),
           );
         } else if (element['contentType'] == 'atomImageGallery') {

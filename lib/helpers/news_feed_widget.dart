@@ -17,45 +17,71 @@
  * Copyright (c) 2022, BrightDV
  */
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/request_error.dart';
 import 'package:boxbox/api/news.dart';
 
-class NewsFeedWidget extends StatelessWidget {
+class NewsFeedWidget extends StatefulWidget {
   final String tagId;
-  Future<List> getLatestNewsItems({String tagId}) async {
+
+  NewsFeedWidget({Key key, this.tagId});
+  @override
+  _NewsFeedWidgetState createState() => _NewsFeedWidgetState();
+}
+
+class _NewsFeedWidgetState extends State<NewsFeedWidget> {
+  FutureOr<List> getLatestNewsItems({String tagId}) async {
     return await F1NewsFetcher().getLatestNews(tagId: tagId);
   }
 
-  NewsFeedWidget({Key key, this.tagId}) : super(key: key);
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
+      new GlobalKey<RefreshIndicatorState>();
+  Future<List> refreshedNews;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) => _refreshIndicatorKey.currentState.show());
+    refreshedNews = getLatestNewsItems(tagId: widget.tagId);
+  }
+
   @override
   Widget build(BuildContext context) {
     Map latestNews = Hive.box('requests').get('news', defaultValue: {}) as Map;
-    if (tagId != null) {
+
+    if (widget.tagId != null) {
       latestNews = {};
     }
     return FutureBuilder(
-      future: getLatestNewsItems(tagId: tagId),
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return latestNews['items'] != null
-              ? NewsList(
-                  items: F1NewsFetcher().formatResponse(latestNews),
-                )
-              : RequestErrorWidget(snapshot.error.toString());
-        }
-        return snapshot.hasData
-            ? NewsList(
-                items: snapshot.data,
-              )
-            : latestNews['items'] != null
+      future: refreshedNews,
+      builder: (context, snapshot) => RefreshIndicator(
+        key: _refreshIndicatorKey,
+        onRefresh: () async {
+          _refreshIndicatorKey.currentState?.show(atTop: false);
+          List freshItems = await getLatestNewsItems(tagId: widget.tagId);
+          setState(() {
+            refreshedNews = Future.value(freshItems);
+          });
+        },
+        child: snapshot.hasError
+            ? RequestErrorWidget(snapshot.error)
+            : snapshot.hasData
                 ? NewsList(
-                    items: F1NewsFetcher().formatResponse(latestNews),
+                    items: snapshot.data,
                   )
-                : LoadingIndicatorUtil();
-      },
+                : LoadingIndicatorUtil(),
+      ),
     );
   }
 }
+
+// latestNews['items']
+
+// NewsList(
+              //items: F1NewsFetcher().formatResponse(latestNews),
+            //)
