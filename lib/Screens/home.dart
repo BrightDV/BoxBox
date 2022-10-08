@@ -17,9 +17,9 @@
  * Copyright (c) 2022, BrightDV
  */
 
-import 'package:flutter/material.dart';
 import 'package:boxbox/helpers/live_session_status_indicator.dart';
 import 'package:boxbox/helpers/news_feed_widget.dart';
+import 'package:flutter/material.dart';
 
 class HomeScreen extends StatelessWidget {
   @override

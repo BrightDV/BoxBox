@@ -113,6 +113,8 @@
     "@newVersionAvailable": {},
     "next": "NEXT",
     "@next": {},
+    "offline": "Offline. The data may not be up to date.",
+    "@offline": {},
     "placeOfBirth": "Place of birth",
     "@placeOfBirth": {},
     "player": "Player",

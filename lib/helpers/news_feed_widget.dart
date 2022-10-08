@@ -19,11 +19,13 @@
 
 import 'dart:async';
 
-import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:boxbox/api/news.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/request_error.dart';
-import 'package:boxbox/api/news.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 class NewsFeedWidget extends StatefulWidget {
   final String tagId;
@@ -45,18 +47,16 @@ class _NewsFeedWidgetState extends State<NewsFeedWidget> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance
-        .addPostFrameCallback((_) => _refreshIndicatorKey.currentState.show());
     refreshedNews = getLatestNewsItems(tagId: widget.tagId);
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      showOfflineSnackBar();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    //showOfflineSnackBar();
     Map latestNews = Hive.box('requests').get('news', defaultValue: {}) as Map;
-
-    if (widget.tagId != null) {
-      latestNews = {};
-    }
     return FutureBuilder(
       future: refreshedNews,
       builder: (context, snapshot) => RefreshIndicator(
@@ -69,19 +69,56 @@ class _NewsFeedWidgetState extends State<NewsFeedWidget> {
           });
         },
         child: snapshot.hasError
-            ? RequestErrorWidget(snapshot.error)
+            ? snapshot.error.toString() == 'XMLHttpRequest error.'
+                ? NewsList(
+                    items: F1NewsFetcher().formatResponse(latestNews),
+                  )
+                : RequestErrorWidget(snapshot.error.toString())
             : snapshot.hasData
                 ? NewsList(
                     items: snapshot.data,
                   )
-                : LoadingIndicatorUtil(),
+                : latestNews['items'] != null
+                    ? NewsList(
+                        items: F1NewsFetcher().formatResponse(latestNews),
+                      )
+                    : LoadingIndicatorUtil(),
       ),
     );
   }
+
+  void showOfflineSnackBar() async {
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult == ConnectivityResult.none) {
+      SnackBar offlineSnackBar = SnackBar(
+        content: Row(
+          children: [
+            Icon(
+              Icons.warning_amber_rounded,
+              color: Colors.black,
+              size: 32,
+            ),
+            Expanded(
+              child: Padding(
+                padding: EdgeInsets.only(
+                  left: 10,
+                ),
+                child: Text(
+                  AppLocalizations.of(context).offline,
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 15,
+                  ),
+                  maxLines: 2,
+                ),
+              ),
+            ),
+          ],
+        ),
+        backgroundColor: Colors.yellow,
+      );
+      ScaffoldMessenger.of(context).showSnackBar(offlineSnackBar);
+    }
+    return;
+  }
 }
-
-// latestNews['items']
-
-// NewsList(
-              //items: F1NewsFetcher().formatResponse(latestNews),
-            //)
