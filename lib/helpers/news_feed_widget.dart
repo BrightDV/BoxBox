@@ -55,7 +55,6 @@ class _NewsFeedWidgetState extends State<NewsFeedWidget> {
 
   @override
   Widget build(BuildContext context) {
-    //showOfflineSnackBar();
     Map latestNews = Hive.box('requests').get('news', defaultValue: {}) as Map;
     return FutureBuilder(
       future: refreshedNews,

@@ -21,14 +21,23 @@ import 'package:boxbox/helpers/live_session_status_indicator.dart';
 import 'package:boxbox/helpers/news_feed_widget.dart';
 import 'package:flutter/material.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
+  HomeScreen();
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Column(
         children: <Widget>[
           LiveSessionStatusIndicator(),
-          NewsFeedWidget(),
+          Container(
+            height: MediaQuery.of(context).size.height - 30,
+            child: NewsFeedWidget(),
+          ),
         ],
       ),
     );

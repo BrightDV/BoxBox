@@ -359,6 +359,7 @@ class _NewsListState extends State<NewsList> {
   @override
   void initState() {
     super.initState();
+    int perPage = widget.items.length < 15 ? widget.items.length : 15;
     setState(() {
       items.addAll(widget.items.getRange(present, present + perPage));
       present = present + perPage;
@@ -376,7 +377,6 @@ class _NewsListState extends State<NewsList> {
       shrinkWrap: true,
       itemCount:
           (present <= originalItems.length) ? items.length + 1 : items.length,
-      physics: AlwaysScrollableScrollPhysics(),
       itemBuilder: (context, index) {
         return index == items.length
             ? TextButton(

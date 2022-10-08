@@ -100,14 +100,8 @@ class LiveSessionStatusIndicator extends StatelessWidget {
                       ),
                     ),
                   )
-                : Container(
-                    height: 0.0,
-                    width: 0.0,
-                  )
-            : Container(
-                height: 0.0,
-                width: 0.0,
-              );
+                : Container()
+            : Container();
       },
     );
   }
