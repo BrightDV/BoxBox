@@ -587,6 +587,17 @@ class JoinArticlesParts extends StatelessWidget {
               ),
             ),
           );
+        } else if (element['contentType'] == 'atomSocialPost' &&
+            element['fields']['postType'] == 'Twitter') {
+          widgetsList.add(
+            Container(
+              height: 400,
+              child: WebView(
+                javascriptMode: JavascriptMode.unrestricted,
+                initialUrl: element['fields']['postUrl'],
+              ),
+            ),
+          );
         } else {
           widgetsList.add(
             Container(
