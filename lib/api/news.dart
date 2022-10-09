@@ -29,6 +29,8 @@ import 'package:boxbox/Screens/standings.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:chewie/chewie.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
@@ -595,6 +597,14 @@ class JoinArticlesParts extends StatelessWidget {
               height: 400,
               child: WebView(
                 javascriptMode: JavascriptMode.unrestricted,
+                gestureRecognizers: [
+                  Factory<VerticalDragGestureRecognizer>(
+                      () => VerticalDragGestureRecognizer()),
+                  Factory<HorizontalDragGestureRecognizer>(
+                      () => HorizontalDragGestureRecognizer()),
+                  Factory<ScaleGestureRecognizer>(
+                      () => ScaleGestureRecognizer()),
+                ].toSet(),
                 initialUrl: element['fields']['postUrl'],
               ),
             ),
