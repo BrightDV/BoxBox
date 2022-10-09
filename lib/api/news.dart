@@ -352,18 +352,16 @@ class NewsList extends StatefulWidget {
 }
 
 class _NewsListState extends State<NewsList> {
-  int perPage = 15;
+  int perPage;
   int present = 0;
   List items = [];
 
   @override
   void initState() {
     super.initState();
-    setState(() {
-      perPage = widget.items.length < 15 ? widget.items.length : 15;
-      items.addAll(widget.items.getRange(present, present + perPage));
-      present = present + perPage;
-    });
+    perPage = widget.items.length < 15 ? widget.items.length : 15;
+    items.addAll(widget.items.getRange(present, present + perPage));
+    present = present + perPage;
   }
 
   @override
