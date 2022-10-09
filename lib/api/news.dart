@@ -359,8 +359,8 @@ class _NewsListState extends State<NewsList> {
   @override
   void initState() {
     super.initState();
-    int perPage = widget.items.length < 15 ? widget.items.length : 15;
     setState(() {
+      perPage = widget.items.length < 15 ? widget.items.length : 15;
       items.addAll(widget.items.getRange(present, present + perPage));
       present = present + perPage;
     });
@@ -368,10 +368,7 @@ class _NewsListState extends State<NewsList> {
 
   @override
   Widget build(BuildContext context) {
-    bool useDarkMode =
-        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     List originalItems = widget.items;
-
     return ListView.builder(
       scrollDirection: Axis.vertical,
       shrinkWrap: true,
@@ -379,32 +376,38 @@ class _NewsListState extends State<NewsList> {
           (present <= originalItems.length) ? items.length + 1 : items.length,
       itemBuilder: (context, index) {
         return index == items.length
-            ? TextButton(
-                child: Padding(
-                  padding: EdgeInsets.only(left: 7, right: 7),
-                  child: Text(
-                    AppLocalizations.of(context).loadMore,
-                    style: TextStyle(
-                      color: useDarkMode ? Colors.white : Colors.black,
-                      fontSize: 18,
+            ? Padding(
+                padding: EdgeInsets.only(
+                  top: 5,
+                  bottom: 10,
+                ),
+                child: ElevatedButton(
+                  child: Padding(
+                    padding:
+                        EdgeInsets.only(left: 7, right: 7, top: 5, bottom: 5),
+                    child: Text(
+                      AppLocalizations.of(context).loadMore,
+                      style: TextStyle(
+                        fontSize: 18,
+                      ),
                     ),
                   ),
+                  onPressed: (() {
+                    setState(
+                      () {
+                        if ((present + perPage) > originalItems.length) {
+                          items.addAll(originalItems.getRange(
+                              present, originalItems.length));
+                        } else {
+                          items.addAll(
+                            originalItems.getRange(present, present + perPage),
+                          );
+                        }
+                        present = present + perPage;
+                      },
+                    );
+                  }),
                 ),
-                onPressed: (() {
-                  setState(
-                    () {
-                      if ((present + perPage) > originalItems.length) {
-                        items.addAll(originalItems.getRange(
-                            present, originalItems.length));
-                      } else {
-                        items.addAll(
-                          originalItems.getRange(present, present + perPage),
-                        );
-                      }
-                      present = present + perPage;
-                    },
-                  );
-                }),
               )
             : NewsItem(
                 items[index],
@@ -549,8 +552,8 @@ class JoinArticlesParts extends StatelessWidget {
           );
         } else if (element['contentType'] == 'atomQuiz') {
           widgetsList.add(
-            Container(
-              height: 400,
+            AspectRatio(
+              aspectRatio: 748 / 598,
               child: WebView(
                 javascriptMode: JavascriptMode.unrestricted,
                 initialUrl: 'about:blank',
@@ -604,7 +607,7 @@ class JoinArticlesParts extends StatelessWidget {
               height: 100,
               child: Center(
                 child: Text(
-                  'Unsupported widget ¯\\_(ツ)_/¯',
+                  'Unsupported widget ¯\\_(ツ)_/¯\nType: ${element['contentType']}',
                   style: TextStyle(
                     color: useDarkMode ? Colors.white : Colors.black,
                   ),
