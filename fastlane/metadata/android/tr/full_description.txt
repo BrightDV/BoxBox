@@ -1,0 +1,9 @@
+Kutu, Kutu! ile favori sürücünüzün ve takımınızın güncel hikayelerini takip edin.
+Pistteki ve pist dışındaki mücadelelerden haberdar olun!
+Özellikler:
+- Dahili okuyucu ve oynatıcı ile resmi web sitesindeki tüm makaleleri okuyun.
+- Son Puan Durumu (Sürücüler ve Takımlar).
+- Serbest Antrenmanlar, Sıralamalar ve Yarışlar için önceki sonuçları içeren program.
+- Bir Grand Prix devam ederken, farklı segmentlerin programını takip edin.
+
+Reklam veya izleyici olmadan da aksiyonun içinde olun ;)
