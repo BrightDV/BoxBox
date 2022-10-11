@@ -55,7 +55,7 @@
     "@followSystem": {},
     "font": "Font",
     "@font": {},
-    "fontDescription": "Use system font instead of the official one.",
+    "fontDescription": "Use system font instead of the official one inside the articles.",
     "@fontDescription": {},
     "gallery": "Gallery",
     "@gallery": {},
