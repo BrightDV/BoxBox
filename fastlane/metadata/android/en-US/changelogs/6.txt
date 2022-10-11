@@ -1,0 +1,8 @@
+- Support timezone when a GP is running.
+- Get the app in the colors of your favorite team!
+- Font is less bold.
+- New look for the Schedule Screen.
+- Share an article instead of opening it in the browser.
+- Supports more article parts.
+- A turkish translation is now available thanks to @metezd.
+and more...
