@@ -556,12 +556,8 @@ class JoinArticlesParts extends StatelessWidget {
               aspectRatio: 748 / 598,
               child: WebView(
                 javascriptMode: JavascriptMode.unrestricted,
-                initialUrl: 'about:blank',
-                onWebViewCreated: (WebViewController webViewController) {
-                  _controller = webViewController;
-                  _controller
-                      .loadHtmlString(element['fields']['riddleEmbedCode']);
-                },
+                initialUrl:
+                    'https://www.riddle.com/view/${element['fields']['riddleId']}',
                 zoomEnabled: true,
               ),
             ),
