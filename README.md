@@ -1,4 +1,4 @@
-<p align="center"><a href="https://newpipe.net"><img src="assets/images/icon.png" width="150"></a></p> 
+<p align="center"><img src="assets/images/icon.png" width="150"></a></p> 
 <h2 align="center"><b>Box, Box!</b></h2>
 <h4 align="center">A new way to follow Formula 1.</h4>
 
