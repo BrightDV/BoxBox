@@ -1,4 +1,4 @@
-<p align="center"><a href="https://newpipe.net"><img src="assets/images/icon.png" width="150"></a></p> 
+<p align="center"><img src="assets/images/icon.png" width="150"></a></p> 
 <h2 align="center"><b>Box, Box!</b></h2>
 <h4 align="center">A new way to follow Formula 1.</h4>
 
@@ -63,6 +63,7 @@ Currently, the app is available in:
 
 - 🇫🇷 French
 - 🇬🇧 English
+- 🇹🇷 Turkish
 
 ## License
 [![GNU GPLv3 Image](https://www.gnu.org/graphics/gplv3-127x51.png)](https://www.gnu.org/licenses/gpl-3.0.en.html)  
