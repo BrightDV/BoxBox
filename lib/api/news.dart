@@ -450,7 +450,6 @@ class JoinArticlesParts extends StatelessWidget {
   JoinArticlesParts(this.article);
 
   Widget build(BuildContext context) {
-    WebViewController _controller;
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     List articleContent = article.articleContent;
