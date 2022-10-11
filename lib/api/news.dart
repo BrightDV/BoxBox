@@ -562,6 +562,7 @@ class JoinArticlesParts extends StatelessWidget {
                   _controller
                       .loadHtmlString(element['fields']['riddleEmbedCode']);
                 },
+                zoomEnabled: true,
               ),
             ),
           );
