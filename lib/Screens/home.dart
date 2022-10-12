@@ -35,7 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
         children: <Widget>[
           LiveSessionStatusIndicator(),
           Container(
-            height: MediaQuery.of(context).size.height - 110,
+            height: MediaQuery.of(context).size.height - 130,
             child: NewsFeedWidget(),
           ),
         ],

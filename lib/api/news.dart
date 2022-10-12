@@ -372,6 +372,7 @@ class _NewsListState extends State<NewsList> {
     return ListView.builder(
       scrollDirection: Axis.vertical,
       shrinkWrap: true,
+      physics: BouncingScrollPhysics(),
       itemCount:
           (present <= originalItems.length) ? items.length + 1 : items.length,
       itemBuilder: (context, index) {
