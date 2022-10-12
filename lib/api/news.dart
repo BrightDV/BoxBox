@@ -568,6 +568,14 @@ class JoinArticlesParts extends StatelessWidget {
                 initialUrl:
                     'https://www.riddle.com/view/${element['fields']['riddleId']}',
                 zoomEnabled: true,
+                gestureRecognizers: [
+                  Factory<VerticalDragGestureRecognizer>(
+                      () => VerticalDragGestureRecognizer()),
+                  Factory<HorizontalDragGestureRecognizer>(
+                      () => HorizontalDragGestureRecognizer()),
+                  Factory<ScaleGestureRecognizer>(
+                      () => ScaleGestureRecognizer()),
+                ].toSet(),
               ),
             ),
           );
