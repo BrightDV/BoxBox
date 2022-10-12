@@ -347,8 +347,13 @@ class NewsItem extends StatelessWidget {
 
 class NewsList extends StatefulWidget {
   final List items;
+  final ValueListenable itemsValueNotifier;
 
-  NewsList({Key key, this.items});
+  NewsList({
+    Key key,
+    this.items,
+    this.itemsValueNotifier,
+  });
   @override
   _NewsListState createState() => _NewsListState();
 }
@@ -369,52 +374,56 @@ class _NewsListState extends State<NewsList> {
   @override
   Widget build(BuildContext context) {
     List originalItems = widget.items;
-    return ListView.builder(
-      scrollDirection: Axis.vertical,
-      shrinkWrap: true,
-      physics: BouncingScrollPhysics(),
-      itemCount:
-          (present <= originalItems.length) ? items.length + 1 : items.length,
-      itemBuilder: (context, index) {
-        return index == items.length
-            ? Padding(
-                padding: EdgeInsets.only(
-                  top: 5,
-                  bottom: 10,
-                ),
-                child: ElevatedButton(
-                  child: Padding(
-                    padding:
-                        EdgeInsets.only(left: 7, right: 7, top: 5, bottom: 5),
-                    child: Text(
-                      AppLocalizations.of(context).loadMore,
-                      style: TextStyle(
-                        fontSize: 18,
+    return ValueListenableBuilder(
+      valueListenable: widget.itemsValueNotifier,
+      builder: (context, value, child) => ListView.builder(
+        scrollDirection: Axis.vertical,
+        shrinkWrap: true,
+        physics: BouncingScrollPhysics(),
+        itemCount:
+            (present <= originalItems.length) ? items.length + 1 : items.length,
+        itemBuilder: (context, index) {
+          return index == items.length
+              ? Padding(
+                  padding: EdgeInsets.only(
+                    top: 5,
+                    bottom: 10,
+                  ),
+                  child: ElevatedButton(
+                    child: Padding(
+                      padding:
+                          EdgeInsets.only(left: 7, right: 7, top: 5, bottom: 5),
+                      child: Text(
+                        AppLocalizations.of(context).loadMore,
+                        style: TextStyle(
+                          fontSize: 18,
+                        ),
                       ),
                     ),
+                    onPressed: (() {
+                      setState(
+                        () {
+                          if ((present + perPage) > originalItems.length) {
+                            items.addAll(originalItems.getRange(
+                                present, originalItems.length));
+                          } else {
+                            items.addAll(
+                              originalItems.getRange(
+                                  present, present + perPage),
+                            );
+                          }
+                          present = present + perPage;
+                        },
+                      );
+                    }),
                   ),
-                  onPressed: (() {
-                    setState(
-                      () {
-                        if ((present + perPage) > originalItems.length) {
-                          items.addAll(originalItems.getRange(
-                              present, originalItems.length));
-                        } else {
-                          items.addAll(
-                            originalItems.getRange(present, present + perPage),
-                          );
-                        }
-                        present = present + perPage;
-                      },
-                    );
-                  }),
-                ),
-              )
-            : NewsItem(
-                items[index],
-                false,
-              );
-      },
+                )
+              : NewsItem(
+                  items[index],
+                  false,
+                );
+        },
+      ),
     );
   }
 }

@@ -42,6 +42,8 @@ class _NewsFeedWidgetState extends State<NewsFeedWidget> {
 
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       new GlobalKey<RefreshIndicatorState>();
+  ValueNotifier<List> itemsValueNotifier = ValueNotifier([]);
+
   Future<List> refreshedNews;
 
   @override
@@ -63,6 +65,7 @@ class _NewsFeedWidgetState extends State<NewsFeedWidget> {
         onRefresh: () async {
           _refreshIndicatorKey.currentState?.show(atTop: false);
           List freshItems = await getLatestNewsItems(tagId: widget.tagId);
+          itemsValueNotifier = ValueNotifier(freshItems);
           setState(() {
             refreshedNews = Future.value(freshItems);
           });
@@ -71,15 +74,18 @@ class _NewsFeedWidgetState extends State<NewsFeedWidget> {
             ? snapshot.error.toString() == 'XMLHttpRequest error.'
                 ? NewsList(
                     items: F1NewsFetcher().formatResponse(latestNews),
+                    itemsValueNotifier: itemsValueNotifier,
                   )
                 : RequestErrorWidget(snapshot.error.toString())
             : snapshot.hasData
                 ? NewsList(
                     items: snapshot.data,
+                    itemsValueNotifier: itemsValueNotifier,
                   )
                 : latestNews['items'] != null
                     ? NewsList(
                         items: F1NewsFetcher().formatResponse(latestNews),
+                        itemsValueNotifier: itemsValueNotifier,
                       )
                     : LoadingIndicatorUtil(),
       ),
@@ -118,6 +124,5 @@ class _NewsFeedWidgetState extends State<NewsFeedWidget> {
       );
       ScaffoldMessenger.of(context).showSnackBar(offlineSnackBar);
     }
-    return;
   }
 }
