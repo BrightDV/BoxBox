@@ -1,5 +1,5 @@
 // This is a generated file; do not edit or check into version control.
-FLUTTER_ROOT=F:\flutter_windows_3.0.5-stable\flutter
+FLUTTER_ROOT=F:\flutter
 FLUTTER_APPLICATION_PATH=F:\gh\BoxBox
 COCOAPODS_PARALLEL_CODE_SIGN=true
 FLUTTER_TARGET=lib\main.dart
@@ -7,7 +7,8 @@ FLUTTER_BUILD_DIR=build
 FLUTTER_BUILD_NAME=0.2.0
 FLUTTER_BUILD_NUMBER=6
 EXCLUDED_ARCHS[sdk=iphonesimulator*]=i386
+EXCLUDED_ARCHS[sdk=iphoneos*]=armv7
 DART_OBFUSCATION=false
-TRACK_WIDGET_CREATION=false
+TRACK_WIDGET_CREATION=true
 TREE_SHAKE_ICONS=false
 PACKAGE_CONFIG=.dart_tool/package_config.json

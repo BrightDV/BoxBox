@@ -28,7 +28,7 @@ dependencies:
   dotted_line: ^3.1.0
   flutter_localizations:
     sdk: flutter 
-  flutter_map: ^0.13.1
+  flutter_map: ^0.14.0
   flutter_markdown: ^0.6.10
   flutter_timer_countdown: ^1.0.3
   font_awesome_flutter: ^10.1.0
@@ -41,10 +41,10 @@ dependencies:
   latlong2: ^0.8.1
   lazy_loading_list: ^1.0.1
   loading_indicator: ^3.0.3
-  map_controller: # version on pub.dev has flutter_map ^0.11.0 as requirement, using my fork
+  map_controller: # fork using null-safety
     git:
-      url: https://github.com/BrightDV/map_controller.git
-      ref: master
+      url: https://github.com/mpinkard/map_controller.git
+      ref: null_safety
   marquee: ^2.2.0
   package_info_plus: ^1.4.3+1
   syncfusion_flutter_pdfviewer: ^20.3.49

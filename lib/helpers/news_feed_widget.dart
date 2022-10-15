@@ -36,7 +36,7 @@ class NewsFeedWidget extends StatefulWidget {
 }
 
 class _NewsFeedWidgetState extends State<NewsFeedWidget> {
-  Future<List> getLatestNewsItems({String? tagId}) async {
+  Future<List<News>> getLatestNewsItems({String? tagId}) async {
     return await F1NewsFetcher().getLatestNews(tagId: tagId);
   }
 
@@ -44,7 +44,7 @@ class _NewsFeedWidgetState extends State<NewsFeedWidget> {
       new GlobalKey<RefreshIndicatorState>();
   ValueNotifier<List> itemsValueNotifier = ValueNotifier([]);
 
-  late Future<List> refreshedNews;
+  late Future<List<News>> refreshedNews;
 
   @override
   void initState() {
@@ -58,13 +58,13 @@ class _NewsFeedWidgetState extends State<NewsFeedWidget> {
   @override
   Widget build(BuildContext context) {
     Map latestNews = Hive.box('requests').get('news', defaultValue: {}) as Map;
-    return FutureBuilder<List>(
+    return FutureBuilder<List<News>>(
       future: refreshedNews,
       builder: (context, snapshot) => RefreshIndicator(
         key: _refreshIndicatorKey,
         onRefresh: () async {
           _refreshIndicatorKey.currentState?.show(atTop: false);
-          List freshItems = await getLatestNewsItems(tagId: widget.tagId);
+          List<News> freshItems = await getLatestNewsItems(tagId: widget.tagId);
           itemsValueNotifier = ValueNotifier(freshItems);
           setState(() {
             refreshedNews = Future.value(freshItems);
@@ -79,7 +79,7 @@ class _NewsFeedWidgetState extends State<NewsFeedWidget> {
                 : RequestErrorWidget(snapshot.error.toString())
             : snapshot.hasData
                 ? NewsList(
-                    items: snapshot.data ?? [],
+                    items: snapshot.data!,
                     itemsValueNotifier: itemsValueNotifier,
                   )
                 : latestNews['items'] != null

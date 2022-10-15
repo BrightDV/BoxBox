@@ -47,9 +47,9 @@ class F1NewsFetcher {
   final String endpoint = "https://api.formula1.com";
   final String apikey = "qPgPPRJyGCIPxFT3el4MF7thXHyJCzAP";
 
-  List formatResponse(Map responseAsJson) {
+  List<News> formatResponse(Map responseAsJson) {
     List finalJson = responseAsJson['items'];
-    List newsList = [];
+    List<News> newsList = [];
     finalJson.forEach((element) {
       element['title'] = element['title'].replaceAll("\n", "");
       if (element['metaDescription'] != null) {
@@ -62,7 +62,7 @@ class F1NewsFetcher {
           element['articleType'],
           element['slug'],
           element['title'],
-          element['metaDescription'],
+          element['metaDescription'] ?? '',
           DateTime.parse(element['updatedAt']),
           element['thumbnail']['image']['url'],
         ),
@@ -71,7 +71,7 @@ class F1NewsFetcher {
     return newsList;
   }
 
-  FutureOr<List> getLatestNews({String? tagId}) async {
+  FutureOr<List<News>> getLatestNews({String? tagId}) async {
     Uri url;
     if (tagId != null) {
       url = Uri.parse('$endpoint/v1/editorial/articles?limit=200&tags=$tagId');
@@ -327,15 +327,13 @@ class NewsItem extends StatelessWidget {
                       ),
                       subtitle: newsLayout != 'big' && newsLayout != 'condensed'
                           ? null
-                          : item.subtitle != null
-                              ? Text(
-                                  item.subtitle,
-                                  style: TextStyle(
-                                    color: Colors.grey[500],
-                                  ),
-                                  textAlign: TextAlign.justify,
-                                )
-                              : Container(height: 0.0, width: 0.0),
+                          : Text(
+                              item.subtitle,
+                              style: TextStyle(
+                                color: Colors.grey[500],
+                              ),
+                              textAlign: TextAlign.justify,
+                            ),
                     ),
                   ],
                 ),

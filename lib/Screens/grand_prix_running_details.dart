@@ -19,6 +19,8 @@
 
 import 'package:boxbox/api/event_tracker.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
+import 'package:boxbox/helpers/request_error.dart';
+import 'package:boxbox/scraping/fia.dart';
 import 'package:boxbox/Screens/session_screen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dotted_line/dotted_line.dart';
@@ -28,6 +30,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:marquee/marquee.dart';
+import 'package:sliding_up_panel/sliding_up_panel.dart';
+import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 class GrandPrixRunningScreen extends StatefulWidget {
   final Event event;
@@ -56,47 +60,192 @@ class _GrandPrixRunningScreenState extends State<GrandPrixRunningScreen> {
       ),
       backgroundColor:
           useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
-      body: ListView(
-        children: [
-          CachedNetworkImage(
-            imageUrl:
-                'https://www.formula1.com/content/dam/fom-website/2018-redesign-assets/Racehub%20header%20images%2016x9/${widget.event.meetingName}.jpg.transform/12col/image.jpg',
-            placeholder: (context, url) => LoadingIndicatorUtil(),
-            errorWidget: (context, url, error) => Icon(
-              Icons.error_outlined,
+      body: SlidingUpPanel(
+        backdropEnabled: true,
+        color: useDarkMode ? Color(0xff22222c) : Colors.white,
+        parallaxEnabled: true,
+        panelBuilder: (scrollController) => Center(
+          child: FutureBuilder<List<SessionDocument>>(
+            future: FIAScraper().scrapeSessionDocuments(),
+            builder: (context, snapshot) => snapshot.hasError
+                ? RequestErrorWidget(snapshot.error.toString())
+                : snapshot.hasData
+                    ? ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: snapshot.data?.length,
+                        controller: scrollController,
+                        itemBuilder: (context, index) => index == 0
+                            ? Padding(
+                                padding: EdgeInsets.all(40),
+                                child: Center(
+                                  child: Text(
+                                    "Grand-Prix documents",
+                                    style: TextStyle(
+                                      color: useDarkMode
+                                          ? Colors.white
+                                          : Colors.black,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ),
+                              )
+                            : GestureDetector(
+                                onTap: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => PdfViewer(
+                                      snapshot.data![index].src,
+                                      snapshot.data![index].name,
+                                    ),
+                                  ),
+                                ),
+                                child: Card(
+                                  color: useDarkMode
+                                      ? Color.fromARGB(255, 45, 45, 58)
+                                      : Colors.white,
+                                  elevation: 5,
+                                  child: ListTile(
+                                    title: Text(
+                                      snapshot.data?[index].name ?? '',
+                                      style: TextStyle(
+                                        color: useDarkMode
+                                            ? Colors.white
+                                            : Colors.black,
+                                      ),
+                                    ),
+                                    subtitle: Text(
+                                      'Published on ${snapshot.data?[index].postedDate}',
+                                      style: TextStyle(
+                                        color: useDarkMode
+                                            ? Colors.white
+                                            : Colors.black,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                    leading: Icon(
+                                      Icons.picture_as_pdf_outlined,
+                                      color: useDarkMode
+                                          ? Colors.white
+                                          : Colors.black,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                      )
+                    : Padding(
+                        padding: EdgeInsets.all(40),
+                        child: Center(
+                          child: Text(
+                            "Grand-Prix documents",
+                            style: TextStyle(
+                              color: useDarkMode ? Colors.white : Colors.black,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
+                      ),
+          ),
+        ),
+        body: ListView(
+          children: [
+            CachedNetworkImage(
+              imageUrl:
+                  'https://www.formula1.com/content/dam/fom-website/2018-redesign-assets/Racehub%20header%20images%2016x9/${widget.event.meetingName}.jpg.transform/12col/image.jpg',
+              placeholder: (context, url) => LoadingIndicatorUtil(),
+              errorWidget: (context, url, error) => Icon(
+                Icons.error_outlined,
+              ),
+              fadeOutDuration: Duration(seconds: 1),
+              fadeInDuration: Duration(seconds: 1),
+              fit: BoxFit.scaleDown,
             ),
-            fadeOutDuration: Duration(seconds: 1),
-            fadeInDuration: Duration(seconds: 1),
-            fit: BoxFit.scaleDown,
-          ),
-          SessionItem(
-            widget.event.session5,
-            widget.event.raceId,
-            widget.event.meetingCountryName,
-          ),
-          SessionItem(
-            widget.event.session4,
-            widget.event.raceId,
-            widget.event.meetingCountryName,
-          ),
-          SessionItem(
-            widget.event.session3,
-            widget.event.raceId,
-            widget.event.meetingCountryName,
-          ),
-          SessionItem(
-            widget.event.session2,
-            widget.event.raceId,
-            widget.event.meetingCountryName,
-          ),
-          SessionItem(
-            widget.event.session1,
-            widget.event.raceId,
-            widget.event.meetingCountryName,
-          ),
-        ],
+            SessionItem(
+              widget.event.session5,
+              widget.event.raceId,
+              widget.event.meetingCountryName,
+            ),
+            SessionItem(
+              widget.event.session4,
+              widget.event.raceId,
+              widget.event.meetingCountryName,
+            ),
+            SessionItem(
+              widget.event.session3,
+              widget.event.raceId,
+              widget.event.meetingCountryName,
+            ),
+            SessionItem(
+              widget.event.session2,
+              widget.event.raceId,
+              widget.event.meetingCountryName,
+            ),
+            SessionItem(
+              widget.event.session1,
+              widget.event.raceId,
+              widget.event.meetingCountryName,
+            ),
+          ],
+        ),
       ),
     );
+  }
+}
+
+class PdfViewer extends StatefulWidget {
+  final String documentTitle;
+  final String src;
+  const PdfViewer(this.src, this.documentTitle, {Key? key}) : super(key: key);
+
+  @override
+  State<PdfViewer> createState() => _PdfViewerState();
+}
+
+class _PdfViewerState extends State<PdfViewer> {
+  final GlobalKey<SfPdfViewerState> _pdfViewerKey = GlobalKey();
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          widget.documentTitle,
+          overflow: TextOverflow.ellipsis,
+        ),
+      ),
+      body: SfPdfViewer.network(
+        widget.src,
+        key: _pdfViewerKey,
+        enableTextSelection: true,
+        onDocumentLoadFailed: (PdfDocumentLoadFailedDetails details) {
+          showErrorDialog(context, details.error, details.description);
+        },
+        canShowPaginationDialog: true,
+      ),
+    );
+  }
+
+  void showErrorDialog(BuildContext context, String error, String description) {
+    showDialog<dynamic>(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(error),
+            content: Text(description),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        });
   }
 }
 

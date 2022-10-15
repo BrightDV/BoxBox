@@ -135,6 +135,7 @@ class MyApp extends StatelessWidget {
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       home: MainBottomNavigationBar(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
