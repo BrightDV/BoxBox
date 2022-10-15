@@ -87,12 +87,12 @@ class TeamBackgroundColor {
   };
 
   List<Color> getTeamGradient(String teamName) {
-    List teamGradientColors = teamsGradientColors[teamName];
+    List<Color> teamGradientColors = teamsGradientColors[teamName]!;
     return teamGradientColors;
   }
 
   Color getTeamColors(String teamName) {
-    Color teamColors = teamColorsList[teamName];
+    Color teamColors = teamColorsList[teamName]!;
     return teamColors;
   }
 }

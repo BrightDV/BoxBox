@@ -50,7 +50,7 @@ class FreePracticeScreen extends StatelessWidget {
       ),
       backgroundColor:
           useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
-      body: FutureBuilder(
+      body: FutureBuilder<List<ScraperRaceResult>>(
         future: FormulaOneScraper().scrapeResults(
           race.circuitId,
           sessionIndex,
@@ -61,7 +61,7 @@ class FreePracticeScreen extends StatelessWidget {
             ? snapshot.error.toString() == 'RangeError: Value not in range: 0'
                 ? Center(
                     child: Text(
-                      AppLocalizations.of(context).dataNotAvailable,
+                      AppLocalizations.of(context)!.dataNotAvailable,
                       style: TextStyle(
                         color: useDarkMode ? Colors.white : Colors.black,
                       ),
@@ -72,7 +72,7 @@ class FreePracticeScreen extends StatelessWidget {
                   )
             : snapshot.hasData
                 ? FreePracticeResultsList(
-                    snapshot.data,
+                    snapshot.data!,
                     race,
                     sessionIndex,
                   )
@@ -104,7 +104,7 @@ class FreePracticeResultsList extends StatelessWidget {
                 color: Colors.white,
               ),
               title: Text(
-                AppLocalizations.of(context).watchOnYoutube,
+                AppLocalizations.of(context)!.watchOnYoutube,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Colors.white,
@@ -137,7 +137,7 @@ class FreePracticeResultsList extends StatelessWidget {
                         Expanded(
                           flex: 2,
                           child: Text(
-                            AppLocalizations.of(context).positionAbbreviation,
+                            AppLocalizations.of(context)!.positionAbbreviation,
                             style: TextStyle(
                               color: Colors.white,
                             ),
@@ -151,7 +151,7 @@ class FreePracticeResultsList extends StatelessWidget {
                         Expanded(
                           flex: 3,
                           child: Text(
-                            AppLocalizations.of(context).driverAbbreviation,
+                            AppLocalizations.of(context)!.driverAbbreviation,
                             style: TextStyle(
                               color: Colors.white,
                             ),
@@ -160,7 +160,7 @@ class FreePracticeResultsList extends StatelessWidget {
                         Expanded(
                           flex: 5,
                           child: Text(
-                            AppLocalizations.of(context).time,
+                            AppLocalizations.of(context)!.time,
                             style: TextStyle(
                               color: Colors.white,
                             ),
@@ -170,7 +170,7 @@ class FreePracticeResultsList extends StatelessWidget {
                         Expanded(
                           flex: 5,
                           child: Text(
-                            AppLocalizations.of(context).gap,
+                            AppLocalizations.of(context)!.gap,
                             style: TextStyle(
                               color: Colors.white,
                             ),
@@ -180,7 +180,7 @@ class FreePracticeResultsList extends StatelessWidget {
                         Expanded(
                           flex: 4,
                           child: Text(
-                            AppLocalizations.of(context).laps,
+                            AppLocalizations.of(context)!.laps,
                             style: TextStyle(
                               color: Colors.white,
                             ),

@@ -44,19 +44,19 @@ class _AppearanceScreenState extends State<AppearanceScreen> {
         .get('useDefaultFontForArticles', defaultValue: false) as bool;
 
     Map layoutValueToString = {
-      'big': AppLocalizations.of(context).articleFull,
-      'medium': AppLocalizations.of(context).articleTitleAndImage,
-      'condensed': AppLocalizations.of(context).articleTitleAndDescription,
-      'small': AppLocalizations.of(context).articleTitle,
+      'big': AppLocalizations.of(context)?.articleFull,
+      'medium': AppLocalizations.of(context)?.articleTitleAndImage,
+      'condensed': AppLocalizations.of(context)?.articleTitleAndDescription,
+      'small': AppLocalizations.of(context)?.articleTitle,
     };
-    List themeOptions = <String>[
-      AppLocalizations.of(context).followSystem,
-      AppLocalizations.of(context).lightMode,
-      AppLocalizations.of(context).darkMode,
+    List themeOptions = <String?>[
+      AppLocalizations.of(context)?.followSystem,
+      AppLocalizations.of(context)?.lightMode,
+      AppLocalizations.of(context)?.darkMode,
     ];
     String newsLayoutFormated = layoutValueToString[newsLayout];
-    List<String> teamThemeOptions = [
-      AppLocalizations.of(context).defaultValue,
+    List<String?> teamThemeOptions = [
+      AppLocalizations.of(context)?.defaultValue,
       'Alfa Romeo',
       'Alpha Tauri',
       'Alpine',
@@ -70,7 +70,7 @@ class _AppearanceScreenState extends State<AppearanceScreen> {
     ];
 
     Map teamNameToString = {
-      "default": AppLocalizations.of(context).defaultValue,
+      "default": AppLocalizations.of(context)?.defaultValue,
       "alfa": 'Alfa Romeo',
       "alphatauri": 'Alpha Tauri',
       "alpine": 'Alpine',
@@ -88,7 +88,7 @@ class _AppearanceScreenState extends State<AppearanceScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          AppLocalizations.of(context).appearance,
+          AppLocalizations.of(context)!.appearance,
           style: TextStyle(
             fontWeight: FontWeight.w600,
           ),
@@ -100,7 +100,7 @@ class _AppearanceScreenState extends State<AppearanceScreen> {
         children: [
           ListTile(
             title: Text(
-              AppLocalizations.of(context).theme,
+              AppLocalizations.of(context)!.theme,
               style: TextStyle(
                 color: useDarkMode ? Colors.white : Colors.black,
               ),
@@ -111,7 +111,7 @@ class _AppearanceScreenState extends State<AppearanceScreen> {
               dropdownColor: useDarkMode
                   ? Theme.of(context).backgroundColor
                   : Colors.white,
-              onChanged: (int newThemeMode) {
+              onChanged: (int? newThemeMode) {
                 if (newThemeMode != null) {
                   setState(
                     () {
@@ -155,13 +155,13 @@ class _AppearanceScreenState extends State<AppearanceScreen> {
           ),
           ListTile(
             title: Text(
-              AppLocalizations.of(context).teamColors,
+              AppLocalizations.of(context)!.teamColors,
               style: TextStyle(
                 color: useDarkMode ? Colors.white : Colors.black,
               ),
             ),
             subtitle: Text(
-              AppLocalizations.of(context).needsRestart,
+              AppLocalizations.of(context)!.needsRestart,
               style: TextStyle(
                 color: useDarkMode ? Colors.white : Colors.black,
                 fontSize: 13,
@@ -173,12 +173,12 @@ class _AppearanceScreenState extends State<AppearanceScreen> {
               dropdownColor: useDarkMode
                   ? Theme.of(context).backgroundColor
                   : Colors.white,
-              onChanged: (String newTeamTheme) {
+              onChanged: (String? newTeamTheme) {
                 if (newTeamTheme != null) {
                   setState(
                     () {
                       Map stringToValue = {
-                        AppLocalizations.of(context).defaultValue: 'default',
+                        AppLocalizations.of(context)?.defaultValue: 'default',
                         'Alfa Romeo': 'alfa',
                         'Alpha Tauri': 'alphatauri',
                         'Alpine': 'alpine',
@@ -198,11 +198,11 @@ class _AppearanceScreenState extends State<AppearanceScreen> {
                 }
               },
               items: teamThemeOptions.map<DropdownMenuItem<String>>(
-                (String value) {
+                (String? value) {
                   return DropdownMenuItem<String>(
                     value: value,
                     child: Text(
-                      value,
+                      value!,
                       style: TextStyle(
                         fontSize: 12,
                         color: useDarkMode ? Colors.white : Colors.black,
@@ -215,7 +215,7 @@ class _AppearanceScreenState extends State<AppearanceScreen> {
           ),
           ListTile(
             title: Text(
-              AppLocalizations.of(context).newsLayout,
+              AppLocalizations.of(context)!.newsLayout,
               style: TextStyle(
                 color: useDarkMode ? Colors.white : Colors.black,
               ),
@@ -231,12 +231,12 @@ class _AppearanceScreenState extends State<AppearanceScreen> {
                   setState(
                     () {
                       Map stringToValue = {
-                        AppLocalizations.of(context).articleFull: 'big',
-                        AppLocalizations.of(context).articleTitleAndImage:
+                        AppLocalizations.of(context)?.articleFull: 'big',
+                        AppLocalizations.of(context)?.articleTitleAndImage:
                             'medium',
-                        AppLocalizations.of(context).articleTitleAndDescription:
-                            'condensed',
-                        AppLocalizations.of(context).articleTitle: 'small',
+                        AppLocalizations.of(context)
+                            ?.articleTitleAndDescription: 'condensed',
+                        AppLocalizations.of(context)?.articleTitle: 'small',
                       };
                       newsLayout = stringToValue[newValue];
                       Hive.box('settings').put('newsLayout', newsLayout);
@@ -246,10 +246,10 @@ class _AppearanceScreenState extends State<AppearanceScreen> {
                 }
               },
               items: <String>[
-                AppLocalizations.of(context).articleFull,
-                AppLocalizations.of(context).articleTitleAndImage,
-                AppLocalizations.of(context).articleTitleAndDescription,
-                AppLocalizations.of(context).articleTitle,
+                AppLocalizations.of(context)!.articleFull,
+                AppLocalizations.of(context)!.articleTitleAndImage,
+                AppLocalizations.of(context)!.articleTitleAndDescription,
+                AppLocalizations.of(context)!.articleTitle,
               ].map<DropdownMenuItem<String>>(
                 (String value) {
                   return DropdownMenuItem<String>(
@@ -268,13 +268,13 @@ class _AppearanceScreenState extends State<AppearanceScreen> {
           ),
           SwitchListTile(
             title: Text(
-              AppLocalizations.of(context).font,
+              AppLocalizations.of(context)!.font,
               style: TextStyle(
                 color: useDarkMode ? Colors.white : Colors.black,
               ),
             ),
             subtitle: Text(
-              AppLocalizations.of(context).fontDescription,
+              AppLocalizations.of(context)!.fontDescription,
               style: TextStyle(
                 color: useDarkMode ? Colors.white : Colors.black,
                 fontSize: 13,

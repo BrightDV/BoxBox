@@ -71,7 +71,7 @@ class F1NewsFetcher {
     return newsList;
   }
 
-  FutureOr<List> getLatestNews({String tagId}) async {
+  FutureOr<List> getLatestNews({String? tagId}) async {
     Uri url;
     if (tagId != null) {
       url = Uri.parse('$endpoint/v1/editorial/articles?limit=200&tags=$tagId');
@@ -350,16 +350,16 @@ class NewsList extends StatefulWidget {
   final ValueListenable itemsValueNotifier;
 
   NewsList({
-    Key key,
-    this.items,
-    this.itemsValueNotifier,
+    Key? key,
+    required this.items,
+    required this.itemsValueNotifier,
   });
   @override
   _NewsListState createState() => _NewsListState();
 }
 
 class _NewsListState extends State<NewsList> {
-  int perPage;
+  late int perPage;
   int present = 0;
   List items = [];
 
@@ -394,7 +394,7 @@ class _NewsListState extends State<NewsList> {
                       padding:
                           EdgeInsets.only(left: 7, right: 7, top: 5, bottom: 5),
                       child: Text(
-                        AppLocalizations.of(context).loadMore,
+                        AppLocalizations.of(context)?.loadMore ?? 'Load more',
                         style: TextStyle(
                           fontSize: 18,
                         ),
@@ -437,7 +437,7 @@ class ArticleRenderer extends StatelessWidget {
   }
 
   Widget build(BuildContext context) {
-    return FutureBuilder(
+    return FutureBuilder<Article>(
       future: getArticleData(item.articleId),
       builder: (context, snapshot) {
         if (snapshot.hasError)
@@ -446,7 +446,7 @@ class ArticleRenderer extends StatelessWidget {
           );
         return snapshot.hasData
             ? JoinArticlesParts(
-                snapshot.data,
+                snapshot.data!,
               )
             : LoadingIndicatorUtil();
       },
@@ -646,7 +646,7 @@ class JoinArticlesParts extends StatelessWidget {
         padding: EdgeInsets.all(5),
         child: Container(
           decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey[700]),
+            border: Border.all(color: Colors.grey[700]!),
             borderRadius: BorderRadius.circular(10),
           ),
           child: Row(
@@ -668,7 +668,7 @@ class JoinArticlesParts extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        AppLocalizations.of(context).share,
+                        AppLocalizations.of(context)?.share ?? 'Share',
                         style: TextStyle(
                           color: useDarkMode ? Colors.white : Colors.black,
                         ),
@@ -759,7 +759,7 @@ class TextParagraphRenderer extends StatelessWidget {
         data: text,
         selectable: true,
         onTapLink: (text, url, title) {
-          if (url.startsWith('https://www.formula1.com/en/latest/article.')) {
+          if (url!.startsWith('https://www.formula1.com/en/latest/article.')) {
             String articleId = url.substring(43, url.length - 5).split('.')[1];
             Navigator.push(
               context,
@@ -782,7 +782,7 @@ class TextParagraphRenderer extends StatelessWidget {
                     appBar: AppBar(
                       centerTitle: true,
                       title: Text(
-                        AppLocalizations.of(context).standings,
+                        AppLocalizations.of(context)!.standings,
                         style: TextStyle(
                           fontWeight: FontWeight.w600,
                         ),
@@ -800,7 +800,7 @@ class TextParagraphRenderer extends StatelessWidget {
                     appBar: AppBar(
                       centerTitle: true,
                       title: Text(
-                        AppLocalizations.of(context).standings,
+                        AppLocalizations.of(context)!.standings,
                         style: TextStyle(
                           fontWeight: FontWeight.w600,
                         ),
@@ -887,8 +887,8 @@ class TextParagraphRenderer extends StatelessWidget {
 
 class ImageRenderer extends StatelessWidget {
   final String imageUrl;
-  final String caption;
-  final bool inSchedule;
+  final String? caption;
+  final bool? inSchedule;
   ImageRenderer(
     this.imageUrl, {
     this.caption,
@@ -1007,7 +1007,7 @@ class ImageRenderer extends StatelessWidget {
                             padding: EdgeInsets.all(4),
                             color: Colors.black.withOpacity(0.7),
                             child: Text(
-                              caption,
+                              caption ?? '',
                               style: TextStyle(
                                 color: Colors.white,
                               ),
@@ -1073,14 +1073,14 @@ class _VideoRendererState extends State<VideoRenderer> {
 
   @override
   Widget build(BuildContext build) {
-    return FutureBuilder(
+    return FutureBuilder<String>(
       future: BrightCove().getVideoLink(widget.videoId),
       builder: (context, snapshot) => snapshot.hasError
           ? RequestErrorWidget(
               snapshot.error.toString(),
             )
           : snapshot.hasData
-              ? VideoPlayer(snapshot.data)
+              ? VideoPlayer(snapshot.data!)
               : Container(
                   height: MediaQuery.of(context).size.width / (16 / 9),
                   child: LoadingIndicatorUtil(),
@@ -1100,10 +1100,10 @@ class VideoPlayer extends StatefulWidget {
 }
 
 class _VideoPlayerState extends State<VideoPlayer> {
-  ChewieController chewieController;
-  VideoPlayerController videoPlayerController;
-  bool isLoaded;
-  Future<void> _initializeVideoPlayerFuture;
+  late ChewieController chewieController;
+  late VideoPlayerController videoPlayerController;
+  late bool isLoaded;
+  late Future<void> _initializeVideoPlayerFuture;
 
   @override
   void initState() {

@@ -37,7 +37,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          AppLocalizations.of(context).player,
+          AppLocalizations.of(context)!.player,
           style: TextStyle(
             fontWeight: FontWeight.w600,
           ),
@@ -53,13 +53,13 @@ class _PlayerScreenState extends State<PlayerScreen> {
           children: [
             ListTile(
               title: Text(
-                AppLocalizations.of(context).playerQuality,
+                AppLocalizations.of(context)!.playerQuality,
                 style: TextStyle(
                   color: useDarkMode ? Colors.white : Colors.black,
                 ),
               ),
               subtitle: Text(
-                AppLocalizations.of(context).playerQualitySub,
+                AppLocalizations.of(context)!.playerQualitySub,
                 style: TextStyle(
                   color: useDarkMode ? Colors.white : Colors.black,
                   fontSize: 13,
@@ -71,7 +71,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
                 dropdownColor: useDarkMode
                     ? Theme.of(context).backgroundColor
                     : Colors.white,
-                onChanged: (newValue) {
+                onChanged: (int? newValue) {
                   if (newValue != null) {
                     setState(
                       () {

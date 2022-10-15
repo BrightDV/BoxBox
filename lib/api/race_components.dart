@@ -34,7 +34,7 @@ class Race {
   final String circuitName;
   final String circuitUrl;
   final String country;
-  final bool isFirst;
+  final bool? isFirst;
 
   Race(
     this.round,
@@ -82,11 +82,11 @@ class RaceItem extends StatelessWidget {
         child: index == 0 && isUpNext
             ? Column(
                 children: [
-                  FutureBuilder(
+                  FutureBuilder<String>(
                     future: RaceTracksUrls().getRaceTrackUrl(item.circuitId),
                     builder: (context, snapshot) => snapshot.hasData
                         ? ImageRenderer(
-                            snapshot.data,
+                            snapshot.data!,
                             inSchedule: true,
                           )
                         : LoadingIndicatorUtil(),
@@ -115,18 +115,18 @@ class RaceListItem extends StatelessWidget {
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     List months = [
-      AppLocalizations.of(context).monthAbbreviationJanuary,
-      AppLocalizations.of(context).monthAbbreviationFebruary,
-      AppLocalizations.of(context).monthAbbreviationMarch,
-      AppLocalizations.of(context).monthAbbreviationApril,
-      AppLocalizations.of(context).monthAbbreviationMay,
-      AppLocalizations.of(context).monthAbbreviationJune,
-      AppLocalizations.of(context).monthAbbreviationJuly,
-      AppLocalizations.of(context).monthAbbreviationAugust,
-      AppLocalizations.of(context).monthAbbreviationSeptember,
-      AppLocalizations.of(context).monthAbbreviationOctober,
-      AppLocalizations.of(context).monthAbbreviationNovember,
-      AppLocalizations.of(context).monthAbbreviationDecember,
+      AppLocalizations.of(context)?.monthAbbreviationJanuary,
+      AppLocalizations.of(context)?.monthAbbreviationFebruary,
+      AppLocalizations.of(context)?.monthAbbreviationMarch,
+      AppLocalizations.of(context)?.monthAbbreviationApril,
+      AppLocalizations.of(context)?.monthAbbreviationMay,
+      AppLocalizations.of(context)?.monthAbbreviationJune,
+      AppLocalizations.of(context)?.monthAbbreviationJuly,
+      AppLocalizations.of(context)?.monthAbbreviationAugust,
+      AppLocalizations.of(context)?.monthAbbreviationSeptember,
+      AppLocalizations.of(context)?.monthAbbreviationOctober,
+      AppLocalizations.of(context)?.monthAbbreviationNovember,
+      AppLocalizations.of(context)?.monthAbbreviationDecember,
     ];
     return Container(
       padding: EdgeInsets.all(2),
@@ -223,7 +223,7 @@ class RacesList extends StatelessWidget {
   final List<Race> items;
   final bool isUpNext;
 
-  RacesList(this.items, this.isUpNext, {Key key});
+  RacesList(this.items, this.isUpNext, {Key? key});
   @override
   Widget build(BuildContext context) {
     return ListView.builder(

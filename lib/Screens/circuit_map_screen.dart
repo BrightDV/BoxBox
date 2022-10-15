@@ -37,7 +37,7 @@ class CircuitMapScreen extends StatelessWidget {
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     return AlertDialog(
       title: Text(
-        AppLocalizations.of(context).grandPrixMap,
+        AppLocalizations.of(context)!.grandPrixMap,
         style: TextStyle(
           color: Theme.of(context).primaryColor,
         ),
@@ -72,7 +72,7 @@ class CircuitMapScreen extends StatelessWidget {
             ),
           ),
           child: Text(
-            AppLocalizations.of(context).close,
+            AppLocalizations.of(context)!.close,
           ),
         ),
       ],
@@ -94,9 +94,9 @@ class MarkersPage extends StatefulWidget {
 }
 
 class _MarkersPageState extends State<MarkersPage> {
-  MapController mapController;
-  StatefulMapController statefulMapController;
-  StreamSubscription<StatefulMapControllerStateChange> sub;
+  late MapController mapController;
+  late StatefulMapController statefulMapController;
+  late StreamSubscription<StatefulMapControllerStateChange> sub;
 
   Future<void> addPoints(String circuitId) async {
     List<List> circuitPointsData =

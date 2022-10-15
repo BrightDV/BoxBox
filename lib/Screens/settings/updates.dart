@@ -42,7 +42,7 @@ class _UpdatesScreenState extends State<UpdatesScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          AppLocalizations.of(context).updates,
+          AppLocalizations.of(context)!.updates,
           style: TextStyle(
             fontWeight: FontWeight.w600,
           ),
@@ -54,13 +54,13 @@ class _UpdatesScreenState extends State<UpdatesScreen> {
         children: [
           ListTile(
             title: Text(
-              AppLocalizations.of(context).checkUpdates,
+              AppLocalizations.of(context)!.checkUpdates,
               style: TextStyle(
                 color: useDarkMode ? Colors.white : Colors.black,
               ),
             ),
             subtitle: Text(
-              AppLocalizations.of(context).tapToCheckForUpdate,
+              AppLocalizations.of(context)!.tapToCheckForUpdate,
               style: TextStyle(
                 color: useDarkMode ? Colors.white : Colors.black,
                 fontSize: 13,
@@ -96,7 +96,7 @@ class _UpdatesScreenState extends State<UpdatesScreen> {
                               padding:
                                   EdgeInsets.fromLTRB(10.0, 24.0, 10.0, 24.0),
                               child: Text(
-                                AppLocalizations.of(context)
+                                AppLocalizations.of(context)!
                                     .newVersionAvailable,
                                 style: TextStyle(
                                   color:
@@ -146,7 +146,7 @@ class _UpdatesScreenState extends State<UpdatesScreen> {
                                       mode: LaunchMode.externalApplication,
                                     ),
                                     child: Text(
-                                      AppLocalizations.of(context).download,
+                                      AppLocalizations.of(context)!.download,
                                     ),
                                   ),
                                   Spacer(),
@@ -154,7 +154,7 @@ class _UpdatesScreenState extends State<UpdatesScreen> {
                                     onPressed: () =>
                                         Navigator.of(context).pop(),
                                     child: Text(
-                                      AppLocalizations.of(context).close,
+                                      AppLocalizations.of(context)!.close,
                                     ),
                                   ),
                                 ],

@@ -24,7 +24,7 @@ import 'package:loading_indicator/loading_indicator.dart';
 import 'package:marquee/marquee.dart';
 
 class LiveSessionStatusIndicator extends StatelessWidget {
-  LiveSessionStatusIndicator({Key key}) : super(key: key);
+  LiveSessionStatusIndicator({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<Event>(
@@ -39,7 +39,7 @@ class LiveSessionStatusIndicator extends StatelessWidget {
           );
         }
         return snapshot.hasData
-            ? snapshot.data.isRunning
+            ? snapshot.data!.isRunning
                 ? GestureDetector(
                     child: Container(
                       height: 50,
@@ -66,7 +66,7 @@ class LiveSessionStatusIndicator extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                '${snapshot.data.meetingName}',
+                                '${snapshot.data!.meetingName}',
                                 style: TextStyle(
                                   fontSize: 15,
                                   color: Colors.white,
@@ -76,7 +76,7 @@ class LiveSessionStatusIndicator extends StatelessWidget {
                                 width: MediaQuery.of(context).size.width - 60,
                                 height: 20,
                                 child: Marquee(
-                                  text: '${snapshot.data.meetingOfficialName}',
+                                  text: '${snapshot.data!.meetingOfficialName}',
                                   style: TextStyle(
                                     fontSize: 12,
                                     color: Colors.white,
@@ -96,7 +96,7 @@ class LiveSessionStatusIndicator extends StatelessWidget {
                       context,
                       MaterialPageRoute(
                         builder: (context) =>
-                            GrandPrixRunningScreen(snapshot.data),
+                            GrandPrixRunningScreen(snapshot.data!),
                       ),
                     ),
                   )

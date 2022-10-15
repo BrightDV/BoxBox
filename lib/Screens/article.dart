@@ -108,14 +108,14 @@ class ArticleProvider extends StatelessWidget {
   ArticleProvider(this.articleId, this.updateArticleTitle);
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
+    return FutureBuilder<Article>(
       future: getArticleData(this.articleId, updateArticleTitle),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return RequestErrorWidget(snapshot.error.toString());
         }
         return snapshot.hasData
-            ? ArticleRenderer(snapshot.data)
+            ? ArticleRenderer(snapshot.data!)
             : LoadingIndicatorUtil();
       },
     );

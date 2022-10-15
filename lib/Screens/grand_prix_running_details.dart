@@ -117,27 +117,27 @@ class _SessionItemState extends State<SessionItem> {
   @override
   Widget build(BuildContext context) {
     Map sessionsAbbreviations = {
-      'r': AppLocalizations.of(context).race,
-      'q': AppLocalizations.of(context).qualifyings,
-      's': AppLocalizations.of(context).sprint,
-      'sq': AppLocalizations.of(context).sprintQualifyings,
-      'p1': AppLocalizations.of(context).freePracticeOne,
-      'p2': AppLocalizations.of(context).freePracticeTwo,
-      'p3': AppLocalizations.of(context).freePracticeThree,
+      'r': AppLocalizations.of(context)!.race,
+      'q': AppLocalizations.of(context)!.qualifyings,
+      's': AppLocalizations.of(context)!.sprint,
+      'sq': AppLocalizations.of(context)!.sprintQualifyings,
+      'p1': AppLocalizations.of(context)!.freePracticeOne,
+      'p2': AppLocalizations.of(context)!.freePracticeTwo,
+      'p3': AppLocalizations.of(context)!.freePracticeThree,
     };
     List months = [
-      AppLocalizations.of(context).monthAbbreviationJanuary,
-      AppLocalizations.of(context).monthAbbreviationFebruary,
-      AppLocalizations.of(context).monthAbbreviationMarch,
-      AppLocalizations.of(context).monthAbbreviationApril,
-      AppLocalizations.of(context).monthAbbreviationMay,
-      AppLocalizations.of(context).monthAbbreviationJune,
-      AppLocalizations.of(context).monthAbbreviationJuly,
-      AppLocalizations.of(context).monthAbbreviationAugust,
-      AppLocalizations.of(context).monthAbbreviationSeptember,
-      AppLocalizations.of(context).monthAbbreviationOctober,
-      AppLocalizations.of(context).monthAbbreviationNovember,
-      AppLocalizations.of(context).monthAbbreviationDecember,
+      AppLocalizations.of(context)!.monthAbbreviationJanuary,
+      AppLocalizations.of(context)!.monthAbbreviationFebruary,
+      AppLocalizations.of(context)!.monthAbbreviationMarch,
+      AppLocalizations.of(context)!.monthAbbreviationApril,
+      AppLocalizations.of(context)!.monthAbbreviationMay,
+      AppLocalizations.of(context)!.monthAbbreviationJune,
+      AppLocalizations.of(context)!.monthAbbreviationJuly,
+      AppLocalizations.of(context)!.monthAbbreviationAugust,
+      AppLocalizations.of(context)!.monthAbbreviationSeptember,
+      AppLocalizations.of(context)!.monthAbbreviationOctober,
+      AppLocalizations.of(context)!.monthAbbreviationNovember,
+      AppLocalizations.of(context)!.monthAbbreviationDecember,
     ];
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
@@ -195,7 +195,7 @@ class _SessionItemState extends State<SessionItem> {
                 dashGapLength: 3,
                 lineThickness: 3,
                 dashRadius: 8,
-                dashColor: useDarkMode ? Colors.grey[700] : Colors.grey[400],
+                dashColor: useDarkMode ? Colors.grey[700]! : Colors.grey[400]!,
               ),
             ),
             Expanded(

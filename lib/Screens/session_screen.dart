@@ -80,7 +80,7 @@ class _SessionScreenState extends State<SessionScreen> {
                   padding: EdgeInsets.all(10),
                   child: Center(
                     child: Text(
-                      AppLocalizations.of(context).sessionStartsIn,
+                      AppLocalizations.of(context)!.sessionStartsIn,
                       style: TextStyle(
                         fontSize: 20,
                         color: useDarkMode ? Colors.white : Colors.black,
@@ -111,13 +111,13 @@ class _SessionScreenState extends State<SessionScreen> {
                     fontSize: 20,
                   ),
                   spacerWidth: 15,
-                  daysDescription: AppLocalizations.of(context).dayFirstLetter,
+                  daysDescription: AppLocalizations.of(context)!.dayFirstLetter,
                   hoursDescription:
-                      AppLocalizations.of(context).hourFirstLetter,
+                      AppLocalizations.of(context)!.hourFirstLetter,
                   minutesDescription:
-                      AppLocalizations.of(context).minuteAbbreviation,
+                      AppLocalizations.of(context)!.minuteAbbreviation,
                   secondsDescription:
-                      AppLocalizations.of(context).secondAbbreviation,
+                      AppLocalizations.of(context)!.secondAbbreviation,
                   onEnd: () {
                     setState(() {});
                   },
@@ -127,7 +127,7 @@ class _SessionScreenState extends State<SessionScreen> {
           : widget.session.state == 'completed'
               ? Center(
                   child: Text(
-                    AppLocalizations.of(context).sessionCompleted,
+                    AppLocalizations.of(context)!.sessionCompleted,
                     style: TextStyle(
                       color: useDarkMode ? Colors.white : Colors.black,
                     ),
@@ -143,7 +143,7 @@ class _SessionScreenState extends State<SessionScreen> {
 }
 
 class SessionFeed extends StatefulWidget {
-  const SessionFeed({Key key}) : super(key: key);
+  const SessionFeed({Key? key}) : super(key: key);
   _SessionFeedState createState() => _SessionFeedState();
 }
 
@@ -159,7 +159,7 @@ class _SessionFeedState extends State<SessionFeed> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
+    return FutureBuilder<Map>(
       future: getSessionInfo(),
       builder: (context, snapshot) {
         return snapshot.hasError
@@ -168,8 +168,8 @@ class _SessionFeedState extends State<SessionFeed> {
                 ? SingleChildScrollView(
                     child: Column(
                       children: [
-                        TrackStatus(snapshot.data),
-                        Leaderboard(snapshot.data),
+                        TrackStatus(snapshot.data!),
+                        Leaderboard(snapshot.data!),
                       ],
                     ),
                   )
@@ -208,7 +208,7 @@ class _TrackStatusState extends State<TrackStatus> {
     "7": Colors.yellow,
   };
 
-  Timer _timer;
+  late Timer _timer;
 
   @override
   void initState() {
@@ -229,17 +229,17 @@ class _TrackStatusState extends State<TrackStatus> {
   Widget build(BuildContext context) {
     return Container(
       height: 50,
-      child: FutureBuilder(
+      child: FutureBuilder<Map>(
         future: LiveTiming().trackStatus(widget.sessionInfo),
         builder: (context, snapshot) => snapshot.hasError
             ? RequestErrorWidget(snapshot.error.toString())
             : snapshot.hasData
                 ? Container(
                     height: 50,
-                    color: backgroundColors[snapshot.data['Status']],
+                    color: backgroundColors[snapshot.data?['Status']],
                     child: Center(
                       child: Text(
-                        trackStates[snapshot.data['Status']],
+                        trackStates[snapshot.data?['Status']],
                         style: TextStyle(color: Colors.white),
                       ),
                     ),
@@ -284,7 +284,7 @@ class _LeaderboardState extends State<Leaderboard> {
     "17": ["de_vries", "Nyck", "De Vries", "VRI", "mercedes"],
   };
 
-  Timer _timer;
+  late Timer _timer;
 
   @override
   void initState() {
@@ -303,7 +303,7 @@ class _LeaderboardState extends State<Leaderboard> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
+    return FutureBuilder<Map>(
       future: LiveTiming().timingData(widget.sessionInfo),
       builder: (context, snapshot) {
         if (snapshot.hasError == true) {
@@ -312,54 +312,54 @@ class _LeaderboardState extends State<Leaderboard> {
           );
         } else {
           if (snapshot.hasData == true) {
-            List drivers = snapshot.data.keys.toList();
+            List drivers = snapshot.data!.keys.toList();
             List driversResults = [];
             if (widget.sessionInfo['Path'].endsWith('Race/')) {
               drivers.forEach(
                 (element) {
-                  snapshot.data[element.toString()]['Line'] == 1
+                  snapshot.data![element.toString()]['Line'] == 1
                       ? driversResults.add(
                           DriverResult(
                             numberToPilot[element.toString()][0],
-                            snapshot.data[element]['Line'].toString(),
+                            snapshot.data![element]['Line'].toString(),
                             element.toString(),
                             numberToPilot[element.toString()][1],
                             numberToPilot[element.toString()][2],
                             numberToPilot[element.toString()][3],
                             numberToPilot[element.toString()][4],
-                            snapshot.data[element]['Retired']
+                            snapshot.data![element]['Retired']
                                 ? 'DNF'
-                                : snapshot.data[element]['InPit']
+                                : snapshot.data![element]['InPit']
                                     ? 'PIT'
-                                    : snapshot.data[element]['PitOut']
+                                    : snapshot.data![element]['PitOut']
                                         ? 'PIT OUT'
-                                        : snapshot.data[element]['GapToLeader']
+                                        : snapshot.data![element]['GapToLeader']
                                             .toString(),
                             false,
-                            snapshot.data[element]['BestLapTime']['Value'],
-                            snapshot.data[element]['BestLapTime']['Lap'],
-                            lapsDone: snapshot.data[element]['NumberOfLaps'],
+                            snapshot.data![element]['BestLapTime']['Value'],
+                            snapshot.data![element]['BestLapTime']['Lap'],
+                            lapsDone: snapshot.data![element]['NumberOfLaps'],
                           ),
                         )
                       : driversResults.add(
                           DriverResult(
                             numberToPilot[element.toString()][0],
-                            snapshot.data[element]['Line'].toString(),
+                            snapshot.data![element]['Line'].toString(),
                             element.toString(),
                             numberToPilot[element.toString()][1],
                             numberToPilot[element.toString()][2],
                             numberToPilot[element.toString()][3],
                             numberToPilot[element.toString()][4],
-                            snapshot.data[element]['TimeDiffToPositionAhead']
+                            snapshot.data![element]['TimeDiffToPositionAhead']
                                 .toString(),
-                            snapshot.data[element]['PersonalBestLapTime']
+                            snapshot.data![element]['PersonalBestLapTime']
                                         ['Position'] ==
                                     1
                                 ? true
                                 : false,
-                            snapshot.data[element]['PersonalBestLapTime']
+                            snapshot.data![element]['PersonalBestLapTime']
                                 ['Value'],
-                            snapshot.data[element]['PersonalBestLapTime']
+                            snapshot.data![element]['PersonalBestLapTime']
                                 ['Lap'],
                           ),
                         );
@@ -368,48 +368,48 @@ class _LeaderboardState extends State<Leaderboard> {
             } else {
               drivers.forEach(
                 (element) {
-                  snapshot.data[element.toString()]['Line'] == 1
+                  snapshot.data![element.toString()]['Line'] == 1
                       ? driversResults.add(
                           DriverResult(
                             numberToPilot[element.toString()][0],
-                            snapshot.data[element]['Line'].toString(),
+                            snapshot.data![element]['Line'].toString(),
                             element.toString(),
                             numberToPilot[element.toString()][1],
                             numberToPilot[element.toString()][2],
                             numberToPilot[element.toString()][3],
                             numberToPilot[element.toString()][4],
-                            snapshot.data[element]['BestLapTime']['Value']
+                            snapshot.data![element]['BestLapTime']['Value']
                                 .toString(),
-                            snapshot.data[element]['PersonalBestLapTime']
+                            snapshot.data![element]['PersonalBestLapTime']
                                         ['Position'] ==
                                     1
                                 ? true
                                 : false,
-                            snapshot.data[element]['PersonalBestLapTime']
+                            snapshot.data![element]['PersonalBestLapTime']
                                 ['Value'],
-                            snapshot.data[element]['PersonalBestLapTime']
+                            snapshot.data![element]['PersonalBestLapTime']
                                 ['Lap'],
                           ),
                         )
                       : driversResults.add(
                           DriverResult(
                             numberToPilot[element.toString()][0],
-                            snapshot.data[element]['Line'].toString(),
+                            snapshot.data![element]['Line'].toString(),
                             element.toString(),
                             numberToPilot[element.toString()][1],
                             numberToPilot[element.toString()][2],
                             numberToPilot[element.toString()][3],
                             numberToPilot[element.toString()][4],
-                            snapshot.data[element]['TimeDiffToFastest']
+                            snapshot.data![element]['TimeDiffToFastest']
                                 .toString(),
-                            snapshot.data[element]['PersonalBestLapTime']
+                            snapshot.data![element]['PersonalBestLapTime']
                                         ['Position'] ==
                                     1
                                 ? true
                                 : false,
-                            snapshot.data[element]['PersonalBestLapTime']
+                            snapshot.data![element]['PersonalBestLapTime']
                                 ['Value'],
-                            snapshot.data[element]['PersonalBestLapTime']
+                            snapshot.data![element]['PersonalBestLapTime']
                                 ['Lap'],
                           ),
                         );
@@ -442,7 +442,7 @@ class _LeaderboardState extends State<Leaderboard> {
 }
 
 class WeatherPopup extends StatelessWidget {
-  const WeatherPopup({Key key}) : super(key: key);
+  const WeatherPopup({Key? key}) : super(key: key);
 
   Future<Map> getWeather() async {
     Map sessionInfo = await LiveTiming().sessionInfo();
@@ -455,7 +455,7 @@ class WeatherPopup extends StatelessWidget {
       title: Center(
         child: Text('MÉTÉO'),
       ),
-      content: FutureBuilder(
+      content: FutureBuilder<Map>(
         future: getWeather(),
         builder: (context, snapshot) => snapshot.hasError
             ? RequestErrorWidget(snapshot.error.toString())
@@ -464,15 +464,15 @@ class WeatherPopup extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                          'Température de l\'air: ${snapshot.data["AirTemp"]}°C'),
+                          'Température de l\'air: ${snapshot.data!["AirTemp"]}°C'),
                       Text(
-                          'Température du circuit: ${snapshot.data["TrackTemp"]}°C'),
-                      Text('Humidité: ${snapshot.data["Humidity"]}%'),
-                      Text('Pression: ${snapshot.data["Pressure"]}hPa'),
-                      Text('Pluie: ${snapshot.data["Rainfall"]}mm'),
-                      Text('Vent: ${snapshot.data["WindSpeed"]}km/h'),
+                          'Température du circuit: ${snapshot.data!["TrackTemp"]}°C'),
+                      Text('Humidité: ${snapshot.data!["Humidity"]}%'),
+                      Text('Pression: ${snapshot.data!["Pressure"]}hPa'),
+                      Text('Pluie: ${snapshot.data!["Rainfall"]}mm'),
+                      Text('Vent: ${snapshot.data!["WindSpeed"]}km/h'),
                       Text(
-                          'Direction du vent: ${snapshot.data["WindDirection"]}°'),
+                          'Direction du vent: ${snapshot.data!["WindDirection"]}°'),
                     ],
                   )
                 : LoadingIndicatorUtil(),
@@ -490,7 +490,7 @@ class WeatherPopup extends StatelessWidget {
 }
 
 class EventsFeed extends StatefulWidget {
-  const EventsFeed({Key key}) : super(key: key);
+  const EventsFeed({Key? key}) : super(key: key);
 
   @override
   State<EventsFeed> createState() => _EventsFeedState();

@@ -120,14 +120,14 @@ class TeamItem extends StatelessWidget {
                 ),
                 int.parse(this.item.points) == 1
                     ? Text(
-                        "${this.item.points} ${AppLocalizations.of(context).point}",
+                        "${this.item.points} ${AppLocalizations.of(context)?.point}",
                         style: TextStyle(
                           fontSize: 18,
                           color: useDarkMode ? Colors.white : Color(0xff171717),
                         ),
                       )
                     : Text(
-                        "${this.item.points} ${AppLocalizations.of(context).points}",
+                        "${this.item.points} ${AppLocalizations.of(context)?.points}",
                         style: TextStyle(
                           fontSize: 18,
                           color: useDarkMode ? Colors.white : Color(0xff171717),
@@ -137,7 +137,7 @@ class TeamItem extends StatelessWidget {
                   padding: EdgeInsets.only(top: 5),
                   child: int.parse(this.item.wins) == 1
                       ? Text(
-                          "${this.item.wins} ${AppLocalizations.of(context).victory}",
+                          "${this.item.wins} ${AppLocalizations.of(context)?.victory}",
                           style: TextStyle(
                             fontSize: 17,
                             color:
@@ -145,7 +145,7 @@ class TeamItem extends StatelessWidget {
                           ),
                         )
                       : Text(
-                          "${this.item.wins} ${AppLocalizations.of(context).victories}",
+                          "${this.item.wins} ${AppLocalizations.of(context)?.victories}",
                           style: TextStyle(
                             fontSize: 17,
                             color:
@@ -177,7 +177,7 @@ class TeamCarImageProvider extends StatelessWidget {
   TeamCarImageProvider(this.teamId);
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
+    return FutureBuilder<String>(
       future: getCircuitImageUrl(this.teamId),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
@@ -195,7 +195,7 @@ class TeamCarImageProvider extends StatelessWidget {
                         fit: BoxFit.fitHeight,
                         alignment: Alignment(0.9, 0.0),
                         image: CachedNetworkImageProvider(
-                          snapshot.data,
+                          snapshot.data!,
                         ),
                       ),
                     ),
@@ -211,7 +211,7 @@ class TeamCarImageProvider extends StatelessWidget {
 class TeamsList extends StatelessWidget {
   final List<Team> items;
 
-  TeamsList({Key key, this.items});
+  TeamsList({Key? key, required this.items});
   @override
   Widget build(BuildContext context) {
     return ListView.builder(

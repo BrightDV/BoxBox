@@ -66,7 +66,7 @@ class _RaceDetailsScreenState extends State<RaceDetailsScreen> {
                     icon: Icon(
                       Icons.map_outlined,
                     ),
-                    tooltip: AppLocalizations.of(context).grandPrixMap,
+                    tooltip: AppLocalizations.of(context)!.grandPrixMap,
                     onPressed: () {
                       showDialog(
                         context: context,
@@ -93,13 +93,13 @@ class _RaceDetailsScreenState extends State<RaceDetailsScreen> {
                   TabBar(
                     tabs: [
                       Tab(
-                        text: AppLocalizations.of(context).freePracticeShort,
+                        text: AppLocalizations.of(context)!.freePracticeShort,
                       ),
                       Tab(
-                        text: AppLocalizations.of(context).qualifyingsShort,
+                        text: AppLocalizations.of(context)!.qualifyingsShort,
                       ),
                       Tab(
-                        text: AppLocalizations.of(context).race.toUpperCase(),
+                        text: AppLocalizations.of(context)!.race.toUpperCase(),
                       ),
                     ],
                     labelColor: useDarkMode
@@ -164,9 +164,9 @@ class FreePracticesResultsProvider extends StatelessWidget {
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     final List<String> sessionsTitle = [
-      AppLocalizations.of(context).freePracticeOne,
-      AppLocalizations.of(context).freePracticeTwo,
-      AppLocalizations.of(context).freePracticeThree,
+      AppLocalizations.of(context)!.freePracticeOne,
+      AppLocalizations.of(context)!.freePracticeTwo,
+      AppLocalizations.of(context)!.freePracticeThree,
     ];
     return ListView.builder(
       itemCount: 3,
@@ -235,7 +235,7 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
           Padding(
             padding: EdgeInsets.all(10),
             child: Text(
-              AppLocalizations.of(context).raceStartsIn,
+              AppLocalizations.of(context)!.raceStartsIn,
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 20,
@@ -266,10 +266,12 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
               fontSize: 20,
             ),
             spacerWidth: 15,
-            daysDescription: AppLocalizations.of(context).dayFirstLetter,
-            hoursDescription: AppLocalizations.of(context).hourFirstLetter,
-            minutesDescription: AppLocalizations.of(context).minuteAbbreviation,
-            secondsDescription: AppLocalizations.of(context).secondAbbreviation,
+            daysDescription: AppLocalizations.of(context)!.dayFirstLetter,
+            hoursDescription: AppLocalizations.of(context)!.hourFirstLetter,
+            minutesDescription:
+                AppLocalizations.of(context)!.minuteAbbreviation,
+            secondsDescription:
+                AppLocalizations.of(context)!.secondAbbreviation,
             onEnd: () {
               setState(() {});
             },
@@ -277,7 +279,7 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
         ],
       );
     } else {
-      return FutureBuilder(
+      return FutureBuilder<List<DriverResult>>(
         future: getRaceStandings(race.round),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
@@ -291,7 +293,7 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
                             color: useDarkMode ? Colors.white : Colors.black,
                           ),
                           title: Text(
-                            AppLocalizations.of(context).unavailableOffline,
+                            AppLocalizations.of(context)!.unavailableOffline,
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               color: useDarkMode ? Colors.white : Colors.black,
@@ -309,7 +311,7 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
                     padding: EdgeInsets.all(10),
                     child: Center(
                       child: Text(
-                        AppLocalizations.of(context).dataNotAvailable,
+                        AppLocalizations.of(context)!.dataNotAvailable,
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: useDarkMode ? Colors.white : Colors.black,
@@ -329,7 +331,7 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
                           color: Colors.white,
                         ),
                         title: Text(
-                          AppLocalizations.of(context).watchOnYoutube,
+                          AppLocalizations.of(context)!.watchOnYoutube,
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: Colors.white,
@@ -352,7 +354,7 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
                         },
                         tileColor: Color(0xff383840),
                       ),
-                      RaceDriversResultsList(snapshot.data),
+                      RaceDriversResultsList(snapshot.data!),
                     ],
                   ),
                 )
@@ -366,7 +368,7 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
                               color: useDarkMode ? Colors.white : Colors.black,
                             ),
                             title: Text(
-                              AppLocalizations.of(context).unavailableOffline,
+                              AppLocalizations.of(context)!.unavailableOffline,
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 color:
@@ -401,7 +403,7 @@ class QualificationResultsProvider extends StatelessWidget {
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
 
-    return FutureBuilder(
+    return FutureBuilder<List<DriverQualificationResult>>(
       future: getQualificationStandings(this.race.round),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
@@ -409,7 +411,7 @@ class QualificationResultsProvider extends StatelessWidget {
             padding: EdgeInsets.all(15),
             child: Center(
               child: Text(
-                AppLocalizations.of(context).dataNotAvailable,
+                AppLocalizations.of(context)!.dataNotAvailable,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: useDarkMode ? Colors.white : Colors.black,
@@ -429,7 +431,7 @@ class QualificationResultsProvider extends StatelessWidget {
                         color: Colors.white,
                       ),
                       title: Text(
-                        AppLocalizations.of(context).watchOnYoutube,
+                        AppLocalizations.of(context)!.watchOnYoutube,
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: Colors.white,
@@ -454,7 +456,7 @@ class QualificationResultsProvider extends StatelessWidget {
                     ),
                   ),
                   QualificationDriversResultsList(
-                    snapshot.data,
+                    snapshot.data!,
                   ),
                 ],
               )
@@ -473,7 +475,7 @@ class RaceImageProvider extends StatelessWidget {
   RaceImageProvider(this.race);
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
+    return FutureBuilder<String>(
       future: getCircuitImageUrl(this.race),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
@@ -486,7 +488,7 @@ class RaceImageProvider extends StatelessWidget {
                 fadeOutDuration: Duration(seconds: 1),
                 fadeInDuration: Duration(seconds: 1),
                 fit: BoxFit.cover,
-                imageUrl: snapshot.data,
+                imageUrl: snapshot.data!,
                 placeholder: (context, url) => LoadingIndicatorUtil(),
               )
             : LoadingIndicatorUtil();

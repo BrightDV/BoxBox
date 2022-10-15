@@ -19,6 +19,7 @@
 
 import 'package:boxbox/Screens/about.dart';
 import 'package:boxbox/Screens/settings/settings_list.dart';
+import 'package:boxbox/Screens/test_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -63,7 +64,7 @@ class _MainDrawerState extends State<MainDrawer> {
             ),
             ListTile(
               title: Text(
-                AppLocalizations.of(context).settings,
+                AppLocalizations.of(context)?.settings ?? 'Settings',
                 style: TextStyle(
                   color: useDarkMode ? Colors.white : Colors.black,
                 ),
@@ -86,7 +87,7 @@ class _MainDrawerState extends State<MainDrawer> {
             ),
             ListTile(
               title: Text(
-                AppLocalizations.of(context).about,
+                AppLocalizations.of(context)?.about ?? 'About',
                 style: TextStyle(
                   color: useDarkMode ? Colors.white : Colors.black,
                 ),
@@ -105,16 +106,37 @@ class _MainDrawerState extends State<MainDrawer> {
                 );
               },
             ),
+            ListTile(
+              title: Text(
+                'Tests',
+                style: TextStyle(
+                  color: useDarkMode ? Colors.white : Colors.black,
+                ),
+              ),
+              leading: Icon(
+                Icons.history_outlined,
+                color: useDarkMode ? Colors.white : Colors.black,
+              ),
+              onTap: () {
+                Navigator.of(context).pop();
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => TestScreen(),
+                  ),
+                );
+              },
+            ),
             Expanded(
               child: Align(
                 alignment: Alignment.bottomCenter,
-                child: FutureBuilder(
+                child: FutureBuilder<PackageInfo>(
                   future: PackageInfo.fromPlatform(),
                   builder: (context, snapshot) => snapshot.hasData
                       ? Padding(
                           padding: EdgeInsets.only(bottom: 10),
                           child: Text(
-                            snapshot.data.version,
+                            snapshot.data!.version,
                             style: TextStyle(
                               color: useDarkMode ? Colors.white : Colors.black,
                             ),

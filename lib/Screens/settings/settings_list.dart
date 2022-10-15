@@ -47,7 +47,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
       appBar: AppBar(
         title: Text(
-          AppLocalizations.of(context).settings,
+          AppLocalizations.of(context)!.settings,
           style: TextStyle(
             fontWeight: FontWeight.w600,
           ),
@@ -61,7 +61,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               children: [
                 ListTile(
                   title: Text(
-                    AppLocalizations.of(context).appearance,
+                    AppLocalizations.of(context)!.appearance,
                     style: TextStyle(
                       color: useDarkMode ? Colors.white : Colors.black,
                     ),
@@ -84,7 +84,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
                 ListTile(
                   title: Text(
-                    AppLocalizations.of(context).player,
+                    AppLocalizations.of(context)!.player,
                     style: TextStyle(
                       color: useDarkMode ? Colors.white : Colors.black,
                     ),
@@ -105,7 +105,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
                 //ListTile(
                 //  title: Text(
-                //    AppLocalizations.of(context).updates,
+                //    AppLocalizations.of(context)!.updates,
                 //    style: TextStyle(
                 //      color: useDarkMode ? Colors.white : Colors.black,
                 //    ),

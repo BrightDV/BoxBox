@@ -54,13 +54,13 @@ class ScheduleScreen extends StatelessWidget {
               child: TabBar(
                 tabs: [
                   Text(
-                    AppLocalizations.of(context).previous,
+                    AppLocalizations.of(context)!.previous,
                     style: TextStyle(
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                   Text(
-                    AppLocalizations.of(context).next,
+                    AppLocalizations.of(context)!.next,
                     style: TextStyle(
                       fontWeight: FontWeight.w600,
                     ),
@@ -77,9 +77,9 @@ class ScheduleScreen extends StatelessWidget {
 
 class ScheduleWidget extends StatelessWidget {
   final bool toCome;
-  ScheduleWidget(this.toCome, {Key key}) : super(key: key);
+  ScheduleWidget(this.toCome, {Key? key}) : super(key: key);
 
-  FutureOr<List<Race>> getRacesList(bool toCome) async {
+  Future<List<Race>> getRacesList(bool toCome) async {
     return await ErgastApi().getLastSchedule(toCome);
   }
 
@@ -102,7 +102,7 @@ class ScheduleWidget extends StatelessWidget {
               : RequestErrorWidget(snapshot.error.toString());
         return snapshot.hasData
             ? RacesList(
-                snapshot.data,
+                snapshot.data!,
                 toCome,
               )
             : schedule['MRData'] != null

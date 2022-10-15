@@ -43,7 +43,7 @@ class _ErgastApiCalls {
         } else {
           time = element["Time"]["time"];
         }
-        String fastestLapRank;
+        String fastestLapRank = "1";
         if (element['FastestLap'] == null) {
           fastestLapRank = "0";
         }

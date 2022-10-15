@@ -47,7 +47,7 @@ class GetTrackGeoJSONPoints {
     "yas_marina": "ae-2009",
   };
   Future<List<List>> getCircuitPoints(String circuitId) async {
-    String encodedCircuitName = circuitIdEncoder[circuitId];
+    String? encodedCircuitName = circuitIdEncoder[circuitId];
     Uri url;
     if (circuitId == 'miami') {
       url = Uri.parse(

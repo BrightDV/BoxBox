@@ -67,8 +67,7 @@ class DriverResultsImage {
         "https://www.formula1.com/content/dam/fom-website/drivers/N/NYCDEV01_Nyck_De%20Vries/nycdev01.png.transform/2col/image.png",
   };
   Future<String> getDriverImageURL(String driverId) async {
-    String driverImageUrl = driverDecoder[driverId];
-    return driverImageUrl;
+    return driverDecoder[driverId]!;
   }
 }
 

@@ -26,7 +26,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class MainBottomNavigationBar extends StatefulWidget {
-  MainBottomNavigationBar({Key key}) : super(key: key);
+  MainBottomNavigationBar({Key? key}) : super(key: key);
 
   @override
   _MainBottomNavigationBarState createState() =>
@@ -93,7 +93,7 @@ class _MainBottomNavigationBarState extends State<MainBottomNavigationBar> {
             activeIcon: Icon(
               Icons.feed,
             ),
-            label: AppLocalizations.of(context).news,
+            label: AppLocalizations.of(context)?.news,
           ),
           BottomNavigationBarItem(
             icon: Icon(
@@ -102,7 +102,7 @@ class _MainBottomNavigationBarState extends State<MainBottomNavigationBar> {
             activeIcon: Icon(
               Icons.emoji_events,
             ),
-            label: AppLocalizations.of(context).standings,
+            label: AppLocalizations.of(context)?.standings,
           ),
           BottomNavigationBarItem(
             icon: Icon(
@@ -111,7 +111,7 @@ class _MainBottomNavigationBarState extends State<MainBottomNavigationBar> {
             activeIcon: Icon(
               Icons.calendar_today,
             ),
-            label: AppLocalizations.of(context).schedule,
+            label: AppLocalizations.of(context)?.schedule,
           ),
         ],
         onTap: _onItemTapped,

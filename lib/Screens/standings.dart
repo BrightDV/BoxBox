@@ -29,8 +29,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class StandingsScreen extends StatefulWidget {
-  final bool switchToTeamStandings;
-  StandingsScreen({Key key, this.switchToTeamStandings}) : super(key: key);
+  final bool? switchToTeamStandings;
+  StandingsScreen({Key? key, this.switchToTeamStandings}) : super(key: key);
 
   @override
   _StandingsScreenState createState() => _StandingsScreenState();
@@ -63,13 +63,13 @@ class _StandingsScreenState extends State<StandingsScreen> {
               child: TabBar(
                 tabs: [
                   Text(
-                    AppLocalizations.of(context).drivers,
+                    AppLocalizations.of(context)!.drivers,
                     style: TextStyle(
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                   Text(
-                    AppLocalizations.of(context).teams,
+                    AppLocalizations.of(context)!.teams,
                     style: TextStyle(
                       fontWeight: FontWeight.w600,
                     ),
@@ -85,11 +85,11 @@ class _StandingsScreenState extends State<StandingsScreen> {
 }
 
 class DriversStandingsWidget extends StatelessWidget {
-  FutureOr<List<Driver>> getDriversList() async {
+  Future<List<Driver>> getDriversList() async {
     return await ErgastApi().getLastStandings();
   }
 
-  DriversStandingsWidget({Key key}) : super(key: key);
+  DriversStandingsWidget({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     Map driversStandings =
@@ -104,7 +104,7 @@ class DriversStandingsWidget extends StatelessWidget {
                 )
               : RequestErrorWidget(snapshot.error.toString());
         return snapshot.hasData
-            ? DriversList(items: snapshot.data)
+            ? DriversList(items: snapshot.data!)
             : driversStandings['MRData'] != null
                 ? DriversList(
                     items: ErgastApi().formatLastStandings(driversStandings),
@@ -116,11 +116,11 @@ class DriversStandingsWidget extends StatelessWidget {
 }
 
 class TeamsStandingsWidget extends StatelessWidget {
-  FutureOr<List<Team>> getLastTeamsStandings() async {
+  Future<List<Team>> getLastTeamsStandings() async {
     return await ErgastApi().getLastTeamsStandings();
   }
 
-  TeamsStandingsWidget({Key key}) : super(key: key);
+  TeamsStandingsWidget({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     Map teamsStandings =
@@ -135,7 +135,7 @@ class TeamsStandingsWidget extends StatelessWidget {
                 )
               : RequestErrorWidget(snapshot.error.toString());
         return snapshot.hasData
-            ? TeamsList(items: snapshot.data)
+            ? TeamsList(items: snapshot.data!)
             : teamsStandings['MRData'] != null
                 ? TeamsList(
                     items: ErgastApi().formatLastTeamsStandings(teamsStandings),

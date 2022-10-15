@@ -187,6 +187,6 @@ class TeamsThemes {
       "williams": 0xff37BEDD,
     };
 
-    return teamColorsList[teamTheme];
+    return teamColorsList[teamTheme]!;
   }
 }

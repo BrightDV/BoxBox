@@ -28,15 +28,15 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class NewsFeedWidget extends StatefulWidget {
-  final String tagId;
+  final String? tagId;
 
-  NewsFeedWidget({Key key, this.tagId});
+  NewsFeedWidget({Key? key, this.tagId});
   @override
   _NewsFeedWidgetState createState() => _NewsFeedWidgetState();
 }
 
 class _NewsFeedWidgetState extends State<NewsFeedWidget> {
-  FutureOr<List> getLatestNewsItems({String tagId}) async {
+  Future<List> getLatestNewsItems({String? tagId}) async {
     return await F1NewsFetcher().getLatestNews(tagId: tagId);
   }
 
@@ -44,7 +44,7 @@ class _NewsFeedWidgetState extends State<NewsFeedWidget> {
       new GlobalKey<RefreshIndicatorState>();
   ValueNotifier<List> itemsValueNotifier = ValueNotifier([]);
 
-  Future<List> refreshedNews;
+  late Future<List> refreshedNews;
 
   @override
   void initState() {
@@ -58,7 +58,7 @@ class _NewsFeedWidgetState extends State<NewsFeedWidget> {
   @override
   Widget build(BuildContext context) {
     Map latestNews = Hive.box('requests').get('news', defaultValue: {}) as Map;
-    return FutureBuilder(
+    return FutureBuilder<List>(
       future: refreshedNews,
       builder: (context, snapshot) => RefreshIndicator(
         key: _refreshIndicatorKey,
@@ -79,7 +79,7 @@ class _NewsFeedWidgetState extends State<NewsFeedWidget> {
                 : RequestErrorWidget(snapshot.error.toString())
             : snapshot.hasData
                 ? NewsList(
-                    items: snapshot.data,
+                    items: snapshot.data ?? [],
                     itemsValueNotifier: itemsValueNotifier,
                   )
                 : latestNews['items'] != null
@@ -109,7 +109,7 @@ class _NewsFeedWidgetState extends State<NewsFeedWidget> {
                   left: 10,
                 ),
                 child: Text(
-                  AppLocalizations.of(context).offline,
+                  AppLocalizations.of(context)!.offline,
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 15,

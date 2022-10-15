@@ -62,8 +62,8 @@ class DriverResult {
   final bool isFastest;
   final String fastestLapTime;
   final String fastestLap;
-  final String lapsDone;
-  final String points;
+  final String? lapsDone;
+  final String? points;
 
   DriverResult(
     this.driverId,
@@ -111,7 +111,7 @@ class DriverQualificationResult {
 class DriversList extends StatelessWidget {
   final List<Driver> items;
 
-  DriversList({Key key, this.items});
+  DriversList({Key? key, required this.items});
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
@@ -242,7 +242,7 @@ class DriverItem extends StatelessWidget {
                                     padding: EdgeInsets.only(top: 5),
                                     child: int.parse(this.item.points) == 1
                                         ? Text(
-                                            "${this.item.points} ${AppLocalizations.of(context).point}",
+                                            "${this.item.points} ${AppLocalizations.of(context)?.point}",
                                             style: TextStyle(
                                               fontSize: 20,
                                               color: useDarkMode
@@ -252,7 +252,7 @@ class DriverItem extends StatelessWidget {
                                             textAlign: TextAlign.center,
                                           )
                                         : Text(
-                                            "${this.item.points} ${AppLocalizations.of(context).points}",
+                                            "${this.item.points} ${AppLocalizations.of(context)?.points}",
                                             style: TextStyle(
                                               fontSize: 20,
                                               color: useDarkMode
@@ -300,7 +300,7 @@ class DriverImageProvider extends StatelessWidget {
         }
         return snapshot.hasData
             ? CachedNetworkImage(
-                imageUrl: snapshot.data,
+                imageUrl: snapshot.data.toString(),
                 placeholder: (context, url) => LoadingIndicatorUtil(),
                 errorWidget: (context, url, error) =>
                     Icon(Icons.error_outlined),

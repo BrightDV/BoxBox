@@ -62,7 +62,7 @@ class DriverDetailsScreen extends StatelessWidget {
               Center(
                 child: DriverImageProvider(driverId, 'driver'),
               ),
-              FutureBuilder(
+              FutureBuilder<List<List>>(
                 future: FormulaOneScraper().scrapeDriversDetails(driverId),
                 builder: (context, snapshot) => snapshot.hasError
                     ? RequestErrorWidget(
@@ -70,7 +70,7 @@ class DriverDetailsScreen extends StatelessWidget {
                       )
                     : snapshot.hasData
                         ? DriverDetailsFragment(
-                            snapshot.data,
+                            snapshot.data!,
                           )
                         : LoadingIndicatorUtil(),
               ),
@@ -99,7 +99,7 @@ class DriverImageProvider extends StatelessWidget {
   DriverImageProvider(this.driverId, this.idOfImage);
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
+    return FutureBuilder<String>(
       future: getImageURL(this.driverId, this.idOfImage),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
@@ -107,7 +107,7 @@ class DriverImageProvider extends StatelessWidget {
         }
         return snapshot.hasData
             ? Image.network(
-                snapshot.data,
+                snapshot.data!,
                 width: idOfImage == 'driver' ? 400 : 200,
                 //fit: BoxFit.scaleDown,
               )
@@ -119,23 +119,23 @@ class DriverImageProvider extends StatelessWidget {
 
 class DriverDetailsFragment extends StatelessWidget {
   final List<List> driverDetails;
-  const DriverDetailsFragment(this.driverDetails, {Key key}) : super(key: key);
+  const DriverDetailsFragment(this.driverDetails, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     final List<String> driverInfosLabels = [
-      AppLocalizations.of(context).team,
-      AppLocalizations.of(context).country,
-      AppLocalizations.of(context).podiums,
-      AppLocalizations.of(context).points,
-      AppLocalizations.of(context).grandsPrix,
-      AppLocalizations.of(context).worldChampionships,
-      AppLocalizations.of(context).highestRaceFinish,
-      AppLocalizations.of(context).highestGridPosition,
-      AppLocalizations.of(context).dateOfBirth,
-      AppLocalizations.of(context).placeOfBirth,
+      AppLocalizations.of(context)!.team,
+      AppLocalizations.of(context)!.country,
+      AppLocalizations.of(context)!.podiums,
+      AppLocalizations.of(context)!.points,
+      AppLocalizations.of(context)!.grandsPrix,
+      AppLocalizations.of(context)!.worldChampionships,
+      AppLocalizations.of(context)!.highestRaceFinish,
+      AppLocalizations.of(context)!.highestGridPosition,
+      AppLocalizations.of(context)!.dateOfBirth,
+      AppLocalizations.of(context)!.placeOfBirth,
     ];
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -177,7 +177,7 @@ class DriverDetailsFragment extends StatelessWidget {
         Column(
           children: [
             Text(
-              AppLocalizations.of(context).news,
+              AppLocalizations.of(context)!.news,
               style: TextStyle(
                 color: useDarkMode ? Colors.white : Colors.black,
                 fontSize: 18,
@@ -189,10 +189,10 @@ class DriverDetailsFragment extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   for (var item in driverDetails[1])
-                    FutureBuilder(
+                    FutureBuilder<Article>(
                       future: F1NewsFetcher().getArticleData(item[0]),
                       builder: (context, snapshot) {
-                        Article sd = snapshot.data;
+                        Article sd = snapshot.data!;
                         return snapshot.hasError
                             ? RequestErrorWidget(
                                 snapshot.error.toString(),
@@ -231,7 +231,7 @@ class DriverDetailsFragment extends StatelessWidget {
           child: Column(
             children: [
               Text(
-                AppLocalizations.of(context).biography,
+                AppLocalizations.of(context)!.biography,
                 style: TextStyle(
                   color: useDarkMode ? Colors.white : Colors.black,
                   fontSize: 18,
@@ -255,7 +255,7 @@ class DriverDetailsFragment extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.only(bottom: 15),
                 child: Text(
-                  AppLocalizations.of(context).gallery,
+                  AppLocalizations.of(context)!.gallery,
                   style: TextStyle(
                     color: useDarkMode ? Colors.white : Colors.black,
                     fontSize: 18,

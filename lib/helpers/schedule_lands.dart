@@ -46,7 +46,7 @@ class ScheduleLands {
     "UAE": "Émirats Arabes Unis",
   };
   String getLandName(String oldName) {
-    String newName = lands[oldName];
+    String newName = lands[oldName]!;
     return newName;
   }
 }

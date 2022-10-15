@@ -32,7 +32,7 @@ class AboutScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          AppLocalizations.of(context).about,
+          AppLocalizations.of(context)!.about,
           style: TextStyle(
             fontWeight: FontWeight.w600,
           ),
@@ -63,7 +63,7 @@ class AboutScreen extends StatelessWidget {
                 ),
               ),
             ),
-            FutureBuilder(
+            FutureBuilder<PackageInfo>(
               future: PackageInfo.fromPlatform(),
               builder: (context, snapshot) => snapshot.hasData
                   ? Padding(
@@ -72,7 +72,7 @@ class AboutScreen extends StatelessWidget {
                         bottom: 30,
                       ),
                       child: Text(
-                        'v${snapshot.data.version}',
+                        'v${snapshot.data?.version}',
                         style: TextStyle(
                           color: useDarkMode ? Colors.white : Colors.black,
                         ),
@@ -83,7 +83,7 @@ class AboutScreen extends StatelessWidget {
             Padding(
               padding: EdgeInsets.all(10),
               child: Text(
-                AppLocalizations.of(context).aboutDescription,
+                AppLocalizations.of(context)!.aboutDescription,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 20,
@@ -122,7 +122,7 @@ class AboutScreen extends StatelessWidget {
             Padding(
               padding: EdgeInsets.all(20),
               child: Text(
-                AppLocalizations.of(context).aboutBottomLine,
+                AppLocalizations.of(context)!.aboutBottomLine,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 11,

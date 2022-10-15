@@ -30,7 +30,7 @@ class FormulaOneScraper {
     int practiceSession,
     String sessionName,
     bool fromErgast, {
-    String originalCircuitName,
+    String? originalCircuitName,
   }) async {
     String circuitId;
     String circuitName;
@@ -42,7 +42,7 @@ class FormulaOneScraper {
           Converter().circuitNameFromErgastToFormulaOne(originalCircuitId);
     } else {
       circuitId = originalCircuitId;
-      circuitName = originalCircuitName;
+      circuitName = originalCircuitName!;
     }
 
     final Uri resultsUrl = Uri.parse(
@@ -80,7 +80,7 @@ class FormulaOneScraper {
     int practiceSession,
     String sessionName,
     bool fromErgast, {
-    String originalCircuitName,
+    String? originalCircuitName,
   }) async {
     String circuitId;
     String circuitName;
@@ -92,7 +92,7 @@ class FormulaOneScraper {
           Converter().circuitNameFromErgastToFormulaOne(originalCircuitId);
     } else {
       circuitId = originalCircuitId;
-      circuitName = originalCircuitName;
+      circuitName = originalCircuitName!;
     }
 
     final Uri resultsUrl = Uri.parse(
@@ -157,8 +157,8 @@ class FormulaOneScraper {
     _tempDriverArticles.forEach(
       (element) => results[1].add(
         [
-          element.attributes['href'].split('.')[2],
-          element.children[0].children[0].attributes['style']
+          element.attributes['href']!.split('.')[2],
+          element.children[0].children[0].attributes['style']!
               .split('(')[1]
               .split(')')[0],
           element.children[0].children[1].children[1].text,
@@ -183,17 +183,18 @@ class FormulaOneScraper {
     _tempDriverMedias.forEach(
       (element) {
         String imageUrl;
-        if (!element.children[0].children[0].attributes['data-path'].startsWith(
+        if (!element.children[0].children[0].attributes['data-path']!
+            .startsWith(
           ('https://'),
         )) {
           imageUrl = 'https://formula1.com' +
-              element.children[0].children[0].attributes['data-path'];
+              element.children[0].children[0].attributes['data-path']!;
         } else {
-          imageUrl = element.children[0].children[0].attributes['data-path'];
+          imageUrl = element.children[0].children[0].attributes['data-path']!;
         }
         imageUrl += '.img.640.medium.' +
-            element.children[0].children[0].attributes['data-extension'] +
-            element.children[0].children[0].attributes['data-suffix'];
+            element.children[0].children[0].attributes['data-extension']! +
+            element.children[0].children[0].attributes['data-suffix']!;
         results[3][0].add(imageUrl);
       },
     );

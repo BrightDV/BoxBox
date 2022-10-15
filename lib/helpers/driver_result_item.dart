@@ -117,7 +117,7 @@ class DriverResultItem extends StatelessWidget {
                   child: Padding(
                     padding: EdgeInsets.only(top: 5, bottom: 5),
                     child: Text(
-                      item.lapsDone,
+                      item.lapsDone!,
                       style: TextStyle(
                         color: Colors.white,
                       ),
@@ -140,7 +140,7 @@ class DriverResultItem extends StatelessWidget {
                   child: Padding(
                     padding: EdgeInsets.only(top: 5, bottom: 5),
                     child: Text(
-                      item.points,
+                      item.points!,
                       style: TextStyle(
                         color: Colors.white,
                       ),
@@ -179,7 +179,8 @@ class RaceDriversResultsList extends StatelessWidget {
                     Expanded(
                       flex: 2,
                       child: Text(
-                        AppLocalizations.of(context).positionAbbreviation,
+                        AppLocalizations.of(context)?.positionAbbreviation ??
+                            ' POS',
                         style: TextStyle(
                           color: Colors.white,
                         ),
@@ -193,7 +194,8 @@ class RaceDriversResultsList extends StatelessWidget {
                     Expanded(
                       flex: 3,
                       child: Text(
-                        AppLocalizations.of(context).driverAbbreviation,
+                        AppLocalizations.of(context)?.driverAbbreviation ??
+                            'DRI',
                         style: TextStyle(
                           color: Colors.white,
                         ),
@@ -202,7 +204,7 @@ class RaceDriversResultsList extends StatelessWidget {
                     Expanded(
                       flex: 6,
                       child: Text(
-                        AppLocalizations.of(context).time,
+                        AppLocalizations.of(context)?.time ?? 'TIME',
                         style: TextStyle(
                           color: Colors.white,
                         ),
@@ -212,7 +214,7 @@ class RaceDriversResultsList extends StatelessWidget {
                     Expanded(
                       flex: 3,
                       child: Text(
-                        AppLocalizations.of(context).laps,
+                        AppLocalizations.of(context)?.laps ?? 'Laps',
                         style: TextStyle(
                           color: Colors.white,
                         ),
@@ -222,7 +224,8 @@ class RaceDriversResultsList extends StatelessWidget {
                     Expanded(
                       flex: 3,
                       child: Text(
-                        AppLocalizations.of(context).pointsAbbreviation,
+                        AppLocalizations.of(context)?.pointsAbbreviation ??
+                            'PTS',
                         style: TextStyle(
                           color: Colors.white,
                         ),
@@ -438,8 +441,9 @@ class QualificationDriversResultsList extends StatelessWidget {
                         ),
                         child: Text(
                           AppLocalizations.of(context)
-                              .positionAbbreviation
-                              .substring(0, 1),
+                                  ?.positionAbbreviation
+                                  .substring(0, 1) ??
+                              'P',
                           style: TextStyle(
                             color: Colors.white,
                           ),
@@ -458,7 +462,8 @@ class QualificationDriversResultsList extends StatelessWidget {
                           left: 7,
                         ),
                         child: Text(
-                          AppLocalizations.of(context).driverAbbreviation,
+                          AppLocalizations.of(context)?.driverAbbreviation ??
+                              'DRI',
                           style: TextStyle(
                             color: Colors.white,
                           ),
@@ -468,7 +473,7 @@ class QualificationDriversResultsList extends StatelessWidget {
                     Expanded(
                       flex: 6,
                       child: Text(
-                        "${AppLocalizations.of(context).qualifyings.substring(0, 1)}1",
+                        "${AppLocalizations.of(context)?.qualifyings.substring(0, 1)}1",
                         style: TextStyle(
                           color: Colors.white,
                         ),
@@ -478,7 +483,7 @@ class QualificationDriversResultsList extends StatelessWidget {
                     Expanded(
                       flex: 6,
                       child: Text(
-                        "${AppLocalizations.of(context).qualifyings.substring(0, 1)}2",
+                        "${AppLocalizations.of(context)?.qualifyings.substring(0, 1)}2",
                         style: TextStyle(
                           color: Colors.white,
                         ),
@@ -488,7 +493,7 @@ class QualificationDriversResultsList extends StatelessWidget {
                     Expanded(
                       flex: 6,
                       child: Text(
-                        "${AppLocalizations.of(context).qualifyings.substring(0, 1)}3",
+                        "${AppLocalizations.of(context)?.qualifyings.substring(0, 1)}3",
                         style: TextStyle(
                           color: Colors.white,
                         ),

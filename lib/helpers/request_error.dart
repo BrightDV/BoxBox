@@ -37,7 +37,7 @@ class RequestErrorWidget extends StatelessWidget {
         children: [
           Center(
             child: Text(
-              AppLocalizations.of(context).requestError,
+              AppLocalizations.of(context)!.requestError,
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 16,
@@ -49,7 +49,7 @@ class RequestErrorWidget extends StatelessWidget {
             padding: EdgeInsets.only(top: 20),
             child: Center(
               child: Text(
-                AppLocalizations.of(context).crashError,
+                AppLocalizations.of(context)!.crashError,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 16,
