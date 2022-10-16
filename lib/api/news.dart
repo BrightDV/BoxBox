@@ -34,6 +34,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
@@ -574,11 +575,15 @@ class JoinArticlesParts extends StatelessWidget {
           widgetsList.add(
             AspectRatio(
               aspectRatio: 748 / 598,
-              child: WebView(
-                javascriptMode: JavascriptMode.unrestricted,
-                initialUrl:
-                    'https://www.riddle.com/view/${element['fields']['riddleId']}',
-                zoomEnabled: true,
+              child: InAppWebView(
+                initialUrlRequest: URLRequest(
+                  url: Uri.parse(
+                      'https://www.riddle.com/view/${element['fields']['riddleId']}'),
+                ),
+                initialOptions: InAppWebViewGroupOptions(
+                  crossPlatform: InAppWebViewOptions(
+                      preferredContentMode: UserPreferredContentMode.DESKTOP),
+                ),
                 gestureRecognizers: [
                   Factory<VerticalDragGestureRecognizer>(
                       () => VerticalDragGestureRecognizer()),
@@ -620,8 +625,16 @@ class JoinArticlesParts extends StatelessWidget {
           widgetsList.add(
             Container(
               height: 400,
-              child: WebView(
-                javascriptMode: JavascriptMode.unrestricted,
+              child: InAppWebView(
+                initialUrlRequest: URLRequest(
+                  url: Uri.parse(
+                    element['fields']['postUrl'],
+                  ),
+                ),
+                initialOptions: InAppWebViewGroupOptions(
+                  crossPlatform: InAppWebViewOptions(
+                      preferredContentMode: UserPreferredContentMode.DESKTOP),
+                ),
                 gestureRecognizers: [
                   Factory<VerticalDragGestureRecognizer>(
                       () => VerticalDragGestureRecognizer()),
@@ -630,7 +643,6 @@ class JoinArticlesParts extends StatelessWidget {
                   Factory<ScaleGestureRecognizer>(
                       () => ScaleGestureRecognizer()),
                 ].toSet(),
-                initialUrl: element['fields']['postUrl'],
               ),
             ),
           );

@@ -27,6 +27,7 @@ dependencies:
   connectivity_plus: ^2.3.8
   dotted_line: ^3.1.0
   flutter_cache_manager: ^3.3.0
+  flutter_inappwebview: ^5.5.0+2
   flutter_localizations:
     sdk: flutter 
   flutter_map: ^0.14.0
