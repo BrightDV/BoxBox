@@ -21,6 +21,7 @@ import 'dart:async';
 
 import 'package:boxbox/helpers/bottom_navigation_bar.dart';
 import 'package:boxbox/helpers/handle_native.dart';
+import 'package:boxbox/helpers/route_handler.dart';
 import 'package:boxbox/theme/teams_themes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -176,6 +177,10 @@ class _MyAppState extends State<MyApp> {
       supportedLocales: AppLocalizations.supportedLocales,
       home: MainBottomNavigationBar(),
       debugShowCheckedModeBanner: false,
+      navigatorKey: navigatorKey,
+      onGenerateRoute: (RouteSettings settings) {
+        return HandleRoute.handleRoute(settings.name);
+      },
     );
   }
 }
