@@ -17,11 +17,15 @@
  * Copyright (c) 2022, BrightDV
  */
 
+import 'dart:async';
+
 import 'package:boxbox/helpers/bottom_navigation_bar.dart';
+import 'package:boxbox/helpers/handle_native.dart';
 import 'package:boxbox/theme/teams_themes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 void main() async {
@@ -114,7 +118,43 @@ void setTimeagoLocaleMessages() {
   timeago.setLocaleMessages('zh', timeago.ZhMessages());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  late StreamSubscription _intentDataStreamSubscription;
+  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
+  @override
+  void initState() {
+    super.initState();
+
+    // For sharing or opening urls/text coming from outside the app while the app is in the memory
+    _intentDataStreamSubscription = ReceiveSharingIntent.getTextStream().listen(
+      (String value) {
+        handleSharedText(value, navigatorKey);
+      },
+      onError: (err) {
+        // print("ERROR in getTextStream: $err");
+      },
+    );
+
+    // For sharing or opening urls/text coming from outside the app while the app is closed
+    ReceiveSharingIntent.getInitialText().then(
+      (String? value) {
+        if (value != null) handleSharedText(value, navigatorKey);
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    _intentDataStreamSubscription.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     String teamTheme = Hive.box('settings')

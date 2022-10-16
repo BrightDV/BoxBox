@@ -39,7 +39,6 @@ dependencies:
   http: ^0.13.0
   intl: ^0.17.0
   latlong2: ^0.8.1
-  lazy_loading_list: ^1.0.1
   loading_indicator: ^3.0.3
   map_controller: # fork using null-safety
     git:
@@ -47,9 +46,10 @@ dependencies:
       ref: null_safety
   marquee: ^2.2.0
   package_info_plus: ^1.4.3+1
-  syncfusion_flutter_pdfviewer: ^20.3.49
+  receive_sharing_intent: ^1.4.5
   share_plus: ^4.4.0
   sliding_up_panel: ^2.0.0+1
+  syncfusion_flutter_pdfviewer: ^20.3.49
   text_divider: ^1.0.0
   timeago: ^3.3.0
   url_launcher: ^6.0.13
