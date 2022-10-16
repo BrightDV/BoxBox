@@ -32,6 +32,7 @@ import 'package:chewie/chewie.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -215,6 +216,12 @@ class NewsItem extends StatelessWidget {
                           ),
                           fadeOutDuration: Duration(seconds: 1),
                           fadeInDuration: Duration(seconds: 1),
+                          cacheManager: CacheManager(
+                            Config(
+                              "newsImages",
+                              stalePeriod: const Duration(days: 7),
+                            ),
+                          ),
                         ),
                       ),
                       ListTile(
@@ -270,6 +277,12 @@ class NewsItem extends StatelessWidget {
                               ),
                               fadeOutDuration: Duration(seconds: 1),
                               fadeInDuration: Duration(seconds: 1),
+                              cacheManager: CacheManager(
+                                Config(
+                                  "newsImages",
+                                  stalePeriod: const Duration(days: 7),
+                                ),
+                              ),
                             ),
                           )
                         : Container(
@@ -910,6 +923,12 @@ class ImageRenderer extends StatelessWidget {
               errorWidget: (context, url, error) => Icon(Icons.error_outlined),
               fadeOutDuration: Duration(seconds: 1),
               fadeInDuration: Duration(seconds: 1),
+              cacheManager: CacheManager(
+                Config(
+                  "newsImages",
+                  stalePeriod: const Duration(days: 7),
+                ),
+              ),
             )
           : GestureDetector(
               onTap: () {
@@ -959,6 +978,12 @@ class ImageRenderer extends StatelessWidget {
                                       fadeOutDuration: Duration(seconds: 1),
                                       fadeInDuration: Duration(seconds: 1),
                                       fit: BoxFit.scaleDown,
+                                      cacheManager: CacheManager(
+                                        Config(
+                                          "newsImages",
+                                          stalePeriod: const Duration(days: 7),
+                                        ),
+                                      ),
                                     ),
                                   ),
                                   Align(
@@ -996,6 +1021,12 @@ class ImageRenderer extends StatelessWidget {
                         Icon(Icons.error_outlined),
                     fadeOutDuration: Duration(seconds: 1),
                     fadeInDuration: Duration(seconds: 1),
+                    cacheManager: CacheManager(
+                      Config(
+                        "newsImages",
+                        stalePeriod: const Duration(days: 7),
+                      ),
+                    ),
                   ),
                   Container(
                     alignment: Alignment.bottomCenter,
