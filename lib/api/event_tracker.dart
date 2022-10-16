@@ -23,7 +23,7 @@ import 'package:http/http.dart';
 
 class Event {
   final String raceId;
-  final String meetingName;
+  late final String meetingName;
   final String meetingOfficialName;
   final String meetingCountryName;
   final DateTime meetingStartDate;

@@ -44,6 +44,10 @@ class _GrandPrixRunningScreenState extends State<GrandPrixRunningScreen> {
   Widget build(BuildContext context) {
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
+    late String meetingName;
+    widget.event.meetingName == 'United States'
+        ? meetingName = 'USA'
+        : meetingName = widget.event.meetingName;
     return Scaffold(
       appBar: AppBar(
         title: SizedBox(
@@ -133,7 +137,7 @@ class _GrandPrixRunningScreenState extends State<GrandPrixRunningScreen> {
                               ),
                       )
                     : Padding(
-                        padding: EdgeInsets.all(40),
+                        padding: EdgeInsets.all(15),
                         child: Center(
                           child: Text(
                             "Grand-Prix documents",
@@ -150,8 +154,11 @@ class _GrandPrixRunningScreenState extends State<GrandPrixRunningScreen> {
           children: [
             CachedNetworkImage(
               imageUrl:
-                  'https://www.formula1.com/content/dam/fom-website/2018-redesign-assets/Racehub%20header%20images%2016x9/${widget.event.meetingName}.jpg.transform/12col/image.jpg',
-              placeholder: (context, url) => LoadingIndicatorUtil(),
+                  'https://www.formula1.com/content/dam/fom-website/2018-redesign-assets/Racehub%20header%20images%2016x9/$meetingName.jpg.transform/12col/image.jpg',
+              placeholder: (context, url) => Container(
+                height: 200,
+                child: LoadingIndicatorUtil(),
+              ),
               errorWidget: (context, url, error) => Icon(
                 Icons.error_outlined,
               ),
@@ -184,6 +191,7 @@ class _GrandPrixRunningScreenState extends State<GrandPrixRunningScreen> {
               widget.event.raceId,
               widget.event.meetingCountryName,
             ),
+            Container(height: 160),
           ],
         ),
       ),
