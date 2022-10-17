@@ -208,6 +208,23 @@ class FormulaOneScraper {
 
     return results;
   }
+
+  Future<int> whichSessionsAreFinised(
+    String circuitId,
+    String circuitName,
+  ) async {
+    final Uri resultsUrl = Uri.parse(
+        'https://www.formula1.com/en/results.html/2022/races/$circuitId/$circuitName.html');
+    http.Response response = await http.get(resultsUrl);
+    dom.Document document = parser.parse(response.body);
+    List<dom.Element>? _tempResults =
+        document.getElementsByClassName('side-nav-item');
+    return _tempResults.length == 0
+        ? 0
+        : _tempResults.length < 4
+            ? _tempResults.length
+            : 3;
+  }
 }
 
 class ScraperRaceResult {

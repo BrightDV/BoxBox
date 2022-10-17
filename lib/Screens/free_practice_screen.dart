@@ -65,6 +65,7 @@ class FreePracticeScreen extends StatelessWidget {
                       style: TextStyle(
                         color: useDarkMode ? Colors.white : Colors.black,
                       ),
+                      textAlign: TextAlign.center,
                     ),
                   )
                 : RequestErrorWidget(
