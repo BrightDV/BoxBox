@@ -30,8 +30,8 @@
                <!--TODO:  Add this filter, if you want support opening urls into your app-->
                <data
                    android:scheme="https"
-                   android:host="formula1.com"
-                   android:pathPrefix="/"/>
+                   android:host="www.formula1.com"
+                   android:pathPattern=".*\\.html" />
             </intent-filter>
             
         </activity>
