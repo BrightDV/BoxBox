@@ -65,7 +65,7 @@ class _NewsFeedWidgetState extends State<NewsFeedWidget> {
         onRefresh: () async {
           _refreshIndicatorKey.currentState?.show(atTop: false);
           List<News> freshItems = await getLatestNewsItems(tagId: widget.tagId);
-          itemsValueNotifier = ValueNotifier(freshItems);
+          itemsValueNotifier.value = freshItems;
           setState(() {
             refreshedNews = Future.value(freshItems);
           });

@@ -79,6 +79,8 @@
     "@loadMore": {},
     "minuteAbbreviation": "MIN",
     "@minuteAbbreviation": {},
+    "modernNewsAppearance": "Utiliser une apparence moderne pour les actualités",
+    "@modernNewsAppearance": {},
     "monthAbbreviationJanuary": "JANV",
     "@monthAbbreviationJanuary": {},
     "monthAbbreviationFebruary": "FEV",
