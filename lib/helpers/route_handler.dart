@@ -27,11 +27,47 @@ class HandleRoute {
 
     return PageRouteBuilder(
       opaque: false,
-      pageBuilder: (_, __, ___) => ArticleScreen(
-        articleId,
-        '',
-        true,
+      pageBuilder: (_, __, ___) => ArticleUrlHandler(articleId),
+    );
+  }
+}
+
+class ArticleUrlHandler extends StatelessWidget {
+  final String articleId;
+  const ArticleUrlHandler(this.articleId, {Key? key});
+
+  void showErrorDialog(BuildContext context, String url) {
+    showDialog<dynamic>(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(url),
+            content: Text(url.split('.')[-2]),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    Navigator.pushReplacement(
+      context,
+      PageRouteBuilder(
+        opaque: false,
+        pageBuilder: (_, __, ___) => ArticleScreen(
+          articleId,
+          '',
+          true,
+        ),
       ),
     );
+    return Container();
   }
 }
