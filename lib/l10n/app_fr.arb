@@ -65,6 +65,8 @@
     "@grandsPrix": {},
     "grandPrixMap": "Carte du Grand Prix",
     "@grandPrixMap": {},
+    "hallOfFame": "Panthéon",
+    "@hallOfFame": {},
     "highestRaceFinish": "Meilleur résultat (course)",
     "@highestRaceFinish": {},
     "highestGridPosition": "Meilleur résultat (grille)",

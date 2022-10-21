@@ -40,7 +40,7 @@ class ArticleScreen extends StatefulWidget {
 }
 
 class _ArticleScreenState extends State<ArticleScreen> {
-  ValueNotifier<String> articleTitle = ValueNotifier(' ');
+  ValueNotifier<String> articleTitle = ValueNotifier('Article title');
 
   void updateTitle(String title) {
     articleTitle.value = title;

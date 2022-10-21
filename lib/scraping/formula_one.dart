@@ -225,6 +225,32 @@ class FormulaOneScraper {
             ? _tempResults.length
             : 3;
   }
+
+  Future<List<HallOfFameDriver>> scrapeHallOfFame() async {
+    List<HallOfFameDriver> results = [];
+    final Uri driverDetailsUrl =
+        Uri.parse('https://www.formula1.com/en/drivers/hall-of-fame.html');
+    http.Response response = await http.get(driverDetailsUrl);
+    dom.Document document = parser.parse(response.body);
+    List<dom.Element>? _tempResults =
+        document.getElementsByClassName('fom-teaser');
+    print(_tempResults[1].firstChild!.children.toString());
+    _tempResults.forEach(
+      (element) => results.add(
+        HallOfFameDriver(
+          element.children[1].firstChild!.firstChild!.text!.split(' - ')[0],
+          element.children[1].firstChild!.firstChild!.text!.split(' - ')[1],
+          'https://www.formula1.com/content/fom-website/en/drivers/hall-of-fame/{element.children[1].firstChild!.firstChild!.text!.split(" - ")[0]}/_jcr_content/image16x9.img.320.medium.jpg',
+          'https://www.formula1.com/content/fom-website/en/drivers/hall-of-fame/${element.children[1].firstChild!.firstChild!.text!.split(' - ')[0]}/jcr:content/image16x9.img.320.medium.jpg',
+        ),
+      ),
+    );
+    print(results[0].detailsPageUrl);
+    print(results[0].driverName);
+    print(results[0].imageUrl);
+    print(results[0].years);
+    return results;
+  }
 }
 
 class ScraperRaceResult {
@@ -266,5 +292,19 @@ class ScraperQualifyingResult {
     this.timeq2,
     this.timeq3,
     this.laps,
+  );
+}
+
+class HallOfFameDriver {
+  String driverName;
+  String years;
+  String detailsPageUrl;
+  String imageUrl;
+
+  HallOfFameDriver(
+    this.driverName,
+    this.years,
+    this.detailsPageUrl,
+    this.imageUrl,
   );
 }

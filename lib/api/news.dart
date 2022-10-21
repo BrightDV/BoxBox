@@ -589,6 +589,7 @@ class JoinArticlesParts extends StatelessWidget {
         ),
       );
     }
+
     List<Widget> tagsList = [];
     article.articleTags.forEach(
       (tag) => tagsList.add(
@@ -639,6 +640,7 @@ class JoinArticlesParts extends StatelessWidget {
         ),
       ),
     );
+
     widgetsList.add(
       SingleChildScrollView(
         scrollDirection: Axis.horizontal,
@@ -667,7 +669,9 @@ class JoinArticlesParts extends StatelessWidget {
           widgetsList.add(
             ImageRenderer(
               element['fields']['image']['url'],
-              caption: element['fields']['caption'],
+              caption: element['fields']['caption'] != null
+                  ? element['fields']['caption']
+                  : '',
             ),
           );
         } else if (element['contentType'] == 'atomQuiz') {
@@ -837,7 +841,7 @@ class JoinArticlesParts extends StatelessWidget {
             article['articleType'],
             article['slug'],
             article['title'],
-            article['metaDescription'],
+            article['metaDescription'] ?? ' ',
             DateTime.parse(article['updatedAt']),
             article['thumbnail']['image']['url'],
           ),
@@ -1141,7 +1145,7 @@ class ImageRenderer extends StatelessWidget {
                   ),
                   Container(
                     alignment: Alignment.bottomCenter,
-                    child: caption != null
+                    child: caption != null || caption == ''
                         ? Container(
                             width: double.infinity,
                             padding: EdgeInsets.all(4),

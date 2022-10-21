@@ -18,6 +18,7 @@
  */
 
 import 'package:boxbox/Screens/about.dart';
+import 'package:boxbox/Screens/hall_of_fame.dart';
 import 'package:boxbox/Screens/settings/settings_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -63,7 +64,28 @@ class _MainDrawerState extends State<MainDrawer> {
             ),
             ListTile(
               title: Text(
-                AppLocalizations.of(context)?.settings ?? 'Settings',
+                AppLocalizations.of(context)!.hallOfFame,
+                style: TextStyle(
+                  color: useDarkMode ? Colors.white : Colors.black,
+                ),
+              ),
+              leading: Icon(
+                Icons.emoji_events_outlined,
+                color: useDarkMode ? Colors.white : Colors.black,
+              ),
+              onTap: () {
+                Navigator.of(context).pop();
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => HallOfFameScreen(),
+                  ),
+                );
+              },
+            ),
+            ListTile(
+              title: Text(
+                AppLocalizations.of(context)!.settings,
                 style: TextStyle(
                   color: useDarkMode ? Colors.white : Colors.black,
                 ),
@@ -86,7 +108,7 @@ class _MainDrawerState extends State<MainDrawer> {
             ),
             ListTile(
               title: Text(
-                AppLocalizations.of(context)?.about ?? 'About',
+                AppLocalizations.of(context)!.about,
                 style: TextStyle(
                   color: useDarkMode ? Colors.white : Colors.black,
                 ),

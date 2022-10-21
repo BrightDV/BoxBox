@@ -65,6 +65,8 @@
     "@grandsPrix": {},
     "grandPrixMap": "Grand Prix Map",
     "@grandPrixMap": {},
+    "hallOfFame": "Hall of Fame",
+    "@hallOfFame": {},
     "highestRaceFinish": "Highest race finish",
     "@highestRaceFinish": {},
     "highestGridPosition": "Highest grid position",

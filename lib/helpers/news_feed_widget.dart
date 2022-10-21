@@ -42,7 +42,7 @@ class _NewsFeedWidgetState extends State<NewsFeedWidget> {
 
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       new GlobalKey<RefreshIndicatorState>();
-  ValueNotifier<List> itemsValueNotifier = ValueNotifier([]);
+  ValueNotifier<List<News>> itemsValueNotifier = ValueNotifier([]);
 
   late Future<List<News>> refreshedNews;
 
