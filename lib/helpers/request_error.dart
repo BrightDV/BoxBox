@@ -48,7 +48,7 @@ class RequestErrorWidget extends StatelessWidget {
           Padding(
             padding: EdgeInsets.only(top: 20),
             child: Center(
-              child: Text(
+              child: SelectableText(
                 AppLocalizations.of(context)!.crashError,
                 textAlign: TextAlign.center,
                 style: TextStyle(
@@ -59,7 +59,7 @@ class RequestErrorWidget extends StatelessWidget {
             ),
           ),
           Center(
-            child: Text(
+            child: SelectableText(
               snapshotError,
               textAlign: TextAlign.center,
               style: TextStyle(

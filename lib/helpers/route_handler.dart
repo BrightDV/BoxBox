@@ -23,7 +23,7 @@ import 'package:flutter/material.dart';
 class HandleRoute {
   static Route? handleRoute(String? url) {
     if (url == null) return null;
-    final String articleId = url.split('.')[-2];
+    final String articleId = url; //url.split('.')[-2];
 
     return PageRouteBuilder(
       opaque: false,
@@ -68,6 +68,7 @@ class ArticleUrlHandler extends StatelessWidget {
     //    ),
     //  ),
     //);
+    showErrorDialog(context, articleId);
     return Scaffold(
       appBar: AppBar(
         title: Text('Intent'),
