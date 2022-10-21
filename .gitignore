@@ -5,3 +5,5 @@ build/
 key.properties
 .packages
 pubspec.lock
+ios/Flutter/Generated.xcconfig
+ios/Flutter/flutter_export_environment.sh
