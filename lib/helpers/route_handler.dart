@@ -57,17 +57,22 @@ class ArticleUrlHandler extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Navigator.pushReplacement(
-      context,
-      PageRouteBuilder(
-        opaque: false,
-        pageBuilder: (_, __, ___) => ArticleScreen(
-          articleId,
-          '',
-          true,
-        ),
+    //Navigator.pushReplacement(
+    //  context,
+    //  PageRouteBuilder(
+    //    opaque: false,
+    //    pageBuilder: (_, __, ___) => ArticleScreen(
+    //      articleId,
+    //      '',
+    //      true,
+    //    ),
+    //  ),
+    //);
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Intent'),
       ),
+      body: Text('Artile: $articleId'),
     );
-    return Container();
   }
 }
