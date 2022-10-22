@@ -219,10 +219,12 @@ class FormulaOneScraper {
     dom.Document document = parser.parse(response.body);
     List<dom.Element>? _tempResults =
         document.getElementsByClassName('side-nav-item');
-    return _tempResults.length == 0
+    print(_tempResults);
+    print(_tempResults.length);
+    return _tempResults.length - 1 <= 0
         ? 0
-        : _tempResults.length < 4
-            ? _tempResults.length
+        : _tempResults.length - 1 < 4
+            ? _tempResults.length - 1
             : 3;
   }
 

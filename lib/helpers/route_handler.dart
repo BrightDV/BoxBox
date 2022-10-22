@@ -71,11 +71,6 @@ class ArticleUrlHandler extends StatelessWidget {
         ),
       );
     }
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Intent'),
-      ),
-      body: Text('Article: $sharedUrl'),
-    );
+    return Container();
   }
 }
