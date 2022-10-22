@@ -44,31 +44,19 @@ class ArticleUrlHandler extends StatelessWidget {
         .replaceAll('.html', '');
     if (sharedUrl.endsWith('/en')) {
     } else if (sharedUrl.startsWith('/en/latest/article.')) {
-      Navigator.pushReplacement(
-        context,
-        PageRouteBuilder(
-          opaque: false,
-          pageBuilder: (_, __, ___) => ArticleScreen(
-            sharedUrl.split('.').last,
-            '',
-            true,
-          ),
-        ),
+      return ArticleScreen(
+        sharedUrl.split('.').last,
+        '',
+        true,
       );
     } else if (sharedUrl.startsWith('/en/racing/2022')) {
-      Navigator.pushReplacement(
-        context,
-        PageRouteBuilder(
-          opaque: false,
-          pageBuilder: (_, __, ___) => Scaffold(
-            appBar: AppBar(
-              title: Text(
-                AppLocalizations.of(context)!.schedule,
-              ),
-            ),
-            body: ScheduleScreen(),
+      return Scaffold(
+        appBar: AppBar(
+          title: Text(
+            AppLocalizations.of(context)!.schedule,
           ),
         ),
+        body: ScheduleScreen(),
       );
     }
     return Container();
