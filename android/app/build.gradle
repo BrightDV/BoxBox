@@ -53,6 +53,10 @@ android {
             signingConfig signingConfigs.debug
         }
     }
+
+    compileOptions {
+        coreLibraryDesugaringEnabled true
+  }
 }
 
 flutter {
