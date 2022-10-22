@@ -459,11 +459,13 @@ class NewsItem extends StatelessWidget {
 class NewsList extends StatefulWidget {
   final List items;
   final ValueListenable itemsValueNotifier;
+  final ScrollController? scrollController;
 
   NewsList({
     Key? key,
     required this.items,
     required this.itemsValueNotifier,
+    this.scrollController,
   });
   @override
   _NewsListState createState() => _NewsListState();
@@ -488,9 +490,9 @@ class _NewsListState extends State<NewsList> {
     return ValueListenableBuilder(
       valueListenable: widget.itemsValueNotifier,
       builder: (context, value, child) => ListView.builder(
+        controller: widget.scrollController,
         scrollDirection: Axis.vertical,
         shrinkWrap: true,
-        physics: BouncingScrollPhysics(),
         itemCount:
             (present <= originalItems.length) ? items.length + 1 : items.length,
         itemBuilder: (context, index) {

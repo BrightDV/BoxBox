@@ -30,7 +30,12 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 class StandingsScreen extends StatefulWidget {
   final bool? switchToTeamStandings;
-  StandingsScreen({Key? key, this.switchToTeamStandings}) : super(key: key);
+  final ScrollController? scrollController;
+  StandingsScreen({
+    Key? key,
+    this.switchToTeamStandings,
+    this.scrollController,
+  }) : super(key: key);
 
   @override
   _StandingsScreenState createState() => _StandingsScreenState();
@@ -49,8 +54,8 @@ class _StandingsScreenState extends State<StandingsScreen> {
             useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
         body: TabBarView(
           children: [
-            DriversStandingsWidget(),
-            TeamsStandingsWidget(),
+            DriversStandingsWidget(scrollController: widget.scrollController),
+            TeamsStandingsWidget(scrollController: widget.scrollController),
           ],
         ),
         appBar: PreferredSize(
@@ -85,11 +90,14 @@ class _StandingsScreenState extends State<StandingsScreen> {
 }
 
 class DriversStandingsWidget extends StatelessWidget {
+  final ScrollController? scrollController;
+
+  DriversStandingsWidget({Key? key, this.scrollController}) : super(key: key);
+
   Future<List<Driver>> getDriversList() async {
     return await ErgastApi().getLastStandings();
   }
 
-  DriversStandingsWidget({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     Map driversStandings =
@@ -101,13 +109,18 @@ class DriversStandingsWidget extends StatelessWidget {
           driversStandings['MRData'] != null
               ? DriversList(
                   items: ErgastApi().formatLastStandings(driversStandings),
+                  scrollController: scrollController,
                 )
               : RequestErrorWidget(snapshot.error.toString());
         return snapshot.hasData
-            ? DriversList(items: snapshot.data!)
+            ? DriversList(
+                items: snapshot.data!,
+                scrollController: scrollController,
+              )
             : driversStandings['MRData'] != null
                 ? DriversList(
                     items: ErgastApi().formatLastStandings(driversStandings),
+                    scrollController: scrollController,
                   )
                 : LoadingIndicatorUtil();
       },
@@ -116,11 +129,17 @@ class DriversStandingsWidget extends StatelessWidget {
 }
 
 class TeamsStandingsWidget extends StatelessWidget {
+  final ScrollController? scrollController;
+
+  TeamsStandingsWidget({
+    Key? key,
+    this.scrollController,
+  }) : super(key: key);
+
   Future<List<Team>> getLastTeamsStandings() async {
     return await ErgastApi().getLastTeamsStandings();
   }
 
-  TeamsStandingsWidget({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     Map teamsStandings =
@@ -132,13 +151,18 @@ class TeamsStandingsWidget extends StatelessWidget {
           teamsStandings['MRData'] != null
               ? TeamsList(
                   items: ErgastApi().formatLastTeamsStandings(teamsStandings),
+                  scrollController: scrollController,
                 )
               : RequestErrorWidget(snapshot.error.toString());
         return snapshot.hasData
-            ? TeamsList(items: snapshot.data!)
+            ? TeamsList(
+                items: snapshot.data!,
+                scrollController: scrollController,
+              )
             : teamsStandings['MRData'] != null
                 ? TeamsList(
                     items: ErgastApi().formatLastTeamsStandings(teamsStandings),
+                    scrollController: scrollController,
                   )
                 : LoadingIndicatorUtil();
       },

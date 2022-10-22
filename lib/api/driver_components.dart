@@ -110,14 +110,20 @@ class DriverQualificationResult {
 
 class DriversList extends StatelessWidget {
   final List<Driver> items;
+  final ScrollController? scrollController;
 
-  DriversList({Key? key, required this.items});
+  DriversList({
+    Key? key,
+    required this.items,
+    this.scrollController,
+  });
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
       scrollDirection: Axis.vertical,
       shrinkWrap: true,
       itemCount: items.length,
+      controller: scrollController,
       itemBuilder: (context, index) {
         return DriverItem(
           items[index],

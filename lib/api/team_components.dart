@@ -210,14 +210,20 @@ class TeamCarImageProvider extends StatelessWidget {
 
 class TeamsList extends StatelessWidget {
   final List<Team> items;
+  final ScrollController? scrollController;
 
-  TeamsList({Key? key, required this.items});
+  TeamsList({
+    Key? key,
+    required this.items,
+    this.scrollController,
+  });
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
       scrollDirection: Axis.vertical,
       shrinkWrap: true,
       itemCount: items.length,
+      controller: scrollController,
       itemBuilder: (context, index) {
         return TeamItem(
           items[index],

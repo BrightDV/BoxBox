@@ -29,8 +29,13 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 class NewsFeedWidget extends StatefulWidget {
   final String? tagId;
+  final ScrollController? scrollController;
 
-  NewsFeedWidget({Key? key, this.tagId});
+  NewsFeedWidget({
+    Key? key,
+    this.tagId,
+    this.scrollController,
+  });
   @override
   _NewsFeedWidgetState createState() => _NewsFeedWidgetState();
 }
@@ -77,17 +82,20 @@ class _NewsFeedWidgetState extends State<NewsFeedWidget> {
                 ? NewsList(
                     items: F1NewsFetcher().formatResponse(latestNews),
                     itemsValueNotifier: itemsValueNotifier,
+                    scrollController: widget.scrollController,
                   )
                 : RequestErrorWidget(snapshot.error.toString())
             : snapshot.hasData
                 ? NewsList(
                     items: snapshot.data!,
                     itemsValueNotifier: itemsValueNotifier,
+                    scrollController: widget.scrollController,
                   )
                 : latestNews['items'] != null
                     ? NewsList(
                         items: F1NewsFetcher().formatResponse(latestNews),
                         itemsValueNotifier: itemsValueNotifier,
+                        scrollController: widget.scrollController,
                       )
                     : LoadingIndicatorUtil(),
       ),

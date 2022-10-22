@@ -22,7 +22,8 @@ import 'package:boxbox/helpers/news_feed_widget.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
-  HomeScreen();
+  final ScrollController _scrollController;
+  HomeScreen(this._scrollController);
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
@@ -35,8 +36,8 @@ class _HomeScreenState extends State<HomeScreen> {
         children: <Widget>[
           LiveSessionStatusIndicator(),
           Container(
-            height: MediaQuery.of(context).size.height - 140,
-            child: NewsFeedWidget(),
+            height: MediaQuery.of(context).size.height - 110,
+            child: NewsFeedWidget(scrollController: widget._scrollController),
           ),
         ],
       ),

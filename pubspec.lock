@@ -308,6 +308,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.0"
+  hidable:
+    dependency: "direct main"
+    description:
+      name: hidable
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.3"
   hive:
     dependency: "direct main"
     description:

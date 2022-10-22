@@ -222,14 +222,21 @@ class RaceListItem extends StatelessWidget {
 class RacesList extends StatelessWidget {
   final List<Race> items;
   final bool isUpNext;
+  final ScrollController? scrollController;
 
-  RacesList(this.items, this.isUpNext, {Key? key});
+  RacesList(
+    this.items,
+    this.isUpNext, {
+    Key? key,
+    this.scrollController,
+  });
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
       scrollDirection: Axis.vertical,
       shrinkWrap: true,
       itemCount: items.length,
+      controller: scrollController,
       itemBuilder: (context, index) {
         return RaceItem(
           items[index],

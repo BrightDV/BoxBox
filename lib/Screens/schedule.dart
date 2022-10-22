@@ -28,6 +28,9 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class ScheduleScreen extends StatelessWidget {
+  final ScrollController? scrollController;
+  const ScheduleScreen({this.scrollController});
+
   @override
   Widget build(BuildContext context) {
     bool useDarkMode =
@@ -40,8 +43,14 @@ class ScheduleScreen extends StatelessWidget {
             useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
         body: TabBarView(
           children: [
-            ScheduleWidget(false),
-            ScheduleWidget(true),
+            ScheduleWidget(
+              false,
+              scrollController: scrollController,
+            ),
+            ScheduleWidget(
+              true,
+              scrollController: scrollController,
+            ),
           ],
         ),
         appBar: PreferredSize(
@@ -77,7 +86,12 @@ class ScheduleScreen extends StatelessWidget {
 
 class ScheduleWidget extends StatelessWidget {
   final bool toCome;
-  ScheduleWidget(this.toCome, {Key? key}) : super(key: key);
+  final ScrollController? scrollController;
+  ScheduleWidget(
+    this.toCome, {
+    Key? key,
+    this.scrollController,
+  }) : super(key: key);
 
   Future<List<Race>> getRacesList(bool toCome) async {
     return await ErgastApi().getLastSchedule(toCome);
@@ -98,12 +112,14 @@ class ScheduleWidget extends StatelessWidget {
                     toCome,
                   ),
                   toCome,
+                  scrollController: scrollController,
                 )
               : RequestErrorWidget(snapshot.error.toString());
         return snapshot.hasData
             ? RacesList(
                 snapshot.data!,
                 toCome,
+                scrollController: scrollController,
               )
             : schedule['MRData'] != null
                 ? RacesList(
@@ -112,6 +128,7 @@ class ScheduleWidget extends StatelessWidget {
                       toCome,
                     ),
                     toCome,
+                    scrollController: scrollController,
                   )
                 : LoadingIndicatorUtil();
       },

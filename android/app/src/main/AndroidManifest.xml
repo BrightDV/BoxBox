@@ -34,7 +34,6 @@
                <data
                    android:scheme="https"
                    android:host="www.formula1.com"
-                   android:pathPrefix="/en/latest/article"
                    android:pathPattern=".*\\.html" />
             </intent-filter>
 

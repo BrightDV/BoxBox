@@ -43,6 +43,7 @@ class ArticleUrlHandler extends StatelessWidget {
         .replaceAll('https://www.formula1.com', '')
         .replaceAll('.html', '');
     if (url.endsWith('/en')) {
+      return Container();
     } else if (url.startsWith('/en/latest/article.')) {
       return ArticleScreen(
         url.split('.').last,
@@ -58,12 +59,12 @@ class ArticleUrlHandler extends StatelessWidget {
         ),
         body: ScheduleScreen(),
       );
-    }
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Intent'),
-      ),
-      body: Text('Article: $url'),
-    );
+    } else
+      return Scaffold(
+        appBar: AppBar(
+          title: Text('Intent'),
+        ),
+        body: Text('Article: $url'),
+      );
   }
 }
