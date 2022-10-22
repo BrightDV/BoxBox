@@ -59,6 +59,11 @@ class ArticleUrlHandler extends StatelessWidget {
         body: ScheduleScreen(),
       );
     }
-    return Container();
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Intent'),
+      ),
+      body: Text('Article: $sharedUrl'),
+    );
   }
 }
