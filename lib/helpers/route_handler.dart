@@ -39,17 +39,17 @@ class ArticleUrlHandler extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    sharedUrl
+    String url = sharedUrl
         .replaceAll('https://www.formula1.com', '')
         .replaceAll('.html', '');
-    if (sharedUrl.endsWith('/en')) {
-    } else if (sharedUrl.startsWith('/en/latest/article.')) {
+    if (url.endsWith('/en')) {
+    } else if (url.startsWith('/en/latest/article.')) {
       return ArticleScreen(
-        sharedUrl.split('.').last,
+        url.split('.').last,
         '',
         true,
       );
-    } else if (sharedUrl.startsWith('/en/racing/2022')) {
+    } else if (url.startsWith('/en/racing/2022')) {
       return Scaffold(
         appBar: AppBar(
           title: Text(
@@ -63,7 +63,7 @@ class ArticleUrlHandler extends StatelessWidget {
       appBar: AppBar(
         title: Text('Intent'),
       ),
-      body: Text('Article: $sharedUrl'),
+      body: Text('Article: $url'),
     );
   }
 }
