@@ -1,0 +1,6 @@
+- Hotfix: some articles were crashing on load.
+- Better readabilty for the news.
+- Open shared links in the app.
+- Read the documents of each GP with an in-app PDF reader.
+- Introducing Hall of Fame.
+- No free practice button if session is not finished.
