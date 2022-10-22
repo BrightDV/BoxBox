@@ -60,12 +60,15 @@ class FreePracticeScreen extends StatelessWidget {
         builder: (context, snapshot) => snapshot.hasError
             ? snapshot.error.toString() == 'RangeError: Value not in range: 0'
                 ? Center(
-                    child: Text(
-                      AppLocalizations.of(context)!.dataNotAvailable,
-                      style: TextStyle(
-                        color: useDarkMode ? Colors.white : Colors.black,
+                    child: Padding(
+                      padding: EdgeInsets.all(30),
+                      child: Text(
+                        AppLocalizations.of(context)!.dataNotAvailable,
+                        style: TextStyle(
+                          color: useDarkMode ? Colors.white : Colors.black,
+                        ),
+                        textAlign: TextAlign.center,
                       ),
-                      textAlign: TextAlign.center,
                     ),
                   )
                 : RequestErrorWidget(

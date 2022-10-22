@@ -32,11 +32,11 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class SessionScreen extends StatefulWidget {
-  final String sessionsAbbreviation;
+  final String sessionFullName;
   final Session session;
 
   const SessionScreen(
-    this.sessionsAbbreviation,
+    this.sessionFullName,
     this.session,
   );
   _SessionScreenState createState() => _SessionScreenState();
@@ -63,7 +63,7 @@ class _SessionScreenState extends State<SessionScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          widget.sessionsAbbreviation,
+          widget.sessionFullName,
           style: TextStyle(
             fontWeight: FontWeight.w600,
           ),

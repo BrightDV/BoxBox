@@ -338,7 +338,7 @@ class _SessionItemState extends State<SessionItem> {
                     style: TextStyle(
                       color: useDarkMode ? Colors.white : Color(0xff171717),
                       fontSize: 16,
-                      fontWeight: FontWeight.w600,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                 ],
