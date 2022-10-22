@@ -17,63 +17,65 @@
  * Copyright (c) 2022, BrightDV
  */
 
-//import 'package:boxbox/Screens/article.dart';
+import 'package:boxbox/Screens/article.dart';
+import 'package:boxbox/Screens/schedule.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HandleRoute {
   static Route? handleRoute(String? url) {
     if (url == null) return null;
-    final String articleId = url; //url.split('.')[-2];
 
     return PageRouteBuilder(
       opaque: false,
-      pageBuilder: (_, __, ___) => ArticleUrlHandler(articleId),
+      pageBuilder: (_, __, ___) => ArticleUrlHandler(url),
     );
   }
 }
 
 class ArticleUrlHandler extends StatelessWidget {
-  final String articleId;
-  const ArticleUrlHandler(this.articleId, {Key? key});
-
-  void showErrorDialog(BuildContext context, String url) {
-    showDialog<dynamic>(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text(url),
-            content: Text(url.split('.')[-2]),
-            actions: <Widget>[
-              TextButton(
-                child: const Text('OK'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        });
-  }
+  final String sharedUrl;
+  const ArticleUrlHandler(this.sharedUrl, {Key? key});
 
   @override
   Widget build(BuildContext context) {
-    //Navigator.pushReplacement(
-    //  context,
-    //  PageRouteBuilder(
-    //    opaque: false,
-    //    pageBuilder: (_, __, ___) => ArticleScreen(
-    //      articleId,
-    //      '',
-    //      true,
-    //    ),
-    //  ),
-    //);
-    showErrorDialog(context, articleId);
+    sharedUrl
+        .replaceAll('https://www.formula1.com', '')
+        .replaceAll('.html', '');
+    if (sharedUrl.endsWith('/en')) {
+    } else if (sharedUrl.startsWith('/en/latest/article.')) {
+      Navigator.pushReplacement(
+        context,
+        PageRouteBuilder(
+          opaque: false,
+          pageBuilder: (_, __, ___) => ArticleScreen(
+            sharedUrl.split('.').last,
+            '',
+            true,
+          ),
+        ),
+      );
+    } else if (sharedUrl.startsWith('/en/racing/2022')) {
+      Navigator.pushReplacement(
+        context,
+        PageRouteBuilder(
+          opaque: false,
+          pageBuilder: (_, __, ___) => Scaffold(
+            appBar: AppBar(
+              title: Text(
+                AppLocalizations.of(context)!.schedule,
+              ),
+            ),
+            body: ScheduleScreen(),
+          ),
+        ),
+      );
+    }
     return Scaffold(
       appBar: AppBar(
         title: Text('Intent'),
       ),
-      body: Text('Artile: $articleId'),
+      body: Text('Article: $sharedUrl'),
     );
   }
 }
