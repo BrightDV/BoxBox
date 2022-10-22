@@ -19,6 +19,7 @@
 
 import 'package:boxbox/Screens/about.dart';
 import 'package:boxbox/Screens/hall_of_fame.dart';
+import 'package:boxbox/Screens/links.dart';
 import 'package:boxbox/Screens/settings/settings_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -79,6 +80,27 @@ class _MainDrawerState extends State<MainDrawer> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => HallOfFameScreen(),
+                  ),
+                );
+              },
+            ),
+            ListTile(
+              title: Text(
+                AppLocalizations.of(context)!.links,
+                style: TextStyle(
+                  color: useDarkMode ? Colors.white : Colors.black,
+                ),
+              ),
+              leading: Icon(
+                Icons.open_in_new_outlined,
+                color: useDarkMode ? Colors.white : Colors.black,
+              ),
+              onTap: () {
+                Navigator.of(context).pop();
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => LinksScreen(),
                   ),
                 );
               },
