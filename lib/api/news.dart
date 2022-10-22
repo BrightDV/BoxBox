@@ -968,7 +968,7 @@ class TextParagraphRenderer extends StatelessWidget {
           strong: TextStyle(
             color: Theme.of(context).primaryColor,
             fontSize: 16,
-            fontWeight: FontWeight.normal,
+            fontWeight: FontWeight.w500,
           ),
           p: TextStyle(
             fontSize: 14,

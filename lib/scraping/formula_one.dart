@@ -234,21 +234,39 @@ class FormulaOneScraper {
     dom.Document document = parser.parse(response.body);
     List<dom.Element>? _tempResults =
         document.getElementsByClassName('fom-teaser');
-    print(_tempResults[1].firstChild!.children.toString());
     _tempResults.forEach(
       (element) => results.add(
         HallOfFameDriver(
-          element.children[1].firstChild!.firstChild!.text!.split(' - ')[0],
-          element.children[1].firstChild!.firstChild!.text!.split(' - ')[1],
-          'https://www.formula1.com/content/fom-website/en/drivers/hall-of-fame/{element.children[1].firstChild!.firstChild!.text!.split(" - ")[0]}/_jcr_content/image16x9.img.320.medium.jpg',
-          'https://www.formula1.com/content/fom-website/en/drivers/hall-of-fame/${element.children[1].firstChild!.firstChild!.text!.split(' - ')[0]}/jcr:content/image16x9.img.320.medium.jpg',
+          element.children[0].children[1].attributes['alt']!
+              .toString()
+              .split(' - ')[0],
+          element.children[0].children[1].attributes['alt']!
+              .toString()
+              .split(' - ')[1],
+          'https://www.formula1.com/content/fom-website/en/drivers/hall-of-fame/${element.children[0].children[1].attributes['alt']!.toString().split(' - ')[0].replaceAll(' ', '_')}.html',
+          'https://www.formula1.com/content/fom-website/en/drivers/hall-of-fame/${element.children[0].children[1].attributes['alt']!.toString().split(' - ')[0].replaceAll(' ', '_')}/_jcr_content/image16x9.img.640.medium.jpg',
         ),
       ),
     );
-    print(results[0].detailsPageUrl);
-    print(results[0].driverName);
-    print(results[0].imageUrl);
-    print(results[0].years);
+    return results;
+  }
+
+  Future<Map> scrapeHallOfFameDriverDetails(String pageUrl) async {
+    Map results = {};
+    final Uri driverDetailsUrl = Uri.parse(pageUrl);
+    http.Response response = await http.get(driverDetailsUrl);
+    dom.Document document = parser.parse(response.body);
+    dom.Element _tempResult = document.getElementsByTagName('main')[0];
+    results['metaDescription'] =
+        _tempResult.getElementsByClassName('strapline')[0].text;
+    List parts = [];
+    _tempResult
+        .getElementsByClassName('text parbase')[0]
+        .getElementsByTagName('p')
+        .forEach(
+          (element) => parts.add(element.text),
+        );
+    results['parts'] = parts;
     return results;
   }
 }
