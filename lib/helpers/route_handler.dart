@@ -19,6 +19,7 @@
 
 import 'package:boxbox/Screens/article.dart';
 import 'package:boxbox/Screens/schedule.dart';
+import 'package:boxbox/Screens/standings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -39,10 +40,11 @@ class ArticleUrlHandler extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    int year = DateTime.now().year;
     String url = sharedUrl
         .replaceAll('https://www.formula1.com', '')
         .replaceAll('.html', '');
-    if (url.endsWith('/en')) {
+    if (url.endsWith('/en') || url == '/en/latest/all') {
       return Container();
     } else if (url.startsWith('/en/latest/article.')) {
       return ArticleScreen(
@@ -50,7 +52,7 @@ class ArticleUrlHandler extends StatelessWidget {
         '',
         true,
       );
-    } else if (url.startsWith('/en/racing/2022')) {
+    } else if (url.startsWith('/en/racing/$year')) {
       return Scaffold(
         appBar: AppBar(
           title: Text(
@@ -59,12 +61,38 @@ class ArticleUrlHandler extends StatelessWidget {
         ),
         body: ScheduleScreen(),
       );
+    } else if (url == '/en/results.html/$year/drivers') {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text(
+            AppLocalizations.of(context)!.schedule,
+          ),
+        ),
+        body: StandingsScreen(),
+      );
+    } else if (url == '/en/results.html/$year/teams') {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text(
+            AppLocalizations.of(context)!.schedule,
+          ),
+        ),
+        body: StandingsScreen(
+          switchToTeamStandings: true,
+        ),
+      );
     } else
       return Scaffold(
         appBar: AppBar(
           title: Text('Intent'),
         ),
-        body: Text('Article: $url'),
+        body: Center(
+          child: Padding(
+            padding: EdgeInsets.all(15),
+            child: SelectableText(
+                'Url shared: $url\nYou can make an issue on github to ask that the application can open this link.'),
+          ),
+        ),
       );
   }
 }
