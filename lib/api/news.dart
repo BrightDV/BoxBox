@@ -412,6 +412,8 @@ class NewsItem extends StatelessWidget {
                                     : Colors.grey[800],
                               ),
                               textAlign: TextAlign.justify,
+                              maxLines: 3,
+                              overflow: TextOverflow.ellipsis,
                             ),
                     ),
                     Padding(
