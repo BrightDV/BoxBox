@@ -26,11 +26,6 @@ public final class GeneratedPluginRegistrant {
       Log.e(TAG, "Error registering plugin flutter_inappwebview, com.pichillilorenzo.flutter_inappwebview.InAppWebViewFlutterPlugin", e);
     }
     try {
-      flutterEngine.getPlugins().add(new com.dexterous.flutterlocalnotifications.FlutterLocalNotificationsPlugin());
-    } catch(Exception e) {
-      Log.e(TAG, "Error registering plugin flutter_local_notifications, com.dexterous.flutterlocalnotifications.FlutterLocalNotificationsPlugin", e);
-    }
-    try {
       flutterEngine.getPlugins().add(new dev.fluttercommunity.plus.packageinfo.PackageInfoPlugin());
     } catch(Exception e) {
       Log.e(TAG, "Error registering plugin package_info_plus, dev.fluttercommunity.plus.packageinfo.PackageInfoPlugin", e);
@@ -79,11 +74,6 @@ public final class GeneratedPluginRegistrant {
       flutterEngine.getPlugins().add(new io.flutter.plugins.webviewflutter.WebViewFlutterPlugin());
     } catch(Exception e) {
       Log.e(TAG, "Error registering plugin webview_flutter_android, io.flutter.plugins.webviewflutter.WebViewFlutterPlugin", e);
-    }
-    try {
-      flutterEngine.getPlugins().add(new be.tramckrijte.workmanager.WorkmanagerPlugin());
-    } catch(Exception e) {
-      Log.e(TAG, "Error registering plugin workmanager, be.tramckrijte.workmanager.WorkmanagerPlugin", e);
     }
   }
 }

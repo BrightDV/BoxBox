@@ -25,11 +25,9 @@ import 'package:boxbox/helpers/route_handler.dart';
 import 'package:boxbox/theme/teams_themes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:timeago/timeago.dart' as timeago;
-import 'package:workmanager/workmanager.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -39,76 +37,9 @@ void main() async {
   // ignore: unused_local_variable
   final requestsBox = await Hive.openBox('requests');
 
-  Workmanager().initialize(callbackDispatcher, isInDebugMode: true);
-  Workmanager().registerPeriodicTask(
-    "2",
-    "Race notifications",
-    frequency: Duration(minutes: 15),
-  );
-
   runApp(
     MyApp(),
   );
-}
-
-void callbackDispatcher() {
-  Workmanager().executeTask((task, inputData) {
-    FlutterLocalNotificationsPlugin flip =
-        new FlutterLocalNotificationsPlugin();
-    AndroidInitializationSettings android =
-        new AndroidInitializationSettings('ic_launcher');
-
-    InitializationSettings settings = new InitializationSettings(
-      android: android,
-    );
-
-    flip.initialize(settings);
-    _showNotificationWithDefaultSound(flip);
-    return Future.value(true);
-  });
-}
-
-Future _showNotificationWithDefaultSound(
-    FlutterLocalNotificationsPlugin flip) async {
-  AndroidNotificationDetails androidPlatformChannelSpecifics =
-      new AndroidNotificationDetails(
-    'org.brightdv.boxbox',
-    'Box, Box! notifications',
-    channelDescription: 'Major news & upcoming sessions',
-    importance: Importance.max,
-    priority: Priority.high,
-    icon: 'ic_launcher',
-  );
-
-  NotificationDetails platformChannelSpecifics =
-      new NotificationDetails(android: androidPlatformChannelSpecifics);
-  await flip.show(
-      0, 'Box, Box!', 'A race is about to start!', platformChannelSpecifics,
-      payload: 'Default_Sound');
-  await scheduleNotificationPeriodically(
-    flip,
-    'org.brightdv.boxbox',
-    'Hello World!',
-    RepeatInterval.everyMinute,
-  );
-}
-
-Future<void> scheduleNotificationPeriodically(
-    FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin,
-    String id,
-    String body,
-    RepeatInterval interval) async {
-  var androidPlatformChannelSpecifics = AndroidNotificationDetails(
-    id,
-    'Box, Box! notifications',
-    channelDescription: 'Major news & upcoming sessions',
-    icon: 'ic_launcher',
-  );
-  var platformChannelSpecifics = NotificationDetails(
-    android: androidPlatformChannelSpecifics,
-  );
-  await flutterLocalNotificationsPlugin.periodicallyShow(
-      0, 'Box, Box!', body, interval, platformChannelSpecifics);
 }
 
 void setTimeagoLocaleMessages() {

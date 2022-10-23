@@ -28,7 +28,6 @@ dependencies:
   dotted_line: ^3.1.0
   flutter_cache_manager: ^3.3.0
   flutter_inappwebview: ^5.5.0+2
-  flutter_local_notifications: ^12.0.2
   flutter_localizations:
     sdk: flutter
   flutter_map: ^0.14.0
@@ -59,7 +58,6 @@ dependencies:
   url_launcher: ^6.0.13
   video_player: ^2.4.5
   webview_flutter: ^3.0.4
-  workmanager: ^0.5.1
   youtube_explode_dart: ^1.10.10+2
 
 dev_dependencies:
