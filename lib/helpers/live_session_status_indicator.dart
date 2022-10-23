@@ -20,6 +20,7 @@
 import 'package:boxbox/api/event_tracker.dart';
 import 'package:boxbox/Screens/grand_prix_running_details.dart';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:marquee/marquee.dart';
 
@@ -27,82 +28,98 @@ class LiveSessionStatusIndicator extends StatelessWidget {
   LiveSessionStatusIndicator({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    Event? eventTrackerSavedRequest =
+        Hive.box('requests').get('event-tracker') as Event;
     return FutureBuilder<Event>(
       future: EventTracker().parseEvent(),
       builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          print("Live Session Status Indicator Error");
-          print(snapshot.error);
-          return Container(
-            height: 0.0,
-            width: 0.0,
-          );
-        }
-        return snapshot.hasData
-            ? snapshot.data!.isRunning
-                ? GestureDetector(
-                    child: Container(
-                      height: 50,
-                      color: Theme.of(context).primaryColor,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.only(
-                              right: 5,
-                              left: 5,
-                            ),
-                            child: LoadingIndicator(
-                              indicatorType: Indicator.values[17],
-                              colors: [
-                                Colors.white,
-                              ],
-                              strokeWidth: 2.0,
-                            ),
-                          ),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                '${snapshot.data!.meetingName}',
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              SizedBox(
-                                width: MediaQuery.of(context).size.width - 60,
-                                height: 20,
-                                child: Marquee(
-                                  text: '${snapshot.data!.meetingOfficialName}',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.white,
-                                  ),
-                                  pauseAfterRound: Duration(seconds: 1),
-                                  startAfter: Duration(seconds: 1),
-                                  velocity: 85,
-                                  blankSpace: 100,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            GrandPrixRunningScreen(snapshot.data!),
-                      ),
-                    ),
-                  )
-                : Container()
-            : Container();
+        return snapshot.hasError
+            ? eventTrackerSavedRequest.raceId != ''
+                ? EventTrackerItem(eventTrackerSavedRequest)
+                : eventTrackerError(snapshot.error.toString())
+            : snapshot.hasData
+                ? snapshot.data!.isRunning
+                    ? EventTrackerItem(snapshot.data!)
+                    : Container()
+                : Container();
       },
+    );
+  }
+
+  Widget eventTrackerError(String snapshotError) {
+    print("Live Session Status Indicator Error");
+    print(snapshotError);
+    return Container(
+      height: 0.0,
+      width: 0.0,
+    );
+  }
+}
+
+class EventTrackerItem extends StatelessWidget {
+  final Event event;
+  const EventTrackerItem(this.event, {Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      child: Container(
+        height: 50,
+        color: Theme.of(context).primaryColor,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.only(
+                right: 5,
+                left: 5,
+              ),
+              child: LoadingIndicator(
+                indicatorType: Indicator.values[17],
+                colors: [
+                  Colors.white,
+                ],
+                strokeWidth: 2.0,
+              ),
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '${event.meetingName}',
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: Colors.white,
+                  ),
+                ),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width - 60,
+                  height: 20,
+                  child: Marquee(
+                    text: '${event.meetingOfficialName}',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.white,
+                    ),
+                    pauseAfterRound: Duration(seconds: 1),
+                    startAfter: Duration(seconds: 1),
+                    velocity: 85,
+                    blankSpace: 100,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+      onTap: () => Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => GrandPrixRunningScreen(event),
+        ),
+      ),
     );
   }
 }

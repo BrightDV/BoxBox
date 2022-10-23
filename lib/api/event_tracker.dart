@@ -19,6 +19,8 @@
 
 import 'dart:async';
 import 'dart:convert';
+
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart';
 
 class Event {
@@ -89,9 +91,9 @@ class EventTracker {
         'locale': 'fr',
       },
     );
-    Map formattedResponse = jsonDecode(res.body);
+    Map formatedResponse = jsonDecode(res.body);
 
-    return formattedResponse;
+    return formatedResponse;
   }
 
   Future<Event> parseEvent() async {
@@ -192,6 +194,7 @@ class EventTracker {
       sessions[3],
       sessions[4],
     );
+    Hive.box('requests').put('event-tracker', event);
     return event;
   }
 }

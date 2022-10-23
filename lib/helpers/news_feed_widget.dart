@@ -76,9 +76,10 @@ class _NewsFeedWidgetState extends State<NewsFeedWidget> {
           });
         },
         child: snapshot.hasError
-            ? snapshot.error.toString() == 'XMLHttpRequest error.' ||
-                    snapshot.error.toString() ==
-                        "Failed host lookup: 'api.formula1.com'"
+            ? (snapshot.error.toString() == 'XMLHttpRequest error.' ||
+                        snapshot.error.toString() ==
+                            "Failed host lookup: 'api.formula1.com'") &&
+                    latestNews['items'] != null
                 ? NewsList(
                     items: F1NewsFetcher().formatResponse(latestNews),
                     itemsValueNotifier: itemsValueNotifier,
