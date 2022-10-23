@@ -24,7 +24,7 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
 
-            <!-- Deep Link -> -->
+            <!-- Deep Link -->
             <meta-data android:name="flutter_deeplinking_enabled" android:value="true" />
 
             <intent-filter>

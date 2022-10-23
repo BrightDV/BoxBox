@@ -39,28 +39,10 @@ void main() async {
   // ignore: unused_local_variable
   final requestsBox = await Hive.openBox('requests');
 
-  Workmanager().initialize(
-
-      // The top level function, aka callbackDispatcher
-      callbackDispatcher,
-
-      // If enabled it will post a notification whenever
-      // the task is running. Handy for debugging tasks
-      isInDebugMode: true);
-  // Periodic task registration
+  Workmanager().initialize(callbackDispatcher, isInDebugMode: true);
   Workmanager().registerPeriodicTask(
     "2",
-
-    //This is the value that will be
-    // returned in the callbackDispatcher
-    "simplePeriodicTask",
-
-    // When no frequency is provided
-    // the default 15 minutes is set.
-    // Minimum frequency is 15 min.
-    // Android will automatically change
-    // your frequency to 15 min
-    // if you have configured a lower frequency.
+    "Race notifications",
     frequency: Duration(minutes: 15),
   );
 
@@ -71,39 +53,62 @@ void main() async {
 
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) {
-    // initialise the plugin of flutterlocalnotifications.
     FlutterLocalNotificationsPlugin flip =
         new FlutterLocalNotificationsPlugin();
+    AndroidInitializationSettings android =
+        new AndroidInitializationSettings('ic_launcher');
 
-    // app_icon needs to be a added as a drawable
-    // resource to the Android head project.
-    var android = new AndroidInitializationSettings('@mipmap/ic_launcher');
-
-    // initialise settings for both Android and iOS device.
-    var settings = new InitializationSettings(
+    InitializationSettings settings = new InitializationSettings(
       android: android,
     );
+
     flip.initialize(settings);
     _showNotificationWithDefaultSound(flip);
     return Future.value(true);
   });
 }
 
-Future _showNotificationWithDefaultSound(flip) async {
-  // Show a notification after every 15 minute with the first
-  // appearance happening a minute after invoking the method
-  var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
-      'org.brightdv.boxbox', 'Box, Box!',
-      channelDescription: 'Race coming!',
-      importance: Importance.max,
-      priority: Priority.high);
+Future _showNotificationWithDefaultSound(
+    FlutterLocalNotificationsPlugin flip) async {
+  AndroidNotificationDetails androidPlatformChannelSpecifics =
+      new AndroidNotificationDetails(
+    'org.brightdv.boxbox',
+    'Box, Box! notifications',
+    channelDescription: 'Major news & upcoming sessions',
+    importance: Importance.max,
+    priority: Priority.high,
+    icon: 'ic_launcher',
+  );
 
-  // initialise channel platform for Android device.
-  var platformChannelSpecifics =
+  NotificationDetails platformChannelSpecifics =
       new NotificationDetails(android: androidPlatformChannelSpecifics);
   await flip.show(
       0, 'Box, Box!', 'A race is about to start!', platformChannelSpecifics,
       payload: 'Default_Sound');
+  await scheduleNotificationPeriodically(
+    flip,
+    'org.brightdv.boxbox',
+    'Hello World!',
+    RepeatInterval.everyMinute,
+  );
+}
+
+Future<void> scheduleNotificationPeriodically(
+    FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin,
+    String id,
+    String body,
+    RepeatInterval interval) async {
+  var androidPlatformChannelSpecifics = AndroidNotificationDetails(
+    id,
+    'Box, Box! notifications',
+    channelDescription: 'Major news & upcoming sessions',
+    icon: 'ic_launcher',
+  );
+  var platformChannelSpecifics = NotificationDetails(
+    android: androidPlatformChannelSpecifics,
+  );
+  await flutterLocalNotificationsPlugin.periodicallyShow(
+      0, 'Box, Box!', body, interval, platformChannelSpecifics);
 }
 
 void setTimeagoLocaleMessages() {
