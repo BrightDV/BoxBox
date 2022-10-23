@@ -28,13 +28,34 @@ class LiveSessionStatusIndicator extends StatelessWidget {
   LiveSessionStatusIndicator({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    Event? eventTrackerSavedRequest =
-        Hive.box('requests').get('event-tracker') as Event;
+    Session session = Session(
+      'upcoming',
+      'f',
+      DateTime.now(),
+      DateTime.now(),
+    );
+    Event? eventTrackerSavedRequest = Hive.box('requests').get(
+      'event-tracker',
+      defaultValue: Event(
+        'none',
+        'none',
+        'none',
+        'none',
+        DateTime.now(),
+        DateTime.now(),
+        false,
+        session,
+        session,
+        session,
+        session,
+        session,
+      ),
+    ) as Event;
     return FutureBuilder<Event>(
       future: EventTracker().parseEvent(),
       builder: (context, snapshot) {
         return snapshot.hasError
-            ? eventTrackerSavedRequest.raceId != ''
+            ? eventTrackerSavedRequest.raceId != 'none'
                 ? EventTrackerItem(eventTrackerSavedRequest)
                 : eventTrackerError(snapshot.error.toString())
             : snapshot.hasData
