@@ -302,7 +302,8 @@ class NewsItem extends StatelessWidget {
                                 child: Container(
                                   width: item.newsType == 'Podcast' ||
                                           item.newsType == 'Feature' ||
-                                          item.newsType == 'Opinion'
+                                          item.newsType == 'Opinion' ||
+                                          item.newsType == 'Report'
                                       ? 110
                                       : item.newsType == 'Technical' ||
                                               item.newsType == 'Live Blog'
