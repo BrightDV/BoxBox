@@ -715,6 +715,7 @@ class JoinArticlesParts extends StatelessWidget {
       widgetsList.add(
         VideoRenderer(
           article.articleHero['fields']['videoId'],
+          autoplay: true,
         ),
       );
     } else {
@@ -1304,33 +1305,6 @@ class _ImageRendererState extends State<ImageRenderer> {
                   ),
                 ],
               ),
-
-              //child: Container(
-              //  height: MediaQuery.of(context).size.height * 0.3,
-              //  decoration: BoxDecoration(
-              //    image: DecorationImage(
-              //      fit: BoxFit.contain,
-              //      image: CachedNetworkImageProvider(
-              //        imageUrl,
-              //      ),
-              //    ),
-              //  ),
-              //  alignment: Alignment.bottomCenter,
-              //  child: caption != null
-              //      ? Container(
-              //          width: double.infinity,
-              //          padding: EdgeInsets.all(4),
-              //          color: Colors.black.withOpacity(0.7),
-              //          child: Text(
-              //            caption,
-              //            style: TextStyle(
-              //              color: Colors.white,
-              //            ),
-              //           textAlign: TextAlign.center,
-              //          ),
-              //        )
-              //      : Container(),
-              //),
             ),
     );
   }
@@ -1338,10 +1312,12 @@ class _ImageRendererState extends State<ImageRenderer> {
 
 class VideoRenderer extends StatefulWidget {
   final String videoId;
+  final bool? autoplay;
 
   VideoRenderer(
-    this.videoId,
-  );
+    this.videoId, {
+    this.autoplay,
+  });
   @override
   _VideoRendererState createState() => _VideoRendererState();
 }
@@ -1366,7 +1342,10 @@ class _VideoRendererState extends State<VideoRenderer> {
               snapshot.error.toString(),
             )
           : snapshot.hasData
-              ? VideoPlayer(snapshot.data!)
+              ? VideoPlayer(
+                  snapshot.data!,
+                  widget.autoplay == null ? false : true,
+                )
               : Container(
                   height: MediaQuery.of(context).size.width / (16 / 9),
                   child: LoadingIndicatorUtil(),
@@ -1377,9 +1356,11 @@ class _VideoRendererState extends State<VideoRenderer> {
 
 class VideoPlayer extends StatefulWidget {
   final String videoUrl;
+  final bool autoplay;
 
   VideoPlayer(
     this.videoUrl,
+    this.autoplay,
   );
   @override
   _VideoPlayerState createState() => _VideoPlayerState();
@@ -1405,7 +1386,7 @@ class _VideoPlayerState extends State<VideoPlayer> {
       autoInitialize: true,
       aspectRatio: 16 / 9,
       allowedScreenSleep: false,
-      autoPlay: false,
+      autoPlay: widget.autoplay,
       looping: false,
       errorBuilder: (context, errorMessage) {
         return Center(
