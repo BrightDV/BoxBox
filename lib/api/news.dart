@@ -524,11 +524,10 @@ class _NewsListState extends State<NewsList> {
     } catch (error) {
       _pagingController.error = error;
     }
-  } // HERE
+  }
 
   @override
   Widget build(BuildContext context) {
-    Map cachedNews = Hive.box('requests').get('news', defaultValue: {}) as Map;
     return RefreshIndicator(
       onRefresh: () => Future.sync(
         () => _pagingController.refresh(),
@@ -540,21 +539,14 @@ class _NewsListState extends State<NewsList> {
         shrinkWrap: true,
         builderDelegate: PagedChildBuilderDelegate<News>(
           itemBuilder: (context, item, index) {
-            return NewsItem(
-              item,
-              false,
-            );
+            return NewsItem(item, false);
           },
           firstPageProgressIndicatorBuilder: (_) => LoadingIndicatorUtil(),
-          firstPageErrorIndicatorBuilder: (_) => cachedNews['items'] != null
-              ? NewsList(
-                  items: F1NewsFetcher().formatResponse(cachedNews),
-                )
-              : FirstPageExceptionIndicator(
-                  title: AppLocalizations.of(context)!.errorOccurred,
-                  message: AppLocalizations.of(context)!.errorOccurredDetails,
-                  onTryAgain: () => _pagingController.refresh(),
-                ),
+          firstPageErrorIndicatorBuilder: (_) => FirstPageExceptionIndicator(
+            title: AppLocalizations.of(context)!.errorOccurred,
+            message: AppLocalizations.of(context)!.errorOccurredDetails,
+            onTryAgain: () => _pagingController.refresh(),
+          ),
           newPageProgressIndicatorBuilder: (_) => LoadingIndicatorUtil(),
         ),
       ),
@@ -636,6 +628,49 @@ class FirstPageExceptionIndicator extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class OfflineNewsList extends StatefulWidget {
+  final List items;
+  final ScrollController? scrollController;
+
+  OfflineNewsList({
+    Key? key,
+    required this.items,
+    this.scrollController,
+  });
+  @override
+  _OfflineNewsListState createState() => _OfflineNewsListState();
+}
+
+class _OfflineNewsListState extends State<OfflineNewsList> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    Map cachedNews = Hive.box('requests').get('news', defaultValue: {}) as Map;
+    List<News> formatedNews = F1NewsFetcher().formatResponse(cachedNews);
+    return ListView.builder(
+      controller: widget.scrollController,
+      scrollDirection: Axis.vertical,
+      shrinkWrap: true,
+      itemCount: formatedNews.length,
+      itemBuilder: (context, index) {
+        return NewsItem(
+          formatedNews[index],
+          false,
+        );
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 }
 

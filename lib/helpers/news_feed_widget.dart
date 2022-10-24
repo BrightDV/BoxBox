@@ -45,12 +45,9 @@ class _NewsFeedWidgetState extends State<NewsFeedWidget> {
     return await F1NewsFetcher().getLatestNews(tagId: tagId);
   }
 
-  late Future<List<News>> refreshedNews;
-
   @override
   void initState() {
     super.initState();
-    refreshedNews = getLatestNewsItems(tagId: widget.tagId);
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       showOfflineSnackBar();
     });
@@ -60,16 +57,15 @@ class _NewsFeedWidgetState extends State<NewsFeedWidget> {
   Widget build(BuildContext context) {
     Map latestNews = Hive.box('requests').get('news', defaultValue: {}) as Map;
     return FutureBuilder<List<News>>(
-      future: refreshedNews,
+      future: getLatestNewsItems(tagId: widget.tagId),
       builder: (context, snapshot) => snapshot.hasError
           ? (snapshot.error.toString() == 'XMLHttpRequest error.' ||
                       snapshot.error.toString() ==
                           "Failed host lookup: 'api.formula1.com'") &&
                   latestNews['items'] != null
-              ? NewsList(
+              ? OfflineNewsList(
                   items: F1NewsFetcher().formatResponse(latestNews),
                   scrollController: widget.scrollController,
-                  tagId: widget.tagId,
                 )
               : RequestErrorWidget(snapshot.error.toString())
           : snapshot.hasData
