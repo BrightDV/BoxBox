@@ -1,0 +1,8 @@
+- Infinite scroll view for the news!
+- Handle more routes when sharing links to the app.
+- Don't cache the articles' images.
+- Links to official website, FIA's regulations and statistics
+- Shorter desciptions of the news items.
+- Swipe to refresh works correctly.
+- Cache event tracker (WIP).
+- Some other UI tweaks...
