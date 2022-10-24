@@ -1,9 +1,11 @@
 With Box, Box! follow the latest stories of your favorite driver and team.
 Be aware of the battles on and off the track!
 Features:
-- Read all articles from the official website with its in-built reader and player.
+- Read all articles from the official website with its in-built reader and video player.
 - Latest Standings (Drivers and Teams).
 - Schedule with previous results for Free Practices, Qualifyings and Races.
-- While a Grand Prix is running, follow the schedule of the different sessions.
+- While a Grand Prix is running, follow the schedule of the different sessions and read the related FIA's documents.
+- Enjoy the app in the colours of your favorite team!
+- Open links in-app.
 
 Be in the action even without ads or trackers ;)

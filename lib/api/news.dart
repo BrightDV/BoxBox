@@ -1369,7 +1369,6 @@ class VideoPlayer extends StatefulWidget {
 class _VideoPlayerState extends State<VideoPlayer> {
   late ChewieController chewieController;
   late VideoPlayerController videoPlayerController;
-  late bool isLoaded;
   late Future<void> _initializeVideoPlayerFuture;
 
   @override
