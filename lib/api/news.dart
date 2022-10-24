@@ -718,6 +718,7 @@ class JoinArticlesParts extends StatelessWidget {
         ),
       );
     } else {
+      print(article.articleHero['fields']['image']['url']);
       widgetsList.add(
         ImageRenderer(
           article.articleHero['fields']['image']['url'],
@@ -1146,7 +1147,7 @@ class TextParagraphRenderer extends StatelessWidget {
   }
 }
 
-class ImageRenderer extends StatelessWidget {
+class ImageRenderer extends StatefulWidget {
   final String imageUrl;
   final String? caption;
   final bool? inSchedule;
@@ -1156,16 +1157,20 @@ class ImageRenderer extends StatelessWidget {
     this.inSchedule,
   });
 
+  _ImageRendererState createState() => _ImageRendererState();
+}
+
+class _ImageRendererState extends State<ImageRenderer> {
   Widget build(BuildContext context) {
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     return Padding(
       padding: EdgeInsets.only(
-        bottom: inSchedule != null ? 0 : 10,
+        bottom: widget.inSchedule != null ? 0 : 10,
       ),
-      child: inSchedule != null
+      child: widget.inSchedule != null
           ? CachedNetworkImage(
-              imageUrl: imageUrl,
+              imageUrl: widget.imageUrl,
               placeholder: (context, url) => Container(
                 height: MediaQuery.of(context).size.width / (16 / 9),
                 child: LoadingIndicatorUtil(),
@@ -1201,41 +1206,44 @@ class ImageRenderer extends StatelessWidget {
                             width: double.infinity - 10,
                             child: InteractiveViewer(
                               minScale: 0.1,
-                              maxScale: 6,
+                              maxScale: 8,
                               child: Stack(
                                 children: [
                                   GestureDetector(
                                     onTap: () => Navigator.pop(context),
                                   ),
                                   Card(
-                                    elevation: 5.0,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(5),
-                                    ),
-                                    clipBehavior: Clip.antiAlias,
-                                    child: CachedNetworkImage(
-                                      imageUrl: imageUrl,
-                                      placeholder: (context, url) => Container(
-                                        height:
-                                            MediaQuery.of(context).size.width /
-                                                (16 / 9),
-                                        child: LoadingIndicatorUtil(),
+                                      elevation: 5.0,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(5),
                                       ),
-                                      errorWidget: (context, url, error) =>
-                                          Icon(
-                                        Icons.error_outlined,
-                                      ),
-                                      fadeOutDuration: Duration(seconds: 1),
-                                      fadeInDuration: Duration(seconds: 1),
-                                      fit: BoxFit.scaleDown,
-                                      cacheManager: CacheManager(
-                                        Config(
-                                          "newsImages",
-                                          stalePeriod: const Duration(days: 7),
+                                      clipBehavior: Clip.antiAlias,
+                                      child: Image(
+                                        image: NetworkImage(
+                                          widget.imageUrl,
                                         ),
-                                      ),
-                                    ),
-                                  ),
+                                        loadingBuilder: (context, child,
+                                                loadingProgress) =>
+                                            loadingProgress == null
+                                                ? child
+                                                : Container(
+                                                    height:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width /
+                                                            (16 / 9),
+                                                    child:
+                                                        LoadingIndicatorUtil(),
+                                                  ),
+                                        errorBuilder: (context, url, error) =>
+                                            Icon(
+                                          Icons.error_outlined,
+                                          color: useDarkMode
+                                              ? Colors.white
+                                              : Colors.black,
+                                          size: 30,
+                                        ),
+                                      )),
                                   Align(
                                     alignment: Alignment.topRight,
                                     child: IconButton(
@@ -1261,32 +1269,31 @@ class ImageRenderer extends StatelessWidget {
               child: Stack(
                 alignment: Alignment.bottomCenter,
                 children: [
-                  CachedNetworkImage(
-                    imageUrl: imageUrl,
-                    placeholder: (context, url) => Container(
-                      height: MediaQuery.of(context).size.width / (16 / 9),
-                      child: LoadingIndicatorUtil(),
-                    ),
-                    errorWidget: (context, url, error) =>
-                        Icon(Icons.error_outlined),
-                    fadeOutDuration: Duration(seconds: 1),
-                    fadeInDuration: Duration(seconds: 1),
-                    cacheManager: CacheManager(
-                      Config(
-                        "newsImages",
-                        stalePeriod: const Duration(days: 7),
-                      ),
+                  Image.network(
+                    widget.imageUrl,
+                    loadingBuilder: (context, child, loadingProgress) =>
+                        loadingProgress == null
+                            ? child
+                            : Container(
+                                height: MediaQuery.of(context).size.width /
+                                    (16 / 9),
+                                child: LoadingIndicatorUtil(),
+                              ),
+                    errorBuilder: (context, url, error) => Icon(
+                      Icons.error_outlined,
+                      color: useDarkMode ? Colors.white : Colors.black,
+                      size: 30,
                     ),
                   ),
                   Container(
                     alignment: Alignment.bottomCenter,
-                    child: caption != null || caption == ''
+                    child: widget.caption != null || widget.caption == ''
                         ? Container(
                             width: double.infinity,
                             padding: EdgeInsets.all(4),
                             color: Colors.black.withOpacity(0.7),
                             child: Text(
-                              caption ?? '',
+                              widget.caption ?? '',
                               style: TextStyle(
                                 color: Colors.white,
                               ),
