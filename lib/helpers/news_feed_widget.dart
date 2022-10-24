@@ -45,10 +45,6 @@ class _NewsFeedWidgetState extends State<NewsFeedWidget> {
     return await F1NewsFetcher().getLatestNews(tagId: tagId);
   }
 
-  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
-      new GlobalKey<RefreshIndicatorState>();
-  ValueNotifier<List<News>> itemsValueNotifier = ValueNotifier([]);
-
   late Future<List<News>> refreshedNews;
 
   @override
@@ -65,41 +61,30 @@ class _NewsFeedWidgetState extends State<NewsFeedWidget> {
     Map latestNews = Hive.box('requests').get('news', defaultValue: {}) as Map;
     return FutureBuilder<List<News>>(
       future: refreshedNews,
-      builder: (context, snapshot) => RefreshIndicator(
-        key: _refreshIndicatorKey,
-        onRefresh: () async {
-          _refreshIndicatorKey.currentState?.show(atTop: false);
-          List<News> freshItems = await getLatestNewsItems(tagId: widget.tagId);
-          itemsValueNotifier.value = freshItems;
-          setState(() {
-            refreshedNews = Future.value(freshItems);
-          });
-        },
-        child: snapshot.hasError
-            ? (snapshot.error.toString() == 'XMLHttpRequest error.' ||
-                        snapshot.error.toString() ==
-                            "Failed host lookup: 'api.formula1.com'") &&
-                    latestNews['items'] != null
-                ? NewsList(
-                    items: F1NewsFetcher().formatResponse(latestNews),
-                    itemsValueNotifier: itemsValueNotifier,
-                    scrollController: widget.scrollController,
-                  )
-                : RequestErrorWidget(snapshot.error.toString())
-            : snapshot.hasData
-                ? NewsList(
-                    items: snapshot.data!,
-                    itemsValueNotifier: itemsValueNotifier,
-                    scrollController: widget.scrollController,
-                  )
-                : latestNews['items'] != null
-                    ? NewsList(
-                        items: F1NewsFetcher().formatResponse(latestNews),
-                        itemsValueNotifier: itemsValueNotifier,
-                        scrollController: widget.scrollController,
-                      )
-                    : LoadingIndicatorUtil(),
-      ),
+      builder: (context, snapshot) => snapshot.hasError
+          ? (snapshot.error.toString() == 'XMLHttpRequest error.' ||
+                      snapshot.error.toString() ==
+                          "Failed host lookup: 'api.formula1.com'") &&
+                  latestNews['items'] != null
+              ? NewsList(
+                  items: F1NewsFetcher().formatResponse(latestNews),
+                  scrollController: widget.scrollController,
+                  tagId: widget.tagId,
+                )
+              : RequestErrorWidget(snapshot.error.toString())
+          : snapshot.hasData
+              ? NewsList(
+                  items: snapshot.data!,
+                  scrollController: widget.scrollController,
+                  tagId: widget.tagId,
+                )
+              : latestNews['items'] != null
+                  ? NewsList(
+                      items: F1NewsFetcher().formatResponse(latestNews),
+                      scrollController: widget.scrollController,
+                      tagId: widget.tagId,
+                    )
+                  : LoadingIndicatorUtil(),
     );
   }
 

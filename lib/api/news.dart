@@ -38,6 +38,7 @@ import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -75,9 +76,9 @@ class F1NewsFetcher {
   FutureOr<List<News>> getLatestNews({String? tagId}) async {
     Uri url;
     if (tagId != null) {
-      url = Uri.parse('$endpoint/v1/editorial/articles?limit=200&tags=$tagId');
+      url = Uri.parse('$endpoint/v1/editorial/articles?limit=16&tags=$tagId');
     } else {
-      url = Uri.parse('$endpoint/v1/editorial/articles?limit=200');
+      url = Uri.parse('$endpoint/v1/editorial/articles?limit=16');
     }
     var response = await http.get(url, headers: {
       "Accept": "application/json",
@@ -91,6 +92,26 @@ class F1NewsFetcher {
     if (tagId == null) {
       Hive.box('requests').put('news', responseAsJson);
     }
+    return formatResponse(responseAsJson);
+  }
+
+  FutureOr<List<News>> getMoreNews(int offset, {String? tagId}) async {
+    Uri url;
+    if (tagId != null) {
+      url = Uri.parse(
+          '$endpoint/v1/editorial/articles?limit=16&offset=$offset&tags=$tagId');
+    } else {
+      url =
+          Uri.parse('$endpoint/v1/editorial/articles?limit=16&offset=$offset');
+    }
+    var response = await http.get(url, headers: {
+      "Accept": "application/json",
+      "apikey": apikey,
+      "locale": "en",
+    });
+
+    Map<String, dynamic> responseAsJson =
+        json.decode(utf8.decode(response.bodyBytes));
     return formatResponse(responseAsJson);
   }
 
@@ -461,84 +482,158 @@ class NewsItem extends StatelessWidget {
 
 class NewsList extends StatefulWidget {
   final List items;
-  final ValueListenable itemsValueNotifier;
   final ScrollController? scrollController;
+  final String? tagId;
 
   NewsList({
     Key? key,
     required this.items,
-    required this.itemsValueNotifier,
     this.scrollController,
+    this.tagId,
   });
   @override
   _NewsListState createState() => _NewsListState();
 }
 
 class _NewsListState extends State<NewsList> {
-  late int perPage;
-  int present = 0;
-  List items = [];
+  static const _pageSize = 16;
+  final PagingController<int, News> _pagingController =
+      PagingController(firstPageKey: 0);
 
   @override
   void initState() {
+    _pagingController.addPageRequestListener((offset) {
+      _fetchPage(offset);
+    });
     super.initState();
-    perPage = widget.items.length < 15 ? widget.items.length : 15;
-    items.addAll(widget.items.getRange(present, present + perPage));
-    present = present + perPage;
   }
+
+  Future<void> _fetchPage(int offset) async {
+    try {
+      List<News> newItems = await F1NewsFetcher().getMoreNews(
+        offset,
+        tagId: widget.tagId,
+      );
+      final isLastPage = newItems.length < _pageSize;
+      if (isLastPage) {
+        _pagingController.appendLastPage(newItems);
+      } else {
+        final nextPageKey = offset + newItems.length;
+        _pagingController.appendPage(newItems, nextPageKey);
+      }
+    } catch (error) {
+      _pagingController.error = error;
+    }
+  } // HERE
 
   @override
   Widget build(BuildContext context) {
-    List originalItems = widget.items;
-    return ValueListenableBuilder(
-      valueListenable: widget.itemsValueNotifier,
-      builder: (context, value, child) => ListView.builder(
-        controller: widget.scrollController,
+    Map cachedNews = Hive.box('requests').get('news', defaultValue: {}) as Map;
+    return RefreshIndicator(
+      onRefresh: () => Future.sync(
+        () => _pagingController.refresh(),
+      ),
+      child: PagedListView<int, News>(
+        pagingController: _pagingController,
+        scrollController: widget.scrollController,
         scrollDirection: Axis.vertical,
         shrinkWrap: true,
-        itemCount:
-            (present <= originalItems.length) ? items.length + 1 : items.length,
-        itemBuilder: (context, index) {
-          return index == items.length
-              ? Padding(
-                  padding: EdgeInsets.only(
-                    top: 5,
-                    bottom: 10,
-                  ),
-                  child: ElevatedButton(
-                    child: Padding(
-                      padding:
-                          EdgeInsets.only(left: 7, right: 7, top: 5, bottom: 5),
-                      child: Text(
-                        AppLocalizations.of(context)?.loadMore ?? 'Load more',
-                        style: TextStyle(
-                          fontSize: 18,
-                        ),
-                      ),
-                    ),
-                    onPressed: (() {
-                      setState(
-                        () {
-                          if ((present + perPage) > originalItems.length) {
-                            items.addAll(originalItems.getRange(
-                                present, originalItems.length));
-                          } else {
-                            items.addAll(
-                              originalItems.getRange(
-                                  present, present + perPage),
-                            );
-                          }
-                          present = present + perPage;
-                        },
-                      );
-                    }),
-                  ),
+        builderDelegate: PagedChildBuilderDelegate<News>(
+          itemBuilder: (context, item, index) {
+            return NewsItem(
+              item,
+              false,
+            );
+          },
+          firstPageProgressIndicatorBuilder: (_) => LoadingIndicatorUtil(),
+          firstPageErrorIndicatorBuilder: (_) => cachedNews['items'] != null
+              ? NewsList(
+                  items: F1NewsFetcher().formatResponse(cachedNews),
                 )
-              : NewsItem(
-                  items[index],
-                  false,
-                );
-        },
+              : FirstPageExceptionIndicator(
+                  title: AppLocalizations.of(context)!.errorOccurred,
+                  message: AppLocalizations.of(context)!.errorOccurredDetails,
+                  onTryAgain: () => _pagingController.refresh(),
+                ),
+          newPageProgressIndicatorBuilder: (_) => LoadingIndicatorUtil(),
+        ),
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _pagingController.dispose();
+    super.dispose();
+  }
+}
+
+class FirstPageExceptionIndicator extends StatelessWidget {
+  const FirstPageExceptionIndicator({
+    required this.title,
+    this.message,
+    this.onTryAgain,
+    Key? key,
+  }) : super(key: key);
+
+  final String title;
+  final String? message;
+  final VoidCallback? onTryAgain;
+
+  @override
+  Widget build(BuildContext context) {
+    bool useDarkMode =
+        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
+    final message = this.message;
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 16),
+        child: Column(
+          children: [
+            Text(
+              title,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: useDarkMode ? Colors.white : Colors.black,
+              ),
+            ),
+            if (message != null)
+              const SizedBox(
+                height: 16,
+              ),
+            if (message != null)
+              Text(
+                message,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: useDarkMode ? Colors.white : Colors.black,
+                ),
+              ),
+            if (onTryAgain != null)
+              const SizedBox(
+                height: 48,
+              ),
+            if (onTryAgain != null)
+              SizedBox(
+                height: 50,
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  onPressed: onTryAgain,
+                  icon: const Icon(
+                    Icons.refresh,
+                    color: Colors.white,
+                  ),
+                  label: Text(
+                    AppLocalizations.of(context)!.tryAgain,
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }

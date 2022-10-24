@@ -19,7 +19,6 @@
 
 import 'dart:async';
 
-import 'package:boxbox/api/event_tracker.dart';
 import 'package:boxbox/helpers/bottom_navigation_bar.dart';
 import 'package:boxbox/helpers/handle_native.dart';
 import 'package:boxbox/helpers/route_handler.dart';
@@ -36,7 +35,6 @@ void main() async {
   // ignore: unused_local_variable
   final settingsBox = await Hive.openBox('settings');
 
-  Hive.registerAdapter(EventAdapter());
   // ignore: unused_local_variable
   final requestsBox = await Hive.openBox('requests');
 

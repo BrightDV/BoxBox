@@ -20,37 +20,22 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart';
-part 'event_tracker.g.dart';
 
-@HiveType(typeId: 1)
 class Event {
-  @HiveField(0)
   final String raceId;
-  @HiveField(1)
   late final String meetingName;
-  @HiveField(2)
   final String meetingOfficialName;
-  @HiveField(3)
   final String meetingCountryName;
-  @HiveField(4)
   final DateTime meetingStartDate;
-  @HiveField(5)
   final DateTime meetingEndDate;
-  @HiveField(6)
   final bool isRunning;
-  @HiveField(7)
   final Session
       session5; // use session instead of race, fp1, etc because with a sprint the order
-  @HiveField(8) // is race, sprint, fp2, qualifications, fp1
-  final Session session4;
-  @HiveField(9)
+  final Session session4; // is race, sprint, fp2, qualifications, fp1
   final Session session3;
-  @HiveField(10)
   final Session session2;
-  @HiveField(11)
   final Session session1;
 
   Event(
@@ -107,12 +92,17 @@ class EventTracker {
       },
     );
     Map formatedResponse = jsonDecode(res.body);
+    Hive.box('requests').put('event-tracker', formatedResponse);
 
     return formatedResponse;
   }
 
   Future<Event> parseEvent() async {
     Map eventAsJson = await fetchEvent();
+    return plainEventParser(eventAsJson);
+  }
+
+  Event plainEventParser(Map eventAsJson) {
     String gmtOffset =
         eventAsJson['seasonContext']['timetables'][0]['gmtOffset'];
     DateTime meetingStartDate = DateTime.parse(
@@ -209,7 +199,6 @@ class EventTracker {
       sessions[3],
       sessions[4],
     );
-    Hive.box('requests').put('event-tracker', event);
     return event;
   }
 }
