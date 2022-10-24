@@ -1344,7 +1344,7 @@ class _VideoRendererState extends State<VideoRenderer> {
           : snapshot.hasData
               ? VideoPlayer(
                   snapshot.data!,
-                  widget.autoplay == null ? false : true,
+                  widget.autoplay == null ? false : widget.autoplay!,
                 )
               : Container(
                   height: MediaQuery.of(context).size.width / (16 / 9),
