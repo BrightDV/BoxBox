@@ -52,11 +52,22 @@ class F1NewsFetcher {
   List<News> formatResponse(Map responseAsJson) {
     List finalJson = responseAsJson['items'];
     List<News> newsList = [];
+    bool useDataSaverMode = Hive.box('settings')
+        .get('useDataSaverMode', defaultValue: false) as bool;
+
     finalJson.forEach((element) {
       element['title'] = element['title'].replaceAll("\n", "");
       if (element['metaDescription'] != null) {
         element['metaDescription'] =
             element['metaDescription'].replaceAll("\n", "");
+      }
+      String imageUrl = element['thumbnail']['image']['url'];
+      if (useDataSaverMode) {
+        if (element['thumbnail']['image']['renditions'] != null) {
+          imageUrl = element['thumbnail']['image']['renditions']['2col-retina'];
+        } else {
+          imageUrl += '.transform/2col-retina/image.jpg';
+        }
       }
       newsList.add(
         News(
@@ -66,7 +77,7 @@ class F1NewsFetcher {
           element['title'],
           element['metaDescription'] ?? '',
           DateTime.parse(element['updatedAt']),
-          element['thumbnail']['image']['url'],
+          imageUrl,
         ),
       );
     });
@@ -200,9 +211,6 @@ class NewsItem extends StatelessWidget {
     String newsLayout =
         Hive.box('settings').get('newsLayout', defaultValue: 'big') as String;
     double width = MediaQuery.of(context).size.width;
-    if (item.imageUrl.startsWith('https://www.formula1.com/')) {
-      imageUrl = '${item.imageUrl}.transform/6col/image.jpg';
-    }
     return inRelated
         ? Container(
             width: width / 2.1,
@@ -708,6 +716,8 @@ class JoinArticlesParts extends StatelessWidget {
   Widget build(BuildContext context) {
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
+    bool useDataSaverMode = Hive.box('settings')
+        .get('useDataSaverMode', defaultValue: false) as bool;
     List articleContent = article.articleContent;
     List<Widget> widgetsList = [];
 
@@ -719,10 +729,15 @@ class JoinArticlesParts extends StatelessWidget {
         ),
       );
     } else {
-      print(article.articleHero['fields']['image']['url']);
       widgetsList.add(
         ImageRenderer(
-          article.articleHero['fields']['image']['url'],
+          useDataSaverMode &&
+                  article.articleHero['fields']['image']['renditions'] != null
+              ? article.articleHero['fields']['image']['renditions']
+                  ['2col-retina']
+              : article.articleHero['fields']['image']['url'] +
+                  '.transform/2col-retina/image.jpg',
+          isHero: true,
         ),
       );
     }
@@ -805,7 +820,11 @@ class JoinArticlesParts extends StatelessWidget {
         } else if (element['contentType'] == 'atomImage') {
           widgetsList.add(
             ImageRenderer(
-              element['fields']['image']['url'],
+              useDataSaverMode &&
+                      element['fields']['image']['renditions'] != null
+                  ? element['fields']['image']['renditions']['2col-retina']
+                  : element['fields']['image']['url'] +
+                      '.transform/2col-retina/image.jpg',
               caption: element['fields']['caption'] != null
                   ? element['fields']['caption']
                   : '',
@@ -842,7 +861,9 @@ class JoinArticlesParts extends StatelessWidget {
               Container(
                 width: MediaQuery.of(context).size.width,
                 child: ImageRenderer(
-                  element['url'],
+                  useDataSaverMode && element['renditions'] != null
+                      ? element['renditions']['2col-retina']
+                      : element['url'] + '.transform/2col-retina/image.jpg',
                 ),
               ),
             ),
@@ -892,7 +913,7 @@ class JoinArticlesParts extends StatelessWidget {
               height: 100,
               child: Center(
                 child: Text(
-                  'Unsupported widget ¯\\_(ツ)_/¯\nType: ${element['contentType']}',
+                  'Unsupported widget ¯\\_(ツ)_/¯\nType: ${element['contentType']}\nArticle id: ${article.articleId}',
                   style: TextStyle(
                     color: useDarkMode ? Colors.white : Colors.black,
                   ),
@@ -973,6 +994,7 @@ class JoinArticlesParts extends StatelessWidget {
     article.relatedArticles.forEach(
       (article) => relatedArticles.add(
         NewsItem(
+          // HERE
           News(
             article['id'],
             article['articleType'],
@@ -980,7 +1002,11 @@ class JoinArticlesParts extends StatelessWidget {
             article['title'],
             article['metaDescription'] ?? ' ',
             DateTime.parse(article['updatedAt']),
-            article['thumbnail']['image']['url'],
+            useDataSaverMode &&
+                    article['thumbnail']['image']['renditions'] != null
+                ? article['thumbnail']['image']['renditions']['2col']
+                : article['thumbnail']['image']['url'] +
+                    '.transform/2col-retina/image.jpg',
           ),
           true,
         ),
@@ -1152,11 +1178,9 @@ class ImageRenderer extends StatefulWidget {
   final String imageUrl;
   final String? caption;
   final bool? inSchedule;
-  ImageRenderer(
-    this.imageUrl, {
-    this.caption,
-    this.inSchedule,
-  });
+  final bool? isHero;
+
+  ImageRenderer(this.imageUrl, {this.caption, this.inSchedule, this.isHero});
 
   _ImageRendererState createState() => _ImageRendererState();
 }
@@ -1219,32 +1243,58 @@ class _ImageRendererState extends State<ImageRenderer> {
                                         borderRadius: BorderRadius.circular(5),
                                       ),
                                       clipBehavior: Clip.antiAlias,
-                                      child: Image(
-                                        image: NetworkImage(
-                                          widget.imageUrl,
-                                        ),
-                                        loadingBuilder: (context, child,
-                                                loadingProgress) =>
-                                            loadingProgress == null
-                                                ? child
-                                                : Container(
-                                                    height:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .width /
-                                                            (16 / 9),
-                                                    child:
-                                                        LoadingIndicatorUtil(),
-                                                  ),
-                                        errorBuilder: (context, url, error) =>
-                                            Icon(
-                                          Icons.error_outlined,
-                                          color: useDarkMode
-                                              ? Colors.white
-                                              : Colors.black,
-                                          size: 30,
-                                        ),
-                                      )),
+                                      child: widget.isHero!
+                                          ? CachedNetworkImage(
+                                              imageUrl: widget.imageUrl,
+                                              placeholder: (context, url) =>
+                                                  Container(
+                                                height: MediaQuery.of(context)
+                                                        .size
+                                                        .width /
+                                                    (16 / 9),
+                                                child: LoadingIndicatorUtil(),
+                                              ),
+                                              errorWidget: (context, url,
+                                                      error) =>
+                                                  Icon(Icons.error_outlined),
+                                              fadeOutDuration:
+                                                  Duration(seconds: 1),
+                                              fadeInDuration:
+                                                  Duration(seconds: 1),
+                                              cacheManager: CacheManager(
+                                                Config(
+                                                  "newsImages",
+                                                  stalePeriod:
+                                                      const Duration(days: 7),
+                                                ),
+                                              ),
+                                            )
+                                          : Image(
+                                              image: NetworkImage(
+                                                widget.imageUrl,
+                                              ),
+                                              loadingBuilder: (context, child,
+                                                      loadingProgress) =>
+                                                  loadingProgress == null
+                                                      ? child
+                                                      : Container(
+                                                          height: MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .width /
+                                                              (16 / 9),
+                                                          child:
+                                                              LoadingIndicatorUtil(),
+                                                        ),
+                                              errorBuilder:
+                                                  (context, url, error) => Icon(
+                                                Icons.error_outlined,
+                                                color: useDarkMode
+                                                    ? Colors.white
+                                                    : Colors.black,
+                                                size: 30,
+                                              ),
+                                            )),
                                   Align(
                                     alignment: Alignment.topRight,
                                     child: IconButton(
@@ -1270,22 +1320,42 @@ class _ImageRendererState extends State<ImageRenderer> {
               child: Stack(
                 alignment: Alignment.bottomCenter,
                 children: [
-                  Image.network(
-                    widget.imageUrl,
-                    loadingBuilder: (context, child, loadingProgress) =>
-                        loadingProgress == null
-                            ? child
-                            : Container(
-                                height: MediaQuery.of(context).size.width /
-                                    (16 / 9),
-                                child: LoadingIndicatorUtil(),
-                              ),
-                    errorBuilder: (context, url, error) => Icon(
-                      Icons.error_outlined,
-                      color: useDarkMode ? Colors.white : Colors.black,
-                      size: 30,
-                    ),
-                  ),
+                  widget.isHero!
+                      ? CachedNetworkImage(
+                          imageUrl: widget.imageUrl,
+                          placeholder: (context, url) => Container(
+                            height:
+                                MediaQuery.of(context).size.width / (16 / 9),
+                            child: LoadingIndicatorUtil(),
+                          ),
+                          errorWidget: (context, url, error) =>
+                              Icon(Icons.error_outlined),
+                          fadeOutDuration: Duration(seconds: 1),
+                          fadeInDuration: Duration(seconds: 1),
+                          cacheManager: CacheManager(
+                            Config(
+                              "newsImages",
+                              stalePeriod: const Duration(days: 7),
+                            ),
+                          ),
+                        )
+                      : Image.network(
+                          widget.imageUrl,
+                          loadingBuilder: (context, child, loadingProgress) =>
+                              loadingProgress == null
+                                  ? child
+                                  : Container(
+                                      height:
+                                          MediaQuery.of(context).size.width /
+                                              (16 / 9),
+                                      child: LoadingIndicatorUtil(),
+                                    ),
+                          errorBuilder: (context, url, error) => Icon(
+                            Icons.error_outlined,
+                            color: useDarkMode ? Colors.white : Colors.black,
+                            size: 30,
+                          ),
+                        ),
                   Container(
                     alignment: Alignment.bottomCenter,
                     child: widget.caption != null || widget.caption == ''
