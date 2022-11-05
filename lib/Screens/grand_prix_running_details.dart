@@ -387,7 +387,8 @@ class _SessionItemState extends State<SessionItem> {
                               ),
                             ),
                             Text(
-                              'Séance terminée',
+                              AppLocalizations.of(context)!
+                                  .sessionCompletedShort,
                               style: TextStyle(
                                 color: useDarkMode
                                     ? Colors.white
@@ -420,7 +421,7 @@ class _SessionItemState extends State<SessionItem> {
                                   ),
                                 ),
                                 Text(
-                                  'Séance en cours',
+                                  AppLocalizations.of(context)!.sessionRunning,
                                   style: TextStyle(
                                     color: useDarkMode
                                         ? Colors.white

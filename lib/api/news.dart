@@ -994,7 +994,6 @@ class JoinArticlesParts extends StatelessWidget {
     article.relatedArticles.forEach(
       (article) => relatedArticles.add(
         NewsItem(
-          // HERE
           News(
             article['id'],
             article['articleType'],
