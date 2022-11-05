@@ -21,6 +21,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:boxbox/api/brightcove.dart';
+import 'package:boxbox/api/twitter.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/news_feed_widget.dart';
 import 'package:boxbox/helpers/request_error.dart';
@@ -42,6 +43,7 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:timeago/timeago.dart' as timeago;
+import 'package:tweet_ui/tweet_ui.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
 
@@ -884,27 +886,17 @@ class JoinArticlesParts extends StatelessWidget {
         } else if (element['contentType'] == 'atomSocialPost' &&
             element['fields']['postType'] == 'Twitter') {
           widgetsList.add(
-            Container(
-              height: 400,
-              child: InAppWebView(
-                initialUrlRequest: URLRequest(
-                  url: Uri.parse(
-                    element['fields']['postUrl'],
-                  ),
-                ),
-                initialOptions: InAppWebViewGroupOptions(
-                  crossPlatform: InAppWebViewOptions(
-                      preferredContentMode: UserPreferredContentMode.DESKTOP),
-                ),
-                gestureRecognizers: [
-                  Factory<VerticalDragGestureRecognizer>(
-                      () => VerticalDragGestureRecognizer()),
-                  Factory<HorizontalDragGestureRecognizer>(
-                      () => HorizontalDragGestureRecognizer()),
-                  Factory<ScaleGestureRecognizer>(
-                      () => ScaleGestureRecognizer()),
-                ].toSet(),
-              ),
+            FutureBuilder<Map<String, dynamic>>(
+              future: Twitter().getTweetContent(element['fields']['postId']),
+              builder: (context, snapshot) => snapshot.hasError
+                  ? RequestErrorWidget(
+                      snapshot.error.toString(),
+                    )
+                  : snapshot.hasData
+                      ? EmbeddedTweetView.fromTweetV1(TweetV1Response.fromJson(
+                          snapshot.data!,
+                        ))
+                      : LoadingIndicatorUtil(),
             ),
           );
         } else {
