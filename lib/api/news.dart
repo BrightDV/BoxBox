@@ -1180,7 +1180,12 @@ class ImageRenderer extends StatefulWidget {
   final bool? inSchedule;
   final bool? isHero;
 
-  ImageRenderer(this.imageUrl, {this.caption, this.inSchedule, this.isHero});
+  ImageRenderer(
+    this.imageUrl, {
+    this.caption,
+    this.inSchedule,
+    this.isHero,
+  });
 
   _ImageRendererState createState() => _ImageRendererState();
 }
@@ -1243,7 +1248,8 @@ class _ImageRendererState extends State<ImageRenderer> {
                                         borderRadius: BorderRadius.circular(5),
                                       ),
                                       clipBehavior: Clip.antiAlias,
-                                      child: widget.isHero!
+                                      child: widget.isHero != null &&
+                                              widget.isHero!
                                           ? CachedNetworkImage(
                                               imageUrl: widget.imageUrl,
                                               placeholder: (context, url) =>
@@ -1320,7 +1326,7 @@ class _ImageRendererState extends State<ImageRenderer> {
               child: Stack(
                 alignment: Alignment.bottomCenter,
                 children: [
-                  widget.isHero!
+                  widget.isHero != null && widget.isHero!
                       ? CachedNetworkImage(
                           imageUrl: widget.imageUrl,
                           placeholder: (context, url) => Container(
