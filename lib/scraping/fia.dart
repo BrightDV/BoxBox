@@ -39,16 +39,26 @@ class FIAScraper {
     List<dom.Element> _tempResult = document
         .getElementsByClassName('event-wrapper')[0]
         .getElementsByClassName('document-row');
-    _tempResult.forEach(
-      (document) => documents.add(
-        SessionDocument(
-          document.firstChild!.children[1].text
-              .substring(13, document.firstChild!.children[1].text.length - 3),
-          document.firstChild!.children[2].children[0].text,
-          'https://www.fia.com${document.firstChild?.attributes['href']}',
-        ),
-      ),
-    );
+    _tempResult.forEach((document) {
+      if (document.firstChild!.nodeType == 3) {
+        documents.add(
+          SessionDocument(
+            'This document cannot be parsed.',
+            'none',
+            'https://www.fia.com/documents/championships/fia-formula-one-world-championship-14/season/season-2022-2005',
+          ),
+        );
+      } else {
+        documents.add(
+          SessionDocument(
+            document.firstChild!.children[1].text.substring(
+                13, document.firstChild!.children[1].text.length - 3),
+            document.firstChild!.children[2].children[0].text,
+            'https://www.fia.com${document.firstChild?.attributes['href']}',
+          ),
+        );
+      }
+    });
     return documents;
   }
 }

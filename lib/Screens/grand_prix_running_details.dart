@@ -76,7 +76,7 @@ class _GrandPrixRunningScreenState extends State<GrandPrixRunningScreen> {
                 : snapshot.hasData
                     ? ListView.builder(
                         shrinkWrap: true,
-                        itemCount: snapshot.data?.length,
+                        itemCount: snapshot.data!.length,
                         controller: scrollController,
                         itemBuilder: (context, index) => index == 0
                             ? Padding(
@@ -94,15 +94,18 @@ class _GrandPrixRunningScreenState extends State<GrandPrixRunningScreen> {
                                 ),
                               )
                             : GestureDetector(
-                                onTap: () => Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => PdfViewer(
-                                      snapshot.data![index].src,
-                                      snapshot.data![index].name,
-                                    ),
-                                  ),
-                                ),
+                                onTap: () =>
+                                    !snapshot.data![index].src.endsWith('pdf')
+                                        ? {}
+                                        : Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => PdfViewer(
+                                                snapshot.data![index].src,
+                                                snapshot.data![index].name,
+                                              ),
+                                            ),
+                                          ),
                                 child: Card(
                                   color: useDarkMode
                                       ? Color.fromARGB(255, 45, 45, 58)
