@@ -669,12 +669,15 @@ class _OfflineNewsListState extends State<OfflineNewsList> {
       scrollDirection: Axis.vertical,
       shrinkWrap: true,
       itemCount: formatedNews.length,
-      itemBuilder: (context, index) {
-        return NewsItem(
-          formatedNews[index],
-          false,
-        );
-      },
+      physics: BouncingScrollPhysics(),
+      itemBuilder: (context, index) => index == formatedNews.length - 1
+          ? Padding(
+              padding: EdgeInsets.all(15),
+            )
+          : NewsItem(
+              formatedNews[index],
+              false,
+            ),
     );
   }
 
@@ -904,7 +907,7 @@ class JoinArticlesParts extends StatelessWidget {
             Container(
               height: 100,
               child: Center(
-                child: Text(
+                child: SelectableText(
                   'Unsupported widget ¯\\_(ツ)_/¯\nType: ${element['contentType']}\nArticle id: ${article.articleId}',
                   style: TextStyle(
                     color: useDarkMode ? Colors.white : Colors.black,
