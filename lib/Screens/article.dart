@@ -115,7 +115,7 @@ class ArticleProvider extends StatelessWidget {
           return RequestErrorWidget(snapshot.error.toString());
         }
         return snapshot.hasData
-            ? ArticleRenderer(snapshot.data!)
+            ? JoinArticlesParts(snapshot.data!)
             : LoadingIndicatorUtil();
       },
     );

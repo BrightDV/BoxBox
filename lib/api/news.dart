@@ -689,32 +689,6 @@ class _OfflineNewsListState extends State<OfflineNewsList> {
   }
 }
 
-class ArticleRenderer extends StatelessWidget {
-  final Article item;
-  ArticleRenderer(this.item);
-
-  Future<Article> getArticleData(String articleId) async {
-    return await F1NewsFetcher().getArticleData(articleId);
-  }
-
-  Widget build(BuildContext context) {
-    return FutureBuilder<Article>(
-      future: getArticleData(item.articleId),
-      builder: (context, snapshot) {
-        if (snapshot.hasError)
-          return Text(
-            snapshot.error.toString(),
-          );
-        return snapshot.hasData
-            ? JoinArticlesParts(
-                snapshot.data!,
-              )
-            : LoadingIndicatorUtil();
-      },
-    );
-  }
-}
-
 class JoinArticlesParts extends StatelessWidget {
   final Article article;
 
@@ -735,15 +709,40 @@ class JoinArticlesParts extends StatelessWidget {
           autoplay: true,
         ),
       );
+    } else if (article.articleHero['contentType'] == 'atomImageGallery') {
+      List<Widget> galleryHeroWidgets = [];
+      article.articleHero['fields']['imageGallery'].forEach(
+        (element) => galleryHeroWidgets.add(
+          ImageRenderer(
+            useDataSaverMode
+                ? element['renditions'] != null
+                    ? element['renditions']['2col-retina']
+                    : element['url'] + '.transform/3col-retina/image.jpg'
+                : element['url'],
+          ),
+        ),
+      );
+      widgetsList.add(
+        CarouselSlider(
+          items: galleryHeroWidgets,
+          options: CarouselOptions(
+            viewportFraction: 1,
+            enableInfiniteScroll: true,
+            enlargeCenterPage: true,
+            autoPlay: true,
+          ),
+        ),
+      );
     } else {
       widgetsList.add(
         ImageRenderer(
-          useDataSaverMode &&
-                  article.articleHero['fields']['image']['renditions'] != null
-              ? article.articleHero['fields']['image']['renditions']
-                  ['2col-retina']
-              : article.articleHero['fields']['image']['url'] +
-                  '.transform/2col-retina/image.jpg',
+          useDataSaverMode
+              ? article.articleHero['fields']['image']['renditions'] != null
+                  ? article.articleHero['fields']['image']['renditions']
+                      ['2col-retina']
+                  : article.articleHero['fields']['image']['url'] +
+                      '.transform/2col-retina/image.jpg'
+              : article.articleHero['fields']['image']['url'],
           isHero: true,
         ),
       );
@@ -827,11 +826,12 @@ class JoinArticlesParts extends StatelessWidget {
         } else if (element['contentType'] == 'atomImage') {
           widgetsList.add(
             ImageRenderer(
-              useDataSaverMode &&
-                      element['fields']['image']['renditions'] != null
-                  ? element['fields']['image']['renditions']['2col-retina']
-                  : element['fields']['image']['url'] +
-                      '.transform/2col-retina/image.jpg',
+              useDataSaverMode
+                  ? element['fields']['image']['renditions'] != null
+                      ? element['fields']['image']['renditions']['2col-retina']
+                      : element['fields']['image']['url'] +
+                          '.transform/2col-retina/image.jpg'
+                  : element['fields']['image']['url'],
               caption: element['fields']['caption'] != null
                   ? element['fields']['caption']
                   : '',
@@ -868,9 +868,11 @@ class JoinArticlesParts extends StatelessWidget {
               Container(
                 width: MediaQuery.of(context).size.width,
                 child: ImageRenderer(
-                  useDataSaverMode && element['renditions'] != null
-                      ? element['renditions']['2col-retina']
-                      : element['url'] + '.transform/2col-retina/image.jpg',
+                  useDataSaverMode
+                      ? element['renditions'] != null
+                          ? element['renditions']['2col-retina']
+                          : element['url'] + '.transform/2col-retina/image.jpg'
+                      : element['url'],
                 ),
               ),
             ),
@@ -1006,11 +1008,12 @@ class JoinArticlesParts extends StatelessWidget {
             article['title'],
             article['metaDescription'] ?? ' ',
             DateTime.parse(article['updatedAt']),
-            useDataSaverMode &&
-                    article['thumbnail']['image']['renditions'] != null
-                ? article['thumbnail']['image']['renditions']['2col']
-                : article['thumbnail']['image']['url'] +
-                    '.transform/2col-retina/image.jpg',
+            useDataSaverMode
+                ? article['thumbnail']['image']['renditions'] != null
+                    ? article['thumbnail']['image']['renditions']['2col']
+                    : article['thumbnail']['image']['url'] +
+                        '.transform/2col-retina/image.jpg'
+                : article['thumbnail']['image']['url'],
           ),
           true,
         ),
