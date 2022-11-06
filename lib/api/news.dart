@@ -339,7 +339,9 @@ class NewsItem extends StatelessWidget {
                                       : item.newsType == 'Technical' ||
                                               item.newsType == 'Live Blog'
                                           ? 120
-                                          : 90,
+                                          : item.newsType == 'Image Gallery'
+                                              ? 150
+                                              : 90,
                                   height: 27,
                                   alignment: Alignment.bottomLeft,
                                   decoration: BoxDecoration(
@@ -443,7 +445,7 @@ class NewsItem extends StatelessWidget {
                                     : Colors.grey[800],
                               ),
                               textAlign: TextAlign.justify,
-                              maxLines: 3,
+                              maxLines: 5,
                               overflow: TextOverflow.ellipsis,
                             ),
                     ),
@@ -896,10 +898,18 @@ class JoinArticlesParts extends StatelessWidget {
                       snapshot.error.toString(),
                     )
                   : snapshot.hasData
-                      ? EmbeddedTweetView.fromTweetV1(TweetV1Response.fromJson(
-                          snapshot.data!,
-                        ))
-                      : LoadingIndicatorUtil(),
+                      ? Container(
+                          height: 500,
+                          child: EmbeddedTweetView.fromTweetV1(
+                            TweetV1Response.fromJson(
+                              snapshot.data!,
+                            ),
+                          ),
+                        )
+                      : Container(
+                          height: 500,
+                          child: LoadingIndicatorUtil(),
+                        ),
             ),
           );
         } else {
