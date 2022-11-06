@@ -131,6 +131,8 @@
     "@next": {},
     "offline": "Offline. The data may not be up to date.",
     "@offline": {},
+    "openInBrowser": "Open in browser",
+    "@openInBrowser": {},
     "other": "Other",
     "@other": {},
     "placeOfBirth": "Place of birth",

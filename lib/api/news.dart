@@ -213,6 +213,81 @@ class NewsItem extends StatelessWidget {
     String newsLayout =
         Hive.box('settings').get('newsLayout', defaultValue: 'big') as String;
     double width = MediaQuery.of(context).size.width;
+    Offset _tapPosition = Offset.zero;
+
+    void _storePosition(TapDownDetails details) {
+      _tapPosition = details.globalPosition;
+    }
+
+    void _showDetailsMenu() {
+      final RenderObject overlay =
+          Overlay.of(context)!.context.findRenderObject()!;
+
+      showMenu(
+        context: context,
+        color: useDarkMode ? Color(0xff1d1d28) : Colors.white,
+        items: <PopupMenuEntry<int>>[
+          PopupMenuItem(
+            value: 0,
+            child: Row(
+              children: [
+                Icon(
+                  Icons.language_outlined,
+                  color: useDarkMode ? Colors.white : Colors.black,
+                ),
+                Padding(
+                  padding: EdgeInsets.all(5),
+                ),
+                Text(
+                  AppLocalizations.of(context)!.openInBrowser,
+                  style: TextStyle(
+                    color: useDarkMode ? Colors.white : Colors.black,
+                    fontSize: 14,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          PopupMenuItem(
+            value: 1,
+            child: Row(
+              children: [
+                Icon(
+                  Icons.share_outlined,
+                  color: useDarkMode ? Colors.white : Colors.black,
+                ),
+                Padding(
+                  padding: EdgeInsets.all(5),
+                ),
+                Text(
+                  AppLocalizations.of(context)!.share,
+                  style: TextStyle(
+                    color: useDarkMode ? Colors.white : Colors.black,
+                    fontSize: 14,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+        position: RelativeRect.fromRect(_tapPosition & const Size(40, 40),
+            Offset.zero & overlay.semanticBounds.size),
+      ).then<void>(
+        (int? delta) {
+          if (delta == null) return;
+          delta == 0
+              ? launchUrl(
+                  Uri.parse(
+                      "https://www.formula1.com/en/latest/article.${item.slug}.${item.newsId}.html"),
+                  mode: LaunchMode.externalApplication,
+                )
+              : Share.share(
+                  "https://www.formula1.com/en/latest/article.${item.slug}.${item.newsId}.html",
+                );
+        },
+      );
+    }
+
     return inRelated
         ? Container(
             width: width / 2.1,
@@ -224,8 +299,11 @@ class NewsItem extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) =>
-                          ArticleScreen(item.newsId, item.title, false),
+                      builder: (context) => ArticleScreen(
+                        item.newsId,
+                        item.title,
+                        false,
+                      ),
                     ),
                   );
                 },
@@ -275,22 +353,30 @@ class NewsItem extends StatelessWidget {
           )
         : Padding(
             padding: EdgeInsets.only(top: 5),
-            child: GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        ArticleScreen(item.newsId, item.title, false),
-                  ),
-                );
-              },
-              child: Card(
-                elevation: 10.0,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15.0),
-                ),
-                color: useDarkMode ? Color(0xff1d1d28) : Colors.white,
+            child: Card(
+              elevation: 10.0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15.0),
+              ),
+              color: useDarkMode ? Color(0xff1d1d28) : Colors.white,
+              child: InkWell(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ArticleScreen(
+                        item.newsId,
+                        item.title,
+                        false,
+                      ),
+                    ),
+                  );
+                },
+                onTapDown: (position) => _storePosition(position),
+                onLongPress: () {
+                  Feedback.forLongPress(context);
+                  _showDetailsMenu();
+                },
                 child: Column(
                   children: [
                     newsLayout != 'condensed' && newsLayout != 'small'

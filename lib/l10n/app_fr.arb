@@ -131,6 +131,8 @@
     "@next": {},
     "offline": "Hors-ligne. Les données peuvent ne pas être à jour.",
     "@offline": {},
+    "openInBrowser": "Ouvrir dans le navigateur",
+    "@openInBrowser": {},
     "other": "Autre",
     "@other": {},
     "placeOfBirth": "Lieu de naissance",
