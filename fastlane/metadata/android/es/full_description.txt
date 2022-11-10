@@ -1,0 +1,11 @@
+Con Box, Box! sigue las últimas noticias de tu piloto y escudería favoritos.
+¡Mantente al día de las batallas dentro y fuera de la pista!
+Características:
+- Lee todas las noticias de la web oficial con su lector y reproductor integrados.
+- Últimas Clasificaciones (Pilotos y Escuderías).
+- Calendario con todos los resultados de los Libres, Clasificaciones y Carreras.
+- Sigue las diferentes sesiones y lee la documentación de la FIA mientras se celebra un Gran Premio.
+- ¡Personaliza la aplicación con los colores de tu equipo favorito!
+- Abre los enlaces dentro de la aplicación.
+
+Participa en la acción sin anuncios ni rastreadores ;)
