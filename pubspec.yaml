@@ -52,9 +52,9 @@ dependencies:
   package_info_plus: ^1.4.3+1
   receive_sharing_intent: ^1.4.5
   share_plus: ^4.4.0
+  signalr_flutter: ^0.2.0
   sliding_up_panel: ^2.0.0+1
   syncfusion_flutter_pdfviewer: ^20.3.49
-  text_divider: ^1.0.0
   timeago: ^3.3.0
   tweet_ui: ^4.0.4
   url_launcher: ^6.0.13

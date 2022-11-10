@@ -51,6 +51,8 @@
     "@errorOccurred": {},
     "errorOccurredDetails": "The application has encountered an unknown error.\nPlease try again later.",
     "@errorOccurredDetails": {},
+    "experimentalFeatures": "Experimental Features",
+    "@experimentalFeatures": {},
     "fiaRegulations": "FIA's Regulations",
     "@fiaRegulations": {},
     "freePracticeOne": "Free Practice 1",

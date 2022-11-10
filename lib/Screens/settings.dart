@@ -436,6 +436,8 @@ class _OtherCardstate extends State<OtherCard> {
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     bool useDataSaverMode = Hive.box('settings')
         .get('useDataSaverMode', defaultValue: false) as bool;
+    bool enableExperimentalFeatures = Hive.box('settings')
+        .get('enableExperimentalFeatures', defaultValue: false) as bool;
     return Column(
       children: [
         Padding(
@@ -478,7 +480,22 @@ class _OtherCardstate extends State<OtherCard> {
               }
             });
           },
-        )
+        ),
+        SwitchListTile(
+          title: Text(
+            AppLocalizations.of(context)!.experimentalFeatures,
+            style: TextStyle(
+              color: useDarkMode ? Colors.white : Colors.black,
+            ),
+          ),
+          value: enableExperimentalFeatures,
+          onChanged: (bool value) {
+            setState(() {
+              enableExperimentalFeatures = value;
+              Hive.box('settings').put('enableExperimentalFeatures', value);
+            });
+          },
+        ),
       ],
     );
   }

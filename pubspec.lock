@@ -751,6 +751,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.1"
+  signalr_flutter:
+    dependency: "direct main"
+    description:
+      name: signalr_flutter
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.0"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -889,13 +896,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.4.12"
-  text_divider:
-    dependency: "direct main"
-    description:
-      name: text_divider
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.0"
   timeago:
     dependency: "direct main"
     description:

@@ -51,6 +51,8 @@
     "@errorOccurred": {},
     "errorOccurredDetails": "L'application a rencontré une erreur inconnue.\nVeuillez réessayer plus tard.",
     "@errorOccurredDetails": {},
+    "experimentalFeatures": "Fonctionnalités Expérimentales",
+    "@experimentalFeatures": {},
     "fiaRegulations": "Règlements de la FIA",
     "@fiaRegulations": {},
     "freePracticeOne": "Essais Libres 1",

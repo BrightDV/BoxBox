@@ -21,6 +21,7 @@ import 'package:boxbox/Screens/about.dart';
 import 'package:boxbox/Screens/hall_of_fame.dart';
 import 'package:boxbox/Screens/links.dart';
 import 'package:boxbox/Screens/settings.dart';
+import 'package:boxbox/Screens/signalr_client.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -37,6 +38,8 @@ class MainDrawer extends StatefulWidget {
 class _MainDrawerState extends State<MainDrawer> {
   bool useDarkMode =
       Hive.box('settings').get('darkMode', defaultValue: true) as bool;
+  bool enableExperimentalFeatures = Hive.box('settings')
+      .get('enableExperimentalFeatures', defaultValue: false) as bool;
 
   @override
   Widget build(BuildContext context) {
@@ -149,6 +152,29 @@ class _MainDrawerState extends State<MainDrawer> {
                 );
               },
             ),
+            enableExperimentalFeatures
+                ? ListTile(
+                    title: Text(
+                      'SignalR Client',
+                      style: TextStyle(
+                        color: useDarkMode ? Colors.white : Colors.black,
+                      ),
+                    ),
+                    leading: Icon(
+                      Icons.settings_outlined,
+                      color: useDarkMode ? Colors.white : Colors.black,
+                    ),
+                    onTap: () {
+                      Navigator.of(context).pop();
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SignalRClientScreen(),
+                        ),
+                      );
+                    },
+                  )
+                : Container(),
             Expanded(
               child: Align(
                 alignment: Alignment.bottomCenter,
