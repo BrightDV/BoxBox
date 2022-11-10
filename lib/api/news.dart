@@ -20,12 +20,14 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:boxbox/Screens/free_practice_screen.dart';
 import 'package:boxbox/api/brightcove.dart';
 import 'package:boxbox/api/twitter.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/news_feed_widget.dart';
 import 'package:boxbox/helpers/request_error.dart';
 import 'package:boxbox/Screens/article.dart';
+import 'package:boxbox/Screens/race_details.dart';
 import 'package:boxbox/Screens/standings.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -998,6 +1000,320 @@ class JoinArticlesParts extends StatelessWidget {
                           height: 500,
                           child: LoadingIndicatorUtil(),
                         ),
+            ),
+          );
+        } else if (element['contentType'] == 'atomSessionResults') {
+          List driversFields = element['fields']
+              ['raceResults${element['fields']['sessionType']}']['results'];
+          widgetsList.add(
+            Padding(
+              padding: EdgeInsets.all(
+                10,
+              ),
+              child: Container(
+                height: 255,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color:
+                        useDarkMode ? Color(0xff1d1d28) : Colors.grey.shade50,
+                  ),
+                  borderRadius: BorderRadius.circular(15.0),
+                ),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(
+                        top: 15,
+                      ),
+                      child: Text(
+                        element['fields']['meetingCountryName'],
+                        style: TextStyle(
+                          color: useDarkMode ? Colors.white : Colors.black,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                    Text(
+                      element['fields']['sessionType'],
+                      style: TextStyle(
+                        color: useDarkMode ? Colors.white : Colors.black,
+                        fontSize: 14,
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(
+                        top: 15,
+                        left: 15,
+                      ),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            flex: element['fields']['sessionType'] == 'Race'
+                                ? 5
+                                : 4,
+                            child: Text(
+                              AppLocalizations.of(context)!
+                                  .positionAbbreviation,
+                              style: TextStyle(
+                                color:
+                                    useDarkMode ? Colors.white : Colors.black,
+                              ),
+                            ),
+                          ),
+                          Spacer(),
+                          Expanded(
+                            flex: 5,
+                            child: Text(
+                              AppLocalizations.of(context)!.time,
+                              style: TextStyle(
+                                color:
+                                    useDarkMode ? Colors.white : Colors.black,
+                              ),
+                            ),
+                          ),
+                          element['fields']['sessionType'] == 'Race'
+                              ? Expanded(
+                                  flex: 3,
+                                  child: Text(
+                                    AppLocalizations.of(context)!
+                                        .pointsAbbreviation,
+                                    style: TextStyle(
+                                      color: useDarkMode
+                                          ? Colors.white
+                                          : Colors.black,
+                                    ),
+                                  ),
+                                )
+                              : Container(),
+                        ],
+                      ),
+                    ),
+                    for (Map driverResults in driversFields)
+                      element['fields']['sessionType'] == 'Race'
+                          ? Padding(
+                              padding: EdgeInsets.only(
+                                top: 7,
+                              ),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    flex: 2,
+                                    child: Text(
+                                      driverResults['positionNumber'],
+                                      style: TextStyle(
+                                        color: useDarkMode
+                                            ? Colors.white
+                                            : Colors.black,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 1,
+                                    child: Container(
+                                      height: 15,
+                                      child: VerticalDivider(
+                                        color: Color(
+                                          int.parse(
+                                              'FF' +
+                                                  driverResults[
+                                                      'teamColourCode'],
+                                              radix: 16),
+                                        ),
+                                        thickness: 5,
+                                        width: 5,
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 3,
+                                    child: Text(
+                                      driverResults['driverTLA'].toString(),
+                                      style: TextStyle(
+                                        color: useDarkMode
+                                            ? Colors.white
+                                            : Colors.black,
+                                      ),
+                                    ),
+                                  ),
+                                  Spacer(),
+                                  Expanded(
+                                    flex: 6,
+                                    child: Text(
+                                      driverResults['gapToLeader'] != "0.0"
+                                          ? '+' + driverResults['gapToLeader']
+                                          : driverResults['raceTime'],
+                                      style: TextStyle(
+                                        color: useDarkMode
+                                            ? Colors.white
+                                            : Colors.black,
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 3,
+                                    child: Text(
+                                      driverResults['racePoints'].toString(),
+                                      style: TextStyle(
+                                        color: useDarkMode
+                                            ? Colors.white
+                                            : Colors.black,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
+                          : Padding(
+                              padding: EdgeInsets.only(
+                                top: 7,
+                              ),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    flex: 2,
+                                    child: Text(
+                                      driverResults['positionNumber'],
+                                      style: TextStyle(
+                                        color: useDarkMode
+                                            ? Colors.white
+                                            : Colors.black,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 1,
+                                    child: Container(
+                                      height: 15,
+                                      child: VerticalDivider(
+                                        color: Color(
+                                          int.parse(
+                                              'FF' +
+                                                  driverResults[
+                                                      'teamColourCode'],
+                                              radix: 16),
+                                        ),
+                                        thickness: 5,
+                                        width: 5,
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 3,
+                                    child: Text(
+                                      driverResults['driverTLA'].toString(),
+                                      style: TextStyle(
+                                        color: useDarkMode
+                                            ? Colors.white
+                                            : Colors.black,
+                                      ),
+                                    ),
+                                  ),
+                                  Spacer(),
+                                  Expanded(
+                                    flex: 6,
+                                    child: Text(
+                                      element['fields']['sessionType']
+                                              .startsWith('Practice')
+                                          ? driverResults['classifiedTime']
+                                          : driverResults['q3']
+                                              ['classifiedTime'],
+                                      style: TextStyle(
+                                        color: useDarkMode
+                                            ? Colors.white
+                                            : Colors.black,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                    Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.only(
+                          top: 15,
+                        ),
+                        child: Container(
+                          width: double.infinity,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.zero,
+                              topRight: Radius.zero,
+                              bottomLeft: Radius.circular(15),
+                              bottomRight: Radius.circular(15),
+                            ),
+                            child: ElevatedButton(
+                              onPressed: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => element['fields']
+                                              ['sessionType']
+                                          .startsWith('Practice')
+                                      ? FreePracticeScreen(
+                                          element['fields'][
+                                                  'raceResults${element["fields"]["sessionType"]}']
+                                              ['description'],
+                                          int.parse(
+                                            element['fields'][
+                                                        'raceResults${element["fields"]["sessionType"]}']
+                                                    ['session']
+                                                .substring(1),
+                                          ),
+                                          '',
+                                          int.parse(
+                                            element['fields']['season'],
+                                          ),
+                                          element['fields']
+                                              ['meetingOfficialName'],
+                                          raceUrl: element['fields']['cta'],
+                                        )
+                                      : Scaffold(
+                                          appBar: AppBar(
+                                            title: Text(element['fields']
+                                                ['sessionType']),
+                                          ),
+                                          backgroundColor:
+                                              Theme.of(context).backgroundColor,
+                                          body: element['fields']
+                                                      ['sessionType'] ==
+                                                  'Race'
+                                              ? RaceResultsProvider(
+                                                  raceUrl: element['fields']
+                                                      ['cta'],
+                                                )
+                                              : SingleChildScrollView(
+                                                  child:
+                                                      QualificationResultsProvider(
+                                                    raceUrl: element['fields']
+                                                        ['cta'],
+                                                  ),
+                                                ),
+                                        ),
+                                ),
+                              ),
+                              child: Text(
+                                'View results',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                shape: ContinuousRectangleBorder(
+                                  borderRadius: BorderRadius.zero,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
           );
         } else {

@@ -58,7 +58,6 @@ class DriverResult {
   final String code;
   final String team;
   final String time;
-
   final bool isFastest;
   final String fastestLapTime;
   final String fastestLap;

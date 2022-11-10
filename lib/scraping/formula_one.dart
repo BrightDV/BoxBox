@@ -19,55 +19,65 @@
 
 import 'dart:convert';
 
+import 'package:boxbox/api/driver_components.dart';
 import 'package:boxbox/helpers/convert_ergast_and_formula_one.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' as parser;
 import 'package:html/dom.dart' as dom;
 
 class FormulaOneScraper {
-  Future<List<ScraperRaceResult>> scrapeResults(
+  Future<List<DriverResult>> scrapeRaceResult(
     String originalCircuitId,
     int practiceSession,
     String sessionName,
     bool fromErgast, {
     String? originalCircuitName,
+    String? raceUrl,
   }) async {
-    String circuitId;
-    String circuitName;
-
-    if (fromErgast) {
-      circuitId =
-          Converter().circuitIdFromErgastToFormulaOne(originalCircuitId);
-      circuitName =
-          Converter().circuitNameFromErgastToFormulaOne(originalCircuitId);
+    late Uri resultsUrl;
+    if (raceUrl != null) {
+      resultsUrl = Uri.parse(raceUrl);
     } else {
-      circuitId = originalCircuitId;
-      circuitName = originalCircuitName!;
+      String circuitId;
+      String circuitName;
+
+      if (fromErgast) {
+        circuitId =
+            Converter().circuitIdFromErgastToFormulaOne(originalCircuitId);
+        circuitName =
+            Converter().circuitNameFromErgastToFormulaOne(originalCircuitId);
+      } else {
+        circuitId = originalCircuitId;
+        circuitName = originalCircuitName!;
+      }
+
+      resultsUrl = Uri.parse(
+          'https://www.formula1.com/en/results.html/2022/races/$circuitId/$circuitName/$sessionName.html');
     }
-
-    final Uri resultsUrl = Uri.parse(
-        'https://www.formula1.com/en/results.html/2022/races/$circuitId/$circuitName/$sessionName.html');
-
     http.Response response = await http.get(resultsUrl);
     dom.Document document = parser.parse(response.body);
-    List<ScraperRaceResult> results = [];
+    List<DriverResult> results = [];
     List<dom.Element> _tempResults = document.getElementsByTagName('tr');
     _tempResults.removeAt(0);
     _tempResults.forEach(
       (result) {
         results.add(
-          ScraperRaceResult(
+          DriverResult(
+            'driverId',
             result.children[1].text,
             result.children[2].text,
-            [
-              result.children[3].children[0].text,
-              result.children[3].children[1].text,
-              result.children[3].children[2].text,
-            ],
-            result.children[4].text,
-            result.children[5].text,
+            result.children[3].children[0].text,
+            result.children[3].children[1].text,
+            result.children[3].children[2].text,
+            Converter().teamsFromFormulaOneToErgast(
+              result.children[4].text,
+            ),
             result.children[6].text,
-            result.children[7].text,
+            false,
+            '2:00.000',
+            '2:00.000',
+            lapsDone: result.children[5].text,
+            points: result.children[7].text,
           ),
         );
       },
@@ -75,50 +85,109 @@ class FormulaOneScraper {
     return results;
   }
 
-  Future<List<ScraperQualifyingResult>> scrapeQualifyingResults(
+  Future<List<DriverQualificationResult>> scrapeQualifyingResults(
     String originalCircuitId,
     int practiceSession,
     String sessionName,
     bool fromErgast, {
     String? originalCircuitName,
+    String? qualifyingResultsUrl,
   }) async {
-    String circuitId;
-    String circuitName;
+    late String circuitId;
+    late String circuitName;
 
     if (fromErgast) {
       circuitId =
           Converter().circuitIdFromErgastToFormulaOne(originalCircuitId);
       circuitName =
           Converter().circuitNameFromErgastToFormulaOne(originalCircuitId);
-    } else {
+    } else if (qualifyingResultsUrl == null) {
       circuitId = originalCircuitId;
       circuitName = originalCircuitName!;
     }
-
-    final Uri resultsUrl = Uri.parse(
-        'https://www.formula1.com/en/results.html/2022/races/$circuitId/$circuitName/$sessionName.html');
+    final Uri resultsUrl = Uri.parse(qualifyingResultsUrl != null
+        ? qualifyingResultsUrl
+        : 'https://www.formula1.com/en/results.html/2022/races/$circuitId/$circuitName/$sessionName.html');
 
     http.Response response = await http.get(resultsUrl);
     dom.Document document = parser.parse(response.body);
     List<dom.Element> _tempResults = document.getElementsByTagName('tr');
-    List<ScraperQualifyingResult> results = [];
+    List<DriverQualificationResult> results = [];
     _tempResults.removeAt(0);
     _tempResults.forEach(
       (result) {
         results.add(
-          ScraperQualifyingResult(
+          DriverQualificationResult(
+            'driverId',
             result.children[1].text,
             result.children[2].text,
-            [
-              result.children[3].children[0].text,
-              result.children[3].children[1].text,
-              result.children[3].children[2].text,
-            ],
-            result.children[4].text,
+            result.children[3].children[0].text,
+            result.children[3].children[1].text,
+            result.children[3].children[2].text,
+            Converter().teamsFromFormulaOneToErgast(
+              result.children[4].text,
+            ),
+            result.children[5].text != '' ? result.children[5].text : '--',
+            result.children[6].text != '' ? result.children[6].text : '--',
+            result.children[7].text != '' ? result.children[7].text : '--',
+          ),
+        );
+      },
+    );
+    return results;
+  }
+
+  Future<List<DriverResult>> scrapeFreePracticeResult(
+    String originalCircuitId,
+    int practiceSession,
+    String sessionName,
+    bool fromErgast, {
+    String? originalCircuitName,
+    String? raceUrl,
+  }) async {
+    late Uri resultsUrl;
+    if (raceUrl != null) {
+      resultsUrl = Uri.parse(raceUrl);
+    } else {
+      String circuitId;
+      String circuitName;
+
+      if (fromErgast) {
+        circuitId =
+            Converter().circuitIdFromErgastToFormulaOne(originalCircuitId);
+        circuitName =
+            Converter().circuitNameFromErgastToFormulaOne(originalCircuitId);
+      } else {
+        circuitId = originalCircuitId;
+        circuitName = originalCircuitName!;
+      }
+
+      resultsUrl = Uri.parse(
+          'https://www.formula1.com/en/results.html/2022/races/$circuitId/$circuitName/$sessionName.html');
+    }
+    http.Response response = await http.get(resultsUrl);
+    dom.Document document = parser.parse(response.body);
+    List<DriverResult> results = [];
+    List<dom.Element> _tempResults = document.getElementsByTagName('tr');
+    _tempResults.removeAt(0);
+    _tempResults.forEach(
+      (result) {
+        results.add(
+          DriverResult(
+            'driverId',
+            result.children[1].text,
+            result.children[2].text,
+            result.children[3].children[0].text,
+            result.children[3].children[1].text,
+            result.children[3].children[2].text,
+            Converter().teamsFromFormulaOneToErgast(
+              result.children[4].text,
+            ),
             result.children[5].text,
+            false,
             result.children[6].text,
-            result.children[7].text,
-            result.children[8].text,
+            result.children[6].text,
+            lapsDone: result.children[7].text,
           ),
         );
       },

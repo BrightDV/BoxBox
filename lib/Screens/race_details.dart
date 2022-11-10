@@ -118,10 +118,10 @@ class _RaceDetailsScreenState extends State<RaceDetailsScreen> {
               FreePracticesResultsProvider(race),
               SingleChildScrollView(
                 child: QualificationResultsProvider(
-                  race,
+                  race: race,
                 ),
               ),
-              RaceResultsProvider(race),
+              RaceResultsProvider(race: race),
             ],
           ),
         ),
@@ -202,7 +202,11 @@ class FreePracticesResultsProvider extends StatelessWidget {
                         builder: (context) => FreePracticeScreen(
                           sessionsTitle[index],
                           index + 1,
-                          race,
+                          race.circuitId,
+                          int.parse(
+                            race.date.split('-')[2],
+                          ),
+                          race.raceName,
                         ),
                       ),
                     ),
@@ -214,39 +218,63 @@ class FreePracticesResultsProvider extends StatelessWidget {
 }
 
 class RaceResultsProvider extends StatefulWidget {
-  final Race race;
-  RaceResultsProvider(this.race);
+  final Race? race;
+  final String? raceUrl;
+  RaceResultsProvider({this.race, this.raceUrl});
   _RaceResultsProviderState createState() => _RaceResultsProviderState();
 }
 
 class _RaceResultsProviderState extends State<RaceResultsProvider> {
-  Future<List<DriverResult>> getRaceStandings(String round) async {
+  Future<List<DriverResult>> getRaceStandingsFromErgast(String round) async {
     return await ErgastApi().getRaceStandings(round);
+  }
+
+  Future<List<DriverResult>> getRaceStandingsFromF1(String raceUrl) async {
+    return await FormulaOneScraper().scrapeRaceResult(
+      '',
+      0,
+      '',
+      false,
+      raceUrl: raceUrl,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    final Race race = widget.race;
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
-    Map savedData =
-        Hive.box('requests').get('race-${race.round}', defaultValue: {}) as Map;
-    String raceFullDate = "${race.date} ${race.raceHour}";
-    DateTime raceFullDateParsed = DateTime.parse(raceFullDate);
-    int timeBetween(DateTime from, DateTime to) {
-      return to.difference(from).inSeconds;
+    late Map savedData;
+    late Race race;
+    late int timeToRace;
+    late int days;
+    late int hours;
+    late int minutes;
+    late int seconds;
+    String raceUrl = '';
+    if (widget.raceUrl != null) {
+      timeToRace = -1;
+      raceUrl = widget.raceUrl!;
+    } else {
+      race = widget.race!;
+      savedData = Hive.box('requests')
+          .get('race-${race.round}', defaultValue: {}) as Map;
+      //raceUrl = "https://ergast.com/api/f1/current/${race.round}/results.json'";
+      String raceFullDate = "${race.date} ${race.raceHour}";
+      DateTime raceFullDateParsed = DateTime.parse(raceFullDate);
+      int timeBetween(DateTime from, DateTime to) {
+        return to.difference(from).inSeconds;
+      }
+
+      timeToRace = timeBetween(
+        DateTime.now(),
+        raceFullDateParsed,
+      );
+      days = (timeToRace / 60 / 60 / 24).round();
+      hours = (timeToRace / 60 / 60 - days * 24 - 1).round();
+      minutes = (timeToRace / 60 - days * 24 * 60 - hours * 60 + 60).round();
+      seconds =
+          (timeToRace - days * 24 * 60 * 60 - hours * 60 * 60 - minutes * 60);
     }
-
-    int timeToRace = timeBetween(
-      DateTime.now(),
-      raceFullDateParsed,
-    );
-    int days = (timeToRace / 60 / 60 / 24).round();
-    int hours = (timeToRace / 60 / 60 - days * 24 - 1).round();
-    int minutes = (timeToRace / 60 - days * 24 * 60 - hours * 60 + 60).round();
-    int seconds =
-        (timeToRace - days * 24 * 60 * 60 - hours * 60 * 60 - minutes * 60);
-
     if (timeToRace > 0) {
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -299,35 +327,12 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
         ],
       );
     } else {
-      return FutureBuilder<List<DriverResult>>(
-        future: getRaceStandings(race.round),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return savedData['MRData'] != null
-                ? SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        ListTile(
-                          leading: FaIcon(
-                            FontAwesomeIcons.youtube,
-                            color: useDarkMode ? Colors.white : Colors.black,
-                          ),
-                          title: Text(
-                            AppLocalizations.of(context)!.unavailableOffline,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: useDarkMode ? Colors.white : Colors.black,
-                            ),
-                          ),
-                          onTap: () async {},
-                        ),
-                        RaceDriversResultsList(
-                          ErgastApi().formatRaceStandings(savedData),
-                        ),
-                      ],
-                    ),
-                  )
-                : Padding(
+      return raceUrl != ''
+          ? FutureBuilder<List<DriverResult>>(
+              future: getRaceStandingsFromF1(raceUrl),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return Padding(
                     padding: EdgeInsets.all(10),
                     child: Center(
                       child: Text(
@@ -339,92 +344,200 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
                       ),
                     ),
                   );
-          }
-
-          return snapshot.hasData
-              ? SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      ListTile(
-                        leading: FaIcon(
-                          FontAwesomeIcons.youtube,
-                          color: Colors.white,
-                        ),
-                        title: Text(
-                          AppLocalizations.of(context)!.watchOnYoutube,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: Colors.white,
-                          ),
-                        ),
-                        onTap: () async {
-                          var yt = YoutubeExplode();
-                          final raceYear = race.date.split('-')[0];
-                          final List<Video> searchResults =
-                              await yt.search.search(
-                            "Formula 1 Race Highlights ${race.raceName} $raceYear",
-                          );
-                          final Video bestVideoMatch = searchResults[0];
-                          await launchUrl(
-                            Uri.parse(
-                                "https://youtube.com/watch?v=${bestVideoMatch.id.value}"),
-                            mode: LaunchMode.externalApplication,
-                          );
-                          // video.id.value,
-                        },
-                        tileColor: Color(0xff383840),
-                      ),
-                      RaceDriversResultsList(snapshot.data!),
-                    ],
-                  ),
-                )
-              : savedData['MRData'] != null
-                  ? SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          ListTile(
-                            leading: FaIcon(
-                              FontAwesomeIcons.youtube,
-                              color: useDarkMode ? Colors.white : Colors.black,
+                }
+                return snapshot.hasData
+                    ? SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            ListTile(
+                              leading: FaIcon(
+                                FontAwesomeIcons.youtube,
+                                color: Colors.white,
+                              ),
+                              title: Text(
+                                AppLocalizations.of(context)!.watchOnYoutube,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ),
+                              onTap: () async {
+                                var yt = YoutubeExplode();
+                                final raceYear = widget.raceUrl != null
+                                    ? DateTime.now()
+                                    : race.date.split('-')[0];
+                                final List<Video> searchResults =
+                                    await yt.search.search(
+                                  "Formula 1 Race Highlights ${race.raceName} $raceYear",
+                                );
+                                final Video bestVideoMatch = searchResults[0];
+                                await launchUrl(
+                                  Uri.parse(
+                                      "https://youtube.com/watch?v=${bestVideoMatch.id.value}"),
+                                  mode: LaunchMode.externalApplication,
+                                );
+                              },
+                              tileColor: Color(0xff383840),
                             ),
-                            title: Text(
-                              AppLocalizations.of(context)!.unavailableOffline,
+                            RaceDriversResultsList(snapshot.data!),
+                          ],
+                        ),
+                      )
+                    : LoadingIndicatorUtil();
+              })
+          : FutureBuilder<List<DriverResult>>(
+              future: getRaceStandingsFromErgast(race.round),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return savedData['MRData'] != null
+                      ? SingleChildScrollView(
+                          child: Column(
+                            children: [
+                              ListTile(
+                                leading: FaIcon(
+                                  FontAwesomeIcons.youtube,
+                                  color:
+                                      useDarkMode ? Colors.white : Colors.black,
+                                ),
+                                title: Text(
+                                  AppLocalizations.of(context)!
+                                      .unavailableOffline,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: useDarkMode
+                                        ? Colors.white
+                                        : Colors.black,
+                                  ),
+                                ),
+                                onTap: () async {},
+                              ),
+                              RaceDriversResultsList(
+                                ErgastApi().formatRaceStandings(savedData),
+                              ),
+                            ],
+                          ),
+                        )
+                      : Padding(
+                          padding: EdgeInsets.all(10),
+                          child: Center(
+                            child: Text(
+                              AppLocalizations.of(context)!.dataNotAvailable,
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 color:
                                     useDarkMode ? Colors.white : Colors.black,
                               ),
                             ),
-                            onTap: () async {},
                           ),
-                          RaceDriversResultsList(
-                            ErgastApi().formatRaceStandings(savedData),
-                          ),
-                        ],
-                      ),
-                    )
-                  : LoadingIndicatorUtil();
-        },
-      );
+                        );
+                }
+
+                return snapshot.hasData
+                    ? SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            ListTile(
+                              leading: FaIcon(
+                                FontAwesomeIcons.youtube,
+                                color: Colors.white,
+                              ),
+                              title: Text(
+                                AppLocalizations.of(context)!.watchOnYoutube,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ),
+                              onTap: () async {
+                                var yt = YoutubeExplode();
+                                final raceYear = widget.raceUrl != null
+                                    ? DateTime.now()
+                                    : race.date.split('-')[0];
+                                final List<Video> searchResults =
+                                    await yt.search.search(
+                                  "Formula 1 Race Highlights ${race.raceName} $raceYear",
+                                );
+                                final Video bestVideoMatch = searchResults[0];
+                                await launchUrl(
+                                  Uri.parse(
+                                      "https://youtube.com/watch?v=${bestVideoMatch.id.value}"),
+                                  mode: LaunchMode.externalApplication,
+                                );
+                              },
+                              tileColor: Color(0xff383840),
+                            ),
+                            RaceDriversResultsList(snapshot.data!),
+                          ],
+                        ),
+                      )
+                    : savedData['MRData'] != null
+                        ? SingleChildScrollView(
+                            child: Column(
+                              children: [
+                                ListTile(
+                                  leading: FaIcon(
+                                    FontAwesomeIcons.youtube,
+                                    color: useDarkMode
+                                        ? Colors.white
+                                        : Colors.black,
+                                  ),
+                                  title: Text(
+                                    AppLocalizations.of(context)!
+                                        .unavailableOffline,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: useDarkMode
+                                          ? Colors.white
+                                          : Colors.black,
+                                    ),
+                                  ),
+                                  onTap: () async {},
+                                ),
+                                RaceDriversResultsList(
+                                  ErgastApi().formatRaceStandings(savedData),
+                                ),
+                              ],
+                            ),
+                          )
+                        : LoadingIndicatorUtil();
+              },
+            );
     }
   }
 }
 
 class QualificationResultsProvider extends StatelessWidget {
   Future<List<DriverQualificationResult>> getQualificationStandings(
-      String round) async {
-    return await ErgastApi().getQualificationStandings(round);
+      String round,
+      {String? raceUrl}) async {
+    return await ErgastApi().getQualificationStandings(
+      round,
+      raceUrl,
+    );
   }
 
-  final Race race;
-  QualificationResultsProvider(this.race);
+  final Race? race;
+  final String? raceUrl;
+  QualificationResultsProvider({
+    this.race,
+    this.raceUrl,
+  });
   @override
   Widget build(BuildContext context) {
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
-
     return FutureBuilder<List<DriverQualificationResult>>(
-      future: getQualificationStandings(this.race.round),
+      future: raceUrl != null
+          ? FormulaOneScraper().scrapeQualifyingResults(
+              '',
+              0,
+              '',
+              false,
+              qualifyingResultsUrl: this.raceUrl!,
+            )
+          : getQualificationStandings(
+              this.race!.round,
+            ),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return Padding(
@@ -459,10 +572,10 @@ class QualificationResultsProvider extends StatelessWidget {
                       ),
                       onTap: () async {
                         var yt = YoutubeExplode();
-                        final raceYear = race.date.split('-')[0];
+                        final raceYear = race!.date.split('-')[0];
                         final List<Video> searchResults =
                             await yt.search.search(
-                          "Formula 1 Qualification Highlights ${race.raceName} $raceYear",
+                          "Formula 1 Qualification Highlights ${race!.raceName} $raceYear",
                         );
                         final Video bestVideoMatch = searchResults[0];
                         await launchUrl(
@@ -470,7 +583,6 @@ class QualificationResultsProvider extends StatelessWidget {
                               "https://youtube.com/watch?v=${bestVideoMatch.id.value}"),
                           mode: LaunchMode.externalApplication,
                         );
-                        // video.id.value,
                       },
                       tileColor: Color(0xff383840),
                     ),

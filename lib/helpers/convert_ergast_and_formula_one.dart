@@ -44,7 +44,7 @@ class Converter {
     return formulaOneToErgast[driverCode];
   }
 
-  String teamsFromFormulaOneToErgast(String carCode) {
+  String teamsFromFormulaOneToErgast(String teamName) {
     Map formulaOneToErgast = {
       'Red Bull Racing RBPT': 'red_bull',
       'Ferrari': 'ferrari',
@@ -57,7 +57,7 @@ class Converter {
       'Alfa Romeo Ferrari': 'alfa',
       'Haas Ferrari': 'haas',
     };
-    return formulaOneToErgast[carCode];
+    return formulaOneToErgast[teamName];
   }
 
   // The following function has to be updated every year

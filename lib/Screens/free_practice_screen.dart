@@ -17,8 +17,7 @@
  * Copyright (c) 2022, BrightDV
  */
 
-import 'package:boxbox/api/race_components.dart';
-import 'package:boxbox/helpers/convert_ergast_and_formula_one.dart';
+import 'package:boxbox/api/driver_components.dart';
 import 'package:boxbox/helpers/request_error.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/team_background_color.dart';
@@ -33,12 +32,19 @@ import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 class FreePracticeScreen extends StatelessWidget {
   final String sessionTitle;
   final int sessionIndex;
-  final Race race;
+  final String circuitId;
+  final int raceYear;
+  final String raceName;
+  final String? raceUrl;
+
   const FreePracticeScreen(
     this.sessionTitle,
     this.sessionIndex,
-    this.race,
-  );
+    this.circuitId,
+    this.raceYear,
+    this.raceName, {
+    this.raceUrl,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -50,13 +56,21 @@ class FreePracticeScreen extends StatelessWidget {
       ),
       backgroundColor:
           useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
-      body: FutureBuilder<List<ScraperRaceResult>>(
-        future: FormulaOneScraper().scrapeResults(
-          race.circuitId,
-          sessionIndex,
-          'practice-$sessionIndex',
-          true,
-        ),
+      body: FutureBuilder<List<DriverResult>>(
+        future: raceUrl != null
+            ? FormulaOneScraper().scrapeFreePracticeResult(
+                '',
+                0,
+                '',
+                false,
+                raceUrl: raceUrl,
+              )
+            : FormulaOneScraper().scrapeFreePracticeResult(
+                circuitId,
+                sessionIndex,
+                'practice-$sessionIndex',
+                true,
+              ),
         builder: (context, snapshot) => snapshot.hasError
             ? snapshot.error.toString() == 'RangeError: Value not in range: 0'
                 ? Center(
@@ -74,26 +88,31 @@ class FreePracticeScreen extends StatelessWidget {
                 : RequestErrorWidget(
                     snapshot.error.toString(),
                   )
-            : snapshot.hasData
-                ? FreePracticeResultsList(
-                    snapshot.data!,
-                    race,
-                    sessionIndex,
-                  )
-                : LoadingIndicatorUtil(),
+            : snapshot.hasError
+                ? RequestErrorWidget(snapshot.error.toString())
+                : snapshot.hasData
+                    ? FreePracticeResultsList(
+                        snapshot.data!,
+                        raceYear,
+                        raceName,
+                        sessionIndex,
+                      )
+                    : LoadingIndicatorUtil(),
       ),
     );
   }
 }
 
 class FreePracticeResultsList extends StatelessWidget {
-  final List<ScraperRaceResult> results;
-  final Race race;
+  final List<DriverResult> results;
+  final int raceYear;
+  final String raceName;
   final int sessionIndex;
 
   const FreePracticeResultsList(
     this.results,
-    this.race,
+    this.raceYear,
+    this.raceName,
     this.sessionIndex,
   );
 
@@ -116,9 +135,8 @@ class FreePracticeResultsList extends StatelessWidget {
               ),
               onTap: () async {
                 var yt = YoutubeExplode();
-                final raceYear = race.date.split('-')[0];
                 final List<Video> searchResults = await yt.search.search(
-                  "Formula 1 Free Practice $sessionIndex ${race.raceName} $raceYear",
+                  "Formula 1 Free Practice $sessionIndex $raceName $raceYear",
                 );
                 final Video bestVideoMatch = searchResults[0];
                 await launchUrl(
@@ -126,7 +144,6 @@ class FreePracticeResultsList extends StatelessWidget {
                       "https://youtube.com/watch?v=${bestVideoMatch.id.value}"),
                   mode: LaunchMode.externalApplication,
                 );
-                // video.id.value,
               },
               tileColor: Color(0xff383840),
             )
@@ -204,7 +221,7 @@ class FreePracticeResultsList extends StatelessWidget {
 }
 
 class FreePracticeResultItem extends StatelessWidget {
-  final ScraperRaceResult result;
+  final DriverResult result;
   final int index;
 
   const FreePracticeResultItem(
@@ -236,7 +253,7 @@ class FreePracticeResultItem extends StatelessWidget {
               flex: 2,
               child: VerticalDivider(
                 color: TeamBackgroundColor().getTeamColors(
-                  Converter().teamsFromFormulaOneToErgast(this.result.car),
+                  result.team,
                 ),
                 thickness: 8,
                 width: 25,
@@ -247,7 +264,7 @@ class FreePracticeResultItem extends StatelessWidget {
             Expanded(
               flex: 3,
               child: Text(
-                result.driver[2],
+                result.code,
                 style: TextStyle(
                   color: Colors.white,
                 ),
@@ -289,7 +306,7 @@ class FreePracticeResultItem extends StatelessWidget {
                   child: Padding(
                     padding: EdgeInsets.only(top: 5, bottom: 5),
                     child: Text(
-                      result.gap == '' ? '--' : result.gap,
+                      result.fastestLap == '' ? '--' : result.fastestLap,
                       style: TextStyle(
                         color: Colors.white,
                       ),
@@ -311,7 +328,7 @@ class FreePracticeResultItem extends StatelessWidget {
                   child: Padding(
                     padding: EdgeInsets.only(top: 5, bottom: 5),
                     child: Text(
-                      result.laps,
+                      result.lapsDone!,
                       style: TextStyle(
                         color: Colors.white,
                       ),

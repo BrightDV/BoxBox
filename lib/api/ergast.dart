@@ -88,7 +88,7 @@ class _ErgastApiCalls {
   }
 
   FutureOr<List<DriverQualificationResult>> getQualificationStandings(
-      String round) async {
+      String round, String? raceUrl) async {
     List<DriverQualificationResult> driversResults = [];
     var url =
         Uri.parse('https://ergast.com/api/f1/current/$round/qualifying.json');
@@ -260,8 +260,11 @@ class ErgastApi {
   }
 
   FutureOr<List<DriverQualificationResult>> getQualificationStandings(
-      String round) async {
-    var data = await _ErgastApiCalls().getQualificationStandings(round);
+      String round, String? raceUrl) async {
+    var data = await _ErgastApiCalls().getQualificationStandings(
+      round,
+      raceUrl,
+    );
     return data;
   }
 
