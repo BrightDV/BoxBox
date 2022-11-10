@@ -1035,7 +1035,19 @@ class JoinArticlesParts extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      element['fields']['sessionType'],
+                      element['fields']['sessionType'] == 'Race'
+                          ? AppLocalizations.of(context)!.race
+                          : element['fields']['sessionType'] == 'Qualifying'
+                              ? AppLocalizations.of(context)!.qualifyings
+                              : element['fields']['sessionType'].endsWith('1')
+                                  ? AppLocalizations.of(context)!
+                                      .freePracticeOne
+                                  : element['fields']['sessionType']
+                                          .endsWith('2')
+                                      ? AppLocalizations.of(context)!
+                                          .freePracticeTwo
+                                      : AppLocalizations.of(context)!
+                                          .freePracticeThree,
                       style: TextStyle(
                         color: useDarkMode ? Colors.white : Colors.black,
                         fontSize: 14,
@@ -1255,8 +1267,21 @@ class JoinArticlesParts extends StatelessWidget {
                                           .startsWith('Practice')
                                       ? FreePracticeScreen(
                                           element['fields'][
-                                                  'raceResults${element["fields"]["sessionType"]}']
-                                              ['description'],
+                                                          'raceResults${element["fields"]["sessionType"]}']
+                                                      ['description']
+                                                  .endsWith('1')
+                                              ? AppLocalizations.of(context)!
+                                                  .freePracticeOne
+                                              : element['fields'][
+                                                              'raceResults${element["fields"]["sessionType"]}']
+                                                          ['description']
+                                                      .endsWith('2')
+                                                  ? AppLocalizations.of(
+                                                          context)!
+                                                      .freePracticeTwo
+                                                  : AppLocalizations.of(
+                                                          context)!
+                                                      .freePracticeThree,
                                           int.parse(
                                             element['fields'][
                                                         'raceResults${element["fields"]["sessionType"]}']
@@ -1274,7 +1299,12 @@ class JoinArticlesParts extends StatelessWidget {
                                       : Scaffold(
                                           appBar: AppBar(
                                             title: Text(element['fields']
-                                                ['sessionType']),
+                                                        ['sessionType'] ==
+                                                    'Race'
+                                                ? AppLocalizations.of(context)!
+                                                    .race
+                                                : AppLocalizations.of(context)!
+                                                    .qualifyings),
                                           ),
                                           backgroundColor:
                                               Theme.of(context).backgroundColor,
@@ -1296,7 +1326,7 @@ class JoinArticlesParts extends StatelessWidget {
                                 ),
                               ),
                               child: Text(
-                                'View results',
+                                AppLocalizations.of(context)!.viewResults,
                                 style: TextStyle(
                                   color: Colors.white,
                                 ),
