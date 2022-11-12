@@ -15,6 +15,7 @@
 [<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
      alt="Get it on F-Droid"
      height="80">](https://f-droid.org/packages/org.brightdv.boxbox/)
+
 [<img src="https://img.shields.io/badge/GitHub-181717?logo=github&logoColor=white"
      alt="Download from GitHub"
      height="60">](https://github.com/BrightDV/BoxBox/releases/latest)
@@ -41,9 +42,9 @@
 
 *You need to have Internet connection in order to refresh the data.
 
-See the live demo [here (outdated).](https://brightdv.github.io)
+See the live demo [here (outdated). It is broken because of the CORS.](https://brightdv.github.io)
 
-## Services
+## Services used
 | Screen  | Service          | Base URL |
 | :---------------: |:---------------:| :---------------:|
 | Home News  | Formula 1 API |  https://api.formula1.com |
@@ -61,6 +62,7 @@ Theses files are used by Flutter to provide you the translation.
 
 Currently, the app is available in:
 
+- 🇪🇸 Spanish
 - 🇫🇷 French
 - 🇬🇧 English
 - 🇹🇷 Turkish
@@ -76,7 +78,7 @@ published by the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 ```
 
-## Note
-I'm doing this app in my spare time, so I will appreciate feedbacks and PRs. (I can't do everyting ;).
+## Notes
+I'm doing this app in my free time, so I will appreciate feedbacks and PRs are welcome!
 
 Box, Box! is unofficial software and in no way associated with the Formula 1 group of companies.

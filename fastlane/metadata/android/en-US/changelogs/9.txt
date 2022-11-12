@@ -1,0 +1,7 @@
+- Support results in articles.
+- Fixed bugs in the Event Tracker.
+- Unified settings page.
+- Data-saver mode (low-res images and videos).
+- Long-press on article for quick actions.
+- Some other bugfixes and improvements
+- Spanish translation thanks to @inigochoa!
