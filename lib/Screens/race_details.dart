@@ -258,7 +258,6 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
       race = widget.race!;
       savedData = Hive.box('requests')
           .get('race-${race.round}', defaultValue: {}) as Map;
-      //raceUrl = "https://ergast.com/api/f1/current/${race.round}/results.json'";
       String raceFullDate = "${race.date} ${race.raceHour}";
       DateTime raceFullDateParsed = DateTime.parse(raceFullDate);
       int timeBetween(DateTime from, DateTime to) {

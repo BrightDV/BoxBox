@@ -59,12 +59,14 @@ class Session {
   final String sessionsAbbreviation;
   final DateTime endTime;
   final DateTime startTime;
+  final String baseUrl;
 
   const Session(
     this.state,
     this.sessionsAbbreviation,
     this.endTime,
     this.startTime,
+    this.baseUrl,
   );
 }
 
@@ -120,6 +122,8 @@ class EventTracker {
       meetingStartDate,
       meetingEndDate,
     );
+    String baseUrl =
+        'https://www.formula1.com/en/results.html/${DateTime.now().year}/races/${eventAsJson['fomRaceId']}/${eventAsJson['circuitSmallImage']['title'].toLowerCase().replaceAll('.png', '')}/session-type.html';
     List<Session> sessions = [
       Session(
         eventAsJson['seasonContext']['timetables'][0]['state'],
@@ -131,6 +135,7 @@ class EventTracker {
           eventAsJson['seasonContext']['timetables'][0]['startTime'] +
               gmtOffset,
         ).toLocal(),
+        baseUrl,
       ),
       Session(
         eventAsJson['seasonContext']['timetables'][1]['state'],
@@ -142,6 +147,7 @@ class EventTracker {
           eventAsJson['seasonContext']['timetables'][1]['startTime'] +
               gmtOffset,
         ).toLocal(),
+        baseUrl,
       ),
       Session(
         eventAsJson['seasonContext']['timetables'][2]['state'],
@@ -153,6 +159,7 @@ class EventTracker {
           eventAsJson['seasonContext']['timetables'][2]['startTime'] +
               gmtOffset,
         ).toLocal(),
+        baseUrl,
       ),
       Session(
         eventAsJson['seasonContext']['timetables'][3]['state'],
@@ -164,6 +171,7 @@ class EventTracker {
           eventAsJson['seasonContext']['timetables'][3]['startTime'] +
               gmtOffset,
         ).toLocal(),
+        baseUrl,
       ),
       Session(
         eventAsJson['seasonContext']['timetables'][4]['state'],
@@ -175,6 +183,7 @@ class EventTracker {
           eventAsJson['seasonContext']['timetables'][4]['startTime'] +
               gmtOffset,
         ).toLocal(),
+        baseUrl,
       ),
     ];
     sessions.sort(

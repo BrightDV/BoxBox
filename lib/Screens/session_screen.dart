@@ -19,6 +19,8 @@
 
 import 'dart:async';
 
+import 'package:boxbox/Screens/free_practice_screen.dart';
+import 'package:boxbox/Screens/race_details.dart';
 import 'package:boxbox/api/driver_components.dart';
 import 'package:boxbox/api/event_tracker.dart';
 import 'package:boxbox/api/livetiming.dart';
@@ -60,85 +62,106 @@ class _SessionScreenState extends State<SessionScreen> {
     int minutes = (timeToRace / 60 - days * 24 * 60 - hours * 60 + 60).round();
     int seconds =
         (timeToRace - days * 24 * 60 * 60 - hours * 60 * 60 - minutes * 60);
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          widget.sessionFullName,
-          style: TextStyle(
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      ),
-      backgroundColor:
-          useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
-      body: widget.session.state == 'upcoming'
-          ? Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: EdgeInsets.all(10),
-                  child: Center(
-                    child: Text(
-                      AppLocalizations.of(context)!.sessionStartsIn,
-                      style: TextStyle(
-                        fontSize: 20,
-                        color: useDarkMode ? Colors.white : Colors.black,
+    return widget.session.sessionsAbbreviation.startsWith('p')
+        ? FreePracticeScreen(
+            widget.sessionFullName,
+            int.parse(
+              widget.session.sessionsAbbreviation.substring(1),
+            ),
+            '',
+            0,
+            '',
+            raceUrl: widget.session.baseUrl.replaceAll(
+              'session-type',
+              'practice-${widget.session.sessionsAbbreviation.substring(1)}',
+            ),
+          )
+        : Scaffold(
+            appBar: AppBar(
+              title: Text(
+                widget.sessionFullName,
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+            backgroundColor:
+                useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
+            body: widget.session.state == 'upcoming' ||
+                    widget.session.startTime.isAfter(DateTime.now())
+                ? Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.all(10),
+                        child: Center(
+                          child: Text(
+                            AppLocalizations.of(context)!.sessionStartsIn,
+                            style: TextStyle(
+                              fontSize: 20,
+                              color: useDarkMode ? Colors.white : Colors.black,
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                ),
-                TimerCountdown(
-                  format: CountDownTimerFormat.daysHoursMinutesSeconds,
-                  endTime: DateTime.now().add(
-                    Duration(
-                      days: days,
-                      hours: hours,
-                      minutes: minutes,
-                      seconds: seconds,
-                    ),
-                  ),
-                  timeTextStyle: TextStyle(
-                    fontSize: 25,
-                    color: useDarkMode ? Colors.white : Colors.black,
-                  ),
-                  colonsTextStyle: TextStyle(
-                    fontSize: 23,
-                    color: useDarkMode ? Colors.white : Colors.black,
-                  ),
-                  descriptionTextStyle: TextStyle(
-                    color: Theme.of(context).primaryColor,
-                    fontSize: 20,
-                  ),
-                  spacerWidth: 15,
-                  daysDescription: AppLocalizations.of(context)!.dayFirstLetter,
-                  hoursDescription:
-                      AppLocalizations.of(context)!.hourFirstLetter,
-                  minutesDescription:
-                      AppLocalizations.of(context)!.minuteAbbreviation,
-                  secondsDescription:
-                      AppLocalizations.of(context)!.secondAbbreviation,
-                  onEnd: () {
-                    setState(() {});
-                  },
-                ),
-              ],
-            )
-          : widget.session.state == 'completed'
-              ? Center(
-                  child: Text(
-                    AppLocalizations.of(context)!.sessionCompleted,
-                    style: TextStyle(
-                      color: useDarkMode ? Colors.white : Colors.black,
-                    ),
-                  ),
-                )
-              : WebView(
-                  javascriptMode: JavascriptMode.unrestricted,
-                  initialUrl:
-                      'https://www.formula1.com/en/live-experience-webview.html',
-                ),
-    );
+                      TimerCountdown(
+                        format: CountDownTimerFormat.daysHoursMinutesSeconds,
+                        endTime: DateTime.now().add(
+                          Duration(
+                            days: days,
+                            hours: hours,
+                            minutes: minutes,
+                            seconds: seconds,
+                          ),
+                        ),
+                        timeTextStyle: TextStyle(
+                          fontSize: 25,
+                          color: useDarkMode ? Colors.white : Colors.black,
+                        ),
+                        colonsTextStyle: TextStyle(
+                          fontSize: 23,
+                          color: useDarkMode ? Colors.white : Colors.black,
+                        ),
+                        descriptionTextStyle: TextStyle(
+                          color: Theme.of(context).primaryColor,
+                          fontSize: 20,
+                        ),
+                        spacerWidth: 15,
+                        daysDescription:
+                            AppLocalizations.of(context)!.dayFirstLetter,
+                        hoursDescription:
+                            AppLocalizations.of(context)!.hourFirstLetter,
+                        minutesDescription:
+                            AppLocalizations.of(context)!.minuteAbbreviation,
+                        secondsDescription:
+                            AppLocalizations.of(context)!.secondAbbreviation,
+                        onEnd: () {
+                          setState(() {});
+                        },
+                      ),
+                    ],
+                  )
+                : widget.session.state == 'completed'
+                    ? widget.session.sessionsAbbreviation == 'r'
+                        ? RaceResultsProvider(
+                            raceUrl: widget.session.baseUrl
+                                .replaceAll('session-type', 'race-result'),
+                          )
+                        : widget.session.sessionsAbbreviation == 'q'
+                            ? SingleChildScrollView(
+                                child: QualificationResultsProvider(
+                                  raceUrl: widget.session.baseUrl
+                                      .replaceAll('session-type', 'qualifying'),
+                                ),
+                              )
+                            : Text('sprint results')
+                    : WebView(
+                        javascriptMode: JavascriptMode.unrestricted,
+                        initialUrl:
+                            'https://www.formula1.com/en/live-experience-webview.html',
+                      ),
+          );
   }
 }
 
