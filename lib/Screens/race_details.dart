@@ -54,77 +54,147 @@ class _RaceDetailsScreenState extends State<RaceDetailsScreen> {
     final Race race = widget.race;
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
-    return DefaultTabController(
-      length: 3,
-      child: Scaffold(
-        backgroundColor:
-            useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
-        body: NestedScrollView(
-          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-            return <Widget>[
-              SliverAppBar(
-                actions: [
-                  IconButton(
-                    icon: Icon(
-                      Icons.map_outlined,
-                    ),
-                    tooltip: AppLocalizations.of(context)!.grandPrixMap,
-                    onPressed: () {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) => CircuitMapScreen(
-                          race.circuitId,
-                        ),
-                      );
-                    },
-                  ),
-                ],
-                expandedHeight: 200.0,
-                floating: false,
-                pinned: true,
-                centerTitle: true,
-                flexibleSpace: FlexibleSpaceBar(
-                  background: RaceImageProvider(race),
-                  title: Text(
-                    race.country,
-                  ),
+    return Scaffold(
+      backgroundColor:
+          useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
+      body: FutureBuilder<bool>(
+        future: ErgastApi().hasSprintQualifyings(widget.race.round),
+        builder: (context, snapshot) => snapshot.hasData ||
+                snapshot.error.toString() == 'XMLHttpRequest error.' ||
+                snapshot.error.toString() == "Failed host lookup: 'ergast.com'"
+            ? DefaultTabController(
+                length: snapshot.data ?? false ? 4 : 3,
+                child: Builder(
+                  builder: (BuildContext context) {
+                    return NestedScrollView(
+                      headerSliverBuilder:
+                          (BuildContext context, bool innerBoxIsScrolled) {
+                        return <Widget>[
+                          SliverAppBar(
+                            actions: [
+                              IconButton(
+                                icon: Icon(
+                                  Icons.map_outlined,
+                                ),
+                                tooltip:
+                                    AppLocalizations.of(context)!.grandPrixMap,
+                                onPressed: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) =>
+                                        CircuitMapScreen(
+                                      race.circuitId,
+                                    ),
+                                  );
+                                },
+                              ),
+                            ],
+                            expandedHeight: 200.0,
+                            floating: false,
+                            pinned: true,
+                            centerTitle: true,
+                            flexibleSpace: FlexibleSpaceBar(
+                              background: RaceImageProvider(race),
+                              title: Text(
+                                race.country,
+                              ),
+                            ),
+                          ),
+                          SliverPersistentHeader(
+                            delegate: _SliverAppBarDelegate(
+                              TabBar(
+                                tabs: snapshot.data ?? false
+                                    ? <Widget>[
+                                        Tooltip(
+                                          child: Tab(
+                                            icon: Icon(Icons.sports_outlined),
+                                          ),
+                                          message: AppLocalizations.of(context)!
+                                              .freePracticeShort,
+                                        ),
+                                        Tooltip(
+                                          child: Tab(
+                                            icon: Icon(Icons.timer_outlined),
+                                          ),
+                                          message: AppLocalizations.of(context)!
+                                              .qualifyings
+                                              .toUpperCase(),
+                                        ),
+                                        Tooltip(
+                                          child: Tab(
+                                            icon: Icon(
+                                              Icons.bolt_outlined,
+                                            ),
+                                          ),
+                                          message: AppLocalizations.of(context)!
+                                              .sprint
+                                              .toUpperCase(),
+                                        ),
+                                        Tooltip(
+                                          child: Tab(
+                                            icon: Icon(
+                                                FontAwesomeIcons.flagCheckered),
+                                          ),
+                                          message: AppLocalizations.of(context)!
+                                              .race
+                                              .toUpperCase(),
+                                        ),
+                                      ]
+                                    : <Widget>[
+                                        Tab(
+                                          text: AppLocalizations.of(context)!
+                                              .freePracticeShort,
+                                        ),
+                                        Tab(
+                                          text: AppLocalizations.of(context)!
+                                              .qualifyingsShort,
+                                        ),
+                                        Tab(
+                                          text: AppLocalizations.of(context)!
+                                              .race
+                                              .toUpperCase(),
+                                        ),
+                                      ],
+                                labelColor: useDarkMode
+                                    ? Colors.white
+                                    : Theme.of(context).backgroundColor,
+                              ),
+                            ),
+                            pinned: true,
+                          ),
+                        ];
+                      },
+                      body: snapshot.data ?? false
+                          ? TabBarView(
+                              children: [
+                                FreePracticesResultsProvider(race),
+                                SingleChildScrollView(
+                                  child: QualificationResultsProvider(
+                                    race: race,
+                                  ),
+                                ),
+                                SprintResultsProvider(race: race),
+                                RaceResultsProvider(race: race),
+                              ],
+                            )
+                          : TabBarView(
+                              children: [
+                                FreePracticesResultsProvider(race),
+                                SingleChildScrollView(
+                                  child: QualificationResultsProvider(
+                                    race: race,
+                                  ),
+                                ),
+                                RaceResultsProvider(race: race),
+                              ],
+                            ),
+                    );
+                  },
                 ),
-              ),
-              SliverPersistentHeader(
-                delegate: _SliverAppBarDelegate(
-                  TabBar(
-                    tabs: [
-                      Tab(
-                        text: AppLocalizations.of(context)!.freePracticeShort,
-                      ),
-                      Tab(
-                        text: AppLocalizations.of(context)!.qualifyingsShort,
-                      ),
-                      Tab(
-                        text: AppLocalizations.of(context)!.race.toUpperCase(),
-                      ),
-                    ],
-                    labelColor: useDarkMode
-                        ? Colors.white
-                        : Theme.of(context).backgroundColor,
-                  ),
-                ),
-                pinned: true,
-              ),
-            ];
-          },
-          body: TabBarView(
-            children: [
-              FreePracticesResultsProvider(race),
-              SingleChildScrollView(
-                child: QualificationResultsProvider(
-                  race: race,
-                ),
-              ),
-              RaceResultsProvider(race: race),
-            ],
-          ),
-        ),
+              )
+            : snapshot.hasError
+                ? RequestErrorWidget(snapshot.error.toString())
+                : LoadingIndicatorUtil(),
       ),
     );
   }
@@ -505,13 +575,105 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
   }
 }
 
+class SprintResultsProvider extends StatelessWidget {
+  Future<List<DriverResult>> getSprintStandings(
+    String round,
+  ) async {
+    return await ErgastApi().getSprintStandings(
+      round,
+    );
+  }
+
+  final Race? race;
+  final String? raceUrl;
+  SprintResultsProvider({
+    this.race,
+    this.raceUrl,
+  });
+  @override
+  Widget build(BuildContext context) {
+    bool useDarkMode =
+        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
+    return SingleChildScrollView(
+      child: FutureBuilder<List<DriverResult>>(
+        future: raceUrl != null
+            ? FormulaOneScraper().scrapeRaceResult(
+                '',
+                0,
+                '',
+                false,
+                raceUrl: this.raceUrl!,
+              )
+            : getSprintStandings(
+                this.race!.round,
+              ),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Padding(
+              padding: EdgeInsets.all(15),
+              child: Center(
+                child: Text(
+                  AppLocalizations.of(context)!.dataNotAvailable,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: useDarkMode ? Colors.white : Colors.black,
+                    fontSize: 15,
+                  ),
+                ),
+              ),
+            );
+          }
+          return snapshot.hasData
+              ? Column(
+                  children: [
+                    GestureDetector(
+                      child: ListTile(
+                        leading: FaIcon(
+                          FontAwesomeIcons.youtube,
+                          color: Colors.white,
+                        ),
+                        title: Text(
+                          AppLocalizations.of(context)!.watchOnYoutube,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                        onTap: () async {
+                          var yt = YoutubeExplode();
+                          final raceYear = race!.date.split('-')[0];
+                          final List<Video> searchResults =
+                              await yt.search.search(
+                            "Formula 1 Sprint Highlights ${race!.raceName} $raceYear",
+                          );
+                          final Video bestVideoMatch = searchResults[0];
+                          await launchUrl(
+                            Uri.parse(
+                                "https://youtube.com/watch?v=${bestVideoMatch.id.value}"),
+                            mode: LaunchMode.externalApplication,
+                          );
+                        },
+                        tileColor: Color(0xff383840),
+                      ),
+                    ),
+                    RaceDriversResultsList(
+                      snapshot.data!,
+                    ),
+                  ],
+                )
+              : LoadingIndicatorUtil();
+        },
+      ),
+    );
+  }
+}
+
 class QualificationResultsProvider extends StatelessWidget {
   Future<List<DriverQualificationResult>> getQualificationStandings(
-      String round,
-      {String? raceUrl}) async {
+    String round,
+  ) async {
     return await ErgastApi().getQualificationStandings(
       round,
-      raceUrl,
     );
   }
 

@@ -87,8 +87,61 @@ class _ErgastApiCalls {
     return driversResults;
   }
 
+  FutureOr<List<DriverResult>> getSprintStandings(String round) async {
+    var url = Uri.parse('https://ergast.com/api/f1/current/$round/sprint.json');
+    var response = await http.get(url);
+    Map<String, dynamic> responseAsJson = jsonDecode(response.body);
+    List<DriverResult> formatedRaceStandings = [];
+    List jsonResponse =
+        responseAsJson['MRData']['RaceTable']['Races'][0]['SprintResults'];
+    String time;
+    jsonResponse.forEach(
+      (element) {
+        if (element['status'] != 'Finished') {
+          if (element['status'].endsWith('Lap')) {
+            time = element['status'];
+          } else {
+            time = "DNF";
+          }
+        } else {
+          time = element["Time"]["time"];
+        }
+        String fastestLapRank = "1";
+        if (element['FastestLap'] == null) {
+          fastestLapRank = "0";
+        }
+        formatedRaceStandings.add(
+          DriverResult(
+            element['Driver']['driverId'],
+            element['position'],
+            element['Driver']['permanentNumber'],
+            element['Driver']['givenName'],
+            element['Driver']['familyName'],
+            element['Driver']['code'],
+            element['Constructor']['constructorId'],
+            time,
+            fastestLapRank != '0'
+                ? element['FastestLap']['rank'].toString() == '1'
+                    ? true
+                    : false
+                : false,
+            fastestLapRank != '0'
+                ? element['FastestLap']['Time']['time']
+                : fastestLapRank,
+            fastestLapRank != '0'
+                ? element['FastestLap']['lap']
+                : fastestLapRank,
+            lapsDone: element['laps'],
+            points: element['points'],
+          ),
+        );
+      },
+    );
+    return formatedRaceStandings;
+  }
+
   FutureOr<List<DriverQualificationResult>> getQualificationStandings(
-      String round, String? raceUrl) async {
+      String round) async {
     List<DriverQualificationResult> driversResults = [];
     var url =
         Uri.parse('https://ergast.com/api/f1/current/$round/qualifying.json');
@@ -246,6 +299,13 @@ class _ErgastApiCalls {
     Hive.box('requests').put('teamsStandings', responseAsJson);
     return formatLastTeamsStandings(responseAsJson);
   }
+
+  FutureOr<bool> hasSprintQualifyings(round) async {
+    var url = Uri.parse('https://ergast.com/api/f1/current/$round/sprint.json');
+    var response = await http.get(url);
+    Map<String, dynamic> responseAsJson = jsonDecode(response.body);
+    return !responseAsJson['MRData']['RaceTable']['Races'].isEmpty;
+  }
 }
 
 class ErgastApi {
@@ -259,11 +319,17 @@ class ErgastApi {
     return data;
   }
 
+  FutureOr<List<DriverResult>> getSprintStandings(String round) async {
+    var data = await _ErgastApiCalls().getSprintStandings(
+      round,
+    );
+    return data;
+  }
+
   FutureOr<List<DriverQualificationResult>> getQualificationStandings(
-      String round, String? raceUrl) async {
+      String round) async {
     var data = await _ErgastApiCalls().getQualificationStandings(
       round,
-      raceUrl,
     );
     return data;
   }
@@ -276,7 +342,7 @@ class ErgastApi {
   FutureOr<List<Driver>> getLastStandings() async {
     var data = await _ErgastApiCalls().getLastStandings();
     return data;
-  } //formatLastSchedule
+  }
 
   List<Race> formatLastSchedule(Map responseAsJson, bool toCome) {
     var data = _ErgastApiCalls().formatLastSchedule(responseAsJson, toCome);
@@ -296,5 +362,9 @@ class ErgastApi {
   FutureOr<List<Team>> getLastTeamsStandings() async {
     var data = await _ErgastApiCalls().getLastTeamsStandings();
     return data;
+  }
+
+  Future<bool> hasSprintQualifyings(String round) async {
+    return await _ErgastApiCalls().hasSprintQualifyings(round);
   }
 }

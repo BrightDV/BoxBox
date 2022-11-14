@@ -94,7 +94,7 @@ class DriverResultItem extends StatelessWidget {
                     child: Text(
                       item.time,
                       style: TextStyle(
-                        color: item.isFastest || item.time == 'Abandon'
+                        color: item.isFastest || item.time == 'DNF'
                             ? Colors.white
                             : Color(0xff00ff00),
                       ),
