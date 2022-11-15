@@ -1003,8 +1003,11 @@ class JoinArticlesParts extends StatelessWidget {
             ),
           );
         } else if (element['contentType'] == 'atomSessionResults') {
-          List driversFields = element['fields']
-              ['raceResults${element['fields']['sessionType']}']['results'];
+          String sessionType = element['fields']['sessionType'] == 'Sprint'
+              ? 'SprintQualifying'
+              : element['fields']['sessionType'];
+          List driversFields =
+              element['fields']['raceResults$sessionType']['results'];
           widgetsList.add(
             Padding(
               padding: EdgeInsets.all(
@@ -1035,19 +1038,20 @@ class JoinArticlesParts extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      element['fields']['sessionType'] == 'Race'
+                      sessionType == 'Race'
                           ? AppLocalizations.of(context)!.race
-                          : element['fields']['sessionType'] == 'Qualifying'
+                          : sessionType == 'Qualifying'
                               ? AppLocalizations.of(context)!.qualifyings
-                              : element['fields']['sessionType'].endsWith('1')
-                                  ? AppLocalizations.of(context)!
-                                      .freePracticeOne
-                                  : element['fields']['sessionType']
-                                          .endsWith('2')
+                              : sessionType == 'SprintQualifying'
+                                  ? AppLocalizations.of(context)!.sprint
+                                  : sessionType.endsWith('1')
                                       ? AppLocalizations.of(context)!
-                                          .freePracticeTwo
-                                      : AppLocalizations.of(context)!
-                                          .freePracticeThree,
+                                          .freePracticeOne
+                                      : sessionType.endsWith('2')
+                                          ? AppLocalizations.of(context)!
+                                              .freePracticeTwo
+                                          : AppLocalizations.of(context)!
+                                              .freePracticeThree,
                       style: TextStyle(
                         color: useDarkMode ? Colors.white : Colors.black,
                         fontSize: 14,
@@ -1061,7 +1065,8 @@ class JoinArticlesParts extends StatelessWidget {
                       child: Row(
                         children: [
                           Expanded(
-                            flex: element['fields']['sessionType'] == 'Race'
+                            flex: sessionType == 'Race' ||
+                                    sessionType == 'SprintQualifying'
                                 ? 5
                                 : 4,
                             child: Text(
@@ -1084,7 +1089,8 @@ class JoinArticlesParts extends StatelessWidget {
                               ),
                             ),
                           ),
-                          element['fields']['sessionType'] == 'Race'
+                          sessionType == 'Race' ||
+                                  sessionType == 'SprintQualifying'
                               ? Expanded(
                                   flex: 3,
                                   child: Text(
@@ -1102,7 +1108,7 @@ class JoinArticlesParts extends StatelessWidget {
                       ),
                     ),
                     for (Map driverResults in driversFields)
-                      element['fields']['sessionType'] == 'Race'
+                      sessionType == 'Race' || sessionType == 'SprintQualifying'
                           ? Padding(
                               padding: EdgeInsets.only(
                                 top: 7,
@@ -1156,7 +1162,10 @@ class JoinArticlesParts extends StatelessWidget {
                                     child: Text(
                                       driverResults['gapToLeader'] != "0.0"
                                           ? '+' + driverResults['gapToLeader']
-                                          : driverResults['raceTime'],
+                                          : sessionType == 'Race'
+                                              ? driverResults['raceTime']
+                                              : driverResults[
+                                                  'sprintQualifyingTime'],
                                       style: TextStyle(
                                         color: useDarkMode
                                             ? Colors.white
@@ -1167,7 +1176,12 @@ class JoinArticlesParts extends StatelessWidget {
                                   Expanded(
                                     flex: 3,
                                     child: Text(
-                                      driverResults['racePoints'].toString(),
+                                      sessionType == 'Race'
+                                          ? driverResults['racePoints']
+                                              .toString()
+                                          : driverResults[
+                                                  'sprintQualifyingPoints']
+                                              .toString(),
                                       style: TextStyle(
                                         color: useDarkMode
                                             ? Colors.white
@@ -1229,8 +1243,7 @@ class JoinArticlesParts extends StatelessWidget {
                                   Expanded(
                                     flex: 6,
                                     child: Text(
-                                      element['fields']['sessionType']
-                                              .startsWith('Practice')
+                                      sessionType.startsWith('Practice')
                                           ? driverResults['classifiedTime']
                                           : driverResults['q3']
                                               ['classifiedTime'],
@@ -1262,18 +1275,17 @@ class JoinArticlesParts extends StatelessWidget {
                               onPressed: () => Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => element['fields']
-                                              ['sessionType']
+                                  builder: (context) => sessionType
                                           .startsWith('Practice')
                                       ? FreePracticeScreen(
                                           element['fields'][
-                                                          'raceResults${element["fields"]["sessionType"]}']
+                                                          'raceResults$sessionType']
                                                       ['description']
                                                   .endsWith('1')
                                               ? AppLocalizations.of(context)!
                                                   .freePracticeOne
                                               : element['fields'][
-                                                              'raceResults${element["fields"]["sessionType"]}']
+                                                              'raceResults$sessionType']
                                                           ['description']
                                                       .endsWith('2')
                                                   ? AppLocalizations.of(
@@ -1284,7 +1296,7 @@ class JoinArticlesParts extends StatelessWidget {
                                                       .freePracticeThree,
                                           int.parse(
                                             element['fields'][
-                                                        'raceResults${element["fields"]["sessionType"]}']
+                                                        'raceResults$sessionType']
                                                     ['session']
                                                 .substring(1),
                                           ),
@@ -1298,19 +1310,26 @@ class JoinArticlesParts extends StatelessWidget {
                                         )
                                       : Scaffold(
                                           appBar: AppBar(
-                                            title: Text(element['fields']
-                                                        ['sessionType'] ==
-                                                    'Race'
-                                                ? AppLocalizations.of(context)!
-                                                    .race
-                                                : AppLocalizations.of(context)!
-                                                    .qualifyings),
+                                            title: Text(
+                                              sessionType == 'Race'
+                                                  ? AppLocalizations.of(
+                                                          context)!
+                                                      .race
+                                                  : sessionType ==
+                                                          'SprintQualifying'
+                                                      ? AppLocalizations.of(
+                                                              context)!
+                                                          .sprint
+                                                      : AppLocalizations.of(
+                                                              context)!
+                                                          .qualifyings,
+                                            ),
                                           ),
                                           backgroundColor:
                                               Theme.of(context).backgroundColor,
-                                          body: element['fields']
-                                                      ['sessionType'] ==
-                                                  'Race'
+                                          body: sessionType == 'Race' ||
+                                                  sessionType ==
+                                                      'SprintQualifying'
                                               ? RaceResultsProvider(
                                                   raceUrl: element['fields']
                                                       ['cta'],
