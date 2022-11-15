@@ -237,13 +237,17 @@ class RacesList extends StatelessWidget {
       shrinkWrap: true,
       itemCount: items.length,
       controller: scrollController,
-      itemBuilder: (context, index) {
-        return RaceItem(
-          items[index],
-          index,
-          isUpNext,
-        );
-      },
+      itemBuilder: (context, index) => isUpNext
+          ? RaceItem(
+              items[index],
+              index,
+              isUpNext,
+            )
+          : RaceItem(
+              items[items.length - index - 1],
+              index,
+              isUpNext,
+            ),
       physics: ClampingScrollPhysics(),
     );
   }
