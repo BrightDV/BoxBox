@@ -36,11 +36,13 @@
 - Get the latest stories of your favorite driver & his ranking, even without any Internet connection*. If you want, you can know where he is born and other personnal informations (not very useful though)...
 - In-app reader for all the editorial articles with markdown!
 - Enjoy the app even the night with its dark mode.
-- Link to the highlights on YouTube of the qualifications and the race.
+- Link to the highlights on YouTube of the qualifications and the race. (or even the sprint...)
 - Wait 'till the next race with its countdown.
 - Follow all the action on track with its integrated WebView (live leaderboard).
+- View the results of all the sessions (Free Practices, Qualifyings, Sprints and Races).
+- Enjoy a race hub during a GP!
 
-*You need to have Internet connection in order to refresh the data.
+*You need to have Internet connection in order to refresh the data...
 
 See the live demo [here (outdated). It is broken because of the CORS.](https://brightdv.github.io)
 
@@ -48,8 +50,8 @@ See the live demo [here (outdated). It is broken because of the CORS.](https://b
 | Screen  | Service          | Base URL |
 | :---------------: |:---------------:| :---------------:|
 | Home News  | Formula 1 API |  https://api.formula1.com |
-| Standings (Q and R)  | Ergast API |  https://ergast.com/mrd |
-| Standings (FP)  | Formula 1 Archives |  https://formula1.com/ |
+| Standings (Q, S and R)  | Ergast API |  https://ergast.com/mrd |
+| Standings (FP, Q, S and R)  | Formula 1 Archives |  https://formula1.com/ |
 | Schedule  |  Ergast API |  https://ergast.com/mrd |
 | Live Timing |  Formula 1 |  https://formula1.com/ |
 
@@ -62,10 +64,10 @@ Theses files are used by Flutter to provide you the translation.
 
 Currently, the app is available in:
 
-- 🇪🇸 Spanish
+- 🇪🇸 Spanish, thanks to @inigochoa
 - 🇫🇷 French
 - 🇬🇧 English
-- 🇹🇷 Turkish
+- 🇹🇷 Turkish, thanks to @metezd
 
 ## License
 [![GNU GPLv3 Image](https://www.gnu.org/graphics/gplv3-127x51.png)](https://www.gnu.org/licenses/gpl-3.0.en.html)  
