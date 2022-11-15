@@ -143,19 +143,21 @@ class _SessionScreenState extends State<SessionScreen> {
                     ],
                   )
                 : widget.session.state == 'completed'
-                    ? widget.session.sessionsAbbreviation == 'r'
+                    ? widget.session.sessionsAbbreviation == 'r' ||
+                            widget.session.sessionsAbbreviation == 's'
                         ? RaceResultsProvider(
-                            raceUrl: widget.session.baseUrl
-                                .replaceAll('session-type', 'race-result'),
+                            raceUrl: widget.session.sessionsAbbreviation == 'r'
+                                ? widget.session.baseUrl
+                                    .replaceAll('session-type', 'race-result')
+                                : widget.session.baseUrl.replaceAll(
+                                    'session-type', 'sprint-results'),
                           )
-                        : widget.session.sessionsAbbreviation == 'q'
-                            ? SingleChildScrollView(
-                                child: QualificationResultsProvider(
-                                  raceUrl: widget.session.baseUrl
-                                      .replaceAll('session-type', 'qualifying'),
-                                ),
-                              )
-                            : Text('sprint results')
+                        : SingleChildScrollView(
+                            child: QualificationResultsProvider(
+                              raceUrl: widget.session.baseUrl
+                                  .replaceAll('session-type', 'qualifying'),
+                            ),
+                          )
                     : WebView(
                         javascriptMode: JavascriptMode.unrestricted,
                         initialUrl:
