@@ -105,38 +105,22 @@ class _RaceDetailsScreenState extends State<RaceDetailsScreen> {
                               TabBar(
                                 tabs: snapshot.data ?? false
                                     ? <Widget>[
-                                        Tooltip(
-                                          child: Tab(
-                                            icon: Icon(Icons.sports_outlined),
-                                          ),
-                                          message: AppLocalizations.of(context)!
-                                              .freePracticeShort,
+                                        Tab(
+                                          text: AppLocalizations.of(context)!
+                                              .freePracticeFirstLetter,
                                         ),
-                                        Tooltip(
-                                          child: Tab(
-                                            icon: Icon(Icons.timer_outlined),
-                                          ),
-                                          message: AppLocalizations.of(context)!
-                                              .qualifyings
+                                        Tab(
+                                          text: AppLocalizations.of(context)!
+                                              .qualifyingsFirstLetter,
+                                        ),
+                                        Tab(
+                                          text: AppLocalizations.of(context)!
+                                              .sprintFirstLetter
                                               .toUpperCase(),
                                         ),
-                                        Tooltip(
-                                          child: Tab(
-                                            icon: Icon(
-                                              Icons.bolt_outlined,
-                                            ),
-                                          ),
-                                          message: AppLocalizations.of(context)!
-                                              .sprint
-                                              .toUpperCase(),
-                                        ),
-                                        Tooltip(
-                                          child: Tab(
-                                            icon: Icon(
-                                                FontAwesomeIcons.flagCheckered),
-                                          ),
-                                          message: AppLocalizations.of(context)!
-                                              .race
+                                        Tab(
+                                          text: AppLocalizations.of(context)!
+                                              .raceFirstLetter
                                               .toUpperCase(),
                                         ),
                                       ]
