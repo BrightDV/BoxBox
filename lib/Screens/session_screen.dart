@@ -63,19 +63,74 @@ class _SessionScreenState extends State<SessionScreen> {
     int seconds =
         (timeToRace - days * 24 * 60 * 60 - hours * 60 * 60 - minutes * 60);
     return widget.session.sessionsAbbreviation.startsWith('p')
-        ? FreePracticeScreen(
-            widget.sessionFullName,
-            int.parse(
-              widget.session.sessionsAbbreviation.substring(1),
-            ),
-            '',
-            0,
-            '',
-            raceUrl: widget.session.baseUrl.replaceAll(
-              'session-type',
-              'practice-${widget.session.sessionsAbbreviation.substring(1)}',
-            ),
-          )
+        ? widget.session.state == 'upcoming' ||
+                widget.session.startTime.isAfter(DateTime.now())
+            ? Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.all(10),
+                    child: Center(
+                      child: Text(
+                        AppLocalizations.of(context)!.sessionStartsIn,
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: useDarkMode ? Colors.white : Colors.black,
+                        ),
+                      ),
+                    ),
+                  ),
+                  TimerCountdown(
+                    format: CountDownTimerFormat.daysHoursMinutesSeconds,
+                    endTime: DateTime.now().add(
+                      Duration(
+                        days: days,
+                        hours: hours,
+                        minutes: minutes,
+                        seconds: seconds,
+                      ),
+                    ),
+                    timeTextStyle: TextStyle(
+                      fontSize: 25,
+                      color: useDarkMode ? Colors.white : Colors.black,
+                    ),
+                    colonsTextStyle: TextStyle(
+                      fontSize: 23,
+                      color: useDarkMode ? Colors.white : Colors.black,
+                    ),
+                    descriptionTextStyle: TextStyle(
+                      color: Theme.of(context).primaryColor,
+                      fontSize: 20,
+                    ),
+                    spacerWidth: 15,
+                    daysDescription:
+                        AppLocalizations.of(context)!.dayFirstLetter,
+                    hoursDescription:
+                        AppLocalizations.of(context)!.hourFirstLetter,
+                    minutesDescription:
+                        AppLocalizations.of(context)!.minuteAbbreviation,
+                    secondsDescription:
+                        AppLocalizations.of(context)!.secondAbbreviation,
+                    onEnd: () {
+                      setState(() {});
+                    },
+                  ),
+                ],
+              )
+            : FreePracticeScreen(
+                widget.sessionFullName,
+                int.parse(
+                  widget.session.sessionsAbbreviation.substring(1),
+                ),
+                '',
+                0,
+                '',
+                raceUrl: widget.session.baseUrl.replaceAll(
+                  'session-type',
+                  'practice-${widget.session.sessionsAbbreviation.substring(1)}',
+                ),
+              )
         : Scaffold(
             appBar: AppBar(
               title: Text(

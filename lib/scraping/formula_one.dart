@@ -111,30 +111,47 @@ class FormulaOneScraper {
 
     http.Response response = await http.get(resultsUrl);
     dom.Document document = parser.parse(response.body);
-    List<dom.Element> _tempResults = document.getElementsByTagName('tr');
-    List<DriverQualificationResult> results = [];
-    _tempResults.removeAt(0);
-    _tempResults.forEach(
-      (result) {
-        results.add(
-          DriverQualificationResult(
-            'driverId',
-            result.children[1].text,
-            result.children[2].text,
-            result.children[3].children[0].text,
-            result.children[3].children[1].text,
-            result.children[3].children[2].text,
-            Converter().teamsFromFormulaOneToErgast(
-              result.children[4].text,
+    List<dom.Element> finishedSessions =
+        document.getElementsByClassName('side-nav-item');
+    finishedSessions.removeAt(0);
+    bool isQualifyingsFinished = false;
+    for (dom.Element element in finishedSessions) {
+      if (element.text.substring(29).startsWith('Qualifying')) {
+        isQualifyingsFinished = true;
+      }
+    }
+    if (isQualifyingsFinished) {
+      List<dom.Element> _tempResults = document.getElementsByTagName('tr');
+      List<DriverQualificationResult> results = [];
+
+      _tempResults.removeAt(0);
+      _tempResults.forEach(
+        (result) {
+          results.add(
+            DriverQualificationResult(
+              'driverId',
+              result.children[1].text,
+              result.children[2].text,
+              result.children[3].children[0].text,
+              result.children[3].children[1].text,
+              result.children[3].children[2].text,
+              Converter().teamsFromFormulaOneToErgast(
+                result.children[4].text,
+              ),
+              result.children[5].text != '' ? result.children[5].text : '--',
+              result.children[6].text != '' ? result.children[6].text : '--',
+              result.children[7].text != '' ? result.children[7].text : '--',
             ),
-            result.children[5].text != '' ? result.children[5].text : '--',
-            result.children[6].text != '' ? result.children[6].text : '--',
-            result.children[7].text != '' ? result.children[7].text : '--',
-          ),
-        );
-      },
-    );
-    return results;
+          );
+        },
+      );
+
+      return results;
+    } else {
+      return [
+        DriverQualificationResult('', '', '', '', '', '', '', '', '', ''),
+      ];
+    }
   }
 
   Future<List<DriverResult>> scrapeFreePracticeResult(
@@ -167,32 +184,48 @@ class FormulaOneScraper {
     }
     http.Response response = await http.get(resultsUrl);
     dom.Document document = parser.parse(response.body);
-    List<DriverResult> results = [];
-    List<dom.Element> _tempResults = document.getElementsByTagName('tr');
-    _tempResults.removeAt(0);
-    _tempResults.forEach(
-      (result) {
-        results.add(
-          DriverResult(
-            'driverId',
-            result.children[1].text,
-            result.children[2].text,
-            result.children[3].children[0].text,
-            result.children[3].children[1].text,
-            result.children[3].children[2].text,
-            Converter().teamsFromFormulaOneToErgast(
-              result.children[4].text,
+    bool isFreePracticeFinished = false;
+    List<dom.Element> finishedSessions =
+        document.getElementsByClassName('side-nav-item');
+    finishedSessions.removeAt(0);
+    for (dom.Element element in finishedSessions) {
+      if (element.text.substring(29).startsWith(
+          'Practice ${raceUrl!.split('/')[9].split('-')[1].split('.')[0]}')) {
+        isFreePracticeFinished = true;
+      }
+    }
+    if (isFreePracticeFinished) {
+      List<DriverResult> results = [];
+      List<dom.Element> _tempResults = document.getElementsByTagName('tr');
+      _tempResults.removeAt(0);
+      _tempResults.forEach(
+        (result) {
+          results.add(
+            DriverResult(
+              'driverId',
+              result.children[1].text,
+              result.children[2].text,
+              result.children[3].children[0].text,
+              result.children[3].children[1].text,
+              result.children[3].children[2].text,
+              Converter().teamsFromFormulaOneToErgast(
+                result.children[4].text,
+              ),
+              result.children[5].text,
+              false,
+              result.children[6].text,
+              result.children[6].text,
+              lapsDone: result.children[7].text,
             ),
-            result.children[5].text,
-            false,
-            result.children[6].text,
-            result.children[6].text,
-            lapsDone: result.children[7].text,
-          ),
-        );
-      },
-    );
-    return results;
+          );
+        },
+      );
+      return results;
+    } else {
+      return [
+        DriverResult('', '', '', '', '', '', '', '', false, '', ''),
+      ];
+    }
   }
 
   Future<List<List>> scrapeDriversDetails(
