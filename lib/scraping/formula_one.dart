@@ -188,9 +188,11 @@ class FormulaOneScraper {
     List<dom.Element> finishedSessions =
         document.getElementsByClassName('side-nav-item');
     finishedSessions.removeAt(0);
+    practiceSession = practiceSession == 0
+        ? int.parse(raceUrl!.split('/')[9].split('-')[1].split('.')[0])
+        : practiceSession;
     for (dom.Element element in finishedSessions) {
-      if (element.text.substring(29).startsWith(
-          'Practice ${raceUrl!.split('/')[9].split('-')[1].split('.')[0]}')) {
+      if (element.text.substring(29).startsWith('Practice $practiceSession')) {
         isFreePracticeFinished = true;
       }
     }
@@ -321,11 +323,16 @@ class FormulaOneScraper {
     dom.Document document = parser.parse(response.body);
     List<dom.Element>? _tempResults =
         document.getElementsByClassName('side-nav-item');
-    return _tempResults.length - 1 <= 0
-        ? 0
-        : _tempResults.length - 1 < 4
-            ? _tempResults.length - 1
-            : 3;
+    _tempResults.remove(0);
+    int maxSession = 0;
+    for (dom.Element element in _tempResults) {
+      if (element.text.contains('Practice')) {
+        if (int.parse(element.text.substring(38, 40)) > maxSession) {
+          maxSession = int.parse(element.text.substring(38, 40));
+        }
+      }
+    }
+    return maxSession;
   }
 
   Future<List<HallOfFameDriver>> scrapeHallOfFame() async {
