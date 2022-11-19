@@ -1,4 +1,5 @@
-"about": "Sobre",
+{
+    "about": "Sobre",
     "@about": {},
     "aboutDescription": "Box, Box! é uma aplicação FOSS disponível no GitHub. O seu objetivo é facilitar a capacidade de seguir a Fórmula 1, sem anúncios ou rastreadores!",
     "@aboutDescription": {},

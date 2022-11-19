@@ -1,0 +1,5 @@
+Last round of the season...
+- Sprints are now supported!
+- See the results of the sessions inside the race hub!
+- Inverse the order of past races to have the most recent one first.
+- Portuguese translation thanks to @Alexthegib!

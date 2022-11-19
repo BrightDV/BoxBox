@@ -67,6 +67,7 @@ Currently, the app is available in:
 - 🇪🇸 Spanish, thanks to @inigochoa
 - 🇫🇷 French
 - 🇬🇧 English
+- 🇵🇹 Portuguese, thanks to @Alexthegib
 - 🇹🇷 Turkish, thanks to @metezd
 
 ## License
