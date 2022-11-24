@@ -79,6 +79,7 @@ class _MainBottomNavigationBarState extends State<MainBottomNavigationBar> {
         ),
       ),
       drawer: MainDrawer(_homeSetState),
+      drawerEdgeDragWidth: MediaQuery.of(context).size.width,
       bottomNavigationBar: Hidable(
         controller: scrollController,
         child: BottomNavigationBar(
