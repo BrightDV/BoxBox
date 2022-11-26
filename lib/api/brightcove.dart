@@ -38,20 +38,30 @@ class BrightCove {
     return responseAsJson;
   }
 
-  Future<String> getVideoLink(String videoId) async {
+  Future<List<String>> getVideoLink(String videoId) async {
     int playerQuality =
         Hive.box('settings').get('playerQuality', defaultValue: 360) as int;
     Map streamsData = await fetchStreamData(videoId);
-    String streamUrl = '';
+    List<String> streamUrls = [];
+    bool foundPreferedQuality = false;
+    List<int> resSelected = [];
     for (var element in streamsData['sources']) {
-      if (element['height'] == playerQuality) {
-        streamUrl = element['src'];
-        break;
+      if (element['height'] == playerQuality && !foundPreferedQuality) {
+        streamUrls.insert(0, element['src']);
+        foundPreferedQuality = true;
+      } else if (element['codec'] == 'H264' &&
+          resSelected.indexOf(element['height']) == -1) {
+        resSelected.add(element['height']);
+        streamUrls.add(element['src']);
       }
     }
-    if (streamUrl.startsWith('http://')) {
-      streamUrl = streamUrl.replaceFirst('http://', 'https://');
+    int c = 0;
+    for (String streamUrl in streamUrls) {
+      if (streamUrl.startsWith('http://')) {
+        streamUrls[c] = streamUrl.replaceFirst('http://', 'https://');
+      }
+      c++;
     }
-    return streamUrl;
+    return streamUrls;
   }
 }

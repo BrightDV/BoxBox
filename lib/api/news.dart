@@ -20,6 +20,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:better_player/better_player.dart';
 import 'package:boxbox/Screens/free_practice_screen.dart';
 import 'package:boxbox/api/brightcove.dart';
 import 'package:boxbox/api/twitter.dart';
@@ -45,7 +46,6 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:timeago/timeago.dart' as timeago;
-import 'package:tweet_ui/tweet_ui.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
 
@@ -988,13 +988,8 @@ class JoinArticlesParts extends StatelessWidget {
                       snapshot.error.toString(),
                     )
                   : snapshot.hasData
-                      ? Container(
-                          height: 500,
-                          child: EmbeddedTweetView.fromTweetV1(
-                            TweetV1Response.fromJson(
-                              snapshot.data!,
-                            ),
-                          ),
+                      ? Text(
+                          snapshot.data!.toString(),
                         )
                       : Container(
                           height: 500,
@@ -1869,14 +1864,14 @@ class _VideoRendererState extends State<VideoRenderer> {
 
   @override
   Widget build(BuildContext build) {
-    return FutureBuilder<String>(
+    return FutureBuilder<List<String>>(
       future: BrightCove().getVideoLink(widget.videoId),
       builder: (context, snapshot) => snapshot.hasError
           ? RequestErrorWidget(
               snapshot.error.toString(),
             )
           : snapshot.hasData
-              ? VideoPlayer(
+              ? BetterPlayerVideoPlayer(
                   snapshot.data!,
                   widget.autoplay == null ? false : widget.autoplay!,
                 )
@@ -1962,5 +1957,64 @@ class _VideoPlayerState extends State<VideoPlayer> {
     super.dispose();
     videoPlayerController.dispose();
     chewieController.dispose();
+  }
+}
+
+class BetterPlayerVideoPlayer extends StatefulWidget {
+  final List<String> videoUrls;
+  final bool autoplay;
+
+  BetterPlayerVideoPlayer(
+    this.videoUrls,
+    this.autoplay,
+  );
+  @override
+  _BetterPlayerVideoPlayerState createState() =>
+      _BetterPlayerVideoPlayerState();
+}
+
+class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
+  late BetterPlayerController _betterPlayerController;
+  bool useDarkMode =
+      Hive.box('settings').get('darkMode', defaultValue: true) as bool;
+
+  @override
+  void initState() {
+    super.initState();
+    BetterPlayerDataSource betterPlayerDataSource = BetterPlayerDataSource(
+        BetterPlayerDataSourceType.network, widget.videoUrls[0],
+        resolutions: {
+          '720p': widget.videoUrls[1],
+          '360p': widget.videoUrls[2],
+          '180p': widget.videoUrls[3],
+        });
+    BetterPlayerConfiguration _betterPlayerConfiguration =
+        BetterPlayerConfiguration(
+      autoPlay: widget.autoplay,
+      allowedScreenSleep: false,
+      autoDetectFullscreenDeviceOrientation: true,
+      fit: BoxFit.contain,
+      controlsConfiguration: BetterPlayerControlsConfiguration(
+        enableAudioTracks: false,
+        enableSubtitles: false,
+      ),
+    );
+    _betterPlayerController = BetterPlayerController(
+      _betterPlayerConfiguration,
+      betterPlayerDataSource: betterPlayerDataSource,
+    );
+  }
+
+  @override
+  Widget build(BuildContext build) {
+    return BetterPlayer(
+      controller: _betterPlayerController,
+    );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _betterPlayerController.dispose();
   }
 }
