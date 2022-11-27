@@ -32,7 +32,6 @@ import 'package:boxbox/Screens/race_details.dart';
 import 'package:boxbox/Screens/standings.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:chewie/chewie.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -47,7 +46,6 @@ import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:url_launcher/url_launcher.dart';
-import 'package:video_player/video_player.dart';
 
 class F1NewsFetcher {
   final String endpoint = "https://api.formula1.com";
@@ -1864,8 +1862,8 @@ class _VideoRendererState extends State<VideoRenderer> {
 
   @override
   Widget build(BuildContext build) {
-    return FutureBuilder<List<String>>(
-      future: BrightCove().getVideoLink(widget.videoId),
+    return FutureBuilder<Map<String, dynamic>>(
+      future: BrightCove().getVideoLinks(widget.videoId),
       builder: (context, snapshot) => snapshot.hasError
           ? RequestErrorWidget(
               snapshot.error.toString(),
@@ -1883,85 +1881,8 @@ class _VideoRendererState extends State<VideoRenderer> {
   }
 }
 
-class VideoPlayer extends StatefulWidget {
-  final String videoUrl;
-  final bool autoplay;
-
-  VideoPlayer(
-    this.videoUrl,
-    this.autoplay,
-  );
-  @override
-  _VideoPlayerState createState() => _VideoPlayerState();
-}
-
-class _VideoPlayerState extends State<VideoPlayer> {
-  late ChewieController chewieController;
-  late VideoPlayerController videoPlayerController;
-  late Future<void> _initializeVideoPlayerFuture;
-
-  @override
-  void initState() {
-    super.initState();
-    videoPlayerController = VideoPlayerController.network(widget.videoUrl);
-    _initializeVideoPlayerFuture = videoPlayerController.initialize().then((_) {
-      setState(() {});
-    });
-    bool useDarkMode =
-        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
-    chewieController = ChewieController(
-      videoPlayerController: videoPlayerController,
-      autoInitialize: true,
-      aspectRatio: 16 / 9,
-      allowedScreenSleep: false,
-      autoPlay: widget.autoplay,
-      looping: false,
-      errorBuilder: (context, errorMessage) {
-        return Center(
-          child: Text(
-            errorMessage,
-            style: TextStyle(
-              color: useDarkMode ? Colors.white : Colors.black,
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  @override
-  Widget build(BuildContext build) {
-    return FutureBuilder(
-      future: _initializeVideoPlayerFuture,
-      builder: (context, snapshot) {
-        return snapshot.connectionState == ConnectionState.done
-            ? SafeArea(
-                child: AspectRatio(
-                  aspectRatio: videoPlayerController.value.aspectRatio,
-                  child: Chewie(
-                    key: new PageStorageKey(widget.videoUrl),
-                    controller: chewieController,
-                  ),
-                ),
-              )
-            : Container(
-                height: MediaQuery.of(context).size.width / (16 / 9),
-                child: LoadingIndicatorUtil(),
-              );
-      },
-    );
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    videoPlayerController.dispose();
-    chewieController.dispose();
-  }
-}
-
 class BetterPlayerVideoPlayer extends StatefulWidget {
-  final List<String> videoUrls;
+  final Map<String, dynamic> videoUrls;
   final bool autoplay;
 
   BetterPlayerVideoPlayer(
@@ -1982,11 +1903,11 @@ class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
   void initState() {
     super.initState();
     BetterPlayerDataSource betterPlayerDataSource = BetterPlayerDataSource(
-        BetterPlayerDataSourceType.network, widget.videoUrls[0],
+        BetterPlayerDataSourceType.network, widget.videoUrls['videos'][0],
         resolutions: {
-          '720p': widget.videoUrls[1],
-          '360p': widget.videoUrls[2],
-          '180p': widget.videoUrls[3],
+          '720p': widget.videoUrls['videos'][1],
+          '360p': widget.videoUrls['videos'][2],
+          '180p': widget.videoUrls['videos'][3],
         });
     BetterPlayerConfiguration _betterPlayerConfiguration =
         BetterPlayerConfiguration(
@@ -1997,7 +1918,12 @@ class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
       controlsConfiguration: BetterPlayerControlsConfiguration(
         enableAudioTracks: false,
         enableSubtitles: false,
+        overflowModalColor: useDarkMode ? Color(0xff1d1d28) : Colors.white,
+        overflowMenuIconsColor: useDarkMode ? Colors.white : Colors.black,
+        overflowModalTextColor: useDarkMode ? Colors.white : Colors.black,
       ),
+      placeholder: Image.network(widget.videoUrls['poster']),
+      showPlaceholderUntilPlay: true,
     );
     _betterPlayerController = BetterPlayerController(
       _betterPlayerConfiguration,
