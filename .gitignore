@@ -9,3 +9,5 @@ ios/Flutter/Generated.xcconfig
 ios/Flutter/flutter_export_environment.sh
 android/local.properties
 android/.gradle
+ios/Flutter/flutter_export_environment.sh
+ios/Flutter/Generated.xcconfig

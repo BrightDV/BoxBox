@@ -1363,6 +1363,77 @@ class JoinArticlesParts extends StatelessWidget {
               ),
             ),
           );
+        } else if (element['contentType'] == 'atomTableContent') {
+          Map<String, dynamic> fields = element['fields'];
+          widgetsList.add(
+            Padding(
+              padding: EdgeInsets.all(5),
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Colors.grey.shade700,
+                  ),
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(15),
+                    topRight: Radius.circular(15),
+                  ),
+                ),
+                height:
+                    (fields['tableData']['tableContent'].length + 1) * 50 + 2,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Column(
+                    children: [
+                      Container(
+                        height: 50,
+                        child: Padding(
+                          padding: EdgeInsets.all(10),
+                          child: Text(
+                            fields['title'],
+                            style: TextStyle(
+                              color: useDarkMode ? Colors.white : Colors.black,
+                              fontSize: 16,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
+                      for (List driverItem in fields['tableData']
+                          ['tableContent'])
+                        Row(
+                          children: <Widget>[
+                            for (Map driverDetails in driverItem)
+                              Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: Colors.grey.shade600,
+                                  ),
+                                ),
+                                width: 150,
+                                height: 50,
+                                child: Center(
+                                  child: Padding(
+                                    padding: EdgeInsets.all(4),
+                                    child: Text(
+                                      driverDetails['value'].toString(),
+                                      style: TextStyle(
+                                        color: useDarkMode
+                                            ? Colors.white
+                                            : Colors.black,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                          ],
+                        ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
         } else {
           widgetsList.add(
             Container(
