@@ -27,7 +27,6 @@ dependencies:
       ref: master
   cached_network_image: ^3.2.0
   carousel_slider: ^4.1.1
-  chewie: ^1.3.4
   connectivity_plus: ^2.3.8
   dotted_line: ^3.1.0
   flutter_cache_manager: ^3.3.0

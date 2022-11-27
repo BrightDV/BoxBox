@@ -23,7 +23,6 @@ import 'dart:convert';
 import 'package:better_player/better_player.dart';
 import 'package:boxbox/Screens/free_practice_screen.dart';
 import 'package:boxbox/api/brightcove.dart';
-import 'package:boxbox/api/twitter.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/news_feed_widget.dart';
 import 'package:boxbox/helpers/request_error.dart';
