@@ -934,7 +934,8 @@ class JoinArticlesParts extends StatelessWidget {
                 ),
                 initialOptions: InAppWebViewGroupOptions(
                   crossPlatform: InAppWebViewOptions(
-                      preferredContentMode: UserPreferredContentMode.DESKTOP),
+                    preferredContentMode: UserPreferredContentMode.DESKTOP,
+                  ),
                 ),
                 gestureRecognizers: [
                   Factory<VerticalDragGestureRecognizer>(
@@ -979,20 +980,25 @@ class JoinArticlesParts extends StatelessWidget {
         } else if (element['contentType'] == 'atomSocialPost' &&
             element['fields']['postType'] == 'Twitter') {
           widgetsList.add(
-            FutureBuilder<Map<String, dynamic>>(
-              future: Twitter().getTweetContent(element['fields']['postId']),
-              builder: (context, snapshot) => snapshot.hasError
-                  ? RequestErrorWidget(
-                      snapshot.error.toString(),
-                    )
-                  : snapshot.hasData
-                      ? Text(
-                          snapshot.data!.toString(),
-                        )
-                      : Container(
-                          height: 500,
-                          child: LoadingIndicatorUtil(),
-                        ),
+            Container(
+              height: 400,
+              child: InAppWebView(
+                initialData: InAppWebViewInitialData(
+                    data:
+                        '<blockquote class="twitter-tweet"><a href="https://twitter.com/x/status/${element['fields']['postId']}"></a> </blockquote><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>'),
+                gestureRecognizers: [
+                  Factory<VerticalDragGestureRecognizer>(
+                      () => VerticalDragGestureRecognizer()),
+                  Factory<HorizontalDragGestureRecognizer>(
+                      () => HorizontalDragGestureRecognizer()),
+                  Factory<ScaleGestureRecognizer>(
+                      () => ScaleGestureRecognizer()),
+                ].toSet(),
+                initialOptions: InAppWebViewGroupOptions(
+                  crossPlatform:
+                      InAppWebViewOptions(transparentBackground: true),
+                ),
+              ),
             ),
           );
         } else if (element['contentType'] == 'atomSessionResults') {
