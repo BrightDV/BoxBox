@@ -1379,7 +1379,7 @@ class JoinArticlesParts extends StatelessWidget {
                   ),
                 ),
                 height:
-                    (fields['tableData']['tableContent'].length + 1) * 50 + 2,
+                    (fields['tableData']['tableContent'].length + 1) * 50.0 + 2,
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Column(
