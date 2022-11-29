@@ -1997,8 +1997,21 @@ class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
         overflowModalColor: useDarkMode ? Color(0xff1d1d28) : Colors.white,
         overflowMenuIconsColor: useDarkMode ? Colors.white : Colors.black,
         overflowModalTextColor: useDarkMode ? Colors.white : Colors.black,
+        showControlsOnInitialize: false,
       ),
-      placeholder: Image.network(widget.videoUrls['poster']),
+      placeholder: Stack(
+        children: [
+          Image.network(widget.videoUrls['poster']),
+          Align(
+            alignment: Alignment.center,
+            child: Icon(
+              Icons.play_arrow_outlined,
+              color: Colors.white,
+              size: 48,
+            ),
+          ),
+        ],
+      ),
       showPlaceholderUntilPlay: true,
     );
     _betterPlayerController = BetterPlayerController(
