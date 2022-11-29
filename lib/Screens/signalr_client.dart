@@ -47,26 +47,14 @@ class _SignalRClientScreenState extends State<SignalRClientScreen> {
     signalR = SignalR(
       "https://livetiming.formula1.com/signalr",
       "Streaming",
-      hubMethods: [
-        "Heartbeat",
-        "CarData.z",
-        "Position.z",
-        "ExtrapolatedClock",
-        "TopThree",
-        "RcmSeries",
-        "TimingStats",
-        "TimingAppData",
-        "WeatherData",
-        "TrackStatus",
-        "DriverList",
-        "RaceControlMessages",
-        "SessionInfo",
-        "SessionData",
-        "LapCount",
-        "TimingData"
-      ],
+      hubMethods: ["Subscribe"],
       statusChangeCallback: _onStatusChange,
       hubCallback: _onNewMessage,
+      headers: {
+        'User-agent': 'BestHTTP',
+        'Accept-Encoding': 'gzip, identity',
+        'Connection': 'keep-alive, Upgrade'
+      },
     );
   }
 
