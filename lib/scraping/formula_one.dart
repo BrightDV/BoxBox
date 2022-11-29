@@ -369,11 +369,10 @@ class FormulaOneScraper {
     results['metaDescription'] =
         _tempResult.getElementsByClassName('strapline')[0].text;
     List parts = [];
-    _tempResult
-        .getElementsByClassName('text parbase')[0]
-        .getElementsByTagName('p')
-        .forEach(
-          (element) => parts.add(element.text),
+    _tempResult.getElementsByClassName('text parbase').forEach(
+          (paragraph) => paragraph.getElementsByTagName('p').forEach(
+                (element) => parts.add(element.text),
+              ),
         );
     results['parts'] = parts;
     return results;
