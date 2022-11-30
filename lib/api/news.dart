@@ -1589,8 +1589,9 @@ class TextParagraphRenderer extends StatelessWidget {
             );
           } else if (url.startsWith('https://www.formula1.com/en/results')) {
             String standingsType =
-                url.substring(0, url.length - 5).split('/')[5];
-            if (standingsType == "driver-standings") {
+                url.substring(0, url.length - 5).split('/')[6];
+            if (standingsType == "driver-standings" ||
+                standingsType == "drivers") {
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -1608,7 +1609,8 @@ class TextParagraphRenderer extends StatelessWidget {
                   ),
                 ),
               );
-            } else if (standingsType == "constructor-standings") {
+            } else if (standingsType == "constructor-standings" ||
+                standingsType == "team") {
               Navigator.push(
                 context,
                 MaterialPageRoute(
