@@ -7,7 +7,6 @@
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@drawable/launch_background</item>
         <item name="android:windowContentOverlay">@null</item>
-        <item name="android:windowNoTitle">true</item>
         <item name="android:backgroundDimEnabled">false</item>
     </style>
     <!-- Theme applied to the Android Window as soon as the process has started.
@@ -20,7 +19,6 @@
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@android:color/black</item>
         <item name="android:windowContentOverlay">@null</item>
-        <item name="android:windowNoTitle">true</item>
         <item name="android:backgroundDimEnabled">false</item>
     </style>
 </resources>
