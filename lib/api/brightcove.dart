@@ -64,6 +64,7 @@ class BrightCove {
       }
       c++;
     }
+    streamUrls['name'] = streamsData['name'];
     return streamUrls;
   }
 }

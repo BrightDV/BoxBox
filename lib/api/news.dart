@@ -1984,12 +1984,21 @@ class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
   void initState() {
     super.initState();
     BetterPlayerDataSource betterPlayerDataSource = BetterPlayerDataSource(
-        BetterPlayerDataSourceType.network, widget.videoUrls['videos'][0],
-        resolutions: {
-          '720p': widget.videoUrls['videos'][1],
-          '360p': widget.videoUrls['videos'][2],
-          '180p': widget.videoUrls['videos'][3],
-        });
+      BetterPlayerDataSourceType.network,
+      widget.videoUrls['videos'][0],
+      resolutions: {
+        '720p': widget.videoUrls['videos'][1],
+        '360p': widget.videoUrls['videos'][2],
+        '180p': widget.videoUrls['videos'][3],
+      },
+      notificationConfiguration: BetterPlayerNotificationConfiguration(
+        showNotification: true,
+        title: widget.videoUrls['name'],
+        author: "Formula 1",
+        imageUrl: widget.videoUrls['poster'],
+        activityName: "MainActivity",
+      ),
+    );
     BetterPlayerConfiguration _betterPlayerConfiguration =
         BetterPlayerConfiguration(
       autoPlay: widget.autoplay,
