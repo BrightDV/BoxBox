@@ -85,6 +85,8 @@
     "@highestRaceFinish": {},
     "highestGridPosition": "Highest grid position",
     "@highestGridPosition": {},
+    "history": "History",
+    "@history": {},
     "hourFirstLetter": "H",
     "@hourFirstLetter": {},
     "laps": "LAPS",

@@ -34,9 +34,10 @@ void main() async {
   await Hive.initFlutter();
   // ignore: unused_local_variable
   final settingsBox = await Hive.openBox('settings');
-
   // ignore: unused_local_variable
   final requestsBox = await Hive.openBox('requests');
+  // ignore: unused_local_variable
+  final historyBox = await Hive.openBox('history');
 
   runApp(
     MyApp(),

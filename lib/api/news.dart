@@ -360,6 +360,32 @@ class NewsItem extends StatelessWidget {
               color: useDarkMode ? Color(0xff1d1d28) : Colors.white,
               child: InkWell(
                 onTap: () {
+                  List articlesHistory = Hive.box('history')
+                      .get('articlesHistory', defaultValue: []) as List;
+                  articlesHistory.isEmpty
+                      ? articlesHistory.add(
+                          {
+                            'imageUrl': item.imageUrl,
+                            'articleId': item.newsId,
+                            'articleTitle': item.title,
+                            'timeVisited': DateTime.now().toString(),
+                          },
+                        )
+                      : articlesHistory[articlesHistory.length - 1]
+                                  ['articleId'] !=
+                              item.newsId
+                          ? articlesHistory.add(
+                              {
+                                'imageUrl': item.imageUrl,
+                                'articleId': item.newsId,
+                                'articleTitle': item.title,
+                                'timeVisited': DateTime.now().toString(),
+                              },
+                            )
+                          : null;
+                  Hive.box('history').put('articlesHistory', articlesHistory);
+                  articlesHistory = Hive.box('history')
+                      .get('articlesHistory', defaultValue: []) as List;
                   Navigator.push(
                     context,
                     MaterialPageRoute(

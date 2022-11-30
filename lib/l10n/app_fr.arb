@@ -85,6 +85,8 @@
     "@highestRaceFinish": {},
     "highestGridPosition": "Meilleur résultat (grille)",
     "@highestGridPosition": {},
+    "history": "Historique",
+    "@history": {},
     "hourFirstLetter": "H",
     "@hourFirstLetter": {},
     "laps": "TOURS",
