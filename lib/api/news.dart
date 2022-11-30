@@ -1972,6 +1972,9 @@ class BetterPlayerVideoPlayer extends StatefulWidget {
 
 class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
   late BetterPlayerController _betterPlayerController;
+  StreamController<bool> _placeholderStreamController =
+      StreamController.broadcast();
+  bool _showPlaceholder = true;
   bool useDarkMode =
       Hive.box('settings').get('darkMode', defaultValue: true) as bool;
 
@@ -1999,24 +2002,45 @@ class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
         overflowModalTextColor: useDarkMode ? Colors.white : Colors.black,
         showControlsOnInitialize: false,
       ),
-      placeholder: Stack(
-        children: [
-          Image.network(widget.videoUrls['poster']),
-          Align(
-            alignment: Alignment.center,
-            child: Icon(
-              Icons.play_arrow_outlined,
-              color: Colors.white,
-              size: 48,
-            ),
-          ),
-        ],
-      ),
+      placeholder: _buildVideoPlaceholder(),
       showPlaceholderUntilPlay: true,
     );
     _betterPlayerController = BetterPlayerController(
       _betterPlayerConfiguration,
       betterPlayerDataSource: betterPlayerDataSource,
+    );
+    _betterPlayerController.addEventsListener((event) {
+      if (event.betterPlayerEventType == BetterPlayerEventType.play) {
+        _setPlaceholderVisibleState(false);
+      }
+    });
+  }
+
+  void _setPlaceholderVisibleState(bool hidden) {
+    _placeholderStreamController.add(hidden);
+    _showPlaceholder = hidden;
+  }
+
+  Widget _buildVideoPlaceholder() {
+    return StreamBuilder<bool>(
+      stream: _placeholderStreamController.stream,
+      builder: (context, snapshot) {
+        return _showPlaceholder
+            ? Stack(
+                children: [
+                  Image.network(widget.videoUrls['poster']),
+                  Align(
+                    alignment: Alignment.center,
+                    child: Icon(
+                      Icons.play_arrow_outlined,
+                      color: Colors.white,
+                      size: 48,
+                    ),
+                  ),
+                ],
+              )
+            : const SizedBox();
+      },
     );
   }
 
@@ -2029,7 +2053,8 @@ class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
 
   @override
   void dispose() {
-    super.dispose();
+    _placeholderStreamController.close();
     _betterPlayerController.dispose();
+    super.dispose();
   }
 }
