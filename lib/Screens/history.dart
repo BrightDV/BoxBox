@@ -17,6 +17,7 @@
  * Copyright (c) 2022, BrightDV
  */
 
+import 'package:boxbox/Screens/article.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -36,7 +37,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     List articlesHistory =
         Hive.box('history').get('articlesHistory', defaultValue: []) as List;
-    articlesHistory.reversed;
+    articlesHistory = articlesHistory.reversed.toList();
 
     return Scaffold(
       appBar: AppBar(
@@ -69,53 +70,67 @@ class _HistoryScreenState extends State<HistoryScreen> {
           : ListView.builder(
               itemCount: articlesHistory.length,
               shrinkWrap: true,
-              itemBuilder: (context, index) => Card(
-                elevation: 5.0,
-                color: useDarkMode ? Color(0xff1d1d28) : Colors.white,
-                child: Row(
-                  children: [
-                    Expanded(
-                      flex: 3,
-                      child: CachedNetworkImage(
-                        imageUrl: articlesHistory[index]['imageUrl'],
+              itemBuilder: (context, index) => GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ArticleScreen(
+                        articlesHistory[index]['articleId'],
+                        articlesHistory[index]['articleTitle'],
+                        false,
                       ),
                     ),
-                    Expanded(
-                      flex: 5,
-                      child: Padding(
-                        padding: EdgeInsets.only(
-                          left: 8,
-                          right: 8,
-                        ),
-                        child: Column(
-                          children: [
-                            Text(
-                              articlesHistory[index]['articleTitle'],
-                              style: TextStyle(
-                                color:
-                                    useDarkMode ? Colors.white : Colors.black,
-                              ),
-                              maxLines: 3,
-                              textAlign: TextAlign.justify,
-                            ),
-                            Text(
-                              articlesHistory[index]['timeVisited'].substring(
-                                0,
-                                articlesHistory[index]['timeVisited']
-                                        .indexOf('.') -
-                                    3,
-                              ),
-                              style: TextStyle(
-                                color: useDarkMode
-                                    ? Colors.grey.shade700
-                                    : Colors.grey.shade50,
-                              ),
-                            ),
-                          ],
+                  );
+                },
+                child: Card(
+                  elevation: 5.0,
+                  color: useDarkMode ? Color(0xff1d1d28) : Colors.white,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        flex: 3,
+                        child: CachedNetworkImage(
+                          imageUrl: articlesHistory[index]['imageUrl'],
                         ),
                       ),
-                    ),
-                  ],
+                      Expanded(
+                        flex: 5,
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                            left: 8,
+                            right: 8,
+                          ),
+                          child: Column(
+                            children: [
+                              Text(
+                                articlesHistory[index]['articleTitle'],
+                                style: TextStyle(
+                                  color:
+                                      useDarkMode ? Colors.white : Colors.black,
+                                ),
+                                maxLines: 3,
+                                textAlign: TextAlign.justify,
+                              ),
+                              Text(
+                                articlesHistory[index]['timeVisited'].substring(
+                                  0,
+                                  articlesHistory[index]['timeVisited']
+                                          .indexOf('.') -
+                                      3,
+                                ),
+                                style: TextStyle(
+                                  color: useDarkMode
+                                      ? Colors.grey.shade700
+                                      : Colors.grey.shade50,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
