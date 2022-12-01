@@ -360,32 +360,6 @@ class NewsItem extends StatelessWidget {
               color: useDarkMode ? Color(0xff1d1d28) : Colors.white,
               child: InkWell(
                 onTap: () {
-                  List articlesHistory = Hive.box('history')
-                      .get('articlesHistory', defaultValue: []) as List;
-                  articlesHistory.isEmpty
-                      ? articlesHistory.add(
-                          {
-                            'imageUrl': item.imageUrl,
-                            'articleId': item.newsId,
-                            'articleTitle': item.title,
-                            'timeVisited': DateTime.now().toString(),
-                          },
-                        )
-                      : articlesHistory[articlesHistory.length - 1]
-                                  ['articleId'] !=
-                              item.newsId
-                          ? articlesHistory.add(
-                              {
-                                'imageUrl': item.imageUrl,
-                                'articleId': item.newsId,
-                                'articleTitle': item.title,
-                                'timeVisited': DateTime.now().toString(),
-                              },
-                            )
-                          : null;
-                  Hive.box('history').put('articlesHistory', articlesHistory);
-                  articlesHistory = Hive.box('history')
-                      .get('articlesHistory', defaultValue: []) as List;
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -812,6 +786,7 @@ class JoinArticlesParts extends StatelessWidget {
         .get('useDataSaverMode', defaultValue: false) as bool;
     List articleContent = article.articleContent;
     List<Widget> widgetsList = [];
+    String heroImageUrl = "";
 
     if (article.articleHero['contentType'] == 'atomVideo') {
       widgetsList.add(
@@ -820,6 +795,7 @@ class JoinArticlesParts extends StatelessWidget {
           autoplay: true,
         ),
       );
+      heroImageUrl = article.articleHero['fields']['thumbnail']['url'];
     } else if (article.articleHero['contentType'] == 'atomImageGallery') {
       List<Widget> galleryHeroWidgets = [];
       article.articleHero['fields']['imageGallery'].forEach(
@@ -844,6 +820,7 @@ class JoinArticlesParts extends StatelessWidget {
           ),
         ),
       );
+      heroImageUrl = article.articleHero['fields']['imageGallery'][0]['url'];
     } else {
       widgetsList.add(
         ImageRenderer(
@@ -857,7 +834,36 @@ class JoinArticlesParts extends StatelessWidget {
           isHero: true,
         ),
       );
+      heroImageUrl = article.articleHero['fields']['image']['url'];
     }
+
+    List articlesHistory =
+        Hive.box('history').get('articlesHistory', defaultValue: []) as List;
+    if (articlesHistory.isEmpty) {
+      articlesHistory.add(
+        {
+          'imageUrl': heroImageUrl,
+          'articleId': article.articleId,
+          'articleTitle': article.articleName,
+          'timeVisited': DateTime.now().toString(),
+        },
+      );
+    } else {
+      if (articlesHistory[articlesHistory.length - 1]['articleId'] !=
+          article.articleId) {
+        articlesHistory.add(
+          {
+            'imageUrl': heroImageUrl,
+            'articleId': article.articleId,
+            'articleTitle': article.articleName,
+            'timeVisited': DateTime.now().toString(),
+          },
+        );
+      }
+    }
+    Hive.box('history').put('articlesHistory', articlesHistory);
+    articlesHistory =
+        Hive.box('history').get('articlesHistory', defaultValue: []) as List;
 
     List<Widget> tagsList = [];
     article.articleTags.forEach(
