@@ -60,7 +60,7 @@ See the live demo [here (outdated). It is broken because of the CORS.](https://b
 Help translate _Box, Box!_ on [Hosted Weblate](https://hosted.weblate.org/projects/box-box/)
 
 <a href="https://hosted.weblate.org/engage/box-box/">
-<img src="https://hosted.weblate.org/widgets/box-box/-/translations/multi-auto.svg" alt="Oversettelsesstatus" />
+<img src="https://hosted.weblate.org/widgets/box-box/-/translations/multi-auto.svg" alt="Translation status" />
 </a>
 
 Or, manually:
