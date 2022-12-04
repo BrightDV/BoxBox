@@ -19,6 +19,7 @@
 
 import 'dart:async';
 
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:boxbox/helpers/bottom_navigation_bar.dart';
 import 'package:boxbox/helpers/handle_native.dart';
 import 'package:boxbox/helpers/route_handler.dart';
@@ -38,6 +39,19 @@ void main() async {
   final requestsBox = await Hive.openBox('requests');
   // ignore: unused_local_variable
   final historyBox = await Hive.openBox('history');
+  AwesomeNotifications().initialize(
+    'resource://drawable/notification_icon',
+    [
+      NotificationChannel(
+        channelKey: 'eventTracker',
+        channelName: 'New Grand Prix notifications',
+        channelDescription: 'Show a notification before each GP.',
+        defaultColor: Colors.red,
+        importance: NotificationImportance.High,
+        channelShowBadge: true,
+      ),
+    ],
+  );
 
   runApp(
     MyApp(),
