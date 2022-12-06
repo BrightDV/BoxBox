@@ -85,7 +85,7 @@ class F1NewsFetcher {
     return newsList;
   }
 
-  FutureOr<List<News>> getLatestNews({String? tagId}) async {
+  Future<Map<String, dynamic>> getRawNews({String? tagId}) async {
     Uri url;
     if (tagId != null) {
       url = Uri.parse('$endpoint/v1/editorial/articles?limit=16&tags=$tagId');
@@ -100,6 +100,12 @@ class F1NewsFetcher {
 
     Map<String, dynamic> responseAsJson =
         json.decode(utf8.decode(response.bodyBytes));
+    return responseAsJson;
+  }
+
+  FutureOr<List<News>> getLatestNews({String? tagId}) async {
+    Map<String, dynamic> responseAsJson =
+        await getRawNews(tagId: tagId ?? null);
 
     if (tagId == null) {
       Hive.box('requests').put('news', responseAsJson);

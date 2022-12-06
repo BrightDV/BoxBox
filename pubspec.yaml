@@ -63,6 +63,7 @@ dependencies:
   url_launcher: ^6.0.13
   video_player: ^2.4.5
   webview_flutter: ^3.0.4
+  workmanager: ^0.5.1
   youtube_explode_dart: ^1.10.10+2
 
 dev_dependencies:

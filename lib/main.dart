@@ -20,6 +20,7 @@
 import 'dart:async';
 
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:boxbox/api/news.dart';
 import 'package:boxbox/helpers/bottom_navigation_bar.dart';
 import 'package:boxbox/helpers/handle_native.dart';
 import 'package:boxbox/helpers/route_handler.dart';
@@ -29,6 +30,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:timeago/timeago.dart' as timeago;
+import 'package:workmanager/workmanager.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -50,12 +52,74 @@ void main() async {
         importance: NotificationImportance.High,
         channelShowBadge: true,
       ),
+      NotificationChannel(
+        channelKey: 'newArticle',
+        channelName: 'New article',
+        channelDescription: 'Show a notification when a new article is posted.',
+        defaultColor: Colors.red,
+        importance: NotificationImportance.High,
+        channelShowBadge: true,
+      ),
     ],
   );
 
-  runApp(
-    MyApp(),
+  Workmanager().initialize(
+    callbackDispatcher,
+    isInDebugMode: true,
   );
+  Workmanager().registerPeriodicTask(
+    createUniqueId().toString(),
+    "Load news in background",
+    existingWorkPolicy: ExistingWorkPolicy.replace,
+    frequency: Duration(hours: 4),
+  );
+
+  runApp(MyApp());
+}
+
+int createUniqueId() {
+  return DateTime.now().millisecondsSinceEpoch.remainder(100000);
+}
+
+void callbackDispatcher() {
+  Workmanager().executeTask((task, inputData) async {
+    await Hive.initFlutter();
+    Box hiveBox = await Hive.openBox("requests");
+    Map cachedNews = hiveBox.get('news', defaultValue: {}) as Map;
+    bool useDataSaverMode =
+        hiveBox.get('useDataSaverMode', defaultValue: false) as bool;
+    Map<String, dynamic> fetchedData = await F1NewsFetcher().getRawNews();
+    if (fetchedData['items'][0]['id'] != cachedNews['items'][0]['id']) {
+      String imageUrl = fetchedData['items'][0]['thumbnail']['image']['url'];
+      if (useDataSaverMode) {
+        if (fetchedData['items'][0]['thumbnail']['image']['renditions'] !=
+            null) {
+          imageUrl = fetchedData['items'][0]['thumbnail']['image']['renditions']
+              ['2col-retina'];
+        } else {
+          imageUrl += '.transform/2col-retina/image.jpg';
+        }
+      }
+      await AwesomeNotifications().createNotification(
+        content: NotificationContent(
+          id: createUniqueId(),
+          channelKey: 'newArticle',
+          title: fetchedData['items'][0]['title'],
+          body: fetchedData['items'][0]['metaDescription'],
+          largeIcon: imageUrl,
+          bigPicture: imageUrl,
+          hideLargeIconOnExpand: true,
+          notificationLayout: NotificationLayout.BigPicture,
+          payload: {
+            'id': fetchedData['items'][0]['id'],
+            'title': fetchedData['items'][0]['title'],
+          },
+        ),
+      );
+      hiveBox.put('news', fetchedData);
+    }
+    return true;
+  });
 }
 
 void setTimeagoLocaleMessages() {
