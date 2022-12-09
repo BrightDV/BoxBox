@@ -377,48 +377,52 @@ class FormulaOneScraper {
     results['parts'] = parts;
     return results;
   }
-}
 
-class ScraperRaceResult {
-  final String position;
-  final String number;
-  final List driver;
-  final String car;
-  final String time;
-  final String gap;
-  final String laps;
+  Future<Map> scrapeCircuitFacts(String formulaOneCircuitName) async {
+    Map results = {};
+    final Uri formulaOneCircuitPageUrl = Uri.parse(
+        'https://www.formula1.com/en/racing/${DateTime.now().year}/$formulaOneCircuitName/Circuit.html');
+    http.Response response = await http.get(formulaOneCircuitPageUrl);
+    dom.Document document = parser.parse(response.body);
+    dom.Element _tempResult = document.getElementsByTagName('main')[0];
+    _tempResult.getElementsByClassName('f1-stat').forEach((element) {
+      String elementSubstring = element.innerHtml
+          .replaceAll('  ', '')
+          .replaceAll('<p class="misc--label">', '')
+          .replaceAll('</p>', '')
+          .replaceAll('<p class="f1-bold--stat">', '')
+          .replaceAll('<span class="misc--label">', '')
+          .replaceAll('</span>', '')
+          .replaceAll('<span class="misc--label d-block d-md-inline">', ' - ');
+      List<String> elementSubstringSplitted = elementSubstring.split('\n');
+      results[elementSubstringSplitted[1]] = elementSubstringSplitted[2];
+    });
+    return results;
+  }
 
-  ScraperRaceResult(
-    this.position,
-    this.number,
-    this.driver,
-    this.car,
-    this.time,
-    this.gap,
-    this.laps,
-  );
-}
-
-class ScraperQualifyingResult {
-  final String position;
-  final String number;
-  final List driver;
-  final String car;
-  final String timeq1;
-  final String timeq2;
-  final String timeq3;
-  final String laps;
-
-  ScraperQualifyingResult(
-    this.position,
-    this.number,
-    this.driver,
-    this.car,
-    this.timeq1,
-    this.timeq2,
-    this.timeq3,
-    this.laps,
-  );
+  Future<String> scrapeCircuitHistory(String formulaOneCircuitName) async {
+    final Uri formulaOneCircuitPageUrl = Uri.parse(
+        'https://www.formula1.com/en/racing/${DateTime.now().year}/$formulaOneCircuitName/Circuit.html');
+    http.Response response = await http.get(formulaOneCircuitPageUrl);
+    dom.Document document = parser.parse(
+      utf8.decode(response.bodyBytes),
+    );
+    dom.Element _tempResult = document.getElementsByTagName('main')[0];
+    String circuitHistory = _tempResult
+        .getElementsByClassName('f1-race-hub--content')[0]
+        .children[0]
+        .children[0]
+        .innerHtml
+        .substring(160)
+        .replaceAll('<h2>', '__')
+        .replaceAll('</h2>', '__\n')
+        .replaceAll('<h3>', '*')
+        .replaceAll('</h3>', '*\n')
+        .replaceAll('<p>', '')
+        .replaceAll('</p>', '\n')
+        .replaceAll('  ', '');
+    return circuitHistory;
+  }
 }
 
 class HallOfFameDriver {

@@ -90,6 +90,34 @@ class Converter {
     return ergastToFormulaOne[circuitId];
   }
 
+  String circuitNameFromErgastToFormulaOneForRaceHub(String circuitId) {
+    Map ergastToFormulaOne = {
+      "bahrain": "Bahrain",
+      "jeddah": "Saudi_Arabia",
+      "albert_park": "Australia",
+      "imola": "EmiliaRomagna",
+      "miami": "Miami",
+      "catalunya": "Spain",
+      "monaco": "Monaco",
+      "baku": "Azerbaijan",
+      "villeneuve": "Canada",
+      "silverstone": "Great_Britain",
+      "red_bull_ring": "Austria",
+      "ricard": "France",
+      "hungaroring": "Hungary",
+      "spa": "Belgium",
+      "zandvoort": "Netherlands",
+      "monza": "Italy",
+      "marina_bay": "Singapore",
+      "suzuka": "Japan",
+      "americas": "United_States",
+      "rodriguez": "Mexico",
+      "interlagos": "Brazil",
+      "yas_marina": "United_Arab_Emirates",
+    };
+    return ergastToFormulaOne[circuitId];
+  }
+
   String circuitNameFromErgastToFormulaOne(String circuitId) {
     Map ergastToFormulaOne = {
       'bahrain': 'bahrain',

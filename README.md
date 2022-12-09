@@ -69,10 +69,10 @@ Theses files are used by Flutter to provide you the translation.
 - Translate [this file](lib/l10n/app_en.arb) to your language (only the text between the quotes).
 - Finally, make a pull request or an issue and attach the code to it.
 
-- 🇪🇸 Spanish, thanks to @inigochoa
-- 🇫🇷 French
 - 🇬🇧 English
+- 🇫🇷 French
 - 🇵🇹 Portuguese, thanks to @Alexthegib
+- 🇪🇸 Spanish, thanks to @inigochoa
 - 🇹🇷 Turkish, thanks to @metezd
 
 ## License

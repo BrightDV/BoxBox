@@ -90,7 +90,6 @@ class EventTracker {
       headers: {
         'Accept': 'application/json',
         'apikey': apikey,
-        'locale': 'fr',
       },
     );
     Map formatedResponse = jsonDecode(res.body);
@@ -209,5 +208,20 @@ class EventTracker {
       sessions[4],
     );
     return event;
+  }
+
+  Future<Map> getCircuitDetails(String formulaOneCircuitId) async {
+    Uri uri =
+        Uri.parse('$endpoint/v1/event-tracker/meeting/$formulaOneCircuitId');
+    Response res = await get(
+      uri,
+      headers: {
+        'Accept': 'application/json',
+        'apikey': apikey,
+      },
+    );
+    Map formatedResponse = jsonDecode(res.body);
+
+    return formatedResponse;
   }
 }

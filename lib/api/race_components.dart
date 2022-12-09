@@ -17,10 +17,10 @@
  * Copyright (c) 2022, BrightDV
  */
 
-import 'package:boxbox/Screens/race_details.dart';
 import 'package:boxbox/api/news.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/racetracks_url.dart';
+import 'package:boxbox/Screens/circuit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -65,7 +65,7 @@ class RaceItem extends StatelessWidget {
       onTap: () => Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => RaceDetailsScreen(
+          builder: (context) => CircuitScreen(
             item,
           ),
         ),
@@ -74,7 +74,7 @@ class RaceItem extends StatelessWidget {
         onTap: () => Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => RaceDetailsScreen(
+            builder: (context) => CircuitScreen(
               item,
             ),
           ),
