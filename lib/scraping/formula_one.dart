@@ -21,6 +21,8 @@ import 'dart:convert';
 
 import 'package:boxbox/api/driver_components.dart';
 import 'package:boxbox/helpers/convert_ergast_and_formula_one.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' as parser;
 import 'package:html/dom.dart' as dom;
@@ -378,7 +380,8 @@ class FormulaOneScraper {
     return results;
   }
 
-  Future<Map> scrapeCircuitFacts(String formulaOneCircuitName) async {
+  Future<Map> scrapeCircuitFacts(
+      String formulaOneCircuitName, BuildContext context) async {
     Map results = {};
     final Uri formulaOneCircuitPageUrl = Uri.parse(
         'https://www.formula1.com/en/racing/${DateTime.now().year}/$formulaOneCircuitName/Circuit.html');
@@ -393,9 +396,19 @@ class FormulaOneScraper {
           .replaceAll('<p class="f1-bold--stat">', '')
           .replaceAll('<span class="misc--label">', '')
           .replaceAll('</span>', '')
-          .replaceAll('<span class="misc--label d-block d-md-inline">', ' - ');
+          .replaceAll('<span class="misc--label d-block d-md-inline">', ' — ');
       List<String> elementSubstringSplitted = elementSubstring.split('\n');
-      results[elementSubstringSplitted[1]] = elementSubstringSplitted[2];
+      String factLabel = "";
+      elementSubstringSplitted[1] == "First Grand Prix"
+          ? factLabel = AppLocalizations.of(context)!.firstGrandPrix
+          : elementSubstringSplitted[1] == "Number of Laps"
+              ? factLabel = AppLocalizations.of(context)!.numberOfLaps
+              : elementSubstringSplitted[1] == "Circuit Length"
+                  ? factLabel = AppLocalizations.of(context)!.circuitLength
+                  : elementSubstringSplitted[1] == "Race Distance"
+                      ? factLabel = AppLocalizations.of(context)!.raceDistance
+                      : factLabel = AppLocalizations.of(context)!.lapRecord;
+      results[factLabel] = elementSubstringSplitted[2];
     });
     return results;
   }

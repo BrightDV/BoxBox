@@ -89,11 +89,32 @@ class _CircuitScreenState extends State<CircuitScreen> {
             children: [
               Padding(
                 padding: EdgeInsets.all(5),
-                child: ListTile(
-                  title: Text(
-                    'View results',
-                    style: TextStyle(
-                      color: useDarkMode ? Colors.white : Colors.black,
+                child: GestureDetector(
+                  child: Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: useDarkMode
+                          ? Color(0xff1d1d28)
+                          : Colors.grey.shade400,
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
+                      child: Row(
+                        children: [
+                          Text(
+                            AppLocalizations.of(context)!.viewResults,
+                            style: TextStyle(
+                              color: useDarkMode ? Colors.white : Colors.black,
+                            ),
+                          ),
+                          Spacer(),
+                          Icon(
+                            Icons.arrow_forward_rounded,
+                            color: useDarkMode ? Colors.white : Colors.black,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                   onTap: () => Navigator.push(
@@ -117,10 +138,13 @@ class _CircuitScreenState extends State<CircuitScreen> {
                     Converter().circuitNameFromErgastToFormulaOneForRaceHub(
                       race.circuitId,
                     ),
+                    context,
                   ),
                   builder: (context, snapshot) => snapshot.hasData
                       ? ListView.builder(
                           itemCount: snapshot.data!.length,
+                          physics: NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
                           itemBuilder: (context, index) => Column(
                             children: [
                               Text(
@@ -144,7 +168,6 @@ class _CircuitScreenState extends State<CircuitScreen> {
                               ),
                             ],
                           ),
-                          shrinkWrap: true,
                         )
                       : Container(
                           height: 400,
@@ -165,6 +188,7 @@ class _CircuitScreenState extends State<CircuitScreen> {
                           data: snapshot.data!,
                           selectable: true,
                           styleSheet: MarkdownStyleSheet(
+                            textAlign: WrapAlignment.spaceBetween,
                             strong: TextStyle(
                               color: Theme.of(context).primaryColor,
                               fontSize: 20,
@@ -213,7 +237,9 @@ class RaceImageProvider extends StatelessWidget {
       future: getCircuitImageUrl(this.race),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
-          return RequestErrorWidget(snapshot.error.toString());
+          return RequestErrorWidget(
+            snapshot.error.toString(),
+          );
         }
         return snapshot.hasData
             ? CachedNetworkImage(
@@ -246,7 +272,9 @@ class TrackLayoutImage extends StatelessWidget {
       future: getTrackLayoutImageUrl(this.race),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
-          return RequestErrorWidget(snapshot.error.toString());
+          return RequestErrorWidget(
+            snapshot.error.toString(),
+          );
         }
         return snapshot.hasData
             ? GestureDetector(
@@ -277,40 +305,40 @@ class TrackLayoutImage extends StatelessWidget {
                                       onTap: () => Navigator.pop(context),
                                     ),
                                     Card(
-                                        color:
-                                            Colors.transparent.withOpacity(0.5),
-                                        elevation: 5.0,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(5),
+                                      color:
+                                          Colors.transparent.withOpacity(0.5),
+                                      elevation: 5.0,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(5),
+                                      ),
+                                      clipBehavior: Clip.antiAlias,
+                                      child: Image(
+                                        image: NetworkImage(
+                                          snapshot.data!,
                                         ),
-                                        clipBehavior: Clip.antiAlias,
-                                        child: Image(
-                                          image: NetworkImage(
-                                            snapshot.data!,
-                                          ),
-                                          loadingBuilder: (context, child,
-                                                  loadingProgress) =>
-                                              loadingProgress == null
-                                                  ? child
-                                                  : Container(
-                                                      height:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .width /
-                                                              (16 / 9),
-                                                      child:
-                                                          LoadingIndicatorUtil(),
-                                                    ),
-                                          errorBuilder: (context, url, error) =>
-                                              Icon(
-                                            Icons.error_outlined,
-                                            color: useDarkMode
-                                                ? Colors.white
-                                                : Colors.black,
-                                            size: 30,
-                                          ),
-                                        )),
+                                        loadingBuilder: (context, child,
+                                                loadingProgress) =>
+                                            loadingProgress == null
+                                                ? child
+                                                : Container(
+                                                    height:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width /
+                                                            (16 / 9),
+                                                    child:
+                                                        LoadingIndicatorUtil(),
+                                                  ),
+                                        errorBuilder: (context, url, error) =>
+                                            Icon(
+                                          Icons.error_outlined,
+                                          color: useDarkMode
+                                              ? Colors.white
+                                              : Colors.black,
+                                          size: 30,
+                                        ),
+                                      ),
+                                    ),
                                     Align(
                                       alignment: Alignment.topRight,
                                       child: IconButton(
