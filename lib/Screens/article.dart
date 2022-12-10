@@ -59,16 +59,21 @@ class _ArticleScreenState extends State<ArticleScreen> {
               ? ValueListenableBuilder(
                   valueListenable: articleTitle,
                   builder: (context, value, widget) {
-                    return Marquee(
-                      text: value.toString(),
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                      ),
-                      pauseAfterRound: Duration(seconds: 1),
-                      startAfter: Duration(seconds: 1),
-                      velocity: 85,
-                      blankSpace: 100,
-                    );
+                    return value.toString() == 'Loading...'
+                        ? Padding(
+                            padding: EdgeInsets.only(top: 15),
+                            child: Text('Loading...'),
+                          )
+                        : Marquee(
+                            text: value.toString(),
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                            ),
+                            pauseAfterRound: Duration(seconds: 1),
+                            startAfter: Duration(seconds: 1),
+                            velocity: 85,
+                            blankSpace: 100,
+                          );
                   },
                 )
               : Marquee(
