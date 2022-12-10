@@ -41,8 +41,9 @@ import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 class RaceDetailsScreen extends StatefulWidget {
   final Race race;
+  final int? tab;
 
-  const RaceDetailsScreen(this.race);
+  const RaceDetailsScreen(this.race, {this.tab});
 
   @override
   _RaceDetailsScreenState createState() => _RaceDetailsScreenState();
@@ -64,6 +65,7 @@ class _RaceDetailsScreenState extends State<RaceDetailsScreen> {
                 snapshot.error.toString() == "Failed host lookup: 'ergast.com'"
             ? DefaultTabController(
                 length: snapshot.data ?? false ? 4 : 3,
+                initialIndex: widget.tab != null ? widget.tab! : 0,
                 child: Builder(
                   builder: (BuildContext context) {
                     return NestedScrollView(

@@ -218,9 +218,11 @@ class EventTracker {
       headers: {
         'Accept': 'application/json',
         'apikey': apikey,
+        'locale': 'en',
       },
     );
     Map formatedResponse = jsonDecode(res.body);
+    print(formatedResponse['links'][1]['url'].split('.')[4]);
 
     return formatedResponse;
   }

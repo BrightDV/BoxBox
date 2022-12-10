@@ -19,7 +19,10 @@
 
 import 'dart:async';
 
+import 'package:boxbox/Screens/article.dart';
 import 'package:boxbox/Screens/race_details.dart';
+import 'package:boxbox/api/event_tracker.dart';
+import 'package:boxbox/api/news.dart';
 import 'package:boxbox/api/race_components.dart';
 import 'package:boxbox/helpers/convert_ergast_and_formula_one.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
@@ -48,6 +51,8 @@ class _CircuitScreenState extends State<CircuitScreen> {
     final Race race = widget.race;
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
+    bool useDataSaverMode = Hive.box('settings')
+        .get('useDataSaverMode', defaultValue: false) as bool;
     return Scaffold(
       backgroundColor:
           useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
@@ -85,138 +90,498 @@ class _CircuitScreenState extends State<CircuitScreen> {
           ];
         },
         body: SingleChildScrollView(
-          child: Column(
-            children: [
-              Padding(
-                padding: EdgeInsets.all(5),
-                child: GestureDetector(
-                  child: Container(
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: useDarkMode
-                          ? Color(0xff1d1d28)
-                          : Colors.grey.shade400,
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
-                      child: Row(
-                        children: [
-                          Text(
-                            AppLocalizations.of(context)!.viewResults,
-                            style: TextStyle(
-                              color: useDarkMode ? Colors.white : Colors.black,
-                            ),
-                          ),
-                          Spacer(),
-                          Icon(
-                            Icons.arrow_forward_rounded,
-                            color: useDarkMode ? Colors.white : Colors.black,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => RaceDetailsScreen(
-                        race,
-                      ),
-                    ),
-                  ),
-                ),
+          child: FutureBuilder<Map>(
+            future: EventTracker().getCircuitDetails(
+              Converter().circuitIdFromErgastToFormulaOne(
+                race.circuitId,
               ),
-              Padding(
-                padding: EdgeInsets.all(5),
-                child: TrackLayoutImage(race),
-              ),
-              Padding(
-                padding: EdgeInsets.all(10),
-                child: FutureBuilder<Map>(
-                  future: FormulaOneScraper().scrapeCircuitFacts(
-                    Converter().circuitNameFromErgastToFormulaOneForRaceHub(
-                      race.circuitId,
-                    ),
-                    context,
-                  ),
-                  builder: (context, snapshot) => snapshot.hasData
-                      ? ListView.builder(
-                          itemCount: snapshot.data!.length,
-                          physics: NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          itemBuilder: (context, index) => Column(
-                            children: [
-                              Text(
-                                snapshot.data!.keys.elementAt(index),
+            ),
+            builder: (context, snapshot) => snapshot.hasData
+                ? Column(
+                    children: [
+                      snapshot.data!['headline'] != null
+                          ? Padding(
+                              padding: EdgeInsets.all(10),
+                              child: Text(
+                                snapshot.data!['headline'],
                                 style: TextStyle(
                                   color:
                                       useDarkMode ? Colors.white : Colors.black,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                              Text(
-                                snapshot.data![
-                                    snapshot.data!.keys.elementAt(index)],
-                                style: TextStyle(
-                                  color:
-                                      useDarkMode ? Colors.white : Colors.black,
-                                  fontSize: 25,
+                                  fontSize: 20,
                                   fontWeight: FontWeight.w500,
                                 ),
-                                textAlign: TextAlign.center,
+                                textAlign: TextAlign.justify,
+                              ),
+                            )
+                          : Container(),
+                      Padding(
+                        padding: EdgeInsets.all(5),
+                        child: GestureDetector(
+                          child: Container(
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              color: useDarkMode
+                                  ? Color(0xff1d1d28)
+                                  : Colors.grey.shade400,
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    AppLocalizations.of(context)!.viewResults,
+                                    style: TextStyle(
+                                      color: useDarkMode
+                                          ? Colors.white
+                                          : Colors.black,
+                                    ),
+                                  ),
+                                  Spacer(),
+                                  Icon(
+                                    Icons.arrow_forward_rounded,
+                                    color: useDarkMode
+                                        ? Colors.white
+                                        : Colors.black,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => RaceDetailsScreen(
+                                race,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      snapshot.data!['links'][1] != null
+                          ? Padding(
+                              padding: EdgeInsets.all(5),
+                              child: GestureDetector(
+                                child: Container(
+                                  width: double.infinity,
+                                  decoration: BoxDecoration(
+                                    color: useDarkMode
+                                        ? Color(0xff1d1d28)
+                                        : Colors.grey.shade400,
+                                    borderRadius: BorderRadius.circular(5),
+                                  ),
+                                  child: Padding(
+                                    padding:
+                                        EdgeInsets.fromLTRB(20, 10, 20, 10),
+                                    child: Row(
+                                      children: [
+                                        Text(
+                                          AppLocalizations.of(context)!
+                                              .viewHighlights,
+                                          style: TextStyle(
+                                            color: useDarkMode
+                                                ? Colors.white
+                                                : Colors.black,
+                                          ),
+                                        ),
+                                        Spacer(),
+                                        Icon(
+                                          Icons.arrow_forward_rounded,
+                                          color: useDarkMode
+                                              ? Colors.white
+                                              : Colors.black,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                onTap: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ArticleScreen(
+                                      snapshot.data!['links'][1]['url']
+                                          .split('.')[4],
+                                      '',
+                                      true,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            )
+                          : Container(),
+                      snapshot.data!['raceResults'] != null
+                          ? Padding(
+                              padding: EdgeInsets.all(
+                                10,
+                              ),
+                              child: Container(
+                                height: 210,
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: useDarkMode
+                                        ? Color(0xff1d1d28)
+                                        : Colors.grey.shade50,
+                                  ),
+                                  borderRadius: BorderRadius.circular(15.0),
+                                ),
+                                child: Column(
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.only(
+                                        top: 15,
+                                      ),
+                                      child: Text(
+                                        snapshot.data!['race']
+                                            ['meetingCountryName'],
+                                        style: TextStyle(
+                                          color: useDarkMode
+                                              ? Colors.white
+                                              : Colors.black,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ),
+                                    Text(
+                                      AppLocalizations.of(context)!.race,
+                                      style: TextStyle(
+                                        color: useDarkMode
+                                            ? Colors.white
+                                            : Colors.black,
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.only(
+                                        top: 15,
+                                        left: 15,
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                            flex: 5,
+                                            child: Text(
+                                              AppLocalizations.of(context)!
+                                                  .positionAbbreviation,
+                                              style: TextStyle(
+                                                color: useDarkMode
+                                                    ? Colors.white
+                                                    : Colors.black,
+                                              ),
+                                            ),
+                                          ),
+                                          Spacer(),
+                                          Expanded(
+                                            flex: 5,
+                                            child: Text(
+                                              AppLocalizations.of(context)!
+                                                  .time,
+                                              style: TextStyle(
+                                                color: useDarkMode
+                                                    ? Colors.white
+                                                    : Colors.black,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    for (Map driverResults
+                                        in snapshot.data!['raceResults'])
+                                      Padding(
+                                        padding: EdgeInsets.only(
+                                          top: 7,
+                                        ),
+                                        child: Row(
+                                          children: [
+                                            Expanded(
+                                              flex: 2,
+                                              child: Text(
+                                                driverResults['positionNumber'],
+                                                style: TextStyle(
+                                                  color: useDarkMode
+                                                      ? Colors.white
+                                                      : Colors.black,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                            ),
+                                            Expanded(
+                                              flex: 1,
+                                              child: Container(
+                                                height: 15,
+                                                child: VerticalDivider(
+                                                  color: Color(
+                                                    int.parse(
+                                                        'FF' +
+                                                            driverResults[
+                                                                'teamColourCode'],
+                                                        radix: 16),
+                                                  ),
+                                                  thickness: 5,
+                                                  width: 5,
+                                                ),
+                                              ),
+                                            ),
+                                            Expanded(
+                                              flex: 3,
+                                              child: Text(
+                                                driverResults['driverTLA']
+                                                    .toString(),
+                                                style: TextStyle(
+                                                  color: useDarkMode
+                                                      ? Colors.white
+                                                      : Colors.black,
+                                                ),
+                                              ),
+                                            ),
+                                            Spacer(),
+                                            Expanded(
+                                              flex: 6,
+                                              child: Text(
+                                                driverResults['gapToLeader'] !=
+                                                        "0.0"
+                                                    ? '+' +
+                                                        driverResults[
+                                                            'gapToLeader']
+                                                    : driverResults['raceTime'],
+                                                style: TextStyle(
+                                                  color: useDarkMode
+                                                      ? Colors.white
+                                                      : Colors.black,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    Expanded(
+                                      child: Padding(
+                                        padding: EdgeInsets.only(
+                                          top: 15,
+                                        ),
+                                        child: Container(
+                                          width: double.infinity,
+                                          child: ClipRRect(
+                                            borderRadius: BorderRadius.only(
+                                              topLeft: Radius.zero,
+                                              topRight: Radius.zero,
+                                              bottomLeft: Radius.circular(15),
+                                              bottomRight: Radius.circular(15),
+                                            ),
+                                            child: ElevatedButton(
+                                              onPressed: () => Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      RaceDetailsScreen(
+                                                    race,
+                                                    tab: 2,
+                                                  ),
+                                                ),
+                                              ),
+                                              child: Text(
+                                                AppLocalizations.of(context)!
+                                                    .viewResults,
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                              style: ElevatedButton.styleFrom(
+                                                shape:
+                                                    ContinuousRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.zero,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            )
+                          : Container(),
+                      snapshot.data!['curatedSection'] != null
+                          ? SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  for (Map article in snapshot
+                                      .data!['curatedSection']['items'])
+                                    NewsItem(
+                                      News(
+                                        article['id'],
+                                        article['articleType'],
+                                        article['slug'],
+                                        article['title'],
+                                        article['metaDescription'] ?? ' ',
+                                        DateTime.parse(article['updatedAt']),
+                                        useDataSaverMode
+                                            ? article['thumbnail']['image']
+                                                        ['renditions'] !=
+                                                    null
+                                                ? article['thumbnail']['image']
+                                                    ['renditions']['2col']
+                                                : article['thumbnail']['image']
+                                                        ['url'] +
+                                                    '.transform/2col-retina/image.jpg'
+                                            : article['thumbnail']['image']
+                                                ['url'],
+                                      ),
+                                      true,
+                                    ),
+                                ],
+                              ),
+                            )
+                          : Container(),
+                      Padding(
+                        padding: EdgeInsets.all(5),
+                        child: TrackLayoutImage(race),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(10),
+                        child: FutureBuilder<Map>(
+                          future: FormulaOneScraper().scrapeCircuitFacts(
+                            Converter()
+                                .circuitNameFromErgastToFormulaOneForRaceHub(
+                              race.circuitId,
+                            ),
+                            context,
+                          ),
+                          builder: (context, snapshot) => snapshot.hasData
+                              ? ListView.builder(
+                                  itemCount: snapshot.data!.length,
+                                  physics: NeverScrollableScrollPhysics(),
+                                  shrinkWrap: true,
+                                  itemBuilder: (context, index) => Column(
+                                    children: [
+                                      Text(
+                                        snapshot.data!.keys.elementAt(index),
+                                        style: TextStyle(
+                                          color: useDarkMode
+                                              ? Colors.white
+                                              : Colors.black,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      Text(
+                                        snapshot.data![snapshot.data!.keys
+                                            .elementAt(index)],
+                                        style: TextStyle(
+                                          color: useDarkMode
+                                              ? Colors.white
+                                              : Colors.black,
+                                          fontSize: 25,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              : Container(
+                                  height: 400,
+                                  child: LoadingIndicatorUtil(),
+                                ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(10),
+                        child: FutureBuilder<String>(
+                          future: FormulaOneScraper().scrapeCircuitHistory(
+                            Converter()
+                                .circuitNameFromErgastToFormulaOneForRaceHub(
+                              race.circuitId,
+                            ),
+                          ),
+                          builder: (context, snapshot) => snapshot.hasData
+                              ? MarkdownBody(
+                                  data: snapshot.data!,
+                                  selectable: true,
+                                  styleSheet: MarkdownStyleSheet(
+                                    textAlign: WrapAlignment.spaceBetween,
+                                    strong: TextStyle(
+                                      color: Theme.of(context).primaryColor,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                    p: TextStyle(
+                                      fontSize: 14,
+                                      color: useDarkMode
+                                          ? Colors.white
+                                          : Colors.black,
+                                    ),
+                                    pPadding: EdgeInsets.only(
+                                      top: 10,
+                                      bottom: 10,
+                                    ),
+                                    h1: TextStyle(
+                                      color: useDarkMode
+                                          ? Colors.white
+                                          : Colors.black,
+                                    ),
+                                    h2: TextStyle(
+                                      color: useDarkMode
+                                          ? Colors.white
+                                          : Colors.black,
+                                    ),
+                                  ),
+                                )
+                              : Container(
+                                  height: 400,
+                                  child: LoadingIndicatorUtil(),
+                                ),
+                        ),
+                      ),
+                    ],
+                  )
+                : Padding(
+                    padding: EdgeInsets.all(5),
+                    child: GestureDetector(
+                      child: Container(
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: useDarkMode
+                              ? Color(0xff1d1d28)
+                              : Colors.grey.shade400,
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
+                          child: Row(
+                            children: [
+                              Text(
+                                AppLocalizations.of(context)!.viewResults,
+                                style: TextStyle(
+                                  color:
+                                      useDarkMode ? Colors.white : Colors.black,
+                                ),
+                              ),
+                              Spacer(),
+                              Icon(
+                                Icons.arrow_forward_rounded,
+                                color:
+                                    useDarkMode ? Colors.white : Colors.black,
                               ),
                             ],
                           ),
-                        )
-                      : Container(
-                          height: 400,
-                          child: LoadingIndicatorUtil(),
                         ),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.all(10),
-                child: FutureBuilder<String>(
-                  future: FormulaOneScraper().scrapeCircuitHistory(
-                    Converter().circuitNameFromErgastToFormulaOneForRaceHub(
-                      race.circuitId,
+                      ),
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => RaceDetailsScreen(
+                            race,
+                          ),
+                        ),
+                      ),
                     ),
                   ),
-                  builder: (context, snapshot) => snapshot.hasData
-                      ? MarkdownBody(
-                          data: snapshot.data!,
-                          selectable: true,
-                          styleSheet: MarkdownStyleSheet(
-                            textAlign: WrapAlignment.spaceBetween,
-                            strong: TextStyle(
-                              color: Theme.of(context).primaryColor,
-                              fontSize: 20,
-                              fontWeight: FontWeight.w500,
-                            ),
-                            p: TextStyle(
-                              fontSize: 14,
-                              color: useDarkMode ? Colors.white : Colors.black,
-                            ),
-                            pPadding: EdgeInsets.only(
-                              top: 10,
-                              bottom: 10,
-                            ),
-                            h1: TextStyle(
-                              color: useDarkMode ? Colors.white : Colors.black,
-                            ),
-                            h2: TextStyle(
-                              color: useDarkMode ? Colors.white : Colors.black,
-                            ),
-                          ),
-                        )
-                      : Container(
-                          height: 400,
-                          child: LoadingIndicatorUtil(),
-                        ),
-                ),
-              ),
-            ],
           ),
         ),
       ),
