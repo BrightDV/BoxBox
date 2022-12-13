@@ -27,7 +27,6 @@ import 'package:boxbox/helpers/driver_result_item.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/racetracks_url.dart';
 import 'package:boxbox/helpers/request_error.dart';
-import 'package:boxbox/Screens/circuit_map_screen.dart';
 import 'package:boxbox/Screens/free_practice_screen.dart';
 import 'package:boxbox/scraping/formula_one.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -65,7 +64,13 @@ class _RaceDetailsScreenState extends State<RaceDetailsScreen> {
                 snapshot.error.toString() == "Failed host lookup: 'ergast.com'"
             ? DefaultTabController(
                 length: snapshot.data ?? false ? 4 : 3,
-                initialIndex: widget.tab != null ? widget.tab! : 0,
+                initialIndex: widget.tab != null
+                    ? widget.tab == 10
+                        ? snapshot.data ?? false
+                            ? 3
+                            : 2
+                        : widget.tab!
+                    : 0,
                 child: Builder(
                   builder: (BuildContext context) {
                     return NestedScrollView(
@@ -73,24 +78,6 @@ class _RaceDetailsScreenState extends State<RaceDetailsScreen> {
                           (BuildContext context, bool innerBoxIsScrolled) {
                         return <Widget>[
                           SliverAppBar(
-                            actions: [
-                              IconButton(
-                                icon: Icon(
-                                  Icons.map_outlined,
-                                ),
-                                tooltip:
-                                    AppLocalizations.of(context)!.grandPrixMap,
-                                onPressed: () {
-                                  showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) =>
-                                        CircuitMapScreen(
-                                      race.circuitId,
-                                    ),
-                                  );
-                                },
-                              ),
-                            ],
                             expandedHeight: 200.0,
                             floating: false,
                             pinned: true,
@@ -228,8 +215,8 @@ class FreePracticesResultsProvider extends StatelessWidget {
     ];
     return FutureBuilder<int>(
       future: FormulaOneScraper().whichSessionsAreFinised(
-        Converter().circuitIdFromErgastToFormulaOne(race.circuitId),
-        Converter().circuitNameFromErgastToFormulaOne(race.circuitId),
+        Convert().circuitIdFromErgastToFormulaOne(race.circuitId),
+        Convert().circuitNameFromErgastToFormulaOne(race.circuitId),
       ),
       builder: (context, snapshot) => snapshot.hasData
           ? snapshot.data == 0

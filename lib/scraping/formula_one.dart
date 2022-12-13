@@ -45,9 +45,9 @@ class FormulaOneScraper {
 
       if (fromErgast) {
         circuitId =
-            Converter().circuitIdFromErgastToFormulaOne(originalCircuitId);
+            Convert().circuitIdFromErgastToFormulaOne(originalCircuitId);
         circuitName =
-            Converter().circuitNameFromErgastToFormulaOne(originalCircuitId);
+            Convert().circuitNameFromErgastToFormulaOne(originalCircuitId);
       } else {
         circuitId = originalCircuitId;
         circuitName = originalCircuitName!;
@@ -71,7 +71,7 @@ class FormulaOneScraper {
             result.children[3].children[0].text,
             result.children[3].children[1].text,
             result.children[3].children[2].text,
-            Converter().teamsFromFormulaOneToErgast(
+            Convert().teamsFromFormulaOneToErgast(
               result.children[4].text,
             ),
             result.children[6].text,
@@ -99,10 +99,9 @@ class FormulaOneScraper {
     late String circuitName;
 
     if (fromErgast) {
-      circuitId =
-          Converter().circuitIdFromErgastToFormulaOne(originalCircuitId);
+      circuitId = Convert().circuitIdFromErgastToFormulaOne(originalCircuitId);
       circuitName =
-          Converter().circuitNameFromErgastToFormulaOne(originalCircuitId);
+          Convert().circuitNameFromErgastToFormulaOne(originalCircuitId);
     } else if (qualifyingResultsUrl == null) {
       circuitId = originalCircuitId;
       circuitName = originalCircuitName!;
@@ -137,7 +136,7 @@ class FormulaOneScraper {
               result.children[3].children[0].text,
               result.children[3].children[1].text,
               result.children[3].children[2].text,
-              Converter().teamsFromFormulaOneToErgast(
+              Convert().teamsFromFormulaOneToErgast(
                 result.children[4].text,
               ),
               result.children[5].text != '' ? result.children[5].text : '--',
@@ -173,9 +172,9 @@ class FormulaOneScraper {
 
       if (fromErgast) {
         circuitId =
-            Converter().circuitIdFromErgastToFormulaOne(originalCircuitId);
+            Convert().circuitIdFromErgastToFormulaOne(originalCircuitId);
         circuitName =
-            Converter().circuitNameFromErgastToFormulaOne(originalCircuitId);
+            Convert().circuitNameFromErgastToFormulaOne(originalCircuitId);
       } else {
         circuitId = originalCircuitId;
         circuitName = originalCircuitName!;
@@ -212,7 +211,7 @@ class FormulaOneScraper {
               result.children[3].children[0].text,
               result.children[3].children[1].text,
               result.children[3].children[2].text,
-              Converter().teamsFromFormulaOneToErgast(
+              Convert().teamsFromFormulaOneToErgast(
                 result.children[4].text,
               ),
               result.children[5].text,
@@ -235,7 +234,7 @@ class FormulaOneScraper {
   Future<List<List>> scrapeDriversDetails(
     String ergastDriverId,
   ) async {
-    final String driverId = Converter().driverIdFromErgast(ergastDriverId);
+    final String driverId = Convert().driverIdFromErgast(ergastDriverId);
     final Uri driverDetailsUrl =
         Uri.parse('https://www.formula1.com/en/drivers/$driverId.html');
     http.Response response = await http.get(driverDetailsUrl);

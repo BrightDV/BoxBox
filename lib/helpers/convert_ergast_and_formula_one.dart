@@ -17,7 +17,7 @@
  * Copyright (c) 2022, BrightDV
  */
 
-class Converter {
+class Convert {
   String driversFromFormulaOneToErgast(String driverCode) {
     Map formulaOneToErgast = {
       'VER': 'max_verstappen',
@@ -88,6 +88,39 @@ class Converter {
       'yas_marina': '1138',
     };
     return ergastToFormulaOne[circuitId];
+  }
+
+  String circuitIdFromFormulaOneToFormulaErgast(String circuitId) {
+    Map ergastToFormulaOne = {
+      'bahrain': '1124',
+      'jeddah': '1125',
+      'albert_park': '1108',
+      'imola': '1109',
+      'miami': '1110',
+      'catalunya': '1111',
+      'monaco': '1112',
+      'baku': '1126',
+      'villeneuve': '1113',
+      'silverstone': '1114',
+      'red_bull_ring': '1115',
+      'ricard': '1116',
+      'hungaroring': '1117',
+      'spa': '1118',
+      'zandvoort': '1119',
+      'monza': '1120',
+      'marina_bay': '1133',
+      'suzuka': '1134',
+      'americas': '1135',
+      'rodriguez': '1136',
+      'interlagos': '1137',
+      'yas_marina': '1138',
+    };
+    Map temp = {};
+    for (String key in ergastToFormulaOne.keys) {
+      temp[ergastToFormulaOne[key]] = key;
+    }
+    print(temp);
+    return temp[circuitId];
   }
 
   String circuitNameFromErgastToFormulaOneForRaceHub(String circuitId) {
@@ -171,5 +204,33 @@ class Converter {
       "vettel": "sebastian-vettel",
     };
     return ergastToFormulaOne[driverId];
+  }
+
+  String circuitNameFromFormulaOneToFormulaOneIdForRaceHub(String circuitId) {
+    Map ergastToFormulaOne = {
+      "Bahrain": '1124',
+      "Saudi_Arabia": '1125',
+      "Australia": '1108',
+      "EmiliaRomagna": '1109',
+      "Miami": '1110',
+      "Spain": '1111',
+      "Monaco": '1112',
+      "Azerbaijan": '1126',
+      "Canada": '1113',
+      "Great_Britain": '1114',
+      "Austria": '1115',
+      "France": '1116',
+      "Hungary": '1117',
+      "Belgium": '1118',
+      "Netherlands": '1119',
+      "Italy": '1120',
+      "Singapore": '1133',
+      "Japan": '1134',
+      "United_States": '1135',
+      "Mexico": '1136',
+      "Brazil": '1137',
+      "United_Arab_Emirates": '1138',
+    };
+    return ergastToFormulaOne[circuitId];
   }
 }

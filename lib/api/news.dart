@@ -21,8 +21,13 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:better_player/better_player.dart';
+import 'package:boxbox/Screens/circuit.dart';
 import 'package:boxbox/Screens/free_practice_screen.dart';
 import 'package:boxbox/api/brightcove.dart';
+import 'package:boxbox/api/ergast.dart';
+import 'package:boxbox/api/event_tracker.dart';
+import 'package:boxbox/api/race_components.dart';
+import 'package:boxbox/helpers/convert_ergast_and_formula_one.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/news_feed_widget.dart';
 import 'package:boxbox/helpers/request_error.dart';
@@ -296,7 +301,7 @@ class NewsItem extends StatelessWidget {
     return inRelated
         ? Container(
             width: width / 2.1,
-            height: 210,
+            height: 232,
             child: Padding(
               padding: EdgeInsets.only(top: 5),
               child: GestureDetector(
@@ -1668,28 +1673,64 @@ class TextParagraphRenderer extends StatelessWidget {
                   ),
                 ),
               );
-            } else if (url.startsWith(
-                "https://www.formula1.com/en/racing/${RegExp(r'\d{4}')}/")) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => Scaffold(
-                    appBar: AppBar(
-                      centerTitle: true,
-                      title: Text(
-                        'Dead end',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                    body: Text('This should not be possible... but it is...'),
-                  ),
-                ),
-              );
             } else {
               launchUrl(Uri.parse(url));
             }
+          } else if (url.startsWith("https://www.formula1.com/en/racing/202") ||
+              url.startsWith(
+                  "https://www.formula1.com/content/fom-website/en/racing/202")) {
+            Widget eventTracker(Map snapshotData) {
+              //Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => CircuitScreen(
+                    Race(
+                      '0',
+                      snapshotData['race']['meetingCountryName'],
+                      '',
+                      '',
+                      Convert().circuitIdFromFormulaOneToFormulaErgast(
+                        Convert()
+                            .circuitNameFromFormulaOneToFormulaOneIdForRaceHub(
+                          url.split('/')[8].split('.')[0],
+                        ),
+                      ),
+                      '',
+                      '',
+                      '',
+                    ),
+                  ),
+                ),
+              );
+              return Container();
+            }
+
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => Scaffold(
+                  body: FutureBuilder<Map>(
+                    future: EventTracker().getCircuitDetails(
+                      Convert()
+                          .circuitNameFromFormulaOneToFormulaOneIdForRaceHub(
+                        url.split('/')[8].split('.')[0],
+                      ),
+                    ),
+                    builder: (context, snapshot) => snapshot.hasData
+                        ? eventTracker(snapshot.data!)
+                        : Scaffold(
+                            backgroundColor: useDarkMode
+                                ? Theme.of(context).backgroundColor
+                                : Colors.white,
+                            body: Center(
+                              child: LoadingIndicatorUtil(),
+                            ),
+                          ),
+                  ),
+                ),
+              ),
+            );
           } else {
             launchUrl(Uri.parse(url));
           }

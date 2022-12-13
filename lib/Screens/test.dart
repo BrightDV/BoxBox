@@ -26,7 +26,7 @@ class TestScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ArticleScreen(
-      '3xAKt5uxeATAAQF4gOALAY',
+      '6fJ3Awe6YmTCf7KSqI2IVG',
       'Russell beats Verstappen in Sprint thriller to secure P1 grid slot for the Sao Paulo GP',
       true,
     );

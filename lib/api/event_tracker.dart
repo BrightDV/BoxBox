@@ -222,7 +222,6 @@ class EventTracker {
       },
     );
     Map formatedResponse = jsonDecode(res.body);
-    print(formatedResponse['links'][1]['url'].split('.')[4]);
 
     return formatedResponse;
   }

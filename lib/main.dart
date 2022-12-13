@@ -55,7 +55,8 @@ void main() async {
       NotificationChannel(
         channelKey: 'newArticle',
         channelName: 'New article',
-        channelDescription: 'Show a notification when a new article is posted.',
+        channelDescription:
+            'Show a notification when a new article is published.',
         defaultColor: Colors.red,
         importance: NotificationImportance.High,
         channelShowBadge: true,
@@ -68,7 +69,7 @@ void main() async {
     isInDebugMode: true,
   );
   Workmanager().registerPeriodicTask(
-    createUniqueId().toString(),
+    'newsLoader',
     "Load news in background",
     existingWorkPolicy: ExistingWorkPolicy.replace,
     frequency: Duration(hours: 4),
@@ -88,35 +89,54 @@ void callbackDispatcher() {
     Map cachedNews = hiveBox.get('news', defaultValue: {}) as Map;
     bool useDataSaverMode =
         hiveBox.get('useDataSaverMode', defaultValue: false) as bool;
-    Map<String, dynamic> fetchedData = await F1NewsFetcher().getRawNews();
-    if (fetchedData['items'][0]['id'] != cachedNews['items'][0]['id']) {
-      String imageUrl = fetchedData['items'][0]['thumbnail']['image']['url'];
-      if (useDataSaverMode) {
-        if (fetchedData['items'][0]['thumbnail']['image']['renditions'] !=
-            null) {
-          imageUrl = fetchedData['items'][0]['thumbnail']['image']['renditions']
-              ['2col-retina'];
-        } else {
-          imageUrl += '.transform/2col-retina/image.jpg';
+    try {
+      Map<String, dynamic> fetchedData = await F1NewsFetcher().getRawNews();
+      if (fetchedData['items'][0]['id'] != cachedNews['items'][0]['id']) {
+        String imageUrl = fetchedData['items'][0]['thumbnail']['image']['url'];
+        if (useDataSaverMode) {
+          if (fetchedData['items'][0]['thumbnail']['image']['renditions'] !=
+              null) {
+            imageUrl = fetchedData['items'][0]['thumbnail']['image']
+                ['renditions']['2col-retina'];
+          } else {
+            imageUrl += '.transform/2col-retina/image.jpg';
+          }
         }
+        await AwesomeNotifications().createNotification(
+          content: NotificationContent(
+            id: createUniqueId(),
+            channelKey: 'newArticle',
+            title: fetchedData['items'][0]['title'],
+            body: fetchedData['items'][0]['metaDescription'],
+            largeIcon: imageUrl,
+            bigPicture: imageUrl,
+            hideLargeIconOnExpand: true,
+            notificationLayout: NotificationLayout.BigPicture,
+            payload: {
+              'id': fetchedData['items'][0]['id'],
+              'title': fetchedData['items'][0]['title'],
+            },
+          ),
+        );
+        hiveBox.put('news', fetchedData);
+      } else {
+        await AwesomeNotifications().createNotification(
+          content: NotificationContent(
+            id: createUniqueId(),
+            channelKey: 'newArticle',
+            title: 'No new article',
+          ),
+        );
       }
+    } catch (error, stackTrace) {
       await AwesomeNotifications().createNotification(
         content: NotificationContent(
           id: createUniqueId(),
           channelKey: 'newArticle',
-          title: fetchedData['items'][0]['title'],
-          body: fetchedData['items'][0]['metaDescription'],
-          largeIcon: imageUrl,
-          bigPicture: imageUrl,
-          hideLargeIconOnExpand: true,
-          notificationLayout: NotificationLayout.BigPicture,
-          payload: {
-            'id': fetchedData['items'][0]['id'],
-            'title': fetchedData['items'][0]['title'],
-          },
+          title: 'An error occured while fetching news.',
+          body: stackTrace.toString(),
         ),
       );
-      hiveBox.put('news', fetchedData);
     }
     return true;
   });

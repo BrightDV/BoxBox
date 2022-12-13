@@ -73,7 +73,7 @@ class DriverResultsImage {
 
 class DriverStatsImage {
   Future<String> getDriverImage(String driverId) async {
-    String driverPath = Converter().driverIdFromErgast(driverId);
+    String driverPath = Convert().driverIdFromErgast(driverId);
     String driverImageUrl =
         "https://www.formula1.com/content/fom-website/en/drivers/$driverPath/_jcr_content/image.img.1920.medium.jpg/1646818893219.jpg";
     return driverImageUrl;
@@ -82,7 +82,7 @@ class DriverStatsImage {
 
 class DriverHelmetImage {
   Future<String> getDriverHelmetImage(String driverId) async {
-    String driverPath = Converter().driverIdFromErgast(driverId);
+    String driverPath = Convert().driverIdFromErgast(driverId);
     String driverImageUrl =
         "https://www.formula1.com/content/fom-website/en/drivers/$driverPath/_jcr_content/helmet.img.png";
     return driverImageUrl;
@@ -91,7 +91,7 @@ class DriverHelmetImage {
 
 class DriverFlagImage {
   Future<String> getDriverFlagImage(String driverId) async {
-    String driverPath = Converter().driverIdFromErgast(driverId);
+    String driverPath = Convert().driverIdFromErgast(driverId);
     String driverImageUrl =
         "https://www.formula1.com/content/fom-website/en/drivers/$driverPath/_jcr_content/countryFlag.img.jpg";
     return driverImageUrl;

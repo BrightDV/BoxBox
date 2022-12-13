@@ -35,16 +35,19 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     AwesomeNotifications().setListeners(
-      onActionReceivedMethod: (receivedAction) async => Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => ArticleScreen(
-            receivedAction.payload!['id']!,
-            receivedAction.payload!['title']!,
-            false,
-          ),
-        ),
-      ),
+      onActionReceivedMethod: (receivedAction) async =>
+          receivedAction.payload?['id'] == null
+              ? null
+              : Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ArticleScreen(
+                      receivedAction.payload!['id']!,
+                      receivedAction.payload!['title']!,
+                      false,
+                    ),
+                  ),
+                ),
     );
   }
 

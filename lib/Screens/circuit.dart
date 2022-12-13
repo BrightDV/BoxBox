@@ -92,7 +92,7 @@ class _CircuitScreenState extends State<CircuitScreen> {
         body: SingleChildScrollView(
           child: FutureBuilder<Map>(
             future: EventTracker().getCircuitDetails(
-              Converter().circuitIdFromErgastToFormulaOne(
+              Convert().circuitIdFromErgastToFormulaOne(
                 race.circuitId,
               ),
             ),
@@ -377,7 +377,7 @@ class _CircuitScreenState extends State<CircuitScreen> {
                                                   builder: (context) =>
                                                       RaceDetailsScreen(
                                                     race,
-                                                    tab: 2,
+                                                    tab: 10,
                                                   ),
                                                 ),
                                               ),
@@ -447,7 +447,7 @@ class _CircuitScreenState extends State<CircuitScreen> {
                         padding: EdgeInsets.all(10),
                         child: FutureBuilder<Map>(
                           future: FormulaOneScraper().scrapeCircuitFacts(
-                            Converter()
+                            Convert()
                                 .circuitNameFromErgastToFormulaOneForRaceHub(
                               race.circuitId,
                             ),
@@ -494,7 +494,7 @@ class _CircuitScreenState extends State<CircuitScreen> {
                         padding: EdgeInsets.all(10),
                         child: FutureBuilder<String>(
                           future: FormulaOneScraper().scrapeCircuitHistory(
-                            Converter()
+                            Convert()
                                 .circuitNameFromErgastToFormulaOneForRaceHub(
                               race.circuitId,
                             ),
