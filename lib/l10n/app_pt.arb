@@ -224,5 +224,17 @@
   "worldChampionships": "Campeonatos do Mundo",
   "@worldChampionships": {},
   "history": "Historia",
-  "@history": {}
+  "@history": {},
+  "raceDistance": "Distância da corrida",
+  "@raceDistance": {},
+  "lapRecord": "Recorde da volta",
+  "@lapRecord": {},
+  "circuitLength": "Comprimento do circuito",
+  "@circuitLength": {},
+  "firstGrandPrix": "Primeiro Grande Prémio",
+  "@firstGrandPrix": {},
+  "numberOfLaps": "Número de Voltas",
+  "@numberOfLaps": {},
+  "viewHighlights": "Ver destaques",
+  "@viewHighlights": {}
 }
