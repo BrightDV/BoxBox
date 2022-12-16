@@ -709,7 +709,11 @@ class _CircuitScreenState extends State<CircuitScreen> {
                                               ),
                                               child: Padding(
                                                 padding: EdgeInsets.fromLTRB(
-                                                    20, 10, 20, 10),
+                                                  20,
+                                                  10,
+                                                  20,
+                                                  10,
+                                                ),
                                                 child: Row(
                                                   children: [
                                                     Text(
@@ -739,7 +743,7 @@ class _CircuitScreenState extends State<CircuitScreen> {
                                               MaterialPageRoute(
                                                 builder: (context) =>
                                                     RaceDetailsScreen(
-                                                  race,
+                                                  circuitSnapshot.data!,
                                                 ),
                                               ),
                                             ),
@@ -758,12 +762,17 @@ class _CircuitScreenState extends State<CircuitScreen> {
                                                               .grey.shade400,
                                                       borderRadius:
                                                           BorderRadius.circular(
-                                                              5),
+                                                        5,
+                                                      ),
                                                     ),
                                                     child: Padding(
                                                       padding:
                                                           EdgeInsets.fromLTRB(
-                                                              20, 10, 20, 10),
+                                                        20,
+                                                        10,
+                                                        20,
+                                                        10,
+                                                      ),
                                                       child: Row(
                                                         children: [
                                                           Text(
@@ -1027,7 +1036,8 @@ class _CircuitScreenState extends State<CircuitScreen> {
                                                                     builder:
                                                                         (context) =>
                                                                             RaceDetailsScreen(
-                                                                      race,
+                                                                      circuitSnapshot
+                                                                          .data!,
                                                                       tab: 10,
                                                                     ),
                                                                   ),
@@ -1115,7 +1125,9 @@ class _CircuitScreenState extends State<CircuitScreen> {
                                             : Container(),
                                         Padding(
                                           padding: EdgeInsets.all(5),
-                                          child: TrackLayoutImage(race),
+                                          child: TrackLayoutImage(
+                                            circuitSnapshot.data!,
+                                          ),
                                         ),
                                         Padding(
                                           padding: EdgeInsets.all(10),
