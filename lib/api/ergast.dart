@@ -273,6 +273,27 @@ class _ErgastApiCalls {
     return formatLastSchedule(responseAsJson, toCome);
   }
 
+  Future<Race> getRaceDetails(String round) async {
+    var url = Uri.parse('https://ergast.com/api/f1/current/$round.json');
+    var response = await http.get(url);
+    Map<String, dynamic> responseAsJson =
+        jsonDecode(response.body)['MRData']['RaceTable']['Races'][0];
+    Race race = Race(
+      responseAsJson['round'],
+      responseAsJson['raceName'].substring(
+        0,
+        responseAsJson['raceName'].indexOf(' Grand Prix'),
+      ),
+      responseAsJson['date'],
+      responseAsJson['time'],
+      responseAsJson['Circuit']['circuitId'],
+      responseAsJson['Circuit']['circuitName'],
+      responseAsJson['Circuit']['url'],
+      responseAsJson['Circuit']['Location']['country'],
+    );
+    return race;
+  }
+
   List<Team> formatLastTeamsStandings(Map responseAsJson) {
     List<Team> drivers = [];
     List finalJson = responseAsJson['MRData']['StandingsTable']
@@ -366,5 +387,9 @@ class ErgastApi {
 
   Future<bool> hasSprintQualifyings(String round) async {
     return await _ErgastApiCalls().hasSprintQualifyings(round);
+  }
+
+  Future<Race> getRaceDetails(String round) async {
+    return await _ErgastApiCalls().getRaceDetails(round);
   }
 }

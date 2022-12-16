@@ -129,6 +129,8 @@ void callbackDispatcher() {
         );
       }
     } catch (error, stackTrace) {
+      print(error);
+      print(stackTrace);
       await AwesomeNotifications().createNotification(
         content: NotificationContent(
           id: createUniqueId(),
