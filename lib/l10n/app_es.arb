@@ -236,5 +236,11 @@
   "raceDistance": "Distancia de la carrera",
   "@raceDistance": {},
   "viewHighlights": "Ver lo más destacado",
-  "@viewHighlights": {}
+  "@viewHighlights": {},
+  "filter": "Filtrar",
+  "@filter": {},
+  "apply": "Aplicar",
+  "@apply": {},
+  "topics": "Temas",
+  "@topics": {}
 }
