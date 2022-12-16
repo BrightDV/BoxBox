@@ -21,6 +21,7 @@ import 'package:boxbox/helpers/drawer.dart';
 import 'package:boxbox/Screens/home.dart';
 import 'package:boxbox/Screens/schedule.dart';
 import 'package:boxbox/Screens/standings.dart';
+import 'package:boxbox/helpers/news_feed_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hidable/hidable.dart';
@@ -36,11 +37,22 @@ class MainBottomNavigationBar extends StatefulWidget {
 
 class _MainBottomNavigationBarState extends State<MainBottomNavigationBar> {
   int _selectedIndex = 0;
+  List<Widget> actions = [];
   final ScrollController scrollController = ScrollController();
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
+      if (_selectedIndex == 0) {
+        actions = [
+          IconButton(
+            icon: const Icon(Icons.close),
+            onPressed: () {},
+          ),
+        ];
+      } else {
+        actions = [];
+      }
     });
   }
 
@@ -67,6 +79,156 @@ class _MainBottomNavigationBarState extends State<MainBottomNavigationBar> {
       StandingsScreen(scrollController: scrollController),
       ScheduleScreen(scrollController: scrollController),
     ];
+    if (_selectedIndex == 0) {
+      actions = [
+        IconButton(
+          icon: const Icon(Icons.sort_outlined),
+          tooltip: 'Filter',
+          onPressed: () {
+            List<String> filterItems = [
+              'Video',
+              'Image Gallery',
+              'Podcast',
+              'Poll',
+              'News',
+              'Report',
+              'Interview',
+              'Feature',
+              'Opinion',
+              'Technical',
+            ];
+            int pressed = 0;
+            bool selected = false;
+
+            showDialog(
+              context: context,
+              builder: (context) => StatefulBuilder(
+                builder: (context, setState) => AlertDialog(
+                  backgroundColor: useDarkMode
+                      ? Theme.of(context).backgroundColor
+                      : Colors.white,
+                  title: Text(
+                    AppLocalizations.of(context)!.filter,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: useDarkMode ? Colors.white : Colors.black,
+                      fontSize: 22,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.all(5),
+                        child: Text(
+                          AppLocalizations.of(context)!.topics,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: useDarkMode ? Colors.white : Colors.black,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                      Wrap(
+                        children: [
+                          for (String filterItem in filterItems)
+                            Padding(
+                              padding: EdgeInsets.all(5),
+                              child: GestureDetector(
+                                onTap: () {
+                                  if (pressed ==
+                                      filterItems.indexOf(filterItem)) {
+                                    selected = !selected;
+                                  } else {
+                                    selected = true;
+                                  }
+                                  if (selected) {
+                                    pressed = filterItems.indexOf(filterItem);
+                                  }
+                                  setState(() {});
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: Theme.of(context).primaryColor,
+                                      width: 1.0,
+                                    ),
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: selected &&
+                                            pressed ==
+                                                filterItems.indexOf(filterItem)
+                                        ? Theme.of(context).primaryColor
+                                        : Colors.transparent,
+                                  ),
+                                  child: Padding(
+                                    padding: EdgeInsets.all(7),
+                                    child: Text(
+                                      filterItem,
+                                      style: TextStyle(
+                                        color: selected &&
+                                                pressed ==
+                                                    filterItems
+                                                        .indexOf(filterItem)
+                                            ? Colors.white
+                                            : Theme.of(context).primaryColor,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.of(context).pop(0),
+                      child: Text(
+                        AppLocalizations.of(context)!.close,
+                        style: TextStyle(
+                          color: useDarkMode ? Colors.white : Colors.black,
+                        ),
+                      ),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).pop(0);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => Scaffold(
+                              appBar: AppBar(
+                                title: Text(
+                                  filterItems[pressed],
+                                ),
+                              ),
+                              backgroundColor: useDarkMode
+                                  ? Theme.of(context).backgroundColor
+                                  : Colors.white,
+                              body: NewsFeedWidget(
+                                articleType: filterItems[pressed],
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                      child: Text(
+                        AppLocalizations.of(context)!.apply,
+                      ),
+                    ),
+                  ],
+                  actionsAlignment: MainAxisAlignment.center,
+                  elevation: 15.0,
+                ),
+              ),
+            );
+          },
+        ),
+      ];
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -77,6 +239,7 @@ class _MainBottomNavigationBarState extends State<MainBottomNavigationBar> {
             fontWeight: FontWeight.w700,
           ),
         ),
+        actions: actions,
       ),
       drawer: MainDrawer(_homeSetState),
       drawerEdgeDragWidth: MediaQuery.of(context).size.width / 4,

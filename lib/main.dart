@@ -119,14 +119,6 @@ void callbackDispatcher() {
           ),
         );
         hiveBox.put('news', fetchedData);
-      } else {
-        await AwesomeNotifications().createNotification(
-          content: NotificationContent(
-            id: createUniqueId(),
-            channelKey: 'newArticle',
-            title: 'No new article',
-          ),
-        );
       }
     } catch (error, stackTrace) {
       print(error);
@@ -135,7 +127,7 @@ void callbackDispatcher() {
         content: NotificationContent(
           id: createUniqueId(),
           channelKey: 'newArticle',
-          title: 'An error occured while fetching news.',
+          title: 'An error occured while fetching news. Please report it.',
           body: stackTrace.toString(),
         ),
       );

@@ -25,7 +25,6 @@ import 'package:boxbox/Screens/circuit.dart';
 import 'package:boxbox/Screens/free_practice_screen.dart';
 import 'package:boxbox/api/brightcove.dart';
 import 'package:boxbox/api/race_components.dart';
-import 'package:boxbox/helpers/convert_ergast_and_formula_one.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/news_feed_widget.dart';
 import 'package:boxbox/helpers/request_error.dart';
@@ -88,10 +87,16 @@ class F1NewsFetcher {
     return newsList;
   }
 
-  Future<Map<String, dynamic>> getRawNews({String? tagId}) async {
+  Future<Map<String, dynamic>> getRawNews({
+    String? tagId,
+    String? articleType,
+  }) async {
     Uri url;
     if (tagId != null) {
       url = Uri.parse('$endpoint/v1/editorial/articles?limit=16&tags=$tagId');
+    } else if (articleType != null) {
+      url = Uri.parse(
+          '$endpoint/v1/editorial/articles?limit=16&articleTypes=$articleType');
     } else {
       url = Uri.parse('$endpoint/v1/editorial/articles?limit=16');
     }
@@ -106,21 +111,31 @@ class F1NewsFetcher {
     return responseAsJson;
   }
 
-  FutureOr<List<News>> getLatestNews({String? tagId}) async {
-    Map<String, dynamic> responseAsJson =
-        await getRawNews(tagId: tagId ?? null);
+  FutureOr<List<News>> getLatestNews(
+      {String? tagId, String? articleType}) async {
+    Map<String, dynamic> responseAsJson = await getRawNews(
+      tagId: tagId ?? null,
+      articleType: articleType ?? null,
+    );
 
-    if (tagId == null) {
+    if (tagId == null && articleType == null) {
       Hive.box('requests').put('news', responseAsJson);
     }
     return formatResponse(responseAsJson);
   }
 
-  FutureOr<List<News>> getMoreNews(int offset, {String? tagId}) async {
+  FutureOr<List<News>> getMoreNews(
+    int offset, {
+    String? tagId,
+    String? articleType,
+  }) async {
     Uri url;
     if (tagId != null) {
       url = Uri.parse(
           '$endpoint/v1/editorial/articles?limit=16&offset=$offset&tags=$tagId');
+    } else if (articleType != null) {
+      url = Uri.parse(
+          '$endpoint/v1/editorial/articles?limit=16&offset=$offset&articleTypes=$articleType');
     } else {
       url =
           Uri.parse('$endpoint/v1/editorial/articles?limit=16&offset=$offset');
@@ -431,7 +446,8 @@ class NewsItem extends StatelessWidget {
                                           item.newsType == 'Report'
                                       ? 110
                                       : item.newsType == 'Technical' ||
-                                              item.newsType == 'Live Blog'
+                                              item.newsType == 'Live Blog' ||
+                                              item.newsType == 'Interview'
                                           ? 120
                                           : item.newsType == 'Image Gallery'
                                               ? 150
@@ -590,12 +606,14 @@ class NewsList extends StatefulWidget {
   final List items;
   final ScrollController? scrollController;
   final String? tagId;
+  final String? articleType;
 
   NewsList({
     Key? key,
     required this.items,
     this.scrollController,
     this.tagId,
+    this.articleType,
   });
   @override
   _NewsListState createState() => _NewsListState();
@@ -619,6 +637,7 @@ class _NewsListState extends State<NewsList> {
       List<News> newItems = await F1NewsFetcher().getMoreNews(
         offset,
         tagId: widget.tagId,
+        articleType: widget.articleType,
       );
       final isLastPage = newItems.length < _pageSize;
       if (isLastPage) {

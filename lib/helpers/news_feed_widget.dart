@@ -29,11 +29,13 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 class NewsFeedWidget extends StatefulWidget {
   final String? tagId;
+  final String? articleType;
   final ScrollController? scrollController;
 
   NewsFeedWidget({
     Key? key,
     this.tagId,
+    this.articleType,
     this.scrollController,
   });
   @override
@@ -41,8 +43,14 @@ class NewsFeedWidget extends StatefulWidget {
 }
 
 class _NewsFeedWidgetState extends State<NewsFeedWidget> {
-  Future<List<News>> getLatestNewsItems({String? tagId}) async {
-    return await F1NewsFetcher().getLatestNews(tagId: tagId);
+  Future<List<News>> getLatestNewsItems({
+    String? tagId,
+    String? articleType,
+  }) async {
+    return await F1NewsFetcher().getLatestNews(
+      tagId: tagId,
+      articleType: articleType,
+    );
   }
 
   @override
@@ -57,24 +65,34 @@ class _NewsFeedWidgetState extends State<NewsFeedWidget> {
   Widget build(BuildContext context) {
     Map latestNews = Hive.box('requests').get('news', defaultValue: {}) as Map;
     return FutureBuilder<List<News>>(
-      future: getLatestNewsItems(tagId: widget.tagId),
+      future: getLatestNewsItems(
+        tagId: widget.tagId,
+        articleType: widget.articleType,
+      ),
       builder: (context, snapshot) => snapshot.hasError
           ? (snapshot.error.toString() == 'XMLHttpRequest error.' ||
                       snapshot.error.toString() ==
                           "Failed host lookup: 'api.formula1.com'") &&
-                  latestNews['items'] != null
+                  latestNews['items'] != null &&
+                  widget.tagId == null &&
+                  widget.articleType == null
               ? OfflineNewsList(
                   items: F1NewsFetcher().formatResponse(latestNews),
                   scrollController: widget.scrollController,
                 )
-              : RequestErrorWidget(snapshot.error.toString())
+              : RequestErrorWidget(
+                  snapshot.error.toString(),
+                )
           : snapshot.hasData
               ? NewsList(
                   items: snapshot.data!,
                   scrollController: widget.scrollController,
                   tagId: widget.tagId,
+                  articleType: widget.articleType,
                 )
-              : latestNews['items'] != null
+              : widget.tagId == null &&
+                      widget.articleType == null &&
+                      latestNews['items'] != null
                   ? NewsList(
                       items: F1NewsFetcher().formatResponse(latestNews),
                       scrollController: widget.scrollController,
