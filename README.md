@@ -74,8 +74,10 @@ The app is currently available in:
 - 🇫🇷 French
 - 🇳🇴 Norwegian, thanks to @comradekingu
 - 🇵🇹 Portuguese, thanks to @Alexthegib
+- 🇮🇳 Punjabi & Hindi, thanks to @ShareASmile
 - 🇪🇸 Spanish, thanks to @inigochoa
 - 🇹🇷 Turkish, thanks to @metezd
+... and many others!
 
 ## License
 [![GNU GPLv3 Image](https://www.gnu.org/graphics/gplv3-127x51.png)](https://www.gnu.org/licenses/gpl-3.0.en.html)  
