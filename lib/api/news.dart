@@ -1494,6 +1494,31 @@ class JoinArticlesParts extends StatelessWidget {
               ),
             ),
           );
+        } else if (element['contentType'] == 'atomAudioBoom') {
+          widgetsList.add(
+            Container(
+              height: 400,
+              child: InAppWebView(
+                initialUrlRequest: URLRequest(
+                  url: Uri.parse(
+                    'https:' + element['fields']['audioPodcast']['iFrameSrc'],
+                  ),
+                ),
+                gestureRecognizers: [
+                  Factory<VerticalDragGestureRecognizer>(
+                      () => VerticalDragGestureRecognizer()),
+                  Factory<HorizontalDragGestureRecognizer>(
+                      () => HorizontalDragGestureRecognizer()),
+                  Factory<ScaleGestureRecognizer>(
+                      () => ScaleGestureRecognizer()),
+                ].toSet(),
+                initialOptions: InAppWebViewGroupOptions(
+                  crossPlatform:
+                      InAppWebViewOptions(transparentBackground: true),
+                ),
+              ),
+            ),
+          );
         } else {
           widgetsList.add(
             Container(
