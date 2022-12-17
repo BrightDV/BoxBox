@@ -50,6 +50,7 @@ See the live demo [here (outdated). It is broken because of the CORS.](https://b
 | Screen  | Service          | URL |
 | :---------------: |:---------------:| :---------------:|
 | Home News  | Formula 1 API |  https://api.formula1.com |
+| Articles search  | SearXNG |  [5 instances](lib/api/searx.dart#26) |
 | Standings (Q, S and R)  | Ergast API |  https://ergast.com/mrd |
 | Standings (FP, Q, S and R)  | Formula 1 Archives |  https://formula1.com |
 | Schedule  |  Ergast API |  https://ergast.com/mrd |

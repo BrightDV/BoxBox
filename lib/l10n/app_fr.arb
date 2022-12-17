@@ -141,6 +141,8 @@
   "@newVersionAvailable": {},
   "next": "À VENIR",
   "@next": {},
+  "noResults": "Rien à afficher... Vous êtes peut-être limité.",
+  "@noResults": {},
   "numberOfLaps": "Nombre de tours",
   "@numberOfLaps": {},
   "offline": "Hors-ligne. Les données peuvent ne pas être à jour.",

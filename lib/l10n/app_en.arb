@@ -141,6 +141,8 @@
     "@newVersionAvailable": {},
     "next": "NEXT",
     "@next": {},
+    "noResults": "Nothing to show here... You may be rate limited.",
+    "@noResults": {},
     "numberOfLaps": "Number of Laps",
     "@numberOfLaps": {},
     "offline": "Offline. The data may not be up to date.",

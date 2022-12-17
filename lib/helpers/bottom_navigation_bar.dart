@@ -20,6 +20,7 @@
 import 'package:boxbox/helpers/drawer.dart';
 import 'package:boxbox/Screens/home.dart';
 import 'package:boxbox/Screens/schedule.dart';
+import 'package:boxbox/Screens/search.dart';
 import 'package:boxbox/Screens/standings.dart';
 import 'package:boxbox/helpers/news_feed_widget.dart';
 import 'package:flutter/material.dart';
@@ -81,6 +82,16 @@ class _MainBottomNavigationBarState extends State<MainBottomNavigationBar> {
     ];
     if (_selectedIndex == 0) {
       actions = [
+        IconButton(
+          icon: const Icon(Icons.search),
+          tooltip: 'Search',
+          onPressed: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => SearchScreen(),
+            ),
+          ),
+        ),
         IconButton(
           icon: const Icon(Icons.sort_outlined),
           tooltip: 'Filter',
