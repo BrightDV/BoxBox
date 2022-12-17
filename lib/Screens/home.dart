@@ -17,10 +17,8 @@
  * Copyright (c) 2022, BrightDV
  */
 
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:boxbox/helpers/live_session_status_indicator.dart';
 import 'package:boxbox/helpers/news_feed_widget.dart';
-import 'package:boxbox/Screens/article.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -34,21 +32,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    AwesomeNotifications().setListeners(
-      onActionReceivedMethod: (receivedAction) async =>
-          receivedAction.payload?['id'] == null
-              ? null
-              : Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ArticleScreen(
-                      receivedAction.payload!['id']!,
-                      receivedAction.payload!['title']!,
-                      false,
-                    ),
-                  ),
-                ),
-    );
   }
 
   @override

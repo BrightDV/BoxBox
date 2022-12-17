@@ -20,8 +20,8 @@
 import 'package:boxbox/api/event_tracker.dart';
 import 'package:boxbox/Screens/grand_prix_running_details.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:loading_indicator/loading_indicator.dart';
 import 'package:marquee/marquee.dart';
 
 class LiveSessionStatusIndicator extends StatelessWidget {
@@ -68,62 +68,111 @@ class EventTrackerItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool useDarkMode =
+        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
+
     return GestureDetector(
       child: Container(
-        height: 50,
-        color: Theme.of(context).primaryColor,
-        child: Row(
+        height: 138,
+        color: useDarkMode ? Color(0xff1d1d28) : Colors.white,
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Padding(
-              padding: EdgeInsets.only(
-                right: 5,
-                left: 5,
-              ),
-              child: LoadingIndicator(
-                indicatorType: Indicator.values[17],
-                colors: [
-                  Colors.white,
-                ],
-                strokeWidth: 2.0,
-              ),
-            ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
+            Row(
               children: [
-                Text(
-                  '${event.meetingName}',
-                  style: TextStyle(
-                    fontSize: 15,
-                    color: Colors.white,
+                Padding(
+                  padding: EdgeInsets.only(
+                    left: 10,
+                    right: 10,
+                  ),
+                  child: Container(
+                    width: 120,
+                    child: Image.network(
+                      event.circuitImage,
+                    ),
                   ),
                 ),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width - 60,
-                  height: 20,
-                  child: Marquee(
-                    text: '${event.meetingOfficialName}',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.white,
-                    ),
-                    pauseAfterRound: Duration(seconds: 1),
-                    startAfter: Duration(seconds: 1),
-                    velocity: 85,
-                    blankSpace: 100,
+                Padding(
+                  padding: EdgeInsets.all(5),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        event.meetingCountryName,
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width - 150,
+                        height: 20,
+                        child: Marquee(
+                          text: '${event.meetingOfficialName}',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.white,
+                          ),
+                          pauseAfterRound: Duration(seconds: 1),
+                          startAfter: Duration(seconds: 1),
+                          velocity: 85,
+                          blankSpace: 100,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
             ),
+            Padding(
+              padding: EdgeInsets.only(
+                left: 5,
+                right: 5,
+              ),
+              child: Container(
+                width: double.infinity,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.zero,
+                    topRight: Radius.zero,
+                    bottomLeft: Radius.circular(15),
+                    bottomRight: Radius.circular(15),
+                  ),
+                  child: ElevatedButton(
+                    onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => GrandPrixRunningScreen(event),
+                      ),
+                    ),
+                    child: Row(
+                      children: [
+                        Text(
+                          'RACE HUB',
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                        Spacer(),
+                        Icon(
+                          Icons.arrow_forward_rounded,
+                          color: useDarkMode ? Colors.white : Colors.black,
+                        ),
+                      ],
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      shape: ContinuousRectangleBorder(
+                        borderRadius: BorderRadius.zero,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
           ],
-        ),
-      ),
-      onTap: () => Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => GrandPrixRunningScreen(event),
         ),
       ),
     );

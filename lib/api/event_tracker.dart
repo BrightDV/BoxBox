@@ -30,6 +30,8 @@ class Event {
   final String meetingCountryName;
   final DateTime meetingStartDate;
   final DateTime meetingEndDate;
+  final String circuitImage;
+  final List raceResults;
   final bool isRunning;
   final Session
       session5; // use session instead of race, fp1, etc because with a sprint the order
@@ -45,6 +47,8 @@ class Event {
     this.meetingCountryName,
     this.meetingStartDate,
     this.meetingEndDate,
+    this.circuitImage,
+    this.raceResults,
     this.isRunning,
     this.session5,
     this.session4,
@@ -90,6 +94,7 @@ class EventTracker {
       headers: {
         'Accept': 'application/json',
         'apikey': apikey,
+        'locale': 'en',
       },
     );
     Map formatedResponse = jsonDecode(res.body);
@@ -200,6 +205,8 @@ class EventTracker {
       eventAsJson['race']['meetingCountryName'],
       meetingStartDate,
       meetingEndDate,
+      eventAsJson['circuitSmallImage']['url'],
+      eventAsJson['raceResults'],
       isRunning,
       sessions[0],
       sessions[1],

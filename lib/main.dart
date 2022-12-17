@@ -24,6 +24,7 @@ import 'package:boxbox/api/news.dart';
 import 'package:boxbox/helpers/bottom_navigation_bar.dart';
 import 'package:boxbox/helpers/handle_native.dart';
 import 'package:boxbox/helpers/route_handler.dart';
+import 'package:boxbox/Screens/article.dart';
 import 'package:boxbox/theme/teams_themes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -91,7 +92,8 @@ void callbackDispatcher() {
         hiveBox.get('useDataSaverMode', defaultValue: false) as bool;
     try {
       Map<String, dynamic> fetchedData = await F1NewsFetcher().getRawNews();
-      if (fetchedData['items'][0]['id'] != cachedNews['items'][0]['id']) {
+      if (cachedNews['items'].isNotEmpty &&
+          fetchedData['items'][0]['id'] != cachedNews['items'][0]['id']) {
         String imageUrl = fetchedData['items'][0]['thumbnail']['image']['url'];
         if (useDataSaverMode) {
           if (fetchedData['items'][0]['thumbnail']['image']['renditions'] !=
@@ -215,6 +217,27 @@ void setTimeagoLocaleMessages() {
   timeago.setLocaleMessages('zh', timeago.ZhMessages());
 }
 
+class NotificationController {
+  static Future<void> startListeningNotificationEvents(
+      BuildContext context) async {
+    AwesomeNotifications().setListeners(
+      onActionReceivedMethod: (receivedAction) async =>
+          receivedAction.payload?['id'] == null
+              ? null
+              : Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ArticleScreen(
+                      receivedAction.payload!['id']!,
+                      receivedAction.payload!['title']!,
+                      false,
+                    ),
+                  ),
+                ),
+    );
+  }
+}
+
 class MyApp extends StatefulWidget {
   @override
   _MyAppState createState() => _MyAppState();
@@ -226,6 +249,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void initState() {
+    NotificationController.startListeningNotificationEvents(context);
     super.initState();
 
     // For sharing or opening urls/text coming from outside the app while the app is in the memory
