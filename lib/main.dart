@@ -121,19 +121,10 @@ void callbackDispatcher() {
           ),
         );
         hiveBox.put('news', fetchedData);
+      } else {
+        return Future.value(true);
       }
-    } catch (error, stackTrace) {
-      print(error);
-      print(stackTrace);
-      await AwesomeNotifications().createNotification(
-        content: NotificationContent(
-          id: createUniqueId(),
-          channelKey: 'newArticle',
-          title: 'An error occured while fetching news. Please report it.',
-          body: stackTrace.toString(),
-        ),
-      );
-    }
+    } catch (error) {}
     return true;
   });
 }

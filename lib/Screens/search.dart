@@ -73,18 +73,26 @@ class _SearchScreenState extends State<SearchScreen> {
                 color: Colors.white,
               ),
               cursorColor: Colors.white,
+              cursorWidth: 3.0,
+              cursorHeight: 20.0,
               decoration: InputDecoration(
                 suffixIcon: IconButton(
                   icon: const Icon(
                     Icons.clear,
                     color: Colors.white,
                   ),
-                  onPressed: () {},
+                  onPressed: () => setState(
+                    () {
+                      searchController.text = '';
+                      query = '';
+                    },
+                  ),
                 ),
                 hintText: 'Search',
                 border: InputBorder.none,
                 hintStyle: TextStyle(
-                  color: Colors.grey.shade200,
+                  color: Colors.grey.shade300,
+                  fontSize: 13,
                 ),
               ),
               onChanged: (text) {
@@ -127,7 +135,6 @@ class _SearchScreenState extends State<SearchScreen> {
                               ? Colors.grey.shade600
                               : Colors.grey.shade400,
                         ),
-                        maxLines: 3,
                         textAlign: TextAlign.justify,
                       ),
                       onTap: () {
@@ -155,6 +162,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     fontSize: 25,
                     fontWeight: FontWeight.w500,
                   ),
+                  textAlign: TextAlign.center,
                 ),
               ),
             ),
