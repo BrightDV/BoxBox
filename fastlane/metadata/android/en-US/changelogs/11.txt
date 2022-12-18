@@ -1,0 +1,12 @@
+- Added search among articles.
+- Added podcast support inside articles.
+- Added brand new circuit screen!
+- Filter news by article type.
+- Improved Event Tracker indicator for better visibility.
+- Notification when a new article is published!
+- History of which articles you red.
+- Migrated to a new player library: enjoy a brand new player with extra features!
+- Other fixes
+- Weblate support for translations! (thanks to all the contributors!)
+
+Thanks for using Box, Box!
