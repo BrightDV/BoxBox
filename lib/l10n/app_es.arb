@@ -242,5 +242,7 @@
   "apply": "Aplicar",
   "@apply": {},
   "topics": "Temas",
-  "@topics": {}
+  "@topics": {},
+  "noResults": "No hay nada que mostrar aquí... Es posible que tenga una tarifa limitada.",
+  "@noResults": {}
 }
