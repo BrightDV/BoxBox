@@ -21,6 +21,7 @@ import 'package:boxbox/Screens/article.dart';
 import 'package:boxbox/api/searx.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -67,45 +68,50 @@ class _SearchScreenState extends State<SearchScreen> {
           width: double.infinity,
           height: 40,
           child: Center(
-            child: TextField(
-              controller: searchController,
-              style: TextStyle(
-                color: Colors.white,
+            child: Theme(
+              data: Theme.of(context).copyWith(
+                textSelectionTheme: TextSelectionThemeData(
+                  selectionColor: Colors.white.withOpacity(0.35),
+                ),
               ),
-              cursorColor: Colors.white,
-              cursorWidth: 3.0,
-              cursorHeight: 20.0,
-              decoration: InputDecoration(
-                suffixIcon: IconButton(
-                  icon: const Icon(
-                    Icons.clear,
-                    color: Colors.white,
+              child: TextField(
+                controller: searchController,
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+                cursorColor: Colors.white,
+                decoration: InputDecoration(
+                  suffixIcon: IconButton(
+                    icon: const Icon(
+                      Icons.clear,
+                      color: Colors.white,
+                    ),
+                    onPressed: () => setState(
+                      () {
+                        searchController.text = '';
+                        query = '';
+                      },
+                    ),
                   ),
-                  onPressed: () => setState(
+                  hintText: 'Search',
+                  border: InputBorder.none,
+                  hintStyle: TextStyle(
+                    color: Colors.grey.shade300,
+                    fontSize: 13,
+                  ),
+                ),
+                onChanged: (text) {
+                  setState(
                     () {
-                      searchController.text = '';
-                      query = '';
+                      query = text;
                     },
-                  ),
-                ),
-                hintText: 'Search',
-                border: InputBorder.none,
-                hintStyle: TextStyle(
-                  color: Colors.grey.shade300,
-                  fontSize: 13,
-                ),
-              ),
-              onChanged: (text) {
-                setState(
-                  () {
-                    query = text;
-                  },
-                );
-              },
-              onSubmitted: (value) => setState(
-                () {
-                  _searchArticles();
+                  );
                 },
+                onSubmitted: (value) => setState(
+                  () {
+                    _searchArticles();
+                  },
+                ),
               ),
             ),
           ),
@@ -128,14 +134,21 @@ class _SearchScreenState extends State<SearchScreen> {
                           color: useDarkMode ? Colors.white : Colors.black,
                         ),
                       ),
-                      subtitle: Text(
-                        results[index]['content'],
-                        style: TextStyle(
-                          color: useDarkMode
-                              ? Colors.grey.shade600
-                              : Colors.grey.shade400,
+                      subtitle: MarkdownBody(
+                        data: results[index]['content'],
+                        styleSheet: MarkdownStyleSheet(
+                          strong: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          p: TextStyle(
+                            color: useDarkMode
+                                ? Colors.grey.shade400
+                                : Colors.grey.shade600,
+                          ),
+                          textAlign: WrapAlignment.spaceBetween,
                         ),
-                        textAlign: TextAlign.justify,
                       ),
                       onTap: () {
                         Navigator.push(

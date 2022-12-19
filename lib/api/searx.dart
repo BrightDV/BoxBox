@@ -102,8 +102,9 @@ class SearXSearch {
               'url': element.firstChild!.attributes['href'],
               'title': element.children[1].firstChild!.text,
               'content': element.children[2].innerHtml
-                  .replaceAll('<span class="highlight">', '')
-                  .replaceAll('</span>', ''),
+                  .replaceAll('<span class="highlight">', '**')
+                  .replaceAll('</span>', '**')
+                  .substring(4),
             },
           );
         }
