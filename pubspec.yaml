@@ -62,6 +62,10 @@ dependencies:
   timeago: ^3.3.0
   url_launcher: ^6.0.13
   video_player: ^2.4.5
+  webfeed: # fork using null-safety
+    git:
+      url: https://github.com/marcjoha/webfeed.git
+      ref: master
   webview_flutter: ^3.0.4
   workmanager: ^0.5.1
   youtube_explode_dart: ^1.10.10+2

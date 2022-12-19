@@ -78,6 +78,7 @@ The app is currently available in:
 - 🇮🇳 Punjabi & Hindi, thanks to @ShareASmile
 - 🇪🇸 Spanish, thanks to @inigochoa
 - 🇹🇷 Turkish, thanks to @metezd
+
 ... and many others!
 
 ## License
