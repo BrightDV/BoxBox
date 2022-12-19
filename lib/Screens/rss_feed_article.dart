@@ -39,33 +39,29 @@ class _RssFeedArticleScreenState extends State<RssFeedArticleScreen> {
   Widget build(BuildContext context) {
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
-
-    print(widget.articleTitle);
-    print(widget.articleUrl);
     return Scaffold(
       backgroundColor:
           useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
       appBar: AppBar(
-        title: Marquee(
-          text: widget.articleTitle,
-          style: TextStyle(
-            fontWeight: FontWeight.w600,
+        title: SizedBox(
+          height: AppBar().preferredSize.height,
+          width: AppBar().preferredSize.width,
+          child: Marquee(
+            text: widget.articleTitle,
+            style: TextStyle(
+              fontWeight: FontWeight.w600,
+            ),
+            pauseAfterRound: Duration(seconds: 1),
+            startAfter: Duration(seconds: 1),
+            velocity: 85,
+            blankSpace: 100,
           ),
-          pauseAfterRound: Duration(seconds: 1),
-          startAfter: Duration(seconds: 1),
-          velocity: 85,
-          blankSpace: 100,
         ),
       ),
       body: InAppWebView(
         initialUrlRequest: URLRequest(
           url: Uri.parse(
             widget.articleUrl,
-          ),
-        ),
-        initialOptions: InAppWebViewGroupOptions(
-          crossPlatform: InAppWebViewOptions(
-            preferredContentMode: UserPreferredContentMode.DESKTOP,
           ),
         ),
         gestureRecognizers: [

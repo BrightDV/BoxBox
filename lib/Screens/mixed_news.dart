@@ -18,6 +18,7 @@
  */
 
 import 'package:boxbox/Screens/rss_feed.dart';
+import 'package:boxbox/Screens/rss_feed_article.dart';
 import 'package:boxbox/api/rss.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/request_error.dart';
@@ -110,7 +111,22 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
                                   child: Padding(
                                     padding: EdgeInsets.only(top: 5),
                                     child: GestureDetector(
-                                      onTap: () {},
+                                      onTap: () => Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              RssFeedArticleScreen(
+                                            feedItem.title!,
+                                            feedItem.link!.indexOf('?utm') == -1
+                                                ? feedItem.link!
+                                                : feedItem.link!.substring(
+                                                    0,
+                                                    feedItem.link!
+                                                        .indexOf('?utm'),
+                                                  ),
+                                          ),
+                                        ),
+                                      ),
                                       child: Card(
                                         elevation: 5.0,
                                         color: useDarkMode
@@ -146,25 +162,6 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
                             ],
                           )
                         : LoadingIndicatorUtil(),
-              ),
-            ),
-            Text('WTF1'),
-            SingleChildScrollView(
-              child: Row(
-                children: [
-                  Card(
-                    child: Text('test'),
-                  ),
-                  Card(
-                    child: Text('test'),
-                  ),
-                  Card(
-                    child: Text('test'),
-                  ),
-                  Card(
-                    child: Text('test'),
-                  ),
-                ],
               ),
             ),
           ],
