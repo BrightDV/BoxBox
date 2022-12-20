@@ -20,27 +20,42 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:webfeed/webfeed.dart';
 
-class RssFeeds {
-  Future<Map<String, dynamic>> getFeedArticles(String feedUrl,
-      {int? max}) async {
-    var url = Uri.parse(feedUrl);
+class Wtf1 {
+  Future<List> getWtf1News({int? max}) async {
+    List formatedNews = [];
+    var url = Uri.parse('https://wtf1.com/wp-json/wp/v2/posts');
     var response = await http.get(url);
-    RssFeed rssFeed = RssFeed.parse(
+    List responseAsJson = jsonDecode(
       utf8.decode(
         response.bodyBytes,
       ),
     );
-    List<RssItem> rssItems = rssFeed.items!;
-    if (max != null) {
-      rssItems = rssItems.sublist(0, max);
-    }
-    Map<String, dynamic> resultsFormated = {
-      'feedTitle': rssFeed.title,
-      'feedArticles': rssItems,
-    };
+    max != null
+        ? formatedNews = responseAsJson.sublist(0, max)
+        : formatedNews = responseAsJson;
+    return formatedNews;
+  }
 
-    return resultsFormated;
+  Future<List> getMoreWtf1News(int offset) async {
+    var url = Uri.parse('https://wtf1.com/wp-json/wp/v2/posts?offset=$offset');
+    var response = await http.get(url);
+    List responseAsJson = jsonDecode(
+      utf8.decode(
+        response.bodyBytes,
+      ),
+    );
+    return responseAsJson;
+  }
+
+  Future<String> getImageUrl(String mediaUrl) async {
+    var url = Uri.parse(mediaUrl);
+    var response = await http.get(url);
+    Map responseAsJson = jsonDecode(
+      utf8.decode(
+        response.bodyBytes,
+      ),
+    );
+    return responseAsJson['source_url'];
   }
 }

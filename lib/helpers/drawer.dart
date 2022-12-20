@@ -21,7 +21,7 @@ import 'package:boxbox/Screens/about.dart';
 import 'package:boxbox/Screens/hall_of_fame.dart';
 import 'package:boxbox/Screens/history.dart';
 import 'package:boxbox/Screens/links.dart';
-import 'package:boxbox/Screens/mixed_news.dart';
+import 'package:boxbox/Screens/MixedNews/mixed_news.dart';
 import 'package:boxbox/Screens/settings.dart';
 import 'package:boxbox/Screens/signalr_client.dart';
 import 'package:boxbox/Screens/test.dart';

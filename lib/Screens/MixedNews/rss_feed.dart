@@ -17,7 +17,8 @@
  * Copyright (c) 2022, BrightDV
  */
 
-import 'package:boxbox/Screens/rss_feed_article.dart';
+import 'package:boxbox/Screens/MixedNews/rss_feed_article.dart';
+import 'package:boxbox/api/rss.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/request_error.dart';
 import 'package:flutter/material.dart';
@@ -28,12 +29,10 @@ import 'package:share_plus/share_plus.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:url_launcher/url_launcher.dart';
 
-import 'package:webfeed/webfeed.dart';
-
 class RssFeedScreen extends StatefulWidget {
-  final String feedName;
-  final Future<List<RssItem>> getArticlesFunction;
-  const RssFeedScreen(this.feedName, this.getArticlesFunction, {Key? key})
+  final String feedTitle;
+  final String feedUrl;
+  const RssFeedScreen(this.feedTitle, this.feedUrl, {Key? key})
       : super(key: key);
 
   @override
@@ -126,18 +125,20 @@ class _RssFeedScreenState extends State<RssFeedScreen> {
           useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
       appBar: AppBar(
         title: Text(
-          widget.feedName,
+          widget.feedTitle,
         ),
       ),
-      body: FutureBuilder<List<RssItem>>(
-        future: widget.getArticlesFunction,
+      body: FutureBuilder<Map<String, dynamic>>(
+        future: RssFeeds().getFeedArticles(
+          widget.feedUrl,
+        ),
         builder: (context, snapshot) => snapshot.hasError
             ? RequestErrorWidget(
                 snapshot.error.toString(),
               )
             : snapshot.hasData
                 ? ListView.builder(
-                    itemCount: snapshot.data!.length,
+                    itemCount: snapshot.data!['feedArticles'].length,
                     shrinkWrap: true,
                     itemBuilder: (context, index) => Padding(
                       padding: EdgeInsets.only(top: 5),
@@ -152,13 +153,18 @@ class _RssFeedScreenState extends State<RssFeedScreen> {
                             context,
                             MaterialPageRoute(
                               builder: (context) => RssFeedArticleScreen(
-                                snapshot.data![index].title!,
-                                snapshot.data![index].link!.indexOf('?utm') ==
+                                snapshot.data!['feedArticles'][index].title!,
+                                snapshot.data!['feedArticles'][index].link!
+                                            .indexOf('?utm') ==
                                         -1
-                                    ? snapshot.data![index].link!
-                                    : snapshot.data![index].link!.substring(
+                                    ? snapshot
+                                        .data!['feedArticles'][index].link!
+                                    : snapshot
+                                        .data!['feedArticles'][index].link!
+                                        .substring(
                                         0,
-                                        snapshot.data![index].link!
+                                        snapshot
+                                            .data!['feedArticles'][index].link!
                                             .indexOf('?utm'),
                                       ),
                               ),
@@ -173,7 +179,8 @@ class _RssFeedScreenState extends State<RssFeedScreen> {
                             children: [
                               newsLayout != 'condensed' &&
                                       newsLayout != 'small' &&
-                                      snapshot.data![index].enclosure!.url !=
+                                      snapshot.data!['feedArticles'][index]
+                                              .enclosure !=
                                           null
                                   ? ClipRRect(
                                       borderRadius: BorderRadius.only(
@@ -181,7 +188,8 @@ class _RssFeedScreenState extends State<RssFeedScreen> {
                                         topRight: Radius.circular(15),
                                       ),
                                       child: Image.network(
-                                        snapshot.data![index].enclosure!.url!,
+                                        snapshot.data!['feedArticles'][index]
+                                            .enclosure!.url!,
                                       ),
                                     )
                                   : Container(
@@ -190,7 +198,7 @@ class _RssFeedScreenState extends State<RssFeedScreen> {
                                     ),
                               ListTile(
                                 title: Text(
-                                  snapshot.data![index].title!,
+                                  snapshot.data!['feedArticles'][index].title!,
                                   style: TextStyle(
                                     color: useDarkMode
                                         ? Colors.white
@@ -206,13 +214,27 @@ class _RssFeedScreenState extends State<RssFeedScreen> {
                                         newsLayout != 'condensed'
                                     ? null
                                     : MarkdownBody(
-                                        data: snapshot.data![index].description!
-                                            .substring(
-                                              0,
-                                              snapshot.data![index].description!
-                                                  .indexOf("<a "),
-                                            )
-                                            .replaceAll('<br>', ''),
+                                        data: snapshot
+                                                    .data!['feedArticles']
+                                                        [index]
+                                                    .description!
+                                                    .indexOf("<a ") ==
+                                                -1
+                                            ? snapshot
+                                                .data!['feedArticles'][index]
+                                                .description!
+                                            : snapshot
+                                                .data!['feedArticles'][index]
+                                                .description!
+                                                .substring(
+                                                  0,
+                                                  snapshot
+                                                      .data!['feedArticles']
+                                                          [index]
+                                                      .description!
+                                                      .indexOf("<a "),
+                                                )
+                                                .replaceAll('<br>', ''),
                                         styleSheet: MarkdownStyleSheet(
                                           textAlign: WrapAlignment.spaceBetween,
                                           p: TextStyle(
@@ -245,7 +267,8 @@ class _RssFeedScreenState extends State<RssFeedScreen> {
                                     ),
                                     Text(
                                       timeago.format(
-                                        snapshot.data![index].pubDate!,
+                                        snapshot.data!['feedArticles'][index]
+                                            .pubDate!,
                                         locale: Localizations.localeOf(context)
                                             .toString(),
                                       ),
