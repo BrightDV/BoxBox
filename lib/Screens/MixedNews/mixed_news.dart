@@ -43,12 +43,12 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
     List<String> feeds = [
       'Motorsport.com',
       'Racer.com',
-      'Crash.com',
+      'Crash.net',
     ];
     Map<String, dynamic> feedsUrl = {
-      'Motorsport': 'https://www.motorsport.com/rss/f1/news/',
-      'Racer': 'https://racer.com/f1/feed/',
-      'Crash': 'https://www.crash.net/rss/f1',
+      'Motorsport.com': 'https://www.motorsport.com/rss/f1/news/',
+      'Racer.com': 'https://racer.com/f1/feed/',
+      'Crash.net': 'https://www.crash.net/rss/f1',
     };
     return Scaffold(
       backgroundColor:
@@ -256,9 +256,14 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
                                             in snapshot.data!['feedArticles'])
                                           Container(
                                             width: width / 2.1,
-                                            height: feedItem.enclosure != null
-                                                ? 232
-                                                : 110,
+                                            height:
+                                                feedItem.enclosure != null ||
+                                                        feedItem
+                                                            .media
+                                                            .thumbnails
+                                                            .isNotEmpty
+                                                    ? 232
+                                                    : 110,
                                             child: Padding(
                                               padding: EdgeInsets.only(top: 5),
                                               child: GestureDetector(
@@ -267,9 +272,18 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
                                                   MaterialPageRoute(
                                                     builder: (context) =>
                                                         RssFeedArticleScreen(
-                                                      feedItem.title!,
+                                                      feedItem.title!
+                                                          .replaceAll(
+                                                              '&#8217;', "'")
+                                                          .replaceAll(
+                                                              '&#8216;', "'")
+                                                          .replaceAll(
+                                                              '&#039;', "'")
+                                                          .replaceAll(
+                                                              '&quot;', '"'),
                                                       feedItem.link!.indexOf(
-                                                                  '?utm') ==
+                                                                '?utm',
+                                                              ) ==
                                                               -1
                                                           ? feedItem.link!
                                                           : feedItem.link!
@@ -277,7 +291,8 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
                                                               0,
                                                               feedItem.link!
                                                                   .indexOf(
-                                                                      '?utm'),
+                                                                '?utm',
+                                                              ),
                                                             ),
                                                     ),
                                                   ),
@@ -295,10 +310,32 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
                                                                   .enclosure!
                                                                   .url!,
                                                             )
-                                                          : Container(),
+                                                          : feedItem
+                                                                  .media
+                                                                  .thumbnails
+                                                                  .isNotEmpty
+                                                              ? Image.network(
+                                                                  feedItem
+                                                                      .media
+                                                                      .thumbnails[
+                                                                          0]
+                                                                      .url,
+                                                                )
+                                                              : Container(),
                                                       ListTile(
                                                         title: Text(
-                                                          feedItem.title!,
+                                                          feedItem.title!
+                                                              .replaceAll(
+                                                                  '&#8217;',
+                                                                  "'")
+                                                              .replaceAll(
+                                                                  '&#8216;',
+                                                                  "'")
+                                                              .replaceAll(
+                                                                  '&#039;', "'")
+                                                              .replaceAll(
+                                                                  '&quot;',
+                                                                  '"'),
                                                           style: TextStyle(
                                                             color: useDarkMode
                                                                 ? Colors.white

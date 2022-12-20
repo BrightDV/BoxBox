@@ -153,7 +153,11 @@ class _RssFeedScreenState extends State<RssFeedScreen> {
                             context,
                             MaterialPageRoute(
                               builder: (context) => RssFeedArticleScreen(
-                                snapshot.data!['feedArticles'][index].title!,
+                                snapshot.data!['feedArticles'][index].title!
+                                    .replaceAll('&#8217;', "'")
+                                    .replaceAll('&#8216;', "'")
+                                    .replaceAll('&#039;', "'")
+                                    .replaceAll('&quot;', '"'),
                                 snapshot.data!['feedArticles'][index].link!
                                             .indexOf('?utm') ==
                                         -1
@@ -179,9 +183,11 @@ class _RssFeedScreenState extends State<RssFeedScreen> {
                             children: [
                               newsLayout != 'condensed' &&
                                       newsLayout != 'small' &&
-                                      snapshot.data!['feedArticles'][index]
-                                              .enclosure !=
-                                          null
+                                      (snapshot.data!['feedArticles'][index]
+                                                  .enclosure !=
+                                              null ||
+                                          snapshot.data!['feedArticles'][index]
+                                              .media.thumbnails.isNotEmpty)
                                   ? ClipRRect(
                                       borderRadius: BorderRadius.only(
                                         topLeft: Radius.circular(15),
@@ -189,7 +195,17 @@ class _RssFeedScreenState extends State<RssFeedScreen> {
                                       ),
                                       child: Image.network(
                                         snapshot.data!['feedArticles'][index]
-                                            .enclosure!.url!,
+                                                    .enclosure !=
+                                                null
+                                            ? snapshot
+                                                .data!['feedArticles'][index]
+                                                .enclosure!
+                                                .url!
+                                            : snapshot
+                                                .data!['feedArticles'][index]
+                                                .media
+                                                .thumbnails[0]
+                                                .url,
                                       ),
                                     )
                                   : Container(
@@ -198,7 +214,11 @@ class _RssFeedScreenState extends State<RssFeedScreen> {
                                     ),
                               ListTile(
                                 title: Text(
-                                  snapshot.data!['feedArticles'][index].title!,
+                                  snapshot.data!['feedArticles'][index].title!
+                                      .replaceAll('&#8217;', "'")
+                                      .replaceAll('&#8216;', "'")
+                                      .replaceAll('&#039;', "'")
+                                      .replaceAll('&quot;', '"'),
                                   style: TextStyle(
                                     color: useDarkMode
                                         ? Colors.white
