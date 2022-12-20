@@ -69,7 +69,7 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
                   child: Row(
                     children: [
                       Text(
-                        'WTF1',
+                        'WTF1.com',
                         style: TextStyle(
                           color: useDarkMode ? Colors.white : Colors.black,
                           fontSize: 16,

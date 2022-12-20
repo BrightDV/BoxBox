@@ -35,6 +35,54 @@ class RssFeedArticleScreen extends StatefulWidget {
 }
 
 class _RssFeedArticleScreenState extends State<RssFeedArticleScreen> {
+  final adUrlFilters = [
+    ".*.doubleclick.net/.*",
+    ".*.crashlytics.com/.*",
+    ".*.scorecardresearch.com/.*",
+    ".*.pubmatic.com/.*",
+    ".*.supersonicads.com/.*",
+    ".*.outbrain.com/.*",
+    ".*.googlesyndication.com/.*",
+    ".*.googletagservices.com/.*",
+    ".*.google-analytics.com/.*",
+    ".*.amazon-adsystem.com/.*",
+    ".*.id5-sync.com/.*",
+    ".*.quantcast.com/.*",
+    ".*.adsafeprotected.com/.*",
+    ".*.crwdcntrl.net/.*",
+    ".*.chartbeat.net/.*",
+    ".*.chartbeat.com/.*",
+  ];
+  final List<ContentBlocker> contentBlockers = [];
+
+  @override
+  void initState() {
+    super.initState();
+
+    for (final adUrlFilter in adUrlFilters) {
+      contentBlockers.add(
+        ContentBlocker(
+          trigger: ContentBlockerTrigger(
+            urlFilter: adUrlFilter,
+          ),
+          action: ContentBlockerAction(
+            type: ContentBlockerActionType.BLOCK,
+          ),
+        ),
+      );
+    }
+    contentBlockers.add(
+      ContentBlocker(
+        trigger: ContentBlockerTrigger(
+          urlFilter: ".*",
+        ),
+        action: ContentBlockerAction(
+            type: ContentBlockerActionType.CSS_DISPLAY_NONE,
+            selector: ".banner, .banners, .ads, .ad, .advert"),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     bool useDarkMode =
@@ -71,6 +119,11 @@ class _RssFeedArticleScreenState extends State<RssFeedArticleScreen> {
               () => HorizontalDragGestureRecognizer()),
           Factory<ScaleGestureRecognizer>(() => ScaleGestureRecognizer()),
         ].toSet(),
+        initialOptions: InAppWebViewGroupOptions(
+          crossPlatform: InAppWebViewOptions(
+            contentBlockers: contentBlockers,
+          ),
+        ),
       ),
     );
   }
