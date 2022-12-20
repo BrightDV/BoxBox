@@ -27,14 +27,12 @@ class SearXSearch {
   final List<String> instances = [
     'https://search.unlocked.link/',
     'https://search.sapti.me/',
-    'https://searx.xyz/',
     'https://search.neet.works/',
     'https://dynabyte.ca/',
   ];
   final List<String> scrapingInstances = [
     'https://search.unlocked.link/',
     'https://search.sapti.me/',
-    'https://searx.xyz/',
     'https://search.neet.works/',
     'https://dynabyte.ca/',
     'https://searx.fmac.xyz/',
