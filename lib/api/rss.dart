@@ -17,8 +17,6 @@
  * Copyright (c) 2022, BrightDV
  */
 
-import 'dart:convert';
-
 import 'package:http/http.dart' as http;
 import 'package:webfeed/webfeed.dart';
 
@@ -27,11 +25,7 @@ class RssFeeds {
       {int? max}) async {
     var url = Uri.parse(feedUrl);
     var response = await http.get(url);
-    RssFeed rssFeed = RssFeed.parse(
-      utf8.decode(
-        response.bodyBytes,
-      ),
-    );
+    RssFeed rssFeed = RssFeed.parse(response.body);
     List<RssItem> rssItems = rssFeed.items!;
     if (max != null) {
       rssItems = rssItems.sublist(0, max);

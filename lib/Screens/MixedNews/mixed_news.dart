@@ -45,15 +45,20 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
       'Motorsport.com',
       'Autosport.com',
       'GPFans.com',
+      'Motorsportweek.com',
       'Racer.com',
       'Crash.net',
+      'Pitpass.com',
     ];
     Map<String, dynamic> feedsUrl = {
       'Motorsport.com': 'https://www.motorsport.com/rss/f1/news/',
       'Autosport.com': 'https://www.autosport.com/rss/f1/news/',
-      'GPFans.com': 'https://racer.com/f1/feed/',
+      'GPFans.com': 'https://www.gpfans.com/en/rss.xml',
+      'Motorsportweek.com': 'https://www.motorsportweek.com/feed/',
       'Racer.com': 'https://racer.com/f1/feed/',
       'Crash.net': 'https://www.crash.net/rss/f1',
+      'Pitpass.com':
+          'https://www.pitpass.com/fes_php/fes_usr_sit_newsfeed.php?fes_prepend_aty_sht_name=1',
     };
     return Scaffold(
       backgroundColor:
@@ -300,15 +305,7 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
                                                     MaterialPageRoute(
                                                       builder: (context) =>
                                                           RssFeedArticleScreen(
-                                                        feedItem.title!
-                                                            .replaceAll(
-                                                                '&#8217;', "'")
-                                                            .replaceAll(
-                                                                '&#8216;', "'")
-                                                            .replaceAll(
-                                                                '&#039;', "'")
-                                                            .replaceAll(
-                                                                '&quot;', '"'),
+                                                        feedItem.title!,
                                                         feedItem.link!.indexOf(
                                                                   '?utm',
                                                                 ) ==
@@ -353,19 +350,7 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
                                                                 : Container(),
                                                         ListTile(
                                                           title: Text(
-                                                            feedItem.title!
-                                                                .replaceAll(
-                                                                    '&#8217;',
-                                                                    "'")
-                                                                .replaceAll(
-                                                                    '&#8216;',
-                                                                    "'")
-                                                                .replaceAll(
-                                                                    '&#039;',
-                                                                    "'")
-                                                                .replaceAll(
-                                                                    '&quot;',
-                                                                    '"'),
+                                                            feedItem.title!,
                                                             style: TextStyle(
                                                               color: useDarkMode
                                                                   ? Colors.white

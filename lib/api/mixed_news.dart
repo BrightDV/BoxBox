@@ -27,9 +27,7 @@ class Wtf1 {
     var url = Uri.parse('https://wtf1.com/wp-json/wp/v2/posts');
     var response = await http.get(url);
     List responseAsJson = jsonDecode(
-      utf8.decode(
-        response.bodyBytes,
-      ),
+      response.body,
     );
     max != null
         ? formatedNews = responseAsJson.sublist(0, max)
@@ -41,9 +39,7 @@ class Wtf1 {
     var url = Uri.parse('https://wtf1.com/wp-json/wp/v2/posts?offset=$offset');
     var response = await http.get(url);
     List responseAsJson = jsonDecode(
-      utf8.decode(
-        response.bodyBytes,
-      ),
+      response.body,
     );
     return responseAsJson;
   }
@@ -52,9 +48,7 @@ class Wtf1 {
     var url = Uri.parse(mediaUrl);
     var response = await http.get(url);
     Map responseAsJson = jsonDecode(
-      utf8.decode(
-        response.bodyBytes,
-      ),
+      response.body,
     );
     return responseAsJson['source_url'];
   }
