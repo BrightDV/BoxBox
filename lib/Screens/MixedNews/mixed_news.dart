@@ -43,6 +43,7 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
     List<String> feeds = [
       'WTF1.com',
       'Racefans.net',
+      'Beyondtheflag.com',
       'Motorsport.com',
       'Autosport.com',
       'GPFans.com',
@@ -55,6 +56,7 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
     Map<String, dynamic> feedsUrl = {
       'WTF1.com': 'https://wtf1.com',
       'Racefans.net': 'https://racefans.net',
+      'Beyondtheflag.com': 'https://beyondtheflag.com',
       'Motorsport.com': 'https://www.motorsport.com/rss/f1/news/',
       'Autosport.com': 'https://www.autosport.com/rss/f1/news/',
       'GPFans.com': 'https://www.gpfans.com/en/rss.xml',
@@ -79,7 +81,9 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             for (String feed in feeds)
-              feed == 'WTF1.com' || feed == 'Racefans.net'
+              feed == 'WTF1.com' ||
+                      feed == 'Racefans.net' ||
+                      feed == 'Beyondtheflag.com'
                   ? Column(
                       children: [
                         Padding(
