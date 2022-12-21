@@ -32,14 +32,17 @@ import 'package:share_plus/share_plus.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:url_launcher/url_launcher.dart';
 
-class Wtf1Screen extends StatefulWidget {
-  const Wtf1Screen({Key? key}) : super(key: key);
+class WordpressScreen extends StatefulWidget {
+  final String feedName;
+  final String feedUrl;
+  const WordpressScreen(this.feedName, this.feedUrl, {Key? key})
+      : super(key: key);
 
   @override
-  State<Wtf1Screen> createState() => _Wtf1ScreenState();
+  State<WordpressScreen> createState() => _WordpressScreenState();
 }
 
-class _Wtf1ScreenState extends State<Wtf1Screen> {
+class _WordpressScreenState extends State<WordpressScreen> {
   @override
   Widget build(BuildContext context) {
     bool useDarkMode =
@@ -47,20 +50,20 @@ class _Wtf1ScreenState extends State<Wtf1Screen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'WTF1.com',
+          widget.feedName,
         ),
       ),
       backgroundColor:
           useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
-      body: Wtf1NewsList(),
+      body: WordpressNewsList(widget.feedUrl),
     );
   }
 }
 
-class Wtf1NewsItem extends StatelessWidget {
+class WordspressNewsItem extends StatelessWidget {
   final Map item;
 
-  Wtf1NewsItem(
+  WordspressNewsItem(
     this.item,
   );
 
@@ -160,8 +163,11 @@ class Wtf1NewsItem extends StatelessWidget {
               MaterialPageRoute(
                 builder: (context) => RssFeedArticleScreen(
                   item['title']['rendered']
+                      .replaceAll('&#8211;', "'")
+                      .replaceAll('&#8216;', "'")
                       .replaceAll('&#8217;', "'")
-                      .replaceAll('&#8216;', "'"),
+                      .replaceAll('&#82120;', "'")
+                      .replaceAll('&#82121;', "'"),
                   item['guid']['rendered'],
                 ),
               ),
@@ -181,7 +187,7 @@ class Wtf1NewsItem extends StatelessWidget {
                         topRight: Radius.circular(15),
                       ),
                       child: FutureBuilder<String>(
-                        future: Wtf1().getImageUrl(
+                        future: Wordpress().getImageUrl(
                           item['_links']['wp:featuredmedia'][0]['href'],
                         ),
                         builder: (context, imageSnapshot) =>
@@ -203,8 +209,11 @@ class Wtf1NewsItem extends StatelessWidget {
               ListTile(
                 title: Text(
                   item['title']['rendered']
+                      .replaceAll('&#8211;', "'")
+                      .replaceAll('&#8216;', "'")
                       .replaceAll('&#8217;', "'")
-                      .replaceAll('&#8216;', "'"),
+                      .replaceAll('&#82120;', "'")
+                      .replaceAll('&#82121;', "'"),
                   style: TextStyle(
                     color: useDarkMode ? Colors.white : Colors.black,
                     fontSize: 18,
@@ -214,6 +223,25 @@ class Wtf1NewsItem extends StatelessWidget {
                   maxLines: 5,
                   textAlign: TextAlign.justify,
                 ),
+                subtitle: newsLayout != 'big' && newsLayout != 'condensed'
+                    ? null
+                    : Text(
+                        item['excerpt']['rendered']
+                            .replaceAll('&#8211;', "'")
+                            .replaceAll('&#8216;', "'")
+                            .replaceAll('&#8217;', "'")
+                            .replaceAll('&#82120;', "'")
+                            .replaceAll('&#82121;', "'")
+                            .replaceAll('<p>', '')
+                            .replaceAll('</p>', ''),
+                        style: TextStyle(
+                          color:
+                              useDarkMode ? Colors.grey[400] : Colors.grey[800],
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 5,
+                        textAlign: TextAlign.justify,
+                      ),
               ),
               Padding(
                 padding: EdgeInsets.only(
@@ -257,18 +285,20 @@ class Wtf1NewsItem extends StatelessWidget {
   }
 }
 
-class Wtf1NewsList extends StatefulWidget {
+class WordpressNewsList extends StatefulWidget {
   final ScrollController? scrollController;
+  final String baseUrl;
 
-  Wtf1NewsList({
+  WordpressNewsList(
+    this.baseUrl, {
     Key? key,
     this.scrollController,
   });
   @override
-  _Wtf1NewsListState createState() => _Wtf1NewsListState();
+  _WordpressNewsListState createState() => _WordpressNewsListState();
 }
 
-class _Wtf1NewsListState extends State<Wtf1NewsList> {
+class _WordpressNewsListState extends State<WordpressNewsList> {
   static const _pageSize = 10;
   final PagingController<int, dynamic> _pagingController =
       PagingController(firstPageKey: 0);
@@ -276,7 +306,6 @@ class _Wtf1NewsListState extends State<Wtf1NewsList> {
   @override
   void initState() {
     _pagingController.addPageRequestListener((offset) {
-      print(offset);
       _fetchPage(offset);
     });
     super.initState();
@@ -284,7 +313,8 @@ class _Wtf1NewsListState extends State<Wtf1NewsList> {
 
   Future<void> _fetchPage(int offset) async {
     try {
-      List newItems = await Wtf1().getMoreWtf1News(
+      List newItems = await Wordpress().getMoreWordpressNews(
+        widget.baseUrl,
         offset,
       );
       final isLastPage = newItems.length < _pageSize;
@@ -312,7 +342,7 @@ class _Wtf1NewsListState extends State<Wtf1NewsList> {
         shrinkWrap: true,
         builderDelegate: PagedChildBuilderDelegate(
           itemBuilder: (context, item, index) {
-            return Wtf1NewsItem(item);
+            return WordspressNewsItem(item);
           },
           firstPageProgressIndicatorBuilder: (_) => LoadingIndicatorUtil(),
           firstPageErrorIndicatorBuilder: (_) => FirstPageExceptionIndicator(

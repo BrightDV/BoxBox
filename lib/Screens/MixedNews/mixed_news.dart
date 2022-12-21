@@ -19,7 +19,7 @@
 
 import 'package:boxbox/Screens/MixedNews/rss_feed.dart';
 import 'package:boxbox/Screens/MixedNews/rss_feed_article.dart';
-import 'package:boxbox/Screens/MixedNews/wtf1.dart';
+import 'package:boxbox/Screens/MixedNews/wordpress.dart';
 import 'package:boxbox/api/mixed_news.dart';
 import 'package:boxbox/api/rss.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
@@ -42,20 +42,26 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
     double width = MediaQuery.of(context).size.width;
     List<String> feeds = [
       'WTF1.com',
+      'Racefans.net',
       'Motorsport.com',
       'Autosport.com',
       'GPFans.com',
-      'Motorsportweek.com',
       'Racer.com',
+      'Thecheckeredflag.co.uk',
+      'Motorsportweek.com',
       'Crash.net',
       'Pitpass.com',
     ];
     Map<String, dynamic> feedsUrl = {
+      'WTF1.com': 'https://wtf1.com',
+      'Racefans.net': 'https://racefans.net',
       'Motorsport.com': 'https://www.motorsport.com/rss/f1/news/',
       'Autosport.com': 'https://www.autosport.com/rss/f1/news/',
       'GPFans.com': 'https://www.gpfans.com/en/rss.xml',
-      'Motorsportweek.com': 'https://www.motorsportweek.com/feed/',
       'Racer.com': 'https://racer.com/f1/feed/',
+      'Thecheckeredflag.co.uk':
+          'https://www.thecheckeredflag.co.uk/open-wheel/formula-1/feed/',
+      'Motorsportweek.com': 'https://www.motorsportweek.com/feed/',
       'Crash.net': 'https://www.crash.net/rss/f1',
       'Pitpass.com':
           'https://www.pitpass.com/fes_php/fes_usr_sit_newsfeed.php?fes_prepend_aty_sht_name=1',
@@ -73,7 +79,7 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             for (String feed in feeds)
-              feed == 'WTF1.com'
+              feed == 'WTF1.com' || feed == 'Racefans.net'
                   ? Column(
                       children: [
                         Padding(
@@ -81,7 +87,7 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
                           child: Row(
                             children: [
                               Text(
-                                'WTF1.com',
+                                feed,
                                 style: TextStyle(
                                   color:
                                       useDarkMode ? Colors.white : Colors.black,
@@ -95,7 +101,10 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
                                 onTap: () => Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => Wtf1Screen(),
+                                    builder: (context) => WordpressScreen(
+                                      feed,
+                                      feedsUrl[feed],
+                                    ),
                                   ),
                                 ),
                                 child: Text(
@@ -122,7 +131,10 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
                         SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
                           child: FutureBuilder<List>(
-                            future: Wtf1().getWtf1News(max: 7),
+                            future: Wordpress().getWordpressNews(
+                              feedsUrl[feed],
+                              max: 7,
+                            ),
                             builder: (context, snapshot) => snapshot.hasError
                                 ? RequestErrorWidget(
                                     snapshot.error.toString(),
@@ -162,7 +174,7 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
                                                     child: Column(
                                                       children: [
                                                         FutureBuilder<String>(
-                                                          future: Wtf1()
+                                                          future: Wordpress()
                                                               .getImageUrl(
                                                             article['_links'][
                                                                     'wp:featuredmedia']
@@ -293,6 +305,10 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
                                                           feedItem
                                                               .media
                                                               .thumbnails
+                                                              .isNotEmpty ||
+                                                          feedItem
+                                                              .media
+                                                              .contents
                                                               .isNotEmpty
                                                       ? 232
                                                       : 110,
@@ -347,7 +363,18 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
                                                                             0]
                                                                         .url,
                                                                   )
-                                                                : Container(),
+                                                                : feedItem
+                                                                        .media
+                                                                        .contents
+                                                                        .isNotEmpty
+                                                                    ? Image
+                                                                        .network(
+                                                                        feedItem
+                                                                            .media
+                                                                            .contents[0]
+                                                                            .url,
+                                                                      )
+                                                                    : Container(),
                                                         ListTile(
                                                           title: Text(
                                                             feedItem.title!,

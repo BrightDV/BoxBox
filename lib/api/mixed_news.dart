@@ -21,10 +21,10 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
-class Wtf1 {
-  Future<List> getWtf1News({int? max}) async {
+class Wordpress {
+  Future<List> getWordpressNews(String baseUrl, {int? max}) async {
     List formatedNews = [];
-    var url = Uri.parse('https://wtf1.com/wp-json/wp/v2/posts');
+    var url = Uri.parse('$baseUrl/wp-json/wp/v2/posts');
     var response = await http.get(url);
     List responseAsJson = jsonDecode(
       response.body,
@@ -35,8 +35,8 @@ class Wtf1 {
     return formatedNews;
   }
 
-  Future<List> getMoreWtf1News(int offset) async {
-    var url = Uri.parse('https://wtf1.com/wp-json/wp/v2/posts?offset=$offset');
+  Future<List> getMoreWordpressNews(String baseUrl, int offset) async {
+    var url = Uri.parse('$baseUrl/wp-json/wp/v2/posts?offset=$offset');
     var response = await http.get(url);
     List responseAsJson = jsonDecode(
       response.body,

@@ -110,11 +110,11 @@ class _RssFeedScreenState extends State<RssFeedScreen> {
           if (delta == null) return;
           delta == 0
               ? launchUrl(
-                  Uri.parse("https://www.formula1.com/en/latest/article..html"),
+                  Uri.parse(""),
                   mode: LaunchMode.externalApplication,
                 )
               : Share.share(
-                  "https://www.formula1.com/en/latest/artihtml",
+                  "",
                 );
         },
       );
@@ -153,11 +153,7 @@ class _RssFeedScreenState extends State<RssFeedScreen> {
                             context,
                             MaterialPageRoute(
                               builder: (context) => RssFeedArticleScreen(
-                                snapshot.data!['feedArticles'][index].title!
-                                    .replaceAll('&#8217;', "'")
-                                    .replaceAll('&#8216;', "'")
-                                    .replaceAll('&#039;', "'")
-                                    .replaceAll('&quot;', '"'),
+                                snapshot.data!['feedArticles'][index].title!,
                                 snapshot.data!['feedArticles'][index].link!
                                             .indexOf('?utm') ==
                                         -1
@@ -187,7 +183,9 @@ class _RssFeedScreenState extends State<RssFeedScreen> {
                                                   .enclosure !=
                                               null ||
                                           snapshot.data!['feedArticles'][index]
-                                              .media.thumbnails.isNotEmpty)
+                                              .media.thumbnails.isNotEmpty ||
+                                          snapshot.data!['feedArticles'][index]
+                                              .media.contents.isNotEmpty)
                                   ? ClipRRect(
                                       borderRadius: BorderRadius.only(
                                         topLeft: Radius.circular(15),
@@ -202,10 +200,23 @@ class _RssFeedScreenState extends State<RssFeedScreen> {
                                                 .enclosure!
                                                 .url!
                                             : snapshot
-                                                .data!['feedArticles'][index]
-                                                .media
-                                                .thumbnails[0]
-                                                .url,
+                                                    .data!['feedArticles']
+                                                        [index]
+                                                    .media
+                                                    .thumbnails
+                                                    .isNotEmpty
+                                                ? snapshot
+                                                    .data!['feedArticles']
+                                                        [index]
+                                                    .media
+                                                    .thumbnails[0]
+                                                    .url
+                                                : snapshot
+                                                    .data!['feedArticles']
+                                                        [index]
+                                                    .media
+                                                    .contents[0]
+                                                    .url,
                                       ),
                                     )
                                   : Container(
@@ -214,11 +225,7 @@ class _RssFeedScreenState extends State<RssFeedScreen> {
                                     ),
                               ListTile(
                                 title: Text(
-                                  snapshot.data!['feedArticles'][index].title!
-                                      .replaceAll('&#8217;', "'")
-                                      .replaceAll('&#8216;', "'")
-                                      .replaceAll('&#039;', "'")
-                                      .replaceAll('&quot;', '"'),
+                                  snapshot.data!['feedArticles'][index].title!,
                                   style: TextStyle(
                                     color: useDarkMode
                                         ? Colors.white
