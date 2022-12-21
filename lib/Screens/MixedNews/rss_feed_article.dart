@@ -77,8 +77,10 @@ class _RssFeedArticleScreenState extends State<RssFeedArticleScreen> {
           urlFilter: ".*",
         ),
         action: ContentBlockerAction(
-            type: ContentBlockerActionType.CSS_DISPLAY_NONE,
-            selector: ".banner, .banners, .ads, .ad, .advert"),
+          type: ContentBlockerActionType.CSS_DISPLAY_NONE,
+          selector:
+              ".banner, .banners, .ads, .ad, .advert, .w7e-platform-101, .adv-ad-wrapper, .ms-apb-super, .ms-content_sidebar",
+        ),
       ),
     );
   }

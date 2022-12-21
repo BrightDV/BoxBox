@@ -41,12 +41,17 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     double width = MediaQuery.of(context).size.width;
     List<String> feeds = [
+      'WTF1.com',
       'Motorsport.com',
+      'Autosport.com',
+      'GPFans.com',
       'Racer.com',
       'Crash.net',
     ];
     Map<String, dynamic> feedsUrl = {
       'Motorsport.com': 'https://www.motorsport.com/rss/f1/news/',
+      'Autosport.com': 'https://www.autosport.com/rss/f1/news/',
+      'GPFans.com': 'https://racer.com/f1/feed/',
       'Racer.com': 'https://racer.com/f1/feed/',
       'Crash.net': 'https://www.crash.net/rss/f1',
     };
@@ -62,308 +67,333 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Column(
-              children: [
-                Padding(
-                  padding: EdgeInsets.all(10),
-                  child: Row(
-                    children: [
-                      Text(
-                        'WTF1.com',
-                        style: TextStyle(
-                          color: useDarkMode ? Colors.white : Colors.black,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                        ),
-                        textAlign: TextAlign.left,
-                      ),
-                      Spacer(),
-                      GestureDetector(
-                        onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => Wtf1Screen(),
-                          ),
-                        ),
-                        child: Text(
-                          'VIEW MORE',
-                          style: TextStyle(
-                            color: useDarkMode ? Colors.white : Colors.black,
-                            fontSize: 12,
-                            fontWeight: FontWeight.w500,
-                            decoration: TextDecoration.underline,
-                          ),
-                          textAlign: TextAlign.left,
-                        ),
-                      ),
-                      Icon(
-                        Icons.arrow_forward,
-                        color: useDarkMode ? Colors.white : Colors.black,
-                      ),
-                    ],
-                  ),
-                ),
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: FutureBuilder<List>(
-                    future: Wtf1().getWtf1News(max: 7),
-                    builder: (context, snapshot) => snapshot.hasError
-                        ? RequestErrorWidget(
-                            snapshot.error.toString(),
-                          )
-                        : snapshot.hasData && snapshot.data != null
-                            ? Row(
-                                children: [
-                                  for (Map article in snapshot.data!)
-                                    Container(
-                                      width: width / 2.1,
-                                      height: 232,
-                                      child: Padding(
-                                        padding: EdgeInsets.only(top: 5),
-                                        child: GestureDetector(
-                                          onTap: () => Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  RssFeedArticleScreen(
-                                                article['title']['rendered']
-                                                    .replaceAll('&#8217;', "'")
-                                                    .replaceAll('&#8216;', "'"),
-                                                article['guid']['rendered'],
-                                              ),
-                                            ),
-                                          ),
-                                          child: Card(
-                                            elevation: 5.0,
-                                            color: useDarkMode
-                                                ? Color(0xff1d1d28)
-                                                : Colors.white,
-                                            child: Column(
-                                              children: [
-                                                FutureBuilder<String>(
-                                                  future: Wtf1().getImageUrl(
-                                                    article['_links']
-                                                            ['wp:featuredmedia']
-                                                        [0]['href'],
-                                                  ),
-                                                  builder: (context,
-                                                          imageSnapshot) =>
-                                                      imageSnapshot.hasError
-                                                          ? RequestErrorWidget(
-                                                              imageSnapshot
-                                                                  .error
-                                                                  .toString(),
-                                                            )
-                                                          : imageSnapshot
-                                                                  .hasData
-                                                              ? Image.network(
-                                                                  imageSnapshot
-                                                                      .data!,
-                                                                )
-                                                              : LoadingIndicatorUtil(),
-                                                ),
-                                                ListTile(
-                                                  title: Text(
-                                                    article['title']['rendered']
-                                                        .replaceAll(
-                                                            '&#8217;', "'")
-                                                        .replaceAll(
-                                                            '&#8216;', "'"),
-                                                    style: TextStyle(
-                                                      color: useDarkMode
-                                                          ? Colors.white
-                                                          : Colors.black,
-                                                      fontSize: 14,
-                                                    ),
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                    textAlign:
-                                                        TextAlign.justify,
-                                                    maxLines: 5,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                ],
-                              )
-                            : LoadingIndicatorUtil(),
-                  ),
-                ),
-                for (String feed in feeds)
-                  Column(
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.all(10),
-                        child: Row(
-                          children: [
-                            Text(
-                              feed,
-                              style: TextStyle(
-                                color:
-                                    useDarkMode ? Colors.white : Colors.black,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                              ),
-                              textAlign: TextAlign.left,
-                            ),
-                            Spacer(),
-                            GestureDetector(
-                              onTap: () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => RssFeedScreen(
-                                    feed,
-                                    feedsUrl[feed],
-                                  ),
-                                ),
-                              ),
-                              child: Text(
-                                'VIEW MORE',
+            for (String feed in feeds)
+              feed == 'WTF1.com'
+                  ? Column(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.all(10),
+                          child: Row(
+                            children: [
+                              Text(
+                                'WTF1.com',
                                 style: TextStyle(
                                   color:
                                       useDarkMode ? Colors.white : Colors.black,
-                                  fontSize: 12,
+                                  fontSize: 16,
                                   fontWeight: FontWeight.w500,
-                                  decoration: TextDecoration.underline,
                                 ),
                                 textAlign: TextAlign.left,
                               ),
-                            ),
-                            Icon(
-                              Icons.arrow_forward,
-                              color: useDarkMode ? Colors.white : Colors.black,
-                            ),
-                          ],
+                              Spacer(),
+                              GestureDetector(
+                                onTap: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => Wtf1Screen(),
+                                  ),
+                                ),
+                                child: Text(
+                                  'VIEW MORE',
+                                  style: TextStyle(
+                                    color: useDarkMode
+                                        ? Colors.white
+                                        : Colors.black,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500,
+                                    decoration: TextDecoration.underline,
+                                  ),
+                                  textAlign: TextAlign.left,
+                                ),
+                              ),
+                              Icon(
+                                Icons.arrow_forward,
+                                color:
+                                    useDarkMode ? Colors.white : Colors.black,
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                      SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: FutureBuilder<Map<String, dynamic>>(
-                          future: RssFeeds()
-                              .getFeedArticles(feedsUrl[feed], max: 7),
-                          builder: (context, snapshot) => snapshot.hasError
-                              ? RequestErrorWidget(
-                                  snapshot.error.toString(),
-                                )
-                              : snapshot.hasData && snapshot.data != null
-                                  ? Row(
-                                      children: [
-                                        for (var feedItem
-                                            in snapshot.data!['feedArticles'])
-                                          Container(
-                                            width: width / 2.1,
-                                            height:
-                                                feedItem.enclosure != null ||
-                                                        feedItem
-                                                            .media
-                                                            .thumbnails
-                                                            .isNotEmpty
-                                                    ? 232
-                                                    : 110,
-                                            child: Padding(
-                                              padding: EdgeInsets.only(top: 5),
-                                              child: GestureDetector(
-                                                onTap: () => Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        RssFeedArticleScreen(
-                                                      feedItem.title!
-                                                          .replaceAll(
-                                                              '&#8217;', "'")
-                                                          .replaceAll(
-                                                              '&#8216;', "'")
-                                                          .replaceAll(
-                                                              '&#039;', "'")
-                                                          .replaceAll(
-                                                              '&quot;', '"'),
-                                                      feedItem.link!.indexOf(
-                                                                '?utm',
-                                                              ) ==
-                                                              -1
-                                                          ? feedItem.link!
-                                                          : feedItem.link!
-                                                              .substring(
-                                                              0,
-                                                              feedItem.link!
-                                                                  .indexOf(
-                                                                '?utm',
-                                                              ),
-                                                            ),
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: FutureBuilder<List>(
+                            future: Wtf1().getWtf1News(max: 7),
+                            builder: (context, snapshot) => snapshot.hasError
+                                ? RequestErrorWidget(
+                                    snapshot.error.toString(),
+                                  )
+                                : snapshot.hasData && snapshot.data != null
+                                    ? Row(
+                                        children: [
+                                          for (Map article in snapshot.data!)
+                                            Container(
+                                              width: width / 2.1,
+                                              height: 232,
+                                              child: Padding(
+                                                padding:
+                                                    EdgeInsets.only(top: 5),
+                                                child: GestureDetector(
+                                                  onTap: () => Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          RssFeedArticleScreen(
+                                                        article['title']
+                                                                ['rendered']
+                                                            .replaceAll(
+                                                                '&#8217;', "'")
+                                                            .replaceAll(
+                                                                '&#8216;', "'"),
+                                                        article['guid']
+                                                            ['rendered'],
+                                                      ),
                                                     ),
                                                   ),
-                                                ),
-                                                child: Card(
-                                                  elevation: 5.0,
-                                                  color: useDarkMode
-                                                      ? Color(0xff1d1d28)
-                                                      : Colors.white,
-                                                  child: Column(
-                                                    children: [
-                                                      feedItem.enclosure != null
-                                                          ? Image.network(
-                                                              feedItem
-                                                                  .enclosure!
-                                                                  .url!,
-                                                            )
-                                                          : feedItem
-                                                                  .media
-                                                                  .thumbnails
-                                                                  .isNotEmpty
-                                                              ? Image.network(
-                                                                  feedItem
-                                                                      .media
-                                                                      .thumbnails[
-                                                                          0]
-                                                                      .url,
-                                                                )
-                                                              : Container(),
-                                                      ListTile(
-                                                        title: Text(
-                                                          feedItem.title!
-                                                              .replaceAll(
-                                                                  '&#8217;',
-                                                                  "'")
-                                                              .replaceAll(
-                                                                  '&#8216;',
-                                                                  "'")
-                                                              .replaceAll(
-                                                                  '&#039;', "'")
-                                                              .replaceAll(
-                                                                  '&quot;',
-                                                                  '"'),
-                                                          style: TextStyle(
-                                                            color: useDarkMode
-                                                                ? Colors.white
-                                                                : Colors.black,
-                                                            fontSize: 14,
+                                                  child: Card(
+                                                    elevation: 5.0,
+                                                    color: useDarkMode
+                                                        ? Color(0xff1d1d28)
+                                                        : Colors.white,
+                                                    child: Column(
+                                                      children: [
+                                                        FutureBuilder<String>(
+                                                          future: Wtf1()
+                                                              .getImageUrl(
+                                                            article['_links'][
+                                                                    'wp:featuredmedia']
+                                                                [0]['href'],
                                                           ),
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                          textAlign:
-                                                              TextAlign.justify,
-                                                          maxLines: 5,
+                                                          builder: (context,
+                                                                  imageSnapshot) =>
+                                                              imageSnapshot
+                                                                      .hasError
+                                                                  ? RequestErrorWidget(
+                                                                      imageSnapshot
+                                                                          .error
+                                                                          .toString(),
+                                                                    )
+                                                                  : imageSnapshot
+                                                                          .hasData
+                                                                      ? Image
+                                                                          .network(
+                                                                          imageSnapshot
+                                                                              .data!,
+                                                                        )
+                                                                      : LoadingIndicatorUtil(),
                                                         ),
-                                                      ),
-                                                    ],
+                                                        ListTile(
+                                                          title: Text(
+                                                            article['title']
+                                                                    ['rendered']
+                                                                .replaceAll(
+                                                                    '&#8217;',
+                                                                    "'")
+                                                                .replaceAll(
+                                                                    '&#8216;',
+                                                                    "'"),
+                                                            style: TextStyle(
+                                                              color: useDarkMode
+                                                                  ? Colors.white
+                                                                  : Colors
+                                                                      .black,
+                                                              fontSize: 14,
+                                                            ),
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                            textAlign: TextAlign
+                                                                .justify,
+                                                            maxLines: 5,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
                                                   ),
                                                 ),
                                               ),
                                             ),
-                                          ),
-                                      ],
-                                    )
-                                  : LoadingIndicatorUtil(),
+                                        ],
+                                      )
+                                    : LoadingIndicatorUtil(),
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-              ],
-            ),
+                      ],
+                    )
+                  : Column(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.all(10),
+                          child: Row(
+                            children: [
+                              Text(
+                                feed,
+                                style: TextStyle(
+                                  color:
+                                      useDarkMode ? Colors.white : Colors.black,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                textAlign: TextAlign.left,
+                              ),
+                              Spacer(),
+                              GestureDetector(
+                                onTap: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => RssFeedScreen(
+                                      feed,
+                                      feedsUrl[feed],
+                                    ),
+                                  ),
+                                ),
+                                child: Text(
+                                  'VIEW MORE',
+                                  style: TextStyle(
+                                    color: useDarkMode
+                                        ? Colors.white
+                                        : Colors.black,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500,
+                                    decoration: TextDecoration.underline,
+                                  ),
+                                  textAlign: TextAlign.left,
+                                ),
+                              ),
+                              Icon(
+                                Icons.arrow_forward,
+                                color:
+                                    useDarkMode ? Colors.white : Colors.black,
+                              ),
+                            ],
+                          ),
+                        ),
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: FutureBuilder<Map<String, dynamic>>(
+                            future: RssFeeds()
+                                .getFeedArticles(feedsUrl[feed], max: 7),
+                            builder: (context, snapshot) => snapshot.hasError
+                                ? RequestErrorWidget(
+                                    snapshot.error.toString(),
+                                  )
+                                : snapshot.hasData && snapshot.data != null
+                                    ? Row(
+                                        children: [
+                                          for (var feedItem
+                                              in snapshot.data!['feedArticles'])
+                                            Container(
+                                              width: width / 2.1,
+                                              height:
+                                                  feedItem.enclosure != null ||
+                                                          feedItem
+                                                              .media
+                                                              .thumbnails
+                                                              .isNotEmpty
+                                                      ? 232
+                                                      : 110,
+                                              child: Padding(
+                                                padding:
+                                                    EdgeInsets.only(top: 5),
+                                                child: GestureDetector(
+                                                  onTap: () => Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          RssFeedArticleScreen(
+                                                        feedItem.title!
+                                                            .replaceAll(
+                                                                '&#8217;', "'")
+                                                            .replaceAll(
+                                                                '&#8216;', "'")
+                                                            .replaceAll(
+                                                                '&#039;', "'")
+                                                            .replaceAll(
+                                                                '&quot;', '"'),
+                                                        feedItem.link!.indexOf(
+                                                                  '?utm',
+                                                                ) ==
+                                                                -1
+                                                            ? feedItem.link!
+                                                            : feedItem.link!
+                                                                .substring(
+                                                                0,
+                                                                feedItem.link!
+                                                                    .indexOf(
+                                                                  '?utm',
+                                                                ),
+                                                              ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  child: Card(
+                                                    elevation: 5.0,
+                                                    color: useDarkMode
+                                                        ? Color(0xff1d1d28)
+                                                        : Colors.white,
+                                                    child: Column(
+                                                      children: [
+                                                        feedItem.enclosure !=
+                                                                null
+                                                            ? Image.network(
+                                                                feedItem
+                                                                    .enclosure!
+                                                                    .url!,
+                                                              )
+                                                            : feedItem
+                                                                    .media
+                                                                    .thumbnails
+                                                                    .isNotEmpty
+                                                                ? Image.network(
+                                                                    feedItem
+                                                                        .media
+                                                                        .thumbnails[
+                                                                            0]
+                                                                        .url,
+                                                                  )
+                                                                : Container(),
+                                                        ListTile(
+                                                          title: Text(
+                                                            feedItem.title!
+                                                                .replaceAll(
+                                                                    '&#8217;',
+                                                                    "'")
+                                                                .replaceAll(
+                                                                    '&#8216;',
+                                                                    "'")
+                                                                .replaceAll(
+                                                                    '&#039;',
+                                                                    "'")
+                                                                .replaceAll(
+                                                                    '&quot;',
+                                                                    '"'),
+                                                            style: TextStyle(
+                                                              color: useDarkMode
+                                                                  ? Colors.white
+                                                                  : Colors
+                                                                      .black,
+                                                              fontSize: 14,
+                                                            ),
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                            textAlign: TextAlign
+                                                                .justify,
+                                                            maxLines: 5,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                        ],
+                                      )
+                                    : LoadingIndicatorUtil(),
+                          ),
+                        ),
+                      ],
+                    ),
           ],
         ),
       ),
