@@ -17,6 +17,7 @@
  * Copyright (c) 2022, BrightDV
  */
 
+import 'package:boxbox/Screens/MixedNews/edit_order.dart';
 import 'package:boxbox/Screens/MixedNews/rss_feed.dart';
 import 'package:boxbox/Screens/MixedNews/rss_feed_article.dart';
 import 'package:boxbox/Screens/MixedNews/wordpress.dart';
@@ -35,24 +36,31 @@ class MixedNewsScreen extends StatefulWidget {
 }
 
 class _MixedNewsScreenState extends State<MixedNewsScreen> {
+  void updateParent() {
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     double width = MediaQuery.of(context).size.width;
-    List<String> feeds = [
-      'WTF1.com',
-      'Racefans.net',
-      'Beyondtheflag.com',
-      'Motorsport.com',
-      'Autosport.com',
-      'GPFans.com',
-      'Racer.com',
-      'Thecheckeredflag.co.uk',
-      'Motorsportweek.com',
-      'Crash.net',
-      'Pitpass.com',
-    ];
+    List feeds = Hive.box('feeds').get(
+      'feedsNames',
+      defaultValue: [
+        'WTF1.com',
+        'Racefans.net',
+        'Beyondtheflag.com',
+        'Motorsport.com',
+        'Autosport.com',
+        'GPFans.com',
+        'Racer.com',
+        'Thecheckeredflag.co.uk',
+        'Motorsportweek.com',
+        'Crash.net',
+        'Pitpass.com',
+      ],
+    ) as List;
     Map<String, dynamic> feedsUrl = {
       'WTF1.com': 'https://wtf1.com',
       'Racefans.net': 'https://racefans.net',
@@ -75,6 +83,22 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
         title: Text(
           'Mixed News',
         ),
+        actions: [
+          IconButton(
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => EditOrderScreen(
+                  updateParent,
+                ),
+              ),
+            ),
+            icon: Icon(
+              Icons.edit,
+              color: Colors.white,
+            ),
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Column(

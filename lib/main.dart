@@ -42,6 +42,8 @@ void main() async {
   final requestsBox = await Hive.openBox('requests');
   // ignore: unused_local_variable
   final historyBox = await Hive.openBox('history');
+  // ignore: unused_local_variable
+  final feedsBox = await Hive.openBox('feeds');
   AwesomeNotifications().initialize(
     'resource://drawable/notification_icon',
     [
