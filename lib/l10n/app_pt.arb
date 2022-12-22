@@ -236,5 +236,13 @@
   "numberOfLaps": "Número de Voltas",
   "@numberOfLaps": {},
   "viewHighlights": "Ver destaques",
-  "@viewHighlights": {}
+  "@viewHighlights": {},
+  "noResults": "Nada para mostrar aqui... Pode ter uma taxa limitada.",
+  "@noResults": {},
+  "topics": "Tópicos",
+  "@topics": {},
+  "apply": "Aplicar",
+  "@apply": {},
+  "filter": "Filtro",
+  "@filter": {}
 }
