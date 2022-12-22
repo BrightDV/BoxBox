@@ -26,6 +26,7 @@ import 'package:boxbox/api/rss.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/request_error.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class MixedNewsScreen extends StatefulWidget {
@@ -81,7 +82,7 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
           useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
       appBar: AppBar(
         title: Text(
-          'Mixed News',
+          AppLocalizations.of(context)!.mixedNews,
         ),
         actions: [
           IconButton(
@@ -136,7 +137,7 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
                                   ),
                                 ),
                                 child: Text(
-                                  'VIEW MORE',
+                                  AppLocalizations.of(context)!.viewMore,
                                   style: TextStyle(
                                     color: useDarkMode
                                         ? Colors.white
@@ -310,7 +311,7 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
                                   ),
                                 ),
                                 child: Text(
-                                  'VIEW MORE',
+                                  AppLocalizations.of(context)!.viewMore,
                                   style: TextStyle(
                                     color: useDarkMode
                                         ? Colors.white

@@ -18,6 +18,7 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class EditOrderScreen extends StatefulWidget {
@@ -51,7 +52,9 @@ class _EditOrderScreenState extends State<EditOrderScreen> {
     ) as List;
     return Scaffold(
       appBar: AppBar(
-        title: Text('Edit'),
+        title: Text(
+          AppLocalizations.of(context)!.edit,
+        ),
       ),
       backgroundColor:
           useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
@@ -65,7 +68,7 @@ class _EditOrderScreenState extends State<EditOrderScreen> {
             padding: EdgeInsets.all(5),
             child: RichText(
               text: TextSpan(
-                text: 'Change order by long-pressing an item.',
+                text: AppLocalizations.of(context)!.editOrderDescription,
                 style: TextStyle(
                   color:
                       useDarkMode ? Colors.grey.shade500 : Colors.grey.shade300,
@@ -83,6 +86,10 @@ class _EditOrderScreenState extends State<EditOrderScreen> {
               style: TextStyle(
                 color: useDarkMode ? Colors.white : Colors.black,
               ),
+            ),
+            trailing: Icon(
+              Icons.drag_handle,
+              color: useDarkMode ? Colors.white : Colors.black,
             ),
           ),
           itemCount: feedsNames.length,
