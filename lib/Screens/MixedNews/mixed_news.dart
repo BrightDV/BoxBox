@@ -137,7 +137,7 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
                           child: FutureBuilder<List>(
                             future: Wordpress().getWordpressNews(
                               feedsUrl[feed],
-                              max: 7,
+                              max: 5,
                             ),
                             builder: (context, snapshot) => snapshot.hasError
                                 ? RequestErrorWidget(
@@ -235,7 +235,10 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
                                             ),
                                         ],
                                       )
-                                    : LoadingIndicatorUtil(),
+                                    : Container(
+                                        height: 232,
+                                        child: LoadingIndicatorUtil(),
+                                      ),
                           ),
                         ),
                       ],
@@ -291,8 +294,10 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
                         SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
                           child: FutureBuilder<Map<String, dynamic>>(
-                            future: RssFeeds()
-                                .getFeedArticles(feedsUrl[feed], max: 7),
+                            future: RssFeeds().getFeedArticles(
+                              feedsUrl[feed],
+                              max: 5,
+                            ),
                             builder: (context, snapshot) => snapshot.hasError
                                 ? RequestErrorWidget(
                                     snapshot.error.toString(),
@@ -405,7 +410,10 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
                                             ),
                                         ],
                                       )
-                                    : LoadingIndicatorUtil(),
+                                    : Container(
+                                        height: 232,
+                                        child: LoadingIndicatorUtil(),
+                                      ),
                           ),
                         ),
                       ],
