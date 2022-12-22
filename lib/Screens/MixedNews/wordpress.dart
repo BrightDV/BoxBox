@@ -166,8 +166,8 @@ class WordspressNewsItem extends StatelessWidget {
                       .replaceAll('&#8211;', "'")
                       .replaceAll('&#8216;', "'")
                       .replaceAll('&#8217;', "'")
-                      .replaceAll('&#82120;', "'")
-                      .replaceAll('&#82121;', "'"),
+                      .replaceAll('&#8220;', '"')
+                      .replaceAll('&#8221;', '"'),
                   item['guid']['rendered'],
                 ),
               ),
@@ -212,8 +212,8 @@ class WordspressNewsItem extends StatelessWidget {
                       .replaceAll('&#8211;', "'")
                       .replaceAll('&#8216;', "'")
                       .replaceAll('&#8217;', "'")
-                      .replaceAll('&#82120;', "'")
-                      .replaceAll('&#82121;', "'"),
+                      .replaceAll('&#8220;', '"')
+                      .replaceAll('&#8221;', '"'),
                   style: TextStyle(
                     color: useDarkMode ? Colors.white : Colors.black,
                     fontSize: 18,
@@ -230,8 +230,8 @@ class WordspressNewsItem extends StatelessWidget {
                             .replaceAll('&#8211;', "'")
                             .replaceAll('&#8216;', "'")
                             .replaceAll('&#8217;', "'")
-                            .replaceAll('&#82120;', "'")
-                            .replaceAll('&#82121;', "'")
+                            .replaceAll('&#8220;', '"')
+                            .replaceAll('&#8221;', '"')
                             .replaceAll('<p>', '')
                             .replaceAll('</p>', ''),
                         style: TextStyle(

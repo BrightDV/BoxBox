@@ -56,18 +56,22 @@ class _EditOrderScreenState extends State<EditOrderScreen> {
       backgroundColor:
           useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
       body: Theme(
-        data: ThemeData(canvasColor: Colors.transparent),
+        data: ThemeData(
+          canvasColor: Colors.transparent,
+          fontFamily: 'Formula1',
+        ),
         child: ReorderableListView.builder(
           header: Padding(
             padding: EdgeInsets.all(5),
-            child: Text.rich(
-              TextSpan(
+            child: RichText(
+              text: TextSpan(
                 text: 'Change order by long-pressing an item.',
-              ),
-              style: TextStyle(
-                color:
-                    useDarkMode ? Colors.grey.shade500 : Colors.grey.shade300,
-                fontStyle: FontStyle.italic,
+                style: TextStyle(
+                  color:
+                      useDarkMode ? Colors.grey.shade500 : Colors.grey.shade300,
+                  fontStyle: FontStyle.italic,
+                  fontFamily: 'Formula1',
+                ),
               ),
               textAlign: TextAlign.center,
             ),

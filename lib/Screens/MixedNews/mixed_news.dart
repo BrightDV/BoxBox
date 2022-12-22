@@ -186,9 +186,15 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
                                                         article['title']
                                                                 ['rendered']
                                                             .replaceAll(
+                                                                '&#8211;', "'")
+                                                            .replaceAll(
+                                                                '&#8216;', "'")
+                                                            .replaceAll(
                                                                 '&#8217;', "'")
                                                             .replaceAll(
-                                                                '&#8216;', "'"),
+                                                                '&#8220;', '"')
+                                                            .replaceAll(
+                                                                '&#8221;', '"'),
                                                         article['guid']
                                                             ['rendered'],
                                                       ),
@@ -231,11 +237,20 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
                                                             article['title']
                                                                     ['rendered']
                                                                 .replaceAll(
-                                                                    '&#8217;',
+                                                                    '&#8211;',
                                                                     "'")
                                                                 .replaceAll(
                                                                     '&#8216;',
-                                                                    "'"),
+                                                                    "'")
+                                                                .replaceAll(
+                                                                    '&#8217;',
+                                                                    "'")
+                                                                .replaceAll(
+                                                                    '&#8220;',
+                                                                    '"')
+                                                                .replaceAll(
+                                                                    '&#8221;',
+                                                                    '"'),
                                                             style: TextStyle(
                                                               color: useDarkMode
                                                                   ? Colors.white
