@@ -51,7 +51,12 @@ class _RssFeedArticleScreenState extends State<RssFeedArticleScreen> {
     ".*.adsafeprotected.com/.*",
     ".*.crwdcntrl.net/.*",
     ".*.chartbeat.net/.*",
-    ".*.chartbeat.com/.*",
+    ".*.omnitagjs.com/.*",
+    ".*.justpremium.com/.*",
+    ".*.stickyadstv.com/.*",
+    ".*.teads.tv/.*",
+    ".*.taboola.com/.*",
+    ".*.aaxads.com/.*",
   ];
   final List<ContentBlocker> contentBlockers = [];
 
@@ -79,7 +84,7 @@ class _RssFeedArticleScreenState extends State<RssFeedArticleScreen> {
         action: ContentBlockerAction(
           type: ContentBlockerActionType.CSS_DISPLAY_NONE,
           selector:
-              ".banner, .banners, .ads, .ad, .advert, .w7e-platform-101, .adv-ad-wrapper, .ms-apb-super, .ms-content_sidebar",
+              ".banner, .banners, .ads, .ad, .advert, .w7e-platform-101, .adgrid-ad-container, .ms-apb-super, .ms-content_sidebar, .ms-apb, .advert-banner-container, .ad-top-margin, .mv-ad-box",
         ),
       ),
     );
@@ -92,22 +97,7 @@ class _RssFeedArticleScreenState extends State<RssFeedArticleScreen> {
     return Scaffold(
       backgroundColor:
           useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
-      appBar: AppBar(
-        title: SizedBox(
-          height: AppBar().preferredSize.height,
-          width: AppBar().preferredSize.width,
-          child: Marquee(
-            text: widget.articleTitle,
-            style: TextStyle(
-              fontWeight: FontWeight.w600,
-            ),
-            pauseAfterRound: Duration(seconds: 1),
-            startAfter: Duration(seconds: 1),
-            velocity: 85,
-            blankSpace: 100,
-          ),
-        ),
-      ),
+      appBar: AppBar(),
       body: InAppWebView(
         initialUrlRequest: URLRequest(
           url: Uri.parse(
