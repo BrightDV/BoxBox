@@ -244,5 +244,13 @@
   "topics": "Temas",
   "@topics": {},
   "noResults": "No hay nada que mostrar aquí... Es posible que tenga una tarifa limitada.",
-  "@noResults": {}
+  "@noResults": {},
+  "edit": "Editar",
+  "@edit": {},
+  "mixedNews": "Noticias variadas",
+  "@mixedNews": {},
+  "viewMore": "VER MÁS",
+  "@viewMore": {},
+  "editOrderDescription": "Cambia el orden pulsando prolongadamente en un elemento.",
+  "@editOrderDescription": {}
 }
