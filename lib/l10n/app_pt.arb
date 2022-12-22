@@ -244,5 +244,13 @@
   "apply": "Aplicar",
   "@apply": {},
   "filter": "Filtro",
-  "@filter": {}
+  "@filter": {},
+  "mixedNews": "Notícias mistas",
+  "@mixedNews": {},
+  "edit": "Editar",
+  "@edit": {},
+  "editOrderDescription": "Altere a ordem pressionando longamente um item.",
+  "@editOrderDescription": {},
+  "viewMore": "VER MAIS",
+  "@viewMore": {}
 }
