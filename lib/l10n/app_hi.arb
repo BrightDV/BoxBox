@@ -244,5 +244,13 @@
   "worldChampionships": "विश्व चैंपियनशिपस",
   "@worldChampionships": {},
   "filter": "फ़िल्टर",
-  "@filter": {}
+  "@filter": {},
+  "viewMore": "और देखें",
+  "@viewMore": {},
+  "edit": "संपादित करें",
+  "@edit": {},
+  "editOrderDescription": "किसी आइटम को लंबे समय तक दबाकर ऑर्डर बदलें।",
+  "@editOrderDescription": {},
+  "mixedNews": "मिश्रित समाचार",
+  "@mixedNews": {}
 }
