@@ -33,7 +33,7 @@
   "@circuitLength": {},
   "apply": "लागू करें",
   "@apply": {},
-  "noResults": "यहां दिखाने के लिए कुछ नहीं है... आपकी नेटवर्क दर सीमित हो सकती है।",
+  "noResults": "यहां दिखाने के लिए कुछ नहीं है. आपकी नेटवर्क दर सीमित हो सकती है।",
   "@noResults": {},
   "player": "प्लेयर",
   "@player": {},
@@ -244,5 +244,17 @@
   "worldChampionships": "विश्व चैंपियनशिपस",
   "@worldChampionships": {},
   "filter": "फ़िल्टर",
-  "@filter": {}
+  "@filter": {},
+  "viewMore": "और देखें",
+  "@viewMore": {},
+  "edit": "संपादित करें",
+  "@edit": {},
+  "editOrderDescription": "किसी आइटम को लंबे समय तक दबाकर ऑर्डर बदलें।",
+  "@editOrderDescription": {},
+  "mixedNews": "मिश्रित समाचार",
+  "@mixedNews": {},
+  "from": "से ",
+  "@from": {},
+  "newsMix": "समाचार मिश्रण",
+  "@newsMix": {}
 }
