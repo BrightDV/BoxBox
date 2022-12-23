@@ -244,5 +244,13 @@
   "apply": "ਲਾਗੂ ਕਰੋ",
   "@apply": {},
   "filter": "ਫਿਲਟਰ",
-  "@filter": {}
+  "@filter": {},
+  "mixedNews": "ਰਲੇ-ਮਿਲੇ ਨਿਊਜ਼",
+  "@mixedNews": {},
+  "viewMore": "ਹੋਰ ਵੇਖੋ",
+  "@viewMore": {},
+  "edit": "ਸੰਪਾਦਿਤ ਕਰੋ",
+  "@edit": {},
+  "editOrderDescription": "ਕਿਸੇ ਆਈਟਮ ਨੂੰ ਦੇਰ ਤੱਕ ਦਬਾ ਕੇ ਆਰਡਰ ਬਦਲੋ।",
+  "@editOrderDescription": {}
 }
