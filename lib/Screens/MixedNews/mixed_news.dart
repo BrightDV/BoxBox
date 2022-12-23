@@ -27,7 +27,9 @@ import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/request_error.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class MixedNewsScreen extends StatefulWidget {
   const MixedNewsScreen({Key? key}) : super(key: key);
@@ -45,6 +47,10 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
   Widget build(BuildContext context) {
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
+    bool useMergedFeeds =
+        Hive.box('feeds').get('mergedFeeds', defaultValue: false) as bool;
+    String newsLayout =
+        Hive.box('settings').get('newsLayout', defaultValue: 'big') as String;
     double width = MediaQuery.of(context).size.width;
     List feeds = Hive.box('feeds').get(
       'feedsNames',
@@ -82,385 +88,664 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
           useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
       appBar: AppBar(
         title: Text(
-          AppLocalizations.of(context)!.mixedNews,
+          AppLocalizations.of(context)!.newsMix,
         ),
         actions: [
           IconButton(
-            onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => EditOrderScreen(
-                  updateParent,
-                ),
-              ),
-            ),
+            onPressed: () {
+              setState(
+                () {
+                  useMergedFeeds = !useMergedFeeds;
+                  Hive.box('feeds').put('mergedFeeds', useMergedFeeds);
+                },
+              );
+            },
             icon: Icon(
-              Icons.edit,
+              useMergedFeeds ? Icons.splitscreen : Icons.merge,
               color: Colors.white,
             ),
           ),
+          useMergedFeeds
+              ? Container()
+              : IconButton(
+                  onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => EditOrderScreen(
+                        updateParent,
+                      ),
+                    ),
+                  ),
+                  icon: Icon(
+                    Icons.edit,
+                    color: Colors.white,
+                  ),
+                ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            for (String feed in feeds)
-              feed == 'WTF1.com' ||
-                      feed == 'Racefans.net' ||
-                      feed == 'Beyondtheflag.com'
-                  ? Column(
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.all(10),
-                          child: Row(
-                            children: [
-                              Text(
-                                feed,
-                                style: TextStyle(
-                                  color:
-                                      useDarkMode ? Colors.white : Colors.black,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                                textAlign: TextAlign.left,
+      body: useMergedFeeds
+          ? FutureBuilder<List<MergedNewsItemDefinition>>(
+              future: MergedFeeds().getFeedsArticles(feeds),
+              builder: (context, snapshot) => snapshot.hasError
+                  ? RequestErrorWidget(
+                      snapshot.error.toString(),
+                    )
+                  : snapshot.hasData
+                      ? ListView.builder(
+                          itemCount: snapshot.data!.length,
+                          shrinkWrap: true,
+                          itemBuilder: (context, index) => Padding(
+                            padding: EdgeInsets.only(top: 5),
+                            child: Card(
+                              elevation: 10.0,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15.0),
                               ),
-                              Spacer(),
-                              GestureDetector(
+                              color: useDarkMode
+                                  ? Color(0xff1d1d28)
+                                  : Colors.white,
+                              child: InkWell(
                                 onTap: () => Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => WordpressScreen(
-                                      feed,
-                                      feedsUrl[feed],
+                                    builder: (context) => RssFeedArticleScreen(
+                                      snapshot.data![index].title,
+                                      snapshot.data![index].link
+                                                  .indexOf('?utm') ==
+                                              -1
+                                          ? snapshot.data![index].link
+                                          : snapshot.data![index].link
+                                              .substring(
+                                              0,
+                                              snapshot.data![index].link
+                                                  .indexOf('?utm'),
+                                            ),
                                     ),
                                   ),
                                 ),
-                                child: Text(
-                                  AppLocalizations.of(context)!.viewMore,
-                                  style: TextStyle(
-                                    color: useDarkMode
-                                        ? Colors.white
-                                        : Colors.black,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w500,
-                                    decoration: TextDecoration.underline,
-                                  ),
-                                  textAlign: TextAlign.left,
-                                ),
-                              ),
-                              Icon(
-                                Icons.arrow_forward,
-                                color:
-                                    useDarkMode ? Colors.white : Colors.black,
-                              ),
-                            ],
-                          ),
-                        ),
-                        SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: FutureBuilder<List>(
-                            future: Wordpress().getWordpressNews(
-                              feedsUrl[feed],
-                              max: 5,
-                            ),
-                            builder: (context, snapshot) => snapshot.hasError
-                                ? RequestErrorWidget(
-                                    snapshot.error.toString(),
-                                  )
-                                : snapshot.hasData && snapshot.data != null
-                                    ? Row(
-                                        children: [
-                                          for (Map article in snapshot.data!)
-                                            Container(
-                                              width: width / 2.1,
-                                              height: 232,
-                                              child: Padding(
-                                                padding:
-                                                    EdgeInsets.only(top: 5),
-                                                child: GestureDetector(
-                                                  onTap: () => Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          RssFeedArticleScreen(
-                                                        article['title']
-                                                                ['rendered']
-                                                            .replaceAll(
-                                                                '&#8211;', "'")
-                                                            .replaceAll(
-                                                                '&#8216;', "'")
-                                                            .replaceAll(
-                                                                '&#8217;', "'")
-                                                            .replaceAll(
-                                                                '&#8220;', '"')
-                                                            .replaceAll(
-                                                                '&#8221;', '"'),
-                                                        article['guid']
-                                                            ['rendered'],
+                                child: Column(
+                                  children: [
+                                    newsLayout != 'condensed' &&
+                                            newsLayout != 'small' &&
+                                            (snapshot.data![index]
+                                                        .thumbnailUrl !=
+                                                    null ||
+                                                snapshot.data![index]
+                                                        .thumbnailIntermediateUrl !=
+                                                    null)
+                                        ? Container(
+                                            constraints: BoxConstraints(
+                                              minHeight: MediaQuery.of(context)
+                                                          .size
+                                                          .width /
+                                                      (16 / 9) -
+                                                  5,
+                                            ),
+                                            child: ClipRRect(
+                                              borderRadius: BorderRadius.only(
+                                                topLeft: Radius.circular(15),
+                                                topRight: Radius.circular(15),
+                                              ),
+                                              child: snapshot.data![index]
+                                                          .thumbnailUrl !=
+                                                      null
+                                                  ? Image.network(
+                                                      snapshot.data![index]
+                                                          .thumbnailUrl!,
+                                                    )
+                                                  : FutureBuilder<String>(
+                                                      future: Wordpress()
+                                                          .getImageUrl(
+                                                        snapshot.data![index]
+                                                            .thumbnailIntermediateUrl!,
                                                       ),
-                                                    ),
-                                                  ),
-                                                  child: Card(
-                                                    elevation: 5.0,
-                                                    color: useDarkMode
-                                                        ? Color(0xff1d1d28)
-                                                        : Colors.white,
-                                                    child: Column(
-                                                      children: [
-                                                        FutureBuilder<String>(
-                                                          future: Wordpress()
-                                                              .getImageUrl(
-                                                            article['_links'][
-                                                                    'wp:featuredmedia']
-                                                                [0]['href'],
-                                                          ),
-                                                          builder: (context,
-                                                                  imageSnapshot) =>
-                                                              imageSnapshot
-                                                                      .hasError
-                                                                  ? RequestErrorWidget(
-                                                                      imageSnapshot
-                                                                          .error
-                                                                          .toString(),
+                                                      builder: (context,
+                                                              snapshot) =>
+                                                          snapshot.hasError
+                                                              ? RequestErrorWidget(
+                                                                  snapshot.error
+                                                                      .toString(),
+                                                                )
+                                                              : snapshot.hasData
+                                                                  ? Image
+                                                                      .network(
+                                                                      snapshot
+                                                                          .data!,
                                                                     )
-                                                                  : imageSnapshot
-                                                                          .hasData
-                                                                      ? Image
-                                                                          .network(
-                                                                          imageSnapshot
-                                                                              .data!,
-                                                                        )
-                                                                      : LoadingIndicatorUtil(),
-                                                        ),
-                                                        ListTile(
-                                                          title: Text(
-                                                            article['title']
-                                                                    ['rendered']
-                                                                .replaceAll(
-                                                                    '&#8211;',
-                                                                    "'")
-                                                                .replaceAll(
-                                                                    '&#8216;',
-                                                                    "'")
-                                                                .replaceAll(
-                                                                    '&#8217;',
-                                                                    "'")
-                                                                .replaceAll(
-                                                                    '&#8220;',
-                                                                    '"')
-                                                                .replaceAll(
-                                                                    '&#8221;',
-                                                                    '"'),
-                                                            style: TextStyle(
-                                                              color: useDarkMode
-                                                                  ? Colors.white
-                                                                  : Colors
-                                                                      .black,
-                                                              fontSize: 14,
-                                                            ),
-                                                            overflow:
-                                                                TextOverflow
-                                                                    .ellipsis,
-                                                            textAlign: TextAlign
-                                                                .justify,
-                                                            maxLines: 5,
-                                                          ),
-                                                        ),
-                                                      ],
+                                                                  : LoadingIndicatorUtil(),
                                                     ),
-                                                  ),
+                                            ),
+                                          )
+                                        : Container(
+                                            height: 0.0,
+                                            width: 0.0,
+                                          ),
+                                    ListTile(
+                                      title: Text(
+                                        snapshot.data![index].title
+                                            .replaceAll('&#8211;', "'")
+                                            .replaceAll('&#8216;', "'")
+                                            .replaceAll('&#8217;', "'")
+                                            .replaceAll('&#8220;', '"')
+                                            .replaceAll('&#8221;', '"'),
+                                        style: TextStyle(
+                                          color: useDarkMode
+                                              ? Colors.white
+                                              : Colors.black,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 5,
+                                        textAlign: TextAlign.justify,
+                                      ),
+                                      subtitle: newsLayout != 'big' &&
+                                              newsLayout != 'condensed' &&
+                                              snapshot.data![index].description!
+                                                  .isEmpty
+                                          ? null
+                                          : MarkdownBody(
+                                              data: snapshot.data![index]
+                                                          .description!
+                                                          .indexOf("<a ") ==
+                                                      -1
+                                                  ? snapshot
+                                                      .data![index].description!
+                                                  : snapshot
+                                                      .data![index].description!
+                                                      .substring(
+                                                        0,
+                                                        snapshot.data![index]
+                                                            .description!
+                                                            .indexOf("<a "),
+                                                      )
+                                                      .replaceAll('<br>', '')
+                                                      .replaceAll(
+                                                          '&#8211;', "'")
+                                                      .replaceAll(
+                                                          '&#8216;', "'")
+                                                      .replaceAll(
+                                                          '&#8217;', "'")
+                                                      .replaceAll(
+                                                          '&#8220;', '"')
+                                                      .replaceAll(
+                                                          '&#8221;', '"')
+                                                      .replaceAll('â-', '"')
+                                                      .replaceAll(
+                                                          '&nbsp;', ' '),
+                                              styleSheet: MarkdownStyleSheet(
+                                                textAlign:
+                                                    WrapAlignment.spaceBetween,
+                                                p: TextStyle(
+                                                  color: useDarkMode
+                                                      ? Colors.grey[400]
+                                                      : Colors.grey[800],
                                                 ),
                                               ),
                                             ),
-                                        ],
-                                      )
-                                    : Container(
-                                        height: 232,
-                                        child: LoadingIndicatorUtil(),
-                                      ),
-                          ),
-                        ),
-                      ],
-                    )
-                  : Column(
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.all(10),
-                          child: Row(
-                            children: [
-                              Text(
-                                feed,
-                                style: TextStyle(
-                                  color:
-                                      useDarkMode ? Colors.white : Colors.black,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                                textAlign: TextAlign.left,
-                              ),
-                              Spacer(),
-                              GestureDetector(
-                                onTap: () => Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => RssFeedScreen(
-                                      feed,
-                                      feedsUrl[feed],
                                     ),
-                                  ),
-                                ),
-                                child: Text(
-                                  AppLocalizations.of(context)!.viewMore,
-                                  style: TextStyle(
-                                    color: useDarkMode
-                                        ? Colors.white
-                                        : Colors.black,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w500,
-                                    decoration: TextDecoration.underline,
-                                  ),
-                                  textAlign: TextAlign.left,
-                                ),
-                              ),
-                              Icon(
-                                Icons.arrow_forward,
-                                color:
-                                    useDarkMode ? Colors.white : Colors.black,
-                              ),
-                            ],
-                          ),
-                        ),
-                        SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: FutureBuilder<Map<String, dynamic>>(
-                            future: RssFeeds().getFeedArticles(
-                              feedsUrl[feed],
-                              max: 5,
-                            ),
-                            builder: (context, snapshot) => snapshot.hasError
-                                ? RequestErrorWidget(
-                                    snapshot.error.toString(),
-                                  )
-                                : snapshot.hasData && snapshot.data != null
-                                    ? Row(
+                                    Padding(
+                                      padding: EdgeInsets.only(
+                                        right: 16,
+                                        left: 16,
+                                        bottom: 5,
+                                      ),
+                                      child: Row(
                                         children: [
-                                          for (var feedItem
-                                              in snapshot.data!['feedArticles'])
-                                            Container(
-                                              width: width / 2.1,
-                                              height:
-                                                  feedItem.enclosure != null ||
-                                                          feedItem
-                                                              .media
-                                                              .thumbnails
-                                                              .isNotEmpty ||
-                                                          feedItem
-                                                              .media
-                                                              .contents
-                                                              .isNotEmpty
-                                                      ? 232
-                                                      : 110,
-                                              child: Padding(
-                                                padding:
-                                                    EdgeInsets.only(top: 5),
-                                                child: GestureDetector(
-                                                  onTap: () => Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          RssFeedArticleScreen(
-                                                        feedItem.title!,
-                                                        feedItem.link!.indexOf(
-                                                                  '?utm',
-                                                                ) ==
-                                                                -1
-                                                            ? feedItem.link!
-                                                            : feedItem.link!
-                                                                .substring(
-                                                                0,
-                                                                feedItem.link!
-                                                                    .indexOf(
-                                                                  '?utm',
+                                          Text(
+                                            AppLocalizations.of(context)!.from,
+                                            style: TextStyle(
+                                              color: useDarkMode
+                                                  ? Colors.grey.shade300
+                                                  : Colors.grey[700],
+                                            ),
+                                          ),
+                                          Text(
+                                            feedsUrl.keys
+                                                .firstWhere(
+                                                  (k) =>
+                                                      feedsUrl[k] ==
+                                                      snapshot
+                                                          .data![index].source,
+                                                  orElse: () => '',
+                                                )
+                                                .split('.')[0],
+                                            style: TextStyle(
+                                              color: useDarkMode
+                                                  ? Colors.white
+                                                  : Colors.grey[900],
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                          Spacer(),
+                                          Padding(
+                                            padding: EdgeInsets.only(
+                                              right: 8,
+                                            ),
+                                            child: Icon(
+                                              Icons.schedule,
+                                              color: useDarkMode
+                                                  ? Colors.grey.shade300
+                                                  : Colors.grey[800],
+                                              size: 20.0,
+                                            ),
+                                          ),
+                                          Text(
+                                            timeago.format(
+                                              DateTime.parse(
+                                                snapshot.data![index].date,
+                                              ),
+                                              locale: Localizations.localeOf(
+                                                      context)
+                                                  .toString(),
+                                            ),
+                                            style: TextStyle(
+                                              color: useDarkMode
+                                                  ? Colors.grey.shade300
+                                                  : Colors.grey[700],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        )
+                      : Center(
+                          child: LoadingIndicatorUtil(),
+                        ),
+            )
+          : SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  for (String feed in feeds)
+                    feed == 'WTF1.com' ||
+                            feed == 'Racefans.net' ||
+                            feed == 'Beyondtheflag.com'
+                        ? Column(
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.all(10),
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      feed,
+                                      style: TextStyle(
+                                        color: useDarkMode
+                                            ? Colors.white
+                                            : Colors.black,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                      textAlign: TextAlign.left,
+                                    ),
+                                    Spacer(),
+                                    GestureDetector(
+                                      onTap: () => Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => WordpressScreen(
+                                            feed,
+                                            feedsUrl[feed],
+                                          ),
+                                        ),
+                                      ),
+                                      child: Text(
+                                        AppLocalizations.of(context)!.viewMore,
+                                        style: TextStyle(
+                                          color: useDarkMode
+                                              ? Colors.white
+                                              : Colors.black,
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w500,
+                                          decoration: TextDecoration.underline,
+                                        ),
+                                        textAlign: TextAlign.left,
+                                      ),
+                                    ),
+                                    Icon(
+                                      Icons.arrow_forward,
+                                      color: useDarkMode
+                                          ? Colors.white
+                                          : Colors.black,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: FutureBuilder<List>(
+                                  future: Wordpress().getWordpressNews(
+                                    feedsUrl[feed],
+                                    max: 5,
+                                  ),
+                                  builder: (context, snapshot) =>
+                                      snapshot.hasError
+                                          ? RequestErrorWidget(
+                                              snapshot.error.toString(),
+                                            )
+                                          : snapshot.hasData &&
+                                                  snapshot.data != null
+                                              ? Row(
+                                                  children: [
+                                                    for (Map article
+                                                        in snapshot.data!)
+                                                      Container(
+                                                        width: width / 2.1,
+                                                        height: 232,
+                                                        child: Padding(
+                                                          padding:
+                                                              EdgeInsets.only(
+                                                                  top: 5),
+                                                          child:
+                                                              GestureDetector(
+                                                            onTap: () =>
+                                                                Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                        RssFeedArticleScreen(
+                                                                  article['title']
+                                                                          [
+                                                                          'rendered']
+                                                                      .replaceAll(
+                                                                          '&#8211;',
+                                                                          "'")
+                                                                      .replaceAll(
+                                                                          '&#8216;',
+                                                                          "'")
+                                                                      .replaceAll(
+                                                                          '&#8217;',
+                                                                          "'")
+                                                                      .replaceAll(
+                                                                          '&#8220;',
+                                                                          '"')
+                                                                      .replaceAll(
+                                                                          '&#8221;',
+                                                                          '"'),
+                                                                  article['guid']
+                                                                      [
+                                                                      'rendered'],
                                                                 ),
                                                               ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  child: Card(
-                                                    elevation: 5.0,
-                                                    color: useDarkMode
-                                                        ? Color(0xff1d1d28)
-                                                        : Colors.white,
-                                                    child: Column(
-                                                      children: [
-                                                        feedItem.enclosure !=
-                                                                null
-                                                            ? Image.network(
-                                                                feedItem
-                                                                    .enclosure!
-                                                                    .url!,
-                                                              )
-                                                            : feedItem
-                                                                    .media
-                                                                    .thumbnails
-                                                                    .isNotEmpty
-                                                                ? Image.network(
-                                                                    feedItem
-                                                                        .media
-                                                                        .thumbnails[
-                                                                            0]
-                                                                        .url,
-                                                                  )
-                                                                : feedItem
-                                                                        .media
-                                                                        .contents
-                                                                        .isNotEmpty
-                                                                    ? Image
-                                                                        .network(
-                                                                        feedItem
-                                                                            .media
-                                                                            .contents[0]
-                                                                            .url,
-                                                                      )
-                                                                    : Container(),
-                                                        ListTile(
-                                                          title: Text(
-                                                            feedItem.title!,
-                                                            style: TextStyle(
-                                                              color: useDarkMode
-                                                                  ? Colors.white
-                                                                  : Colors
-                                                                      .black,
-                                                              fontSize: 14,
                                                             ),
-                                                            overflow:
-                                                                TextOverflow
-                                                                    .ellipsis,
-                                                            textAlign: TextAlign
-                                                                .justify,
-                                                            maxLines: 5,
+                                                            child: Card(
+                                                              elevation: 5.0,
+                                                              color: useDarkMode
+                                                                  ? Color(
+                                                                      0xff1d1d28)
+                                                                  : Colors
+                                                                      .white,
+                                                              child: Column(
+                                                                children: [
+                                                                  FutureBuilder<
+                                                                      String>(
+                                                                    future: Wordpress()
+                                                                        .getImageUrl(
+                                                                      article['_links']['wp:featuredmedia']
+                                                                              [
+                                                                              0]
+                                                                          [
+                                                                          'href'],
+                                                                    ),
+                                                                    builder: (context, imageSnapshot) => imageSnapshot
+                                                                            .hasError
+                                                                        ? RequestErrorWidget(
+                                                                            imageSnapshot.error.toString(),
+                                                                          )
+                                                                        : imageSnapshot.hasData
+                                                                            ? Image.network(
+                                                                                imageSnapshot.data!,
+                                                                              )
+                                                                            : LoadingIndicatorUtil(),
+                                                                  ),
+                                                                  ListTile(
+                                                                    title: Text(
+                                                                      article['title'][
+                                                                              'rendered']
+                                                                          .replaceAll(
+                                                                              '&#8211;',
+                                                                              "'")
+                                                                          .replaceAll(
+                                                                              '&#8216;',
+                                                                              "'")
+                                                                          .replaceAll(
+                                                                              '&#8217;',
+                                                                              "'")
+                                                                          .replaceAll(
+                                                                              '&#8220;',
+                                                                              '"')
+                                                                          .replaceAll(
+                                                                              '&#8221;',
+                                                                              '"'),
+                                                                      style:
+                                                                          TextStyle(
+                                                                        color: useDarkMode
+                                                                            ? Colors.white
+                                                                            : Colors.black,
+                                                                        fontSize:
+                                                                            14,
+                                                                      ),
+                                                                      overflow:
+                                                                          TextOverflow
+                                                                              .ellipsis,
+                                                                      textAlign:
+                                                                          TextAlign
+                                                                              .justify,
+                                                                      maxLines:
+                                                                          5,
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
                                                           ),
                                                         ),
-                                                      ],
-                                                    ),
-                                                  ),
+                                                      ),
+                                                  ],
+                                                )
+                                              : Container(
+                                                  height: 232,
+                                                  child: LoadingIndicatorUtil(),
                                                 ),
-                                              ),
-                                            ),
-                                        ],
-                                      )
-                                    : Container(
-                                        height: 232,
-                                        child: LoadingIndicatorUtil(),
+                                ),
+                              ),
+                            ],
+                          )
+                        : Column(
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.all(10),
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      feed,
+                                      style: TextStyle(
+                                        color: useDarkMode
+                                            ? Colors.white
+                                            : Colors.black,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500,
                                       ),
+                                      textAlign: TextAlign.left,
+                                    ),
+                                    Spacer(),
+                                    GestureDetector(
+                                      onTap: () => Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => RssFeedScreen(
+                                            feed,
+                                            feedsUrl[feed],
+                                          ),
+                                        ),
+                                      ),
+                                      child: Text(
+                                        AppLocalizations.of(context)!.viewMore,
+                                        style: TextStyle(
+                                          color: useDarkMode
+                                              ? Colors.white
+                                              : Colors.black,
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w500,
+                                          decoration: TextDecoration.underline,
+                                        ),
+                                        textAlign: TextAlign.left,
+                                      ),
+                                    ),
+                                    Icon(
+                                      Icons.arrow_forward,
+                                      color: useDarkMode
+                                          ? Colors.white
+                                          : Colors.black,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: FutureBuilder<Map<String, dynamic>>(
+                                  future: RssFeeds().getFeedArticles(
+                                    feedsUrl[feed],
+                                    max: 5,
+                                  ),
+                                  builder: (context, snapshot) =>
+                                      snapshot.hasError
+                                          ? RequestErrorWidget(
+                                              snapshot.error.toString(),
+                                            )
+                                          : snapshot.hasData &&
+                                                  snapshot.data != null
+                                              ? Row(
+                                                  children: [
+                                                    for (var feedItem
+                                                        in snapshot.data![
+                                                            'feedArticles'])
+                                                      Container(
+                                                        width: width / 2.1,
+                                                        height: feedItem.enclosure !=
+                                                                    null ||
+                                                                feedItem
+                                                                    .media
+                                                                    .thumbnails
+                                                                    .isNotEmpty ||
+                                                                feedItem
+                                                                    .media
+                                                                    .contents
+                                                                    .isNotEmpty
+                                                            ? 232
+                                                            : 110,
+                                                        child: Padding(
+                                                          padding:
+                                                              EdgeInsets.only(
+                                                                  top: 5),
+                                                          child:
+                                                              GestureDetector(
+                                                            onTap: () =>
+                                                                Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                        RssFeedArticleScreen(
+                                                                  feedItem
+                                                                      .title!,
+                                                                  feedItem.link!
+                                                                              .indexOf(
+                                                                            '?utm',
+                                                                          ) ==
+                                                                          -1
+                                                                      ? feedItem
+                                                                          .link!
+                                                                      : feedItem
+                                                                          .link!
+                                                                          .substring(
+                                                                          0,
+                                                                          feedItem
+                                                                              .link!
+                                                                              .indexOf(
+                                                                            '?utm',
+                                                                          ),
+                                                                        ),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            child: Card(
+                                                              elevation: 5.0,
+                                                              color: useDarkMode
+                                                                  ? Color(
+                                                                      0xff1d1d28)
+                                                                  : Colors
+                                                                      .white,
+                                                              child: Column(
+                                                                children: [
+                                                                  feedItem.enclosure !=
+                                                                          null
+                                                                      ? Image
+                                                                          .network(
+                                                                          feedItem
+                                                                              .enclosure!
+                                                                              .url!,
+                                                                        )
+                                                                      : feedItem
+                                                                              .media
+                                                                              .thumbnails
+                                                                              .isNotEmpty
+                                                                          ? Image
+                                                                              .network(
+                                                                              feedItem.media.thumbnails[0].url,
+                                                                            )
+                                                                          : feedItem.media.contents.isNotEmpty
+                                                                              ? Image.network(
+                                                                                  feedItem.media.contents[0].url,
+                                                                                )
+                                                                              : Container(),
+                                                                  ListTile(
+                                                                    title: Text(
+                                                                      feedItem
+                                                                          .title!,
+                                                                      style:
+                                                                          TextStyle(
+                                                                        color: useDarkMode
+                                                                            ? Colors.white
+                                                                            : Colors.black,
+                                                                        fontSize:
+                                                                            14,
+                                                                      ),
+                                                                      overflow:
+                                                                          TextOverflow
+                                                                              .ellipsis,
+                                                                      textAlign:
+                                                                          TextAlign
+                                                                              .justify,
+                                                                      maxLines:
+                                                                          5,
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                  ],
+                                                )
+                                              : Container(
+                                                  height: 232,
+                                                  child: LoadingIndicatorUtil(),
+                                                ),
+                                ),
+                              ),
+                            ],
                           ),
-                        ),
-                      ],
-                    ),
-          ],
-        ),
-      ),
+                ],
+              ),
+            ),
     );
   }
 }

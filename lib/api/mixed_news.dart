@@ -19,6 +19,7 @@
 
 import 'dart:convert';
 
+import 'package:boxbox/api/rss.dart';
 import 'package:http/http.dart' as http;
 
 class Wordpress {
@@ -52,4 +53,111 @@ class Wordpress {
     );
     return responseAsJson['source_url'];
   }
+}
+
+class MergedFeeds {
+  Map<String, dynamic> feedsUrl = {
+    'WTF1.com': 'https://wtf1.com',
+    'Racefans.net': 'https://racefans.net',
+    'Beyondtheflag.com': 'https://beyondtheflag.com',
+    'Motorsport.com': 'https://www.motorsport.com/rss/f1/news/',
+    'Autosport.com': 'https://www.autosport.com/rss/f1/news/',
+    'GPFans.com': 'https://www.gpfans.com/en/rss.xml',
+    'Racer.com': 'https://racer.com/f1/feed/',
+    'Thecheckeredflag.co.uk':
+        'https://www.thecheckeredflag.co.uk/open-wheel/formula-1/feed/',
+    'Motorsportweek.com': 'https://www.motorsportweek.com/feed/',
+    'Crash.net': 'https://www.crash.net/rss/f1',
+    'Pitpass.com':
+        'https://www.pitpass.com/fes_php/fes_usr_sit_newsfeed.php?fes_prepend_aty_sht_name=1',
+  };
+
+  Future<List<MergedNewsItemDefinition>> getWordpressArticles(
+      String feedUrl) async {
+    List<MergedNewsItemDefinition> formatedItems = [];
+    List feedItems = await Wordpress().getWordpressNews(feedUrl);
+    feedItems.forEach(
+      (element) => formatedItems.add(
+        MergedNewsItemDefinition(
+          feedUrl,
+          element['title']['rendered'],
+          element['link'],
+          element['date'],
+          description: ' ',
+          thumbnailIntermediateUrl: element['_links']['wp:featuredmedia'][0]
+              ['href'],
+        ),
+      ),
+    );
+    return formatedItems;
+  }
+
+  Future<List<MergedNewsItemDefinition>> getRssArticles(String feedUrl) async {
+    List<MergedNewsItemDefinition> formatedItems = [];
+    Map feedItems = await RssFeeds().getFeedArticles(feedUrl);
+    feedItems['feedArticles'].forEach(
+      (element) => formatedItems.add(
+        MergedNewsItemDefinition(
+          feedUrl,
+          element.title,
+          element.link,
+          element.pubDate.toString(),
+          description: element.description,
+          thumbnailUrl: element.enclosure != null
+              ? element.enclosure.url
+              : element.media.thumbnails.isNotEmpty
+                  ? element.media.thumbnails[0].url
+                  : element.media.contents.isNotEmpty
+                      ? element.media.contents[0].url
+                      : null,
+        ),
+      ),
+    );
+    return formatedItems;
+  }
+
+  Future<List<MergedNewsItemDefinition>> getFeedsArticles(
+      List feedsNames) async {
+    List<MergedNewsItemDefinition> feeds = [];
+    for (String feedName in feedsNames) {
+      feedName == 'WTF1.com' ||
+              feedName == 'Racefans.net' ||
+              feedName == 'Beyondtheflag.com'
+          ? feeds = feeds +
+              await getWordpressArticles(
+                feedsUrl[feedName],
+              )
+          : feeds = feeds +
+              await getRssArticles(
+                feedsUrl[feedName],
+              );
+    }
+    feeds.sort(
+      (a, b) => DateTime.parse(b.date).compareTo(
+        DateTime.parse(a.date),
+      ),
+    );
+    return feeds;
+  }
+}
+
+class MergedNewsItemDefinition {
+  final String source;
+  final String title;
+
+  final String link;
+  final String date;
+  final String? description;
+  final String? thumbnailUrl;
+  final String? thumbnailIntermediateUrl;
+
+  MergedNewsItemDefinition(
+    this.source,
+    this.title,
+    this.link,
+    this.date, {
+    this.description,
+    this.thumbnailUrl,
+    this.thumbnailIntermediateUrl,
+  });
 }

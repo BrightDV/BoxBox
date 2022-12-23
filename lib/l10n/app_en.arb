@@ -73,6 +73,8 @@
     "@freePracticeThree": {},
     "freePracticeShort": "PRACTICE",
     "@freePracticeShort": {},
+    "from": "From ",
+    "@from": {},
     "followSystem": "Follow system",
     "@followSystem": {},
     "font": "Font",
