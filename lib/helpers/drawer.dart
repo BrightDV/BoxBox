@@ -71,13 +71,13 @@ class _MainDrawerState extends State<MainDrawer> {
             ),
             ListTile(
               title: Text(
-                AppLocalizations.of(context)!.mixedNews,
+                AppLocalizations.of(context)!.newsMix,
                 style: TextStyle(
                   color: useDarkMode ? Colors.white : Colors.black,
                 ),
               ),
               leading: Icon(
-                Icons.merge_outlined,
+                Icons.dynamic_feed_outlined,
                 color: useDarkMode ? Colors.white : Colors.black,
               ),
               onTap: () {

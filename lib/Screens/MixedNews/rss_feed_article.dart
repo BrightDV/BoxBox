@@ -22,7 +22,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:marquee/marquee.dart';
 
 class RssFeedArticleScreen extends StatefulWidget {
   final String articleTitle;
