@@ -199,7 +199,7 @@
   "@sessionCompleted": {},
   "sprintQualifyings": "ਸਪ੍ਰਿੰਟ ਕੁਆਲੀਫਾਈਇੰਗਜ਼",
   "@sprintQualifyings": {},
-  "noResults": "ਇੱਥੇ ਦਿਖਾਉਣ ਲਈ ਕੁਝ ਨਹੀਂ... ਤੁਸੀਂ ਸੀਮਤ ਰੇਟ ਕੀਤੇ ਹੋ ਸਕਦੇ ਹੋ।",
+  "noResults": "ਇੱਥੇ ਦਿਖਾਉਣ ਲਈ ਕੁਝ ਨਹੀਂ. ਤੁਸੀਂ ਸੀਮਤ ਰੇਟ ਕੀਤੇ ਹੋ ਸਕਦੇ ਹੋ।",
   "@noResults": {},
   "monthAbbreviationMarch": "MAR",
   "@monthAbbreviationMarch": {},
@@ -252,5 +252,9 @@
   "edit": "ਸੰਪਾਦਿਤ ਕਰੋ",
   "@edit": {},
   "editOrderDescription": "ਕਿਸੇ ਆਈਟਮ ਨੂੰ ਦੇਰ ਤੱਕ ਦਬਾ ਕੇ ਆਰਡਰ ਬਦਲੋ।",
-  "@editOrderDescription": {}
+  "@editOrderDescription": {},
+  "from": "ਵਲੋਂ ",
+  "@from": {},
+  "newsMix": "ਨਿਊਜ਼ ਮਿਕਸ",
+  "@newsMix": {}
 }
