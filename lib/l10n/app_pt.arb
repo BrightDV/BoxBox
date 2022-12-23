@@ -237,7 +237,7 @@
   "@numberOfLaps": {},
   "viewHighlights": "Ver destaques",
   "@viewHighlights": {},
-  "noResults": "Nada para mostrar aqui... Pode ter uma taxa limitada.",
+  "noResults": "Nada para mostrar aqui. Pode ter uma taxa limitada.",
   "@noResults": {},
   "topics": "Tópicos",
   "@topics": {},
@@ -252,5 +252,9 @@
   "editOrderDescription": "Altere a ordem pressionando longamente um item.",
   "@editOrderDescription": {},
   "viewMore": "VER MAIS",
-  "@viewMore": {}
+  "@viewMore": {},
+  "from": "A partir de ",
+  "@from": {},
+  "newsMix": "Mix de notícias",
+  "@newsMix": {}
 }
