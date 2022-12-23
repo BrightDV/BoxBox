@@ -33,7 +33,7 @@
   "@circuitLength": {},
   "apply": "लागू करें",
   "@apply": {},
-  "noResults": "यहां दिखाने के लिए कुछ नहीं है... आपकी नेटवर्क दर सीमित हो सकती है।",
+  "noResults": "यहां दिखाने के लिए कुछ नहीं है. आपकी नेटवर्क दर सीमित हो सकती है।",
   "@noResults": {},
   "player": "प्लेयर",
   "@player": {},
@@ -252,5 +252,9 @@
   "editOrderDescription": "किसी आइटम को लंबे समय तक दबाकर ऑर्डर बदलें।",
   "@editOrderDescription": {},
   "mixedNews": "मिश्रित समाचार",
-  "@mixedNews": {}
+  "@mixedNews": {},
+  "from": "से ",
+  "@from": {},
+  "newsMix": "समाचार मिश्रण",
+  "@newsMix": {}
 }
