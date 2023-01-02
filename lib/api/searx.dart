@@ -25,15 +25,15 @@ import 'package:http/http.dart' as http;
 
 class SearXSearch {
   final List<String> instances = [
-    'https://search.unlocked.link/',
-    'https://search.sapti.me/',
-    'https://search.neet.works/',
-    'https://dynabyte.ca/',
-    'https://searx.fmac.xyz/',
-    'https://priv.au/',
+    'https://search.unlocked.link',
+    'https://search.sapti.me',
+    'https://search.neet.works',
+    'https://dynabyte.ca',
+    'https://searx.fmac.xyz',
+    'https://priv.au',
     'https://searx.be',
-    'https://searx.tiekoetter.com/',
-    'https://searx.work/',
+    'https://searx.tiekoetter.com',
+    'https://searx.work',
   ];
 
   Future<List> searchArticles(String query) async {
@@ -41,7 +41,7 @@ class SearXSearch {
     late http.Response response;
     for (String instance in instances) {
       url = Uri.parse(
-        '$instance/search?q="formula1.com/en/latest/article" $query',
+        '$instance/search?q="formula1.com/en/latest/article" $query&language=en-US',
       );
       response = await http.get(
         url,
