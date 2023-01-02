@@ -108,7 +108,7 @@ class FormulaOneScraper {
     }
     final Uri resultsUrl = Uri.parse(qualifyingResultsUrl != null
         ? qualifyingResultsUrl
-        : 'https://www.formula1.com/en/results.html/2022/races/$circuitId/$circuitName/$sessionName.html');
+        : 'https://www.formula1.com/en/results.html/${DateTime.now().year}/races/$circuitId/$circuitName/$sessionName.html');
 
     http.Response response = await http.get(resultsUrl);
     dom.Document document = parser.parse(response.body);
@@ -181,7 +181,7 @@ class FormulaOneScraper {
       }
 
       resultsUrl = Uri.parse(
-          'https://www.formula1.com/en/results.html/2022/races/$circuitId/$circuitName/$sessionName.html');
+          'https://www.formula1.com/en/results.html/${DateTime.now().year}/races/$circuitId/$circuitName/$sessionName.html');
     }
     http.Response response = await http.get(resultsUrl);
     dom.Document document = parser.parse(response.body);
@@ -319,7 +319,7 @@ class FormulaOneScraper {
     String circuitName,
   ) async {
     final Uri resultsUrl = Uri.parse(
-        'https://www.formula1.com/en/results.html/2022/races/$circuitId/$circuitName.html');
+        'https://www.formula1.com/en/results.html/${DateTime.now().year}/races/$circuitId/$circuitName.html');
     http.Response response = await http.get(resultsUrl);
     dom.Document document = parser.parse(response.body);
     List<dom.Element>? _tempResults =

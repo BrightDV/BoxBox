@@ -78,8 +78,8 @@ class _ErgastApiCalls {
   }
 
   FutureOr<List<DriverResult>> getRaceStandings(String round) async {
-    var url =
-        Uri.parse('https://ergast.com/api/f1/current/$round/results.json');
+    var url = Uri.parse(
+        'https://ergast.com/api/f1/${DateTime.now().year}/$round/results.json');
     var response = await http.get(url);
     Map<String, dynamic> responseAsJson = jsonDecode(response.body);
     Hive.box('requests').put('race-$round', responseAsJson);
@@ -88,7 +88,8 @@ class _ErgastApiCalls {
   }
 
   FutureOr<List<DriverResult>> getSprintStandings(String round) async {
-    var url = Uri.parse('https://ergast.com/api/f1/current/$round/sprint.json');
+    var url = Uri.parse(
+        'https://ergast.com/api/f1/${DateTime.now().year}/$round/sprint.json');
     var response = await http.get(url);
     Map<String, dynamic> responseAsJson = jsonDecode(response.body);
     List<DriverResult> formatedRaceStandings = [];
@@ -143,8 +144,8 @@ class _ErgastApiCalls {
   FutureOr<List<DriverQualificationResult>> getQualificationStandings(
       String round) async {
     List<DriverQualificationResult> driversResults = [];
-    var url =
-        Uri.parse('https://ergast.com/api/f1/current/$round/qualifying.json');
+    var url = Uri.parse(
+        'https://ergast.com/api/f1/${DateTime.now().year}/$round/qualifying.json');
     var response = await http.get(url);
     Map<String, dynamic> responseAsJson = jsonDecode(response.body);
     List finalJson =
@@ -266,7 +267,8 @@ class _ErgastApiCalls {
   }
 
   FutureOr<List<Race>> getLastSchedule(bool toCome) async {
-    var url = Uri.parse('https://ergast.com/api/f1/current.json');
+    var url =
+        Uri.parse('https://ergast.com/api/f1/${DateTime.now().year}.json');
     var response = await http.get(url);
     Map<String, dynamic> responseAsJson = jsonDecode(response.body);
     Hive.box('requests').put('schedule', responseAsJson);
@@ -274,7 +276,8 @@ class _ErgastApiCalls {
   }
 
   Future<Race> getRaceDetails(String round) async {
-    var url = Uri.parse('https://ergast.com/api/f1/current/$round.json');
+    var url = Uri.parse(
+        'https://ergast.com/api/f1/${DateTime.now().year}/$round.json');
     var response = await http.get(url);
     Map<String, dynamic> responseAsJson =
         jsonDecode(response.body)['MRData']['RaceTable']['Races'][0];
@@ -322,7 +325,8 @@ class _ErgastApiCalls {
   }
 
   FutureOr<bool> hasSprintQualifyings(round) async {
-    var url = Uri.parse('https://ergast.com/api/f1/current/$round/sprint.json');
+    var url = Uri.parse(
+        'https://ergast.com/api/f1/${DateTime.now().year}/$round/sprint.json');
     var response = await http.get(url);
     Map<String, dynamic> responseAsJson = jsonDecode(response.body);
     return !responseAsJson['MRData']['RaceTable']['Races'].isEmpty;
