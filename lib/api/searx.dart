@@ -29,49 +29,17 @@ class SearXSearch {
     'https://search.sapti.me/',
     'https://search.neet.works/',
     'https://dynabyte.ca/',
-  ];
-  final List<String> scrapingInstances = [
-    'https://search.unlocked.link/',
-    'https://search.sapti.me/',
-    'https://search.neet.works/',
-    'https://dynabyte.ca/',
     'https://searx.fmac.xyz/',
     'https://priv.au/',
     'https://searx.be',
     'https://searx.tiekoetter.com/',
     'https://searx.work/',
   ];
+
   Future<List> searchArticles(String query) async {
     late Uri url;
     late http.Response response;
     for (String instance in instances) {
-      url = Uri.parse(
-        '$instance/search?q="formula1.com/en/latest/article" $query&format=json',
-      );
-      response = await http.get(
-        url,
-        headers: {
-          'user-agent':
-              'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36',
-        },
-      );
-      if (response.body != 'Too Many Requests') {
-        break;
-      }
-    }
-    late Map<String, dynamic> responseAsJson;
-    try {
-      responseAsJson = jsonDecode(response.body);
-    } catch (e) {
-      responseAsJson = await scrapeArticles(query);
-    }
-    return responseAsJson['results'];
-  }
-
-  Future<Map<String, dynamic>> scrapeArticles(String query) async {
-    late Uri url;
-    late http.Response response;
-    for (String instance in scrapingInstances) {
       url = Uri.parse(
         '$instance/search?q="formula1.com/en/latest/article" $query',
       );
@@ -108,10 +76,6 @@ class SearXSearch {
         }
       },
     );
-
-    Map<String, dynamic> responseAsJson = {};
-    responseAsJson['results'] = results;
-
-    return responseAsJson;
+    return results;
   }
 }
