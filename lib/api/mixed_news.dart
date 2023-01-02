@@ -24,8 +24,11 @@ import 'package:http/http.dart' as http;
 
 class Wordpress {
   Future<List> getWordpressNews(String baseUrl, {int? max}) async {
+    late Uri url;
     List formatedNews = [];
-    var url = Uri.parse('$baseUrl/wp-json/wp/v2/posts');
+    baseUrl == 'https://beyondtheflag.com'
+        ? url = Uri.parse('$baseUrl/wp-json/wp/v2/posts?categories=270521,0')
+        : url = Uri.parse('$baseUrl/wp-json/wp/v2/posts');
     var response = await http.get(url);
     List responseAsJson = jsonDecode(
       response.body,
@@ -37,7 +40,13 @@ class Wordpress {
   }
 
   Future<List> getMoreWordpressNews(String baseUrl, int offset) async {
-    var url = Uri.parse('$baseUrl/wp-json/wp/v2/posts?offset=$offset');
+    late Uri url;
+
+    baseUrl == 'https://beyondtheflag.com'
+        ? url = Uri.parse(
+            '$baseUrl/wp-json/wp/v2/posts?offset=$offset&categories=270521,0',
+          )
+        : url = Uri.parse('$baseUrl/wp-json/wp/v2/posts?offset=$offset');
     var response = await http.get(url);
     List responseAsJson = jsonDecode(
       response.body,
