@@ -69,7 +69,33 @@ class RaceTracksUrls {
     "vegas": "Las Vegas",
     "yas_marina": "Abu Dhabi",
   };
-  Future<String> getRaceTrackUrl(String gpId) async {
+
+  Map<String, String> raceCoverImageConverter = {
+    "bahrain": "Bahrain",
+    "jeddah": "Saudi_Arabian",
+    "albert_park": "Australian",
+    "baku": "Azerbaijan",
+    "miami": "Miami",
+    "imola": "Emilia Romagna",
+    "monaco": "Monaco",
+    "catalunya": "Spanish",
+    "villeneuve": "Canadian",
+    "red_bull_ring": "Austrian",
+    "silverstone": "British",
+    "hungaroring": "Hungarian",
+    "spa": "Belgian",
+    "zandvoort": "Dutch",
+    "monza": "Italian",
+    "marina_bay": "Singapore",
+    "suzuka": "Japanese",
+    "losail": "Qatar",
+    "americas": "United States",
+    "rodriguez": "Mexico City",
+    "interlagos": "São Paulo",
+    "vegas": "Las Vegas",
+    "yas_marina": "Abu Dhabi",
+  };
+  Future<String> getRaceTrackImageUrl(String gpId) async {
     String gpName = trackUrlConverter[gpId]!;
     return "https://www.formula1.com/content/dam/fom-website/2018-redesign-assets/Racehub%20header%20images%2016x9/$gpName.jpg.transform/12col/image.jpg";
   }
@@ -78,5 +104,10 @@ class RaceTracksUrls {
     String gpName = trackLayoutConverter[gpId]!.replaceAll(' ', '_');
     print(gpName);
     return "https://www.formula1.com/content/dam/fom-website/2018-redesign-assets/Circuit%20maps%2016x9/${gpName}_Circuit.png";
+  }
+
+  Future<String> getRaceCoverImageUrl(String gpId) async {
+    String gpName = trackUrlConverter[gpId]!;
+    return "https://www.formula1.com/content/dam/fom-website/races/${DateTime.now().year}/${gpName}_Grand_Prix.png";
   }
 }

@@ -1315,7 +1315,7 @@ class _CircuitScreenState extends State<CircuitScreen> {
 
 class RaceImageProvider extends StatelessWidget {
   Future<String> getCircuitImageUrl(Race race) async {
-    return await RaceTracksUrls().getRaceTrackUrl(race.circuitId);
+    return await RaceTracksUrls().getRaceTrackImageUrl(race.circuitId);
   }
 
   final Race race;

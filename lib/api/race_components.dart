@@ -74,7 +74,7 @@ class RaceItem extends StatelessWidget {
           ? Column(
               children: [
                 FutureBuilder<String>(
-                  future: RaceTracksUrls().getRaceTrackUrl(item.circuitId),
+                  future: RaceTracksUrls().getRaceCoverImageUrl(item.circuitId),
                   builder: (context, snapshot) => snapshot.hasData
                       ? ImageRenderer(
                           snapshot.data!,
