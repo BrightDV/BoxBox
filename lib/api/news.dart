@@ -817,12 +817,6 @@ class JoinArticlesParts extends StatelessWidget {
     String heroImageUrl = "";
 
     if (article.articleHero['contentType'] == 'atomVideo') {
-      widgetsList.add(
-        VideoRenderer(
-          article.articleHero['fields']['videoId'],
-          autoplay: true,
-        ),
-      );
       heroImageUrl = article.articleHero['fields']['thumbnail']['url'];
     } else if (article.articleHero['contentType'] == 'atomImageGallery') {
       List<Widget> galleryHeroWidgets = [];
@@ -1633,11 +1627,34 @@ class JoinArticlesParts extends StatelessWidget {
         ),
       ),
     );
-    return SingleChildScrollView(
-      child: Column(
-        children: widgetsList,
-      ),
-    );
+    return article.articleHero['contentType'] == 'atomVideo'
+        ? NestedScrollView(
+            headerSliverBuilder:
+                (BuildContext context, bool innerBoxIsScrolled) {
+              return <Widget>[
+                SliverPersistentHeader(
+                  pinned: true,
+                  delegate: PinnedVideoPlayer(
+                    VideoRenderer(
+                      article.articleHero['fields']['videoId'],
+                      autoplay: true,
+                    ),
+                    MediaQuery.of(context).size.width / (16 / 9),
+                  ),
+                ),
+              ];
+            },
+            body: SingleChildScrollView(
+              child: Column(
+                children: widgetsList,
+              ),
+            ),
+          )
+        : SingleChildScrollView(
+            child: Column(
+              children: widgetsList,
+            ),
+          );
   }
 }
 
@@ -2154,5 +2171,42 @@ class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
     _placeholderStreamController.close();
     _betterPlayerController.dispose();
     super.dispose();
+  }
+}
+
+class PinnedVideoPlayer extends SliverPersistentHeaderDelegate {
+  final Widget widget;
+  final double height;
+
+  PinnedVideoPlayer(this.widget, this.height);
+
+  @override
+  Widget build(
+      BuildContext context, double shrinkOffset, bool overlapsContent) {
+    bool useDarkMode =
+        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
+    return Container(
+      width: double.infinity,
+      height: height,
+      child: Card(
+        margin: EdgeInsets.all(0),
+        color: useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
+        elevation: 10.0,
+        child: Center(
+          child: widget,
+        ),
+      ),
+    );
+  }
+
+  @override
+  double get maxExtent => height;
+
+  @override
+  double get minExtent => height;
+
+  @override
+  bool shouldRebuild(SliverPersistentHeaderDelegate oldDelegate) {
+    return true;
   }
 }
