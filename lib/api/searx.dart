@@ -39,6 +39,7 @@ class SearXSearch {
   Future<List> searchArticles(String query) async {
     late Uri url;
     late http.Response response;
+    instances.shuffle();
     for (String instance in instances) {
       url = Uri.parse(
         '$instance/search?q="formula1.com/en/latest/article" $query&language=en-US',
@@ -50,7 +51,8 @@ class SearXSearch {
               'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36',
         },
       );
-      if (response.body != 'Too Many Requests') {
+      if (response.body != 'Too Many Requests' &&
+          response.body != 'Rate limit exceeded') {
         break;
       }
     }
