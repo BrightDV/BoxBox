@@ -96,3 +96,8 @@ published by the Free Software Foundation, either version 3 of the License, or
 I'm developing this app in my free time, so I appreciate feedback and welcome PRs!
 
 (_Box, Box!_ is unofficial software and in no way associated with the Formula 1 group of companies.)
+
+Some interesting Formula 1 related projects:
+- The amazing [Ergast API](https://ergast.com/mrd).
+- [bacinger/f1-circuits](https://github.com/bacinger/f1-circuits): geo points for the map of each circuit.
+- [theOehrly/Fast-F1](https://github.com/theOehrly/Fast-F1): client for live telemetry (upcoming) and stats, in Python.
