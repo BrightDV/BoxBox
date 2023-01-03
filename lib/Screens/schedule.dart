@@ -116,22 +116,52 @@ class ScheduleWidget extends StatelessWidget {
                 )
               : RequestErrorWidget(snapshot.error.toString());
         return snapshot.hasData
-            ? RacesList(
-                snapshot.data!,
-                toCome,
-                scrollController: scrollController,
-              )
-            : schedule['MRData'] != null
-                ? RacesList(
-                    ErgastApi().formatLastSchedule(
-                      schedule,
-                      toCome,
-                    ),
+            ? snapshot.data!.length == 0
+                ? EmptySchedule()
+                : RacesList(
+                    snapshot.data!,
                     toCome,
                     scrollController: scrollController,
                   )
+            : schedule['MRData'] != null
+                ? ErgastApi()
+                        .formatLastSchedule(
+                          schedule,
+                          toCome,
+                        )
+                        .isEmpty
+                    ? EmptySchedule()
+                    : RacesList(
+                        ErgastApi().formatLastSchedule(
+                          schedule,
+                          toCome,
+                        ),
+                        toCome,
+                        scrollController: scrollController,
+                      )
                 : LoadingIndicatorUtil();
       },
+    );
+  }
+}
+
+class EmptySchedule extends StatelessWidget {
+  const EmptySchedule({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    bool useDarkMode =
+        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
+    return Center(
+      child: Text(
+        AppLocalizations.of(context)!.nothingHere,
+        style: TextStyle(
+          color: useDarkMode ? Colors.white : Colors.black,
+          fontWeight: FontWeight.w500,
+          fontSize: 30,
+        ),
+        textAlign: TextAlign.center,
+      ),
     );
   }
 }

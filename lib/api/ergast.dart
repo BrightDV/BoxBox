@@ -232,36 +232,38 @@ class _ErgastApiCalls {
         }
       });
     } else {
-      finalJson.forEach((element) {
-        List dateParts = element['date'].split('-');
-        DateTime raceDate = DateTime(
-          int.parse(dateParts[0]),
-          int.parse(dateParts[1]),
-          int.parse(dateParts[2]),
-        ).add(
-          Duration(
-            days: 1,
-          ),
-        );
-        DateTime now = new DateTime.now();
-        if (now.compareTo(raceDate) > 0) {
-          races.add(
-            Race(
-              element['round'],
-              element['raceName'].substring(
-                0,
-                element['raceName'].indexOf(' Grand Prix'),
-              ),
-              element['date'],
-              element['time'],
-              element['Circuit']['circuitId'],
-              element['Circuit']['circuitName'],
-              element['Circuit']['url'],
-              element['Circuit']['Location']['country'],
+      finalJson.forEach(
+        (element) {
+          List dateParts = element['date'].split('-');
+          DateTime raceDate = DateTime(
+            int.parse(dateParts[0]),
+            int.parse(dateParts[1]),
+            int.parse(dateParts[2]),
+          ).add(
+            Duration(
+              days: 1,
             ),
           );
-        }
-      });
+          DateTime now = new DateTime.now();
+          if (now.compareTo(raceDate) > 0) {
+            races.add(
+              Race(
+                element['round'],
+                element['raceName'].substring(
+                  0,
+                  element['raceName'].indexOf(' Grand Prix'),
+                ),
+                element['date'],
+                element['time'],
+                element['Circuit']['circuitId'],
+                element['Circuit']['circuitName'],
+                element['Circuit']['url'],
+                element['Circuit']['Location']['country'],
+              ),
+            );
+          }
+        },
+      );
     }
     return races;
   }

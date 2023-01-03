@@ -151,6 +151,8 @@
   "@next": {},
   "noResults": "Rien à afficher. Vous êtes peut-être bloqué.",
   "@noResults": {},
+  "nothingHere": "Rien à afficher\nici.",
+  "@nothingHere": {},
   "numberOfLaps": "Nombre de tours",
   "@numberOfLaps": {},
   "offline": "Hors-ligne. Les données peuvent ne pas être à jour.",

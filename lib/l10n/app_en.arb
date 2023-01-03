@@ -151,6 +151,8 @@
   "@next": {},
   "noResults": "Nothing to show here. You may be rate limited.",
   "@noResults": {},
+  "nothingHere": "Nothing to show\nhere.",
+  "@nothingHere": {},
   "numberOfLaps": "Number of Laps",
   "@numberOfLaps": {},
   "offline": "Offline. The data may not be up to date.",
