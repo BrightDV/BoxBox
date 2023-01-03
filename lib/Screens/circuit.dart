@@ -90,7 +90,7 @@ class _CircuitScreenState extends State<CircuitScreen> {
                     flexibleSpace: FlexibleSpaceBar(
                       background: RaceImageProvider(race),
                       title: Text(
-                        race.raceName + ' Grand Prix',
+                        race.raceName,
                       ),
                     ),
                   ),
@@ -168,7 +168,7 @@ class _CircuitScreenState extends State<CircuitScreen> {
                                 ),
                               ),
                             ),
-                            snapshot.data!['links'][1] != null
+                            snapshot.data!['links'].isNotEmpty
                                 ? Padding(
                                     padding: EdgeInsets.all(5),
                                     child: GestureDetector(
@@ -220,7 +220,7 @@ class _CircuitScreenState extends State<CircuitScreen> {
                                     ),
                                   )
                                 : Container(),
-                            snapshot.data!['raceResults'] != null
+                            snapshot.data!['raceResults'] == []
                                 ? Padding(
                                     padding: EdgeInsets.all(
                                       10,
@@ -660,10 +660,7 @@ class _CircuitScreenState extends State<CircuitScreen> {
                                   background: RaceImageProvider(
                                     circuitSnapshot.data!,
                                   ),
-                                  title: Text(
-                                    circuitSnapshot.data!.raceName +
-                                        ' Grand Prix',
-                                  ),
+                                  title: Text(circuitSnapshot.data!.raceName),
                                 ),
                               ),
                             ];

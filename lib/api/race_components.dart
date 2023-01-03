@@ -70,32 +70,22 @@ class RaceItem extends StatelessWidget {
           ),
         ),
       ),
-      child: GestureDetector(
-        onTap: () => Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => CircuitScreen(
-              item,
-            ),
-          ),
-        ),
-        child: index == 0 && isUpNext
-            ? Column(
-                children: [
-                  FutureBuilder<String>(
-                    future: RaceTracksUrls().getRaceTrackUrl(item.circuitId),
-                    builder: (context, snapshot) => snapshot.hasData
-                        ? ImageRenderer(
-                            snapshot.data!,
-                            inSchedule: true,
-                          )
-                        : LoadingIndicatorUtil(),
-                  ),
-                  RaceListItem(item, index),
-                ],
-              )
-            : RaceListItem(item, index),
-      ),
+      child: index == 0 && isUpNext
+          ? Column(
+              children: [
+                FutureBuilder<String>(
+                  future: RaceTracksUrls().getRaceTrackUrl(item.circuitId),
+                  builder: (context, snapshot) => snapshot.hasData
+                      ? ImageRenderer(
+                          snapshot.data!,
+                          inSchedule: true,
+                        )
+                      : LoadingIndicatorUtil(),
+                ),
+                RaceListItem(item, index),
+              ],
+            )
+          : RaceListItem(item, index),
     );
   }
 }
