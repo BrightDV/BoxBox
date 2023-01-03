@@ -7,8 +7,10 @@
 [![GitHub forks](https://img.shields.io/github/forks/BrightDV/BoxBox?style=for-the-badge)](https://github.com/BrightDV/BoxBox/network)
 [![GitHub stars](https://img.shields.io/github/stars/BrightDV/BoxBox?style=for-the-badge)](https://github.com/BrightDV/BoxBox/stargazers)
 [![GitHub license](https://img.shields.io/github/license/BrightDV/BoxBox?style=for-the-badge)](https://github.com/BrightDV/BoxBox/blob/main/LICENSE)
-![Github all releases](https://img.shields.io/github/downloads/BrightDV/BoxBox/total.svg?style=for-the-badge) \
+[![Github all releases](https://img.shields.io/github/downloads/BrightDV/BoxBox/total.svg?style=for-the-badge)](https://github.com/BrightDV/BoxBox/releases)
+[![Codeberg mirror](https://img.shields.io/badge/Mirror-Codeberg-blue?style=for-the-badge)](https://codeberg.org/BrightDV/BoxBox)
 ![https://hosted.weblate.org/engage/box-box/](https://hosted.weblate.org/widgets/box-box/-/translations/svg-badge.svg)
+
 
 ## Download
 
