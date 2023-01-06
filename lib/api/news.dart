@@ -151,6 +151,30 @@ class F1NewsFetcher {
     return formatResponse(responseAsJson);
   }
 
+  Future<Map<String, dynamic>> getRawPersonalizedFeed(
+    List tags, {
+    String? articleType,
+  }) async {
+    Uri url;
+    if (articleType != null) {
+      url = Uri.parse(
+        '$endpoint/v1/editorial/articles?limit=16&tags=${tags.join(',')}&articleTypes=$articleType',
+      );
+    } else {
+      url = Uri.parse(
+          '$endpoint/v1/editorial/articles?limit=16&tags=${tags.join(',')}');
+    }
+    var response = await http.get(url, headers: {
+      "Accept": "application/json",
+      "apikey": apikey,
+      "locale": "en",
+    });
+
+    Map<String, dynamic> responseAsJson =
+        json.decode(utf8.decode(response.bodyBytes));
+    return responseAsJson;
+  }
+
   Future<Article> getArticleData(String articleId) async {
     Uri url = Uri.parse('$endpoint/v1/editorial/articles/$articleId');
     var response = await http.get(url, headers: {
@@ -2143,7 +2167,18 @@ class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
         return _showPlaceholder
             ? Stack(
                 children: [
-                  Image.network(widget.videoUrls['poster']),
+                  Container(
+                    decoration: BoxDecoration(
+                      image: new DecorationImage(
+                        fit: BoxFit.cover,
+                        colorFilter: ColorFilter.mode(
+                          Colors.black.withOpacity(0.4),
+                          BlendMode.dstATop,
+                        ),
+                        image: NetworkImage(widget.videoUrls['poster']),
+                      ),
+                    ),
+                  ),
                   Align(
                     alignment: Alignment.center,
                     child: Icon(
