@@ -17,6 +17,7 @@
  * Copyright (c) 2022-2023, BrightDV
  */
 
+import 'package:boxbox/Screens/FormulaYou/home.dart';
 import 'package:boxbox/Screens/about.dart';
 import 'package:boxbox/Screens/hall_of_fame.dart';
 import 'package:boxbox/Screens/history.dart';
@@ -223,7 +224,7 @@ class _MainDrawerState extends State<MainDrawer> {
             enableExperimentalFeatures
                 ? ListTile(
                     title: Text(
-                      'Article tests screen',
+                      'Formula You',
                       style: TextStyle(
                         color: useDarkMode ? Colors.white : Colors.black,
                       ),
@@ -237,7 +238,7 @@ class _MainDrawerState extends State<MainDrawer> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => TestScreen(),
+                          builder: (context) => PersonalizedHomeScreen(),
                         ),
                       );
                     },

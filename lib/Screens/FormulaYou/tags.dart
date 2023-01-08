@@ -85,4 +85,9 @@ class FormulaYouTags {
         articleTypes,
         misc,
       ];
+
+  Map unifiedTags() => Map.from(drivers)
+    ..addAll(teams)
+    ..addAll(articleTypes)
+    ..addAll(misc);
 }

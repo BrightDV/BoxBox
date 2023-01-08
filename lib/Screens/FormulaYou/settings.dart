@@ -63,7 +63,7 @@ class _FormulaYouSettingsScreenState extends State<FormulaYouSettingsScreen> {
                         ? AppLocalizations.of(context)!.teams.capitalize()
                         : i == 2
                             ? AppLocalizations.of(context)!.topics.capitalize()
-                            : 'Misc',
+                            : AppLocalizations.of(context)!.other.capitalize(),
               ),
               children: [
                 for (String key in availableTags[i].keys.toList()..sort())
