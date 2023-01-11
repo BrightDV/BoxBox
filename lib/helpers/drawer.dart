@@ -242,6 +242,29 @@ class _MainDrawerState extends State<MainDrawer> {
                     },
                   )
                 : Container(),
+            enableExperimentalFeatures
+                ? ListTile(
+                    title: Text(
+                      'Article Test Screen',
+                      style: TextStyle(
+                        color: useDarkMode ? Colors.white : Colors.black,
+                      ),
+                    ),
+                    leading: Icon(
+                      Icons.settings_outlined,
+                      color: useDarkMode ? Colors.white : Colors.black,
+                    ),
+                    onTap: () {
+                      Navigator.of(context).pop();
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => TestScreen(),
+                        ),
+                      );
+                    },
+                  )
+                : Container(),
             Expanded(
               child: Align(
                 alignment: Alignment.bottomCenter,
