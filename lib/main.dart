@@ -75,7 +75,8 @@ void main() async {
     'newsLoader',
     "Load news in background",
     existingWorkPolicy: ExistingWorkPolicy.replace,
-    frequency: Duration(hours: 4),
+    frequency: Duration(hours: 2),
+    initialDelay: Duration(hours: 2),
   );
 
   runApp(MyApp());
@@ -126,7 +127,16 @@ void callbackDispatcher() {
       } else {
         return Future.value(true);
       }
-    } catch (error) {}
+    } catch (error, stacktrace) {
+      await AwesomeNotifications().createNotification(
+        content: NotificationContent(
+          id: createUniqueId(),
+          channelKey: 'newArticle',
+          title: 'An error occured.',
+          body: stacktrace.toString(),
+        ),
+      );
+    }
     return true;
   });
 }
@@ -216,7 +226,21 @@ class NotificationController {
     AwesomeNotifications().setListeners(
       onActionReceivedMethod: (receivedAction) async =>
           receivedAction.payload?['id'] == null
-              ? null
+              ? Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => Scaffold(
+                      appBar: AppBar(
+                        title: Text('wrong payload'),
+                      ),
+                      body: Center(
+                        child: Text(
+                          receivedAction.payload.toString(),
+                        ),
+                      ),
+                    ),
+                  ),
+                )
               : Navigator.push(
                   context,
                   MaterialPageRoute(

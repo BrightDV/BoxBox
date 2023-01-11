@@ -17,6 +17,7 @@
  * Copyright (c) 2022-2023, BrightDV
  */
 
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:boxbox/api/news.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/racetracks_url.dart';
@@ -220,25 +221,79 @@ class RacesList extends StatelessWidget {
     Key? key,
     this.scrollController,
   });
+
+  int createUniqueId() {
+    return DateTime.now().millisecondsSinceEpoch.remainder(100000);
+  }
+
+  Future<void> scheduledNotification(Race race) async {
+    DateTime date = DateTime.parse(race.date);
+    date.subtract(
+      Duration(
+        days: 3,
+      ),
+    );
+    await AwesomeNotifications().createNotification(
+      content: NotificationContent(
+        id: createUniqueId(),
+        channelKey: 'eventTracker',
+        title: "A Grand-Prix is starting soon.",
+        body: "Be ready for the Free Practices!",
+      ),
+      schedule: NotificationCalendar(
+        allowWhileIdle: true,
+        repeats: false,
+        millisecond: 0,
+        second: date.second,
+        minute: date.minute,
+        hour: date.hour,
+        day: date.day,
+        month: date.month,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      scrollDirection: Axis.vertical,
-      shrinkWrap: true,
-      itemCount: items.length,
-      controller: scrollController,
-      itemBuilder: (context, index) => isUpNext
-          ? RaceItem(
-              items[index],
-              index,
-              isUpNext,
-            )
-          : RaceItem(
-              items[items.length - index - 1],
-              index,
-              isUpNext,
+    return isUpNext
+        ? FutureBuilder(
+            future: scheduledNotification(items[0]),
+            builder: (context, snapshot) => ListView.builder(
+              scrollDirection: Axis.vertical,
+              shrinkWrap: true,
+              itemCount: items.length,
+              controller: scrollController,
+              itemBuilder: (context, index) => isUpNext
+                  ? RaceItem(
+                      items[index],
+                      index,
+                      isUpNext,
+                    )
+                  : RaceItem(
+                      items[items.length - index - 1],
+                      index,
+                      isUpNext,
+                    ),
+              physics: ClampingScrollPhysics(),
             ),
-      physics: ClampingScrollPhysics(),
-    );
+          )
+        : ListView.builder(
+            scrollDirection: Axis.vertical,
+            shrinkWrap: true,
+            itemCount: items.length,
+            controller: scrollController,
+            itemBuilder: (context, index) => isUpNext
+                ? RaceItem(
+                    items[index],
+                    index,
+                    isUpNext,
+                  )
+                : RaceItem(
+                    items[items.length - index - 1],
+                    index,
+                    isUpNext,
+                  ),
+            physics: ClampingScrollPhysics(),
+          );
   }
 }
