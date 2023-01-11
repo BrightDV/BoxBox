@@ -23,7 +23,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class FormulaYouSettingsScreen extends StatefulWidget {
-  const FormulaYouSettingsScreen();
+  final Function? update;
+  const FormulaYouSettingsScreen({this.update});
 
   @override
   State<FormulaYouSettingsScreen> createState() =>
@@ -45,9 +46,10 @@ class _FormulaYouSettingsScreenState extends State<FormulaYouSettingsScreen> {
           useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
       appBar: AppBar(
         title: Text(
-          'Formula You Settings',
+          AppLocalizations.of(context)!.formulaYouSettings,
           style: TextStyle(
             fontWeight: FontWeight.w600,
+            fontSize: 18,
           ),
         ),
       ),
@@ -79,6 +81,9 @@ class _FormulaYouSettingsScreenState extends State<FormulaYouSettingsScreen> {
                             ? selectedTags.remove(key)
                             : selectedTags.add(key);
                         Hive.box('settings').put('selectedTags', selectedTags);
+                        if (widget.update != null) {
+                          widget.update!();
+                        }
                         setState(() {});
                       },
                       title: Text(

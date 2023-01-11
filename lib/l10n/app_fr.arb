@@ -61,6 +61,10 @@
   "@fiaRegulations": {},
   "firstGrandPrix": "Premier Grand-Prix",
   "@firstGrandPrix": {},
+  "formulaYouSettings": "Paramètres de Formula You",
+  "@formulaYouSettings": {
+    "description": "Ne pas changer 'Formula You' car c'est le nom du service."
+  },
   "filter": "Filtrer",
   "@filter": {},
   "freePracticeFirstLetter": "EL",

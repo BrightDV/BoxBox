@@ -457,7 +457,7 @@ class _OtherCardstate extends State<OtherCard> {
         ),
         ListTile(
           title: Text(
-            'Formula You Settings',
+            AppLocalizations.of(context)!.formulaYouSettings,
             style: TextStyle(
               color: useDarkMode ? Colors.white : Colors.black,
             ),

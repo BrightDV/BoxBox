@@ -17,8 +17,8 @@
  * Copyright (c) 2022-2023, BrightDV
  */
 
+import 'package:boxbox/Screens/FormulaYou/settings.dart';
 import 'package:boxbox/Screens/FormulaYou/tags.dart';
-import 'package:boxbox/helpers/live_session_status_indicator.dart';
 import 'package:boxbox/helpers/news_feed_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -30,6 +30,10 @@ class PersonalizedHomeScreen extends StatefulWidget {
 }
 
 class _PersonalizedHomeScreenState extends State<PersonalizedHomeScreen> {
+  void updateState() {
+    setState(() {});
+  }
+
   @override
   void initState() {
     super.initState();
@@ -49,7 +53,27 @@ class _PersonalizedHomeScreenState extends State<PersonalizedHomeScreen> {
       );
     return Scaffold(
       appBar: AppBar(
-        title: Text('Formula You'),
+        title: Text(
+          'Formula You',
+          style: TextStyle(
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        actions: [
+          IconButton(
+            icon: Icon(
+              Icons.settings_outlined,
+            ),
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => FormulaYouSettingsScreen(
+                  update: updateState,
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
       backgroundColor:
           useDarkMode ? Theme.of(context).backgroundColor : Colors.white,

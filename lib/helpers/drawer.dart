@@ -72,6 +72,27 @@ class _MainDrawerState extends State<MainDrawer> {
             ),
             ListTile(
               title: Text(
+                'Formula You',
+                style: TextStyle(
+                  color: useDarkMode ? Colors.white : Colors.black,
+                ),
+              ),
+              leading: Icon(
+                Icons.account_circle_outlined,
+                color: useDarkMode ? Colors.white : Colors.black,
+              ),
+              onTap: () {
+                Navigator.of(context).pop();
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => PersonalizedHomeScreen(),
+                  ),
+                );
+              },
+            ),
+            ListTile(
+              title: Text(
                 AppLocalizations.of(context)!.newsMix,
                 style: TextStyle(
                   color: useDarkMode ? Colors.white : Colors.black,
@@ -216,29 +237,6 @@ class _MainDrawerState extends State<MainDrawer> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => SignalRClientScreen(),
-                        ),
-                      );
-                    },
-                  )
-                : Container(),
-            enableExperimentalFeatures
-                ? ListTile(
-                    title: Text(
-                      'Formula You',
-                      style: TextStyle(
-                        color: useDarkMode ? Colors.white : Colors.black,
-                      ),
-                    ),
-                    leading: Icon(
-                      Icons.settings_outlined,
-                      color: useDarkMode ? Colors.white : Colors.black,
-                    ),
-                    onTap: () {
-                      Navigator.of(context).pop();
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => PersonalizedHomeScreen(),
                         ),
                       );
                     },
