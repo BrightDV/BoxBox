@@ -256,5 +256,7 @@
   "newsMix": "Noticias Mixtas",
   "@newsMix": {},
   "from": "Desde ",
-  "@from": {}
+  "@from": {},
+  "nothingHere": "Nada que mostrar\naquí.",
+  "@nothingHere": {}
 }

@@ -256,5 +256,7 @@
   "from": "से ",
   "@from": {},
   "newsMix": "समाचार मिश्रण",
-  "@newsMix": {}
+  "@newsMix": {},
+  "nothingHere": "दिखाने के लिए कुछ नहीं \nयहाँ।",
+  "@nothingHere": {}
 }
