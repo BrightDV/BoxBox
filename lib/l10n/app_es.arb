@@ -258,5 +258,9 @@
   "from": "Desde ",
   "@from": {},
   "nothingHere": "Nada que mostrar\naquí.",
-  "@nothingHere": {}
+  "@nothingHere": {},
+  "formulaYouSettings": "Configuración de Formula You",
+  "@formulaYouSettings": {
+    "description": "Keep 'Formula You' untranslated as it is the name of the service."
+  }
 }
