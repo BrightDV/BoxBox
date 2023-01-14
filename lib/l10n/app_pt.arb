@@ -258,5 +258,9 @@
   "newsMix": "Mix de notícias",
   "@newsMix": {},
   "nothingHere": "Nada a mostrar\naqui.",
-  "@nothingHere": {}
+  "@nothingHere": {},
+  "formulaYouSettings": "Formula You Settings",
+  "@formulaYouSettings": {
+    "description": "Keep 'Formula You' untranslated as it is the name of the service."
+  }
 }
