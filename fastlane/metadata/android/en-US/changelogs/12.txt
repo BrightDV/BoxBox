@@ -1,0 +1,8 @@
+2023 Season!
+- Support the new circuits and new drivers with updated images.
+- Formula You: follow only tags that you like (drivers/teams...) to get a personalized feed!
+- Mixed News: enjoy a feed with news from about 10 others F1-related websites!
+- Search: this was buggy for non-english users but it has been fixed!
+- Improved player: pinned when it is the main content of the article and darker thumbnail.
+- Merged translation from Weblate
+... and many more!
