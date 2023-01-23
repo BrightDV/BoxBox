@@ -46,13 +46,85 @@ class LiveFeedFetcher {
     return responseAsJson;
   }
 
-  Future<Map> getSessionData(Map sessionInfo) async {
-    String sessionDataPath = sessionInfo['Path'];
+  Future<Map> getTrackStatus() async {
+    Map sessionDataPath = await getSessionInfo();
     var url = Uri.parse(
-        'https://livetiming.formula1.com/static/${sessionDataPath}SPFeed.json');
+        'https://livetiming.formula1.com/static/${sessionDataPath["Path"]}TrackStatus.jsonStream');
     var response = await http.get(url);
-    Map<String, dynamic> responseAsJson =
-        json.decode(utf8.decode(response.bodyBytes));
+    Map<String, dynamic> responseAsJson = {};
+    List responseAsList = utf8.decode(response.bodyBytes).split('\n');
+    responseAsList.removeAt(responseAsList.length - 1);
+    for (String line in responseAsList) {
+      responseAsJson[line.split('{')[0].split('.')[0]] = json.decode(
+        line.substring(
+          line.indexOf('{'),
+        ),
+      );
+    }
+    return responseAsJson;
+  }
+
+  Future<Map> getLapCount() async {
+    Map sessionDataPath = await getSessionInfo();
+    var url = Uri.parse(
+        'https://livetiming.formula1.com/static/${sessionDataPath["Path"]}LapCount.jsonStream');
+    var response = await http.get(url);
+    Map<String, dynamic> responseAsJson = {};
+    List responseAsList = utf8.decode(response.bodyBytes).split('\n');
+    responseAsList.removeAt(responseAsList.length - 1);
+    for (String line in responseAsList) {
+      responseAsJson[line.split('{')[0].split('.')[0]] = json.decode(
+        line.substring(
+          line.indexOf('{'),
+        ),
+      );
+    }
+    return responseAsJson;
+  }
+
+  Future<Map> getTimingData() async {
+    Map sessionDataPath = await getSessionInfo();
+    var url = Uri.parse(
+        'https://livetiming.formula1.com/static/${sessionDataPath["Path"]}TimingData.jsonStream');
+    var response = await http.get(url);
+    Map<String, dynamic> responseAsJson = {};
+    List responseAsList = utf8.decode(response.bodyBytes).split('\n');
+    responseAsList.removeAt(responseAsList.length - 1);
+    for (String line in responseAsList) {
+      responseAsJson[line.split('{')[0].split('.')[0]] != null
+          ? responseAsJson[line.split('{')[0].split('.')[0]] += [
+              json.decode(
+                line.substring(
+                  line.indexOf('{'),
+                ),
+              ),
+            ]
+          : responseAsJson[line.split('{')[0].split('.')[0]] = [
+              json.decode(
+                line.substring(
+                  line.indexOf('{'),
+                ),
+              ),
+            ];
+    }
+    return responseAsJson;
+  }
+
+  Future<Map> getTimingStats() async {
+    Map sessionDataPath = await getSessionInfo();
+    var url = Uri.parse(
+        'https://livetiming.formula1.com/static/${sessionDataPath["Path"]}TimingStats.jsonStream');
+    var response = await http.get(url);
+    Map<String, dynamic> responseAsJson = {};
+    List responseAsList = utf8.decode(response.bodyBytes).split('\n');
+    responseAsList.removeAt(responseAsList.length - 1);
+    for (String line in responseAsList) {
+      responseAsJson[line.split('{')[0].split('.')[0]] = json.decode(
+        line.substring(
+          line.indexOf('{'),
+        ),
+      );
+    }
     return responseAsJson;
   }
 }

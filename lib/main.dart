@@ -69,7 +69,7 @@ void main() async {
 
   Workmanager().initialize(
     callbackDispatcher,
-    isInDebugMode: true,
+    //isInDebugMode: true,
   );
   Workmanager().registerPeriodicTask(
     'newsLoader',
