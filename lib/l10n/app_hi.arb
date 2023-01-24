@@ -259,7 +259,7 @@
   "@newsMix": {},
   "nothingHere": "दिखाने के लिए कुछ नहीं \nयहाँ।",
   "@nothingHere": {},
-  "formulaYouSettings": "फार्मूला यू सेटिंग",
+  "formulaYouSettings": "Formula You सेटिंग",
   "@formulaYouSettings": {
     "description": "Keep 'Formula You' untranslated as it is the name of the service."
   }
