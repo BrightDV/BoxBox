@@ -407,6 +407,7 @@ class NewsItem extends StatelessWidget {
               ),
               color: useDarkMode ? Color(0xff1d1d28) : Colors.white,
               child: InkWell(
+                borderRadius: BorderRadius.circular(15.0),
                 onTap: () {
                   Navigator.push(
                     context,
@@ -443,11 +444,15 @@ class NewsItem extends StatelessWidget {
                                         5,
                                     child: LoadingIndicatorUtil(),
                                   ),
-                                  errorWidget: (context, url, error) => Icon(
-                                    Icons.error_outlined,
-                                    color: useDarkMode
-                                        ? Color(0xff1d1d28)
-                                        : Colors.white,
+                                  errorWidget: (context, url, error) =>
+                                      SizedBox(
+                                    height: 50,
+                                    child: Icon(
+                                      Icons.error_outlined,
+                                      color: useDarkMode
+                                          ? Color(0xff1d1d28)
+                                          : Colors.white,
+                                    ),
                                   ),
                                   fadeOutDuration: Duration(seconds: 1),
                                   fadeInDuration: Duration(seconds: 1),
@@ -1668,15 +1673,23 @@ class JoinArticlesParts extends StatelessWidget {
                 ),
               ];
             },
-            body: SingleChildScrollView(
-              child: Column(
-                children: widgetsList,
+            body: SafeArea(
+              child: Scrollbar(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: widgetsList,
+                  ),
+                ),
               ),
             ),
           )
-        : SingleChildScrollView(
-            child: Column(
-              children: widgetsList,
+        : SafeArea(
+            child: Scrollbar(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: widgetsList,
+                ),
+              ),
             ),
           );
   }
