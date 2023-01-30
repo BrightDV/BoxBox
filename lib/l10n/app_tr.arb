@@ -254,5 +254,11 @@
   "statistics": "İstatistikler",
   "@statistics": {},
   "tryAgain": "Tekrar Deneyin",
-  "@tryAgain": {}
+  "@tryAgain": {},
+  "nothingHere": "Burada gösterilecek bir şey\nyok.",
+  "@nothingHere": {},
+  "formulaYouSettings": "Formula You Ayarları",
+  "@formulaYouSettings": {
+    "description": "Keep 'Formula You' untranslated as it is the name of the service."
+  }
 }
