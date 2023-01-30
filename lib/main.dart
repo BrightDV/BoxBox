@@ -125,7 +125,14 @@ void callbackDispatcher() {
         );
         hiveBox.put('news', fetchedData);
       } else {
-        return Future.value(true);
+        await AwesomeNotifications().createNotification(
+          content: NotificationContent(
+            id: createUniqueId(),
+            channelKey: 'newArticle',
+            title: 'No new article publsihed.',
+            body: 'Nothing to show...',
+          ),
+        );
       }
     } catch (error, stacktrace) {
       await AwesomeNotifications().createNotification(
