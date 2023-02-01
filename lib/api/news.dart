@@ -47,6 +47,7 @@ import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:url_launcher/url_launcher.dart';
+import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 class F1NewsFetcher {
   final String endpoint = "https://api.formula1.com";
@@ -933,6 +934,8 @@ class JoinArticlesParts extends StatelessWidget {
 
     if (article.articleHero['contentType'] == 'atomVideo') {
       heroImageUrl = article.articleHero['fields']['thumbnail']['url'];
+    } else if (article.articleHero['contentType'] == 'atomVideoYouTube') {
+      heroImageUrl = article.articleHero['fields']['image']['url'];
     } else if (article.articleHero['contentType'] == 'atomImageGallery') {
       List<Widget> galleryHeroWidgets = [];
       article.articleHero['fields']['imageGallery'].forEach(
@@ -1722,7 +1725,8 @@ class JoinArticlesParts extends StatelessWidget {
         ),
       ),
     );
-    return article.articleHero['contentType'] == 'atomVideo'
+    return (article.articleHero['contentType'] == 'atomVideo') ||
+            (article.articleHero['contentType'] == 'atomVideoYouTube')
         ? NestedScrollView(
             headerSliverBuilder:
                 (BuildContext context, bool innerBoxIsScrolled) {
@@ -1731,8 +1735,10 @@ class JoinArticlesParts extends StatelessWidget {
                   pinned: true,
                   delegate: PinnedVideoPlayer(
                     VideoRenderer(
-                      article.articleHero['fields']['videoId'],
+                      article.articleHero['fields']['videoId'] ?? '',
                       autoplay: true,
+                      youtubeId:
+                          article.articleHero['fields']['youTubeVideoId'] ?? '',
                     ),
                     MediaQuery.of(context).size.width / (16 / 9),
                   ),
@@ -2148,11 +2154,13 @@ class _ImageRendererState extends State<ImageRenderer> {
 class VideoRenderer extends StatefulWidget {
   final String videoId;
   final bool? autoplay;
+  final String? youtubeId;
 
   const VideoRenderer(
     this.videoId, {
     Key? key,
     this.autoplay,
+    this.youtubeId,
   }) : super(key: key);
   @override
   State<VideoRenderer> createState() => _VideoRendererState();
@@ -2169,10 +2177,25 @@ class _VideoRendererState extends State<VideoRenderer> {
     super.dispose();
   }
 
+  Future<Map<String, dynamic>> getYouTubeVideoLinks(String videoId) async {
+    Map<String, dynamic> urls = {};
+    urls['videos'] = [];
+    YoutubeExplode yt = YoutubeExplode();
+    var manifest = await yt.videos.streamsClient.getManifest(videoId);
+    urls['poster'] = 'https://img.youtube.com/vi/$videoId/0.jpg';
+    urls['videos'].add(manifest.muxed[1].url.toString());
+    for (var stream in manifest.muxed) {
+      urls['videos'].add(stream.url.toString());
+    }
+    return urls;
+  }
+
   @override
   Widget build(BuildContext build) {
     return FutureBuilder<Map<String, dynamic>>(
-      future: BrightCove().getVideoLinks(widget.videoId),
+      future: widget.youtubeId != ''
+          ? getYouTubeVideoLinks(widget.youtubeId!)
+          : BrightCove().getVideoLinks(widget.videoId),
       builder: (context, snapshot) => snapshot.hasError
           ? RequestErrorWidget(
               snapshot.error.toString(),
@@ -2194,8 +2217,11 @@ class BetterPlayerVideoPlayer extends StatefulWidget {
   final Map<String, dynamic> videoUrls;
   final bool autoplay;
 
-  const BetterPlayerVideoPlayer(this.videoUrls, this.autoplay, {Key? key})
-      : super(key: key);
+  const BetterPlayerVideoPlayer(
+    this.videoUrls,
+    this.autoplay, {
+    Key? key,
+  }) : super(key: key);
   @override
   State<BetterPlayerVideoPlayer> createState() =>
       _BetterPlayerVideoPlayerState();
