@@ -35,8 +35,12 @@ import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 class GrandPrixRunningScreen extends StatefulWidget {
   final Event event;
-  const GrandPrixRunningScreen(this.event);
-  _GrandPrixRunningScreenState createState() => _GrandPrixRunningScreenState();
+  const GrandPrixRunningScreen(
+    this.event, {
+    Key? key,
+  }) : super(key: key);
+  @override
+  State<GrandPrixRunningScreen> createState() => _GrandPrixRunningScreenState();
 }
 
 class _GrandPrixRunningScreenState extends State<GrandPrixRunningScreen> {
@@ -55,8 +59,8 @@ class _GrandPrixRunningScreenState extends State<GrandPrixRunningScreen> {
           width: AppBar().preferredSize.width,
           child: Marquee(
             text: widget.event.meetingOfficialName,
-            pauseAfterRound: Duration(seconds: 1),
-            startAfter: Duration(seconds: 1),
+            pauseAfterRound: const Duration(seconds: 1),
+            startAfter: const Duration(seconds: 1),
             velocity: 85,
             blankSpace: 100,
           ),
@@ -66,7 +70,7 @@ class _GrandPrixRunningScreenState extends State<GrandPrixRunningScreen> {
           useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
       body: SlidingUpPanel(
         backdropEnabled: true,
-        color: useDarkMode ? Color(0xff22222c) : Colors.white,
+        color: useDarkMode ? const Color(0xff22222c) : Colors.white,
         parallaxEnabled: true,
         panelBuilder: (scrollController) => Center(
           child: FutureBuilder<List<SessionDocument>>(
@@ -80,7 +84,7 @@ class _GrandPrixRunningScreenState extends State<GrandPrixRunningScreen> {
                         controller: scrollController,
                         itemBuilder: (context, index) => index == 0
                             ? Padding(
-                                padding: EdgeInsets.all(40),
+                                padding: const EdgeInsets.all(40),
                                 child: Center(
                                   child: Text(
                                     "Grand-Prix documents",
@@ -108,7 +112,7 @@ class _GrandPrixRunningScreenState extends State<GrandPrixRunningScreen> {
                                           ),
                                 child: Card(
                                   color: useDarkMode
-                                      ? Color.fromARGB(255, 45, 45, 58)
+                                      ? const Color.fromARGB(255, 45, 45, 58)
                                       : Colors.white,
                                   elevation: 5,
                                   child: ListTile(
@@ -140,7 +144,7 @@ class _GrandPrixRunningScreenState extends State<GrandPrixRunningScreen> {
                               ),
                       )
                     : Padding(
-                        padding: EdgeInsets.all(15),
+                        padding: const EdgeInsets.all(15),
                         child: Center(
                           child: Text(
                             "Grand-Prix documents",
@@ -158,15 +162,15 @@ class _GrandPrixRunningScreenState extends State<GrandPrixRunningScreen> {
             CachedNetworkImage(
               imageUrl:
                   'https://www.formula1.com/content/dam/fom-website/2018-redesign-assets/Racehub%20header%20images%2016x9/$meetingName.jpg.transform/12col/image.jpg',
-              placeholder: (context, url) => Container(
+              placeholder: (context, url) => const SizedBox(
                 height: 200,
                 child: LoadingIndicatorUtil(),
               ),
-              errorWidget: (context, url, error) => Icon(
+              errorWidget: (context, url, error) => const Icon(
                 Icons.error_outlined,
               ),
-              fadeOutDuration: Duration(seconds: 1),
-              fadeInDuration: Duration(seconds: 1),
+              fadeOutDuration: const Duration(seconds: 1),
+              fadeInDuration: const Duration(seconds: 1),
               fit: BoxFit.scaleDown,
             ),
             SessionItem(
@@ -268,9 +272,11 @@ class SessionItem extends StatefulWidget {
   const SessionItem(
     this.session,
     this.raceId,
-    this.meetingCountryName,
-  );
-  _SessionItemState createState() => _SessionItemState();
+    this.meetingCountryName, {
+    Key? key,
+  }) : super(key: key);
+  @override
+  State<SessionItem> createState() => _SessionItemState();
 }
 
 class _SessionItemState extends State<SessionItem> {
@@ -321,7 +327,7 @@ class _SessionItemState extends State<SessionItem> {
     String endTime = '$endTimeHour:$endTimeMinute';
     return GestureDetector(
       child: Container(
-        padding: EdgeInsets.only(top: 10),
+        padding: const EdgeInsets.only(top: 10),
         height: 70,
         child: Row(
           children: [
@@ -332,14 +338,16 @@ class _SessionItemState extends State<SessionItem> {
                   Text(
                     widget.session.startTime.day.toString(),
                     style: TextStyle(
-                      color: useDarkMode ? Colors.white : Color(0xff171717),
+                      color:
+                          useDarkMode ? Colors.white : const Color(0xff171717),
                       fontSize: 18,
                     ),
                   ),
                   Text(
                     months[widget.session.startTime.month - 1],
                     style: TextStyle(
-                      color: useDarkMode ? Colors.white : Color(0xff171717),
+                      color:
+                          useDarkMode ? Colors.white : const Color(0xff171717),
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
                     ),
@@ -365,7 +373,8 @@ class _SessionItemState extends State<SessionItem> {
                   Text(
                     sessionsAbbreviations[widget.session.sessionsAbbreviation],
                     style: TextStyle(
-                      color: useDarkMode ? Colors.white : Color(0xff171717),
+                      color:
+                          useDarkMode ? Colors.white : const Color(0xff171717),
                       fontSize: 20,
                     ),
                   ),
@@ -374,7 +383,7 @@ class _SessionItemState extends State<SessionItem> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Padding(
-                              padding: EdgeInsets.only(
+                              padding: const EdgeInsets.only(
                                 right: 10,
                                 top: 5,
                               ),
@@ -385,7 +394,7 @@ class _SessionItemState extends State<SessionItem> {
                                   FontAwesomeIcons.flagCheckered,
                                   color: useDarkMode
                                       ? Colors.white
-                                      : Color(0xff171717),
+                                      : const Color(0xff171717),
                                 ),
                               ),
                             ),
@@ -395,7 +404,7 @@ class _SessionItemState extends State<SessionItem> {
                               style: TextStyle(
                                 color: useDarkMode
                                     ? Colors.white
-                                    : Color(0xff171717),
+                                    : const Color(0xff171717),
                               ),
                             ),
                           ],
@@ -405,7 +414,7 @@ class _SessionItemState extends State<SessionItem> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Padding(
-                                  padding: EdgeInsets.only(
+                                  padding: const EdgeInsets.only(
                                     right: 5,
                                     top: 5,
                                   ),
@@ -428,7 +437,7 @@ class _SessionItemState extends State<SessionItem> {
                                   style: TextStyle(
                                     color: useDarkMode
                                         ? Colors.white
-                                        : Color(0xff171717),
+                                        : const Color(0xff171717),
                                   ),
                                 ),
                               ],
@@ -438,7 +447,7 @@ class _SessionItemState extends State<SessionItem> {
                               style: TextStyle(
                                 color: useDarkMode
                                     ? Colors.white
-                                    : Color(0xff171717),
+                                    : const Color(0xff171717),
                                 fontSize: 17,
                               ),
                             ),

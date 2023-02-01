@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 /*
  *  This file is part of BoxBox (https://github.com/BrightDV/BoxBox).
  * 
@@ -24,12 +26,12 @@ import 'package:signalr_flutter/signalr_api.dart';
 import 'package:signalr_flutter/signalr_flutter.dart';
 
 class SignalRClientScreen extends StatefulWidget {
-  SignalRClientScreen({
+  const SignalRClientScreen({
     Key? key,
   }) : super(key: key);
 
   @override
-  _SignalRClientScreenState createState() => _SignalRClientScreenState();
+  State<SignalRClientScreen> createState() => _SignalRClientScreenState();
 }
 
 class _SignalRClientScreenState extends State<SignalRClientScreen> {
@@ -62,7 +64,7 @@ class _SignalRClientScreenState extends State<SignalRClientScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("SignalR Client"),
+        title: const Text("SignalR Client"),
       ),
       body: Center(
         child: Column(

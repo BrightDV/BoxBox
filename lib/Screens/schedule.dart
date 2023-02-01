@@ -29,7 +29,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 class ScheduleScreen extends StatelessWidget {
   final ScrollController? scrollController;
-  const ScheduleScreen({this.scrollController});
+  const ScheduleScreen({Key? key, this.scrollController}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -54,8 +54,8 @@ class ScheduleScreen extends StatelessWidget {
           ],
         ),
         appBar: PreferredSize(
-          preferredSize: Size(200, 100),
-          child: Container(
+          preferredSize: const Size(200, 100),
+          child: SizedBox(
             height: 50,
             child: Card(
               elevation: 3,
@@ -64,13 +64,13 @@ class ScheduleScreen extends StatelessWidget {
                 tabs: [
                   Text(
                     AppLocalizations.of(context)!.previous,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                   Text(
                     AppLocalizations.of(context)!.next,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -87,7 +87,7 @@ class ScheduleScreen extends StatelessWidget {
 class ScheduleWidget extends StatelessWidget {
   final bool toCome;
   final ScrollController? scrollController;
-  ScheduleWidget(
+  const ScheduleWidget(
     this.toCome, {
     Key? key,
     this.scrollController,
@@ -104,7 +104,7 @@ class ScheduleWidget extends StatelessWidget {
     return FutureBuilder<List<Race>>(
       future: getRacesList(toCome),
       builder: (context, snapshot) {
-        if (snapshot.hasError)
+        if (snapshot.hasError) {
           schedule['MRData'] != null
               ? RacesList(
                   ErgastApi().formatLastSchedule(
@@ -115,9 +115,10 @@ class ScheduleWidget extends StatelessWidget {
                   scrollController: scrollController,
                 )
               : RequestErrorWidget(snapshot.error.toString());
+        }
         return snapshot.hasData
-            ? snapshot.data!.length == 0
-                ? EmptySchedule()
+            ? snapshot.data!.isEmpty
+                ? const EmptySchedule()
                 : RacesList(
                     snapshot.data!,
                     toCome,
@@ -130,7 +131,7 @@ class ScheduleWidget extends StatelessWidget {
                           toCome,
                         )
                         .isEmpty
-                    ? EmptySchedule()
+                    ? const EmptySchedule()
                     : RacesList(
                         ErgastApi().formatLastSchedule(
                           schedule,
@@ -139,7 +140,7 @@ class ScheduleWidget extends StatelessWidget {
                         toCome,
                         scrollController: scrollController,
                       )
-                : LoadingIndicatorUtil();
+                : const LoadingIndicatorUtil();
       },
     );
   }

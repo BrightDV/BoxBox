@@ -23,9 +23,9 @@ import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
   final ScrollController _scrollController;
-  HomeScreen(this._scrollController);
+  const HomeScreen(this._scrollController, {Key? key}) : super(key: key);
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
@@ -39,8 +39,8 @@ class _HomeScreenState extends State<HomeScreen> {
     return SingleChildScrollView(
       child: Column(
         children: <Widget>[
-          LiveSessionStatusIndicator(),
-          Container(
+          const LiveSessionStatusIndicator(),
+          SizedBox(
             height: MediaQuery.of(context).size.height - 60,
             child: NewsFeedWidget(scrollController: widget._scrollController),
           ),

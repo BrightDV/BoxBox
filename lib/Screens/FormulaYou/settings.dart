@@ -24,7 +24,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 class FormulaYouSettingsScreen extends StatefulWidget {
   final Function? update;
-  const FormulaYouSettingsScreen({this.update});
+  const FormulaYouSettingsScreen({Key? key, this.update}) : super(key: key);
 
   @override
   State<FormulaYouSettingsScreen> createState() =>
@@ -47,7 +47,7 @@ class _FormulaYouSettingsScreenState extends State<FormulaYouSettingsScreen> {
       appBar: AppBar(
         title: Text(
           AppLocalizations.of(context)!.formulaYouSettings,
-          style: TextStyle(
+          style: const TextStyle(
             fontWeight: FontWeight.w600,
             fontSize: 18,
           ),
@@ -67,6 +67,8 @@ class _FormulaYouSettingsScreenState extends State<FormulaYouSettingsScreen> {
                             ? AppLocalizations.of(context)!.topics.capitalize()
                             : AppLocalizations.of(context)!.other.capitalize(),
               ),
+              collapsedIconColor: useDarkMode ? Colors.white : Colors.black,
+              collapsedTextColor: useDarkMode ? Colors.white : Colors.black,
               children: [
                 for (String key in availableTags[i].keys.toList()..sort())
                   Theme(
@@ -95,8 +97,6 @@ class _FormulaYouSettingsScreenState extends State<FormulaYouSettingsScreen> {
                     ),
                   ),
               ],
-              collapsedIconColor: useDarkMode ? Colors.white : Colors.black,
-              collapsedTextColor: useDarkMode ? Colors.white : Colors.black,
             ),
         ],
       ),
@@ -106,6 +106,6 @@ class _FormulaYouSettingsScreenState extends State<FormulaYouSettingsScreen> {
 
 extension StringExtension on String {
   String capitalize() {
-    return "${this[0].toUpperCase()}${this.substring(1).toLowerCase()}";
+    return "${this[0].toUpperCase()}${substring(1).toLowerCase()}";
   }
 }

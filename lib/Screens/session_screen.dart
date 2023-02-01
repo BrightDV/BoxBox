@@ -37,11 +37,10 @@ class SessionScreen extends StatefulWidget {
   final String sessionFullName;
   final Session session;
 
-  const SessionScreen(
-    this.sessionFullName,
-    this.session,
-  );
-  _SessionScreenState createState() => _SessionScreenState();
+  const SessionScreen(this.sessionFullName, this.session, {Key? key})
+      : super(key: key);
+  @override
+  State<SessionScreen> createState() => _SessionScreenState();
 }
 
 class _SessionScreenState extends State<SessionScreen> {
@@ -70,7 +69,7 @@ class _SessionScreenState extends State<SessionScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Padding(
-                    padding: EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(10),
                     child: Center(
                       child: Text(
                         AppLocalizations.of(context)!.sessionStartsIn,
@@ -135,7 +134,7 @@ class _SessionScreenState extends State<SessionScreen> {
             appBar: AppBar(
               title: Text(
                 widget.sessionFullName,
-                style: TextStyle(
+                style: const TextStyle(
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -149,7 +148,7 @@ class _SessionScreenState extends State<SessionScreen> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Padding(
-                        padding: EdgeInsets.all(10),
+                        padding: const EdgeInsets.all(10),
                         child: Center(
                           child: Text(
                             AppLocalizations.of(context)!.sessionStartsIn,
@@ -213,7 +212,7 @@ class _SessionScreenState extends State<SessionScreen> {
                                   .replaceAll('session-type', 'qualifying'),
                             ),
                           )
-                    : WebView(
+                    : const WebView(
                         javascriptMode: JavascriptMode.unrestricted,
                         initialUrl:
                             'https://www.formula1.com/en/live-experience-webview.html',
@@ -224,7 +223,8 @@ class _SessionScreenState extends State<SessionScreen> {
 
 class SessionFeed extends StatefulWidget {
   const SessionFeed({Key? key}) : super(key: key);
-  _SessionFeedState createState() => _SessionFeedState();
+  @override
+  State<SessionFeed> createState() => _SessionFeedState();
 }
 
 class _SessionFeedState extends State<SessionFeed> {
@@ -253,7 +253,7 @@ class _SessionFeedState extends State<SessionFeed> {
                       ],
                     ),
                   )
-                : LoadingIndicatorUtil();
+                : const LoadingIndicatorUtil();
       },
     );
   }
@@ -261,7 +261,7 @@ class _SessionFeedState extends State<SessionFeed> {
 
 class TrackStatus extends StatefulWidget {
   final Map sessionInfo;
-  const TrackStatus(this.sessionInfo);
+  const TrackStatus(this.sessionInfo, {Key? key}) : super(key: key);
 
   @override
   State<TrackStatus> createState() => _TrackStatusState();
@@ -293,8 +293,8 @@ class _TrackStatusState extends State<TrackStatus> {
   @override
   void initState() {
     super.initState();
-    _timer = new Timer.periodic(
-      Duration(seconds: 5),
+    _timer = Timer.periodic(
+      const Duration(seconds: 5),
       (_) => setState(() {}),
     );
   }
@@ -307,7 +307,7 @@ class _TrackStatusState extends State<TrackStatus> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: 50,
       child: FutureBuilder<Map>(
         future: LiveTiming().trackStatus(widget.sessionInfo),
@@ -320,11 +320,11 @@ class _TrackStatusState extends State<TrackStatus> {
                     child: Center(
                       child: Text(
                         trackStates[snapshot.data?['Status']],
-                        style: TextStyle(color: Colors.white),
+                        style: const TextStyle(color: Colors.white),
                       ),
                     ),
                   )
-                : LoadingIndicatorUtil(),
+                : const LoadingIndicatorUtil(),
       ),
     );
   }
@@ -332,7 +332,7 @@ class _TrackStatusState extends State<TrackStatus> {
 
 class Leaderboard extends StatefulWidget {
   final Map sessionInfo;
-  const Leaderboard(this.sessionInfo);
+  const Leaderboard(this.sessionInfo, {Key? key}) : super(key: key);
 
   @override
   State<Leaderboard> createState() => _LeaderboardState();
@@ -369,8 +369,8 @@ class _LeaderboardState extends State<Leaderboard> {
   @override
   void initState() {
     super.initState();
-    _timer = new Timer.periodic(
-      Duration(seconds: 2),
+    _timer = Timer.periodic(
+      const Duration(seconds: 2),
       (_) => setState(() {}),
     );
   }
@@ -395,106 +395,99 @@ class _LeaderboardState extends State<Leaderboard> {
             List drivers = snapshot.data!.keys.toList();
             List driversResults = [];
             if (widget.sessionInfo['Path'].endsWith('Race/')) {
-              drivers.forEach(
-                (element) {
-                  snapshot.data![element.toString()]['Line'] == 1
-                      ? driversResults.add(
-                          DriverResult(
-                            numberToPilot[element.toString()][0],
-                            snapshot.data![element]['Line'].toString(),
-                            element.toString(),
-                            numberToPilot[element.toString()][1],
-                            numberToPilot[element.toString()][2],
-                            numberToPilot[element.toString()][3],
-                            numberToPilot[element.toString()][4],
-                            snapshot.data![element]['Retired']
-                                ? 'DNF'
-                                : snapshot.data![element]['InPit']
-                                    ? 'PIT'
-                                    : snapshot.data![element]['PitOut']
-                                        ? 'PIT OUT'
-                                        : snapshot.data![element]['GapToLeader']
-                                            .toString(),
-                            false,
-                            snapshot.data![element]['BestLapTime']['Value'],
-                            snapshot.data![element]['BestLapTime']['Lap'],
-                            lapsDone: snapshot.data![element]['NumberOfLaps'],
-                          ),
-                        )
-                      : driversResults.add(
-                          DriverResult(
-                            numberToPilot[element.toString()][0],
-                            snapshot.data![element]['Line'].toString(),
-                            element.toString(),
-                            numberToPilot[element.toString()][1],
-                            numberToPilot[element.toString()][2],
-                            numberToPilot[element.toString()][3],
-                            numberToPilot[element.toString()][4],
-                            snapshot.data![element]['TimeDiffToPositionAhead']
-                                .toString(),
-                            snapshot.data![element]['PersonalBestLapTime']
-                                        ['Position'] ==
-                                    1
-                                ? true
-                                : false,
-                            snapshot.data![element]['PersonalBestLapTime']
-                                ['Value'],
-                            snapshot.data![element]['PersonalBestLapTime']
-                                ['Lap'],
-                          ),
-                        );
-                },
-              );
+              for (var element in drivers) {
+                snapshot.data![element.toString()]['Line'] == 1
+                    ? driversResults.add(
+                        DriverResult(
+                          numberToPilot[element.toString()][0],
+                          snapshot.data![element]['Line'].toString(),
+                          element.toString(),
+                          numberToPilot[element.toString()][1],
+                          numberToPilot[element.toString()][2],
+                          numberToPilot[element.toString()][3],
+                          numberToPilot[element.toString()][4],
+                          snapshot.data![element]['Retired']
+                              ? 'DNF'
+                              : snapshot.data![element]['InPit']
+                                  ? 'PIT'
+                                  : snapshot.data![element]['PitOut']
+                                      ? 'PIT OUT'
+                                      : snapshot.data![element]['GapToLeader']
+                                          .toString(),
+                          false,
+                          snapshot.data![element]['BestLapTime']['Value'],
+                          snapshot.data![element]['BestLapTime']['Lap'],
+                          lapsDone: snapshot.data![element]['NumberOfLaps'],
+                        ),
+                      )
+                    : driversResults.add(
+                        DriverResult(
+                          numberToPilot[element.toString()][0],
+                          snapshot.data![element]['Line'].toString(),
+                          element.toString(),
+                          numberToPilot[element.toString()][1],
+                          numberToPilot[element.toString()][2],
+                          numberToPilot[element.toString()][3],
+                          numberToPilot[element.toString()][4],
+                          snapshot.data![element]['TimeDiffToPositionAhead']
+                              .toString(),
+                          snapshot.data![element]['PersonalBestLapTime']
+                                      ['Position'] ==
+                                  1
+                              ? true
+                              : false,
+                          snapshot.data![element]['PersonalBestLapTime']
+                              ['Value'],
+                          snapshot.data![element]['PersonalBestLapTime']['Lap'],
+                        ),
+                      );
+              }
             } else {
-              drivers.forEach(
-                (element) {
-                  snapshot.data![element.toString()]['Line'] == 1
-                      ? driversResults.add(
-                          DriverResult(
-                            numberToPilot[element.toString()][0],
-                            snapshot.data![element]['Line'].toString(),
-                            element.toString(),
-                            numberToPilot[element.toString()][1],
-                            numberToPilot[element.toString()][2],
-                            numberToPilot[element.toString()][3],
-                            numberToPilot[element.toString()][4],
-                            snapshot.data![element]['BestLapTime']['Value']
-                                .toString(),
-                            snapshot.data![element]['PersonalBestLapTime']
-                                        ['Position'] ==
-                                    1
-                                ? true
-                                : false,
-                            snapshot.data![element]['PersonalBestLapTime']
-                                ['Value'],
-                            snapshot.data![element]['PersonalBestLapTime']
-                                ['Lap'],
-                          ),
-                        )
-                      : driversResults.add(
-                          DriverResult(
-                            numberToPilot[element.toString()][0],
-                            snapshot.data![element]['Line'].toString(),
-                            element.toString(),
-                            numberToPilot[element.toString()][1],
-                            numberToPilot[element.toString()][2],
-                            numberToPilot[element.toString()][3],
-                            numberToPilot[element.toString()][4],
-                            snapshot.data![element]['TimeDiffToFastest']
-                                .toString(),
-                            snapshot.data![element]['PersonalBestLapTime']
-                                        ['Position'] ==
-                                    1
-                                ? true
-                                : false,
-                            snapshot.data![element]['PersonalBestLapTime']
-                                ['Value'],
-                            snapshot.data![element]['PersonalBestLapTime']
-                                ['Lap'],
-                          ),
-                        );
-                },
-              );
+              for (var element in drivers) {
+                snapshot.data![element.toString()]['Line'] == 1
+                    ? driversResults.add(
+                        DriverResult(
+                          numberToPilot[element.toString()][0],
+                          snapshot.data![element]['Line'].toString(),
+                          element.toString(),
+                          numberToPilot[element.toString()][1],
+                          numberToPilot[element.toString()][2],
+                          numberToPilot[element.toString()][3],
+                          numberToPilot[element.toString()][4],
+                          snapshot.data![element]['BestLapTime']['Value']
+                              .toString(),
+                          snapshot.data![element]['PersonalBestLapTime']
+                                      ['Position'] ==
+                                  1
+                              ? true
+                              : false,
+                          snapshot.data![element]['PersonalBestLapTime']
+                              ['Value'],
+                          snapshot.data![element]['PersonalBestLapTime']['Lap'],
+                        ),
+                      )
+                    : driversResults.add(
+                        DriverResult(
+                          numberToPilot[element.toString()][0],
+                          snapshot.data![element]['Line'].toString(),
+                          element.toString(),
+                          numberToPilot[element.toString()][1],
+                          numberToPilot[element.toString()][2],
+                          numberToPilot[element.toString()][3],
+                          numberToPilot[element.toString()][4],
+                          snapshot.data![element]['TimeDiffToFastest']
+                              .toString(),
+                          snapshot.data![element]['PersonalBestLapTime']
+                                      ['Position'] ==
+                                  1
+                              ? true
+                              : false,
+                          snapshot.data![element]['PersonalBestLapTime']
+                              ['Value'],
+                          snapshot.data![element]['PersonalBestLapTime']['Lap'],
+                        ),
+                      );
+              }
             }
 
             driversResults.sort((a, b) {
@@ -504,7 +497,7 @@ class _LeaderboardState extends State<Leaderboard> {
             return ListView.builder(
               shrinkWrap: true,
               itemCount: drivers.length,
-              physics: BouncingScrollPhysics(),
+              physics: const BouncingScrollPhysics(),
               itemBuilder: (context, index) {
                 return DriverResultItem(
                   driversResults[index],
@@ -513,7 +506,7 @@ class _LeaderboardState extends State<Leaderboard> {
               },
             );
           } else {
-            return LoadingIndicatorUtil();
+            return const LoadingIndicatorUtil();
           }
         }
       },
@@ -531,8 +524,8 @@ class WeatherPopup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new AlertDialog(
-      title: Center(
+    return AlertDialog(
+      title: const Center(
         child: Text('MÉTÉO'),
       ),
       content: FutureBuilder<Map>(
@@ -555,10 +548,10 @@ class WeatherPopup extends StatelessWidget {
                           'Direction du vent: ${snapshot.data!["WindDirection"]}°'),
                     ],
                   )
-                : LoadingIndicatorUtil(),
+                : const LoadingIndicatorUtil(),
       ),
       actions: <Widget>[
-        new TextButton(
+        TextButton(
           onPressed: () {
             Navigator.of(context).pop();
           },
@@ -579,8 +572,6 @@ class EventsFeed extends StatefulWidget {
 class _EventsFeedState extends State<EventsFeed> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Text('Radios'),
-    );
+    return const Text('Radios');
   }
 }

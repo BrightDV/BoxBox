@@ -36,10 +36,10 @@ class FIAScraper {
     http.Response response = await http.get(latestDocumentsUrl);
     dom.Document document = parser.parse(response.body);
     List<SessionDocument> documents = [];
-    List<dom.Element> _tempResult = document
+    List<dom.Element> tempResult = document
         .getElementsByClassName('event-wrapper')[0]
         .getElementsByClassName('document-row');
-    _tempResult.forEach((document) {
+    for (var document in tempResult) {
       if (document.firstChild!.nodeType == 3) {
         documents.add(
           SessionDocument(
@@ -58,7 +58,7 @@ class FIAScraper {
           ),
         );
       }
-    });
+    }
     return documents;
   }
 }

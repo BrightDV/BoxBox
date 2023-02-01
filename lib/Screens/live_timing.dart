@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 /*
  *  This file is part of BoxBox (https://github.com/BrightDV/BoxBox).
  * 
@@ -33,7 +35,7 @@ class LiveTimingScreen extends StatefulWidget {
 
 class _LiveTimingScreenState extends State<LiveTimingScreen> {
   late Timer timer;
-  Duration initialDuration = Duration(hours: 00, minutes: 0, seconds: 0);
+  Duration initialDuration = const Duration(hours: 00, minutes: 0, seconds: 0);
   double sliderValue = 0;
   List driverNumbers = [
     "1",
@@ -100,15 +102,15 @@ class _LiveTimingScreenState extends State<LiveTimingScreen> {
     if ((lapCount != {}) && (totalLaps != 0)) {
       return Text("LAP ${lapCount['CurrentLap'].toString()} / $totalLaps");
     } else {
-      return Text("LAP .. / ..");
+      return const Text("LAP .. / ..");
     }
   }
 
   Widget _updateTimingData(Map snapshotData, String currentDurationFormated) {
     if (snapshotData[currentDurationFormated] != null) {
-      if (snapshotData[currentDurationFormated][0]['Withheld'] != null)
+      if (snapshotData[currentDurationFormated][0]['Withheld'] != null) {
         timingData = snapshotData[currentDurationFormated][0];
-      else {
+      } else {
         // other ossible events
         // {"Lines":{"47":{"Sectors":{"0":{"Segments":{"1":{"Status":0},"2":{"Status":0},"3":{"Status":0},"4":{"Status":0}}},"1":{"Segments":{"0":{"Status":0},"1":{"Status":0},"2":{"Status":0},"3":{"Status":0},"4":{"Status":0},"5":{"Status":0},"6":{"Status":0},"7":{"Status":0},"8":{"Status":0}}},"2":{"Segments":{"0":{"Status":0},"1":{"Status":0},"2":{"Status":0},"3":{"Status":0},"4":{"Status":0},"5":{"Status":0},"6":{"Status":0},"7":{"Status":0},"8":{"Status":0}}}}}}}
         //
@@ -144,10 +146,11 @@ class _LiveTimingScreenState extends State<LiveTimingScreen> {
                           [0]['Status'] !=
                       null)) {
                 // first values sent, they initiate the Segments' matrix
-                for (int i = 0; i < 3; i++)
+                for (int i = 0; i < 3; i++) {
                   timingData['Lines'][driverNumber]['Sectors'][i]['Segments'] =
                       element['Lines'][driverNumber]['Sectors'][sector]
                           ['Segments'][i];
+                }
               } else if (element['Lines'][driverNumber]['Sectors'][sector]
                       ['Segments'] !=
                   null) {
@@ -211,7 +214,7 @@ class _LiveTimingScreenState extends State<LiveTimingScreen> {
   void initState() {
     super.initState();
     timer = Timer.periodic(
-      Duration(seconds: 1),
+      const Duration(seconds: 1),
       (Timer t) => setState(
         () {},
       ),
@@ -231,14 +234,14 @@ class _LiveTimingScreenState extends State<LiveTimingScreen> {
     );
     if (currentDuration.inSeconds >= 10800) {
       // avoid going above 3 hours
-      currentDuration = Duration(seconds: 10800);
+      currentDuration = const Duration(seconds: 10800);
     }
     String currentDurationFormated =
         "${currentDuration.inHours.toString().padLeft(2, '0')}:${currentDuration.inMinutes.remainder(60).toString().padLeft(2, '0')}:${currentDuration.inSeconds.remainder(60).toString().padLeft(2, '0')}";
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Live Timing Archive'),
+        title: const Text('Live Timing Archive'),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -271,7 +274,7 @@ class _LiveTimingScreenState extends State<LiveTimingScreen> {
                             snapshot.data!,
                             currentDurationFormated,
                           )
-                        : LoadingIndicatorUtil(),
+                        : const LoadingIndicatorUtil(),
               ),
             ),
             FutureBuilder<Map>(
@@ -286,7 +289,7 @@ class _LiveTimingScreenState extends State<LiveTimingScreen> {
                             snapshot.data!,
                             currentDurationFormated,
                           )
-                        : LoadingIndicatorUtil(),
+                        : const LoadingIndicatorUtil(),
               ),
             ),
             FutureBuilder<Map>(
@@ -301,7 +304,7 @@ class _LiveTimingScreenState extends State<LiveTimingScreen> {
                             snapshot.data!,
                             currentDurationFormated,
                           )
-                        : LoadingIndicatorUtil(),
+                        : const LoadingIndicatorUtil(),
               ),
             ),
           ],
@@ -346,10 +349,10 @@ class _LeaderboardState extends State<Leaderboard> {
   @override
   Widget build(BuildContext context) {
     if (widget.items.isEmpty) {
-      return LoadingIndicatorUtil();
+      return const LoadingIndicatorUtil();
     } else {
       if (widget.items['Lines'] == null) {
-        return LoadingIndicatorUtil();
+        return const LoadingIndicatorUtil();
       } else {
         List values = widget.items['Lines'].values.toList();
         values.sort(

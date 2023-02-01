@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 /*
  *  This file is part of BoxBox (https://github.com/BrightDV/BoxBox).
  * 
@@ -24,7 +26,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:marquee/marquee.dart';
 
 class LiveSessionStatusIndicator extends StatelessWidget {
-  LiveSessionStatusIndicator({Key? key}) : super(key: key);
+  const LiveSessionStatusIndicator({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     Event? eventTrackerSavedRequest;
@@ -54,7 +56,7 @@ class LiveSessionStatusIndicator extends StatelessWidget {
   Widget eventTrackerError(String snapshotError) {
     print("Live Session Status Indicator Error");
     print(snapshotError);
-    return Container(
+    return const SizedBox(
       height: 0.0,
       width: 0.0,
     );
@@ -73,7 +75,7 @@ class EventTrackerItem extends StatelessWidget {
     return GestureDetector(
       child: Container(
         height: 138,
-        color: useDarkMode ? Color(0xff1d1d28) : Colors.white,
+        color: useDarkMode ? const Color(0xff1d1d28) : Colors.white,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -82,11 +84,11 @@ class EventTrackerItem extends StatelessWidget {
             Row(
               children: [
                 Padding(
-                  padding: EdgeInsets.only(
+                  padding: const EdgeInsets.only(
                     left: 10,
                     right: 10,
                   ),
-                  child: Container(
+                  child: SizedBox(
                     width: 120,
                     child: Image.network(
                       event.circuitImage,
@@ -94,13 +96,13 @@ class EventTrackerItem extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.all(5),
+                  padding: const EdgeInsets.all(5),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         event.meetingCountryName,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 18,
                           color: Colors.white,
                           fontWeight: FontWeight.w500,
@@ -110,13 +112,13 @@ class EventTrackerItem extends StatelessWidget {
                         width: MediaQuery.of(context).size.width - 150,
                         height: 20,
                         child: Marquee(
-                          text: '${event.meetingOfficialName}',
-                          style: TextStyle(
+                          text: event.meetingOfficialName,
+                          style: const TextStyle(
                             fontSize: 12,
                             color: Colors.white,
                           ),
-                          pauseAfterRound: Duration(seconds: 1),
-                          startAfter: Duration(seconds: 1),
+                          pauseAfterRound: const Duration(seconds: 1),
+                          startAfter: const Duration(seconds: 1),
                           velocity: 85,
                           blankSpace: 100,
                         ),
@@ -127,14 +129,14 @@ class EventTrackerItem extends StatelessWidget {
               ],
             ),
             Padding(
-              padding: EdgeInsets.only(
+              padding: const EdgeInsets.only(
                 left: 5,
                 right: 5,
               ),
-              child: Container(
+              child: SizedBox(
                 width: double.infinity,
                 child: ClipRRect(
-                  borderRadius: BorderRadius.only(
+                  borderRadius: const BorderRadius.only(
                     topLeft: Radius.zero,
                     topRight: Radius.zero,
                     bottomLeft: Radius.circular(15),
@@ -147,25 +149,25 @@ class EventTrackerItem extends StatelessWidget {
                         builder: (context) => GrandPrixRunningScreen(event),
                       ),
                     ),
+                    style: ElevatedButton.styleFrom(
+                      shape: const ContinuousRectangleBorder(
+                        borderRadius: BorderRadius.zero,
+                      ),
+                    ),
                     child: Row(
                       children: [
-                        Text(
+                        const Text(
                           'RACE HUB',
                           style: TextStyle(
                             color: Colors.white,
                           ),
                         ),
-                        Spacer(),
+                        const Spacer(),
                         Icon(
                           Icons.arrow_forward_rounded,
                           color: useDarkMode ? Colors.white : Colors.black,
                         ),
                       ],
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      shape: ContinuousRectangleBorder(
-                        borderRadius: BorderRadius.zero,
-                      ),
                     ),
                   ),
                 ),

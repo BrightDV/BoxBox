@@ -36,7 +36,10 @@ class HandleRoute {
 
 class ArticleUrlHandler extends StatelessWidget {
   final String sharedUrl;
-  const ArticleUrlHandler(this.sharedUrl, {Key? key});
+  const ArticleUrlHandler(
+    this.sharedUrl, {
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +62,7 @@ class ArticleUrlHandler extends StatelessWidget {
             AppLocalizations.of(context)!.schedule,
           ),
         ),
-        body: ScheduleScreen(),
+        body: const ScheduleScreen(),
       );
     } else if (url == '/en/results.html/$year/drivers') {
       return Scaffold(
@@ -68,7 +71,7 @@ class ArticleUrlHandler extends StatelessWidget {
             AppLocalizations.of(context)!.schedule,
           ),
         ),
-        body: StandingsScreen(),
+        body: const StandingsScreen(),
       );
     } else if (url == '/en/results.html/$year/teams') {
       return Scaffold(
@@ -77,22 +80,23 @@ class ArticleUrlHandler extends StatelessWidget {
             AppLocalizations.of(context)!.schedule,
           ),
         ),
-        body: StandingsScreen(
+        body: const StandingsScreen(
           switchToTeamStandings: true,
         ),
       );
-    } else
+    } else {
       return Scaffold(
         appBar: AppBar(
-          title: Text('Intent'),
+          title: const Text('Intent'),
         ),
         body: Center(
           child: Padding(
-            padding: EdgeInsets.all(15),
+            padding: const EdgeInsets.all(15),
             child: SelectableText(
                 'Url shared: $url\nYou can make an issue on github to ask that the application can open this link.'),
           ),
         ),
       );
+    }
   }
 }

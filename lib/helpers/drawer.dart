@@ -34,10 +34,10 @@ import 'package:package_info_plus/package_info_plus.dart';
 
 class MainDrawer extends StatefulWidget {
   final Function homeSetState;
-  const MainDrawer(this.homeSetState);
+  const MainDrawer(this.homeSetState, {Key? key}) : super(key: key);
 
   @override
-  _MainDrawerState createState() => _MainDrawerState();
+  State<MainDrawer> createState() => _MainDrawerState();
 }
 
 class _MainDrawerState extends State<MainDrawer> {
@@ -57,7 +57,10 @@ class _MainDrawerState extends State<MainDrawer> {
         child: Column(
           children: [
             DrawerHeader(
-              child: Center(
+              decoration: BoxDecoration(
+                color: Theme.of(context).primaryColor,
+              ),
+              child: const Center(
                 child: Text(
                   'Box, Box!',
                   style: TextStyle(
@@ -66,9 +69,6 @@ class _MainDrawerState extends State<MainDrawer> {
                     fontWeight: FontWeight.w700,
                   ),
                 ),
-              ),
-              decoration: BoxDecoration(
-                color: Theme.of(context).primaryColor,
               ),
             ),
             ListTile(
@@ -87,7 +87,7 @@ class _MainDrawerState extends State<MainDrawer> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => PersonalizedHomeScreen(),
+                    builder: (context) => const PersonalizedHomeScreen(),
                   ),
                 );
               },
@@ -108,7 +108,7 @@ class _MainDrawerState extends State<MainDrawer> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => MixedNewsScreen(),
+                    builder: (context) => const MixedNewsScreen(),
                   ),
                 );
               },
@@ -129,7 +129,7 @@ class _MainDrawerState extends State<MainDrawer> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => HallOfFameScreen(),
+                    builder: (context) => const HallOfFameScreen(),
                   ),
                 );
               },
@@ -150,7 +150,7 @@ class _MainDrawerState extends State<MainDrawer> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => HistoryScreen(),
+                    builder: (context) => const HistoryScreen(),
                   ),
                 );
               },
@@ -171,7 +171,7 @@ class _MainDrawerState extends State<MainDrawer> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => LinksScreen(),
+                    builder: (context) => const LinksScreen(),
                   ),
                 );
               },
@@ -215,7 +215,7 @@ class _MainDrawerState extends State<MainDrawer> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => AboutScreen(),
+                    builder: (context) => const AboutScreen(),
                   ),
                 );
               },
@@ -237,7 +237,7 @@ class _MainDrawerState extends State<MainDrawer> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => SignalRClientScreen(),
+                          builder: (context) => const SignalRClientScreen(),
                         ),
                       );
                     },
@@ -260,7 +260,7 @@ class _MainDrawerState extends State<MainDrawer> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => LiveTimingScreen(),
+                          builder: (context) => const LiveTimingScreen(),
                         ),
                       );
                     },
@@ -283,7 +283,7 @@ class _MainDrawerState extends State<MainDrawer> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => TestScreen(),
+                          builder: (context) => const TestScreen(),
                         ),
                       );
                     },
@@ -296,7 +296,7 @@ class _MainDrawerState extends State<MainDrawer> {
                   future: PackageInfo.fromPlatform(),
                   builder: (context, snapshot) => snapshot.hasData
                       ? Padding(
-                          padding: EdgeInsets.only(bottom: 10),
+                          padding: const EdgeInsets.only(bottom: 10),
                           child: Text(
                             snapshot.data!.version,
                             style: TextStyle(
@@ -304,7 +304,7 @@ class _MainDrawerState extends State<MainDrawer> {
                             ),
                           ),
                         )
-                      : Text(''),
+                      : const Text(''),
                 ),
               ),
             ),

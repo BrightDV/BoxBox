@@ -63,28 +63,30 @@ class _WordpressScreenState extends State<WordpressScreen> {
 class WordspressNewsItem extends StatelessWidget {
   final Map item;
 
-  WordspressNewsItem(
-    this.item,
-  );
+  const WordspressNewsItem(
+    this.item, {
+    Key? key,
+  }) : super(key: key);
 
+  @override
   Widget build(BuildContext context) {
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     String newsLayout =
         Hive.box('settings').get('newsLayout', defaultValue: 'big') as String;
-    Offset _tapPosition = Offset.zero;
+    Offset tapPosition = Offset.zero;
 
-    void _storePosition(TapDownDetails details) {
-      _tapPosition = details.globalPosition;
+    void storePosition(TapDownDetails details) {
+      tapPosition = details.globalPosition;
     }
 
-    void _showDetailsMenu() {
+    void showDetailsMenu() {
       final RenderObject overlay =
           Overlay.of(context)!.context.findRenderObject()!;
 
       showMenu(
         context: context,
-        color: useDarkMode ? Color(0xff1d1d28) : Colors.white,
+        color: useDarkMode ? const Color(0xff1d1d28) : Colors.white,
         items: <PopupMenuEntry<int>>[
           PopupMenuItem(
             value: 0,
@@ -94,7 +96,7 @@ class WordspressNewsItem extends StatelessWidget {
                   Icons.language_outlined,
                   color: useDarkMode ? Colors.white : Colors.black,
                 ),
-                Padding(
+                const Padding(
                   padding: EdgeInsets.all(5),
                 ),
                 Text(
@@ -115,7 +117,7 @@ class WordspressNewsItem extends StatelessWidget {
                   Icons.share_outlined,
                   color: useDarkMode ? Colors.white : Colors.black,
                 ),
-                Padding(
+                const Padding(
                   padding: EdgeInsets.all(5),
                 ),
                 Text(
@@ -129,7 +131,7 @@ class WordspressNewsItem extends StatelessWidget {
             ),
           ),
         ],
-        position: RelativeRect.fromRect(_tapPosition & const Size(40, 40),
+        position: RelativeRect.fromRect(tapPosition & const Size(40, 40),
             Offset.zero & overlay.semanticBounds.size),
       ).then<void>(
         (int? delta) {
@@ -149,13 +151,13 @@ class WordspressNewsItem extends StatelessWidget {
     }
 
     return Padding(
-      padding: EdgeInsets.only(top: 5),
+      padding: const EdgeInsets.only(top: 5),
       child: Card(
         elevation: 10.0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15.0),
         ),
-        color: useDarkMode ? Color(0xff1d1d28) : Colors.white,
+        color: useDarkMode ? const Color(0xff1d1d28) : Colors.white,
         child: InkWell(
           onTap: () {
             Navigator.push(
@@ -173,16 +175,16 @@ class WordspressNewsItem extends StatelessWidget {
               ),
             );
           },
-          onTapDown: (position) => _storePosition(position),
+          onTapDown: (position) => storePosition(position),
           onLongPress: () {
             Feedback.forLongPress(context);
-            _showDetailsMenu();
+            showDetailsMenu();
           },
           child: Column(
             children: [
               newsLayout != 'condensed' && newsLayout != 'small'
                   ? ClipRRect(
-                      borderRadius: BorderRadius.only(
+                      borderRadius: const BorderRadius.only(
                         topLeft: Radius.circular(15),
                         topRight: Radius.circular(15),
                       ),
@@ -199,10 +201,10 @@ class WordspressNewsItem extends StatelessWidget {
                                     ? Image.network(
                                         imageSnapshot.data!,
                                       )
-                                    : LoadingIndicatorUtil(),
+                                    : const LoadingIndicatorUtil(),
                       ),
                     )
-                  : Container(
+                  : const SizedBox(
                       height: 0.0,
                       width: 0.0,
                     ),
@@ -244,7 +246,7 @@ class WordspressNewsItem extends StatelessWidget {
                       ),
               ),
               Padding(
-                padding: EdgeInsets.only(
+                padding: const EdgeInsets.only(
                   right: 16,
                   bottom: 5,
                 ),
@@ -252,7 +254,7 @@ class WordspressNewsItem extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Padding(
-                      padding: EdgeInsets.only(
+                      padding: const EdgeInsets.only(
                         right: 8,
                       ),
                       child: Icon(
@@ -289,13 +291,13 @@ class WordpressNewsList extends StatefulWidget {
   final ScrollController? scrollController;
   final String baseUrl;
 
-  WordpressNewsList(
+  const WordpressNewsList(
     this.baseUrl, {
     Key? key,
     this.scrollController,
-  });
+  }) : super(key: key);
   @override
-  _WordpressNewsListState createState() => _WordpressNewsListState();
+  State<WordpressNewsList> createState() => _WordpressNewsListState();
 }
 
 class _WordpressNewsListState extends State<WordpressNewsList> {
@@ -344,13 +346,14 @@ class _WordpressNewsListState extends State<WordpressNewsList> {
           itemBuilder: (context, item, index) {
             return WordspressNewsItem(item);
           },
-          firstPageProgressIndicatorBuilder: (_) => LoadingIndicatorUtil(),
+          firstPageProgressIndicatorBuilder: (_) =>
+              const LoadingIndicatorUtil(),
           firstPageErrorIndicatorBuilder: (_) => FirstPageExceptionIndicator(
             title: AppLocalizations.of(context)!.errorOccurred,
             message: AppLocalizations.of(context)!.errorOccurredDetails,
             onTryAgain: () => _pagingController.refresh(),
           ),
-          newPageProgressIndicatorBuilder: (_) => LoadingIndicatorUtil(),
+          newPageProgressIndicatorBuilder: (_) => const LoadingIndicatorUtil(),
         ),
       ),
     );

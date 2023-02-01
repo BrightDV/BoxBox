@@ -29,10 +29,10 @@ import 'package:hidable/hidable.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class MainBottomNavigationBar extends StatefulWidget {
-  MainBottomNavigationBar({Key? key}) : super(key: key);
+  const MainBottomNavigationBar({Key? key}) : super(key: key);
 
   @override
-  _MainBottomNavigationBarState createState() =>
+  State<MainBottomNavigationBar> createState() =>
       _MainBottomNavigationBarState();
 }
 
@@ -75,7 +75,7 @@ class _MainBottomNavigationBarState extends State<MainBottomNavigationBar> {
             : Hive.box('settings').put('darkMode', true);
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
-    List<Widget> _screens = [
+    List<Widget> screens = [
       HomeScreen(scrollController),
       StandingsScreen(scrollController: scrollController),
       ScheduleScreen(scrollController: scrollController),
@@ -88,7 +88,7 @@ class _MainBottomNavigationBarState extends State<MainBottomNavigationBar> {
           onPressed: () => Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => SearchScreen(),
+              builder: (context) => const SearchScreen(),
             ),
           ),
         ),
@@ -131,7 +131,7 @@ class _MainBottomNavigationBarState extends State<MainBottomNavigationBar> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Padding(
-                        padding: EdgeInsets.all(5),
+                        padding: const EdgeInsets.all(5),
                         child: Text(
                           AppLocalizations.of(context)!.topics,
                           textAlign: TextAlign.center,
@@ -146,7 +146,7 @@ class _MainBottomNavigationBarState extends State<MainBottomNavigationBar> {
                         children: [
                           for (String filterItem in filterItems)
                             Padding(
-                              padding: EdgeInsets.all(5),
+                              padding: const EdgeInsets.all(5),
                               child: GestureDetector(
                                 onTap: () {
                                   if (pressed ==
@@ -174,7 +174,7 @@ class _MainBottomNavigationBarState extends State<MainBottomNavigationBar> {
                                         : Colors.transparent,
                                   ),
                                   child: Padding(
-                                    padding: EdgeInsets.all(7),
+                                    padding: const EdgeInsets.all(7),
                                     child: Text(
                                       filterItem,
                                       style: TextStyle(
@@ -244,7 +244,7 @@ class _MainBottomNavigationBarState extends State<MainBottomNavigationBar> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text(
+        title: const Text(
           'Box, Box!',
           style: TextStyle(
             fontWeight: FontWeight.w700,
@@ -258,36 +258,37 @@ class _MainBottomNavigationBarState extends State<MainBottomNavigationBar> {
         controller: scrollController,
         child: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
-          backgroundColor:
-              useDarkMode ? Color.fromARGB(255, 16, 16, 24) : Colors.white,
+          backgroundColor: useDarkMode
+              ? const Color.fromARGB(255, 16, 16, 24)
+              : Colors.white,
           selectedItemColor: Theme.of(context).primaryColor,
           unselectedItemColor: useDarkMode ? Colors.white : Colors.grey[600],
           currentIndex: _selectedIndex,
           elevation: 10.0,
           items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(
-              icon: Icon(
+              icon: const Icon(
                 Icons.feed_outlined,
               ),
-              activeIcon: Icon(
+              activeIcon: const Icon(
                 Icons.feed,
               ),
               label: AppLocalizations.of(context)?.news,
             ),
             BottomNavigationBarItem(
-              icon: Icon(
+              icon: const Icon(
                 Icons.emoji_events_outlined,
               ),
-              activeIcon: Icon(
+              activeIcon: const Icon(
                 Icons.emoji_events,
               ),
               label: AppLocalizations.of(context)?.standings,
             ),
             BottomNavigationBarItem(
-              icon: Icon(
+              icon: const Icon(
                 Icons.calendar_today_outlined,
               ),
-              activeIcon: Icon(
+              activeIcon: const Icon(
                 Icons.calendar_today,
               ),
               label: AppLocalizations.of(context)?.schedule,
@@ -296,7 +297,7 @@ class _MainBottomNavigationBarState extends State<MainBottomNavigationBar> {
           onTap: _onItemTapped,
         ),
       ),
-      body: _screens.elementAt(_selectedIndex),
+      body: screens.elementAt(_selectedIndex),
       backgroundColor:
           useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
     );

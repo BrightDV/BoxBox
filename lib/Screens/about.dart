@@ -25,6 +25,8 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AboutScreen extends StatelessWidget {
+  const AboutScreen({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     bool useDarkMode =
@@ -33,7 +35,7 @@ class AboutScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           AppLocalizations.of(context)!.about,
-          style: TextStyle(
+          style: const TextStyle(
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -46,14 +48,14 @@ class AboutScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Padding(
-              padding: EdgeInsets.only(top: 10),
+              padding: const EdgeInsets.only(top: 10),
               child: Image.asset(
                 'assets/images/icon.png',
                 height: 200,
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(top: 30),
+              padding: const EdgeInsets.only(top: 30),
               child: Text(
                 'Box, Box!',
                 style: TextStyle(
@@ -67,7 +69,7 @@ class AboutScreen extends StatelessWidget {
               future: PackageInfo.fromPlatform(),
               builder: (context, snapshot) => snapshot.hasData
                   ? Padding(
-                      padding: EdgeInsets.only(
+                      padding: const EdgeInsets.only(
                         top: 10,
                         bottom: 30,
                       ),
@@ -78,10 +80,10 @@ class AboutScreen extends StatelessWidget {
                         ),
                       ),
                     )
-                  : Text(''),
+                  : const Text(''),
             ),
             Padding(
-              padding: EdgeInsets.all(10),
+              padding: const EdgeInsets.all(10),
               child: Text(
                 AppLocalizations.of(context)!.aboutDescription,
                 textAlign: TextAlign.center,
@@ -92,7 +94,7 @@ class AboutScreen extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: EdgeInsets.all(10),
+              padding: const EdgeInsets.all(10),
               child: SizedBox(
                 height: 40,
                 child: TextButton.icon(
@@ -100,10 +102,10 @@ class AboutScreen extends StatelessWidget {
                     Uri.parse("https://github.com/BrightDV/BoxBox"),
                     mode: LaunchMode.externalApplication,
                   ),
-                  icon: FaIcon(
+                  icon: const FaIcon(
                     FontAwesomeIcons.github,
                   ),
-                  label: Text(
+                  label: const Text(
                     "GitHub - Box, Box!",
                   ),
                   style: ButtonStyle(
@@ -120,7 +122,7 @@ class AboutScreen extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: EdgeInsets.all(20),
+              padding: const EdgeInsets.all(20),
               child: Text(
                 AppLocalizations.of(context)!.aboutBottomLine,
                 textAlign: TextAlign.center,

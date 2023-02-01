@@ -56,11 +56,11 @@ class GetTrackGeoJSONPoints {
     var response = await http.get(url);
     Map<String, dynamic> responseAsJson = jsonDecode(response.body);
     List trackPoints = responseAsJson["features"][0]["geometry"]["coordinates"];
-    List _tempMapCenter = responseAsJson["features"][0]["bbox"];
+    List tempMapCenter = responseAsJson["features"][0]["bbox"];
     double latitude =
-        _tempMapCenter[1] - (_tempMapCenter[1] - _tempMapCenter[3]) / 2;
+        tempMapCenter[1] - (tempMapCenter[1] - tempMapCenter[3]) / 2;
     double longitude =
-        _tempMapCenter[0] - (_tempMapCenter[0] - _tempMapCenter[2]) / 2;
+        tempMapCenter[0] - (tempMapCenter[0] - tempMapCenter[2]) / 2;
     List mapCenter = [latitude, longitude];
     List<List> circuitPoints = [
       trackPoints,

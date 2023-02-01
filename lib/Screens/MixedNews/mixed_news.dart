@@ -116,7 +116,7 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
                       ),
                     ),
                   ),
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.edit,
                     color: Colors.white,
                   ),
@@ -135,14 +135,14 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
                           itemCount: snapshot.data!.length,
                           shrinkWrap: true,
                           itemBuilder: (context, index) => Padding(
-                            padding: EdgeInsets.only(top: 5),
+                            padding: const EdgeInsets.only(top: 5),
                             child: Card(
                               elevation: 10.0,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(15.0),
                               ),
                               color: useDarkMode
-                                  ? Color(0xff1d1d28)
+                                  ? const Color(0xff1d1d28)
                                   : Colors.white,
                               child: InkWell(
                                 onTap: () => Navigator.push(
@@ -150,9 +150,8 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
                                   MaterialPageRoute(
                                     builder: (context) => RssFeedArticleScreen(
                                       snapshot.data![index].title,
-                                      snapshot.data![index].link
-                                                  .indexOf('?utm') ==
-                                              -1
+                                      !snapshot.data![index].link
+                                                  .contains('?utm')
                                           ? snapshot.data![index].link
                                           : snapshot.data![index].link
                                               .substring(
@@ -182,7 +181,7 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
                                                   5,
                                             ),
                                             child: ClipRRect(
-                                              borderRadius: BorderRadius.only(
+                                              borderRadius: const BorderRadius.only(
                                                 topLeft: Radius.circular(15),
                                                 topRight: Radius.circular(15),
                                               ),
@@ -212,11 +211,11 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
                                                                       snapshot
                                                                           .data!,
                                                                     )
-                                                                  : LoadingIndicatorUtil(),
+                                                                  : const LoadingIndicatorUtil(),
                                                     ),
                                             ),
                                           )
-                                        : Container(
+                                        : const SizedBox(
                                             height: 0.0,
                                             width: 0.0,
                                           ),
@@ -245,10 +244,9 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
                                                   .isEmpty
                                           ? null
                                           : MarkdownBody(
-                                              data: snapshot.data![index]
+                                              data: !snapshot.data![index]
                                                           .description!
-                                                          .indexOf("<a ") ==
-                                                      -1
+                                                          .contains("<a ")
                                                   ? snapshot
                                                       .data![index].description!
                                                   : snapshot
@@ -285,7 +283,7 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
                                             ),
                                     ),
                                     Padding(
-                                      padding: EdgeInsets.only(
+                                      padding: const EdgeInsets.only(
                                         right: 16,
                                         left: 16,
                                         bottom: 5,
@@ -317,9 +315,9 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
                                               fontWeight: FontWeight.w500,
                                             ),
                                           ),
-                                          Spacer(),
+                                          const Spacer(),
                                           Padding(
-                                            padding: EdgeInsets.only(
+                                            padding: const EdgeInsets.only(
                                               right: 8,
                                             ),
                                             child: Icon(
@@ -354,7 +352,7 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
                             ),
                           ),
                         )
-                      : Center(
+                      : const Center(
                           child: LoadingIndicatorUtil(),
                         ),
             )
@@ -369,7 +367,7 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
                         ? Column(
                             children: [
                               Padding(
-                                padding: EdgeInsets.all(10),
+                                padding: const EdgeInsets.all(10),
                                 child: Row(
                                   children: [
                                     Text(
@@ -383,7 +381,7 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
                                       ),
                                       textAlign: TextAlign.left,
                                     ),
-                                    Spacer(),
+                                    const Spacer(),
                                     GestureDetector(
                                       onTap: () => Navigator.push(
                                         context,
@@ -434,12 +432,12 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
                                                   children: [
                                                     for (Map article
                                                         in snapshot.data!)
-                                                      Container(
+                                                      SizedBox(
                                                         width: width / 2.1,
                                                         height: 232,
                                                         child: Padding(
                                                           padding:
-                                                              EdgeInsets.only(
+                                                              const EdgeInsets.only(
                                                                   top: 5),
                                                           child:
                                                               GestureDetector(
@@ -477,7 +475,7 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
                                                             child: Card(
                                                               elevation: 5.0,
                                                               color: useDarkMode
-                                                                  ? Color(
+                                                                  ? const Color(
                                                                       0xff1d1d28)
                                                                   : Colors
                                                                       .white,
@@ -502,7 +500,7 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
                                                                             ? Image.network(
                                                                                 imageSnapshot.data!,
                                                                               )
-                                                                            : LoadingIndicatorUtil(),
+                                                                            : const LoadingIndicatorUtil(),
                                                                   ),
                                                                   ListTile(
                                                                     title: Text(
@@ -549,7 +547,7 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
                                                       ),
                                                   ],
                                                 )
-                                              : Container(
+                                              : const SizedBox(
                                                   height: 232,
                                                   child: LoadingIndicatorUtil(),
                                                 ),
@@ -560,7 +558,7 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
                         : Column(
                             children: [
                               Padding(
-                                padding: EdgeInsets.all(10),
+                                padding: const EdgeInsets.all(10),
                                 child: Row(
                                   children: [
                                     Text(
@@ -574,7 +572,7 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
                                       ),
                                       textAlign: TextAlign.left,
                                     ),
-                                    Spacer(),
+                                    const Spacer(),
                                     GestureDetector(
                                       onTap: () => Navigator.push(
                                         context,
@@ -626,7 +624,7 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
                                                     for (var feedItem
                                                         in snapshot.data![
                                                             'feedArticles'])
-                                                      Container(
+                                                      SizedBox(
                                                         width: width / 2.1,
                                                         height: feedItem.enclosure !=
                                                                     null ||
@@ -642,7 +640,7 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
                                                             : 110,
                                                         child: Padding(
                                                           padding:
-                                                              EdgeInsets.only(
+                                                              const EdgeInsets.only(
                                                                   top: 5),
                                                           child:
                                                               GestureDetector(
@@ -678,7 +676,7 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
                                                             child: Card(
                                                               elevation: 5.0,
                                                               color: useDarkMode
-                                                                  ? Color(
+                                                                  ? const Color(
                                                                       0xff1d1d28)
                                                                   : Colors
                                                                       .white,
@@ -735,7 +733,7 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
                                                       ),
                                                   ],
                                                 )
-                                              : Container(
+                                              : const SizedBox(
                                                   height: 232,
                                                   child: LoadingIndicatorUtil(),
                                                 ),

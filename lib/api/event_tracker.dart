@@ -117,7 +117,7 @@ class EventTracker {
     DateTime meetingEndDate = DateTime.parse(
       eventAsJson['race']['meetingEndDate'].substring(0, 23),
     ).toLocal().add(
-          Duration(
+          const Duration(
             hours: 4,
           ),
         );

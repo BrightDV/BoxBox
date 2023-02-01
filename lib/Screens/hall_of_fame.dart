@@ -25,7 +25,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class HallOfFameScreen extends StatelessWidget {
-  const HallOfFameScreen();
+  const HallOfFameScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -61,11 +61,13 @@ class HallOfFameScreen extends StatelessWidget {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15.0),
                         ),
-                        color: useDarkMode ? Color(0xff1d1d28) : Colors.white,
+                        color: useDarkMode
+                            ? const Color(0xff1d1d28)
+                            : Colors.white,
                         child: Column(
                           children: [
                             ClipRRect(
-                              borderRadius: BorderRadius.only(
+                              borderRadius: const BorderRadius.only(
                                 topLeft: Radius.circular(15.0),
                                 topRight: Radius.circular(15.0),
                               ),
@@ -96,7 +98,7 @@ class HallOfFameScreen extends StatelessWidget {
                       ),
                     ),
                   )
-                : LoadingIndicatorUtil(),
+                : const LoadingIndicatorUtil(),
       ),
     );
   }
@@ -127,7 +129,7 @@ class HallOfFameDriverDetailsScreen extends StatelessWidget {
             : snapshot.hasData
                 ? SingleChildScrollView(
                     child: Padding(
-                      padding: EdgeInsets.all(15),
+                      padding: const EdgeInsets.all(15),
                       child: Column(
                         children: [
                           Text(
@@ -140,7 +142,7 @@ class HallOfFameDriverDetailsScreen extends StatelessWidget {
                             ),
                           ),
                           Padding(
-                            padding: EdgeInsets.only(
+                            padding: const EdgeInsets.only(
                               top: 10,
                             ),
                             child: Image(
@@ -172,7 +174,7 @@ class HallOfFameDriverDetailsScreen extends StatelessWidget {
                       ),
                     ),
                   )
-                : LoadingIndicatorUtil(),
+                : const LoadingIndicatorUtil(),
       ),
     );
   }

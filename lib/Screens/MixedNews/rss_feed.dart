@@ -46,19 +46,19 @@ class _RssFeedScreenState extends State<RssFeedScreen> {
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     String newsLayout =
         Hive.box('settings').get('newsLayout', defaultValue: 'big') as String;
-    Offset _tapPosition = Offset.zero;
+    Offset tapPosition = Offset.zero;
 
-    void _storePosition(TapDownDetails details) {
-      _tapPosition = details.globalPosition;
+    void storePosition(TapDownDetails details) {
+      tapPosition = details.globalPosition;
     }
 
-    void _showDetailsMenu() {
+    void showDetailsMenu() {
       final RenderObject overlay =
           Overlay.of(context)!.context.findRenderObject()!;
 
       showMenu(
         context: context,
-        color: useDarkMode ? Color(0xff1d1d28) : Colors.white,
+        color: useDarkMode ? const Color(0xff1d1d28) : Colors.white,
         items: <PopupMenuEntry<int>>[
           PopupMenuItem(
             value: 0,
@@ -68,7 +68,7 @@ class _RssFeedScreenState extends State<RssFeedScreen> {
                   Icons.language_outlined,
                   color: useDarkMode ? Colors.white : Colors.black,
                 ),
-                Padding(
+                const Padding(
                   padding: EdgeInsets.all(5),
                 ),
                 Text(
@@ -89,7 +89,7 @@ class _RssFeedScreenState extends State<RssFeedScreen> {
                   Icons.share_outlined,
                   color: useDarkMode ? Colors.white : Colors.black,
                 ),
-                Padding(
+                const Padding(
                   padding: EdgeInsets.all(5),
                 ),
                 Text(
@@ -103,7 +103,7 @@ class _RssFeedScreenState extends State<RssFeedScreen> {
             ),
           ),
         ],
-        position: RelativeRect.fromRect(_tapPosition & const Size(40, 40),
+        position: RelativeRect.fromRect(tapPosition & const Size(40, 40),
             Offset.zero & overlay.semanticBounds.size),
       ).then<void>(
         (int? delta) {
@@ -141,13 +141,15 @@ class _RssFeedScreenState extends State<RssFeedScreen> {
                     itemCount: snapshot.data!['feedArticles'].length,
                     shrinkWrap: true,
                     itemBuilder: (context, index) => Padding(
-                      padding: EdgeInsets.only(top: 5),
+                      padding: const EdgeInsets.only(top: 5),
                       child: Card(
                         elevation: 10.0,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15.0),
                         ),
-                        color: useDarkMode ? Color(0xff1d1d28) : Colors.white,
+                        color: useDarkMode
+                            ? const Color(0xff1d1d28)
+                            : Colors.white,
                         child: InkWell(
                           onTap: () => Navigator.push(
                             context,
@@ -170,10 +172,10 @@ class _RssFeedScreenState extends State<RssFeedScreen> {
                               ),
                             ),
                           ),
-                          onTapDown: (position) => _storePosition(position),
+                          onTapDown: (position) => storePosition(position),
                           onLongPress: () {
                             Feedback.forLongPress(context);
-                            _showDetailsMenu();
+                            showDetailsMenu();
                           },
                           child: Column(
                             children: [
@@ -187,7 +189,7 @@ class _RssFeedScreenState extends State<RssFeedScreen> {
                                           snapshot.data!['feedArticles'][index]
                                               .media.contents.isNotEmpty)
                                   ? ClipRRect(
-                                      borderRadius: BorderRadius.only(
+                                      borderRadius: const BorderRadius.only(
                                         topLeft: Radius.circular(15),
                                         topRight: Radius.circular(15),
                                       ),
@@ -219,7 +221,7 @@ class _RssFeedScreenState extends State<RssFeedScreen> {
                                                     .url,
                                       ),
                                     )
-                                  : Container(
+                                  : const SizedBox(
                                       height: 0.0,
                                       width: 0.0,
                                     ),
@@ -273,7 +275,7 @@ class _RssFeedScreenState extends State<RssFeedScreen> {
                                       ),
                               ),
                               Padding(
-                                padding: EdgeInsets.only(
+                                padding: const EdgeInsets.only(
                                   right: 16,
                                   bottom: 5,
                                 ),
@@ -281,7 +283,7 @@ class _RssFeedScreenState extends State<RssFeedScreen> {
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
                                     Padding(
-                                      padding: EdgeInsets.only(
+                                      padding: const EdgeInsets.only(
                                         right: 8,
                                       ),
                                       child: Icon(
@@ -314,7 +316,7 @@ class _RssFeedScreenState extends State<RssFeedScreen> {
                       ),
                     ),
                   )
-                : LoadingIndicatorUtil(),
+                : const LoadingIndicatorUtil(),
       ),
     );
   }

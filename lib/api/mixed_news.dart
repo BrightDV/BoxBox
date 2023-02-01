@@ -85,8 +85,8 @@ class MergedFeeds {
       String feedUrl) async {
     List<MergedNewsItemDefinition> formatedItems = [];
     List feedItems = await Wordpress().getWordpressNews(feedUrl);
-    feedItems.forEach(
-      (element) => formatedItems.add(
+    for (var element in feedItems) {
+      formatedItems.add(
         MergedNewsItemDefinition(
           feedUrl,
           element['title']['rendered'],
@@ -96,8 +96,8 @@ class MergedFeeds {
           thumbnailIntermediateUrl: element['_links']['wp:featuredmedia'][0]
               ['href'],
         ),
-      ),
-    );
+      );
+    }
     return formatedItems;
   }
 

@@ -65,7 +65,7 @@ class _EditOrderScreenState extends State<EditOrderScreen> {
         ),
         child: ReorderableListView.builder(
           header: Padding(
-            padding: EdgeInsets.all(5),
+            padding: const EdgeInsets.all(5),
             child: RichText(
               text: TextSpan(
                 text: AppLocalizations.of(context)!.editOrderDescription,

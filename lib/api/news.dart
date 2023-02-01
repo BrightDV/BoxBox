@@ -58,7 +58,7 @@ class F1NewsFetcher {
     bool useDataSaverMode = Hive.box('settings')
         .get('useDataSaverMode', defaultValue: false) as bool;
 
-    finalJson.forEach((element) {
+    for (var element in finalJson) {
       element['title'] = element['title'].replaceAll("\n", "");
       if (element['metaDescription'] != null) {
         element['metaDescription'] =
@@ -83,7 +83,7 @@ class F1NewsFetcher {
           imageUrl,
         ),
       );
-    });
+    }
     return newsList;
   }
 
@@ -114,8 +114,8 @@ class F1NewsFetcher {
   FutureOr<List<News>> getLatestNews(
       {String? tagId, String? articleType}) async {
     Map<String, dynamic> responseAsJson = await getRawNews(
-      tagId: tagId ?? null,
-      articleType: articleType ?? null,
+      tagId: tagId,
+      articleType: articleType,
     );
 
     if (tagId == null && articleType == null) {
@@ -241,38 +241,48 @@ class Article {
   );
 }
 
-class NewsItem extends StatelessWidget {
+class NewsItem extends StatefulWidget {
   final News item;
   final bool inRelated;
+  final bool? showSmallDescription;
 
-  NewsItem(
+  const NewsItem(
     this.item,
-    this.inRelated,
-  );
+    this.inRelated, {
+    Key? key,
+    this.showSmallDescription,
+  }) : super(key: key);
+  @override
+  State<NewsItem> createState() => _NewsItemState();
+}
 
+class _NewsItemState extends State<NewsItem> {
   final String endpoint = 'https://formula1.com';
   final String articleLink = '/en/latest/article.';
 
+  @override
   Widget build(BuildContext context) {
+    final News item = widget.item;
+    final bool inRelated = widget.inRelated;
     String imageUrl = item.imageUrl;
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     String newsLayout =
         Hive.box('settings').get('newsLayout', defaultValue: 'big') as String;
     double width = MediaQuery.of(context).size.width;
-    Offset _tapPosition = Offset.zero;
+    Offset tapPosition = Offset.zero;
 
-    void _storePosition(TapDownDetails details) {
-      _tapPosition = details.globalPosition;
+    void storePosition(TapDownDetails details) {
+      tapPosition = details.globalPosition;
     }
 
-    void _showDetailsMenu() {
+    void showDetailsMenu() {
       final RenderObject overlay =
           Overlay.of(context)!.context.findRenderObject()!;
 
       showMenu(
         context: context,
-        color: useDarkMode ? Color(0xff1d1d28) : Colors.white,
+        color: useDarkMode ? const Color(0xff1d1d28) : Colors.white,
         items: <PopupMenuEntry<int>>[
           PopupMenuItem(
             value: 0,
@@ -282,7 +292,7 @@ class NewsItem extends StatelessWidget {
                   Icons.language_outlined,
                   color: useDarkMode ? Colors.white : Colors.black,
                 ),
-                Padding(
+                const Padding(
                   padding: EdgeInsets.all(5),
                 ),
                 Text(
@@ -303,7 +313,7 @@ class NewsItem extends StatelessWidget {
                   Icons.share_outlined,
                   color: useDarkMode ? Colors.white : Colors.black,
                 ),
-                Padding(
+                const Padding(
                   padding: EdgeInsets.all(5),
                 ),
                 Text(
@@ -317,7 +327,7 @@ class NewsItem extends StatelessWidget {
             ),
           ),
         ],
-        position: RelativeRect.fromRect(_tapPosition & const Size(40, 40),
+        position: RelativeRect.fromRect(tapPosition & const Size(40, 40),
             Offset.zero & overlay.semanticBounds.size),
       ).then<void>(
         (int? delta) {
@@ -336,11 +346,11 @@ class NewsItem extends StatelessWidget {
     }
 
     return inRelated
-        ? Container(
+        ? SizedBox(
             width: width / 2.1,
             height: 232,
             child: Padding(
-              padding: EdgeInsets.only(top: 5),
+              padding: const EdgeInsets.only(top: 5),
               child: GestureDetector(
                 onTap: () {
                   Navigator.push(
@@ -356,27 +366,25 @@ class NewsItem extends StatelessWidget {
                 },
                 child: Card(
                   elevation: 5.0,
-                  color: useDarkMode ? Color(0xff1d1d28) : Colors.white,
+                  color: useDarkMode ? const Color(0xff1d1d28) : Colors.white,
                   child: Column(
                     children: [
-                      Container(
-                        child: CachedNetworkImage(
-                          imageUrl: imageUrl,
-                          placeholder: (context, url) => Container(
-                            height: 90,
-                            child: LoadingIndicatorUtil(),
-                          ),
-                          errorWidget: (context, url, error) => Icon(
-                            Icons.error_outlined,
-                            color: useDarkMode ? Colors.white : Colors.black,
-                          ),
-                          fadeOutDuration: Duration(seconds: 1),
-                          fadeInDuration: Duration(seconds: 1),
-                          cacheManager: CacheManager(
-                            Config(
-                              "newsImages",
-                              stalePeriod: const Duration(days: 7),
-                            ),
+                      CachedNetworkImage(
+                        imageUrl: imageUrl,
+                        placeholder: (context, url) => const SizedBox(
+                          height: 90,
+                          child: LoadingIndicatorUtil(),
+                        ),
+                        errorWidget: (context, url, error) => Icon(
+                          Icons.error_outlined,
+                          color: useDarkMode ? Colors.white : Colors.black,
+                        ),
+                        fadeOutDuration: const Duration(seconds: 1),
+                        fadeInDuration: const Duration(seconds: 1),
+                        cacheManager: CacheManager(
+                          Config(
+                            "newsImages",
+                            stalePeriod: const Duration(days: 7),
                           ),
                         ),
                       ),
@@ -399,235 +407,259 @@ class NewsItem extends StatelessWidget {
             ),
           )
         : Padding(
-            padding: EdgeInsets.only(top: 5),
+            padding: const EdgeInsets.only(top: 5),
             child: Card(
               elevation: 10.0,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(15.0),
               ),
-              color: useDarkMode ? Color(0xff1d1d28) : Colors.white,
-              child: InkWell(
-                borderRadius: BorderRadius.circular(15.0),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ArticleScreen(
-                        item.newsId,
-                        item.title,
-                        false,
+              color: useDarkMode ? const Color(0xff1d1d28) : Colors.white,
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(15.0),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ArticleScreen(
+                          item.newsId,
+                          item.title,
+                          false,
+                        ),
                       ),
-                    ),
-                  );
-                },
-                onTapDown: (position) => _storePosition(position),
-                onLongPress: () {
-                  Feedback.forLongPress(context);
-                  _showDetailsMenu();
-                },
-                child: Column(
-                  children: [
-                    newsLayout != 'condensed' && newsLayout != 'small'
-                        ? Stack(
-                            alignment: Alignment.bottomLeft,
-                            children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(15),
-                                  topRight: Radius.circular(15),
-                                ),
-                                child: CachedNetworkImage(
-                                  imageUrl: imageUrl,
-                                  placeholder: (context, url) => Container(
-                                    height: MediaQuery.of(context).size.width /
-                                            (16 / 9) -
-                                        5,
-                                    child: LoadingIndicatorUtil(),
+                    );
+                  },
+                  hoverColor: Colors.grey.shade700,
+                  onTapDown: (position) => storePosition(position),
+                  onLongPress: () {
+                    Feedback.forLongPress(context);
+                    showDetailsMenu();
+                  },
+                  child: Column(
+                    children: [
+                      newsLayout != 'condensed' && newsLayout != 'small'
+                          ? Stack(
+                              alignment: Alignment.bottomLeft,
+                              children: [
+                                ClipRRect(
+                                  borderRadius: const BorderRadius.only(
+                                    topLeft: Radius.circular(15),
+                                    topRight: Radius.circular(15),
                                   ),
-                                  errorWidget: (context, url, error) =>
-                                      SizedBox(
-                                    height: 50,
-                                    child: Icon(
-                                      Icons.error_outlined,
-                                      color: useDarkMode
-                                          ? Color(0xff1d1d28)
-                                          : Colors.white,
+                                  child: CachedNetworkImage(
+                                    imageUrl: imageUrl,
+                                    placeholder: (context, url) => SizedBox(
+                                      height:
+                                          MediaQuery.of(context).size.width /
+                                                  (16 / 9) -
+                                              5,
+                                      child: const LoadingIndicatorUtil(),
                                     ),
-                                  ),
-                                  fadeOutDuration: Duration(seconds: 1),
-                                  fadeInDuration: Duration(seconds: 1),
-                                  cacheManager: CacheManager(
-                                    Config(
-                                      "newsImages",
-                                      stalePeriod: const Duration(days: 7),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(
-                                  left: 8,
-                                ),
-                                child: Container(
-                                  width: item.newsType == 'Podcast' ||
-                                          item.newsType == 'Feature' ||
-                                          item.newsType == 'Opinion' ||
-                                          item.newsType == 'Report'
-                                      ? 110
-                                      : item.newsType == 'Technical' ||
-                                              item.newsType == 'Live Blog' ||
-                                              item.newsType == 'Interview'
-                                          ? 120
-                                          : item.newsType == 'Image Gallery'
-                                              ? 150
-                                              : 90,
-                                  height: 27,
-                                  alignment: Alignment.bottomLeft,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(3),
-                                      topRight: Radius.circular(8),
-                                      bottomRight: Radius.circular(3),
-                                    ),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        blurRadius: 2,
-                                        offset: Offset(0, 0),
+                                    errorWidget: (context, url, error) =>
+                                        SizedBox(
+                                      height: 50,
+                                      child: Icon(
+                                        Icons.error_outlined,
+                                        color: useDarkMode
+                                            ? const Color(0xff1d1d28)
+                                            : Colors.white,
                                       ),
-                                    ],
-                                    color: Theme.of(context).primaryColor,
-                                  ),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Padding(
-                                        padding: EdgeInsets.only(
-                                          left: 6,
-                                        ),
-                                        child: Icon(
-                                          item.newsType == 'Video'
-                                              ? Icons.play_arrow_outlined
-                                              : item.newsType == 'Image Gallery'
-                                                  ? Icons.image_outlined
-                                                  : item.newsType == 'Podcast'
-                                                      ? Icons.podcasts_outlined
-                                                      : item.newsType == 'Poll'
-                                                          ? Icons.bar_chart
-                                                          : item.newsType ==
-                                                                  'News'
-                                                              ? Icons
-                                                                  .feed_outlined
-                                                              : item.newsType ==
-                                                                      'Report'
-                                                                  ? Icons
-                                                                      .report_outlined
-                                                                  : item.newsType ==
-                                                                          'Interview'
-                                                                      ? Icons
-                                                                          .mic_outlined
-                                                                      : item.newsType ==
-                                                                              'Feature'
-                                                                          ? Icons
-                                                                              .star_outline_outlined
-                                                                          : item.newsType == 'Opinion'
-                                                                              ? Icons.chat_outlined
-                                                                              : item.newsType == 'Technical'
-                                                                                  ? Icons.construction_outlined
-                                                                                  : item.newsType == 'Live Blog'
-                                                                                      ? Icons.live_tv_outlined
-                                                                                      : Icons.info_outlined,
-                                          color: Colors.white,
-                                          size: 24,
-                                        ),
+                                    ),
+                                    fadeOutDuration: const Duration(seconds: 1),
+                                    fadeInDuration: const Duration(seconds: 1),
+                                    cacheManager: CacheManager(
+                                      Config(
+                                        "newsImages",
+                                        stalePeriod: const Duration(days: 7),
                                       ),
-                                      Padding(
-                                        padding: EdgeInsets.only(
-                                          left: 5,
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                    left: 8,
+                                  ),
+                                  child: Container(
+                                    width: item.newsType == 'Podcast' ||
+                                            item.newsType == 'Feature' ||
+                                            item.newsType == 'Opinion' ||
+                                            item.newsType == 'Report'
+                                        ? 110
+                                        : item.newsType == 'Technical' ||
+                                                item.newsType == 'Live Blog' ||
+                                                item.newsType == 'Interview'
+                                            ? 120
+                                            : item.newsType == 'Image Gallery'
+                                                ? 150
+                                                : 90,
+                                    height: 27,
+                                    alignment: Alignment.bottomLeft,
+                                    decoration: BoxDecoration(
+                                      borderRadius: const BorderRadius.only(
+                                        topLeft: Radius.circular(3),
+                                        topRight: Radius.circular(8),
+                                        bottomRight: Radius.circular(3),
+                                      ),
+                                      boxShadow: const [
+                                        BoxShadow(
+                                          blurRadius: 2,
+                                          offset: Offset(0, 0),
                                         ),
-                                        child: Text(
-                                          item.newsType,
-                                          style: TextStyle(
+                                      ],
+                                      color: Theme.of(context).primaryColor,
+                                    ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                            left: 6,
+                                          ),
+                                          child: Icon(
+                                            item.newsType == 'Video'
+                                                ? Icons.play_arrow_outlined
+                                                : item.newsType ==
+                                                        'Image Gallery'
+                                                    ? Icons.image_outlined
+                                                    : item.newsType == 'Podcast'
+                                                        ? Icons
+                                                            .podcasts_outlined
+                                                        : item.newsType ==
+                                                                'Poll'
+                                                            ? Icons.bar_chart
+                                                            : item.newsType ==
+                                                                    'News'
+                                                                ? Icons
+                                                                    .feed_outlined
+                                                                : item.newsType ==
+                                                                        'Report'
+                                                                    ? Icons
+                                                                        .report_outlined
+                                                                    : item.newsType ==
+                                                                            'Interview'
+                                                                        ? Icons
+                                                                            .mic_outlined
+                                                                        : item.newsType ==
+                                                                                'Feature'
+                                                                            ? Icons.star_outline_outlined
+                                                                            : item.newsType == 'Opinion'
+                                                                                ? Icons.chat_outlined
+                                                                                : item.newsType == 'Technical'
+                                                                                    ? Icons.construction_outlined
+                                                                                    : item.newsType == 'Live Blog'
+                                                                                        ? Icons.live_tv_outlined
+                                                                                        : Icons.info_outlined,
                                             color: Colors.white,
-                                            fontSize: 14,
+                                            size: 24,
                                           ),
                                         ),
-                                      ),
-                                    ],
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                            left: 5,
+                                          ),
+                                          child: Text(
+                                            item.newsType,
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
-                          )
-                        : Container(
-                            height: 0.0,
-                            width: 0.0,
+                              ],
+                            )
+                          : const SizedBox(
+                              height: 0.0,
+                              width: 0.0,
+                            ),
+                      ListTile(
+                        title: Text(
+                          item.title,
+                          style: TextStyle(
+                            color: useDarkMode ? Colors.white : Colors.black,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w500,
                           ),
-                    ListTile(
-                      title: Text(
-                        item.title,
-                        style: TextStyle(
-                          color: useDarkMode ? Colors.white : Colors.black,
-                          fontSize: 18,
-                          fontWeight: FontWeight.w500,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines:
+                              (widget.showSmallDescription ?? false) ? 3 : 5,
+                          textAlign: TextAlign.justify,
                         ),
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 5,
-                        textAlign: TextAlign.justify,
+                        subtitle: (newsLayout != 'big' &&
+                                    newsLayout != 'condensed') ||
+                                (widget.showSmallDescription ?? false)
+                            ? null
+                            : Text(
+                                item.subtitle,
+                                style: TextStyle(
+                                  color: useDarkMode
+                                      ? Colors.grey[400]
+                                      : Colors.grey[800],
+                                ),
+                                textAlign: TextAlign.justify,
+                                maxLines: 5,
+                                overflow: TextOverflow.ellipsis,
+                              ),
                       ),
-                      subtitle: newsLayout != 'big' && newsLayout != 'condensed'
-                          ? null
-                          : Text(
-                              item.subtitle,
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          right: 16,
+                          bottom: 5,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                right: 8,
+                              ),
+                              child: Icon(
+                                Icons.schedule,
+                                color: useDarkMode
+                                    ? Colors.grey.shade300
+                                    : Colors.grey[800],
+                                size: 20.0,
+                              ),
+                            ),
+                            Text(
+                              timeago.format(
+                                item.datePosted,
+                                locale:
+                                    Localizations.localeOf(context).toString(),
+                              ),
                               style: TextStyle(
                                 color: useDarkMode
-                                    ? Colors.grey[400]
-                                    : Colors.grey[800],
+                                    ? Colors.grey.shade300
+                                    : Colors.grey[700],
                               ),
-                              textAlign: TextAlign.justify,
-                              maxLines: 5,
-                              overflow: TextOverflow.ellipsis,
                             ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(
-                        right: 16,
-                        bottom: 5,
+                          ],
+                        ),
                       ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.only(
-                              right: 8,
-                            ),
-                            child: Icon(
-                              Icons.schedule,
-                              color: useDarkMode
-                                  ? Colors.grey.shade300
-                                  : Colors.grey[800],
-                              size: 20.0,
-                            ),
-                          ),
-                          Text(
-                            timeago.format(
-                              item.datePosted,
-                              locale:
-                                  Localizations.localeOf(context).toString(),
-                            ),
-                            style: TextStyle(
-                              color: useDarkMode
-                                  ? Colors.grey.shade300
-                                  : Colors.grey[700],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
           );
+  }
+}
+
+class CachedNewsImage extends StatefulWidget {
+  const CachedNewsImage({Key? key}) : super(key: key);
+
+  @override
+  State<CachedNewsImage> createState() => _CachedNewsImageState();
+}
+
+class _CachedNewsImageState extends State<CachedNewsImage> {
+  @override
+  Widget build(BuildContext context) {
+    return Container();
   }
 }
 
@@ -637,15 +669,15 @@ class NewsList extends StatefulWidget {
   final String? tagId;
   final String? articleType;
 
-  NewsList({
-    Key? key,
+  const NewsList({
     required this.items,
     this.scrollController,
     this.tagId,
     this.articleType,
-  });
+    Key? key,
+  }) : super(key: key);
   @override
-  _NewsListState createState() => _NewsListState();
+  State<NewsList> createState() => _NewsListState();
 }
 
 class _NewsListState extends State<NewsList> {
@@ -682,29 +714,68 @@ class _NewsListState extends State<NewsList> {
 
   @override
   Widget build(BuildContext context) {
-    return RefreshIndicator(
-      onRefresh: () => Future.sync(
-        () => _pagingController.refresh(),
-      ),
-      child: PagedListView<int, News>(
-        pagingController: _pagingController,
-        scrollController: widget.scrollController,
-        scrollDirection: Axis.vertical,
-        shrinkWrap: true,
-        builderDelegate: PagedChildBuilderDelegate<News>(
-          itemBuilder: (context, item, index) {
-            return NewsItem(item, false);
-          },
-          firstPageProgressIndicatorBuilder: (_) => LoadingIndicatorUtil(),
-          firstPageErrorIndicatorBuilder: (_) => FirstPageExceptionIndicator(
-            title: AppLocalizations.of(context)!.errorOccurred,
-            message: AppLocalizations.of(context)!.errorOccurredDetails,
-            onTryAgain: () => _pagingController.refresh(),
-          ),
-          newPageProgressIndicatorBuilder: (_) => LoadingIndicatorUtil(),
-        ),
-      ),
-    );
+    double width = MediaQuery.of(context).size.width;
+    return width < 600
+        ? RefreshIndicator(
+            onRefresh: () => Future.sync(
+              () => _pagingController.refresh(),
+            ),
+            child: PagedListView<int, News>(
+              pagingController: _pagingController,
+              scrollController: widget.scrollController,
+              scrollDirection: Axis.vertical,
+              shrinkWrap: true,
+              builderDelegate: PagedChildBuilderDelegate<News>(
+                itemBuilder: (context, item, index) {
+                  return NewsItem(item, false);
+                },
+                firstPageProgressIndicatorBuilder: (_) =>
+                    const LoadingIndicatorUtil(),
+                firstPageErrorIndicatorBuilder: (_) =>
+                    FirstPageExceptionIndicator(
+                  title: AppLocalizations.of(context)!.errorOccurred,
+                  message: AppLocalizations.of(context)!.errorOccurredDetails,
+                  onTryAgain: () => _pagingController.refresh(),
+                ),
+                newPageProgressIndicatorBuilder: (_) =>
+                    const LoadingIndicatorUtil(),
+              ),
+            ),
+          )
+        : PagedGridView<int, News>(
+            pagingController: _pagingController,
+            scrollController: widget.scrollController,
+            scrollDirection: Axis.vertical,
+            shrinkWrap: true,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: width < 1000
+                  ? 3
+                  : width < 1400
+                      ? 4
+                      : 5,
+              crossAxisSpacing: 5.0,
+              mainAxisSpacing: 5.0,
+            ),
+            builderDelegate: PagedChildBuilderDelegate<News>(
+              itemBuilder: (context, item, index) {
+                return NewsItem(
+                  item,
+                  false,
+                  showSmallDescription: true,
+                );
+              },
+              firstPageProgressIndicatorBuilder: (_) =>
+                  const LoadingIndicatorUtil(),
+              firstPageErrorIndicatorBuilder: (_) =>
+                  FirstPageExceptionIndicator(
+                title: AppLocalizations.of(context)!.errorOccurred,
+                message: AppLocalizations.of(context)!.errorOccurredDetails,
+                onTryAgain: () => _pagingController.refresh(),
+              ),
+              newPageProgressIndicatorBuilder: (_) =>
+                  const LoadingIndicatorUtil(),
+            ),
+          );
   }
 
   @override
@@ -771,7 +842,7 @@ class FirstPageExceptionIndicator extends StatelessWidget {
                   ),
                   label: Text(
                     AppLocalizations.of(context)!.tryAgain,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 16,
                       color: Colors.white,
                     ),
@@ -789,13 +860,13 @@ class OfflineNewsList extends StatefulWidget {
   final List items;
   final ScrollController? scrollController;
 
-  OfflineNewsList({
-    Key? key,
+  const OfflineNewsList({
     required this.items,
     this.scrollController,
-  });
+    Key? key,
+  }) : super(key: key);
   @override
-  _OfflineNewsListState createState() => _OfflineNewsListState();
+  State<OfflineNewsList> createState() => _OfflineNewsListState();
 }
 
 class _OfflineNewsListState extends State<OfflineNewsList> {
@@ -813,9 +884,9 @@ class _OfflineNewsListState extends State<OfflineNewsList> {
       scrollDirection: Axis.vertical,
       shrinkWrap: true,
       itemCount: formatedNews.length,
-      physics: BouncingScrollPhysics(),
+      physics: const BouncingScrollPhysics(),
       itemBuilder: (context, index) => index == formatedNews.length - 1
-          ? Padding(
+          ? const Padding(
               padding: EdgeInsets.all(15),
             )
           : NewsItem(
@@ -834,8 +905,9 @@ class _OfflineNewsListState extends State<OfflineNewsList> {
 class JoinArticlesParts extends StatelessWidget {
   final Article article;
 
-  JoinArticlesParts(this.article);
+  const JoinArticlesParts(this.article, {Key? key}) : super(key: key);
 
+  @override
   Widget build(BuildContext context) {
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
@@ -917,10 +989,10 @@ class JoinArticlesParts extends StatelessWidget {
         Hive.box('history').get('articlesHistory', defaultValue: []) as List;
 
     List<Widget> tagsList = [];
-    article.articleTags.forEach(
-      (tag) => tagsList.add(
+    for (var tag in article.articleTags) {
+      tagsList.add(
         Padding(
-          padding: EdgeInsets.only(
+          padding: const EdgeInsets.only(
             top: 10,
             left: 5,
             right: 5,
@@ -953,7 +1025,7 @@ class JoinArticlesParts extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Padding(
-                padding: EdgeInsets.all(7),
+                padding: const EdgeInsets.all(7),
                 child: Text(
                   tag['fields']['tagName'],
                   style: TextStyle(
@@ -964,14 +1036,14 @@ class JoinArticlesParts extends StatelessWidget {
             ),
           ),
         ),
-      ),
-    );
+      );
+    }
 
     widgetsList.add(
       SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Padding(
-          padding: EdgeInsets.only(left: 5, right: 5),
+          padding: const EdgeInsets.only(left: 5, right: 5),
           child: Row(
             children: tagsList,
           ),
@@ -979,590 +1051,570 @@ class JoinArticlesParts extends StatelessWidget {
       ),
     );
 
-    articleContent.forEach(
-      (element) {
-        if (element['contentType'] == 'atomRichText') {
-          widgetsList.add(
-            TextParagraphRenderer(element['fields']['richTextBlock']),
-          );
-        } else if (element['contentType'] == 'atomVideo') {
-          widgetsList.add(
-            VideoRenderer(
-              element['fields']['videoId'],
-            ),
-          );
-        } else if (element['contentType'] == 'atomImage') {
-          widgetsList.add(
-            ImageRenderer(
-              useDataSaverMode
-                  ? element['fields']['image']['renditions'] != null
-                      ? element['fields']['image']['renditions']['2col-retina']
-                      : element['fields']['image']['url'] +
-                          '.transform/2col-retina/image.jpg'
-                  : element['fields']['image']['url'],
-              caption: element['fields']['caption'] != null
-                  ? element['fields']['caption']
-                  : '',
-            ),
-          );
-        } else if (element['contentType'] == 'atomQuiz') {
-          widgetsList.add(
-            AspectRatio(
-              aspectRatio: 748 / 598,
-              child: InAppWebView(
-                initialUrlRequest: URLRequest(
-                  url: Uri.parse(
-                      'https://www.riddle.com/view/${element['fields']['riddleId']}'),
-                ),
-                initialOptions: InAppWebViewGroupOptions(
-                  crossPlatform: InAppWebViewOptions(
-                    preferredContentMode: UserPreferredContentMode.DESKTOP,
-                  ),
-                ),
-                gestureRecognizers: [
-                  Factory<VerticalDragGestureRecognizer>(
-                      () => VerticalDragGestureRecognizer()),
-                  Factory<HorizontalDragGestureRecognizer>(
-                      () => HorizontalDragGestureRecognizer()),
-                  Factory<ScaleGestureRecognizer>(
-                      () => ScaleGestureRecognizer()),
-                ].toSet(),
+    for (var element in articleContent) {
+      if (element['contentType'] == 'atomRichText') {
+        widgetsList.add(
+          TextParagraphRenderer(element['fields']['richTextBlock']),
+        );
+      } else if (element['contentType'] == 'atomVideo') {
+        widgetsList.add(
+          VideoRenderer(
+            element['fields']['videoId'],
+          ),
+        );
+      } else if (element['contentType'] == 'atomImage') {
+        widgetsList.add(
+          ImageRenderer(
+            useDataSaverMode
+                ? element['fields']['image']['renditions'] != null
+                    ? element['fields']['image']['renditions']['2col-retina']
+                    : element['fields']['image']['url'] +
+                        '.transform/2col-retina/image.jpg'
+                : element['fields']['image']['url'],
+            caption: element['fields']['caption'] ?? '',
+          ),
+        );
+      } else if (element['contentType'] == 'atomQuiz') {
+        widgetsList.add(
+          AspectRatio(
+            aspectRatio: 748 / 598,
+            child: InAppWebView(
+              initialUrlRequest: URLRequest(
+                url: Uri.parse(
+                    'https://www.riddle.com/view/${element['fields']['riddleId']}'),
               ),
-            ),
-          );
-        } else if (element['contentType'] == 'atomImageGallery') {
-          List<Widget> galleryWidgets = [];
-          element['fields']['imageGallery'].forEach(
-            (element) => galleryWidgets.add(
-              Container(
-                width: MediaQuery.of(context).size.width,
-                child: ImageRenderer(
-                  useDataSaverMode
-                      ? element['renditions'] != null
-                          ? element['renditions']['2col-retina']
-                          : element['url'] + '.transform/2col-retina/image.jpg'
-                      : element['url'],
+              initialOptions: InAppWebViewGroupOptions(
+                crossPlatform: InAppWebViewOptions(
+                  preferredContentMode: UserPreferredContentMode.DESKTOP,
                 ),
               ),
+              gestureRecognizers: {
+                Factory<VerticalDragGestureRecognizer>(
+                    () => VerticalDragGestureRecognizer()),
+                Factory<HorizontalDragGestureRecognizer>(
+                    () => HorizontalDragGestureRecognizer()),
+                Factory<ScaleGestureRecognizer>(() => ScaleGestureRecognizer()),
+              },
             ),
-          );
-          widgetsList.add(
-            CarouselSlider(
-              items: galleryWidgets,
-              options: CarouselOptions(
-                viewportFraction: 1,
-                aspectRatio: 16 / 9,
-                enableInfiniteScroll: false,
-                enlargeCenterPage: true,
-                autoPlay: true,
-                autoPlayInterval: Duration(seconds: 7),
+          ),
+        );
+      } else if (element['contentType'] == 'atomImageGallery') {
+        List<Widget> galleryWidgets = [];
+        element['fields']['imageGallery'].forEach(
+          (element) => galleryWidgets.add(
+            SizedBox(
+              width: MediaQuery.of(context).size.width,
+              child: ImageRenderer(
+                useDataSaverMode
+                    ? element['renditions'] != null
+                        ? element['renditions']['2col-retina']
+                        : element['url'] + '.transform/2col-retina/image.jpg'
+                    : element['url'],
               ),
             ),
-          );
-        } else if (element['contentType'] == 'atomSocialPost' &&
-            element['fields']['postType'] == 'Twitter') {
-          widgetsList.add(
-            Container(
-              height: 400,
-              child: InAppWebView(
-                initialData: InAppWebViewInitialData(
-                    data:
-                        '<blockquote class="twitter-tweet"><a href="https://twitter.com/x/status/${element['fields']['postId']}"></a> </blockquote><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>'),
-                gestureRecognizers: [
-                  Factory<VerticalDragGestureRecognizer>(
-                      () => VerticalDragGestureRecognizer()),
-                  Factory<HorizontalDragGestureRecognizer>(
-                      () => HorizontalDragGestureRecognizer()),
-                  Factory<ScaleGestureRecognizer>(
-                      () => ScaleGestureRecognizer()),
-                ].toSet(),
-                initialOptions: InAppWebViewGroupOptions(
-                  crossPlatform:
-                      InAppWebViewOptions(transparentBackground: true),
+          ),
+        );
+        widgetsList.add(
+          CarouselSlider(
+            items: galleryWidgets,
+            options: CarouselOptions(
+              viewportFraction: 1,
+              aspectRatio: 16 / 9,
+              enableInfiniteScroll: false,
+              enlargeCenterPage: true,
+              autoPlay: true,
+              autoPlayInterval: const Duration(seconds: 7),
+            ),
+          ),
+        );
+      } else if (element['contentType'] == 'atomSocialPost' &&
+          element['fields']['postType'] == 'Twitter') {
+        widgetsList.add(
+          SizedBox(
+            height: 400,
+            child: InAppWebView(
+              initialData: InAppWebViewInitialData(
+                  data:
+                      '<blockquote class="twitter-tweet"><a href="https://twitter.com/x/status/${element['fields']['postId']}"></a> </blockquote><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>'),
+              gestureRecognizers: {
+                Factory<VerticalDragGestureRecognizer>(
+                    () => VerticalDragGestureRecognizer()),
+                Factory<HorizontalDragGestureRecognizer>(
+                    () => HorizontalDragGestureRecognizer()),
+                Factory<ScaleGestureRecognizer>(() => ScaleGestureRecognizer()),
+              },
+              initialOptions: InAppWebViewGroupOptions(
+                crossPlatform: InAppWebViewOptions(transparentBackground: true),
+              ),
+            ),
+          ),
+        );
+      } else if (element['contentType'] == 'atomSessionResults') {
+        String sessionType = element['fields']['sessionType'] == 'Sprint'
+            ? 'SprintQualifying'
+            : element['fields']['sessionType'];
+        List driversFields =
+            element['fields']['raceResults$sessionType']['results'];
+        widgetsList.add(
+          Padding(
+            padding: const EdgeInsets.all(
+              10,
+            ),
+            child: Container(
+              height: 255,
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: useDarkMode
+                      ? const Color(0xff1d1d28)
+                      : Colors.grey.shade50,
                 ),
+                borderRadius: BorderRadius.circular(15.0),
               ),
-            ),
-          );
-        } else if (element['contentType'] == 'atomSessionResults') {
-          String sessionType = element['fields']['sessionType'] == 'Sprint'
-              ? 'SprintQualifying'
-              : element['fields']['sessionType'];
-          List driversFields =
-              element['fields']['raceResults$sessionType']['results'];
-          widgetsList.add(
-            Padding(
-              padding: EdgeInsets.all(
-                10,
-              ),
-              child: Container(
-                height: 255,
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color:
-                        useDarkMode ? Color(0xff1d1d28) : Colors.grey.shade50,
-                  ),
-                  borderRadius: BorderRadius.circular(15.0),
-                ),
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(
-                        top: 15,
-                      ),
-                      child: Text(
-                        element['fields']['meetingCountryName'],
-                        style: TextStyle(
-                          color: useDarkMode ? Colors.white : Colors.black,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      top: 15,
                     ),
-                    Text(
-                      sessionType == 'Race'
-                          ? AppLocalizations.of(context)!.race
-                          : sessionType == 'Qualifying'
-                              ? AppLocalizations.of(context)!.qualifyings
-                              : sessionType == 'SprintQualifying'
-                                  ? AppLocalizations.of(context)!.sprint
-                                  : sessionType.endsWith('1')
-                                      ? AppLocalizations.of(context)!
-                                          .freePracticeOne
-                                      : sessionType.endsWith('2')
-                                          ? AppLocalizations.of(context)!
-                                              .freePracticeTwo
-                                          : AppLocalizations.of(context)!
-                                              .freePracticeThree,
+                    child: Text(
+                      element['fields']['meetingCountryName'],
                       style: TextStyle(
                         color: useDarkMode ? Colors.white : Colors.black,
-                        fontSize: 14,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(
-                        top: 15,
-                        left: 15,
-                      ),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            flex: sessionType == 'Race' ||
-                                    sessionType == 'SprintQualifying'
-                                ? 5
-                                : 4,
-                            child: Text(
-                              AppLocalizations.of(context)!
-                                  .positionAbbreviation,
-                              style: TextStyle(
-                                color:
-                                    useDarkMode ? Colors.white : Colors.black,
-                              ),
-                            ),
-                          ),
-                          Spacer(),
-                          Expanded(
-                            flex: 5,
-                            child: Text(
-                              AppLocalizations.of(context)!.time,
-                              style: TextStyle(
-                                color:
-                                    useDarkMode ? Colors.white : Colors.black,
-                              ),
-                            ),
-                          ),
-                          sessionType == 'Race' ||
+                  ),
+                  Text(
+                    sessionType == 'Race'
+                        ? AppLocalizations.of(context)!.race
+                        : sessionType == 'Qualifying'
+                            ? AppLocalizations.of(context)!.qualifyings
+                            : sessionType == 'SprintQualifying'
+                                ? AppLocalizations.of(context)!.sprint
+                                : sessionType.endsWith('1')
+                                    ? AppLocalizations.of(context)!
+                                        .freePracticeOne
+                                    : sessionType.endsWith('2')
+                                        ? AppLocalizations.of(context)!
+                                            .freePracticeTwo
+                                        : AppLocalizations.of(context)!
+                                            .freePracticeThree,
+                    style: TextStyle(
+                      color: useDarkMode ? Colors.white : Colors.black,
+                      fontSize: 14,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      top: 15,
+                      left: 15,
+                    ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          flex: sessionType == 'Race' ||
                                   sessionType == 'SprintQualifying'
-                              ? Expanded(
+                              ? 5
+                              : 4,
+                          child: Text(
+                            AppLocalizations.of(context)!.positionAbbreviation,
+                            style: TextStyle(
+                              color: useDarkMode ? Colors.white : Colors.black,
+                            ),
+                          ),
+                        ),
+                        const Spacer(),
+                        Expanded(
+                          flex: 5,
+                          child: Text(
+                            AppLocalizations.of(context)!.time,
+                            style: TextStyle(
+                              color: useDarkMode ? Colors.white : Colors.black,
+                            ),
+                          ),
+                        ),
+                        sessionType == 'Race' ||
+                                sessionType == 'SprintQualifying'
+                            ? Expanded(
+                                flex: 3,
+                                child: Text(
+                                  AppLocalizations.of(context)!
+                                      .pointsAbbreviation,
+                                  style: TextStyle(
+                                    color: useDarkMode
+                                        ? Colors.white
+                                        : Colors.black,
+                                  ),
+                                ),
+                              )
+                            : Container(),
+                      ],
+                    ),
+                  ),
+                  for (Map driverResults in driversFields)
+                    sessionType == 'Race' || sessionType == 'SprintQualifying'
+                        ? Padding(
+                            padding: const EdgeInsets.only(
+                              top: 7,
+                            ),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  flex: 2,
+                                  child: Text(
+                                    driverResults['positionNumber'],
+                                    style: TextStyle(
+                                      color: useDarkMode
+                                          ? Colors.white
+                                          : Colors.black,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 1,
+                                  child: SizedBox(
+                                    height: 15,
+                                    child: VerticalDivider(
+                                      color: Color(
+                                        int.parse(
+                                            'FF${driverResults['teamColourCode']}',
+                                            radix: 16),
+                                      ),
+                                      thickness: 5,
+                                      width: 5,
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
                                   flex: 3,
                                   child: Text(
-                                    AppLocalizations.of(context)!
-                                        .pointsAbbreviation,
+                                    driverResults['driverTLA'].toString(),
                                     style: TextStyle(
                                       color: useDarkMode
                                           ? Colors.white
                                           : Colors.black,
                                     ),
                                   ),
-                                )
-                              : Container(),
-                        ],
+                                ),
+                                const Spacer(),
+                                Expanded(
+                                  flex: 6,
+                                  child: Text(
+                                    driverResults['gapToLeader'] != "0.0"
+                                        ? '+${driverResults['gapToLeader']}'
+                                        : sessionType == 'Race'
+                                            ? driverResults['raceTime']
+                                            : driverResults[
+                                                'sprintQualifyingTime'],
+                                    style: TextStyle(
+                                      color: useDarkMode
+                                          ? Colors.white
+                                          : Colors.black,
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 3,
+                                  child: Text(
+                                    sessionType == 'Race'
+                                        ? driverResults['racePoints'].toString()
+                                        : driverResults[
+                                                'sprintQualifyingPoints']
+                                            .toString(),
+                                    style: TextStyle(
+                                      color: useDarkMode
+                                          ? Colors.white
+                                          : Colors.black,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )
+                        : Padding(
+                            padding: const EdgeInsets.only(
+                              top: 7,
+                            ),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  flex: 2,
+                                  child: Text(
+                                    driverResults['positionNumber'],
+                                    style: TextStyle(
+                                      color: useDarkMode
+                                          ? Colors.white
+                                          : Colors.black,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 1,
+                                  child: SizedBox(
+                                    height: 15,
+                                    child: VerticalDivider(
+                                      color: Color(
+                                        int.parse(
+                                          'FF${driverResults['teamColourCode']}',
+                                          radix: 16,
+                                        ),
+                                      ),
+                                      thickness: 5,
+                                      width: 5,
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 3,
+                                  child: Text(
+                                    driverResults['driverTLA'].toString(),
+                                    style: TextStyle(
+                                      color: useDarkMode
+                                          ? Colors.white
+                                          : Colors.black,
+                                    ),
+                                  ),
+                                ),
+                                const Spacer(),
+                                Expanded(
+                                  flex: 6,
+                                  child: Text(
+                                    sessionType.startsWith('Practice')
+                                        ? driverResults['classifiedTime']
+                                        : driverResults['q3']['classifiedTime'],
+                                    style: TextStyle(
+                                      color: useDarkMode
+                                          ? Colors.white
+                                          : Colors.black,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                        top: 15,
                       ),
-                    ),
-                    for (Map driverResults in driversFields)
-                      sessionType == 'Race' || sessionType == 'SprintQualifying'
-                          ? Padding(
-                              padding: EdgeInsets.only(
-                                top: 7,
-                              ),
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    flex: 2,
-                                    child: Text(
-                                      driverResults['positionNumber'],
-                                      style: TextStyle(
-                                        color: useDarkMode
-                                            ? Colors.white
-                                            : Colors.black,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ),
-                                  Expanded(
-                                    flex: 1,
-                                    child: Container(
-                                      height: 15,
-                                      child: VerticalDivider(
-                                        color: Color(
-                                          int.parse(
-                                              'FF' +
-                                                  driverResults[
-                                                      'teamColourCode'],
-                                              radix: 16),
-                                        ),
-                                        thickness: 5,
-                                        width: 5,
-                                      ),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    flex: 3,
-                                    child: Text(
-                                      driverResults['driverTLA'].toString(),
-                                      style: TextStyle(
-                                        color: useDarkMode
-                                            ? Colors.white
-                                            : Colors.black,
-                                      ),
-                                    ),
-                                  ),
-                                  Spacer(),
-                                  Expanded(
-                                    flex: 6,
-                                    child: Text(
-                                      driverResults['gapToLeader'] != "0.0"
-                                          ? '+' + driverResults['gapToLeader']
-                                          : sessionType == 'Race'
-                                              ? driverResults['raceTime']
-                                              : driverResults[
-                                                  'sprintQualifyingTime'],
-                                      style: TextStyle(
-                                        color: useDarkMode
-                                            ? Colors.white
-                                            : Colors.black,
-                                      ),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    flex: 3,
-                                    child: Text(
-                                      sessionType == 'Race'
-                                          ? driverResults['racePoints']
-                                              .toString()
-                                          : driverResults[
-                                                  'sprintQualifyingPoints']
-                                              .toString(),
-                                      style: TextStyle(
-                                        color: useDarkMode
-                                            ? Colors.white
-                                            : Colors.black,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            )
-                          : Padding(
-                              padding: EdgeInsets.only(
-                                top: 7,
-                              ),
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    flex: 2,
-                                    child: Text(
-                                      driverResults['positionNumber'],
-                                      style: TextStyle(
-                                        color: useDarkMode
-                                            ? Colors.white
-                                            : Colors.black,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ),
-                                  Expanded(
-                                    flex: 1,
-                                    child: Container(
-                                      height: 15,
-                                      child: VerticalDivider(
-                                        color: Color(
-                                          int.parse(
-                                              'FF' +
-                                                  driverResults[
-                                                      'teamColourCode'],
-                                              radix: 16),
-                                        ),
-                                        thickness: 5,
-                                        width: 5,
-                                      ),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    flex: 3,
-                                    child: Text(
-                                      driverResults['driverTLA'].toString(),
-                                      style: TextStyle(
-                                        color: useDarkMode
-                                            ? Colors.white
-                                            : Colors.black,
-                                      ),
-                                    ),
-                                  ),
-                                  Spacer(),
-                                  Expanded(
-                                    flex: 6,
-                                    child: Text(
-                                      sessionType.startsWith('Practice')
-                                          ? driverResults['classifiedTime']
-                                          : driverResults['q3']
-                                              ['classifiedTime'],
-                                      style: TextStyle(
-                                        color: useDarkMode
-                                            ? Colors.white
-                                            : Colors.black,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                    Expanded(
-                      child: Padding(
-                        padding: EdgeInsets.only(
-                          top: 15,
-                        ),
-                        child: Container(
-                          width: double.infinity,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.zero,
-                              topRight: Radius.zero,
-                              bottomLeft: Radius.circular(15),
-                              bottomRight: Radius.circular(15),
-                            ),
-                            child: ElevatedButton(
-                              onPressed: () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => sessionType
-                                          .startsWith('Practice')
-                                      ? FreePracticeScreen(
-                                          element['fields'][
-                                                          'raceResults$sessionType']
-                                                      ['description']
-                                                  .endsWith('1')
-                                              ? AppLocalizations.of(context)!
-                                                  .freePracticeOne
-                                              : element['fields'][
-                                                              'raceResults$sessionType']
-                                                          ['description']
-                                                      .endsWith('2')
-                                                  ? AppLocalizations.of(
-                                                          context)!
-                                                      .freePracticeTwo
-                                                  : AppLocalizations.of(
-                                                          context)!
-                                                      .freePracticeThree,
-                                          int.parse(
-                                            element['fields'][
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: ClipRRect(
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.zero,
+                            topRight: Radius.zero,
+                            bottomLeft: Radius.circular(15),
+                            bottomRight: Radius.circular(15),
+                          ),
+                          child: ElevatedButton(
+                            onPressed: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => sessionType
+                                        .startsWith('Practice')
+                                    ? FreePracticeScreen(
+                                        element['fields'][
                                                         'raceResults$sessionType']
-                                                    ['session']
-                                                .substring(1),
+                                                    ['description']
+                                                .endsWith('1')
+                                            ? AppLocalizations.of(context)!
+                                                .freePracticeOne
+                                            : element['fields'][
+                                                            'raceResults$sessionType']
+                                                        ['description']
+                                                    .endsWith('2')
+                                                ? AppLocalizations.of(context)!
+                                                    .freePracticeTwo
+                                                : AppLocalizations.of(context)!
+                                                    .freePracticeThree,
+                                        int.parse(
+                                          element['fields'][
+                                                      'raceResults$sessionType']
+                                                  ['session']
+                                              .substring(1),
+                                        ),
+                                        '',
+                                        int.parse(
+                                          element['fields']['season'],
+                                        ),
+                                        element['fields']
+                                            ['meetingOfficialName'],
+                                        raceUrl: element['fields']['cta'],
+                                      )
+                                    : Scaffold(
+                                        appBar: AppBar(
+                                          title: Text(
+                                            sessionType == 'Race'
+                                                ? AppLocalizations.of(context)!
+                                                    .race
+                                                : sessionType ==
+                                                        'SprintQualifying'
+                                                    ? AppLocalizations.of(
+                                                            context)!
+                                                        .sprint
+                                                    : AppLocalizations.of(
+                                                            context)!
+                                                        .qualifyings,
                                           ),
-                                          '',
-                                          int.parse(
-                                            element['fields']['season'],
-                                          ),
-                                          element['fields']
-                                              ['meetingOfficialName'],
-                                          raceUrl: element['fields']['cta'],
-                                        )
-                                      : Scaffold(
-                                          appBar: AppBar(
-                                            title: Text(
-                                              sessionType == 'Race'
-                                                  ? AppLocalizations.of(
-                                                          context)!
-                                                      .race
-                                                  : sessionType ==
-                                                          'SprintQualifying'
-                                                      ? AppLocalizations.of(
-                                                              context)!
-                                                          .sprint
-                                                      : AppLocalizations.of(
-                                                              context)!
-                                                          .qualifyings,
-                                            ),
-                                          ),
-                                          backgroundColor:
-                                              Theme.of(context).backgroundColor,
-                                          body: sessionType == 'Race' ||
-                                                  sessionType ==
-                                                      'SprintQualifying'
-                                              ? RaceResultsProvider(
+                                        ),
+                                        backgroundColor:
+                                            Theme.of(context).backgroundColor,
+                                        body: sessionType == 'Race' ||
+                                                sessionType ==
+                                                    'SprintQualifying'
+                                            ? RaceResultsProvider(
+                                                raceUrl: element['fields']
+                                                    ['cta'],
+                                              )
+                                            : SingleChildScrollView(
+                                                child:
+                                                    QualificationResultsProvider(
                                                   raceUrl: element['fields']
                                                       ['cta'],
-                                                )
-                                              : SingleChildScrollView(
-                                                  child:
-                                                      QualificationResultsProvider(
-                                                    raceUrl: element['fields']
-                                                        ['cta'],
-                                                  ),
                                                 ),
-                                        ),
-                                ),
+                                              ),
+                                      ),
                               ),
-                              child: Text(
-                                AppLocalizations.of(context)!.viewResults,
-                                style: TextStyle(
-                                  color: Colors.white,
-                                ),
+                            ),
+                            style: ElevatedButton.styleFrom(
+                              shape: const ContinuousRectangleBorder(
+                                borderRadius: BorderRadius.zero,
                               ),
-                              style: ElevatedButton.styleFrom(
-                                shape: ContinuousRectangleBorder(
-                                  borderRadius: BorderRadius.zero,
-                                ),
+                            ),
+                            child: Text(
+                              AppLocalizations.of(context)!.viewResults,
+                              style: const TextStyle(
+                                color: Colors.white,
                               ),
                             ),
                           ),
                         ),
                       ),
                     ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      } else if (element['contentType'] == 'atomTableContent') {
+        Map<String, dynamic> fields = element['fields'];
+        widgetsList.add(
+          Padding(
+            padding: const EdgeInsets.all(5),
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: Colors.grey.shade700,
+                ),
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(15),
+                  topRight: Radius.circular(15),
+                ),
+              ),
+              height:
+                  (fields['tableData']['tableContent'].length + 1) * 50.0 + 2,
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: 50,
+                      child: Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: Text(
+                          fields['title'],
+                          style: TextStyle(
+                            color: useDarkMode ? Colors.white : Colors.black,
+                            fontSize: 16,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                    for (List driverItem in fields['tableData']['tableContent'])
+                      Row(
+                        children: <Widget>[
+                          for (Map driverDetails in driverItem)
+                            Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: Colors.grey.shade600,
+                                ),
+                              ),
+                              width: 150,
+                              height: 50,
+                              child: Center(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(4),
+                                  child: Text(
+                                    driverDetails['value'].toString(),
+                                    style: TextStyle(
+                                      color: useDarkMode
+                                          ? Colors.white
+                                          : Colors.black,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
                   ],
                 ),
               ),
             ),
-          );
-        } else if (element['contentType'] == 'atomTableContent') {
-          Map<String, dynamic> fields = element['fields'];
-          widgetsList.add(
-            Padding(
-              padding: EdgeInsets.all(5),
-              child: Container(
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors.grey.shade700,
-                  ),
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(15),
-                    topRight: Radius.circular(15),
-                  ),
+          ),
+        );
+      } else if (element['contentType'] == 'atomAudioBoom') {
+        widgetsList.add(
+          SizedBox(
+            height: 400,
+            child: InAppWebView(
+              initialUrlRequest: URLRequest(
+                url: Uri.parse(
+                  'https:${element['fields']['audioPodcast']['iFrameSrc']}',
                 ),
-                height:
-                    (fields['tableData']['tableContent'].length + 1) * 50.0 + 2,
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Column(
-                    children: [
-                      Container(
-                        height: 50,
-                        child: Padding(
-                          padding: EdgeInsets.all(10),
-                          child: Text(
-                            fields['title'],
-                            style: TextStyle(
-                              color: useDarkMode ? Colors.white : Colors.black,
-                              fontSize: 16,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      ),
-                      for (List driverItem in fields['tableData']
-                          ['tableContent'])
-                        Row(
-                          children: <Widget>[
-                            for (Map driverDetails in driverItem)
-                              Container(
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: Colors.grey.shade600,
-                                  ),
-                                ),
-                                width: 150,
-                                height: 50,
-                                child: Center(
-                                  child: Padding(
-                                    padding: EdgeInsets.all(4),
-                                    child: Text(
-                                      driverDetails['value'].toString(),
-                                      style: TextStyle(
-                                        color: useDarkMode
-                                            ? Colors.white
-                                            : Colors.black,
-                                      ),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                          ],
-                        ),
-                    ],
-                  ),
+              ),
+              gestureRecognizers: {
+                Factory<VerticalDragGestureRecognizer>(
+                    () => VerticalDragGestureRecognizer()),
+                Factory<HorizontalDragGestureRecognizer>(
+                    () => HorizontalDragGestureRecognizer()),
+                Factory<ScaleGestureRecognizer>(() => ScaleGestureRecognizer()),
+              },
+              initialOptions: InAppWebViewGroupOptions(
+                crossPlatform: InAppWebViewOptions(transparentBackground: true),
+              ),
+            ),
+          ),
+        );
+      } else {
+        widgetsList.add(
+          SizedBox(
+            height: 100,
+            child: Center(
+              child: SelectableText(
+                'Unsupported widget ¯\\_(ツ)_/¯\nType: ${element['contentType']}\nArticle id: ${article.articleId}',
+                style: TextStyle(
+                  color: useDarkMode ? Colors.white : Colors.black,
                 ),
               ),
             ),
-          );
-        } else if (element['contentType'] == 'atomAudioBoom') {
-          widgetsList.add(
-            Container(
-              height: 400,
-              child: InAppWebView(
-                initialUrlRequest: URLRequest(
-                  url: Uri.parse(
-                    'https:' + element['fields']['audioPodcast']['iFrameSrc'],
-                  ),
-                ),
-                gestureRecognizers: [
-                  Factory<VerticalDragGestureRecognizer>(
-                      () => VerticalDragGestureRecognizer()),
-                  Factory<HorizontalDragGestureRecognizer>(
-                      () => HorizontalDragGestureRecognizer()),
-                  Factory<ScaleGestureRecognizer>(
-                      () => ScaleGestureRecognizer()),
-                ].toSet(),
-                initialOptions: InAppWebViewGroupOptions(
-                  crossPlatform:
-                      InAppWebViewOptions(transparentBackground: true),
-                ),
-              ),
-            ),
-          );
-        } else {
-          widgetsList.add(
-            Container(
-              height: 100,
-              child: Center(
-                child: SelectableText(
-                  'Unsupported widget ¯\\_(ツ)_/¯\nType: ${element['contentType']}\nArticle id: ${article.articleId}',
-                  style: TextStyle(
-                    color: useDarkMode ? Colors.white : Colors.black,
-                  ),
-                ),
-              ),
-            ),
-          );
-        }
-      },
-    );
+          ),
+        );
+      }
+    }
 
     widgetsList.add(
       Padding(
-        padding: EdgeInsets.all(5),
+        padding: const EdgeInsets.all(5),
         child: Container(
           decoration: BoxDecoration(
             border: Border.all(color: Colors.grey[700]!),
@@ -1574,7 +1626,7 @@ class JoinArticlesParts extends StatelessWidget {
             children: [
               Expanded(
                 child: Padding(
-                  padding: EdgeInsets.only(bottom: 10),
+                  padding: const EdgeInsets.only(bottom: 10),
                   child: Column(
                     children: [
                       IconButton(
@@ -1598,7 +1650,7 @@ class JoinArticlesParts extends StatelessWidget {
               ),
               Expanded(
                 child: Padding(
-                  padding: EdgeInsets.only(bottom: 10),
+                  padding: const EdgeInsets.only(bottom: 10),
                   child: Column(
                     children: [
                       IconButton(
@@ -1626,8 +1678,8 @@ class JoinArticlesParts extends StatelessWidget {
       ),
     );
     List<NewsItem> relatedArticles = [];
-    article.relatedArticles.forEach(
-      (article) => relatedArticles.add(
+    for (var article in article.relatedArticles) {
+      relatedArticles.add(
         NewsItem(
           News(
             article['id'],
@@ -1645,8 +1697,8 @@ class JoinArticlesParts extends StatelessWidget {
           ),
           true,
         ),
-      ),
-    );
+      );
+    }
     widgetsList.add(
       SingleChildScrollView(
         scrollDirection: Axis.horizontal,
@@ -1683,29 +1735,48 @@ class JoinArticlesParts extends StatelessWidget {
               ),
             ),
           )
-        : SafeArea(
-            child: Scrollbar(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: widgetsList,
+        : MediaQuery.of(context).size.width > 600
+            ? Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(
+                    minWidth: 300,
+                    maxWidth: 900,
+                  ),
+                  child: SafeArea(
+                    child: Scrollbar(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: widgetsList,
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
-              ),
-            ),
-          );
+              )
+            : SafeArea(
+                child: Scrollbar(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: widgetsList,
+                    ),
+                  ),
+                ),
+              );
   }
 }
 
 class TextParagraphRenderer extends StatelessWidget {
   final String text;
-  TextParagraphRenderer(this.text);
+  const TextParagraphRenderer(this.text, {Key? key}) : super(key: key);
 
+  @override
   Widget build(BuildContext context) {
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     bool useDefaultFontForArticles = Hive.box('settings')
         .get('useDefaultFontForArticles', defaultValue: false) as bool;
     return Padding(
-      padding: EdgeInsets.only(
+      padding: const EdgeInsets.only(
         top: 10,
         left: 10,
         right: 10,
@@ -1739,12 +1810,12 @@ class TextParagraphRenderer extends StatelessWidget {
                       centerTitle: true,
                       title: Text(
                         AppLocalizations.of(context)!.standings,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontWeight: FontWeight.w600,
                         ),
                       ),
                     ),
-                    body: StandingsScreen(),
+                    body: const StandingsScreen(),
                   ),
                 ),
               );
@@ -1758,12 +1829,12 @@ class TextParagraphRenderer extends StatelessWidget {
                       centerTitle: true,
                       title: Text(
                         AppLocalizations.of(context)!.standings,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontWeight: FontWeight.w600,
                         ),
                       ),
                     ),
-                    body: StandingsScreen(
+                    body: const StandingsScreen(
                       switchToTeamStandings: true,
                     ),
                   ),
@@ -1808,7 +1879,7 @@ class TextParagraphRenderer extends StatelessWidget {
             color: useDarkMode ? Colors.white : Colors.black,
             fontFamily: useDefaultFontForArticles ? 'Roboto' : 'Formula1',
           ),
-          pPadding: EdgeInsets.only(
+          pPadding: const EdgeInsets.only(
             top: 10,
             bottom: 10,
           ),
@@ -1850,17 +1921,20 @@ class ImageRenderer extends StatefulWidget {
   final bool? inSchedule;
   final bool? isHero;
 
-  ImageRenderer(
+  const ImageRenderer(
     this.imageUrl, {
+    Key? key,
     this.caption,
     this.inSchedule,
     this.isHero,
-  });
+  }) : super(key: key);
 
-  _ImageRendererState createState() => _ImageRendererState();
+  @override
+  State<ImageRenderer> createState() => _ImageRendererState();
 }
 
 class _ImageRendererState extends State<ImageRenderer> {
+  @override
   Widget build(BuildContext context) {
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
@@ -1871,13 +1945,14 @@ class _ImageRendererState extends State<ImageRenderer> {
       child: widget.inSchedule != null
           ? CachedNetworkImage(
               imageUrl: widget.imageUrl,
-              placeholder: (context, url) => Container(
+              placeholder: (context, url) => SizedBox(
                 height: MediaQuery.of(context).size.width / (16 / 9),
-                child: LoadingIndicatorUtil(),
+                child: const LoadingIndicatorUtil(),
               ),
-              errorWidget: (context, url, error) => Icon(Icons.error_outlined),
-              fadeOutDuration: Duration(seconds: 1),
-              fadeInDuration: Duration(seconds: 1),
+              errorWidget: (context, url, error) =>
+                  const Icon(Icons.error_outlined),
+              fadeOutDuration: const Duration(seconds: 1),
+              fadeInDuration: const Duration(seconds: 1),
               cacheManager: CacheManager(
                 Config(
                   "newsImages",
@@ -1891,7 +1966,7 @@ class _ImageRendererState extends State<ImageRenderer> {
                   context: context,
                   builder: (BuildContext context) {
                     return AlertDialog(
-                      contentPadding: EdgeInsets.only(
+                      contentPadding: const EdgeInsets.only(
                         top: 52,
                         bottom: 50,
                       ),
@@ -1902,7 +1977,7 @@ class _ImageRendererState extends State<ImageRenderer> {
                       backgroundColor: Colors.transparent,
                       content: Builder(
                         builder: (context) {
-                          return Container(
+                          return SizedBox(
                             width: double.infinity - 10,
                             child: InteractiveViewer(
                               minScale: 0.1,
@@ -1923,20 +1998,22 @@ class _ImageRendererState extends State<ImageRenderer> {
                                           ? CachedNetworkImage(
                                               imageUrl: widget.imageUrl,
                                               placeholder: (context, url) =>
-                                                  Container(
+                                                  SizedBox(
                                                 height: MediaQuery.of(context)
                                                         .size
                                                         .width /
                                                     (16 / 9),
-                                                child: LoadingIndicatorUtil(),
+                                                child:
+                                                    const LoadingIndicatorUtil(),
                                               ),
-                                              errorWidget: (context, url,
-                                                      error) =>
-                                                  Icon(Icons.error_outlined),
+                                              errorWidget:
+                                                  (context, url, error) =>
+                                                      const Icon(
+                                                          Icons.error_outlined),
                                               fadeOutDuration:
-                                                  Duration(seconds: 1),
+                                                  const Duration(seconds: 1),
                                               fadeInDuration:
-                                                  Duration(seconds: 1),
+                                                  const Duration(seconds: 1),
                                               cacheManager: CacheManager(
                                                 Config(
                                                   "newsImages",
@@ -1953,14 +2030,14 @@ class _ImageRendererState extends State<ImageRenderer> {
                                                       loadingProgress) =>
                                                   loadingProgress == null
                                                       ? child
-                                                      : Container(
+                                                      : SizedBox(
                                                           height: MediaQuery.of(
                                                                       context)
                                                                   .size
                                                                   .width /
                                                               (16 / 9),
                                                           child:
-                                                              LoadingIndicatorUtil(),
+                                                              const LoadingIndicatorUtil(),
                                                         ),
                                               errorBuilder:
                                                   (context, url, error) => Icon(
@@ -1999,15 +2076,15 @@ class _ImageRendererState extends State<ImageRenderer> {
                   widget.isHero != null && widget.isHero!
                       ? CachedNetworkImage(
                           imageUrl: widget.imageUrl,
-                          placeholder: (context, url) => Container(
+                          placeholder: (context, url) => SizedBox(
                             height:
                                 MediaQuery.of(context).size.width / (16 / 9),
-                            child: LoadingIndicatorUtil(),
+                            child: const LoadingIndicatorUtil(),
                           ),
                           errorWidget: (context, url, error) =>
-                              Icon(Icons.error_outlined),
-                          fadeOutDuration: Duration(seconds: 1),
-                          fadeInDuration: Duration(seconds: 1),
+                              const Icon(Icons.error_outlined),
+                          fadeOutDuration: const Duration(seconds: 1),
+                          fadeInDuration: const Duration(seconds: 1),
                           cacheManager: CacheManager(
                             Config(
                               "newsImages",
@@ -2020,11 +2097,11 @@ class _ImageRendererState extends State<ImageRenderer> {
                           loadingBuilder: (context, child, loadingProgress) =>
                               loadingProgress == null
                                   ? child
-                                  : Container(
+                                  : SizedBox(
                                       height:
                                           MediaQuery.of(context).size.width /
                                               (16 / 9),
-                                      child: LoadingIndicatorUtil(),
+                                      child: const LoadingIndicatorUtil(),
                                     ),
                           errorBuilder: (context, url, error) => Icon(
                             Icons.error_outlined,
@@ -2037,11 +2114,11 @@ class _ImageRendererState extends State<ImageRenderer> {
                     child: widget.caption != null || widget.caption == ''
                         ? Container(
                             width: double.infinity,
-                            padding: EdgeInsets.all(4),
+                            padding: const EdgeInsets.all(4),
                             color: Colors.black.withOpacity(0.7),
                             child: Text(
                               widget.caption ?? '',
-                              style: TextStyle(
+                              style: const TextStyle(
                                 color: Colors.white,
                               ),
                               textAlign: TextAlign.center,
@@ -2060,12 +2137,13 @@ class VideoRenderer extends StatefulWidget {
   final String videoId;
   final bool? autoplay;
 
-  VideoRenderer(
+  const VideoRenderer(
     this.videoId, {
+    Key? key,
     this.autoplay,
-  });
+  }) : super(key: key);
   @override
-  _VideoRendererState createState() => _VideoRendererState();
+  State<VideoRenderer> createState() => _VideoRendererState();
 }
 
 class _VideoRendererState extends State<VideoRenderer> {
@@ -2092,9 +2170,9 @@ class _VideoRendererState extends State<VideoRenderer> {
                   snapshot.data!,
                   widget.autoplay == null ? false : widget.autoplay!,
                 )
-              : Container(
+              : SizedBox(
                   height: MediaQuery.of(context).size.width / (16 / 9),
-                  child: LoadingIndicatorUtil(),
+                  child: const LoadingIndicatorUtil(),
                 ),
     );
   }
@@ -2104,18 +2182,16 @@ class BetterPlayerVideoPlayer extends StatefulWidget {
   final Map<String, dynamic> videoUrls;
   final bool autoplay;
 
-  BetterPlayerVideoPlayer(
-    this.videoUrls,
-    this.autoplay,
-  );
+  const BetterPlayerVideoPlayer(this.videoUrls, this.autoplay, {Key? key})
+      : super(key: key);
   @override
-  _BetterPlayerVideoPlayerState createState() =>
+  State<BetterPlayerVideoPlayer> createState() =>
       _BetterPlayerVideoPlayerState();
 }
 
 class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
   late BetterPlayerController _betterPlayerController;
-  StreamController<bool> _placeholderStreamController =
+  final StreamController<bool> _placeholderStreamController =
       StreamController.broadcast();
   bool _showPlaceholder = true;
   bool useDarkMode =
@@ -2140,7 +2216,7 @@ class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
         activityName: "MainActivity",
       ),
     );
-    BetterPlayerConfiguration _betterPlayerConfiguration =
+    BetterPlayerConfiguration betterPlayerConfiguration =
         BetterPlayerConfiguration(
       autoPlay: widget.autoplay,
       allowedScreenSleep: false,
@@ -2149,7 +2225,8 @@ class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
       controlsConfiguration: BetterPlayerControlsConfiguration(
         enableAudioTracks: false,
         enableSubtitles: false,
-        overflowModalColor: useDarkMode ? Color(0xff1d1d28) : Colors.white,
+        overflowModalColor:
+            useDarkMode ? const Color(0xff1d1d28) : Colors.white,
         overflowMenuIconsColor: useDarkMode ? Colors.white : Colors.black,
         overflowModalTextColor: useDarkMode ? Colors.white : Colors.black,
         showControlsOnInitialize: false,
@@ -2158,7 +2235,7 @@ class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
       showPlaceholderUntilPlay: true,
     );
     _betterPlayerController = BetterPlayerController(
-      _betterPlayerConfiguration,
+      betterPlayerConfiguration,
       betterPlayerDataSource: betterPlayerDataSource,
     );
     _betterPlayerController.addEventsListener((event) {
@@ -2182,7 +2259,7 @@ class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
                 children: [
                   Container(
                     decoration: BoxDecoration(
-                      image: new DecorationImage(
+                      image: DecorationImage(
                         fit: BoxFit.cover,
                         colorFilter: ColorFilter.mode(
                           Colors.black.withOpacity(0.4),
@@ -2192,7 +2269,7 @@ class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
                       ),
                     ),
                   ),
-                  Align(
+                  const Align(
                     alignment: Alignment.center,
                     child: Icon(
                       Icons.play_arrow_outlined,
@@ -2233,11 +2310,11 @@ class PinnedVideoPlayer extends SliverPersistentHeaderDelegate {
       BuildContext context, double shrinkOffset, bool overlapsContent) {
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
-    return Container(
+    return SizedBox(
       width: double.infinity,
       height: height,
       child: Card(
-        margin: EdgeInsets.all(0),
+        margin: const EdgeInsets.all(0),
         color: useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
         elevation: 10.0,
         child: Center(

@@ -103,13 +103,13 @@ class _RssFeedArticleScreenState extends State<RssFeedArticleScreen> {
             widget.articleUrl,
           ),
         ),
-        gestureRecognizers: [
+        gestureRecognizers: {
           Factory<VerticalDragGestureRecognizer>(
               () => VerticalDragGestureRecognizer()),
           Factory<HorizontalDragGestureRecognizer>(
               () => HorizontalDragGestureRecognizer()),
           Factory<ScaleGestureRecognizer>(() => ScaleGestureRecognizer()),
-        ].toSet(),
+        },
         initialOptions: InAppWebViewGroupOptions(
           crossPlatform: InAppWebViewOptions(
             contentBlockers: contentBlockers,

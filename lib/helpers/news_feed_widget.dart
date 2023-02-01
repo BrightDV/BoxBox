@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 /*
  *  This file is part of BoxBox (https://github.com/BrightDV/BoxBox).
  * 
@@ -32,14 +34,14 @@ class NewsFeedWidget extends StatefulWidget {
   final String? articleType;
   final ScrollController? scrollController;
 
-  NewsFeedWidget({
+  const NewsFeedWidget({
     Key? key,
     this.tagId,
     this.articleType,
     this.scrollController,
-  });
+  }) : super(key: key);
   @override
-  _NewsFeedWidgetState createState() => _NewsFeedWidgetState();
+  State<NewsFeedWidget> createState() => _NewsFeedWidgetState();
 }
 
 class _NewsFeedWidgetState extends State<NewsFeedWidget> {
@@ -98,7 +100,7 @@ class _NewsFeedWidgetState extends State<NewsFeedWidget> {
                       scrollController: widget.scrollController,
                       tagId: widget.tagId,
                     )
-                  : LoadingIndicatorUtil(),
+                  : const LoadingIndicatorUtil(),
     );
   }
 
@@ -108,19 +110,19 @@ class _NewsFeedWidgetState extends State<NewsFeedWidget> {
       SnackBar offlineSnackBar = SnackBar(
         content: Row(
           children: [
-            Icon(
+            const Icon(
               Icons.warning_amber_rounded,
               color: Colors.black,
               size: 32,
             ),
             Expanded(
               child: Padding(
-                padding: EdgeInsets.only(
+                padding: const EdgeInsets.only(
                   left: 10,
                 ),
                 child: Text(
                   AppLocalizations.of(context)!.offline,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.black,
                     fontSize: 15,
                   ),

@@ -22,17 +22,18 @@ import 'package:loading_indicator/loading_indicator.dart';
 
 class LoadingIndicatorUtil extends StatelessWidget {
   final double? width;
-  LoadingIndicatorUtil({
+  const LoadingIndicatorUtil({
+    Key? key,
     this.width,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(10),
+      padding: const EdgeInsets.all(10),
       child: Center(
         child: SizedBox(
-          width: width != null ? width : 110.0,
+          width: width ?? 110.0,
           height: 55.0,
           child: LoadingIndicator(
             indicatorType: Indicator.values[15],

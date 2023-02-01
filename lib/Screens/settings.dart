@@ -24,7 +24,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 class SettingsScreen extends StatefulWidget {
   final Function update;
-  const SettingsScreen(this.update);
+  const SettingsScreen(this.update, {Key? key}) : super(key: key);
 
   @override
   State<SettingsScreen> createState() => _SettingsScreenState();
@@ -46,7 +46,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       appBar: AppBar(
         title: Text(
           AppLocalizations.of(context)!.settings,
-          style: TextStyle(
+          style: const TextStyle(
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -58,8 +58,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 AppearanceCard(_settingsSetState),
-                PlayerCard(),
-                OtherCard(),
+                const PlayerCard(),
+                const OtherCard(),
               ],
             ),
           ],
@@ -71,7 +71,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
 class AppearanceCard extends StatefulWidget {
   final Function update;
-  const AppearanceCard(this.update);
+  const AppearanceCard(this.update, {Key? key}) : super(key: key);
 
   @override
   State<AppearanceCard> createState() => _AppearanceCardState();
@@ -136,7 +136,7 @@ class _AppearanceCardState extends State<AppearanceCard> {
     return Column(
       children: [
         Padding(
-          padding: EdgeInsets.only(
+          padding: const EdgeInsets.only(
             top: 10,
             bottom: 10,
           ),
@@ -342,7 +342,7 @@ class _AppearanceCardState extends State<AppearanceCard> {
 }
 
 class PlayerCard extends StatefulWidget {
-  const PlayerCard();
+  const PlayerCard({Key? key}) : super(key: key);
   @override
   State<PlayerCard> createState() => _PlayerCardState();
 }
@@ -357,7 +357,7 @@ class _PlayerCardState extends State<PlayerCard> {
     return Column(
       children: [
         Padding(
-          padding: EdgeInsets.only(
+          padding: const EdgeInsets.only(
             top: 20,
             bottom: 20,
           ),
@@ -425,7 +425,7 @@ class _PlayerCardState extends State<PlayerCard> {
 }
 
 class OtherCard extends StatefulWidget {
-  const OtherCard();
+  const OtherCard({Key? key}) : super(key: key);
   @override
   State<OtherCard> createState() => _OtherCardstate();
 }
@@ -442,7 +442,7 @@ class _OtherCardstate extends State<OtherCard> {
     return Column(
       children: [
         Padding(
-          padding: EdgeInsets.only(
+          padding: const EdgeInsets.only(
             top: 20,
             bottom: 20,
           ),
@@ -469,7 +469,7 @@ class _OtherCardstate extends State<OtherCard> {
           onTap: () => Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => FormulaYouSettingsScreen(),
+              builder: (context) => const FormulaYouSettingsScreen(),
             ),
           ),
         ),

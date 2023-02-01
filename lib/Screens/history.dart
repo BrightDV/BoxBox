@@ -24,10 +24,10 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class HistoryScreen extends StatefulWidget {
-  const HistoryScreen();
+  const HistoryScreen({Key? key}) : super(key: key);
 
   @override
-  _HistoryScreenState createState() => _HistoryScreenState();
+  State<HistoryScreen> createState() => _HistoryScreenState();
 }
 
 class _HistoryScreenState extends State<HistoryScreen> {
@@ -49,7 +49,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
             onPressed: () => setState(() {
               Hive.box('history').put('articlesHistory', []);
             }),
-            icon: Icon(
+            icon: const Icon(
               Icons.delete_outline,
             ),
           ),
@@ -57,7 +57,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
       ),
       backgroundColor:
           useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
-      body: articlesHistory.length == 0
+      body: articlesHistory.isEmpty
           ? Center(
               child: Text(
                 '¯\\_(ツ)_/¯',
@@ -85,7 +85,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 },
                 child: Card(
                   elevation: 5.0,
-                  color: useDarkMode ? Color(0xff1d1d28) : Colors.white,
+                  color: useDarkMode ? const Color(0xff1d1d28) : Colors.white,
                   child: Row(
                     children: [
                       Expanded(
@@ -97,7 +97,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                       Expanded(
                         flex: 5,
                         child: Padding(
-                          padding: EdgeInsets.only(
+                          padding: const EdgeInsets.only(
                             left: 8,
                             right: 8,
                           ),

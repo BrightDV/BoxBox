@@ -111,11 +111,11 @@ class DriversList extends StatelessWidget {
   final List<Driver> items;
   final ScrollController? scrollController;
 
-  DriversList({
+  const DriversList({
     Key? key,
     required this.items,
     this.scrollController,
-  });
+  }) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
@@ -137,18 +137,20 @@ class DriverItem extends StatelessWidget {
   final Driver item;
   final int index;
 
-  DriverItem(
+  const DriverItem(
     this.item,
-    this.index,
-  );
+    this.index, {
+    Key? key,
+  }) : super(key: key);
 
   Color getTeamColors(String teamId) {
     Color tC = TeamBackgroundColor().getTeamColors(teamId);
     return tC;
   }
 
+  @override
   Widget build(BuildContext context) {
-    Color finalTeamColor = getTeamColors(this.item.team);
+    Color finalTeamColor = getTeamColors(item.team);
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     return GestureDetector(
@@ -157,9 +159,9 @@ class DriverItem extends StatelessWidget {
           context,
           MaterialPageRoute(
             builder: (context) => DriverDetailsScreen(
-              this.item.driverId,
-              this.item.givenName,
-              this.item.familyName,
+              item.driverId,
+              item.givenName,
+              item.familyName,
             ),
           ),
         );
@@ -168,11 +170,11 @@ class DriverItem extends StatelessWidget {
         height: 120,
         color: index % 2 == 1
             ? useDarkMode
-                ? Color(0xff22222c)
-                : Color(0xffffffff)
+                ? const Color(0xff22222c)
+                : const Color(0xffffffff)
             : useDarkMode
-                ? Color(0xff15151f)
-                : Color(0xfff4f4f4),
+                ? const Color(0xff15151f)
+                : const Color(0xfff4f4f4),
         child: Row(
           children: <Widget>[
             Expanded(
@@ -183,24 +185,24 @@ class DriverItem extends StatelessWidget {
                   Expanded(
                     child: Container(
                       height: 84,
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         borderRadius: BorderRadius.all(
                           Radius.circular(5.0),
                         ),
                       ),
-                      padding: EdgeInsets.all(5),
+                      padding: const EdgeInsets.all(5),
                       child: Row(
                         children: <Widget>[
                           Expanded(
                             flex: 1,
                             child: Text(
-                              this.item.position,
+                              item.position,
                               style: TextStyle(
                                 fontWeight: FontWeight.w600,
                                 fontSize: 20,
                                 color: useDarkMode
                                     ? Colors.white
-                                    : Color(0xff171717),
+                                    : const Color(0xff171717),
                               ),
                               textAlign: TextAlign.center,
                             ),
@@ -217,7 +219,7 @@ class DriverItem extends StatelessWidget {
                           Expanded(
                             flex: 4,
                             child: Padding(
-                              padding: EdgeInsets.only(
+                              padding: const EdgeInsets.only(
                                 left: 10,
                               ),
                               child: Column(
@@ -225,44 +227,44 @@ class DriverItem extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    this.item.givenName,
+                                    item.givenName,
                                     style: TextStyle(
                                       color: useDarkMode
                                           ? Colors.white54
-                                          : Color(0xff171717),
+                                          : const Color(0xff171717),
                                       fontSize: 18,
                                     ),
                                   ),
                                   Text(
-                                    this.item.familyName,
+                                    item.familyName,
                                     style: TextStyle(
                                       fontWeight: FontWeight.w600,
                                       fontSize: 19,
                                       color: useDarkMode
                                           ? Colors.white
-                                          : Color(0xff171717),
+                                          : const Color(0xff171717),
                                     ),
                                   ),
                                   Padding(
-                                    padding: EdgeInsets.only(top: 5),
-                                    child: int.parse(this.item.points) == 1
+                                    padding: const EdgeInsets.only(top: 5),
+                                    child: int.parse(item.points) == 1
                                         ? Text(
-                                            "${this.item.points} ${AppLocalizations.of(context)?.point}",
+                                            "${item.points} ${AppLocalizations.of(context)?.point}",
                                             style: TextStyle(
                                               fontSize: 20,
                                               color: useDarkMode
                                                   ? Colors.white
-                                                  : Color(0xff171717),
+                                                  : const Color(0xff171717),
                                             ),
                                             textAlign: TextAlign.center,
                                           )
                                         : Text(
-                                            "${this.item.points} ${AppLocalizations.of(context)?.points}",
+                                            "${item.points} ${AppLocalizations.of(context)?.points}",
                                             style: TextStyle(
                                               fontSize: 20,
                                               color: useDarkMode
                                                   ? Colors.white
-                                                  : Color(0xff171717),
+                                                  : const Color(0xff171717),
                                             ),
                                             textAlign: TextAlign.center,
                                           ),
@@ -279,7 +281,7 @@ class DriverItem extends StatelessWidget {
               ),
             ),
             DriverImageProvider(
-              this.item.driverId,
+              item.driverId,
             ),
           ],
         ),
@@ -294,11 +296,11 @@ class DriverImageProvider extends StatelessWidget {
   }
 
   final String driverId;
-  DriverImageProvider(this.driverId);
+  const DriverImageProvider(this.driverId, {Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: getDriverImageUrl(this.driverId),
+      future: getDriverImageUrl(driverId),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           RequestErrorWidget(snapshot.error.toString());
@@ -306,13 +308,13 @@ class DriverImageProvider extends StatelessWidget {
         return snapshot.hasData
             ? CachedNetworkImage(
                 imageUrl: snapshot.data.toString(),
-                placeholder: (context, url) => LoadingIndicatorUtil(),
+                placeholder: (context, url) => const LoadingIndicatorUtil(),
                 errorWidget: (context, url, error) =>
-                    Icon(Icons.error_outlined),
-                fadeOutDuration: Duration(milliseconds: 500),
-                fadeInDuration: Duration(milliseconds: 500),
+                    const Icon(Icons.error_outlined),
+                fadeOutDuration: const Duration(milliseconds: 500),
+                fadeInDuration: const Duration(milliseconds: 500),
               )
-            : LoadingIndicatorUtil();
+            : const LoadingIndicatorUtil();
       },
     );
   }

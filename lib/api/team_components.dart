@@ -54,29 +54,27 @@ class TeamItem extends StatelessWidget {
   final Team item;
   final int index;
 
-  TeamItem(
-    this.item,
-    this.index,
-  );
+  const TeamItem(this.item, this.index, {Key? key}) : super(key: key);
 
   Color getTeamColors(String teamId) {
     Color tC = TeamBackgroundColor().getTeamColors(teamId);
     return tC;
   }
 
+  @override
   Widget build(BuildContext context) {
-    Color finalTeamColors = getTeamColors(this.item.constructorId);
+    Color finalTeamColors = getTeamColors(item.constructorId);
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     return Container(
       height: 120,
       color: index % 2 == 1
           ? useDarkMode
-              ? Color(0xff22222c)
-              : Color(0xffffffff)
+              ? const Color(0xff22222c)
+              : const Color(0xffffffff)
           : useDarkMode
-              ? Color(0xff15151f)
-              : Color(0xfff4f4f4),
+              ? const Color(0xff15151f)
+              : const Color(0xfff4f4f4),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
@@ -84,11 +82,11 @@ class TeamItem extends StatelessWidget {
             flex: 2,
             child: Center(
               child: Text(
-                '${this.item.position}',
+                item.position,
                 style: TextStyle(
                   fontWeight: FontWeight.w600,
                   fontSize: 18,
-                  color: useDarkMode ? Colors.white : Color(0xff171717),
+                  color: useDarkMode ? Colors.white : const Color(0xff171717),
                 ),
               ),
             ),
@@ -110,46 +108,52 @@ class TeamItem extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text(
-                  "${this.item.name}",
+                  item.name,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontWeight: FontWeight.w600,
                     fontSize: 18,
-                    color: useDarkMode ? Colors.white : Color(0xff171717),
+                    color: useDarkMode ? Colors.white : const Color(0xff171717),
                   ),
                 ),
-                int.parse(this.item.points) == 1
+                int.parse(item.points) == 1
                     ? Text(
-                        "${this.item.points} ${AppLocalizations.of(context)?.point}",
+                        "${item.points} ${AppLocalizations.of(context)?.point}",
                         style: TextStyle(
                           fontSize: 18,
-                          color: useDarkMode ? Colors.white : Color(0xff171717),
+                          color: useDarkMode
+                              ? Colors.white
+                              : const Color(0xff171717),
                         ),
                       )
                     : Text(
-                        "${this.item.points} ${AppLocalizations.of(context)?.points}",
+                        "${item.points} ${AppLocalizations.of(context)?.points}",
                         style: TextStyle(
                           fontSize: 18,
-                          color: useDarkMode ? Colors.white : Color(0xff171717),
+                          color: useDarkMode
+                              ? Colors.white
+                              : const Color(0xff171717),
                         ),
                       ),
                 Padding(
-                  padding: EdgeInsets.only(top: 5),
-                  child: int.parse(this.item.wins) == 1
+                  padding: const EdgeInsets.only(top: 5),
+                  child: int.parse(item.wins) == 1
                       ? Text(
-                          "${this.item.wins} ${AppLocalizations.of(context)?.victory}",
+                          "${item.wins} ${AppLocalizations.of(context)?.victory}",
                           style: TextStyle(
                             fontSize: 17,
-                            color:
-                                useDarkMode ? Colors.white : Color(0xff171717),
+                            color: useDarkMode
+                                ? Colors.white
+                                : const Color(0xff171717),
                           ),
                         )
                       : Text(
-                          "${this.item.wins} ${AppLocalizations.of(context)?.victories}",
+                          "${item.wins} ${AppLocalizations.of(context)?.victories}",
                           style: TextStyle(
                             fontSize: 17,
-                            color:
-                                useDarkMode ? Colors.white : Color(0xff171717),
+                            color: useDarkMode
+                                ? Colors.white
+                                : const Color(0xff171717),
                           ),
                         ),
                 ),
@@ -159,7 +163,7 @@ class TeamItem extends StatelessWidget {
           Expanded(
             flex: 6,
             child: TeamCarImageProvider(
-              this.item.constructorId,
+              item.constructorId,
             ),
           ),
         ],
@@ -174,11 +178,11 @@ class TeamCarImageProvider extends StatelessWidget {
   }
 
   final String teamId;
-  TeamCarImageProvider(this.teamId);
+  const TeamCarImageProvider(this.teamId, {Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<String>(
-      future: getCircuitImageUrl(this.teamId),
+      future: getCircuitImageUrl(teamId),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return RequestErrorWidget(snapshot.error.toString());
@@ -193,7 +197,7 @@ class TeamCarImageProvider extends StatelessWidget {
                     decoration: BoxDecoration(
                       image: DecorationImage(
                         fit: BoxFit.fitHeight,
-                        alignment: Alignment(0.9, 0.0),
+                        alignment: const Alignment(0.9, 0.0),
                         image: CachedNetworkImageProvider(
                           snapshot.data!,
                         ),
@@ -202,7 +206,7 @@ class TeamCarImageProvider extends StatelessWidget {
                   ),
                 ),
               )
-            : LoadingIndicatorUtil();
+            : const LoadingIndicatorUtil();
       },
     );
   }
@@ -212,11 +216,11 @@ class TeamsList extends StatelessWidget {
   final List<Team> items;
   final ScrollController? scrollController;
 
-  TeamsList({
+  const TeamsList({
     Key? key,
     required this.items,
     this.scrollController,
-  });
+  }) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return ListView.builder(

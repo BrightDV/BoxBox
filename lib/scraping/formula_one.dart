@@ -59,31 +59,29 @@ class FormulaOneScraper {
     http.Response response = await http.get(resultsUrl);
     dom.Document document = parser.parse(response.body);
     List<DriverResult> results = [];
-    List<dom.Element> _tempResults = document.getElementsByTagName('tr');
-    _tempResults.removeAt(0);
-    _tempResults.forEach(
-      (result) {
-        results.add(
-          DriverResult(
-            'driverId',
-            result.children[1].text,
-            result.children[2].text,
-            result.children[3].children[0].text,
-            result.children[3].children[1].text,
-            result.children[3].children[2].text,
-            Convert().teamsFromFormulaOneToErgast(
-              result.children[4].text,
-            ),
-            result.children[6].text,
-            false,
-            '2:00.000',
-            '2:00.000',
-            lapsDone: result.children[5].text,
-            points: result.children[7].text,
+    List<dom.Element> tempResults = document.getElementsByTagName('tr');
+    tempResults.removeAt(0);
+    for (var result in tempResults) {
+      results.add(
+        DriverResult(
+          'driverId',
+          result.children[1].text,
+          result.children[2].text,
+          result.children[3].children[0].text,
+          result.children[3].children[1].text,
+          result.children[3].children[2].text,
+          Convert().teamsFromFormulaOneToErgast(
+            result.children[4].text,
           ),
-        );
-      },
-    );
+          result.children[6].text,
+          false,
+          '2:00.000',
+          '2:00.000',
+          lapsDone: result.children[5].text,
+          points: result.children[7].text,
+        ),
+      );
+    }
     return results;
   }
 
@@ -106,9 +104,8 @@ class FormulaOneScraper {
       circuitId = originalCircuitId;
       circuitName = originalCircuitName!;
     }
-    final Uri resultsUrl = Uri.parse(qualifyingResultsUrl != null
-        ? qualifyingResultsUrl
-        : 'https://www.formula1.com/en/results.html/${DateTime.now().year}/races/$circuitId/$circuitName/$sessionName.html');
+    final Uri resultsUrl = Uri.parse(qualifyingResultsUrl ??
+        'https://www.formula1.com/en/results.html/${DateTime.now().year}/races/$circuitId/$circuitName/$sessionName.html');
 
     http.Response response = await http.get(resultsUrl);
     dom.Document document = parser.parse(response.body);
@@ -122,30 +119,28 @@ class FormulaOneScraper {
       }
     }
     if (isQualifyingsFinished) {
-      List<dom.Element> _tempResults = document.getElementsByTagName('tr');
+      List<dom.Element> tempResults = document.getElementsByTagName('tr');
       List<DriverQualificationResult> results = [];
 
-      _tempResults.removeAt(0);
-      _tempResults.forEach(
-        (result) {
-          results.add(
-            DriverQualificationResult(
-              'driverId',
-              result.children[1].text,
-              result.children[2].text,
-              result.children[3].children[0].text,
-              result.children[3].children[1].text,
-              result.children[3].children[2].text,
-              Convert().teamsFromFormulaOneToErgast(
-                result.children[4].text,
-              ),
-              result.children[5].text != '' ? result.children[5].text : '--',
-              result.children[6].text != '' ? result.children[6].text : '--',
-              result.children[7].text != '' ? result.children[7].text : '--',
+      tempResults.removeAt(0);
+      for (var result in tempResults) {
+        results.add(
+          DriverQualificationResult(
+            'driverId',
+            result.children[1].text,
+            result.children[2].text,
+            result.children[3].children[0].text,
+            result.children[3].children[1].text,
+            result.children[3].children[2].text,
+            Convert().teamsFromFormulaOneToErgast(
+              result.children[4].text,
             ),
-          );
-        },
-      );
+            result.children[5].text != '' ? result.children[5].text : '--',
+            result.children[6].text != '' ? result.children[6].text : '--',
+            result.children[7].text != '' ? result.children[7].text : '--',
+          ),
+        );
+      }
 
       return results;
     } else {
@@ -199,30 +194,28 @@ class FormulaOneScraper {
     }
     if (isFreePracticeFinished) {
       List<DriverResult> results = [];
-      List<dom.Element> _tempResults = document.getElementsByTagName('tr');
-      _tempResults.removeAt(0);
-      _tempResults.forEach(
-        (result) {
-          results.add(
-            DriverResult(
-              'driverId',
-              result.children[1].text,
-              result.children[2].text,
-              result.children[3].children[0].text,
-              result.children[3].children[1].text,
-              result.children[3].children[2].text,
-              Convert().teamsFromFormulaOneToErgast(
-                result.children[4].text,
-              ),
-              result.children[5].text,
-              false,
-              result.children[6].text,
-              result.children[6].text,
-              lapsDone: result.children[7].text,
+      List<dom.Element> tempResults = document.getElementsByTagName('tr');
+      tempResults.removeAt(0);
+      for (var result in tempResults) {
+        results.add(
+          DriverResult(
+            'driverId',
+            result.children[1].text,
+            result.children[2].text,
+            result.children[3].children[0].text,
+            result.children[3].children[1].text,
+            result.children[3].children[2].text,
+            Convert().teamsFromFormulaOneToErgast(
+              result.children[4].text,
             ),
-          );
-        },
-      );
+            result.children[5].text,
+            false,
+            result.children[6].text,
+            result.children[6].text,
+            lapsDone: result.children[7].text,
+          ),
+        );
+      }
       return results;
     } else {
       return [
@@ -251,16 +244,16 @@ class FormulaOneScraper {
       utf8.decode(response.bodyBytes),
     );
 
-    List<dom.Element> _tempDetails = document.getElementsByTagName('tr');
+    List<dom.Element> tempDetails = document.getElementsByTagName('tr');
     for (int i = 0; i < 10; i++) {
-      results[0].add(_tempDetails[i].children[1].text);
+      results[0].add(tempDetails[i].children[1].text);
     }
 
-    List<dom.Element> _tempDriverArticles = document
+    List<dom.Element> tempDriverArticles = document
         .getElementsByClassName('articles')[0]
         .getElementsByClassName('article-teaser-link');
-    _tempDriverArticles.forEach(
-      (element) => results[1].add(
+    for (var element in tempDriverArticles) {
+      results[1].add(
         [
           element.attributes['href']!.split('.')[2],
           element.children[0].children[0].attributes['style']!
@@ -269,47 +262,39 @@ class FormulaOneScraper {
           element.children[0].children[1].children[1].text,
           element.children[0].children[1].children[0].text,
         ],
-      ),
-    );
+      );
+    }
 
-    List<dom.Element> _tempBiography = document
+    List<dom.Element> tempBiography = document
         .getElementsByClassName('biography')[0]
         .children[
             document.getElementsByClassName('biography')[0].children.length - 1]
         .children;
-    _tempBiography.forEach(
-      (element) {
-        results[2].add(element.text);
-      },
-    );
+    for (var element in tempBiography) {
+      results[2].add(element.text);
+    }
 
-    List<dom.Element> _tempDriverMedias =
+    List<dom.Element> tempDriverMedias =
         document.getElementsByClassName('swiper-slide');
-    _tempDriverMedias.forEach(
-      (element) {
-        String imageUrl;
-        if (!element.children[0].children[0].attributes['data-path']!
-            .startsWith(
-          ('https://'),
-        )) {
-          imageUrl = 'https://formula1.com' +
-              element.children[0].children[0].attributes['data-path']!;
-        } else {
-          imageUrl = element.children[0].children[0].attributes['data-path']!;
-        }
-        imageUrl += '.img.640.medium.' +
-            element.children[0].children[0].attributes['data-extension']! +
-            element.children[0].children[0].attributes['data-suffix']!;
-        results[3][0].add(imageUrl);
-      },
-    );
+    for (var element in tempDriverMedias) {
+      String imageUrl;
+      if (!element.children[0].children[0].attributes['data-path']!.startsWith(
+        ('https://'),
+      )) {
+        imageUrl =
+            'https://formula1.com${element.children[0].children[0].attributes['data-path']!}';
+      } else {
+        imageUrl = element.children[0].children[0].attributes['data-path']!;
+      }
+      imageUrl +=
+          '.img.640.medium.${element.children[0].children[0].attributes['data-extension']!}${element.children[0].children[0].attributes['data-suffix']!}';
+      results[3][0].add(imageUrl);
+    }
 
-    _tempDriverMedias = document.getElementsByClassName('gallery-description');
-    _tempDriverMedias.forEach(
-      (element) {
-        results[3][1].add(element.text);
-      },
-    );
+    tempDriverMedias = document.getElementsByClassName('gallery-description');
+    for (var element in tempDriverMedias) {
+      results[3][1].add(element.text);
+    }
 
     return results;
   }
@@ -322,11 +307,11 @@ class FormulaOneScraper {
         'https://www.formula1.com/en/results.html/${DateTime.now().year}/races/$circuitId/$circuitName.html');
     http.Response response = await http.get(resultsUrl);
     dom.Document document = parser.parse(response.body);
-    List<dom.Element>? _tempResults =
+    List<dom.Element>? tempResults =
         document.getElementsByClassName('side-nav-item');
-    _tempResults.remove(0);
+    tempResults.removeAt(0);
     int maxSession = 0;
-    for (dom.Element element in _tempResults) {
+    for (dom.Element element in tempResults) {
       if (element.text.contains('Practice')) {
         if (int.parse(element.text.substring(38, 40)) > maxSession) {
           maxSession = int.parse(element.text.substring(38, 40));
@@ -342,10 +327,10 @@ class FormulaOneScraper {
         Uri.parse('https://www.formula1.com/en/drivers/hall-of-fame.html');
     http.Response response = await http.get(driverDetailsUrl);
     dom.Document document = parser.parse(response.body);
-    List<dom.Element>? _tempResults =
+    List<dom.Element>? tempResults =
         document.getElementsByClassName('fom-teaser');
-    _tempResults.forEach(
-      (element) => results.add(
+    for (var element in tempResults) {
+      results.add(
         HallOfFameDriver(
           element.children[0].children[1].attributes['alt']!
               .toString()
@@ -356,8 +341,8 @@ class FormulaOneScraper {
           'https://www.formula1.com/content/fom-website/en/drivers/hall-of-fame/${element.children[0].children[1].attributes['alt']!.toString().split(' - ')[0].replaceAll(' ', '_')}.html',
           'https://www.formula1.com/content/fom-website/en/drivers/hall-of-fame/${element.children[0].children[1].attributes['alt']!.toString().split(' - ')[0].replaceAll(' ', '_')}/_jcr_content/image16x9.img.640.medium.jpg',
         ),
-      ),
-    );
+      );
+    }
     return results;
   }
 
@@ -366,11 +351,11 @@ class FormulaOneScraper {
     final Uri driverDetailsUrl = Uri.parse(pageUrl);
     http.Response response = await http.get(driverDetailsUrl);
     dom.Document document = parser.parse(response.body);
-    dom.Element _tempResult = document.getElementsByTagName('main')[0];
+    dom.Element tempResult = document.getElementsByTagName('main')[0];
     results['metaDescription'] =
-        _tempResult.getElementsByClassName('strapline')[0].text;
+        tempResult.getElementsByClassName('strapline')[0].text;
     List parts = [];
-    _tempResult.getElementsByClassName('text parbase').forEach(
+    tempResult.getElementsByClassName('text parbase').forEach(
           (paragraph) => paragraph.getElementsByTagName('p').forEach(
                 (element) => parts.add(element.text),
               ),
@@ -386,8 +371,8 @@ class FormulaOneScraper {
         'https://www.formula1.com/en/racing/${DateTime.now().year}/$formulaOneCircuitName/Circuit.html');
     http.Response response = await http.get(formulaOneCircuitPageUrl);
     dom.Document document = parser.parse(response.body);
-    dom.Element _tempResult = document.getElementsByTagName('main')[0];
-    _tempResult.getElementsByClassName('f1-stat').forEach((element) {
+    dom.Element tempResult = document.getElementsByTagName('main')[0];
+    tempResult.getElementsByClassName('f1-stat').forEach((element) {
       String elementSubstring = element.innerHtml
           .replaceAll('  ', '')
           .replaceAll('<p class="misc--label">', '')
@@ -419,8 +404,8 @@ class FormulaOneScraper {
     dom.Document document = parser.parse(
       utf8.decode(response.bodyBytes),
     );
-    dom.Element _tempResult = document.getElementsByTagName('main')[0];
-    String circuitHistory = _tempResult
+    dom.Element tempResult = document.getElementsByTagName('main')[0];
+    String circuitHistory = tempResult
         .getElementsByClassName('f1-race-hub--content')[0]
         .children[0]
         .children[0]

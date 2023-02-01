@@ -39,7 +39,7 @@ class LinksScreen extends StatelessWidget {
       backgroundColor:
           useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
       body: Padding(
-        padding: EdgeInsets.only(
+        padding: const EdgeInsets.only(
           left: 15,
           right: 15,
         ),

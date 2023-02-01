@@ -31,14 +31,14 @@ import 'package:hive_flutter/hive_flutter.dart';
 class StandingsScreen extends StatefulWidget {
   final bool? switchToTeamStandings;
   final ScrollController? scrollController;
-  StandingsScreen({
+  const StandingsScreen({
     Key? key,
     this.switchToTeamStandings,
     this.scrollController,
   }) : super(key: key);
 
   @override
-  _StandingsScreenState createState() => _StandingsScreenState();
+  State<StandingsScreen> createState() => _StandingsScreenState();
 }
 
 class _StandingsScreenState extends State<StandingsScreen> {
@@ -59,8 +59,8 @@ class _StandingsScreenState extends State<StandingsScreen> {
           ],
         ),
         appBar: PreferredSize(
-          preferredSize: Size(200, 100),
-          child: Container(
+          preferredSize: const Size(200, 100),
+          child: SizedBox(
             height: 50,
             child: Card(
               elevation: 3,
@@ -69,13 +69,13 @@ class _StandingsScreenState extends State<StandingsScreen> {
                 tabs: [
                   Text(
                     AppLocalizations.of(context)!.drivers,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                   Text(
                     AppLocalizations.of(context)!.teams,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -92,7 +92,8 @@ class _StandingsScreenState extends State<StandingsScreen> {
 class DriversStandingsWidget extends StatelessWidget {
   final ScrollController? scrollController;
 
-  DriversStandingsWidget({Key? key, this.scrollController}) : super(key: key);
+  const DriversStandingsWidget({Key? key, this.scrollController})
+      : super(key: key);
 
   Future<List<Driver>> getDriversList() async {
     return await ErgastApi().getLastStandings();
@@ -105,13 +106,14 @@ class DriversStandingsWidget extends StatelessWidget {
     return FutureBuilder<List<Driver>>(
       future: getDriversList(),
       builder: (context, snapshot) {
-        if (snapshot.hasError)
+        if (snapshot.hasError) {
           driversStandings['MRData'] != null
               ? DriversList(
                   items: ErgastApi().formatLastStandings(driversStandings),
                   scrollController: scrollController,
                 )
               : RequestErrorWidget(snapshot.error.toString());
+        }
         return snapshot.hasData
             ? DriversList(
                 items: snapshot.data!,
@@ -122,7 +124,7 @@ class DriversStandingsWidget extends StatelessWidget {
                     items: ErgastApi().formatLastStandings(driversStandings),
                     scrollController: scrollController,
                   )
-                : LoadingIndicatorUtil();
+                : const LoadingIndicatorUtil();
       },
     );
   }
@@ -131,7 +133,7 @@ class DriversStandingsWidget extends StatelessWidget {
 class TeamsStandingsWidget extends StatelessWidget {
   final ScrollController? scrollController;
 
-  TeamsStandingsWidget({
+  const TeamsStandingsWidget({
     Key? key,
     this.scrollController,
   }) : super(key: key);
@@ -147,13 +149,14 @@ class TeamsStandingsWidget extends StatelessWidget {
     return FutureBuilder<List<Team>>(
       future: getLastTeamsStandings(),
       builder: (context, snapshot) {
-        if (snapshot.hasError)
+        if (snapshot.hasError) {
           teamsStandings['MRData'] != null
               ? TeamsList(
                   items: ErgastApi().formatLastTeamsStandings(teamsStandings),
                   scrollController: scrollController,
                 )
               : RequestErrorWidget(snapshot.error.toString());
+        }
         return snapshot.hasData
             ? TeamsList(
                 items: snapshot.data!,
@@ -164,7 +167,7 @@ class TeamsStandingsWidget extends StatelessWidget {
                     items: ErgastApi().formatLastTeamsStandings(teamsStandings),
                     scrollController: scrollController,
                   )
-                : LoadingIndicatorUtil();
+                : const LoadingIndicatorUtil();
       },
     );
   }

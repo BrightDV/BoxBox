@@ -60,9 +60,8 @@ class SearXSearch {
       utf8.decode(response.bodyBytes),
     );
     List<Map> results = [];
-    List<dom.Element> _tempResults = document.getElementsByTagName('article');
-    _tempResults.forEach(
-      (element) {
+    List<dom.Element> tempResults = document.getElementsByTagName('article');
+    for (var element in tempResults) {
         if (element.firstChild!.attributes['href']!
             .contains('formula1.com/en/latest/article')) {
           results.add(
@@ -76,8 +75,7 @@ class SearXSearch {
             },
           );
         }
-      },
-    );
+      }
     return results;
   }
 }

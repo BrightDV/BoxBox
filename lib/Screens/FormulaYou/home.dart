@@ -24,9 +24,9 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class PersonalizedHomeScreen extends StatefulWidget {
-  PersonalizedHomeScreen();
+  const PersonalizedHomeScreen({Key? key}) : super(key: key);
   @override
-  _PersonalizedHomeScreenState createState() => _PersonalizedHomeScreenState();
+  State<PersonalizedHomeScreen> createState() => _PersonalizedHomeScreenState();
 }
 
 class _PersonalizedHomeScreenState extends State<PersonalizedHomeScreen> {
@@ -47,13 +47,14 @@ class _PersonalizedHomeScreenState extends State<PersonalizedHomeScreen> {
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     Map availableTags = FormulaYouTags().unifiedTags();
     List selectedTagsIds = [];
-    for (String tagName in selectedTags)
+    for (String tagName in selectedTags) {
       selectedTagsIds.add(
         availableTags[tagName],
       );
+    }
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'Formula You',
           style: TextStyle(
             fontWeight: FontWeight.w600,
@@ -61,7 +62,7 @@ class _PersonalizedHomeScreenState extends State<PersonalizedHomeScreen> {
         ),
         actions: [
           IconButton(
-            icon: Icon(
+            icon: const Icon(
               Icons.settings_outlined,
             ),
             onPressed: () => Navigator.push(

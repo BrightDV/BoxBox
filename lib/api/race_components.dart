@@ -55,12 +55,10 @@ class RaceItem extends StatelessWidget {
   final int index;
   final bool isUpNext;
 
-  RaceItem(
-    this.item,
-    this.index,
-    this.isUpNext,
-  );
+  const RaceItem(this.item, this.index, this.isUpNext, {Key? key})
+      : super(key: key);
 
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => Navigator.push(
@@ -81,7 +79,7 @@ class RaceItem extends StatelessWidget {
                           snapshot.data!,
                           inSchedule: true,
                         )
-                      : LoadingIndicatorUtil(),
+                      : const LoadingIndicatorUtil(),
                 ),
                 RaceListItem(item, index),
               ],
@@ -95,14 +93,12 @@ class RaceListItem extends StatelessWidget {
   final Race item;
   final int index;
 
-  RaceListItem(
-    this.item,
-    this.index,
-  );
+  const RaceListItem(this.item, this.index, {Key? key}) : super(key: key);
 
+  @override
   Widget build(BuildContext context) {
-    int month = int.parse(this.item.date.split("-")[1]);
-    String day = this.item.date.split("-")[2];
+    int month = int.parse(item.date.split("-")[1]);
+    String day = item.date.split("-")[2];
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     List months = [
@@ -120,22 +116,22 @@ class RaceListItem extends StatelessWidget {
       AppLocalizations.of(context)?.monthAbbreviationDecember,
     ];
     return Container(
-      padding: EdgeInsets.all(2),
+      padding: const EdgeInsets.all(2),
       height: 80,
       color: index % 2 == 1
           ? useDarkMode
-              ? Color(0xff22222c)
-              : Color(0xffffffff)
+              ? const Color(0xff22222c)
+              : const Color(0xffffffff)
           : useDarkMode
-              ? Color(0xff15151f)
-              : Color(0xfff4f4f4),
+              ? const Color(0xff15151f)
+              : const Color(0xfff4f4f4),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Container(
             padding: index == 0
-                ? EdgeInsets.fromLTRB(10, 0, 10, 10)
-                : EdgeInsets.all(10),
+                ? const EdgeInsets.fromLTRB(10, 0, 10, 10)
+                : const EdgeInsets.all(10),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
@@ -146,23 +142,23 @@ class RaceListItem extends StatelessWidget {
                       borderRadius: BorderRadius.circular(7),
                       color: useDarkMode
                           ? index % 2 == 0
-                              ? Color.fromARGB(255, 36, 36, 48)
-                              : Color.fromARGB(255, 23, 23, 34)
-                          : Color.fromARGB(255, 136, 135, 135),
+                              ? const Color.fromARGB(255, 36, 36, 48)
+                              : const Color.fromARGB(255, 23, 23, 34)
+                          : const Color.fromARGB(255, 136, 135, 135),
                     ),
                     child: Padding(
-                      padding: EdgeInsets.all(5),
+                      padding: const EdgeInsets.all(5),
                       child: Column(
                         children: [
                           Text(
                             day,
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: Colors.white,
                             ),
                           ),
                           Text(
                             months[month - 1].toLowerCase(),
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: Colors.white,
                             ),
                           ),
@@ -174,24 +170,25 @@ class RaceListItem extends StatelessWidget {
                 Expanded(
                   flex: 5,
                   child: Padding(
-                    padding: EdgeInsets.only(
+                    padding: const EdgeInsets.only(
                       left: 10,
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          this.item.country,
+                          item.country,
                           style: TextStyle(
-                            color:
-                                useDarkMode ? Colors.white : Color(0xff171717),
+                            color: useDarkMode
+                                ? Colors.white
+                                : const Color(0xff171717),
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.only(top: 5),
+                          padding: const EdgeInsets.only(top: 5),
                           child: Text(
-                            this.item.circuitName,
-                            style: TextStyle(
+                            item.circuitName,
+                            style: const TextStyle(
                               color: Color.fromARGB(255, 136, 135, 135),
                               fontSize: 12,
                             ),
@@ -215,12 +212,12 @@ class RacesList extends StatelessWidget {
   final bool isUpNext;
   final ScrollController? scrollController;
 
-  RacesList(
+  const RacesList(
     this.items,
     this.isUpNext, {
     Key? key,
     this.scrollController,
-  });
+  }) : super(key: key);
 
   int createUniqueId() {
     return DateTime.now().millisecondsSinceEpoch.remainder(100000);
@@ -275,7 +272,7 @@ class RacesList extends StatelessWidget {
                     index,
                     isUpNext,
                   ),
-            physics: ClampingScrollPhysics(),
+            physics: const ClampingScrollPhysics(),
             //),
           )
         : ListView.builder(
@@ -294,7 +291,7 @@ class RacesList extends StatelessWidget {
                     index,
                     isUpNext,
                   ),
-            physics: ClampingScrollPhysics(),
+            physics: const ClampingScrollPhysics(),
           );
   }
 }

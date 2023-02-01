@@ -35,8 +35,9 @@ class DriverDetailsScreen extends StatelessWidget {
   const DriverDetailsScreen(
     this.driverId,
     this.givenName,
-    this.familyName,
-  );
+    this.familyName, {
+    Key? key,
+  }) : super(key: key);
   @override
   Widget build(BuildContext context) {
     bool useDarkMode =
@@ -45,7 +46,7 @@ class DriverDetailsScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           '$givenName ${familyName.toUpperCase()}',
-          style: TextStyle(
+          style: const TextStyle(
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -53,7 +54,7 @@ class DriverDetailsScreen extends StatelessWidget {
       backgroundColor:
           useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
       body: Padding(
-        padding: EdgeInsets.all(5),
+        padding: const EdgeInsets.all(5),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -72,7 +73,7 @@ class DriverDetailsScreen extends StatelessWidget {
                         ? DriverDetailsFragment(
                             snapshot.data!,
                           )
-                        : LoadingIndicatorUtil(),
+                        : const LoadingIndicatorUtil(),
               ),
             ],
           ),
@@ -96,11 +97,15 @@ class DriverImageProvider extends StatelessWidget {
 
   final String driverId;
   final String idOfImage;
-  DriverImageProvider(this.driverId, this.idOfImage);
+  const DriverImageProvider(
+    this.driverId,
+    this.idOfImage, {
+    Key? key,
+  }) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<String>(
-      future: getImageURL(this.driverId, this.idOfImage),
+      future: getImageURL(driverId, idOfImage),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return RequestErrorWidget(snapshot.error.toString());
@@ -111,7 +116,7 @@ class DriverImageProvider extends StatelessWidget {
                 width: idOfImage == 'driver' ? 400 : 200,
                 //fit: BoxFit.scaleDown,
               )
-            : LoadingIndicatorUtil();
+            : const LoadingIndicatorUtil();
       },
     );
   }
@@ -141,7 +146,7 @@ class DriverDetailsFragment extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Padding(
-          padding: EdgeInsets.all(5),
+          padding: const EdgeInsets.all(5),
           child: Column(
             children: [
               for (int i = 0; i < driverDetails[0].length; i++)
@@ -215,7 +220,7 @@ class DriverDetailsFragment extends StatelessWidget {
                                     ),
                                     true,
                                   )
-                                : Container(
+                                : const SizedBox(
                                     height: 200,
                                     child: LoadingIndicatorUtil(),
                                   );
@@ -227,7 +232,7 @@ class DriverDetailsFragment extends StatelessWidget {
           ],
         ),
         Padding(
-          padding: EdgeInsets.all(15),
+          padding: const EdgeInsets.all(15),
           child: Column(
             children: [
               Text(
@@ -239,7 +244,7 @@ class DriverDetailsFragment extends StatelessWidget {
               ),
               for (String biographyParagraph in driverDetails[2])
                 Text(
-                  '\n' + biographyParagraph,
+                  '\n$biographyParagraph',
                   style: TextStyle(
                     color: useDarkMode ? Colors.white : Colors.black,
                   ),
@@ -249,11 +254,11 @@ class DriverDetailsFragment extends StatelessWidget {
           ),
         ),
         Padding(
-          padding: EdgeInsets.only(left: 5, right: 5),
+          padding: const EdgeInsets.only(left: 5, right: 5),
           child: Column(
             children: [
               Padding(
-                padding: EdgeInsets.only(bottom: 15),
+                padding: const EdgeInsets.only(bottom: 15),
                 child: Text(
                   AppLocalizations.of(context)!.gallery,
                   style: TextStyle(
@@ -269,7 +274,7 @@ class DriverDetailsFragment extends StatelessWidget {
                       children: [
                         Image.network(driverDetails[3][0][i]),
                         Padding(
-                          padding: EdgeInsets.only(
+                          padding: const EdgeInsets.only(
                             top: 10,
                           ),
                           child: Text(
@@ -288,7 +293,7 @@ class DriverDetailsFragment extends StatelessWidget {
                   height: 350,
                   autoPlay: true,
                   viewportFraction: 0.85,
-                  autoPlayInterval: Duration(seconds: 7),
+                  autoPlayInterval: const Duration(seconds: 7),
                   enlargeCenterPage: true,
                   aspectRatio: 16 / 9,
                 ),

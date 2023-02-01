@@ -52,7 +52,7 @@ class BrightCove {
         streamUrls['videos'].insert(0, element['src']);
         foundPreferedQuality = true;
       } else if (element['codec'] == 'H264' &&
-          resSelected.indexOf(element['height']) == -1) {
+          !resSelected.contains(element['height'])) {
         resSelected.add(element['height']);
         streamUrls['videos'].add(element['src']);
       }

@@ -42,10 +42,10 @@ class RaceDetailsScreen extends StatefulWidget {
   final Race race;
   final int? tab;
 
-  const RaceDetailsScreen(this.race, {this.tab});
+  const RaceDetailsScreen(this.race, {Key? key, this.tab}) : super(key: key);
 
   @override
-  _RaceDetailsScreenState createState() => _RaceDetailsScreenState();
+  State<RaceDetailsScreen> createState() => _RaceDetailsScreenState();
 }
 
 class _RaceDetailsScreenState extends State<RaceDetailsScreen> {
@@ -167,7 +167,7 @@ class _RaceDetailsScreenState extends State<RaceDetailsScreen> {
               )
             : snapshot.hasError
                 ? RequestErrorWidget(snapshot.error.toString())
-                : LoadingIndicatorUtil(),
+                : const LoadingIndicatorUtil(),
       ),
     );
   }
@@ -188,7 +188,7 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
       BuildContext context, double shrinkOffset, bool overlapsContent) {
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
-    return new Container(
+    return Container(
       color: useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
       child: _tabBar,
     );
@@ -202,7 +202,7 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
 
 class FreePracticesResultsProvider extends StatelessWidget {
   final Race race;
-  const FreePracticesResultsProvider(this.race);
+  const FreePracticesResultsProvider(this.race, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -255,7 +255,7 @@ class FreePracticesResultsProvider extends StatelessWidget {
                     ),
                   ),
                 )
-          : LoadingIndicatorUtil(),
+          : const LoadingIndicatorUtil(),
     );
   }
 }
@@ -263,8 +263,10 @@ class FreePracticesResultsProvider extends StatelessWidget {
 class RaceResultsProvider extends StatefulWidget {
   final Race? race;
   final String? raceUrl;
-  RaceResultsProvider({this.race, this.raceUrl});
-  _RaceResultsProviderState createState() => _RaceResultsProviderState();
+  const RaceResultsProvider({Key? key, this.race, this.raceUrl})
+      : super(key: key);
+  @override
+  State<RaceResultsProvider> createState() => _RaceResultsProviderState();
 }
 
 class _RaceResultsProviderState extends State<RaceResultsProvider> {
@@ -323,7 +325,7 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Padding(
-            padding: EdgeInsets.all(10),
+            padding: const EdgeInsets.all(10),
             child: Text(
               AppLocalizations.of(context)!.raceStartsIn,
               textAlign: TextAlign.center,
@@ -375,7 +377,7 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
                   return Padding(
-                    padding: EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(10),
                     child: Center(
                       child: Text(
                         AppLocalizations.of(context)!.dataNotAvailable,
@@ -392,14 +394,14 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
                         child: Column(
                           children: [
                             ListTile(
-                              leading: FaIcon(
+                              leading: const FaIcon(
                                 FontAwesomeIcons.youtube,
                                 color: Colors.white,
                               ),
                               title: Text(
                                 AppLocalizations.of(context)!.watchOnYoutube,
                                 textAlign: TextAlign.center,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   color: Colors.white,
                                 ),
                               ),
@@ -419,13 +421,13 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
                                   mode: LaunchMode.externalApplication,
                                 );
                               },
-                              tileColor: Color(0xff383840),
+                              tileColor: const Color(0xff383840),
                             ),
                             RaceDriversResultsList(snapshot.data!),
                           ],
                         ),
                       )
-                    : LoadingIndicatorUtil();
+                    : const LoadingIndicatorUtil();
               })
           : FutureBuilder<List<DriverResult>>(
               future: getRaceStandingsFromErgast(race.round),
@@ -460,7 +462,7 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
                           ),
                         )
                       : Padding(
-                          padding: EdgeInsets.all(10),
+                          padding: const EdgeInsets.all(10),
                           child: Center(
                             child: Text(
                               AppLocalizations.of(context)!.dataNotAvailable,
@@ -479,14 +481,14 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
                         child: Column(
                           children: [
                             ListTile(
-                              leading: FaIcon(
+                              leading: const FaIcon(
                                 FontAwesomeIcons.youtube,
                                 color: Colors.white,
                               ),
                               title: Text(
                                 AppLocalizations.of(context)!.watchOnYoutube,
                                 textAlign: TextAlign.center,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   color: Colors.white,
                                 ),
                               ),
@@ -506,7 +508,7 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
                                   mode: LaunchMode.externalApplication,
                                 );
                               },
-                              tileColor: Color(0xff383840),
+                              tileColor: const Color(0xff383840),
                             ),
                             RaceDriversResultsList(snapshot.data!),
                           ],
@@ -541,7 +543,7 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
                               ],
                             ),
                           )
-                        : LoadingIndicatorUtil();
+                        : const LoadingIndicatorUtil();
               },
             );
     }
@@ -559,10 +561,11 @@ class SprintResultsProvider extends StatelessWidget {
 
   final Race? race;
   final String? raceUrl;
-  SprintResultsProvider({
+  const SprintResultsProvider({
+    Key? key,
     this.race,
     this.raceUrl,
-  });
+  }) : super(key: key);
   @override
   Widget build(BuildContext context) {
     bool useDarkMode =
@@ -575,15 +578,15 @@ class SprintResultsProvider extends StatelessWidget {
                 0,
                 '',
                 false,
-                raceUrl: this.raceUrl!,
+                raceUrl: raceUrl!,
               )
             : getSprintStandings(
-                this.race!.round,
+                race!.round,
               ),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return Padding(
-              padding: EdgeInsets.all(15),
+              padding: const EdgeInsets.all(15),
               child: Center(
                 child: Text(
                   AppLocalizations.of(context)!.dataNotAvailable,
@@ -601,14 +604,14 @@ class SprintResultsProvider extends StatelessWidget {
                   children: [
                     GestureDetector(
                       child: ListTile(
-                        leading: FaIcon(
+                        leading: const FaIcon(
                           FontAwesomeIcons.youtube,
                           color: Colors.white,
                         ),
                         title: Text(
                           AppLocalizations.of(context)!.watchOnYoutube,
                           textAlign: TextAlign.center,
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: Colors.white,
                           ),
                         ),
@@ -626,7 +629,7 @@ class SprintResultsProvider extends StatelessWidget {
                             mode: LaunchMode.externalApplication,
                           );
                         },
-                        tileColor: Color(0xff383840),
+                        tileColor: const Color(0xff383840),
                       ),
                     ),
                     RaceDriversResultsList(
@@ -634,7 +637,7 @@ class SprintResultsProvider extends StatelessWidget {
                     ),
                   ],
                 )
-              : LoadingIndicatorUtil();
+              : const LoadingIndicatorUtil();
         },
       ),
     );
@@ -652,10 +655,11 @@ class QualificationResultsProvider extends StatelessWidget {
 
   final Race? race;
   final String? raceUrl;
-  QualificationResultsProvider({
+  const QualificationResultsProvider({
+    Key? key,
     this.race,
     this.raceUrl,
-  });
+  }) : super(key: key);
   @override
   Widget build(BuildContext context) {
     bool useDarkMode =
@@ -667,15 +671,15 @@ class QualificationResultsProvider extends StatelessWidget {
               0,
               '',
               false,
-              qualifyingResultsUrl: this.raceUrl!,
+              qualifyingResultsUrl: raceUrl!,
             )
           : getQualificationStandings(
-              this.race!.round,
+              race!.round,
             ),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return Padding(
-            padding: EdgeInsets.all(15),
+            padding: const EdgeInsets.all(15),
             child: Center(
               child: Text(
                 AppLocalizations.of(context)!.dataNotAvailable,
@@ -693,14 +697,14 @@ class QualificationResultsProvider extends StatelessWidget {
                 children: [
                   GestureDetector(
                     child: ListTile(
-                      leading: FaIcon(
+                      leading: const FaIcon(
                         FontAwesomeIcons.youtube,
                         color: Colors.white,
                       ),
                       title: Text(
                         AppLocalizations.of(context)!.watchOnYoutube,
                         textAlign: TextAlign.center,
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Colors.white,
                         ),
                       ),
@@ -718,7 +722,7 @@ class QualificationResultsProvider extends StatelessWidget {
                           mode: LaunchMode.externalApplication,
                         );
                       },
-                      tileColor: Color(0xff383840),
+                      tileColor: const Color(0xff383840),
                     ),
                   ),
                   QualificationDriversResultsList(
@@ -726,7 +730,7 @@ class QualificationResultsProvider extends StatelessWidget {
                   ),
                 ],
               )
-            : LoadingIndicatorUtil();
+            : const LoadingIndicatorUtil();
       },
     );
   }
@@ -738,11 +742,11 @@ class RaceImageProvider extends StatelessWidget {
   }
 
   final Race race;
-  RaceImageProvider(this.race);
+  const RaceImageProvider(this.race, {Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<String>(
-      future: getCircuitImageUrl(this.race),
+      future: getCircuitImageUrl(race),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return RequestErrorWidget(snapshot.error.toString());
@@ -750,14 +754,14 @@ class RaceImageProvider extends StatelessWidget {
         return snapshot.hasData
             ? CachedNetworkImage(
                 errorWidget: (context, url, error) =>
-                    Icon(Icons.error_outlined),
-                fadeOutDuration: Duration(seconds: 1),
-                fadeInDuration: Duration(seconds: 1),
+                    const Icon(Icons.error_outlined),
+                fadeOutDuration: const Duration(seconds: 1),
+                fadeInDuration: const Duration(seconds: 1),
                 fit: BoxFit.cover,
                 imageUrl: snapshot.data!,
-                placeholder: (context, url) => LoadingIndicatorUtil(),
+                placeholder: (context, url) => const LoadingIndicatorUtil(),
               )
-            : LoadingIndicatorUtil();
+            : const LoadingIndicatorUtil();
       },
     );
   }

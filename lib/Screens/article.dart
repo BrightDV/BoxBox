@@ -32,11 +32,12 @@ class ArticleScreen extends StatefulWidget {
   const ArticleScreen(
     this.articleId,
     this.articleName,
-    this.isFromLink,
-  );
+    this.isFromLink, {
+    Key? key,
+  }) : super(key: key);
 
   @override
-  _ArticleScreenState createState() => _ArticleScreenState();
+  State<ArticleScreen> createState() => _ArticleScreenState();
 }
 
 class _ArticleScreenState extends State<ArticleScreen> {
@@ -60,29 +61,29 @@ class _ArticleScreenState extends State<ArticleScreen> {
                   valueListenable: articleTitle,
                   builder: (context, value, widget) {
                     return value.toString() == 'Loading...'
-                        ? Padding(
+                        ? const Padding(
                             padding: EdgeInsets.only(top: 15),
                             child: Text('Loading...'),
                           )
                         : Marquee(
                             text: value.toString(),
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontWeight: FontWeight.w600,
                             ),
-                            pauseAfterRound: Duration(seconds: 1),
-                            startAfter: Duration(seconds: 1),
+                            pauseAfterRound: const Duration(seconds: 1),
+                            startAfter: const Duration(seconds: 1),
                             velocity: 85,
                             blankSpace: 100,
                           );
                   },
                 )
               : Marquee(
-                  text: '${widget.articleName}',
-                  style: TextStyle(
+                  text: widget.articleName,
+                  style: const TextStyle(
                     fontWeight: FontWeight.w600,
                   ),
-                  pauseAfterRound: Duration(seconds: 1),
-                  startAfter: Duration(seconds: 1),
+                  pauseAfterRound: const Duration(seconds: 1),
+                  startAfter: const Duration(seconds: 1),
                   velocity: 85,
                   blankSpace: 100,
                 ),
@@ -110,18 +111,22 @@ class ArticleProvider extends StatelessWidget {
 
   final String articleId;
   final Function updateArticleTitle;
-  ArticleProvider(this.articleId, this.updateArticleTitle);
+  const ArticleProvider(
+    this.articleId,
+    this.updateArticleTitle, {
+    Key? key,
+  }) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<Article>(
-      future: getArticleData(this.articleId, updateArticleTitle),
+      future: getArticleData(articleId, updateArticleTitle),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return RequestErrorWidget(snapshot.error.toString());
         }
         return snapshot.hasData
             ? JoinArticlesParts(snapshot.data!)
-            : LoadingIndicatorUtil();
+            : const LoadingIndicatorUtil();
       },
     );
   }

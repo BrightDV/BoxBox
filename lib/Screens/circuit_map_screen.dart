@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 /*
  *  This file is part of BoxBox (https://github.com/BrightDV/BoxBox).
  * 
@@ -30,7 +32,7 @@ import 'package:boxbox/helpers/circuit_points.dart';
 class CircuitMapScreen extends StatelessWidget {
   final String circuitId;
 
-  const CircuitMapScreen(this.circuitId);
+  const CircuitMapScreen(this.circuitId, {Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     bool useDarkMode =
@@ -49,13 +51,13 @@ class CircuitMapScreen extends StatelessWidget {
           var height = MediaQuery.of(context).size.height;
           var width = MediaQuery.of(context).size.width;
 
-          return Container(
+          return SizedBox(
             height: height * 0.6,
             width: width * 0.8,
             child: Padding(
-              padding: EdgeInsets.all(5),
+              padding: const EdgeInsets.all(5),
               child: MarkersPage(
-                this.circuitId,
+                circuitId,
               ),
             ),
           );
@@ -76,7 +78,7 @@ class CircuitMapScreen extends StatelessWidget {
           ),
         ),
       ],
-      shape: RoundedRectangleBorder(
+      shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(
           Radius.circular(10.0),
         ),
@@ -88,9 +90,9 @@ class CircuitMapScreen extends StatelessWidget {
 class MarkersPage extends StatefulWidget {
   final String circuitId;
 
-  const MarkersPage(this.circuitId);
+  const MarkersPage(this.circuitId, {Key? key}) : super(key: key);
   @override
-  _MarkersPageState createState() => _MarkersPageState();
+  State<MarkersPage> createState() => _MarkersPageState();
 }
 
 class _MarkersPageState extends State<MarkersPage> {

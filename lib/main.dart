@@ -75,11 +75,11 @@ void main() async {
     'newsLoader',
     "Load news in background",
     existingWorkPolicy: ExistingWorkPolicy.replace,
-    frequency: Duration(hours: 2),
-    initialDelay: Duration(hours: 2),
+    frequency: const Duration(hours: 2),
+    initialDelay: const Duration(hours: 2),
   );
 
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 int createUniqueId() {
@@ -238,7 +238,7 @@ class NotificationController {
                   MaterialPageRoute(
                     builder: (context) => Scaffold(
                       appBar: AppBar(
-                        title: Text('wrong payload'),
+                        title: const Text('wrong payload'),
                       ),
                       body: Center(
                         child: Text(
@@ -263,8 +263,10 @@ class NotificationController {
 }
 
 class MyApp extends StatefulWidget {
+  const MyApp({Key? key}) : super(key: key);
+
   @override
-  _MyAppState createState() => _MyAppState();
+  State<MyApp> createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
@@ -315,11 +317,11 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         fontFamily: 'Formula1',
         primarySwatch: colorCustom,
-        backgroundColor: Color(0xff12121a),
+        backgroundColor: const Color(0xff12121a),
       ),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
-      home: MainBottomNavigationBar(),
+      home: const MainBottomNavigationBar(),
       debugShowCheckedModeBanner: false,
       navigatorKey: navigatorKey,
       onGenerateRoute: (RouteSettings settings) {

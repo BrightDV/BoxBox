@@ -32,8 +32,7 @@ class _ErgastApiCalls {
     List jsonResponse =
         raceStandings['MRData']['RaceTable']['Races'][0]['Results'];
     String time;
-    jsonResponse.forEach(
-      (element) {
+    for (var element in jsonResponse) {
         if (element['status'] != 'Finished') {
           if (element['status'].endsWith('Lap')) {
             time = element['status'];
@@ -72,8 +71,7 @@ class _ErgastApiCalls {
             points: element['points'],
           ),
         );
-      },
-    );
+      }
     return formatedRaceStandings;
   }
 
@@ -96,8 +94,7 @@ class _ErgastApiCalls {
     List jsonResponse =
         responseAsJson['MRData']['RaceTable']['Races'][0]['SprintResults'];
     String time;
-    jsonResponse.forEach(
-      (element) {
+    for (var element in jsonResponse) {
         if (element['status'] != 'Finished') {
           if (element['status'].endsWith('Lap')) {
             time = element['status'];
@@ -136,8 +133,7 @@ class _ErgastApiCalls {
             points: element['points'],
           ),
         );
-      },
-    );
+      }
     return formatedRaceStandings;
   }
 
@@ -151,7 +147,7 @@ class _ErgastApiCalls {
     List finalJson =
         responseAsJson['MRData']['RaceTable']['Races'][0]['QualifyingResults'];
 
-    finalJson.forEach((element) {
+    for (var element in finalJson) {
       driversResults.add(
         DriverQualificationResult(
           element['Driver']['driverId'],
@@ -166,7 +162,7 @@ class _ErgastApiCalls {
           element['Q3'] ?? '--',
         ),
       );
-    });
+    }
 
     return driversResults;
   }
@@ -175,7 +171,7 @@ class _ErgastApiCalls {
     List<Driver> drivers = [];
     List finalJson = responseAsJson['MRData']['StandingsTable']
         ['StandingsLists'][0]['DriverStandings'];
-    finalJson.forEach((element) {
+    for (var element in finalJson) {
       drivers.add(
         Driver(
           element['Driver']['driverId'],
@@ -188,7 +184,7 @@ class _ErgastApiCalls {
           element['points'],
         ),
       );
-    });
+    }
     return drivers;
   }
 
@@ -205,16 +201,16 @@ class _ErgastApiCalls {
     List<Race> races = [];
     List finalJson = responseAsJson['MRData']['RaceTable']['Races'];
     if (toCome) {
-      finalJson.forEach((element) {
+      for (var element in finalJson) {
         List dateParts = element['date'].split('-');
-        DateTime raceDate = new DateTime(
+        DateTime raceDate = DateTime(
           int.parse(dateParts[0]),
           int.parse(dateParts[1]),
           int.parse(dateParts[2]),
         ).add(
-          Duration(days: 1),
+          const Duration(days: 1),
         );
-        DateTime now = new DateTime.now();
+        DateTime now = DateTime.now();
         if (now.compareTo(raceDate) < 0) {
           races.add(
             Race(
@@ -226,25 +222,24 @@ class _ErgastApiCalls {
               element['Circuit']['circuitName'],
               element['Circuit']['url'],
               element['Circuit']['Location']['country'],
-              isFirst: races.length == 0,
+              isFirst: races.isEmpty,
             ),
           );
         }
-      });
+      }
     } else {
-      finalJson.forEach(
-        (element) {
+      for (var element in finalJson) {
           List dateParts = element['date'].split('-');
           DateTime raceDate = DateTime(
             int.parse(dateParts[0]),
             int.parse(dateParts[1]),
             int.parse(dateParts[2]),
           ).add(
-            Duration(
+            const Duration(
               days: 1,
             ),
           );
-          DateTime now = new DateTime.now();
+          DateTime now = DateTime.now();
           if (now.compareTo(raceDate) > 0) {
             races.add(
               Race(
@@ -262,8 +257,7 @@ class _ErgastApiCalls {
               ),
             );
           }
-        },
-      );
+        }
     }
     return races;
   }
@@ -303,8 +297,8 @@ class _ErgastApiCalls {
     List<Team> drivers = [];
     List finalJson = responseAsJson['MRData']['StandingsTable']
         ['StandingsLists'][0]['ConstructorStandings'];
-    finalJson.forEach(
-      (element) => drivers.add(
+    for (var element in finalJson) {
+      drivers.add(
         Team(
           element['Constructor']['constructorId'],
           element['position'],
@@ -312,8 +306,8 @@ class _ErgastApiCalls {
           element['points'],
           element['wins'],
         ),
-      ),
-    );
+      );
+    }
     return drivers;
   }
 

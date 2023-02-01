@@ -102,7 +102,6 @@ class RaceTracksUrls {
 
   Future<String> getTrackLayoutImageUrl(String gpId) async {
     String gpName = trackLayoutConverter[gpId]!.replaceAll(' ', '_');
-    print(gpName);
     return "https://www.formula1.com/content/dam/fom-website/2018-redesign-assets/Circuit%20maps%2016x9/${gpName}_Circuit.png";
   }
 

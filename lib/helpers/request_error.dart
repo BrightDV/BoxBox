@@ -24,13 +24,13 @@ import 'package:hive_flutter/hive_flutter.dart';
 class RequestErrorWidget extends StatelessWidget {
   final String snapshotError;
 
-  RequestErrorWidget(this.snapshotError);
+  const RequestErrorWidget(this.snapshotError, {Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     return Padding(
-      padding: EdgeInsets.all(
+      padding: const EdgeInsets.all(
         10,
       ),
       child: Column(
@@ -46,7 +46,7 @@ class RequestErrorWidget extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(top: 20),
+            padding: const EdgeInsets.only(top: 20),
             child: Center(
               child: SelectableText(
                 AppLocalizations.of(context)!.crashError,

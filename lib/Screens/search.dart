@@ -64,7 +64,7 @@ class _SearchScreenState extends State<SearchScreen> {
       backgroundColor:
           useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
       appBar: AppBar(
-        title: Container(
+        title: SizedBox(
           width: double.infinity,
           height: 40,
           child: Center(
@@ -76,7 +76,7 @@ class _SearchScreenState extends State<SearchScreen> {
               ),
               child: TextField(
                 controller: searchController,
-                style: TextStyle(
+                style: const TextStyle(
                   color: Colors.white,
                 ),
                 cursorColor: Colors.white,
@@ -117,16 +117,16 @@ class _SearchScreenState extends State<SearchScreen> {
           ),
         ),
       ),
-      body: results.length != 0
+      body: results.isNotEmpty
           ? ListView.builder(
               itemCount: results.length,
               shrinkWrap: true,
               itemBuilder: (context, index) {
                 return Padding(
-                  padding: EdgeInsets.all(5),
+                  padding: const EdgeInsets.all(5),
                   child: ListTile(
                       tileColor: useDarkMode
-                          ? Color(0xff1d1d28)
+                          ? const Color(0xff1d1d28)
                           : Colors.grey.shade400,
                       title: Text(
                         results[index]['title'],
@@ -137,7 +137,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       subtitle: MarkdownBody(
                         data: results[index]['content'],
                         styleSheet: MarkdownStyleSheet(
-                          strong: TextStyle(
+                          strong: const TextStyle(
                             color: Colors.white,
                             fontSize: 16,
                             fontWeight: FontWeight.w500,
@@ -167,7 +167,7 @@ class _SearchScreenState extends State<SearchScreen> {
             )
           : Center(
               child: Padding(
-                padding: EdgeInsets.all(40),
+                padding: const EdgeInsets.all(40),
                 child: Text(
                   AppLocalizations.of(context)!.noResults,
                   style: TextStyle(

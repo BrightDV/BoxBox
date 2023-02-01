@@ -43,11 +43,12 @@ class CircuitScreen extends StatefulWidget {
 
   const CircuitScreen(
     this.race, {
+    Key? key,
     this.isFetched,
-  });
+  }) : super(key: key);
 
   @override
-  _CircuitScreenState createState() => _CircuitScreenState();
+  State<CircuitScreen> createState() => _CircuitScreenState();
 }
 
 class _CircuitScreenState extends State<CircuitScreen> {
@@ -69,7 +70,7 @@ class _CircuitScreenState extends State<CircuitScreen> {
                   SliverAppBar(
                     actions: [
                       IconButton(
-                        icon: Icon(
+                        icon: const Icon(
                           Icons.map_outlined,
                         ),
                         tooltip: AppLocalizations.of(context)!.grandPrixMap,
@@ -108,7 +109,7 @@ class _CircuitScreenState extends State<CircuitScreen> {
                           children: [
                             snapshot.data!['headline'] != null
                                 ? Padding(
-                                    padding: EdgeInsets.all(10),
+                                    padding: const EdgeInsets.all(10),
                                     child: Text(
                                       snapshot.data!['headline'],
                                       style: TextStyle(
@@ -123,19 +124,19 @@ class _CircuitScreenState extends State<CircuitScreen> {
                                   )
                                 : Container(),
                             Padding(
-                              padding: EdgeInsets.all(5),
+                              padding: const EdgeInsets.all(5),
                               child: GestureDetector(
                                 child: Container(
                                   width: double.infinity,
                                   decoration: BoxDecoration(
                                     color: useDarkMode
-                                        ? Color(0xff1d1d28)
+                                        ? const Color(0xff1d1d28)
                                         : Colors.grey.shade400,
                                     borderRadius: BorderRadius.circular(5),
                                   ),
                                   child: Padding(
-                                    padding:
-                                        EdgeInsets.fromLTRB(20, 10, 20, 10),
+                                    padding: const EdgeInsets.fromLTRB(
+                                        20, 10, 20, 10),
                                     child: Row(
                                       children: [
                                         Text(
@@ -147,7 +148,7 @@ class _CircuitScreenState extends State<CircuitScreen> {
                                                 : Colors.black,
                                           ),
                                         ),
-                                        Spacer(),
+                                        const Spacer(),
                                         Icon(
                                           Icons.arrow_forward_rounded,
                                           color: useDarkMode
@@ -170,19 +171,19 @@ class _CircuitScreenState extends State<CircuitScreen> {
                             ),
                             snapshot.data!['links'].isNotEmpty
                                 ? Padding(
-                                    padding: EdgeInsets.all(5),
+                                    padding: const EdgeInsets.all(5),
                                     child: GestureDetector(
                                       child: Container(
                                         width: double.infinity,
                                         decoration: BoxDecoration(
                                           color: useDarkMode
-                                              ? Color(0xff1d1d28)
+                                              ? const Color(0xff1d1d28)
                                               : Colors.grey.shade400,
                                           borderRadius:
                                               BorderRadius.circular(5),
                                         ),
                                         child: Padding(
-                                          padding: EdgeInsets.fromLTRB(
+                                          padding: const EdgeInsets.fromLTRB(
                                               20, 10, 20, 10),
                                           child: Row(
                                             children: [
@@ -195,7 +196,7 @@ class _CircuitScreenState extends State<CircuitScreen> {
                                                       : Colors.black,
                                                 ),
                                               ),
-                                              Spacer(),
+                                              const Spacer(),
                                               Icon(
                                                 Icons.arrow_forward_rounded,
                                                 color: useDarkMode
@@ -222,7 +223,7 @@ class _CircuitScreenState extends State<CircuitScreen> {
                                 : Container(),
                             snapshot.data!['raceResults'] == []
                                 ? Padding(
-                                    padding: EdgeInsets.all(
+                                    padding: const EdgeInsets.all(
                                       10,
                                     ),
                                     child: Container(
@@ -230,7 +231,7 @@ class _CircuitScreenState extends State<CircuitScreen> {
                                       decoration: BoxDecoration(
                                         border: Border.all(
                                           color: useDarkMode
-                                              ? Color(0xff1d1d28)
+                                              ? const Color(0xff1d1d28)
                                               : Colors.grey.shade50,
                                         ),
                                         borderRadius:
@@ -239,7 +240,7 @@ class _CircuitScreenState extends State<CircuitScreen> {
                                       child: Column(
                                         children: [
                                           Padding(
-                                            padding: EdgeInsets.only(
+                                            padding: const EdgeInsets.only(
                                               top: 15,
                                             ),
                                             child: Text(
@@ -264,7 +265,7 @@ class _CircuitScreenState extends State<CircuitScreen> {
                                             ),
                                           ),
                                           Padding(
-                                            padding: EdgeInsets.only(
+                                            padding: const EdgeInsets.only(
                                               top: 15,
                                               left: 15,
                                             ),
@@ -283,7 +284,7 @@ class _CircuitScreenState extends State<CircuitScreen> {
                                                     ),
                                                   ),
                                                 ),
-                                                Spacer(),
+                                                const Spacer(),
                                                 Expanded(
                                                   flex: 5,
                                                   child: Text(
@@ -303,7 +304,7 @@ class _CircuitScreenState extends State<CircuitScreen> {
                                           for (Map driverResults
                                               in snapshot.data!['raceResults'])
                                             Padding(
-                                              padding: EdgeInsets.only(
+                                              padding: const EdgeInsets.only(
                                                 top: 7,
                                               ),
                                               child: Row(
@@ -326,15 +327,14 @@ class _CircuitScreenState extends State<CircuitScreen> {
                                                   ),
                                                   Expanded(
                                                     flex: 1,
-                                                    child: Container(
+                                                    child: SizedBox(
                                                       height: 15,
                                                       child: VerticalDivider(
                                                         color: Color(
                                                           int.parse(
-                                                              'FF' +
-                                                                  driverResults[
-                                                                      'teamColourCode'],
-                                                              radix: 16),
+                                                            'FF${driverResults['teamColourCode']}',
+                                                            radix: 16,
+                                                          ),
                                                         ),
                                                         thickness: 5,
                                                         width: 5,
@@ -353,16 +353,14 @@ class _CircuitScreenState extends State<CircuitScreen> {
                                                       ),
                                                     ),
                                                   ),
-                                                  Spacer(),
+                                                  const Spacer(),
                                                   Expanded(
                                                     flex: 6,
                                                     child: Text(
                                                       driverResults[
                                                                   'gapToLeader'] !=
                                                               "0.0"
-                                                          ? '+' +
-                                                              driverResults[
-                                                                  'gapToLeader']
+                                                          ? '+${driverResults['gapToLeader']}'
                                                           : driverResults[
                                                               'raceTime'],
                                                       style: TextStyle(
@@ -377,14 +375,14 @@ class _CircuitScreenState extends State<CircuitScreen> {
                                             ),
                                           Expanded(
                                             child: Padding(
-                                              padding: EdgeInsets.only(
+                                              padding: const EdgeInsets.only(
                                                 top: 15,
                                               ),
-                                              child: Container(
+                                              child: SizedBox(
                                                 width: double.infinity,
                                                 child: ClipRRect(
                                                   borderRadius:
-                                                      BorderRadius.only(
+                                                      const BorderRadius.only(
                                                     topLeft: Radius.zero,
                                                     topRight: Radius.zero,
                                                     bottomLeft:
@@ -404,20 +402,20 @@ class _CircuitScreenState extends State<CircuitScreen> {
                                                         ),
                                                       ),
                                                     ),
+                                                    style: ElevatedButton
+                                                        .styleFrom(
+                                                      shape:
+                                                          const ContinuousRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius.zero,
+                                                      ),
+                                                    ),
                                                     child: Text(
                                                       AppLocalizations.of(
                                                               context)!
                                                           .viewResults,
-                                                      style: TextStyle(
+                                                      style: const TextStyle(
                                                         color: Colors.white,
-                                                      ),
-                                                    ),
-                                                    style: ElevatedButton
-                                                        .styleFrom(
-                                                      shape:
-                                                          ContinuousRectangleBorder(
-                                                        borderRadius:
-                                                            BorderRadius.zero,
                                                       ),
                                                     ),
                                                   ),
@@ -468,11 +466,11 @@ class _CircuitScreenState extends State<CircuitScreen> {
                                   )
                                 : Container(),
                             Padding(
-                              padding: EdgeInsets.all(5),
+                              padding: const EdgeInsets.all(5),
                               child: TrackLayoutImage(race),
                             ),
                             Padding(
-                              padding: EdgeInsets.all(10),
+                              padding: const EdgeInsets.all(10),
                               child: FutureBuilder<Map>(
                                 future: FormulaOneScraper().scrapeCircuitFacts(
                                   Convert()
@@ -484,7 +482,8 @@ class _CircuitScreenState extends State<CircuitScreen> {
                                 builder: (context, snapshot) => snapshot.hasData
                                     ? ListView.builder(
                                         itemCount: snapshot.data!.length,
-                                        physics: NeverScrollableScrollPhysics(),
+                                        physics:
+                                            const NeverScrollableScrollPhysics(),
                                         shrinkWrap: true,
                                         itemBuilder: (context, index) => Column(
                                           children: [
@@ -513,14 +512,14 @@ class _CircuitScreenState extends State<CircuitScreen> {
                                           ],
                                         ),
                                       )
-                                    : Container(
+                                    : const SizedBox(
                                         height: 400,
                                         child: LoadingIndicatorUtil(),
                                       ),
                               ),
                             ),
                             Padding(
-                              padding: EdgeInsets.all(10),
+                              padding: const EdgeInsets.all(10),
                               child: FutureBuilder<String>(
                                 future:
                                     FormulaOneScraper().scrapeCircuitHistory(
@@ -547,7 +546,7 @@ class _CircuitScreenState extends State<CircuitScreen> {
                                                 ? Colors.white
                                                 : Colors.black,
                                           ),
-                                          pPadding: EdgeInsets.only(
+                                          pPadding: const EdgeInsets.only(
                                             top: 10,
                                             bottom: 10,
                                           ),
@@ -563,7 +562,7 @@ class _CircuitScreenState extends State<CircuitScreen> {
                                           ),
                                         ),
                                       )
-                                    : Container(
+                                    : const SizedBox(
                                         height: 400,
                                         child: LoadingIndicatorUtil(),
                                       ),
@@ -572,18 +571,19 @@ class _CircuitScreenState extends State<CircuitScreen> {
                           ],
                         )
                       : Padding(
-                          padding: EdgeInsets.all(5),
+                          padding: const EdgeInsets.all(5),
                           child: GestureDetector(
                             child: Container(
                               width: double.infinity,
                               decoration: BoxDecoration(
                                 color: useDarkMode
-                                    ? Color(0xff1d1d28)
+                                    ? const Color(0xff1d1d28)
                                     : Colors.grey.shade400,
                                 borderRadius: BorderRadius.circular(5),
                               ),
                               child: Padding(
-                                padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
+                                padding:
+                                    const EdgeInsets.fromLTRB(20, 10, 20, 10),
                                 child: Row(
                                   children: [
                                     Text(
@@ -594,7 +594,7 @@ class _CircuitScreenState extends State<CircuitScreen> {
                                             : Colors.black,
                                       ),
                                     ),
-                                    Spacer(),
+                                    const Spacer(),
                                     Icon(
                                       Icons.arrow_forward_rounded,
                                       color: useDarkMode
@@ -636,7 +636,7 @@ class _CircuitScreenState extends State<CircuitScreen> {
                               SliverAppBar(
                                 actions: [
                                   IconButton(
-                                    icon: Icon(
+                                    icon: const Icon(
                                       Icons.map_outlined,
                                     ),
                                     tooltip: AppLocalizations.of(context)!
@@ -678,7 +678,8 @@ class _CircuitScreenState extends State<CircuitScreen> {
                                       children: [
                                         snapshot.data!['headline'] != null
                                             ? Padding(
-                                                padding: EdgeInsets.all(10),
+                                                padding:
+                                                    const EdgeInsets.all(10),
                                                 child: Text(
                                                   snapshot.data!['headline'],
                                                   style: TextStyle(
@@ -693,19 +694,20 @@ class _CircuitScreenState extends State<CircuitScreen> {
                                               )
                                             : Container(),
                                         Padding(
-                                          padding: EdgeInsets.all(5),
+                                          padding: const EdgeInsets.all(5),
                                           child: GestureDetector(
                                             child: Container(
                                               width: double.infinity,
                                               decoration: BoxDecoration(
                                                 color: useDarkMode
-                                                    ? Color(0xff1d1d28)
+                                                    ? const Color(0xff1d1d28)
                                                     : Colors.grey.shade400,
                                                 borderRadius:
                                                     BorderRadius.circular(5),
                                               ),
                                               child: Padding(
-                                                padding: EdgeInsets.fromLTRB(
+                                                padding:
+                                                    const EdgeInsets.fromLTRB(
                                                   20,
                                                   10,
                                                   20,
@@ -723,7 +725,7 @@ class _CircuitScreenState extends State<CircuitScreen> {
                                                             : Colors.black,
                                                       ),
                                                     ),
-                                                    Spacer(),
+                                                    const Spacer(),
                                                     Icon(
                                                       Icons
                                                           .arrow_forward_rounded,
@@ -748,13 +750,15 @@ class _CircuitScreenState extends State<CircuitScreen> {
                                         ),
                                         snapshot.data!['links'][1] != null
                                             ? Padding(
-                                                padding: EdgeInsets.all(5),
+                                                padding:
+                                                    const EdgeInsets.all(5),
                                                 child: GestureDetector(
                                                   child: Container(
                                                     width: double.infinity,
                                                     decoration: BoxDecoration(
                                                       color: useDarkMode
-                                                          ? Color(0xff1d1d28)
+                                                          ? const Color(
+                                                              0xff1d1d28)
                                                           : Colors
                                                               .grey.shade400,
                                                       borderRadius:
@@ -763,8 +767,8 @@ class _CircuitScreenState extends State<CircuitScreen> {
                                                       ),
                                                     ),
                                                     child: Padding(
-                                                      padding:
-                                                          EdgeInsets.fromLTRB(
+                                                      padding: const EdgeInsets
+                                                          .fromLTRB(
                                                         20,
                                                         10,
                                                         20,
@@ -783,7 +787,7 @@ class _CircuitScreenState extends State<CircuitScreen> {
                                                                       .black,
                                                             ),
                                                           ),
-                                                          Spacer(),
+                                                          const Spacer(),
                                                           Icon(
                                                             Icons
                                                                 .arrow_forward_rounded,
@@ -813,7 +817,7 @@ class _CircuitScreenState extends State<CircuitScreen> {
                                             : Container(),
                                         snapshot.data!['raceResults'] != null
                                             ? Padding(
-                                                padding: EdgeInsets.all(
+                                                padding: const EdgeInsets.all(
                                                   10,
                                                 ),
                                                 child: Container(
@@ -821,7 +825,8 @@ class _CircuitScreenState extends State<CircuitScreen> {
                                                   decoration: BoxDecoration(
                                                     border: Border.all(
                                                       color: useDarkMode
-                                                          ? Color(0xff1d1d28)
+                                                          ? const Color(
+                                                              0xff1d1d28)
                                                           : Colors.grey.shade50,
                                                     ),
                                                     borderRadius:
@@ -832,7 +837,8 @@ class _CircuitScreenState extends State<CircuitScreen> {
                                                     children: [
                                                       Padding(
                                                         padding:
-                                                            EdgeInsets.only(
+                                                            const EdgeInsets
+                                                                .only(
                                                           top: 15,
                                                         ),
                                                         child: Text(
@@ -862,7 +868,8 @@ class _CircuitScreenState extends State<CircuitScreen> {
                                                       ),
                                                       Padding(
                                                         padding:
-                                                            EdgeInsets.only(
+                                                            const EdgeInsets
+                                                                .only(
                                                           top: 15,
                                                           left: 15,
                                                         ),
@@ -884,7 +891,7 @@ class _CircuitScreenState extends State<CircuitScreen> {
                                                                 ),
                                                               ),
                                                             ),
-                                                            Spacer(),
+                                                            const Spacer(),
                                                             Expanded(
                                                               flex: 5,
                                                               child: Text(
@@ -909,7 +916,8 @@ class _CircuitScreenState extends State<CircuitScreen> {
                                                               'raceResults'])
                                                         Padding(
                                                           padding:
-                                                              EdgeInsets.only(
+                                                              const EdgeInsets
+                                                                  .only(
                                                             top: 7,
                                                           ),
                                                           child: Row(
@@ -937,17 +945,14 @@ class _CircuitScreenState extends State<CircuitScreen> {
                                                               ),
                                                               Expanded(
                                                                 flex: 1,
-                                                                child:
-                                                                    Container(
+                                                                child: SizedBox(
                                                                   height: 15,
                                                                   child:
                                                                       VerticalDivider(
                                                                     color:
                                                                         Color(
                                                                       int.parse(
-                                                                          'FF' +
-                                                                              driverResults[
-                                                                                  'teamColourCode'],
+                                                                          'FF${driverResults['teamColourCode']}',
                                                                           radix:
                                                                               16),
                                                                     ),
@@ -973,16 +978,14 @@ class _CircuitScreenState extends State<CircuitScreen> {
                                                                   ),
                                                                 ),
                                                               ),
-                                                              Spacer(),
+                                                              const Spacer(),
                                                               Expanded(
                                                                 flex: 6,
                                                                 child: Text(
                                                                   driverResults[
                                                                               'gapToLeader'] !=
                                                                           "0.0"
-                                                                      ? '+' +
-                                                                          driverResults[
-                                                                              'gapToLeader']
+                                                                      ? '+${driverResults['gapToLeader']}'
                                                                       : driverResults[
                                                                           'raceTime'],
                                                                   style:
@@ -1001,15 +1004,16 @@ class _CircuitScreenState extends State<CircuitScreen> {
                                                       Expanded(
                                                         child: Padding(
                                                           padding:
-                                                              EdgeInsets.only(
+                                                              const EdgeInsets
+                                                                  .only(
                                                             top: 15,
                                                           ),
-                                                          child: Container(
+                                                          child: SizedBox(
                                                             width:
                                                                 double.infinity,
                                                             child: ClipRRect(
                                                               borderRadius:
-                                                                  BorderRadius
+                                                                  const BorderRadius
                                                                       .only(
                                                                 topLeft:
                                                                     Radius.zero,
@@ -1039,23 +1043,23 @@ class _CircuitScreenState extends State<CircuitScreen> {
                                                                     ),
                                                                   ),
                                                                 ),
+                                                                style: ElevatedButton
+                                                                    .styleFrom(
+                                                                  shape:
+                                                                      const ContinuousRectangleBorder(
+                                                                    borderRadius:
+                                                                        BorderRadius
+                                                                            .zero,
+                                                                  ),
+                                                                ),
                                                                 child: Text(
                                                                   AppLocalizations.of(
                                                                           context)!
                                                                       .viewResults,
                                                                   style:
-                                                                      TextStyle(
+                                                                      const TextStyle(
                                                                     color: Colors
                                                                         .white,
-                                                                  ),
-                                                                ),
-                                                                style: ElevatedButton
-                                                                    .styleFrom(
-                                                                  shape:
-                                                                      ContinuousRectangleBorder(
-                                                                    borderRadius:
-                                                                        BorderRadius
-                                                                            .zero,
                                                                   ),
                                                                 ),
                                                               ),
@@ -1121,13 +1125,13 @@ class _CircuitScreenState extends State<CircuitScreen> {
                                               )
                                             : Container(),
                                         Padding(
-                                          padding: EdgeInsets.all(5),
+                                          padding: const EdgeInsets.all(5),
                                           child: TrackLayoutImage(
                                             circuitSnapshot.data!,
                                           ),
                                         ),
                                         Padding(
-                                          padding: EdgeInsets.all(10),
+                                          padding: const EdgeInsets.all(10),
                                           child: FutureBuilder<Map>(
                                             future: FormulaOneScraper()
                                                 .scrapeCircuitFacts(
@@ -1143,7 +1147,7 @@ class _CircuitScreenState extends State<CircuitScreen> {
                                                         itemCount: snapshot
                                                             .data!.length,
                                                         physics:
-                                                            NeverScrollableScrollPhysics(),
+                                                            const NeverScrollableScrollPhysics(),
                                                         shrinkWrap: true,
                                                         itemBuilder:
                                                             (context, index) =>
@@ -1189,7 +1193,7 @@ class _CircuitScreenState extends State<CircuitScreen> {
                                                           ],
                                                         ),
                                                       )
-                                                    : Container(
+                                                    : const SizedBox(
                                                         height: 400,
                                                         child:
                                                             LoadingIndicatorUtil(),
@@ -1197,7 +1201,7 @@ class _CircuitScreenState extends State<CircuitScreen> {
                                           ),
                                         ),
                                         Padding(
-                                          padding: EdgeInsets.all(10),
+                                          padding: const EdgeInsets.all(10),
                                           child: FutureBuilder<String>(
                                             future: FormulaOneScraper()
                                                 .scrapeCircuitHistory(
@@ -1231,7 +1235,8 @@ class _CircuitScreenState extends State<CircuitScreen> {
                                                                 : Colors.black,
                                                           ),
                                                           pPadding:
-                                                              EdgeInsets.only(
+                                                              const EdgeInsets
+                                                                  .only(
                                                             top: 10,
                                                             bottom: 10,
                                                           ),
@@ -1247,7 +1252,7 @@ class _CircuitScreenState extends State<CircuitScreen> {
                                                           ),
                                                         ),
                                                       )
-                                                    : Container(
+                                                    : const SizedBox(
                                                         height: 400,
                                                         child:
                                                             LoadingIndicatorUtil(),
@@ -1257,19 +1262,19 @@ class _CircuitScreenState extends State<CircuitScreen> {
                                       ],
                                     )
                                   : Padding(
-                                      padding: EdgeInsets.all(5),
+                                      padding: const EdgeInsets.all(5),
                                       child: GestureDetector(
                                         child: Container(
                                           width: double.infinity,
                                           decoration: BoxDecoration(
                                             color: useDarkMode
-                                                ? Color(0xff1d1d28)
+                                                ? const Color(0xff1d1d28)
                                                 : Colors.grey.shade400,
                                             borderRadius:
                                                 BorderRadius.circular(5),
                                           ),
                                           child: Padding(
-                                            padding: EdgeInsets.fromLTRB(
+                                            padding: const EdgeInsets.fromLTRB(
                                                 20, 10, 20, 10),
                                             child: Row(
                                               children: [
@@ -1282,7 +1287,7 @@ class _CircuitScreenState extends State<CircuitScreen> {
                                                         : Colors.black,
                                                   ),
                                                 ),
-                                                Spacer(),
+                                                const Spacer(),
                                                 Icon(
                                                   Icons.arrow_forward_rounded,
                                                   color: useDarkMode
@@ -1307,7 +1312,7 @@ class _CircuitScreenState extends State<CircuitScreen> {
                             ),
                           ),
                         )
-                      : LoadingIndicatorUtil(),
+                      : const LoadingIndicatorUtil(),
             ),
     );
   }
@@ -1319,11 +1324,11 @@ class RaceImageProvider extends StatelessWidget {
   }
 
   final Race race;
-  RaceImageProvider(this.race);
+  const RaceImageProvider(this.race, {Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<String>(
-      future: getCircuitImageUrl(this.race),
+      future: getCircuitImageUrl(race),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return RequestErrorWidget(
@@ -1333,14 +1338,14 @@ class RaceImageProvider extends StatelessWidget {
         return snapshot.hasData
             ? CachedNetworkImage(
                 errorWidget: (context, url, error) =>
-                    Icon(Icons.error_outlined),
-                fadeOutDuration: Duration(seconds: 1),
-                fadeInDuration: Duration(seconds: 1),
+                    const Icon(Icons.error_outlined),
+                fadeOutDuration: const Duration(seconds: 1),
+                fadeInDuration: const Duration(seconds: 1),
                 fit: BoxFit.cover,
                 imageUrl: snapshot.data!,
-                placeholder: (context, url) => LoadingIndicatorUtil(),
+                placeholder: (context, url) => const LoadingIndicatorUtil(),
               )
-            : LoadingIndicatorUtil();
+            : const LoadingIndicatorUtil();
       },
     );
   }
@@ -1352,13 +1357,13 @@ class TrackLayoutImage extends StatelessWidget {
   }
 
   final Race race;
-  TrackLayoutImage(this.race);
+  const TrackLayoutImage(this.race, {Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     return FutureBuilder<String>(
-      future: getTrackLayoutImageUrl(this.race),
+      future: getTrackLayoutImageUrl(race),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return RequestErrorWidget(
@@ -1372,7 +1377,7 @@ class TrackLayoutImage extends StatelessWidget {
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
-                        contentPadding: EdgeInsets.only(
+                        contentPadding: const EdgeInsets.only(
                           top: 52,
                           bottom: 50,
                         ),
@@ -1383,7 +1388,7 @@ class TrackLayoutImage extends StatelessWidget {
                         backgroundColor: Colors.transparent,
                         content: Builder(
                           builder: (context) {
-                            return Container(
+                            return SizedBox(
                               width: double.infinity - 10,
                               child: InteractiveViewer(
                                 minScale: 0.1,
@@ -1409,14 +1414,14 @@ class TrackLayoutImage extends StatelessWidget {
                                                 loadingProgress) =>
                                             loadingProgress == null
                                                 ? child
-                                                : Container(
+                                                : SizedBox(
                                                     height:
                                                         MediaQuery.of(context)
                                                                 .size
                                                                 .width /
                                                             (16 / 9),
                                                     child:
-                                                        LoadingIndicatorUtil(),
+                                                        const LoadingIndicatorUtil(),
                                                   ),
                                         errorBuilder: (context, url, error) =>
                                             Icon(
@@ -1432,7 +1437,7 @@ class TrackLayoutImage extends StatelessWidget {
                                       alignment: Alignment.topRight,
                                       child: IconButton(
                                         onPressed: () => Navigator.pop(context),
-                                        icon: Icon(Icons.close_rounded,
+                                        icon: const Icon(Icons.close_rounded,
                                             color: Colors.white),
                                       ),
                                     ),
@@ -1454,10 +1459,10 @@ class TrackLayoutImage extends StatelessWidget {
                       loadingBuilder: (context, child, loadingProgress) =>
                           loadingProgress == null
                               ? child
-                              : Container(
+                              : SizedBox(
                                   height: MediaQuery.of(context).size.width /
                                       (16 / 9),
-                                  child: LoadingIndicatorUtil(),
+                                  child: const LoadingIndicatorUtil(),
                                 ),
                       errorBuilder: (context, url, error) => Icon(
                         Icons.error_outlined,
@@ -1468,7 +1473,7 @@ class TrackLayoutImage extends StatelessWidget {
                   ],
                 ),
               )
-            : LoadingIndicatorUtil();
+            : const LoadingIndicatorUtil();
       },
     );
   }
