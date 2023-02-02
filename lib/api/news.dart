@@ -2187,13 +2187,14 @@ class _VideoRendererState extends State<VideoRenderer> {
     for (var stream in manifest.muxed) {
       urls['videos'].add(stream.url.toString());
     }
+    urls['videos'] = urls['videos'].reversed;
     return urls;
   }
 
   @override
   Widget build(BuildContext build) {
     return FutureBuilder<Map<String, dynamic>>(
-      future: widget.youtubeId != ''
+      future: (widget.youtubeId ?? '') != ''
           ? getYouTubeVideoLinks(widget.youtubeId!)
           : BrightCove().getVideoLinks(widget.videoId),
       builder: (context, snapshot) => snapshot.hasError
