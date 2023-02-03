@@ -51,6 +51,7 @@ class _ArticleScreenState extends State<ArticleScreen> {
   Widget build(BuildContext context) {
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
+    double width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
         title: SizedBox(
@@ -65,28 +66,38 @@ class _ArticleScreenState extends State<ArticleScreen> {
                             padding: EdgeInsets.only(top: 15),
                             child: Text('Loading...'),
                           )
-                        : Marquee(
-                            text: value.toString(),
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w600,
-                            ),
-                            pauseAfterRound: const Duration(seconds: 1),
-                            startAfter: const Duration(seconds: 1),
-                            velocity: 85,
-                            blankSpace: 100,
-                          );
+                        : width > 1000
+                            ? Padding(
+                                padding: const EdgeInsets.only(top: 15),
+                                child: Text(value.toString()),
+                              )
+                            : Marquee(
+                                text: value.toString(),
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                ),
+                                pauseAfterRound: const Duration(seconds: 1),
+                                startAfter: const Duration(seconds: 1),
+                                velocity: 85,
+                                blankSpace: 100,
+                              );
                   },
                 )
-              : Marquee(
-                  text: widget.articleName,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w600,
-                  ),
-                  pauseAfterRound: const Duration(seconds: 1),
-                  startAfter: const Duration(seconds: 1),
-                  velocity: 85,
-                  blankSpace: 100,
-                ),
+              : width > 1000
+                  ? Padding(
+                      padding: const EdgeInsets.only(top: 15),
+                      child: Text(widget.articleName),
+                    )
+                  : Marquee(
+                      text: widget.articleName,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w600,
+                      ),
+                      pauseAfterRound: const Duration(seconds: 1),
+                      startAfter: const Duration(seconds: 1),
+                      velocity: 85,
+                      blankSpace: 100,
+                    ),
         ),
       ),
       backgroundColor:

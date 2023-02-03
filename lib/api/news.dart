@@ -1070,6 +1070,13 @@ class JoinArticlesParts extends StatelessWidget {
             element['fields']['videoId'],
           ),
         );
+      } else if (element['contentType'] == 'atomVideoYouTube') {
+        widgetsList.add(
+          VideoRenderer(
+            '',
+            youtubeId: element['fields']['youTubeVideoId'],
+          ),
+        );
       } else if (element['contentType'] == 'atomImage') {
         widgetsList.add(
           ImageRenderer(
@@ -2178,7 +2185,7 @@ class _VideoRendererState extends State<VideoRenderer> {
     for (var stream in manifest.muxed) {
       urls['videos'].add(stream.url.toString());
     }
-    urls['videos'] = urls['videos'].reversed;
+    urls['videos'] = urls['videos'].reversed.toList();
     return urls;
   }
 
@@ -2230,13 +2237,14 @@ class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
   @override
   void initState() {
     super.initState();
+    int videosCount = widget.videoUrls['videos'].length;
     BetterPlayerDataSource betterPlayerDataSource = BetterPlayerDataSource(
       BetterPlayerDataSourceType.network,
       widget.videoUrls['videos'][0],
       resolutions: {
-        '720p': widget.videoUrls['videos'][1],
-        '360p': widget.videoUrls['videos'][2],
-        '180p': widget.videoUrls['videos'][3],
+        '720p': widget.videoUrls['videos'][videosCount - 3],
+        '360p': widget.videoUrls['videos'][videosCount - 2],
+        '180p': widget.videoUrls['videos'][videosCount - 1],
       },
       notificationConfiguration: BetterPlayerNotificationConfiguration(
         showNotification: true,
