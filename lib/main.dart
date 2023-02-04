@@ -76,7 +76,7 @@ void main() async {
     "Load news in background",
     existingWorkPolicy: ExistingWorkPolicy.replace,
     frequency: const Duration(hours: 2),
-    initialDelay: const Duration(hours: 2),
+    //initialDelay: const Duration(hours: 2),
   );
 
   runApp(const MyApp());

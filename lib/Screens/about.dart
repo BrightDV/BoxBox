@@ -49,9 +49,12 @@ class AboutScreen extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.only(top: 10),
-              child: Image.asset(
-                'assets/images/icon.png',
-                height: 200,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(30.0),
+                child: Image.asset(
+                  'assets/images/icon.png',
+                  height: 200,
+                ),
               ),
             ),
             Padding(
