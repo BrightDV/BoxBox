@@ -401,8 +401,7 @@ class _NewsItemState extends State<NewsItem> {
                             fontSize: 14,
                           ),
                           overflow: TextOverflow.ellipsis,
-                          maxLines:
-                              (widget.showSmallDescription ?? false) ? 3 : 5,
+                          maxLines: 3,
                           textAlign: TextAlign.justify,
                         ),
                       ),
@@ -2181,11 +2180,13 @@ class _VideoRendererState extends State<VideoRenderer> {
     YoutubeExplode yt = YoutubeExplode();
     var manifest = await yt.videos.streamsClient.getManifest(videoId);
     urls['poster'] = 'https://img.youtube.com/vi/$videoId/0.jpg';
-    urls['videos'].add(manifest.muxed[1].url.toString());
+
     for (var stream in manifest.muxed) {
       urls['videos'].add(stream.url.toString());
     }
+    urls['videos'].add(manifest.muxed[1].url.toString());
     urls['videos'] = urls['videos'].reversed.toList();
+    urls['videos'].add(manifest.muxed[1].url.toString());
     return urls;
   }
 
@@ -2237,14 +2238,13 @@ class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
   @override
   void initState() {
     super.initState();
-    int videosCount = widget.videoUrls['videos'].length;
     BetterPlayerDataSource betterPlayerDataSource = BetterPlayerDataSource(
       BetterPlayerDataSourceType.network,
       widget.videoUrls['videos'][0],
       resolutions: {
-        '720p': widget.videoUrls['videos'][videosCount - 3],
-        '360p': widget.videoUrls['videos'][videosCount - 2],
-        '180p': widget.videoUrls['videos'][videosCount - 1],
+        '720p': widget.videoUrls['videos'][1],
+        '360p': widget.videoUrls['videos'][2],
+        '180p': widget.videoUrls['videos'][3],
       },
       notificationConfiguration: BetterPlayerNotificationConfiguration(
         showNotification: true,

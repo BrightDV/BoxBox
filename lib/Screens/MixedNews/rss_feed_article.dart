@@ -22,6 +22,8 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class RssFeedArticleScreen extends StatefulWidget {
   final String articleTitle;
@@ -94,9 +96,37 @@ class _RssFeedArticleScreenState extends State<RssFeedArticleScreen> {
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     return Scaffold(
+      appBar: AppBar(
+        actions: [
+          IconButton(
+            onPressed: () => launchUrl(
+              Uri.parse(
+                widget.articleUrl,
+              ),
+              mode: LaunchMode.externalApplication,
+            ),
+            icon: const Icon(
+              Icons.language,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(
+              left: 3,
+              right: 6,
+            ),
+            child: IconButton(
+              onPressed: () => Share.share(
+                widget.articleUrl,
+              ),
+              icon: const Icon(
+                Icons.share,
+              ),
+            ),
+          ),
+        ],
+      ),
       backgroundColor:
           useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
-      appBar: AppBar(),
       body: InAppWebView(
         initialUrlRequest: URLRequest(
           url: Uri.parse(
