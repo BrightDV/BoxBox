@@ -51,7 +51,7 @@ void main() async {
         channelKey: 'eventTracker',
         channelName: 'New Grand Prix notifications',
         channelDescription: 'Show a notification before each GP.',
-        defaultColor: Colors.red,
+        defaultColor: Colors.white,
         importance: NotificationImportance.High,
         channelShowBadge: true,
       ),
@@ -60,7 +60,7 @@ void main() async {
         channelName: 'New article',
         channelDescription:
             'Show a notification when a new article is published.',
-        defaultColor: Colors.red,
+        defaultColor: Colors.white,
         importance: NotificationImportance.High,
         channelShowBadge: true,
       ),
@@ -87,65 +87,74 @@ int createUniqueId() {
 }
 
 void callbackDispatcher() {
-  Workmanager().executeTask((task, inputData) async {
-    await Hive.initFlutter();
-    Box hiveBox = await Hive.openBox("requests");
-    Map cachedNews = hiveBox.get('news', defaultValue: {}) as Map;
-    bool useDataSaverMode =
-        hiveBox.get('useDataSaverMode', defaultValue: false) as bool;
-    try {
-      Map<String, dynamic> fetchedData = await F1NewsFetcher().getRawNews();
-      if (cachedNews['items'].isNotEmpty &&
-          fetchedData['items'][0]['id'] != cachedNews['items'][0]['id']) {
-        String imageUrl = fetchedData['items'][0]['thumbnail']['image']['url'];
-        if (useDataSaverMode) {
-          if (fetchedData['items'][0]['thumbnail']['image']['renditions'] !=
-              null) {
-            imageUrl = fetchedData['items'][0]['thumbnail']['image']
-                ['renditions']['2col-retina'];
-          } else {
-            imageUrl += '.transform/2col-retina/image.jpg';
+  Workmanager().executeTask(
+    (task, inputData) async {
+      await Hive.initFlutter();
+      Box hiveBox = await Hive.openBox("requests");
+      Box settingsBox = await Hive.openBox("settings");
+      Map cachedNews = hiveBox.get('news', defaultValue: {}) as Map;
+      bool useDataSaverMode =
+          settingsBox.get('useDataSaverMode', defaultValue: false) as bool;
+      try {
+        Map<String, dynamic> fetchedData = await F1NewsFetcher().getRawNews();
+        if (cachedNews.isNotEmpty &&
+            fetchedData['items'][0]['id'] != cachedNews['items'][0]['id']) {
+          String imageUrl =
+              fetchedData['items'][0]['thumbnail']['image']['url'];
+          if (useDataSaverMode) {
+            if (fetchedData['items'][0]['thumbnail']['image']['renditions'] !=
+                null) {
+              imageUrl = fetchedData['items'][0]['thumbnail']['image']
+                  ['renditions']['2col-retina'];
+            } else {
+              imageUrl += '.transform/2col-retina/image.jpg';
+            }
           }
+          await AwesomeNotifications().createNotification(
+            content: NotificationContent(
+              id: createUniqueId(),
+              channelKey: 'newArticle',
+              title: fetchedData['items'][0]['title'],
+              body: fetchedData['items'][0]['metaDescription'],
+              largeIcon: imageUrl,
+              bigPicture: imageUrl,
+              hideLargeIconOnExpand: true,
+              notificationLayout: NotificationLayout.BigPicture,
+              payload: {
+                'id': fetchedData['items'][0]['id'],
+                'title': fetchedData['items'][0]['title'],
+              },
+              color: Colors.white,
+            ),
+          );
+          hiveBox.put('news', fetchedData);
+        } else {
+          await AwesomeNotifications().createNotification(
+            content: NotificationContent(
+              id: createUniqueId(),
+              channelKey: 'newArticle',
+              title: 'No new article published.',
+              body: 'Nothing to show...',
+            ),
+          );
         }
+        return Future.value(true);
+      } catch (error, stacktrace) {
+        // print(error.toString());
+        // print("Notification error. Stacktrace:");
+        // print(stacktrace.toString());
         await AwesomeNotifications().createNotification(
           content: NotificationContent(
             id: createUniqueId(),
             channelKey: 'newArticle',
-            title: fetchedData['items'][0]['title'],
-            body: fetchedData['items'][0]['metaDescription'],
-            largeIcon: imageUrl,
-            bigPicture: imageUrl,
-            hideLargeIconOnExpand: true,
-            notificationLayout: NotificationLayout.BigPicture,
-            payload: {
-              'id': fetchedData['items'][0]['id'],
-              'title': fetchedData['items'][0]['title'],
-            },
+            title: 'An error occured.',
+            body: stacktrace.toString(),
           ),
         );
-        hiveBox.put('news', fetchedData);
-      } else {
-        await AwesomeNotifications().createNotification(
-          content: NotificationContent(
-            id: createUniqueId(),
-            channelKey: 'newArticle',
-            title: 'No new article publsihed.',
-            body: 'Nothing to show...',
-          ),
-        );
+        return Future.value(false);
       }
-    } catch (error, stacktrace) {
-      await AwesomeNotifications().createNotification(
-        content: NotificationContent(
-          id: createUniqueId(),
-          channelKey: 'newArticle',
-          title: 'An error occured.',
-          body: stacktrace.toString(),
-        ),
-      );
-    }
-    return true;
-  });
+    },
+  );
 }
 
 void setTimeagoLocaleMessages() {

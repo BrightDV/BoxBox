@@ -107,8 +107,9 @@ class F1NewsFetcher {
       "locale": "en",
     });
 
-    Map<String, dynamic> responseAsJson =
-        json.decode(utf8.decode(response.bodyBytes));
+    Map<String, dynamic> responseAsJson = json.decode(
+      utf8.decode(response.bodyBytes),
+    );
     return responseAsJson;
   }
 

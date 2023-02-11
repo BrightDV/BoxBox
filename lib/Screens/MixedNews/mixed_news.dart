@@ -151,7 +151,7 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
                                     builder: (context) => RssFeedArticleScreen(
                                       snapshot.data![index].title,
                                       !snapshot.data![index].link
-                                                  .contains('?utm')
+                                              .contains('?utm')
                                           ? snapshot.data![index].link
                                           : snapshot.data![index].link
                                               .substring(
@@ -181,7 +181,8 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
                                                   5,
                                             ),
                                             child: ClipRRect(
-                                              borderRadius: const BorderRadius.only(
+                                              borderRadius:
+                                                  const BorderRadius.only(
                                                 topLeft: Radius.circular(15),
                                                 topRight: Radius.circular(15),
                                               ),
@@ -244,9 +245,9 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
                                                   .isEmpty
                                           ? null
                                           : MarkdownBody(
-                                              data: !snapshot.data![index]
-                                                          .description!
-                                                          .contains("<a ")
+                                              data: !snapshot
+                                                      .data![index].description!
+                                                      .contains("<a ")
                                                   ? snapshot
                                                       .data![index].description!
                                                   : snapshot
@@ -437,8 +438,10 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
                                                         height: 232,
                                                         child: Padding(
                                                           padding:
-                                                              const EdgeInsets.only(
-                                                                  top: 5),
+                                                              const EdgeInsets
+                                                                  .only(
+                                                            top: 5,
+                                                          ),
                                                           child:
                                                               GestureDetector(
                                                             onTap: () =>
@@ -468,7 +471,7 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
                                                                           '"'),
                                                                   article['guid']
                                                                       [
-                                                                      'rendered'],
+                                                                      'rendered'], // here ??
                                                                 ),
                                                               ),
                                                             ),
@@ -612,131 +615,134 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
                                     feedsUrl[feed],
                                     max: 5,
                                   ),
-                                  builder: (context, snapshot) =>
-                                      snapshot.hasError
-                                          ? RequestErrorWidget(
-                                              snapshot.error.toString(),
-                                            )
-                                          : snapshot.hasData &&
-                                                  snapshot.data != null
-                                              ? Row(
-                                                  children: [
-                                                    for (var feedItem
-                                                        in snapshot.data![
-                                                            'feedArticles'])
-                                                      SizedBox(
-                                                        width: width / 2.1,
-                                                        height: feedItem.enclosure !=
-                                                                    null ||
-                                                                feedItem
-                                                                    .media
-                                                                    .thumbnails
-                                                                    .isNotEmpty ||
-                                                                feedItem
-                                                                    .media
-                                                                    .contents
-                                                                    .isNotEmpty
-                                                            ? 232
-                                                            : 110,
-                                                        child: Padding(
-                                                          padding:
-                                                              const EdgeInsets.only(
-                                                                  top: 5),
-                                                          child:
-                                                              GestureDetector(
-                                                            onTap: () =>
-                                                                Navigator.push(
-                                                              context,
-                                                              MaterialPageRoute(
-                                                                builder:
-                                                                    (context) =>
-                                                                        RssFeedArticleScreen(
-                                                                  feedItem
-                                                                      .title!,
-                                                                  feedItem.link!
-                                                                              .indexOf(
-                                                                            '?utm',
-                                                                          ) ==
-                                                                          -1
-                                                                      ? feedItem
-                                                                          .link!
-                                                                      : feedItem
-                                                                          .link!
-                                                                          .substring(
-                                                                          0,
-                                                                          feedItem
-                                                                              .link!
-                                                                              .indexOf(
-                                                                            '?utm',
-                                                                          ),
-                                                                        ),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                            child: Card(
-                                                              elevation: 5.0,
-                                                              color: useDarkMode
-                                                                  ? const Color(
-                                                                      0xff1d1d28)
-                                                                  : Colors
-                                                                      .white,
-                                                              child: Column(
-                                                                children: [
-                                                                  feedItem.enclosure !=
-                                                                          null
-                                                                      ? Image
-                                                                          .network(
-                                                                          feedItem
-                                                                              .enclosure!
-                                                                              .url!,
-                                                                        )
-                                                                      : feedItem
-                                                                              .media
-                                                                              .thumbnails
-                                                                              .isNotEmpty
-                                                                          ? Image
-                                                                              .network(
-                                                                              feedItem.media.thumbnails[0].url,
-                                                                            )
-                                                                          : feedItem.media.contents.isNotEmpty
-                                                                              ? Image.network(
-                                                                                  feedItem.media.contents[0].url,
-                                                                                )
-                                                                              : Container(),
-                                                                  ListTile(
-                                                                    title: Text(
+                                  builder: (context, snapshot) => snapshot
+                                          .hasError
+                                      ? RequestErrorWidget(
+                                          snapshot.error.toString(),
+                                        )
+                                      : snapshot.hasData &&
+                                              snapshot.data != null
+                                          ? Row(
+                                              children: [
+                                                for (var feedItem in snapshot
+                                                    .data!['feedArticles'])
+                                                  SizedBox(
+                                                    width: width / 2.1,
+                                                    height: feedItem.enclosure !=
+                                                                null ||
+                                                            feedItem
+                                                                .media
+                                                                .thumbnails
+                                                                .isNotEmpty ||
+                                                            feedItem
+                                                                .media
+                                                                .contents
+                                                                .isNotEmpty
+                                                        ? 232
+                                                        : 110,
+                                                    child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              top: 5),
+                                                      child: GestureDetector(
+                                                        onTap: () =>
+                                                            Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                RssFeedArticleScreen(
+                                                              feedItem.title!,
+                                                              feedItem.link!
+                                                                          .indexOf(
+                                                                        '?utm',
+                                                                      ) ==
+                                                                      -1
+                                                                  ? feedItem
+                                                                      .link!
+                                                                  : feedItem
+                                                                      .link!
+                                                                      .substring(
+                                                                      0,
                                                                       feedItem
-                                                                          .title!,
-                                                                      style:
-                                                                          TextStyle(
-                                                                        color: useDarkMode
-                                                                            ? Colors.white
-                                                                            : Colors.black,
-                                                                        fontSize:
-                                                                            14,
+                                                                          .link!
+                                                                          .indexOf(
+                                                                        '?utm',
                                                                       ),
-                                                                      overflow:
-                                                                          TextOverflow
-                                                                              .ellipsis,
-                                                                      textAlign:
-                                                                          TextAlign
-                                                                              .justify,
-                                                                      maxLines:
-                                                                          5,
                                                                     ),
-                                                                  ),
-                                                                ],
-                                                              ),
                                                             ),
                                                           ),
                                                         ),
+                                                        child: Card(
+                                                          elevation: 5.0,
+                                                          color: useDarkMode
+                                                              ? const Color(
+                                                                  0xff1d1d28)
+                                                              : Colors.white,
+                                                          child: Column(
+                                                            children: [
+                                                              feedItem.enclosure !=
+                                                                      null
+                                                                  ? Image
+                                                                      .network(
+                                                                      feedItem
+                                                                          .enclosure!
+                                                                          .url!,
+                                                                    )
+                                                                  : feedItem
+                                                                          .media
+                                                                          .thumbnails
+                                                                          .isNotEmpty
+                                                                      ? Image
+                                                                          .network(
+                                                                          feedItem
+                                                                              .media
+                                                                              .thumbnails[0]
+                                                                              .url,
+                                                                        )
+                                                                      : feedItem
+                                                                              .media
+                                                                              .contents
+                                                                              .isNotEmpty
+                                                                          ? Image
+                                                                              .network(
+                                                                              feedItem.media.contents[0].url,
+                                                                            )
+                                                                          : Container(),
+                                                              ListTile(
+                                                                title: Text(
+                                                                  feedItem
+                                                                      .title!,
+                                                                  style:
+                                                                      TextStyle(
+                                                                    color: useDarkMode
+                                                                        ? Colors
+                                                                            .white
+                                                                        : Colors
+                                                                            .black,
+                                                                    fontSize:
+                                                                        14,
+                                                                  ),
+                                                                  overflow:
+                                                                      TextOverflow
+                                                                          .ellipsis,
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .justify,
+                                                                  maxLines: 5,
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
                                                       ),
-                                                  ],
-                                                )
-                                              : const SizedBox(
-                                                  height: 232,
-                                                  child: LoadingIndicatorUtil(),
-                                                ),
+                                                    ),
+                                                  ),
+                                              ],
+                                            )
+                                          : const SizedBox(
+                                              height: 232,
+                                              child: LoadingIndicatorUtil(),
+                                            ),
                                 ),
                               ),
                             ],
