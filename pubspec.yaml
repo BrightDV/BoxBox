@@ -21,6 +21,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  animations: ^2.0.7
   awesome_notifications: ^0.7.4+1
   better_player:
     git:

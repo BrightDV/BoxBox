@@ -424,18 +424,16 @@ class _NewsItemState extends State<NewsItem> {
                 duration: const Duration(milliseconds: 200),
                 child: InkWell(
                   borderRadius: BorderRadius.circular(15.0),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ArticleScreen(
-                          item.newsId,
-                          item.title,
-                          false,
-                        ),
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ArticleScreen(
+                        item.newsId,
+                        item.title,
+                        false,
                       ),
-                    );
-                  },
+                    ),
+                  ),
                   hoverColor: Colors.grey.shade700,
                   onTapDown: (position) => storePosition(position),
                   onLongPress: () {
@@ -453,31 +451,36 @@ class _NewsItemState extends State<NewsItem> {
                                     topLeft: Radius.circular(15),
                                     topRight: Radius.circular(15),
                                   ),
-                                  child: CachedNetworkImage(
-                                    imageUrl: imageUrl,
-                                    placeholder: (context, url) => SizedBox(
-                                      height:
-                                          (widget.showSmallDescription ?? false)
-                                              ? height / (16 / 9) - 58
-                                              : width / (16 / 9),
-                                      child: const LoadingIndicatorUtil(),
-                                    ),
-                                    errorWidget: (context, url, error) =>
-                                        SizedBox(
-                                      height: 50,
-                                      child: Icon(
-                                        Icons.error_outlined,
-                                        color: useDarkMode
-                                            ? const Color(0xff1d1d28)
-                                            : Colors.white,
+                                  child: Hero(
+                                    tag: widget.item.newsId,
+                                    child: CachedNetworkImage(
+                                      imageUrl: imageUrl,
+                                      placeholder: (context, url) => SizedBox(
+                                        height: (widget.showSmallDescription ??
+                                                false)
+                                            ? height / (16 / 9) - 58
+                                            : width / (16 / 9),
+                                        child: const LoadingIndicatorUtil(),
                                       ),
-                                    ),
-                                    fadeOutDuration: const Duration(seconds: 1),
-                                    fadeInDuration: const Duration(seconds: 1),
-                                    cacheManager: CacheManager(
-                                      Config(
-                                        "newsImages",
-                                        stalePeriod: const Duration(days: 7),
+                                      errorWidget: (context, url, error) =>
+                                          SizedBox(
+                                        height: 50,
+                                        child: Icon(
+                                          Icons.error_outlined,
+                                          color: useDarkMode
+                                              ? const Color(0xff1d1d28)
+                                              : Colors.white,
+                                        ),
+                                      ),
+                                      fadeOutDuration:
+                                          const Duration(seconds: 1),
+                                      fadeInDuration:
+                                          const Duration(seconds: 1),
+                                      cacheManager: CacheManager(
+                                        Config(
+                                          "newsImages",
+                                          stalePeriod: const Duration(days: 7),
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -954,15 +957,18 @@ class JoinArticlesParts extends StatelessWidget {
       heroImageUrl = article.articleHero['fields']['imageGallery'][0]['url'];
     } else {
       widgetsList.add(
-        ImageRenderer(
-          useDataSaverMode
-              ? article.articleHero['fields']['image']['renditions'] != null
-                  ? article.articleHero['fields']['image']['renditions']
-                      ['2col-retina']
-                  : article.articleHero['fields']['image']['url'] +
-                      '.transform/2col-retina/image.jpg'
-              : article.articleHero['fields']['image']['url'],
-          isHero: true,
+        Hero(
+          tag: article.articleId,
+          child: ImageRenderer(
+            useDataSaverMode
+                ? article.articleHero['fields']['image']['renditions'] != null
+                    ? article.articleHero['fields']['image']['renditions']
+                        ['2col-retina']
+                    : article.articleHero['fields']['image']['url'] +
+                        '.transform/2col-retina/image.jpg'
+                : article.articleHero['fields']['image']['url'],
+            isHero: true,
+          ),
         ),
       );
       heroImageUrl = article.articleHero['fields']['image']['url'];
@@ -2028,8 +2034,11 @@ class _ImageRendererState extends State<ImageRenderer> {
                                                           Icons.error_outlined),
                                               fadeOutDuration:
                                                   const Duration(seconds: 1),
-                                              fadeInDuration:
-                                                  const Duration(seconds: 1),
+                                              fadeInDuration: widget.isHero ??
+                                                      false
+                                                  ? const Duration(
+                                                      milliseconds: 300)
+                                                  : const Duration(seconds: 1),
                                               cacheManager: CacheManager(
                                                 Config(
                                                   "newsImages",
