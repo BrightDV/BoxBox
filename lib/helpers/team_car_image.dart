@@ -20,25 +20,25 @@
 class TeamCarImage {
   Map<String, String> teamCarDecoder = {
     "ferrari":
-        "https://www.formula1.com/content/dam/fom-website/teams/2022/ferrari.png",
+        "https://www.formula1.com/content/dam/fom-website/teams/2023/ferrari.png",
     "mercedes":
-        "https://www.formula1.com/content/dam/fom-website/teams/2022/mercedes.png",
+        "https://www.formula1.com/content/dam/fom-website/teams/2023/mercedes.png",
     "red_bull":
-        "https://www.formula1.com/content/dam/fom-website/teams/2022/red-bull-racing.png",
+        "https://www.formula1.com/content/dam/fom-website/teams/2023/red-bull-racing.png",
     "alpine":
-        "https://www.formula1.com/content/dam/fom-website/teams/2022/alpine.png",
+        "https://www.formula1.com/content/dam/fom-website/teams/2023/alpine.png",
     "haas":
-        "https://www.formula1.com/content/dam/fom-website/teams/2022/haas-f1-team.png",
+        "https://www.formula1.com/content/dam/fom-website/teams/2023/haas-f1-team.png",
     "alfa":
-        "https://www.formula1.com/content/dam/fom-website/teams/2022/alfa-romeo.png",
+        "https://www.formula1.com/content/dam/fom-website/teams/2023/alfa-romeo.png",
     "alphatauri":
-        "https://www.formula1.com/content/dam/fom-website/teams/2022/alphatauri.png",
+        "https://www.formula1.com/content/dam/fom-website/teams/2023/alphatauri.png",
     "mclaren":
-        "https://www.formula1.com/content/dam/fom-website/teams/2022/mclaren.png",
+        "https://www.formula1.com/content/dam/fom-website/teams/2023/mclaren.png",
     "aston_martin":
-        "https://www.formula1.com/content/dam/fom-website/teams/2022/aston-martin.png",
+        "https://www.formula1.com/content/dam/fom-website/teams/2023/aston-martin.png",
     "williams":
-        "https://www.formula1.com/content/dam/fom-website/teams/2022/williams.png",
+        "https://www.formula1.com/content/dam/fom-website/teams/2023/williams.png",
   };
   Future<String> getTeamCarImageURL(String teamId) async {
     String teamCarImageUrl = teamCarDecoder[teamId]!;
