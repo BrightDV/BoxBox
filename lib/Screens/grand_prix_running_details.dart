@@ -237,6 +237,8 @@ class _PdfViewerState extends State<PdfViewer> {
         key: _pdfViewerKey,
         enableTextSelection: true,
         onDocumentLoadFailed: (PdfDocumentLoadFailedDetails details) {
+          print(details.error);
+          print(details.description);
           showErrorDialog(context, details.error, details.description);
         },
         canShowPaginationDialog: true,

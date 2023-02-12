@@ -64,58 +64,71 @@ class _SessionScreenState extends State<SessionScreen> {
     return widget.session.sessionsAbbreviation.startsWith('p')
         ? widget.session.state == 'upcoming' ||
                 widget.session.startTime.isAfter(DateTime.now())
-            ? Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: Center(
-                      child: Text(
-                        AppLocalizations.of(context)!.sessionStartsIn,
-                        style: TextStyle(
-                          fontSize: 20,
-                          color: useDarkMode ? Colors.white : Colors.black,
+            ? Scaffold(
+                appBar: AppBar(
+                  title: Text(
+                    widget.sessionFullName,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                backgroundColor: useDarkMode
+                    ? Theme.of(context).backgroundColor
+                    : Colors.white,
+                body: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: Center(
+                        child: Text(
+                          AppLocalizations.of(context)!.sessionStartsIn,
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: useDarkMode ? Colors.white : Colors.black,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  TimerCountdown(
-                    format: CountDownTimerFormat.daysHoursMinutesSeconds,
-                    endTime: DateTime.now().add(
-                      Duration(
-                        days: days,
-                        hours: hours,
-                        minutes: minutes,
-                        seconds: seconds,
+                    TimerCountdown(
+                      format: CountDownTimerFormat.daysHoursMinutesSeconds,
+                      endTime: DateTime.now().add(
+                        Duration(
+                          days: days,
+                          hours: hours,
+                          minutes: minutes,
+                          seconds: seconds,
+                        ),
                       ),
+                      timeTextStyle: TextStyle(
+                        fontSize: 25,
+                        color: useDarkMode ? Colors.white : Colors.black,
+                      ),
+                      colonsTextStyle: TextStyle(
+                        fontSize: 23,
+                        color: useDarkMode ? Colors.white : Colors.black,
+                      ),
+                      descriptionTextStyle: TextStyle(
+                        color: Theme.of(context).primaryColor,
+                        fontSize: 20,
+                      ),
+                      spacerWidth: 15,
+                      daysDescription:
+                          AppLocalizations.of(context)!.dayFirstLetter,
+                      hoursDescription:
+                          AppLocalizations.of(context)!.hourFirstLetter,
+                      minutesDescription:
+                          AppLocalizations.of(context)!.minuteAbbreviation,
+                      secondsDescription:
+                          AppLocalizations.of(context)!.secondAbbreviation,
+                      onEnd: () {
+                        setState(() {});
+                      },
                     ),
-                    timeTextStyle: TextStyle(
-                      fontSize: 25,
-                      color: useDarkMode ? Colors.white : Colors.black,
-                    ),
-                    colonsTextStyle: TextStyle(
-                      fontSize: 23,
-                      color: useDarkMode ? Colors.white : Colors.black,
-                    ),
-                    descriptionTextStyle: TextStyle(
-                      color: Theme.of(context).primaryColor,
-                      fontSize: 20,
-                    ),
-                    spacerWidth: 15,
-                    daysDescription:
-                        AppLocalizations.of(context)!.dayFirstLetter,
-                    hoursDescription:
-                        AppLocalizations.of(context)!.hourFirstLetter,
-                    minutesDescription:
-                        AppLocalizations.of(context)!.minuteAbbreviation,
-                    secondsDescription:
-                        AppLocalizations.of(context)!.secondAbbreviation,
-                    onEnd: () {
-                      setState(() {});
-                    },
-                  ),
-                ],
+                  ],
+                ),
               )
             : FreePracticeScreen(
                 widget.sessionFullName,

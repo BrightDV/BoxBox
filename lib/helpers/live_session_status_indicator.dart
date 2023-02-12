@@ -22,6 +22,7 @@
 import 'package:boxbox/api/event_tracker.dart';
 import 'package:boxbox/Screens/grand_prix_running_details.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:marquee/marquee.dart';
 
@@ -71,69 +72,105 @@ class EventTrackerItem extends StatelessWidget {
   Widget build(BuildContext context) {
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
-
+    bool haveRunningSession = false;
+    DateTime date = DateTime.now();
+    if ((event.session1.startTime.isBefore(date) &&
+        event.session1.endTime.isAfter(date))) {
+      haveRunningSession = true;
+    } else if ((event.session2.startTime.isBefore(date) &&
+        event.session2.endTime.isAfter(date))) {
+      haveRunningSession = true;
+    } else if ((event.session3.startTime.isBefore(date) &&
+        event.session3.endTime.isAfter(date))) {
+      haveRunningSession = true;
+    } else if ((event.session4.startTime.isBefore(date) &&
+        event.session4.endTime.isAfter(date))) {
+      haveRunningSession = true;
+    } else if ((event.session5.startTime.isBefore(date) &&
+        event.session5.endTime.isAfter(date))) {
+      haveRunningSession = true;
+    }
     return GestureDetector(
-      child: Container(
-        height: 138,
-        color: useDarkMode ? const Color(0xff1d1d28) : Colors.white,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(
-                    left: 10,
-                    right: 10,
-                  ),
-                  child: SizedBox(
-                    width: 120,
-                    child: Image.network(
-                      event.circuitImage,
+      child: Padding(
+        padding: const EdgeInsets.only(
+          right: 5,
+          left: 5,
+        ),
+        child: Container(
+          height: 135,
+          decoration: BoxDecoration(
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.zero,
+              topRight: Radius.zero,
+              bottomLeft: Radius.circular(15),
+              bottomRight: Radius.circular(15),
+            ),
+            color: useDarkMode ? const Color(0xff1d1d28) : Colors.white,
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      top: 3,
+                      left: 10,
+                      right: 10,
+                      bottom: 5,
+                    ),
+                    child: SizedBox(
+                      width: 120,
+                      child: Image.network(
+                        event.circuitImage,
+                      ),
                     ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(5),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        event.meetingCountryName,
-                        style: const TextStyle(
-                          fontSize: 18,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width - 150,
-                        height: 20,
-                        child: Marquee(
-                          text: event.meetingOfficialName,
+                  Padding(
+                    padding: const EdgeInsets.all(5),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          event.meetingCountryName,
                           style: const TextStyle(
-                            fontSize: 12,
+                            fontSize: 18,
                             color: Colors.white,
+                            fontWeight: FontWeight.w500,
                           ),
-                          pauseAfterRound: const Duration(seconds: 1),
-                          startAfter: const Duration(seconds: 1),
-                          velocity: 85,
-                          blankSpace: 100,
                         ),
-                      ),
-                    ],
+                        haveRunningSession
+                            ? Text(
+                                AppLocalizations.of(context)!.sessionRunning,
+                                style: TextStyle(
+                                  color:
+                                      useDarkMode ? Colors.white : Colors.black,
+                                ),
+                              )
+                            : Container(),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width - 160,
+                          height: 20,
+                          child: Marquee(
+                            text: event.meetingOfficialName,
+                            style: const TextStyle(
+                              fontSize: 12,
+                              color: Colors.white,
+                            ),
+                            pauseAfterRound: const Duration(seconds: 1),
+                            startAfter: const Duration(seconds: 1),
+                            velocity: 85,
+                            blankSpace: 100,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.only(
-                left: 5,
-                right: 5,
+                ],
               ),
-              child: SizedBox(
+              SizedBox(
                 width: double.infinity,
                 child: ClipRRect(
                   borderRadius: const BorderRadius.only(
@@ -156,10 +193,13 @@ class EventTrackerItem extends StatelessWidget {
                     ),
                     child: Row(
                       children: [
-                        const Text(
-                          'RACE HUB',
-                          style: TextStyle(
-                            color: Colors.white,
+                        const Padding(
+                          padding: EdgeInsets.all(10),
+                          child: Text(
+                            'RACE HUB',
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
                           ),
                         ),
                         const Spacer(),
@@ -172,8 +212,8 @@ class EventTrackerItem extends StatelessWidget {
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
