@@ -459,7 +459,7 @@ class _NewsItemState extends State<NewsItem> {
                                         height: (widget.showSmallDescription ??
                                                 false)
                                             ? height / (16 / 9) - 58
-                                            : width / (16 / 9),
+                                            : width / (16 / 9) - 10,
                                         child: const LoadingIndicatorUtil(),
                                       ),
                                       errorWidget: (context, url, error) =>
@@ -724,7 +724,7 @@ class _NewsListState extends State<NewsList> {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    return width < 600
+    return width < 500
         ? RefreshIndicator(
             onRefresh: () => Future.sync(
               () => _pagingController.refresh(),
@@ -757,11 +757,13 @@ class _NewsListState extends State<NewsList> {
             scrollDirection: Axis.vertical,
             shrinkWrap: true,
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: width < 1000
-                  ? 3
-                  : width < 1400
-                      ? 4
-                      : 5,
+              crossAxisCount: width < 750
+                  ? 2
+                  : width < 1000
+                      ? 3
+                      : width < 1400
+                          ? 4
+                          : 5,
               crossAxisSpacing: 5.0,
               mainAxisSpacing: 5.0,
             ),

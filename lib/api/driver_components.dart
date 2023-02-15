@@ -308,7 +308,10 @@ class DriverImageProvider extends StatelessWidget {
         return snapshot.hasData
             ? CachedNetworkImage(
                 imageUrl: snapshot.data.toString(),
-                placeholder: (context, url) => const LoadingIndicatorUtil(),
+                placeholder: (context, url) => const SizedBox(
+                  width: 100,
+                  child: LoadingIndicatorUtil(),
+                ),
                 errorWidget: (context, url, error) =>
                     const Icon(Icons.error_outlined),
                 fadeOutDuration: const Duration(milliseconds: 500),

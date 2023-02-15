@@ -162,9 +162,9 @@ class _GrandPrixRunningScreenState extends State<GrandPrixRunningScreen> {
             CachedNetworkImage(
               imageUrl:
                   'https://www.formula1.com/content/dam/fom-website/2018-redesign-assets/Racehub%20header%20images%2016x9/$meetingName.jpg.transform/12col/image.jpg',
-              placeholder: (context, url) => const SizedBox(
-                height: 200,
-                child: LoadingIndicatorUtil(),
+              placeholder: (context, url) => SizedBox(
+                height: MediaQuery.of(context).size.width / 16 / 9,
+                child: const LoadingIndicatorUtil(),
               ),
               errorWidget: (context, url, error) => const Icon(
                 Icons.error_outlined,

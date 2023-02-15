@@ -88,6 +88,7 @@ class DriverImageProvider extends StatelessWidget {
     if (idOfImage == 'driver') {
       return await DriverStatsImage().getDriverImage(driverId);
     } else if (idOfImage == 'helmet') {
+      // not used for the moment, maybe later?
       return await DriverHelmetImage().getDriverHelmetImage(driverId);
     } else if (idOfImage == 'flag') {
       return await DriverFlagImage().getDriverFlagImage(driverId);
@@ -113,10 +114,13 @@ class DriverImageProvider extends StatelessWidget {
         return snapshot.hasData
             ? Image.network(
                 snapshot.data!,
-                width: idOfImage == 'driver' ? 400 : 200,
-                //fit: BoxFit.scaleDown,
+                height: MediaQuery.of(context).size.width - 10,
+                //width: idOfImage == 'driver' ? 400 : 200,
               )
-            : const LoadingIndicatorUtil();
+            : SizedBox(
+                height: MediaQuery.of(context).size.width - 10,
+                child: const LoadingIndicatorUtil(),
+              );
       },
     );
   }
@@ -197,7 +201,6 @@ class DriverDetailsFragment extends StatelessWidget {
                     FutureBuilder<Article>(
                       future: F1NewsFetcher().getArticleData(item[0]),
                       builder: (context, snapshot) {
-                        Article sd = snapshot.data!;
                         return snapshot.hasError
                             ? RequestErrorWidget(
                                 snapshot.error.toString(),
@@ -205,18 +208,26 @@ class DriverDetailsFragment extends StatelessWidget {
                             : snapshot.hasData
                                 ? NewsItem(
                                     News(
-                                      sd.articleId,
+                                      snapshot.data!.articleId,
                                       'News',
-                                      sd.articleSlug,
-                                      sd.articleName,
+                                      snapshot.data!.articleSlug,
+                                      snapshot.data!.articleName,
                                       '',
-                                      sd.publishedDate,
-                                      sd.articleHero['contentType'] ==
+                                      snapshot.data!.publishedDate,
+                                      snapshot.data!
+                                                  .articleHero['contentType'] ==
                                               'atomVideo'
-                                          ? sd.articleHero['fields']
+                                          ? snapshot.data!.articleHero['fields']
                                               ['thumbnail']['url']
-                                          : sd.articleHero['fields']['image']
-                                              ['url'],
+                                          : snapshot.data!.articleHero[
+                                                      'contentType'] ==
+                                                  'atomImageGallery'
+                                              ? snapshot.data!
+                                                      .articleHero['fields']
+                                                  ['imageGallery'][0]['url']
+                                              : snapshot.data!
+                                                      .articleHero['fields']
+                                                  ['image']['url'],
                                     ),
                                     true,
                                   )
