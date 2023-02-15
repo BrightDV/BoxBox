@@ -26,8 +26,8 @@ class TestScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const ArticleScreen(
-      '3i0tt8WlAzwiqooEqwExQq',
-      'None',
+      '3mk8c8ec2hThECsxtusEdm',
+      'links',
       true,
     );
   }

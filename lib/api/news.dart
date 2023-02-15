@@ -1618,6 +1618,61 @@ class JoinArticlesParts extends StatelessWidget {
             ),
           ),
         );
+      } else if (element['contentType'] == 'atomLinkList') {
+        widgetsList.add(
+          Padding(
+            padding: const EdgeInsets.all(10),
+            child: ListView.builder(
+              itemCount: element['fields']['items'].length + 1,
+              shrinkWrap: true,
+              itemBuilder: (context, index) => index == 0
+                  ? Padding(
+                      padding: const EdgeInsets.only(
+                        bottom: 10,
+                      ),
+                      child: Text(
+                        element['fields']['title'],
+                        style: TextStyle(
+                          color: useDarkMode ? Colors.white : Colors.black,
+                          fontSize: 19,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    )
+                  : GestureDetector(
+                      onTap: () {
+                        String articleUrl =
+                            element['fields']['items'][index - 1]['webUrl'];
+                        String articleId = articleUrl
+                            .substring(43, articleUrl.length - 5)
+                            .split('.')[1];
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ArticleScreen(
+                              articleId,
+                              element['fields']['items'][index - 1]['title'],
+                              true,
+                            ),
+                          ),
+                        );
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(2),
+                        child: Text(
+                          '• ${element['fields']['items'][index - 1]['title']}',
+                          style: TextStyle(
+                            color: Theme.of(context).primaryColor,
+                            decoration: TextDecoration.underline,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
+                    ),
+            ),
+          ),
+        );
+        // atomLinkList
       } else {
         widgetsList.add(
           SizedBox(
