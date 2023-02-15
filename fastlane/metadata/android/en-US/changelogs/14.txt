@@ -1,0 +1,10 @@
+New logo - Simpler and better
+- Notifications have been improved.
+- Support articles' videos from YouTube.
+- Update images in the teams' standings.
+- Lot of small fixes and UI improvements.
+- Share article in the mixed news and fix WTF1.
+- Improve Live Session header and fix Race Hub.
+- Add basic support for Linux.
+- Update translations.
+- Update Dart SDK.

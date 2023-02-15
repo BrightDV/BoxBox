@@ -1625,6 +1625,7 @@ class JoinArticlesParts extends StatelessWidget {
             child: ListView.builder(
               itemCount: element['fields']['items'].length + 1,
               shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
               itemBuilder: (context, index) => index == 0
                   ? Padding(
                       padding: const EdgeInsets.only(
