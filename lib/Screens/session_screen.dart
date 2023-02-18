@@ -27,11 +27,13 @@ import 'package:boxbox/api/livetiming.dart';
 import 'package:boxbox/helpers/driver_result_item.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/request_error.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_timer_countdown/flutter_timer_countdown.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:webview_flutter/webview_flutter.dart';
 
 class SessionScreen extends StatefulWidget {
   final String sessionFullName;
@@ -225,10 +227,19 @@ class _SessionScreenState extends State<SessionScreen> {
                                   .replaceAll('session-type', 'qualifying'),
                             ),
                           )
-                    : const WebView(
-                        javascriptMode: JavascriptMode.unrestricted,
-                        initialUrl:
-                            'https://www.formula1.com/en/live-experience-webview.html',
+                    : InAppWebView(
+                        initialUrlRequest: URLRequest(
+                          url: Uri.parse(
+                              "https://www.formula1.com/en/live-experience-webview.html"),
+                        ),
+                        gestureRecognizers: {
+                          Factory<VerticalDragGestureRecognizer>(
+                              () => VerticalDragGestureRecognizer()),
+                          Factory<HorizontalDragGestureRecognizer>(
+                              () => HorizontalDragGestureRecognizer()),
+                          Factory<ScaleGestureRecognizer>(
+                              () => ScaleGestureRecognizer()),
+                        },
                       ),
           );
   }
