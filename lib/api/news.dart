@@ -1787,6 +1787,7 @@ class JoinArticlesParts extends StatelessWidget {
         ),
       ),
     );
+    ScrollController articleScrollController = ScrollController();
     return (article.articleHero['contentType'] == 'atomVideo') ||
             (article.articleHero['contentType'] == 'atomVideoYouTube')
         ? NestedScrollView(
@@ -1809,7 +1810,10 @@ class JoinArticlesParts extends StatelessWidget {
             },
             body: SafeArea(
               child: Scrollbar(
+                interactive: true,
+                controller: articleScrollController,
                 child: SingleChildScrollView(
+                  controller: articleScrollController,
                   child: Column(
                     children: widgetsList,
                   ),
@@ -1819,7 +1823,10 @@ class JoinArticlesParts extends StatelessWidget {
           )
         : MediaQuery.of(context).size.width > 600
             ? Scrollbar(
+                interactive: true,
+                controller: articleScrollController,
                 child: SingleChildScrollView(
+                  controller: articleScrollController,
                   child: Center(
                     child: ConstrainedBox(
                       constraints: const BoxConstraints(
@@ -1835,7 +1842,10 @@ class JoinArticlesParts extends StatelessWidget {
               )
             : SafeArea(
                 child: Scrollbar(
+                  interactive: true,
+                  controller: articleScrollController,
                   child: SingleChildScrollView(
+                    controller: articleScrollController,
                     child: Column(
                       children: widgetsList,
                     ),
