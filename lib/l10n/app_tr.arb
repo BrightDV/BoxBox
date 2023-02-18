@@ -255,10 +255,12 @@
   "@statistics": {},
   "tryAgain": "Tekrar Deneyin",
   "@tryAgain": {},
-  "nothingHere": "Burada gösterilecek bir şey\nyok.",
+  "nothingHere": "Burada gösterilecek\nbir şey yok.",
   "@nothingHere": {},
   "formulaYouSettings": "Formula You Ayarları",
   "@formulaYouSettings": {
     "description": "Keep 'Formula You' untranslated as it is the name of the service."
-  }
+  },
+  "videos": "Videolar",
+  "@videos": {}
 }
