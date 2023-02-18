@@ -17,6 +17,7 @@
  * Copyright (c) 2022-2023, BrightDV
  */
 
+import 'package:boxbox/Screens/videos.dart';
 import 'package:boxbox/helpers/drawer.dart';
 import 'package:boxbox/Screens/home.dart';
 import 'package:boxbox/Screens/schedule.dart';
@@ -77,6 +78,7 @@ class _MainBottomNavigationBarState extends State<MainBottomNavigationBar> {
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     List<Widget> screens = [
       HomeScreen(scrollController),
+      VideosScreen(scrollController),
       StandingsScreen(scrollController: scrollController),
       ScheduleScreen(scrollController: scrollController),
     ];
@@ -274,6 +276,15 @@ class _MainBottomNavigationBarState extends State<MainBottomNavigationBar> {
                 Icons.feed,
               ),
               label: AppLocalizations.of(context)?.news,
+            ),
+            BottomNavigationBarItem(
+              icon: const Icon(
+                Icons.play_circle_outline,
+              ),
+              activeIcon: const Icon(
+                Icons.play_circle,
+              ),
+              label: AppLocalizations.of(context)?.videos,
             ),
             BottomNavigationBarItem(
               icon: const Icon(

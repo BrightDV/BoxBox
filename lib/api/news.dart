@@ -19,6 +19,7 @@
 
 import 'dart:async';
 import 'dart:convert';
+import 'dart:ui';
 
 import 'package:better_player/better_player.dart';
 import 'package:boxbox/Screens/circuit.dart';
@@ -796,76 +797,7 @@ class _NewsListState extends State<NewsList> {
   }
 }
 
-class FirstPageExceptionIndicator extends StatelessWidget {
-  const FirstPageExceptionIndicator({
-    required this.title,
-    this.message,
-    this.onTryAgain,
-    Key? key,
-  }) : super(key: key);
 
-  final String title;
-  final String? message;
-  final VoidCallback? onTryAgain;
-
-  @override
-  Widget build(BuildContext context) {
-    bool useDarkMode =
-        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
-    final message = this.message;
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 16),
-        child: Column(
-          children: [
-            Text(
-              title,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: useDarkMode ? Colors.white : Colors.black,
-              ),
-            ),
-            if (message != null)
-              const SizedBox(
-                height: 16,
-              ),
-            if (message != null)
-              Text(
-                message,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: useDarkMode ? Colors.white : Colors.black,
-                ),
-              ),
-            if (onTryAgain != null)
-              const SizedBox(
-                height: 48,
-              ),
-            if (onTryAgain != null)
-              SizedBox(
-                height: 50,
-                width: double.infinity,
-                child: ElevatedButton.icon(
-                  onPressed: onTryAgain,
-                  icon: const Icon(
-                    Icons.refresh,
-                    color: Colors.white,
-                  ),
-                  label: Text(
-                    AppLocalizations.of(context)!.tryAgain,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ),
-          ],
-        ),
-      ),
-    );
-  }
-}
 
 class OfflineNewsList extends StatefulWidget {
   final List items;
@@ -2230,12 +2162,14 @@ class VideoRenderer extends StatefulWidget {
   final String videoId;
   final bool? autoplay;
   final String? youtubeId;
+  final String? heroTag;
 
   const VideoRenderer(
     this.videoId, {
     Key? key,
     this.autoplay,
     this.youtubeId,
+    this.heroTag,
   }) : super(key: key);
   @override
   State<VideoRenderer> createState() => _VideoRendererState();
@@ -2282,6 +2216,7 @@ class _VideoRendererState extends State<VideoRenderer> {
               ? BetterPlayerVideoPlayer(
                   snapshot.data!,
                   widget.autoplay == null ? false : widget.autoplay!,
+                  widget.heroTag ?? '',
                 )
               : SizedBox(
                   height: MediaQuery.of(context).size.width / (16 / 9),
@@ -2294,10 +2229,12 @@ class _VideoRendererState extends State<VideoRenderer> {
 class BetterPlayerVideoPlayer extends StatefulWidget {
   final Map<String, dynamic> videoUrls;
   final bool autoplay;
+  final String heroTag;
 
   const BetterPlayerVideoPlayer(
     this.videoUrls,
-    this.autoplay, {
+    this.autoplay,
+    this.heroTag, {
     Key? key,
   }) : super(key: key);
   @override
@@ -2373,24 +2310,51 @@ class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
         return _showPlaceholder
             ? Stack(
                 children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        fit: BoxFit.cover,
-                        colorFilter: ColorFilter.mode(
-                          Colors.black.withOpacity(0.4),
-                          BlendMode.dstATop,
+                  widget.heroTag != ''
+                      ? Hero(
+                          tag: widget.heroTag,
+                          child: ImageFiltered(
+                            imageFilter: ImageFilter.blur(),
+                            child: CachedNetworkImage(
+                              imageUrl: widget.videoUrls['poster'],
+                              placeholder: (context, url) => const SizedBox(
+                                height: 90,
+                                child: LoadingIndicatorUtil(),
+                              ),
+                              errorWidget: (context, url, error) => Icon(
+                                Icons.error_outlined,
+                                color:
+                                    useDarkMode ? Colors.white : Colors.black,
+                              ),
+                              fadeOutDuration:
+                                  const Duration(milliseconds: 100),
+                              fadeInDuration: const Duration(seconds: 1),
+                            ),
+                          ),
+                        )
+                      : Container(
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              fit: BoxFit.cover,
+                              colorFilter: ColorFilter.mode(
+                                Colors.black.withOpacity(0.4),
+                                BlendMode.dstATop,
+                              ),
+                              image: NetworkImage(
+                                widget.videoUrls['poster'],
+                              ),
+                            ),
+                          ),
                         ),
-                        image: NetworkImage(widget.videoUrls['poster']),
-                      ),
-                    ),
-                  ),
                   const Align(
                     alignment: Alignment.center,
-                    child: Icon(
-                      Icons.play_arrow_outlined,
-                      color: Colors.white,
-                      size: 48,
+                    child: Padding(
+                      padding: EdgeInsets.only(bottom: 20),
+                      child: Icon(
+                        Icons.play_arrow_outlined,
+                        color: Colors.white,
+                        size: 48,
+                      ),
                     ),
                   ),
                 ],

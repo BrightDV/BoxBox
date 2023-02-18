@@ -37,6 +37,7 @@ dependencies:
     sdk: flutter
   flutter_map: ^0.14.0
   flutter_markdown: ^0.6.10
+  flutter_swiper_view: ^1.1.8
   flutter_timer_countdown: ^1.0.3
   font_awesome_flutter: ^10.2.1
   geojson_vi: ^2.0.7
