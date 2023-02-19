@@ -797,8 +797,6 @@ class _NewsListState extends State<NewsList> {
   }
 }
 
-
-
 class OfflineNewsList extends StatefulWidget {
   final List items;
   final ScrollController? scrollController;
@@ -2317,9 +2315,10 @@ class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
                             imageFilter: ImageFilter.blur(),
                             child: CachedNetworkImage(
                               imageUrl: widget.videoUrls['poster'],
-                              placeholder: (context, url) => const SizedBox(
-                                height: 90,
-                                child: LoadingIndicatorUtil(),
+                              placeholder: (context, url) => SizedBox(
+                                height: MediaQuery.of(context).size.width /
+                                    (16 / 9),
+                                child: const LoadingIndicatorUtil(),
                               ),
                               errorWidget: (context, url, error) => Icon(
                                 Icons.error_outlined,
@@ -2348,13 +2347,10 @@ class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
                         ),
                   const Align(
                     alignment: Alignment.center,
-                    child: Padding(
-                      padding: EdgeInsets.only(bottom: 20),
-                      child: Icon(
-                        Icons.play_arrow_outlined,
-                        color: Colors.white,
-                        size: 48,
-                      ),
+                    child: Icon(
+                      Icons.play_arrow_outlined,
+                      color: Colors.white,
+                      size: 48,
                     ),
                   ),
                 ],

@@ -29,6 +29,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_swiper_view/flutter_swiper_view.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class VideosScreen extends StatefulWidget {
   final ScrollController _scrollController;
@@ -129,11 +130,13 @@ class _VideosScreenState extends State<VideosScreen> {
             scrollDirection: Axis.vertical,
             shrinkWrap: true,
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: width < 1000
+              crossAxisCount: width < 800
                   ? 2
-                  : width < 1400
-                      ? 4
-                      : 5,
+                  : width < 1200
+                      ? 3
+                      : width < 1400
+                          ? 4
+                          : 5,
               crossAxisSpacing: 5.0,
               mainAxisSpacing: 5.0,
             ),
@@ -240,25 +243,25 @@ class _VideoItemState extends State<VideoItem> {
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     return Padding(
       padding: const EdgeInsets.fromLTRB(2, 2, 2, 2),
-      child: OpenContainer(
-        closedColor:
-            useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
-        openColor:
-            useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
-        transitionDuration: const Duration(milliseconds: 500),
-        openBuilder: (context, action) => Swiper(
-          itemBuilder: (context, index) {
-            return VideoScreen(videos[index]);
-          },
-          itemCount: videos.length,
-          scrollDirection: Axis.vertical,
-          control: const SwiperControl(),
-          index: widget.index,
-        ),
-        closedBuilder: (context, action) => Card(
-          elevation: 5.0,
-          color: Colors.transparent,
-          child: Stack(
+      child: Card(
+        elevation: 5.0,
+        color: Colors.transparent,
+        child: OpenContainer(
+          closedColor:
+              useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
+          openColor:
+              useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
+          transitionDuration: const Duration(milliseconds: 500),
+          openBuilder: (context, action) => Swiper(
+            itemBuilder: (context, index) {
+              return VideoScreen(videos[index]);
+            },
+            itemCount: videos.length,
+            scrollDirection: Axis.vertical,
+            control: const SwiperControl(),
+            index: widget.index,
+          ),
+          closedBuilder: (context, action) => Stack(
             alignment: Alignment.bottomLeft,
             children: [
               Hero(
@@ -269,8 +272,9 @@ class _VideoItemState extends State<VideoItem> {
                   ),
                   child: CachedNetworkImage(
                     imageUrl: videos[widget.index].thumbnailUrl,
-                    placeholder: (context, url) => const SizedBox(
-                      child: LoadingIndicatorUtil(),
+                    placeholder: (context, url) => SizedBox(
+                      height: MediaQuery.of(context).size.width / (16 / 9) - 7,
+                      child: const LoadingIndicatorUtil(),
                     ),
                     errorWidget: (context, url, error) => Icon(
                       Icons.error_outlined,

@@ -22,6 +22,7 @@ import 'package:boxbox/api/videos.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:marquee/marquee.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 class VideoScreen extends StatefulWidget {
@@ -54,6 +55,22 @@ class _VideoScreenState extends State<VideoScreen> {
             blankSpace: 100,
           ),
         ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(
+              left: 3,
+              right: 6,
+            ),
+            child: IconButton(
+              onPressed: () => Share.share(
+                video.videoUrl,
+              ),
+              icon: const Icon(
+                Icons.share,
+              ),
+            ),
+          ),
+        ],
       ),
       backgroundColor:
           useDarkMode ? Theme.of(context).backgroundColor : Colors.white,

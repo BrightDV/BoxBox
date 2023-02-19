@@ -45,6 +45,7 @@ class F1VideosFetcher {
       newsList.add(
         Video(
           element['videoId'],
+          'https://formula1.com${element['url']}',
           element['caption'],
           element['description'],
           element['videoDuration'],
@@ -79,6 +80,7 @@ class F1VideosFetcher {
 
 class Video {
   final String videoId;
+  final String videoUrl;
   final String caption;
   final String description;
   final String videoDuration;
@@ -87,6 +89,7 @@ class Video {
 
   Video(
     this.videoId,
+    this.videoUrl,
     this.caption,
     this.description,
     this.videoDuration,
