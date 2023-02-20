@@ -42,8 +42,9 @@ class _FormulaYouSettingsScreenState extends State<FormulaYouSettingsScreen> {
     int i = 0;
 
     return Scaffold(
-      backgroundColor:
-          useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
+      backgroundColor: useDarkMode
+          ? Theme.of(context).scaffoldBackgroundColor
+          : Colors.white,
       appBar: AppBar(
         title: Text(
           AppLocalizations.of(context)!.formulaYouSettings,

@@ -118,7 +118,7 @@ class _MainBottomNavigationBarState extends State<MainBottomNavigationBar> {
               builder: (context) => StatefulBuilder(
                 builder: (context, setState) => AlertDialog(
                   backgroundColor: useDarkMode
-                      ? Theme.of(context).backgroundColor
+                      ? Theme.of(context).scaffoldBackgroundColor
                       : Colors.white,
                   title: Text(
                     AppLocalizations.of(context)!.filter,
@@ -219,7 +219,7 @@ class _MainBottomNavigationBarState extends State<MainBottomNavigationBar> {
                                 ),
                               ),
                               backgroundColor: useDarkMode
-                                  ? Theme.of(context).backgroundColor
+                                  ? Theme.of(context).scaffoldBackgroundColor
                                   : Colors.white,
                               body: NewsFeedWidget(
                                 articleType: filterItems[pressed],
@@ -309,8 +309,9 @@ class _MainBottomNavigationBarState extends State<MainBottomNavigationBar> {
         ),
       ),
       body: screens.elementAt(_selectedIndex),
-      backgroundColor:
-          useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
+      backgroundColor: useDarkMode
+          ? Theme.of(context).scaffoldBackgroundColor
+          : Colors.white,
     );
   }
 }

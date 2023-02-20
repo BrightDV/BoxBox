@@ -56,8 +56,9 @@ class _EditOrderScreenState extends State<EditOrderScreen> {
           AppLocalizations.of(context)!.edit,
         ),
       ),
-      backgroundColor:
-          useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
+      backgroundColor: useDarkMode
+          ? Theme.of(context).scaffoldBackgroundColor
+          : Colors.white,
       body: Theme(
         data: ThemeData(
           canvasColor: Colors.transparent,

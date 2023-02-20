@@ -60,8 +60,9 @@ class _CircuitScreenState extends State<CircuitScreen> {
     bool useDataSaverMode = Hive.box('settings')
         .get('useDataSaverMode', defaultValue: false) as bool;
     return Scaffold(
-      backgroundColor:
-          useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
+      backgroundColor: useDarkMode
+          ? Theme.of(context).scaffoldBackgroundColor
+          : Colors.white,
       body: widget.isFetched ?? true
           ? NestedScrollView(
               headerSliverBuilder:

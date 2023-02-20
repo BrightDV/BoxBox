@@ -125,8 +125,9 @@ class _RssFeedArticleScreenState extends State<RssFeedArticleScreen> {
           ),
         ],
       ),
-      backgroundColor:
-          useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
+      backgroundColor: useDarkMode
+          ? Theme.of(context).scaffoldBackgroundColor
+          : Colors.white,
       body: InAppWebView(
         initialUrlRequest: URLRequest(
           url: Uri.parse(

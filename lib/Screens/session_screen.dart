@@ -76,7 +76,7 @@ class _SessionScreenState extends State<SessionScreen> {
                   ),
                 ),
                 backgroundColor: useDarkMode
-                    ? Theme.of(context).backgroundColor
+                    ? Theme.of(context).scaffoldBackgroundColor
                     : Colors.white,
                 body: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -154,8 +154,9 @@ class _SessionScreenState extends State<SessionScreen> {
                 ),
               ),
             ),
-            backgroundColor:
-                useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
+            backgroundColor: useDarkMode
+                ? Theme.of(context).scaffoldBackgroundColor
+                : Colors.white,
             body: widget.session.state == 'upcoming' ||
                     widget.session.startTime.isAfter(DateTime.now())
                 ? Column(

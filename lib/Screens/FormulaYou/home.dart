@@ -76,8 +76,9 @@ class _PersonalizedHomeScreenState extends State<PersonalizedHomeScreen> {
           ),
         ],
       ),
-      backgroundColor:
-          useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
+      backgroundColor: useDarkMode
+          ? Theme.of(context).scaffoldBackgroundColor
+          : Colors.white,
       body: NewsFeedWidget(
         tagId: selectedTagsIds.join(','),
       ),

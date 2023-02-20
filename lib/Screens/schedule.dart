@@ -39,8 +39,9 @@ class ScheduleScreen extends StatelessWidget {
       length: 2,
       initialIndex: 1,
       child: Scaffold(
-        backgroundColor:
-            useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
+        backgroundColor: useDarkMode
+            ? Theme.of(context).scaffoldBackgroundColor
+            : Colors.white,
         body: TabBarView(
           children: [
             ScheduleWidget(

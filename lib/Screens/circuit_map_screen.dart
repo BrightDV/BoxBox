@@ -44,8 +44,9 @@ class CircuitMapScreen extends StatelessWidget {
           color: Theme.of(context).primaryColor,
         ),
       ),
-      backgroundColor:
-          useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
+      backgroundColor: useDarkMode
+          ? Theme.of(context).scaffoldBackgroundColor
+          : Colors.white,
       content: Builder(
         builder: (context) {
           var height = MediaQuery.of(context).size.height;

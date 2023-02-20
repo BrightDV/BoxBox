@@ -55,8 +55,9 @@ class FreePracticeScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(sessionTitle),
       ),
-      backgroundColor:
-          useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
+      backgroundColor: useDarkMode
+          ? Theme.of(context).scaffoldBackgroundColor
+          : Colors.white,
       body: FutureBuilder<List<DriverResult>>(
         future: raceUrl != null
             ? FormulaOneScraper().scrapeFreePracticeResult(

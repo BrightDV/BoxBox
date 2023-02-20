@@ -16,7 +16,7 @@ publish_to: none
 version: 0.5.0+14
 
 environment:
-  sdk: ">=2.15.0 <3.4.4"
+  sdk: ">=2.19.0 <3.4.4"
 
 dependencies:
   flutter:
@@ -60,8 +60,7 @@ dependencies:
   share_plus: ^6.3.1
   signalr_flutter: ^0.2.0
   sliding_up_panel: ^2.0.0+1
-  syncfusion_flutter_core: '20.3.49'
-  syncfusion_flutter_pdfviewer: ^20.3.49
+  syncfusion_flutter_pdfviewer: ^20.4.50
   timeago: ^3.3.0
   url_launcher: ^6.0.13
   video_player: ^2.4.5

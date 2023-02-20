@@ -72,7 +72,7 @@ class _SignalRClientScreenState extends State<SignalRClientScreen> {
           children: <Widget>[
             Text(
               "Connection Status: $signalRStatus\n",
-              style: Theme.of(context).textTheme.headline6,
+              style: Theme.of(context).textTheme.titleLarge,
               textAlign: TextAlign.center,
             ),
             Padding(

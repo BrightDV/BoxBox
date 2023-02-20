@@ -326,7 +326,7 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         fontFamily: 'Formula1',
         primarySwatch: colorCustom,
-        backgroundColor: const Color(0xff12121a),
+        scaffoldBackgroundColor: const Color(0xff12121a),
       ),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,

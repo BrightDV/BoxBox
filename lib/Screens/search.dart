@@ -61,8 +61,9 @@ class _SearchScreenState extends State<SearchScreen> {
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     return Scaffold(
-      backgroundColor:
-          useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
+      backgroundColor: useDarkMode
+          ? Theme.of(context).scaffoldBackgroundColor
+          : Colors.white,
       appBar: AppBar(
         title: SizedBox(
           width: double.infinity,

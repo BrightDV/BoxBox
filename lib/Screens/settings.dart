@@ -41,8 +41,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     return Scaffold(
-      backgroundColor:
-          useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
+      backgroundColor: useDarkMode
+          ? Theme.of(context).scaffoldBackgroundColor
+          : Colors.white,
       appBar: AppBar(
         title: Text(
           AppLocalizations.of(context)!.settings,
@@ -159,8 +160,9 @@ class _AppearanceCardState extends State<AppearanceCard> {
           onTap: () {},
           trailing: DropdownButton(
             value: themeMode,
-            dropdownColor:
-                useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
+            dropdownColor: useDarkMode
+                ? Theme.of(context).scaffoldBackgroundColor
+                : Colors.white,
             onChanged: (int? newThemeMode) {
               if (newThemeMode != null) {
                 setState(
@@ -220,8 +222,9 @@ class _AppearanceCardState extends State<AppearanceCard> {
           onTap: () {},
           trailing: DropdownButton(
             value: teamTheme,
-            dropdownColor:
-                useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
+            dropdownColor: useDarkMode
+                ? Theme.of(context).scaffoldBackgroundColor
+                : Colors.white,
             onChanged: (String? newTeamTheme) {
               if (newTeamTheme != null) {
                 setState(
@@ -272,8 +275,9 @@ class _AppearanceCardState extends State<AppearanceCard> {
           onTap: () {},
           trailing: DropdownButton(
             value: newsLayoutFormated,
-            dropdownColor:
-                useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
+            dropdownColor: useDarkMode
+                ? Theme.of(context).scaffoldBackgroundColor
+                : Colors.white,
             onChanged: (newValue) {
               if (newValue != null) {
                 setState(
@@ -387,8 +391,9 @@ class _PlayerCardState extends State<PlayerCard> {
           onTap: () {},
           trailing: DropdownButton(
             value: playerQuality,
-            dropdownColor:
-                useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
+            dropdownColor: useDarkMode
+                ? Theme.of(context).scaffoldBackgroundColor
+                : Colors.white,
             onChanged: (int? newValue) {
               if (newValue != null) {
                 setState(

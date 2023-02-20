@@ -50,8 +50,9 @@ class _MainDrawerState extends State<MainDrawer> {
   Widget build(BuildContext context) {
     return Theme(
       data: Theme.of(context).copyWith(
-        canvasColor:
-            useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
+        canvasColor: useDarkMode
+            ? Theme.of(context).scaffoldBackgroundColor
+            : Colors.white,
       ),
       child: Drawer(
         child: Column(

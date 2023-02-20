@@ -35,8 +35,9 @@ class HallOfFameScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.hallOfFame),
       ),
-      backgroundColor:
-          useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
+      backgroundColor: useDarkMode
+          ? Theme.of(context).scaffoldBackgroundColor
+          : Colors.white,
       body: FutureBuilder<List<HallOfFameDriver>>(
         future: FormulaOneScraper().scrapeHallOfFame(),
         builder: (context, snapshot) => snapshot.hasError
@@ -118,8 +119,9 @@ class HallOfFameDriverDetailsScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(driverName),
       ),
-      backgroundColor:
-          useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
+      backgroundColor: useDarkMode
+          ? Theme.of(context).scaffoldBackgroundColor
+          : Colors.white,
       body: FutureBuilder<Map>(
         future: FormulaOneScraper().scrapeHallOfFameDriverDetails(pageUrl),
         builder: (context, snapshot) => snapshot.hasError

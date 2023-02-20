@@ -54,7 +54,7 @@ class _RssFeedScreenState extends State<RssFeedScreen> {
 
     void showDetailsMenu() {
       final RenderObject overlay =
-          Overlay.of(context)!.context.findRenderObject()!;
+          Overlay.of(context).context.findRenderObject()!;
 
       showMenu(
         context: context,
@@ -121,8 +121,9 @@ class _RssFeedScreenState extends State<RssFeedScreen> {
     }
 
     return Scaffold(
-      backgroundColor:
-          useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
+      backgroundColor: useDarkMode
+          ? Theme.of(context).scaffoldBackgroundColor
+          : Colors.white,
       appBar: AppBar(
         title: Text(
           widget.feedTitle,

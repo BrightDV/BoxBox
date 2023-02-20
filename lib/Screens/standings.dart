@@ -50,8 +50,9 @@ class _StandingsScreenState extends State<StandingsScreen> {
       length: 2,
       initialIndex: widget.switchToTeamStandings != null ? 1 : 0,
       child: Scaffold(
-        backgroundColor:
-            useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
+        backgroundColor: useDarkMode
+            ? Theme.of(context).scaffoldBackgroundColor
+            : Colors.white,
         body: TabBarView(
           children: [
             DriversStandingsWidget(scrollController: widget.scrollController),

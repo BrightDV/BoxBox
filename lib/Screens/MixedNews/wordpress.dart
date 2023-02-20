@@ -52,8 +52,9 @@ class _WordpressScreenState extends State<WordpressScreen> {
           widget.feedName,
         ),
       ),
-      backgroundColor:
-          useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
+      backgroundColor: useDarkMode
+          ? Theme.of(context).scaffoldBackgroundColor
+          : Colors.white,
       body: WordpressNewsList(widget.feedUrl),
     );
   }
@@ -81,7 +82,7 @@ class WordspressNewsItem extends StatelessWidget {
 
     void showDetailsMenu() {
       final RenderObject overlay =
-          Overlay.of(context)!.context.findRenderObject()!;
+          Overlay.of(context).context.findRenderObject()!;
 
       showMenu(
         context: context,

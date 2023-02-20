@@ -55,8 +55,9 @@ class _RaceDetailsScreenState extends State<RaceDetailsScreen> {
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     return Scaffold(
-      backgroundColor:
-          useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
+      backgroundColor: useDarkMode
+          ? Theme.of(context).scaffoldBackgroundColor
+          : Colors.white,
       body: FutureBuilder<bool>(
         future: ErgastApi().hasSprintQualifyings(widget.race.round),
         builder: (context, snapshot) => snapshot.hasData ||
@@ -130,7 +131,7 @@ class _RaceDetailsScreenState extends State<RaceDetailsScreen> {
                                       ],
                                 labelColor: useDarkMode
                                     ? Colors.white
-                                    : Theme.of(context).backgroundColor,
+                                    : Theme.of(context).scaffoldBackgroundColor,
                               ),
                             ),
                             pinned: true,
@@ -189,7 +190,9 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     return Container(
-      color: useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
+      color: useDarkMode
+          ? Theme.of(context).scaffoldBackgroundColor
+          : Colors.white,
       child: _tabBar,
     );
   }

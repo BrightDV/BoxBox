@@ -29,7 +29,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_swiper_view/flutter_swiper_view.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-import 'package:timeago/timeago.dart' as timeago;
 
 class VideosScreen extends StatefulWidget {
   final ScrollController _scrollController;
@@ -247,10 +246,12 @@ class _VideoItemState extends State<VideoItem> {
         elevation: 5.0,
         color: Colors.transparent,
         child: OpenContainer(
-          closedColor:
-              useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
-          openColor:
-              useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
+          closedColor: useDarkMode
+              ? Theme.of(context).scaffoldBackgroundColor
+              : Colors.white,
+          openColor: useDarkMode
+              ? Theme.of(context).scaffoldBackgroundColor
+              : Colors.white,
           transitionDuration: const Duration(milliseconds: 500),
           openBuilder: (context, action) => Swiper(
             itemBuilder: (context, index) {

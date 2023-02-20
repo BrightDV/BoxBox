@@ -66,8 +66,9 @@ class _GrandPrixRunningScreenState extends State<GrandPrixRunningScreen> {
           ),
         ),
       ),
-      backgroundColor:
-          useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
+      backgroundColor: useDarkMode
+          ? Theme.of(context).scaffoldBackgroundColor
+          : Colors.white,
       body: SlidingUpPanel(
         backdropEnabled: true,
         color: useDarkMode ? const Color(0xff22222c) : Colors.white,
@@ -237,8 +238,8 @@ class _PdfViewerState extends State<PdfViewer> {
         key: _pdfViewerKey,
         enableTextSelection: true,
         onDocumentLoadFailed: (PdfDocumentLoadFailedDetails details) {
-          print(details.error);
-          print(details.description);
+          //print(details.error);
+          //print(details.description);
           showErrorDialog(context, details.error, details.description);
         },
         canShowPaginationDialog: true,

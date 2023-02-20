@@ -282,7 +282,7 @@ class _NewsItemState extends State<NewsItem> {
 
     void showDetailsMenu() {
       final RenderObject overlay =
-          Overlay.of(context)!.context.findRenderObject()!;
+          Overlay.of(context).context.findRenderObject()!;
 
       showMenu(
         context: context,
@@ -955,7 +955,7 @@ class JoinArticlesParts extends StatelessWidget {
                       ),
                     ),
                     backgroundColor: useDarkMode
-                        ? Theme.of(context).backgroundColor
+                        ? Theme.of(context).scaffoldBackgroundColor
                         : Colors.white,
                     body: NewsFeedWidget(tagId: tag['id']),
                   ),
@@ -1415,8 +1415,9 @@ class JoinArticlesParts extends StatelessWidget {
                                                         .qualifyings,
                                           ),
                                         ),
-                                        backgroundColor:
-                                            Theme.of(context).backgroundColor,
+                                        backgroundColor: Theme.of(context)
+                                            .colorScheme
+                                            .background,
                                         body: sessionType == 'Race' ||
                                                 sessionType ==
                                                     'SprintQualifying'
@@ -2391,7 +2392,9 @@ class PinnedVideoPlayer extends SliverPersistentHeaderDelegate {
       height: height,
       child: Card(
         margin: const EdgeInsets.all(0),
-        color: useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
+        color: useDarkMode
+            ? Theme.of(context).scaffoldBackgroundColor
+            : Colors.white,
         elevation: 10.0,
         child: Center(
           child: widget,

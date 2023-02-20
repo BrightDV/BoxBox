@@ -84,8 +84,9 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
           'https://www.pitpass.com/fes_php/fes_usr_sit_newsfeed.php?fes_prepend_aty_sht_name=1',
     };
     return Scaffold(
-      backgroundColor:
-          useDarkMode ? Theme.of(context).backgroundColor : Colors.white,
+      backgroundColor: useDarkMode
+          ? Theme.of(context).scaffoldBackgroundColor
+          : Colors.white,
       appBar: AppBar(
         title: Text(
           AppLocalizations.of(context)!.newsMix,
