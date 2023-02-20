@@ -25,7 +25,6 @@ import 'package:boxbox/Screens/links.dart';
 import 'package:boxbox/Screens/MixedNews/mixed_news.dart';
 import 'package:boxbox/Screens/live_timing.dart';
 import 'package:boxbox/Screens/settings.dart';
-import 'package:boxbox/Screens/signalr_client.dart';
 import 'package:boxbox/Screens/test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -221,29 +220,6 @@ class _MainDrawerState extends State<MainDrawer> {
                 );
               },
             ),
-            enableExperimentalFeatures
-                ? ListTile(
-                    title: Text(
-                      'SignalR Client',
-                      style: TextStyle(
-                        color: useDarkMode ? Colors.white : Colors.black,
-                      ),
-                    ),
-                    leading: Icon(
-                      Icons.settings_outlined,
-                      color: useDarkMode ? Colors.white : Colors.black,
-                    ),
-                    onTap: () {
-                      Navigator.of(context).pop();
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const SignalRClientScreen(),
-                        ),
-                      );
-                    },
-                  )
-                : Container(),
             enableExperimentalFeatures
                 ? ListTile(
                     title: Text(

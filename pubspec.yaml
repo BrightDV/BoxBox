@@ -58,7 +58,7 @@ dependencies:
   package_info_plus: ^3.0.3
   receive_sharing_intent: ^1.4.5
   share_plus: ^6.3.1
-  signalr_flutter: ^0.2.0
+  # signalr_flutter: ^0.2.0 # uses (non-foss?) .jar
   sliding_up_panel: ^2.0.0+1
   syncfusion_flutter_pdfviewer: ^20.4.50
   timeago: ^3.3.0
