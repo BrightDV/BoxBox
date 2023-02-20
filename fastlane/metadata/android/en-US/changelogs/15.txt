@@ -1,0 +1,5 @@
+- Fix F-Droid build.
+- New video tab, with vertical swipe.
+- Support for dragging scroll indicator.
+- Update translations and upgrade dependencies.
+- Remove the SignalR screen.
