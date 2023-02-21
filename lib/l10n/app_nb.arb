@@ -254,5 +254,11 @@
   "viewHighlights": "Vis høydepunkter",
   "@viewHighlights": {},
   "viewMore": "VIS FLERE",
-  "@viewMore": {}
+  "@viewMore": {},
+  "nothingHere": "Ingenting å vise\nher.",
+  "@nothingHere": {},
+  "formulaYouSettings": "Formula You Innstillinger",
+  "@formulaYouSettings": {
+    "description": "Keep 'Formula You' untranslated as it is the name of the service."
+  }
 }
