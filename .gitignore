@@ -3,6 +3,7 @@ build/
 .flutter-plugins
 .flutter-plugins-dependencies
 .idea/
+.flutter/
 key.properties
 .packages
 pubspec.lock
