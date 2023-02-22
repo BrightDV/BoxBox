@@ -312,6 +312,7 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
         return to.difference(from).inSeconds;
       }
 
+      // create a custom widget for the timer.
       timeToRace = timeBetween(
         DateTime.now(),
         raceFullDateParsed,
@@ -679,62 +680,68 @@ class QualificationResultsProvider extends StatelessWidget {
           : getQualificationStandings(
               race!.round,
             ),
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return Padding(
-            padding: const EdgeInsets.all(15),
-            child: Center(
-              child: Text(
-                AppLocalizations.of(context)!.dataNotAvailable,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: useDarkMode ? Colors.white : Colors.black,
-                  fontSize: 15,
-                ),
-              ),
-            ),
-          );
-        }
-        return snapshot.hasData
-            ? Column(
-                children: [
-                  GestureDetector(
-                    child: ListTile(
-                      leading: const FaIcon(
-                        FontAwesomeIcons.youtube,
-                        color: Colors.white,
+      builder: (context, snapshot) => snapshot.hasError
+          ? (race?.sessionDates.isNotEmpty ?? false) &&
+                  (race?.sessionDates.last.isBefore(
+                        DateTime.now(),
+                      ) ??
+                      false)
+              ? Text("Show countdown")
+              : Padding(
+                  padding: const EdgeInsets.all(15),
+                  child: Center(
+                    child: Text(
+                      AppLocalizations.of(context)!.dataNotAvailable,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: useDarkMode ? Colors.white : Colors.black,
+                        fontSize: 15,
                       ),
-                      title: Text(
-                        AppLocalizations.of(context)!.watchOnYoutube,
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-                      onTap: () async {
-                        var yt = YoutubeExplode();
-                        final raceYear = race!.date.split('-')[0];
-                        final List<Video> searchResults =
-                            await yt.search.search(
-                          "Formula 1 Qualification Highlights ${race!.raceName} $raceYear",
-                        );
-                        final Video bestVideoMatch = searchResults[0];
-                        await launchUrl(
-                          Uri.parse(
-                              "https://youtube.com/watch?v=${bestVideoMatch.id.value}"),
-                          mode: LaunchMode.externalApplication,
-                        );
-                      },
-                      tileColor: const Color(0xff383840),
                     ),
                   ),
-                  QualificationDriversResultsList(
-                    snapshot.data!,
-                  ),
-                ],
-              )
-            : const LoadingIndicatorUtil();
-      },
+                )
+          : snapshot.hasData
+              ? snapshot.data!.isNotEmpty
+                  ? Column(
+                      children: [
+                        GestureDetector(
+                          child: ListTile(
+                            leading: const FaIcon(
+                              FontAwesomeIcons.youtube,
+                              color: Colors.white,
+                            ),
+                            title: Text(
+                              AppLocalizations.of(context)!.watchOnYoutube,
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                            onTap: () async {
+                              var yt = YoutubeExplode();
+                              final raceYear = race!.date.split('-')[0];
+                              final List<Video> searchResults =
+                                  await yt.search.search(
+                                "Formula 1 Qualification Highlights ${race!.raceName} $raceYear",
+                              );
+                              final Video bestVideoMatch = searchResults[0];
+                              await launchUrl(
+                                Uri.parse(
+                                  "https://youtube.com/watch?v=${bestVideoMatch.id.value}",
+                                ),
+                                mode: LaunchMode.externalApplication,
+                              );
+                            },
+                            tileColor: const Color(0xff383840),
+                          ),
+                        ),
+                        QualificationDriversResultsList(
+                          snapshot.data!,
+                        ),
+                      ],
+                    )
+                  : Text('countdown')
+              : const LoadingIndicatorUtil(),
     );
   }
 }

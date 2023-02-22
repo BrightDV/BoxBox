@@ -1880,6 +1880,7 @@ class TextParagraphRenderer extends StatelessWidget {
                     '',
                     '',
                     '',
+                    [],
                   ),
                   isFetched: false,
                 ),

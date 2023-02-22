@@ -35,6 +35,7 @@ class Race {
   final String circuitName;
   final String circuitUrl;
   final String country;
+  final List<DateTime> sessionDates;
   final bool? isFirst;
 
   Race(
@@ -45,7 +46,8 @@ class Race {
     this.circuitId,
     this.circuitName,
     this.circuitUrl,
-    this.country, {
+    this.country,
+    this.sessionDates, {
     this.isFirst,
   });
 }

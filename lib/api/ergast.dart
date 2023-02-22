@@ -33,45 +33,43 @@ class _ErgastApiCalls {
         raceStandings['MRData']['RaceTable']['Races'][0]['Results'];
     String time;
     for (var element in jsonResponse) {
-        if (element['status'] != 'Finished') {
-          if (element['status'].endsWith('Lap')) {
-            time = element['status'];
-          } else {
-            time = "DNF";
-          }
+      if (element['status'] != 'Finished') {
+        if (element['status'].endsWith('Lap')) {
+          time = element['status'];
         } else {
-          time = element["Time"]["time"];
+          time = "DNF";
         }
-        String fastestLapRank = "1";
-        if (element['FastestLap'] == null) {
-          fastestLapRank = "0";
-        }
-        formatedRaceStandings.add(
-          DriverResult(
-            element['Driver']['driverId'],
-            element['position'],
-            element['Driver']['permanentNumber'],
-            element['Driver']['givenName'],
-            element['Driver']['familyName'],
-            element['Driver']['code'],
-            element['Constructor']['constructorId'],
-            time,
-            fastestLapRank != '0'
-                ? element['FastestLap']['rank'].toString() == '1'
-                    ? true
-                    : false
-                : false,
-            fastestLapRank != '0'
-                ? element['FastestLap']['Time']['time']
-                : fastestLapRank,
-            fastestLapRank != '0'
-                ? element['FastestLap']['lap']
-                : fastestLapRank,
-            lapsDone: element['laps'],
-            points: element['points'],
-          ),
-        );
+      } else {
+        time = element["Time"]["time"];
       }
+      String fastestLapRank = "1";
+      if (element['FastestLap'] == null) {
+        fastestLapRank = "0";
+      }
+      formatedRaceStandings.add(
+        DriverResult(
+          element['Driver']['driverId'],
+          element['position'],
+          element['Driver']['permanentNumber'],
+          element['Driver']['givenName'],
+          element['Driver']['familyName'],
+          element['Driver']['code'],
+          element['Constructor']['constructorId'],
+          time,
+          fastestLapRank != '0'
+              ? element['FastestLap']['rank'].toString() == '1'
+                  ? true
+                  : false
+              : false,
+          fastestLapRank != '0'
+              ? element['FastestLap']['Time']['time']
+              : fastestLapRank,
+          fastestLapRank != '0' ? element['FastestLap']['lap'] : fastestLapRank,
+          lapsDone: element['laps'],
+          points: element['points'],
+        ),
+      );
+    }
     return formatedRaceStandings;
   }
 
@@ -95,61 +93,21 @@ class _ErgastApiCalls {
         responseAsJson['MRData']['RaceTable']['Races'][0]['SprintResults'];
     String time;
     for (var element in jsonResponse) {
-        if (element['status'] != 'Finished') {
-          if (element['status'].endsWith('Lap')) {
-            time = element['status'];
-          } else {
-            time = "DNF";
-          }
+      if (element['status'] != 'Finished') {
+        if (element['status'].endsWith('Lap')) {
+          time = element['status'];
         } else {
-          time = element["Time"]["time"];
+          time = "DNF";
         }
-        String fastestLapRank = "1";
-        if (element['FastestLap'] == null) {
-          fastestLapRank = "0";
-        }
-        formatedRaceStandings.add(
-          DriverResult(
-            element['Driver']['driverId'],
-            element['position'],
-            element['Driver']['permanentNumber'],
-            element['Driver']['givenName'],
-            element['Driver']['familyName'],
-            element['Driver']['code'],
-            element['Constructor']['constructorId'],
-            time,
-            fastestLapRank != '0'
-                ? element['FastestLap']['rank'].toString() == '1'
-                    ? true
-                    : false
-                : false,
-            fastestLapRank != '0'
-                ? element['FastestLap']['Time']['time']
-                : fastestLapRank,
-            fastestLapRank != '0'
-                ? element['FastestLap']['lap']
-                : fastestLapRank,
-            lapsDone: element['laps'],
-            points: element['points'],
-          ),
-        );
+      } else {
+        time = element["Time"]["time"];
       }
-    return formatedRaceStandings;
-  }
-
-  FutureOr<List<DriverQualificationResult>> getQualificationStandings(
-      String round) async {
-    List<DriverQualificationResult> driversResults = [];
-    var url = Uri.parse(
-        'https://ergast.com/api/f1/${DateTime.now().year}/$round/qualifying.json');
-    var response = await http.get(url);
-    Map<String, dynamic> responseAsJson = jsonDecode(response.body);
-    List finalJson =
-        responseAsJson['MRData']['RaceTable']['Races'][0]['QualifyingResults'];
-
-    for (var element in finalJson) {
-      driversResults.add(
-        DriverQualificationResult(
+      String fastestLapRank = "1";
+      if (element['FastestLap'] == null) {
+        fastestLapRank = "0";
+      }
+      formatedRaceStandings.add(
+        DriverResult(
           element['Driver']['driverId'],
           element['position'],
           element['Driver']['permanentNumber'],
@@ -157,14 +115,59 @@ class _ErgastApiCalls {
           element['Driver']['familyName'],
           element['Driver']['code'],
           element['Constructor']['constructorId'],
-          element['Q1'] == '' ? 'DNF' : element['Q1'],
-          element['Q2'] ?? '--',
-          element['Q3'] ?? '--',
+          time,
+          fastestLapRank != '0'
+              ? element['FastestLap']['rank'].toString() == '1'
+                  ? true
+                  : false
+              : false,
+          fastestLapRank != '0'
+              ? element['FastestLap']['Time']['time']
+              : fastestLapRank,
+          fastestLapRank != '0' ? element['FastestLap']['lap'] : fastestLapRank,
+          lapsDone: element['laps'],
+          points: element['points'],
         ),
       );
     }
+    return formatedRaceStandings;
+  }
 
-    return driversResults;
+  FutureOr<List<DriverQualificationResult>> getQualificationStandings(
+      String round) async {
+    List<DriverQualificationResult> driversResults = [];
+    var url = Uri.parse(
+      'https://ergast.com/api/f1/${DateTime.now().year}/$round/qualifying.json',
+    );
+    var response = await http.get(url);
+    Map<String, dynamic> responseAsJson = jsonDecode(response.body);
+    if ((responseAsJson['MRData']['RaceTable']['Races'].isEmpty) ||
+        (responseAsJson['MRData']['RaceTable']['Races'][0]
+                ['QualifyingResults'] ==
+            null)) {
+      return [];
+    } else {
+      List finalJson = responseAsJson['MRData']['RaceTable']['Races'][0]
+          ['QualifyingResults'];
+      for (var element in finalJson) {
+        driversResults.add(
+          DriverQualificationResult(
+            element['Driver']['driverId'],
+            element['position'],
+            element['Driver']['permanentNumber'],
+            element['Driver']['givenName'],
+            element['Driver']['familyName'],
+            element['Driver']['code'],
+            element['Constructor']['constructorId'],
+            element['Q1'] == '' ? 'DNF' : element['Q1'],
+            element['Q2'] ?? '--',
+            element['Q3'] ?? '--',
+          ),
+        );
+      }
+
+      return driversResults;
+    }
   }
 
   List<Driver> formatLastStandings(Map responseAsJson) {
@@ -211,6 +214,22 @@ class _ErgastApiCalls {
           const Duration(days: 1),
         );
         DateTime now = DateTime.now();
+        List<DateTime> raceDates = [];
+        List<String> sessionKeys = [
+          'FirstPractice',
+          'SecondPractice',
+          'ThirdPractice',
+          'Sprint',
+          'Qualifying',
+        ];
+        for (String sessionKey in sessionKeys) {
+          if (element[sessionKey] != null) {
+            DateTime raceDate = DateTime.parse(
+              '${element[sessionKey]['date']} ${element[sessionKey]['time']}',
+            );
+            raceDates.add(raceDate);
+          }
+        }
         if (now.compareTo(raceDate) < 0) {
           races.add(
             Race(
@@ -222,6 +241,7 @@ class _ErgastApiCalls {
               element['Circuit']['circuitName'],
               element['Circuit']['url'],
               element['Circuit']['Location']['country'],
+              [],
               isFirst: races.isEmpty,
             ),
           );
@@ -229,35 +249,36 @@ class _ErgastApiCalls {
       }
     } else {
       for (var element in finalJson) {
-          List dateParts = element['date'].split('-');
-          DateTime raceDate = DateTime(
-            int.parse(dateParts[0]),
-            int.parse(dateParts[1]),
-            int.parse(dateParts[2]),
-          ).add(
-            const Duration(
-              days: 1,
+        List dateParts = element['date'].split('-');
+        DateTime raceDate = DateTime(
+          int.parse(dateParts[0]),
+          int.parse(dateParts[1]),
+          int.parse(dateParts[2]),
+        ).add(
+          const Duration(
+            days: 1,
+          ),
+        );
+        DateTime now = DateTime.now();
+        if (now.compareTo(raceDate) > 0) {
+          races.add(
+            Race(
+              element['round'],
+              element['raceName'].substring(
+                0,
+                element['raceName'].indexOf(' Grand Prix'),
+              ),
+              element['date'],
+              element['time'],
+              element['Circuit']['circuitId'],
+              element['Circuit']['circuitName'],
+              element['Circuit']['url'],
+              element['Circuit']['Location']['country'],
+              [],
             ),
           );
-          DateTime now = DateTime.now();
-          if (now.compareTo(raceDate) > 0) {
-            races.add(
-              Race(
-                element['round'],
-                element['raceName'].substring(
-                  0,
-                  element['raceName'].indexOf(' Grand Prix'),
-                ),
-                element['date'],
-                element['time'],
-                element['Circuit']['circuitId'],
-                element['Circuit']['circuitName'],
-                element['Circuit']['url'],
-                element['Circuit']['Location']['country'],
-              ),
-            );
-          }
         }
+      }
     }
     return races;
   }
@@ -277,6 +298,19 @@ class _ErgastApiCalls {
     var response = await http.get(url);
     Map<String, dynamic> responseAsJson =
         jsonDecode(response.body)['MRData']['RaceTable']['Races'][0];
+    List<DateTime> raceDates = [];
+    List<String> sessionKeys = [
+      'FirstPractice',
+      'SecondPractice',
+      'ThirdPractice',
+      'Qualifying',
+    ];
+    for (String sessionKey in sessionKeys) {
+      DateTime raceDate = DateTime.parse(
+        '${responseAsJson[sessionKey]['date']} ${responseAsJson[sessionKey]['time']}',
+      );
+      raceDates.add(raceDate);
+    }
     Race race = Race(
       responseAsJson['round'],
       responseAsJson['raceName'].substring(
@@ -289,6 +323,7 @@ class _ErgastApiCalls {
       responseAsJson['Circuit']['circuitName'],
       responseAsJson['Circuit']['url'],
       responseAsJson['Circuit']['Location']['country'],
+      raceDates,
     );
     return race;
   }
