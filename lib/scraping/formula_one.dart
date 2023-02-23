@@ -307,18 +307,22 @@ class FormulaOneScraper {
         'https://www.formula1.com/en/results.html/${DateTime.now().year}/races/$circuitId/$circuitName.html');
     http.Response response = await http.get(resultsUrl);
     dom.Document document = parser.parse(response.body);
-    List<dom.Element>? tempResults =
-        document.getElementsByClassName('side-nav-item');
-    tempResults.removeAt(0);
-    int maxSession = 0;
-    for (dom.Element element in tempResults) {
-      if (element.text.contains('Practice')) {
-        if (int.parse(element.text.substring(38, 40)) > maxSession) {
-          maxSession = int.parse(element.text.substring(38, 40));
+    if (document.getElementsByClassName("no-results").isNotEmpty) {
+      return 0;
+    } else {
+      List<dom.Element>? tempResults =
+          document.getElementsByClassName('side-nav-item');
+      tempResults.removeAt(0);
+      int maxSession = 0;
+      for (dom.Element element in tempResults) {
+        if (element.text.contains('Practice')) {
+          if (int.parse(element.text.substring(38, 40)) > maxSession) {
+            maxSession = int.parse(element.text.substring(38, 40));
+          }
         }
       }
+      return maxSession;
     }
-    return maxSession;
   }
 
   Future<List<HallOfFameDriver>> scrapeHallOfFame() async {

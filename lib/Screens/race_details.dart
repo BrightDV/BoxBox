@@ -221,44 +221,43 @@ class FreePracticesResultsProvider extends StatelessWidget {
         Convert().circuitIdFromErgastToFormulaOne(race.circuitId),
         Convert().circuitNameFromErgastToFormulaOne(race.circuitId),
       ),
-      builder: (context, snapshot) => snapshot.hasData
-          ? snapshot.data == 0
-              ? Center(
-                  child: Text(
-                    AppLocalizations.of(context)!.dataNotAvailable,
-                    style: TextStyle(
-                      color: useDarkMode ? Colors.white : Colors.black,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                )
-              : ListView.builder(
-                  itemCount: snapshot.data ?? 0,
-                  itemBuilder: (context, index) => ListTile(
-                    title: Text(
-                      sessionsTitle[index],
-                      style: TextStyle(
-                        color: useDarkMode ? Colors.white : Colors.black,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => FreePracticeScreen(
-                          sessionsTitle[index],
-                          index + 1,
-                          race.circuitId,
-                          int.parse(
-                            race.date.split('-')[2],
+      builder: (context, snapshot) => snapshot.hasError
+          ? RequestErrorWidget(
+              snapshot.error.toString(),
+            )
+          : snapshot.hasData
+              ? ListView.builder(
+                  itemCount: 3,
+                  itemBuilder: (context, index) => snapshot.data! > index
+                      ? ListTile(
+                          title: Text(
+                            sessionsTitle[index],
+                            style: TextStyle(
+                              color: useDarkMode ? Colors.white : Colors.black,
+                            ),
+                            textAlign: TextAlign.center,
                           ),
-                          race.raceName,
+                          onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => FreePracticeScreen(
+                                sessionsTitle[index],
+                                index + 1,
+                                race.circuitId,
+                                int.parse(
+                                  race.date.split('-')[2],
+                                ),
+                                race.raceName,
+                              ),
+                            ),
+                          ),
+                        )
+                      : Padding(
+                          padding: const EdgeInsets.only(top: 100),
+                          child: SessionCountdownTimer(race, index),
                         ),
-                      ),
-                    ),
-                  ),
                 )
-          : const LoadingIndicatorUtil(),
+              : const LoadingIndicatorUtil(),
     );
   }
 }
