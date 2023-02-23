@@ -89,48 +89,56 @@ class _ErgastApiCalls {
     var response = await http.get(url);
     Map<String, dynamic> responseAsJson = jsonDecode(response.body);
     List<DriverResult> formatedRaceStandings = [];
-    List jsonResponse =
-        responseAsJson['MRData']['RaceTable']['Races'][0]['SprintResults'];
-    String time;
-    for (var element in jsonResponse) {
-      if (element['status'] != 'Finished') {
-        if (element['status'].endsWith('Lap')) {
-          time = element['status'];
+    if ((responseAsJson['MRData']['RaceTable']['Races'].isEmpty) ||
+        (responseAsJson['MRData']['RaceTable']['Races'][0]['SprintResults'] ==
+            null)) {
+      return [];
+    } else {
+      List jsonResponse =
+          responseAsJson['MRData']['RaceTable']['Races'][0]['SprintResults'];
+      String time;
+      for (var element in jsonResponse) {
+        if (element['status'] != 'Finished') {
+          if (element['status'].endsWith('Lap')) {
+            time = element['status'];
+          } else {
+            time = "DNF";
+          }
         } else {
-          time = "DNF";
+          time = element["Time"]["time"];
         }
-      } else {
-        time = element["Time"]["time"];
+        String fastestLapRank = "1";
+        if (element['FastestLap'] == null) {
+          fastestLapRank = "0";
+        }
+        formatedRaceStandings.add(
+          DriverResult(
+            element['Driver']['driverId'],
+            element['position'],
+            element['Driver']['permanentNumber'],
+            element['Driver']['givenName'],
+            element['Driver']['familyName'],
+            element['Driver']['code'],
+            element['Constructor']['constructorId'],
+            time,
+            fastestLapRank != '0'
+                ? element['FastestLap']['rank'].toString() == '1'
+                    ? true
+                    : false
+                : false,
+            fastestLapRank != '0'
+                ? element['FastestLap']['Time']['time']
+                : fastestLapRank,
+            fastestLapRank != '0'
+                ? element['FastestLap']['lap']
+                : fastestLapRank,
+            lapsDone: element['laps'],
+            points: element['points'],
+          ),
+        );
       }
-      String fastestLapRank = "1";
-      if (element['FastestLap'] == null) {
-        fastestLapRank = "0";
-      }
-      formatedRaceStandings.add(
-        DriverResult(
-          element['Driver']['driverId'],
-          element['position'],
-          element['Driver']['permanentNumber'],
-          element['Driver']['givenName'],
-          element['Driver']['familyName'],
-          element['Driver']['code'],
-          element['Constructor']['constructorId'],
-          time,
-          fastestLapRank != '0'
-              ? element['FastestLap']['rank'].toString() == '1'
-                  ? true
-                  : false
-              : false,
-          fastestLapRank != '0'
-              ? element['FastestLap']['Time']['time']
-              : fastestLapRank,
-          fastestLapRank != '0' ? element['FastestLap']['lap'] : fastestLapRank,
-          lapsDone: element['laps'],
-          points: element['points'],
-        ),
-      );
+      return formatedRaceStandings;
     }
-    return formatedRaceStandings;
   }
 
   FutureOr<List<DriverQualificationResult>> getQualificationStandings(

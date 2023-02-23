@@ -165,6 +165,9 @@ class _CircuitScreenState extends State<CircuitScreen> {
                                   MaterialPageRoute(
                                     builder: (context) => RaceDetailsScreen(
                                       race,
+                                      snapshot.data!['meetingContext']
+                                              ['timetables'][2]['session'] ==
+                                          's',
                                     ),
                                   ),
                                 ),
@@ -399,6 +402,12 @@ class _CircuitScreenState extends State<CircuitScreen> {
                                                         builder: (context) =>
                                                             RaceDetailsScreen(
                                                           race,
+                                                          snapshot.data!['meetingContext']
+                                                                      [
+                                                                      'timetables']
+                                                                  [
+                                                                  2]['session'] ==
+                                                              's',
                                                           tab: 10,
                                                         ),
                                                       ),
@@ -611,6 +620,7 @@ class _CircuitScreenState extends State<CircuitScreen> {
                               MaterialPageRoute(
                                 builder: (context) => RaceDetailsScreen(
                                   race,
+                                  false, // offline
                                 ),
                               ),
                             ),
@@ -744,6 +754,10 @@ class _CircuitScreenState extends State<CircuitScreen> {
                                                 builder: (context) =>
                                                     RaceDetailsScreen(
                                                   circuitSnapshot.data!,
+                                                  snapshot.data!['meetingContext']
+                                                              ['timetables'][2]
+                                                          ['session'] ==
+                                                      's',
                                                 ),
                                               ),
                                             ),
@@ -1040,6 +1054,10 @@ class _CircuitScreenState extends State<CircuitScreen> {
                                                                             RaceDetailsScreen(
                                                                       circuitSnapshot
                                                                           .data!,
+                                                                      snapshot.data!['meetingContext']['timetables'][2]
+                                                                              [
+                                                                              'session'] ==
+                                                                          's',
                                                                       tab: 10,
                                                                     ),
                                                                   ),
@@ -1276,7 +1294,11 @@ class _CircuitScreenState extends State<CircuitScreen> {
                                           ),
                                           child: Padding(
                                             padding: const EdgeInsets.fromLTRB(
-                                                20, 10, 20, 10),
+                                              20,
+                                              10,
+                                              20,
+                                              10,
+                                            ),
                                             child: Row(
                                               children: [
                                                 Text(
@@ -1305,6 +1327,7 @@ class _CircuitScreenState extends State<CircuitScreen> {
                                             builder: (context) =>
                                                 RaceDetailsScreen(
                                               race,
+                                              false, // offline
                                             ),
                                           ),
                                         ),
