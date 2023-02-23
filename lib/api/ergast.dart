@@ -241,7 +241,7 @@ class _ErgastApiCalls {
               element['Circuit']['circuitName'],
               element['Circuit']['url'],
               element['Circuit']['Location']['country'],
-              [],
+              raceDates,
               isFirst: races.isEmpty,
             ),
           );

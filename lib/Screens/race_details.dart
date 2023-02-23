@@ -294,10 +294,6 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
     late Map savedData;
     late Race race;
     late int timeToRace;
-    late int days;
-    late int hours;
-    late int minutes;
-    late int seconds;
     String raceUrl = '';
     if (widget.raceUrl != null) {
       timeToRace = -1;
@@ -306,74 +302,20 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
       race = widget.race!;
       savedData = Hive.box('requests')
           .get('race-${race.round}', defaultValue: {}) as Map;
-      String raceFullDate = "${race.date} ${race.raceHour}";
-      DateTime raceFullDateParsed = DateTime.parse(raceFullDate);
+      DateTime raceFullDateParsed = DateTime.parse(
+        "${race.date} ${race.raceHour}",
+      );
       int timeBetween(DateTime from, DateTime to) {
         return to.difference(from).inSeconds;
       }
 
-      // create a custom widget for the timer.
       timeToRace = timeBetween(
         DateTime.now(),
         raceFullDateParsed,
       );
-      days = (timeToRace / 60 / 60 / 24).round();
-      hours = (timeToRace / 60 / 60 - days * 24 - 1).round();
-      minutes = (timeToRace / 60 - days * 24 * 60 - hours * 60 + 60).round();
-      seconds =
-          (timeToRace - days * 24 * 60 * 60 - hours * 60 * 60 - minutes * 60);
     }
     if (timeToRace > 0) {
-      return Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(10),
-            child: Text(
-              AppLocalizations.of(context)!.raceStartsIn,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 20,
-                color: useDarkMode ? Colors.white : Colors.black,
-              ),
-            ),
-          ),
-          TimerCountdown(
-            format: CountDownTimerFormat.daysHoursMinutesSeconds,
-            endTime: DateTime.now().add(
-              Duration(
-                days: days,
-                hours: hours,
-                minutes: minutes,
-                seconds: seconds,
-              ),
-            ),
-            timeTextStyle: TextStyle(
-              fontSize: 25,
-              color: useDarkMode ? Colors.white : Colors.black,
-            ),
-            colonsTextStyle: TextStyle(
-              fontSize: 23,
-              color: useDarkMode ? Colors.white : Colors.black,
-            ),
-            descriptionTextStyle: TextStyle(
-              color: Theme.of(context).primaryColor,
-              fontSize: 20,
-            ),
-            spacerWidth: 15,
-            daysDescription: AppLocalizations.of(context)!.dayFirstLetter,
-            hoursDescription: AppLocalizations.of(context)!.hourFirstLetter,
-            minutesDescription:
-                AppLocalizations.of(context)!.minuteAbbreviation,
-            secondsDescription:
-                AppLocalizations.of(context)!.secondAbbreviation,
-            onEnd: () {
-              setState(() {});
-            },
-          ),
-        ],
-      );
+      return SessionCountdownTimer(race, 4);
     } else {
       return raceUrl != ''
           ? FutureBuilder<List<DriverResult>>(
@@ -686,7 +628,7 @@ class QualificationResultsProvider extends StatelessWidget {
                         DateTime.now(),
                       ) ??
                       false)
-              ? Text("Show countdown")
+              ? SessionCountdownTimer(race, 3)
               : Padding(
                   padding: const EdgeInsets.all(15),
                   child: Center(
@@ -740,7 +682,7 @@ class QualificationResultsProvider extends StatelessWidget {
                         ),
                       ],
                     )
-                  : Text('countdown')
+                  : SessionCountdownTimer(race, 3)
               : const LoadingIndicatorUtil(),
     );
   }
@@ -773,6 +715,101 @@ class RaceImageProvider extends StatelessWidget {
               )
             : const LoadingIndicatorUtil();
       },
+    );
+  }
+}
+
+class SessionCountdownTimer extends StatefulWidget {
+  final Race? race;
+  final int sessionIndex;
+  const SessionCountdownTimer(this.race, this.sessionIndex, {super.key});
+
+  @override
+  State<SessionCountdownTimer> createState() => _SessionCountdownTimerState();
+}
+
+class _SessionCountdownTimerState extends State<SessionCountdownTimer> {
+  @override
+  Widget build(BuildContext context) {
+    bool useDarkMode =
+        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
+    late int timeToRace;
+    late int days;
+    late int hours;
+    late int minutes;
+    late int seconds;
+    late DateTime raceFullDateParsed;
+
+    Race race = widget.race!;
+    if (widget.sessionIndex == 4) {
+      String raceFullDate = "${race.date} ${race.raceHour}";
+      raceFullDateParsed = DateTime.parse(raceFullDate);
+    } else {
+      raceFullDateParsed = race.sessionDates[widget.sessionIndex];
+    }
+    int timeBetween(DateTime from, DateTime to) {
+      return to.difference(from).inSeconds;
+    }
+
+    timeToRace = timeBetween(
+      DateTime.now(),
+      raceFullDateParsed,
+    );
+    days = (timeToRace / 60 / 60 / 24).round();
+    hours = (timeToRace / 60 / 60 - days * 24 - 1).round();
+    minutes = (timeToRace / 60 - days * 24 * 60 - hours * 60 + 60).round();
+    seconds =
+        (timeToRace - days * 24 * 60 * 60 - hours * 60 * 60 - minutes * 60);
+
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(10),
+          child: Text(
+            widget.sessionIndex == 4
+                ? AppLocalizations.of(context)!.raceStartsIn
+                : AppLocalizations.of(context)!.sessionStartsIn,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 20,
+              color: useDarkMode ? Colors.white : Colors.black,
+            ),
+          ),
+        ),
+        TimerCountdown(
+          format: CountDownTimerFormat.daysHoursMinutesSeconds,
+          endTime: DateTime.now().add(
+            Duration(
+              days: days,
+              hours: hours,
+              minutes: minutes,
+              seconds: seconds,
+            ),
+          ),
+          timeTextStyle: TextStyle(
+            fontSize: 25,
+            color: useDarkMode ? Colors.white : Colors.black,
+          ),
+          colonsTextStyle: TextStyle(
+            fontSize: 23,
+            color: useDarkMode ? Colors.white : Colors.black,
+          ),
+          descriptionTextStyle: TextStyle(
+            color: Theme.of(context).primaryColor,
+            fontSize: 20,
+          ),
+          spacerWidth: 15,
+          daysDescription: AppLocalizations.of(context)!.dayFirstLetter,
+          hoursDescription: AppLocalizations.of(context)!.hourFirstLetter,
+          minutesDescription: AppLocalizations.of(context)!.minuteAbbreviation,
+          secondsDescription: AppLocalizations.of(context)!.secondAbbreviation,
+          onEnd: () {
+            setState(() {});
+          },
+        ),
+      ],
     );
   }
 }
