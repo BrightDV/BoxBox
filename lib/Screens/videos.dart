@@ -299,7 +299,7 @@ class _VideoItemState extends State<VideoItem> {
                         bottom: 8,
                       ),
                       child: Icon(
-                        Icons.play_circle_fill,
+                        Icons.play_circle_fill_rounded,
                         color: Colors.white,
                         size: 40,
                       ),
