@@ -69,22 +69,6 @@ class _CircuitScreenState extends State<CircuitScreen> {
                   (BuildContext context, bool innerBoxIsScrolled) {
                 return <Widget>[
                   SliverAppBar(
-                    actions: [
-                      IconButton(
-                        icon: const Icon(
-                          Icons.map_outlined,
-                        ),
-                        tooltip: AppLocalizations.of(context)!.grandPrixMap,
-                        onPressed: () {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) => CircuitMapScreen(
-                              race.circuitId,
-                            ),
-                          );
-                        },
-                      ),
-                    ],
                     expandedHeight: 200.0,
                     floating: false,
                     pinned: true,
@@ -137,7 +121,11 @@ class _CircuitScreenState extends State<CircuitScreen> {
                                   ),
                                   child: Padding(
                                     padding: const EdgeInsets.fromLTRB(
-                                        20, 10, 20, 10),
+                                      20,
+                                      10,
+                                      20,
+                                      10,
+                                    ),
                                     child: Row(
                                       children: [
                                         Text(
@@ -477,6 +465,55 @@ class _CircuitScreenState extends State<CircuitScreen> {
                                 : Container(),
                             Padding(
                               padding: const EdgeInsets.all(5),
+                              child: GestureDetector(
+                                child: Container(
+                                  width: double.infinity,
+                                  decoration: BoxDecoration(
+                                    color: useDarkMode
+                                        ? const Color(0xff1d1d28)
+                                        : Colors.grey.shade400,
+                                    borderRadius: BorderRadius.circular(5),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.fromLTRB(
+                                      20,
+                                      10,
+                                      20,
+                                      10,
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        Text(
+                                          AppLocalizations.of(context)!
+                                              .grandPrixMap,
+                                          style: TextStyle(
+                                            color: useDarkMode
+                                                ? Colors.white
+                                                : Colors.black,
+                                          ),
+                                        ),
+                                        const Spacer(),
+                                        Icon(
+                                          Icons.map_outlined,
+                                          color: useDarkMode
+                                              ? Colors.white
+                                              : Colors.black,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                onTap: () => showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) =>
+                                      CircuitMapScreen(
+                                    race.circuitId,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(5),
                               child: TrackLayoutImage(race),
                             ),
                             Padding(
@@ -645,24 +682,6 @@ class _CircuitScreenState extends State<CircuitScreen> {
                               (BuildContext context, bool innerBoxIsScrolled) {
                             return <Widget>[
                               SliverAppBar(
-                                actions: [
-                                  IconButton(
-                                    icon: const Icon(
-                                      Icons.map_outlined,
-                                    ),
-                                    tooltip: AppLocalizations.of(context)!
-                                        .grandPrixMap,
-                                    onPressed: () {
-                                      showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) =>
-                                            CircuitMapScreen(
-                                          circuitSnapshot.data!.circuitId,
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                ],
                                 expandedHeight: 200.0,
                                 floating: false,
                                 pinned: true,
@@ -1143,6 +1162,58 @@ class _CircuitScreenState extends State<CircuitScreen> {
                                                 ),
                                               )
                                             : Container(),
+                                        Padding(
+                                          padding: const EdgeInsets.all(5),
+                                          child: GestureDetector(
+                                            child: Container(
+                                              width: double.infinity,
+                                              decoration: BoxDecoration(
+                                                color: useDarkMode
+                                                    ? const Color(0xff1d1d28)
+                                                    : Colors.grey.shade400,
+                                                borderRadius:
+                                                    BorderRadius.circular(5),
+                                              ),
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.fromLTRB(
+                                                  20,
+                                                  10,
+                                                  20,
+                                                  10,
+                                                ),
+                                                child: Row(
+                                                  children: [
+                                                    Text(
+                                                      AppLocalizations.of(
+                                                              context)!
+                                                          .grandPrixMap,
+                                                      style: TextStyle(
+                                                        color: useDarkMode
+                                                            ? Colors.white
+                                                            : Colors.black,
+                                                      ),
+                                                    ),
+                                                    const Spacer(),
+                                                    Icon(
+                                                      Icons.map_outlined,
+                                                      color: useDarkMode
+                                                          ? Colors.white
+                                                          : Colors.black,
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                            onTap: () => showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) =>
+                                                  CircuitMapScreen(
+                                                circuitSnapshot.data!.circuitId,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
                                         Padding(
                                           padding: const EdgeInsets.all(5),
                                           child: TrackLayoutImage(
