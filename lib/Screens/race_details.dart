@@ -249,10 +249,34 @@ class FreePracticesResultsProvider extends StatelessWidget {
                           ),
                         )
                       : Padding(
-                          padding: const EdgeInsets.only(top: 100),
-                          child: SessionCountdownTimer(
-                            race,
-                            index,
+                          padding: const EdgeInsets.only(top: 25),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                sessionsTitle[index],
+                                style: TextStyle(
+                                  color:
+                                      useDarkMode ? Colors.white : Colors.black,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              SessionCountdownTimer(
+                                race,
+                                index,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                  top: 25,
+                                ),
+                                child: Divider(
+                                  color: useDarkMode
+                                      ? const Color(0xff1d1d28)
+                                      : Colors.grey.shade400,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                 )
