@@ -89,8 +89,8 @@ class _AppearanceCardState extends State<AppearanceCard> {
         Hive.box('settings').get('themeMode', defaultValue: 0) as int;
     String teamTheme = Hive.box('settings')
         .get('teamTheme', defaultValue: 'default') as String;
-    bool useDefaultFontForArticles = Hive.box('settings')
-        .get('useDefaultFontForArticles', defaultValue: false) as bool;
+    String fontUsedInArticles = Hive.box('settings')
+        .get('fontUsedInArticles', defaultValue: 'Formula1') as String;
 
     Map layoutValueToString = {
       'big': AppLocalizations.of(context)?.articleFull,
@@ -133,6 +133,13 @@ class _AppearanceCardState extends State<AppearanceCard> {
     };
 
     teamTheme = teamNameToString[teamTheme];
+
+    Map fontNameToLabel = {
+      'Formula1': 'Formula 1',
+      'Titilium': 'Titilium',
+      'Roboto': AppLocalizations.of(context)!.defaultValue,
+    };
+    fontUsedInArticles = fontNameToLabel[fontUsedInArticles];
 
     return Column(
       children: [
@@ -318,7 +325,7 @@ class _AppearanceCardState extends State<AppearanceCard> {
             ).toList(),
           ),
         ),
-        SwitchListTile(
+        ListTile(
           title: Text(
             AppLocalizations.of(context)!.font,
             style: TextStyle(
@@ -332,13 +339,47 @@ class _AppearanceCardState extends State<AppearanceCard> {
               fontSize: 13,
             ),
           ),
-          value: useDefaultFontForArticles,
-          onChanged: (bool value) {
-            setState(() {
-              useDefaultFontForArticles = value;
-              Hive.box('settings').put('useDefaultFontForArticles', value);
-            });
-          },
+          trailing: DropdownButton(
+            value: fontUsedInArticles,
+            dropdownColor: useDarkMode
+                ? Theme.of(context).scaffoldBackgroundColor
+                : Colors.white,
+            onChanged: (newValue) {
+              if (newValue != null) {
+                setState(
+                  () {
+                    Map stringToValue = {
+                      'Formula 1': 'Formula1',
+                      'Titilium': 'Titilium',
+                      AppLocalizations.of(context)!.defaultValue: 'Roboto',
+                    };
+                    fontUsedInArticles = stringToValue[newValue];
+                    Hive.box('settings')
+                        .put('fontUsedInArticles', fontUsedInArticles);
+                  },
+                );
+                widget.update();
+              }
+            },
+            items: <String>[
+              'Formula 1',
+              'Titilium',
+              AppLocalizations.of(context)!.defaultValue,
+            ].map<DropdownMenuItem<String>>(
+              (String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(
+                    value,
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: useDarkMode ? Colors.white : Colors.black,
+                    ),
+                  ),
+                );
+              },
+            ).toList(),
+          ),
         ),
       ],
     );

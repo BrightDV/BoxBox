@@ -96,6 +96,12 @@ flutter:
         - asset: assets/fonts/Formula1-Wide.ttf
           weight: 700
 
+    - family: Titilium
+      fonts:
+        - asset : assets/fonts/TitilliumWeb-Regular.ttf
+        - asset: assets/fonts/TitilliumWeb-Bold.ttf
+          weight: 500
+
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.

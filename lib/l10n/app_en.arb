@@ -83,7 +83,7 @@
   "@followSystem": {},
   "font": "Font",
   "@font": {},
-  "fontDescription": "Use system font in articles instead of the official one.",
+  "fontDescription": "Font used in the articles.",
   "@fontDescription": {},
   "gallery": "Gallery",
   "@gallery": {},

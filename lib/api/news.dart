@@ -1794,8 +1794,8 @@ class TextParagraphRenderer extends StatelessWidget {
   Widget build(BuildContext context) {
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
-    bool useDefaultFontForArticles = Hive.box('settings')
-        .get('useDefaultFontForArticles', defaultValue: false) as bool;
+    String fontUsedInArticles = Hive.box('settings')
+        .get('fontUsedInArticles', defaultValue: 'Formula1') as String;
     return Padding(
       padding: const EdgeInsets.only(
         top: 10,
@@ -1893,43 +1893,43 @@ class TextParagraphRenderer extends StatelessWidget {
         styleSheet: MarkdownStyleSheet(
           strong: TextStyle(
             color: Theme.of(context).primaryColor,
-            fontSize: 16,
+            fontSize: fontUsedInArticles == 'Formula1' ? 16 : 20,
             fontWeight: FontWeight.w500,
           ),
           p: TextStyle(
-            fontSize: 14,
+            fontSize: fontUsedInArticles == 'Formula1' ? 14 : 18,
             color: useDarkMode ? Colors.white : Colors.black,
-            fontFamily: useDefaultFontForArticles ? 'Roboto' : 'Formula1',
+            fontFamily: fontUsedInArticles,
           ),
-          pPadding: const EdgeInsets.only(
-            top: 10,
-            bottom: 10,
+          pPadding: EdgeInsets.only(
+            top: fontUsedInArticles == 'Formula1' ? 10 : 7,
+            bottom: fontUsedInArticles == 'Formula1' ? 10 : 7,
           ),
           a: TextStyle(
             color: Theme.of(context).primaryColor,
             decoration: TextDecoration.underline,
             fontWeight: FontWeight.normal,
-            fontFamily: useDefaultFontForArticles ? 'Roboto' : 'Formula1',
+            fontFamily: fontUsedInArticles,
           ),
           h1: TextStyle(
             color: useDarkMode ? Colors.white : Colors.black,
-            fontFamily: useDefaultFontForArticles ? 'Roboto' : 'Formula1',
+            fontFamily: fontUsedInArticles,
           ),
           h2: TextStyle(
             color: useDarkMode ? Colors.white : Colors.black,
-            fontFamily: useDefaultFontForArticles ? 'Roboto' : 'Formula1',
+            fontFamily: fontUsedInArticles,
           ),
           h3: TextStyle(
             color: useDarkMode ? Colors.white : Colors.black,
-            fontFamily: useDefaultFontForArticles ? 'Roboto' : 'Formula1',
+            fontFamily: fontUsedInArticles,
           ),
           h4: TextStyle(
             color: useDarkMode ? Colors.white : Colors.black,
-            fontFamily: useDefaultFontForArticles ? 'Roboto' : 'Formula1',
+            fontFamily: fontUsedInArticles,
           ),
           listBullet: TextStyle(
             color: useDarkMode ? Colors.white : Colors.black,
-            fontFamily: useDefaultFontForArticles ? 'Roboto' : 'Formula1',
+            fontFamily: fontUsedInArticles,
           ),
         ),
       ),
