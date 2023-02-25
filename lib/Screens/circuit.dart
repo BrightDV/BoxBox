@@ -36,6 +36,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class CircuitScreen extends StatefulWidget {
   final Race race;
@@ -579,6 +580,10 @@ class _CircuitScreenState extends State<CircuitScreen> {
                                     ? MarkdownBody(
                                         data: snapshot.data!,
                                         selectable: true,
+                                        onTapLink: (text, href, title) =>
+                                            launchUrl(
+                                          Uri.parse(href!),
+                                        ),
                                         styleSheet: MarkdownStyleSheet(
                                           textAlign: WrapAlignment.spaceBetween,
                                           strong: TextStyle(
@@ -606,6 +611,13 @@ class _CircuitScreenState extends State<CircuitScreen> {
                                             color: useDarkMode
                                                 ? Colors.white
                                                 : Colors.black,
+                                          ),
+                                          a: TextStyle(
+                                            color:
+                                                Theme.of(context).primaryColor,
+                                            decoration:
+                                                TextDecoration.underline,
+                                            fontWeight: FontWeight.normal,
                                           ),
                                         ),
                                       )
@@ -1305,6 +1317,11 @@ class _CircuitScreenState extends State<CircuitScreen> {
                                                     ? MarkdownBody(
                                                         data: snapshot.data!,
                                                         selectable: true,
+                                                        onTapLink: (text, href,
+                                                                title) =>
+                                                            launchUrl(
+                                                          Uri.parse(href!),
+                                                        ),
                                                         styleSheet:
                                                             MarkdownStyleSheet(
                                                           textAlign:
@@ -1339,6 +1356,17 @@ class _CircuitScreenState extends State<CircuitScreen> {
                                                             color: useDarkMode
                                                                 ? Colors.white
                                                                 : Colors.black,
+                                                          ),
+                                                          a: TextStyle(
+                                                            color: Theme.of(
+                                                                    context)
+                                                                .primaryColor,
+                                                            decoration:
+                                                                TextDecoration
+                                                                    .underline,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .normal,
                                                           ),
                                                         ),
                                                       )

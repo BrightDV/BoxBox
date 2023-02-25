@@ -422,6 +422,24 @@ class FormulaOneScraper {
         .replaceAll('<p>', '')
         .replaceAll('</p>', '\n')
         .replaceAll('  ', '');
+    int position = circuitHistory.indexOf('<a ');
+    while (position != -1) {
+      int hrefPosition = circuitHistory.indexOf("href") + 6;
+      String href = circuitHistory.substring(
+        hrefPosition,
+        circuitHistory.indexOf(
+          '"',
+          hrefPosition,
+        ),
+      );
+      String anchor = circuitHistory.substring(
+          circuitHistory.indexOf('">') + 2, circuitHistory.indexOf('</a>'));
+      circuitHistory =
+          '${circuitHistory.substring(0, position)}[$anchor]($href)${circuitHistory.substring(
+        circuitHistory.indexOf('</a>') + 4,
+      )}';
+      position = circuitHistory.indexOf('<a ');
+    }
     return circuitHistory;
   }
 }
