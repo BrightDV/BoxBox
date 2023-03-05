@@ -65,7 +65,7 @@
   "@followSystem": {},
   "font": "Fuente",
   "@font": {},
-  "fontDescription": "Utilice la fuente del sistema en los artículos en lugar de la oficial.",
+  "fontDescription": "Fuente utilizada en los artículos.",
   "@fontDescription": {},
   "gallery": "Galería",
   "@gallery": {},
