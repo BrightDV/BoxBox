@@ -98,11 +98,12 @@ class EventTrackerItem extends StatelessWidget {
         child: GestureDetector(
           child: Container(
             height: 146,
-            decoration: const BoxDecoration(
-              borderRadius: BorderRadius.all(
-                Radius.circular(5),
+            decoration: BoxDecoration(
+              borderRadius: const BorderRadius.only(
+                bottomLeft: Radius.circular(5),
+                bottomRight: Radius.circular(5),
               ),
-              color: Color(0xff1d1d28),
+              color: useDarkMode ? const Color(0xff1d1d28) : Colors.black,
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -188,8 +189,8 @@ class EventTrackerItem extends StatelessWidget {
                         ),
                       ),
                       child: Row(
-                        children: [
-                          const Padding(
+                        children: const [
+                          Padding(
                             padding: EdgeInsets.all(10),
                             child: Text(
                               'RACE HUB',
@@ -198,10 +199,10 @@ class EventTrackerItem extends StatelessWidget {
                               ),
                             ),
                           ),
-                          const Spacer(),
+                          Spacer(),
                           Icon(
                             Icons.arrow_forward_rounded,
-                            color: useDarkMode ? Colors.white : Colors.black,
+                            color: Colors.white,
                           ),
                         ],
                       ),
