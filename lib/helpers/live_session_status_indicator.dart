@@ -90,24 +90,19 @@ class EventTrackerItem extends StatelessWidget {
         event.session5.endTime.isAfter(date))) {
       haveRunningSession = true;
     }
-    return Container(
-      color: Colors.transparent,
-      child: GestureDetector(
-        child: Padding(
-          padding: const EdgeInsets.only(
-            right: 5,
-            left: 5,
-          ),
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 1),
+      child: Material(
+        elevation: 10.0,
+        color: Colors.transparent,
+        child: GestureDetector(
           child: Container(
-            height: 135,
-            decoration: BoxDecoration(
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.zero,
-                topRight: Radius.zero,
-                bottomLeft: Radius.circular(15),
-                bottomRight: Radius.circular(15),
+            height: 146,
+            decoration: const BoxDecoration(
+              borderRadius: BorderRadius.all(
+                Radius.circular(5),
               ),
-              color: useDarkMode ? const Color(0xff1d1d28) : Colors.white,
+              color: Color(0xff1d1d28),
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -175,12 +170,10 @@ class EventTrackerItem extends StatelessWidget {
                 ),
                 SizedBox(
                   width: double.infinity,
+                  height: 45,
                   child: ClipRRect(
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.zero,
-                      topRight: Radius.zero,
-                      bottomLeft: Radius.circular(15),
-                      bottomRight: Radius.circular(15),
+                    borderRadius: const BorderRadius.all(
+                      Radius.circular(5),
                     ),
                     child: ElevatedButton(
                       onPressed: () => Navigator.push(
