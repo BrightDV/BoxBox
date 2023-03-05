@@ -1,0 +1,10 @@
+- Fix the player
+- Fix the results (Free Practices and Qualifications)
+- Fix the Race Hub and its indicator.
+- Fix the Grand-Prix Documents.
+- Move the Map button.
+- Fix schedule for races after Australia.
+- Improve Sprints support.
+- Add Titilium-Web font for the articles.
+- Add countdown to Free Practices.
+- The app is now available in italian and Hungarian!
