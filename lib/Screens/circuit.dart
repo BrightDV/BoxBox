@@ -427,43 +427,6 @@ class _CircuitScreenState extends State<CircuitScreen> {
                                     ),
                                   )
                                 : Container(),
-                            snapshot.data!['curatedSection'] != null
-                                ? SingleChildScrollView(
-                                    scrollDirection: Axis.horizontal,
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        for (Map article in snapshot
-                                            .data!['curatedSection']['items'])
-                                          NewsItem(
-                                            News(
-                                              article['id'],
-                                              article['articleType'],
-                                              article['slug'],
-                                              article['title'],
-                                              article['metaDescription'] ?? ' ',
-                                              DateTime.parse(
-                                                  article['updatedAt']),
-                                              useDataSaverMode
-                                                  ? article['thumbnail']
-                                                                  ['image']
-                                                              ['renditions'] !=
-                                                          null
-                                                      ? article['thumbnail']
-                                                              ['image']
-                                                          ['renditions']['2col']
-                                                      : article['thumbnail']
-                                                              ['image']['url'] +
-                                                          '.transform/2col-retina/image.jpg'
-                                                  : article['thumbnail']
-                                                      ['image']['url'],
-                                            ),
-                                            true,
-                                          ),
-                                      ],
-                                    ),
-                                  )
-                                : Container(),
                             Padding(
                               padding: const EdgeInsets.all(5),
                               child: GestureDetector(
@@ -513,6 +476,43 @@ class _CircuitScreenState extends State<CircuitScreen> {
                                 ),
                               ),
                             ),
+                            snapshot.data!['curatedSection'] != null
+                                ? SingleChildScrollView(
+                                    scrollDirection: Axis.horizontal,
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        for (Map article in snapshot
+                                            .data!['curatedSection']['items'])
+                                          NewsItem(
+                                            News(
+                                              article['id'],
+                                              article['articleType'],
+                                              article['slug'],
+                                              article['title'],
+                                              article['metaDescription'] ?? ' ',
+                                              DateTime.parse(
+                                                  article['updatedAt']),
+                                              useDataSaverMode
+                                                  ? article['thumbnail']
+                                                                  ['image']
+                                                              ['renditions'] !=
+                                                          null
+                                                      ? article['thumbnail']
+                                                              ['image']
+                                                          ['renditions']['2col']
+                                                      : article['thumbnail']
+                                                              ['image']['url'] +
+                                                          '.transform/2col-retina/image.jpg'
+                                                  : article['thumbnail']
+                                                      ['image']['url'],
+                                            ),
+                                            true,
+                                          ),
+                                      ],
+                                    ),
+                                  )
+                                : Container(),
                             Padding(
                               padding: const EdgeInsets.all(5),
                               child: TrackLayoutImage(race),
