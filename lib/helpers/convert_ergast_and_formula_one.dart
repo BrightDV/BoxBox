@@ -20,12 +20,12 @@
 class Convert {
   String teamsFromFormulaOneToErgast(String teamName) {
     Map formulaOneToErgast = {
-      'Red Bull Racing RBPT': 'red_bull',
+      'Red Bull Racing Honda RBPT': 'red_bull',
       'Ferrari': 'ferrari',
       'Mercedes': 'mercedes',
       'Alpine Renault': 'alpine',
       'McLaren Mercedes': 'mclaren',
-      'AlphaTauri RBPT': 'alphatauri',
+      'AlphaTauri Honda RBPT': 'alphatauri',
       'Aston Martin Aramco Mercedes': 'aston_martin',
       'Williams Mercedes': 'williams',
       'Alfa Romeo Ferrari': 'alfa',
