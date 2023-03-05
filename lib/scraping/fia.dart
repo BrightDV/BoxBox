@@ -32,7 +32,8 @@ class SessionDocument {
 class FIAScraper {
   Future<List<SessionDocument>> scrapeSessionDocuments() async {
     final Uri latestDocumentsUrl = Uri.parse(
-        'https://www.fia.com/documents/championships/fia-formula-one-world-championship-14/season/season-2022-2005');
+      'https://www.fia.com/documents/championships/fia-formula-one-world-championship-14/season/season-2023-2042',
+    );
     http.Response response = await http.get(latestDocumentsUrl);
     dom.Document document = parser.parse(response.body);
     List<SessionDocument> documents = [];
@@ -45,7 +46,7 @@ class FIAScraper {
           SessionDocument(
             'This document cannot be parsed.',
             'none',
-            'https://www.fia.com/documents/championships/fia-formula-one-world-championship-14/season/season-2022-2005',
+            'https://www.fia.com/documents/championships/fia-formula-one-world-championship-14/season/season-2023-2042',
           ),
         );
       } else {
