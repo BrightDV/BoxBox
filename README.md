@@ -37,6 +37,7 @@
 - Get the latest stories of your favorite driver and his ranking, even without any Internet connection*. \
 If you want, you can know where he is born and other personal info (not very useful though)…
 - In-app reader for all the editorial articles, with markdown!
+- Watch all the latest videos with a dedicated tab and a swipe-up!
 - Enjoy the app even at night with dark mode.
 - Link to the highlights on YouTube of the qualifications and the race. (or even the sprint…)
 - Wait till the next race with a countdown.
@@ -52,7 +53,8 @@ See the live demo [here (outdated). It is broken because of the CORS.](https://b
 | Screen  | Service          | URL |
 | :---------------: |:---------------:| :---------------:|
 | Home News  | Formula 1 API |  https://api.formula1.com |
-| Articles search  | SearXNG |  [5 instances](lib/api/searx.dart#L26) |
+| Home Videos  | Formula 1 API |  https://api.formula1.com |
+| Articles search  | SearXNG |  [9 instances](lib/api/searx.dart#L26) |
 | Standings (Q, S and R)  | Ergast API |  https://ergast.com/mrd |
 | Standings (FP, Q, S and R)  | Formula 1 Archives |  https://formula1.com |
 | Schedule  |  Ergast API |  https://ergast.com/mrd |
@@ -75,6 +77,8 @@ Theses files are used by Flutter to provide you the translation.
 The app is currently available in:
 - 🇬🇧 English
 - 🇫🇷 French
+- 🇭🇺 Hungarian, thanks to @thereeroyz
+- 🇮🇹 Italian, thanks to @atilluF
 - 🇳🇴 Norwegian, thanks to @comradekingu
 - 🇵🇹 Portuguese, thanks to @Alexthegib
 - 🇮🇳 Punjabi & Hindi, thanks to @ShareASmile
