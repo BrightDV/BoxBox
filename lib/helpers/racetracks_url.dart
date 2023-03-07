@@ -20,16 +20,16 @@
 class RaceTracksUrls {
   Map<String, String> trackUrlConverter = {
     "bahrain": "Bahrain",
-    "jeddah": "Saudi_Arabia",
-    "albert_park": "Australia",
+    "jeddah": "Saudi_Arabian",
+    "albert_park": "Australian",
     "baku": "Azerbaijan",
     "miami": "Miami",
-    "imola": "Emilia Romagna",
+    "imola": "Emilia_Romagna",
     "monaco": "Monaco",
     "catalunya": "Spain",
     "villeneuve": "Canada",
     "red_bull_ring": "Austria",
-    "silverstone": "Great Britain",
+    "silverstone": "Great_Britain",
     "hungaroring": "Hungary",
     "spa": "Belgium",
     "zandvoort": "Netherlands",
@@ -40,8 +40,8 @@ class RaceTracksUrls {
     "americas": "USA",
     "rodriguez": "Mexico",
     "interlagos": "Brazil",
-    "vegas": "Las Vegas",
-    "yas_marina": "Abu Dhabi",
+    "vegas": "Las_Vegas",
+    "yas_marina": "Abu_Dhabi",
   };
 
   Map<String, String> trackLayoutConverter = {

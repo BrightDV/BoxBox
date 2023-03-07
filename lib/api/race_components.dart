@@ -221,10 +221,10 @@ class RacesList extends StatelessWidget {
     this.scrollController,
   }) : super(key: key);
 
-  int createUniqueId() {
-    return DateTime.now().millisecondsSinceEpoch.remainder(100000);
-  }
-
+  //int createUniqueId() {
+  //  return DateTime.now().millisecondsSinceEpoch.remainder(100000);
+  //}
+  //
   //Future<void> scheduledNotification(Race race) async {
   //  DateTime date = DateTime.parse(race.date);
   //  date.subtract(
