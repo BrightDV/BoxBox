@@ -99,16 +99,16 @@ class _MainBottomNavigationBarState extends State<MainBottomNavigationBar> {
           tooltip: 'Filter',
           onPressed: () {
             List<String> filterItems = [
-              'Video',
+              'Feature',
               'Image Gallery',
+              'Interview',
+              'News',
+              'Opinion',
               'Podcast',
               'Poll',
-              'News',
               'Report',
-              'Interview',
-              'Feature',
-              'Opinion',
               'Technical',
+              'Video',
             ];
             int pressed = 0;
             bool selected = false;
