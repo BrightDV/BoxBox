@@ -1029,25 +1029,74 @@ class JoinArticlesParts extends StatelessWidget {
         );
       } else if (element['contentType'] == 'atomQuiz') {
         widgetsList.add(
-          AspectRatio(
-            aspectRatio: 748 / 598,
-            child: InAppWebView(
-              initialUrlRequest: URLRequest(
-                url: Uri.parse(
-                    'https://www.riddle.com/view/${element['fields']['riddleId']}'),
-              ),
-              initialOptions: InAppWebViewGroupOptions(
-                crossPlatform: InAppWebViewOptions(
-                  preferredContentMode: UserPreferredContentMode.DESKTOP,
+          Padding(
+            padding: const EdgeInsets.all(5),
+            child: GestureDetector(
+              child: Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: useDarkMode
+                      ? const Color(0xff1d1d28)
+                      : Colors.grey.shade400,
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(
+                    20,
+                    10,
+                    20,
+                    10,
+                  ),
+                  child: Row(
+                    children: [
+                      Text(
+                        AppLocalizations.of(context)!.openQuiz,
+                        style: TextStyle(
+                          color: useDarkMode ? Colors.white : Colors.black,
+                        ),
+                      ),
+                      const Spacer(),
+                      Icon(
+                        Icons.bar_chart,
+                        color: useDarkMode ? Colors.white : Colors.black,
+                      ),
+                    ],
+                  ),
                 ),
               ),
-              gestureRecognizers: {
-                Factory<VerticalDragGestureRecognizer>(
-                    () => VerticalDragGestureRecognizer()),
-                Factory<HorizontalDragGestureRecognizer>(
-                    () => HorizontalDragGestureRecognizer()),
-                Factory<ScaleGestureRecognizer>(() => ScaleGestureRecognizer()),
-              },
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => Scaffold(
+                    appBar: AppBar(
+                      title: Text(
+                        AppLocalizations.of(context)!.quiz,
+                      ),
+                    ),
+                    body: InAppWebView(
+                      initialUrlRequest: URLRequest(
+                        url: Uri.parse(
+                          "https://www.riddle.com/view/${element['fields']['riddleId']}",
+                        ),
+                      ),
+                      initialOptions: InAppWebViewGroupOptions(
+                        crossPlatform: InAppWebViewOptions(
+                          preferredContentMode:
+                              UserPreferredContentMode.DESKTOP,
+                        ),
+                      ),
+                      gestureRecognizers: {
+                        Factory<VerticalDragGestureRecognizer>(
+                            () => VerticalDragGestureRecognizer()),
+                        Factory<HorizontalDragGestureRecognizer>(
+                            () => HorizontalDragGestureRecognizer()),
+                        Factory<ScaleGestureRecognizer>(
+                            () => ScaleGestureRecognizer()),
+                      },
+                    ),
+                  ),
+                ),
+              ),
             ),
           ),
         );
