@@ -13,7 +13,9 @@ publish_to: none
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 0.5.2+16
+
+# Before releasing a new version, isInDebugMode must be set to false (main.dart#72).
+version: 0.5.2+16 # Read above before bump.
 
 environment:
   sdk: ">=2.19.0 <3.4.4"
@@ -60,6 +62,8 @@ dependencies:
   share_plus: ^6.3.1
   # signalr_flutter: ^0.2.0 # uses (non-foss?) .jar
   sliding_up_panel: ^2.0.0+1
+  story_view: # Updated packages with custom features. Origninally: https://github.com/blackmann/story_view
+    path: ./story_view
   syncfusion_flutter_pdfviewer: ^20.4.50
   timeago: ^3.3.0
   url_launcher: ^6.0.13

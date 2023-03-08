@@ -23,9 +23,9 @@ import 'package:boxbox/api/videos.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/request_error.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import "package:story_view/story_view.dart";
 import 'package:flutter_swiper_view/flutter_swiper_view.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
@@ -87,7 +87,7 @@ class _VideosScreenState extends State<VideosScreen> {
               shrinkWrap: true,
               builderDelegate: PagedChildBuilderDelegate<Video>(
                 itemBuilder: (context, video, index) {
-                  if (index < 2) {
+                  if (index < 3) {
                     headerVideos.add(
                       VideoItem(
                         index,
@@ -95,7 +95,7 @@ class _VideosScreenState extends State<VideosScreen> {
                       ),
                     );
                     return Container();
-                  } else if (index == 2) {
+                  } else if (index == 3) {
                     headerVideos.add(
                       VideoItem(
                         index,
@@ -176,19 +176,39 @@ class VideosHeader extends StatefulWidget {
 }
 
 class _VideosHeaderState extends State<VideosHeader> {
+  final StoryController controller = StoryController();
   @override
   Widget build(BuildContext context) {
-    return CarouselSlider(
-      items: widget.videos,
-      options: CarouselOptions(
-        aspectRatio: 1.93,
-        viewportFraction: 0.9,
-        enableInfiniteScroll: true,
-        enlargeCenterPage: true,
-        autoPlay: true,
-        enlargeStrategy: CenterPageEnlargeStrategy.scale,
+    List<StoryItem> storyItems = [];
+    for (var video in widget.videos) {
+      storyItems.add(
+        StoryItem(
+          video,
+          duration: const Duration(seconds: 7),
+        ),
+      );
+    }
+    return SizedBox(
+      height: MediaQuery.of(context).size.width / (16 / 9) + 5,
+      child: StoryView(
+        storyItems: storyItems,
+        progressPosition: ProgressPosition.bottom,
+        repeat: true,
+        inline: true,
+        controller: controller,
       ),
     );
+    // return CarouselSlider(
+    //   items: widget.videos,
+    //   options: CarouselOptions(
+    //     aspectRatio: 1.93,
+    //     viewportFraction: 0.9,
+    //     enableInfiniteScroll: true,
+    //     enlargeCenterPage: true,
+    //     autoPlay: true,
+    //     enlargeStrategy: CenterPageEnlargeStrategy.scale,
+    //   ),
+    // );
   }
 }
 
