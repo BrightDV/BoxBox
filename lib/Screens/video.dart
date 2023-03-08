@@ -38,6 +38,8 @@ class _VideoScreenState extends State<VideoScreen> {
   Widget build(BuildContext context) {
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
+    String fontUsedInArticles = Hive.box('settings')
+        .get('fontUsedInArticles', defaultValue: 'Formula1') as String;
     final Video video = widget.video;
     return Scaffold(
       appBar: AppBar(
@@ -110,6 +112,7 @@ class _VideoScreenState extends State<VideoScreen> {
                   style: TextStyle(
                     color:
                         useDarkMode ? Colors.grey.shade300 : Colors.grey[700],
+                    fontFamily: fontUsedInArticles,
                   ),
                 ),
               ],
@@ -121,6 +124,7 @@ class _VideoScreenState extends State<VideoScreen> {
               video.caption,
               style: TextStyle(
                 color: useDarkMode ? Colors.white : Colors.black,
+                fontFamily: fontUsedInArticles,
                 fontSize: 22,
                 fontWeight: FontWeight.w500,
               ),
@@ -133,6 +137,7 @@ class _VideoScreenState extends State<VideoScreen> {
               style: TextStyle(
                 color:
                     useDarkMode ? Colors.grey.shade400 : Colors.grey.shade600,
+                fontFamily: fontUsedInArticles,
                 fontSize: 17,
               ),
             ),
