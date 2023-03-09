@@ -262,5 +262,9 @@
     "description": "Keep 'Formula You' untranslated as it is the name of the service."
   },
   "videos": "Videoer",
-  "@videos": {}
+  "@videos": {},
+  "openQuiz": "Åpen quiz",
+  "@openQuiz": {},
+  "quiz": "Quiz",
+  "@quiz": {}
 }
