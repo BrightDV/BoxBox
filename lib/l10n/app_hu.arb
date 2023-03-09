@@ -262,5 +262,9 @@
   "viewMore": "TÖBB MEGTEKINTÉSE",
   "@viewMore": {},
   "watchOnYoutube": "Kiemelések megtekintése YouTube-on",
-  "@watchOnYoutube": {}
+  "@watchOnYoutube": {},
+  "openQuiz": "Nyílt kvíz",
+  "@openQuiz": {},
+  "quiz": "Kvíz",
+  "@quiz": {}
 }
