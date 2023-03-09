@@ -264,5 +264,9 @@
     "description": "Keep 'Formula You' untranslated as it is the name of the service."
   },
   "videos": "वीडियोज",
-  "@videos": {}
+  "@videos": {},
+  "quiz": "प्रश्नोत्तरी",
+  "@quiz": {},
+  "openQuiz": "ओपन क्विज",
+  "@openQuiz": {}
 }
