@@ -268,5 +268,9 @@
   "quiz": "प्रश्नोत्तरी",
   "@quiz": {},
   "openQuiz": "ओपन क्विज",
-  "@openQuiz": {}
+  "@openQuiz": {},
+  "openLiveBlog": "लाइव ब्लॉग खोलें",
+  "@openLiveBlog": {},
+  "liveBlog": "लाइव ब्लॉग",
+  "@liveBlog": {}
 }
