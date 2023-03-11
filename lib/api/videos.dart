@@ -79,7 +79,7 @@ class F1VideosFetcher {
 
   Future<Video> getVideoDetails(String videoId) async {
     Uri url = Uri.parse(
-      "$endpoint/v1/video-assets/$videoId",
+      "$endpoint/v1/video-assets/videos/$videoId",
     );
     var response = await http.get(url, headers: {
       "Accept": "application/json",
@@ -90,7 +90,25 @@ class F1VideosFetcher {
     Map<String, dynamic> responseAsJson = json.decode(
       utf8.decode(response.bodyBytes),
     );
-    return formatResponse(responseAsJson)[0];
+    String imageUrl = responseAsJson['thumbnail']['url'];
+    bool useDataSaverMode = Hive.box('settings')
+        .get('useDataSaverMode', defaultValue: false) as bool;
+    if (useDataSaverMode) {
+      if (responseAsJson['thumbnail']['renditions'] != null) {
+        imageUrl = responseAsJson['thumbnail']['renditions']['2col-retina'];
+      } else {
+        imageUrl += '.transform/2col-retina/image.jpg';
+      }
+    }
+    return Video(
+      responseAsJson['videoId'],
+      'https://formula1.com${responseAsJson['url']}',
+      responseAsJson['caption'],
+      responseAsJson['description'],
+      responseAsJson['videoDuration'],
+      imageUrl,
+      DateTime.parse(responseAsJson['publishedAt']),
+    );
   }
 }
 

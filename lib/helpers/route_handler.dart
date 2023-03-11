@@ -58,6 +58,7 @@ class ArticleUrlHandler extends StatelessWidget {
     int year = DateTime.now().year;
     String url = sharedUrl
         .replaceAll('https://www.formula1.com', '')
+        .replaceAll('https://formula1.com', '')
         .replaceAll('.html', '');
     if (url.endsWith('/en') || url == '/en/latest/all') {
       return Container();
@@ -78,7 +79,9 @@ class ArticleUrlHandler extends StatelessWidget {
                 )
               : snapshot.hasData
                   ? nextPage(context, snapshot.data!)
-                  : const LoadingIndicatorUtil(),
+                  : const Center(
+                      child: LoadingIndicatorUtil(),
+                    ),
         ),
       );
     } else if (url.startsWith('/en/racing/$year')) {
