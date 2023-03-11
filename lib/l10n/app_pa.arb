@@ -268,5 +268,9 @@
   "openQuiz": "ਓਪਨ ਕੁਇਜ਼",
   "@openQuiz": {},
   "quiz": "ਕੁਇਜ਼",
-  "@quiz": {}
+  "@quiz": {},
+  "liveBlog": "ਲਾਈਵ ਬਲੌਗ",
+  "@liveBlog": {},
+  "openLiveBlog": "ਲਾਈਵ ਬਲੌਗ ਖੋਲੋ",
+  "@openLiveBlog": {}
 }
