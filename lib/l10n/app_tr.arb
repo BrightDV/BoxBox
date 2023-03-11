@@ -266,5 +266,9 @@
   "openQuiz": "Açık sınav",
   "@openQuiz": {},
   "quiz": "Quiz",
-  "@quiz": {}
+  "@quiz": {},
+  "liveBlog": "Canlı Blog",
+  "@liveBlog": {},
+  "openLiveBlog": "Canlı blog açın",
+  "@openLiveBlog": {}
 }
