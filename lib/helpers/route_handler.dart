@@ -20,6 +20,10 @@
 import 'package:boxbox/Screens/article.dart';
 import 'package:boxbox/Screens/schedule.dart';
 import 'package:boxbox/Screens/standings.dart';
+import 'package:boxbox/Screens/video.dart';
+import 'package:boxbox/api/videos.dart';
+import 'package:boxbox/helpers/loading_indicator_util.dart';
+import 'package:boxbox/helpers/request_error.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -41,6 +45,14 @@ class ArticleUrlHandler extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
+  Widget nextPage(BuildContext context, Video video) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => VideoScreen(video)),
+    );
+    return Container();
+  }
+
   @override
   Widget build(BuildContext context) {
     int year = DateTime.now().year;
@@ -54,6 +66,20 @@ class ArticleUrlHandler extends StatelessWidget {
         url.split('.').last,
         '',
         true,
+      );
+    } else if (url.startsWith('/en/latest/video.')) {
+      String videoId = url.split('.')[2];
+      return Scaffold(
+        body: FutureBuilder<Video>(
+          future: F1VideosFetcher().getVideoDetails(videoId),
+          builder: (context, snapshot) => snapshot.hasError
+              ? RequestErrorWidget(
+                  snapshot.error.toString(),
+                )
+              : snapshot.hasData
+                  ? nextPage(context, snapshot.data!)
+                  : const LoadingIndicatorUtil(),
+        ),
       );
     } else if (url.startsWith('/en/racing/$year')) {
       return Scaffold(
@@ -93,7 +119,8 @@ class ArticleUrlHandler extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.all(15),
             child: SelectableText(
-                'Url shared: $url\nYou can make an issue on github to ask that the application can open this link.'),
+              'Url shared: $url\nYou can make an issue on github to ask that the application can open this link.',
+            ),
           ),
         ),
       );

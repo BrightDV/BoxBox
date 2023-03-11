@@ -76,6 +76,22 @@ class F1VideosFetcher {
     );
     return formatResponse(responseAsJson);
   }
+
+  Future<Video> getVideoDetails(String videoId) async {
+    Uri url = Uri.parse(
+      "$endpoint/v1/video-assets/$videoId",
+    );
+    var response = await http.get(url, headers: {
+      "Accept": "application/json",
+      "apikey": apikey,
+      "locale": "en",
+    });
+
+    Map<String, dynamic> responseAsJson = json.decode(
+      utf8.decode(response.bodyBytes),
+    );
+    return formatResponse(responseAsJson)[0];
+  }
 }
 
 class Video {
