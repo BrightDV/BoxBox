@@ -264,5 +264,13 @@
     "description": "Keep 'Formula You' untranslated as it is the name of the service."
   },
   "videos": "ਵੀਡੀਓਜ਼",
-  "@videos": {}
+  "@videos": {},
+  "openQuiz": "ਓਪਨ ਕੁਇਜ਼",
+  "@openQuiz": {},
+  "quiz": "ਕੁਇਜ਼",
+  "@quiz": {},
+  "liveBlog": "ਲਾਈਵ ਬਲੌਗ",
+  "@liveBlog": {},
+  "openLiveBlog": "ਲਾਈਵ ਬਲੌਗ ਖੋਲੋ",
+  "@openLiveBlog": {}
 }

@@ -264,5 +264,13 @@
     "description": "Keep 'Formula You' untranslated as it is the name of the service."
   },
   "videos": "Vídeos",
-  "@videos": {}
+  "@videos": {},
+  "quiz": "Questionário",
+  "@quiz": {},
+  "openQuiz": "Abrir questionário",
+  "@openQuiz": {},
+  "liveBlog": "Blog em directo",
+  "@liveBlog": {},
+  "openLiveBlog": "Abrir blog em directo",
+  "@openLiveBlog": {}
 }

@@ -262,5 +262,13 @@
     "description": "Keep 'Formula You' untranslated as it is the name of the service."
   },
   "videos": "Videolar",
-  "@videos": {}
+  "@videos": {},
+  "openQuiz": "Açık sınav",
+  "@openQuiz": {},
+  "quiz": "Quiz",
+  "@quiz": {},
+  "liveBlog": "Canlı Blog",
+  "@liveBlog": {},
+  "openLiveBlog": "Canlı blog açın",
+  "@openLiveBlog": {}
 }

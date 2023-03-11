@@ -262,5 +262,13 @@
   "victories": "Vittorie",
   "@victories": {},
   "watchOnYoutube": "Guarda i momenti salienti su YouTube",
-  "@watchOnYoutube": {}
+  "@watchOnYoutube": {},
+  "quiz": "Quiz",
+  "@quiz": {},
+  "openQuiz": "Aprire il quiz",
+  "@openQuiz": {},
+  "openLiveBlog": "Aprire il blog in diretta",
+  "@openLiveBlog": {},
+  "liveBlog": "Blog in diretta",
+  "@liveBlog": {}
 }
