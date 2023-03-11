@@ -266,5 +266,9 @@
   "openQuiz": "Åpen quiz",
   "@openQuiz": {},
   "quiz": "Quiz",
-  "@quiz": {}
+  "@quiz": {},
+  "openLiveBlog": "Åpne live-bloggen",
+  "@openLiveBlog": {},
+  "liveBlog": "Live-blogg",
+  "@liveBlog": {}
 }
