@@ -77,6 +77,30 @@ class _RssFeedArticleScreenState extends State<RssFeedArticleScreen> {
         ),
       );
     }
+    List<String> selectors = [
+      ".banner",
+      ".banners",
+      ".ads",
+      ".ad",
+      ".advert",
+      ".w7e-platform-101",
+      ".adgrid-ad-container",
+      ".ms-apb-inarticle-after-preview-without-sidebar",
+      ".ms-apb-super",
+      ".ms-content_sidebar",
+      ".ms-apb",
+      ".ms-footer_piano-footer",
+      ".advert-banner-container",
+      ".ad-top-margin",
+      ".mv-ad-box",
+      ".onetrust-pc-dark-filter",
+      ".ms-ap",
+      ".ms-hapb",
+      ".ci-ad",
+      ".ot-sdk-container",
+      ".GoogleActiveViewElement",
+      ".widget_text",
+    ];
     contentBlockers.add(
       ContentBlocker(
         trigger: ContentBlockerTrigger(
@@ -84,8 +108,7 @@ class _RssFeedArticleScreenState extends State<RssFeedArticleScreen> {
         ),
         action: ContentBlockerAction(
           type: ContentBlockerActionType.CSS_DISPLAY_NONE,
-          selector:
-              ".banner, .banners, .ads, .ad, .advert, .w7e-platform-101, .adgrid-ad-container, .ms-apb, .ms-apb-super, .ms-content_sidebar, .ms-apb, .advert-banner-container, .ad-top-margin, .mv-ad-box, .onetrust-pc-dark-filter",
+          selector: selectors.join(', '),
         ),
       ),
     );
