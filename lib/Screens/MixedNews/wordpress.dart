@@ -139,12 +139,12 @@ class WordspressNewsItem extends StatelessWidget {
           delta == 0
               ? launchUrl(
                   Uri.parse(
-                    item['guid']['rendered'],
+                    item['link'],
                   ),
                   mode: LaunchMode.externalApplication,
                 )
               : Share.share(
-                  item['guid']['rendered'],
+                  item['link'],
                 );
         },
       );
@@ -170,7 +170,7 @@ class WordspressNewsItem extends StatelessWidget {
                       .replaceAll('&#8217;', "'")
                       .replaceAll('&#8220;', '"')
                       .replaceAll('&#8221;', '"'),
-                  item['guid']['rendered'],
+                  item['link'],
                 ),
               ),
             );

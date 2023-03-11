@@ -423,35 +423,88 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
                                     feedsUrl[feed],
                                     max: 5,
                                   ),
-                                  builder: (context, snapshot) =>
-                                      snapshot.hasError
-                                          ? RequestErrorWidget(
-                                              snapshot.error.toString(),
-                                            )
-                                          : snapshot.hasData &&
-                                                  snapshot.data != null
-                                              ? Row(
-                                                  children: [
-                                                    for (Map article
-                                                        in snapshot.data!)
-                                                      SizedBox(
-                                                        width: width / 2.1,
-                                                        height: 232,
-                                                        child: Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .only(
-                                                            top: 5,
+                                  builder: (context, snapshot) => snapshot
+                                          .hasError
+                                      ? RequestErrorWidget(
+                                          snapshot.error.toString(),
+                                        )
+                                      : snapshot.hasData &&
+                                              snapshot.data != null
+                                          ? Row(
+                                              children: [
+                                                for (Map article
+                                                    in snapshot.data!)
+                                                  SizedBox(
+                                                    width: width / 2.1,
+                                                    height: 232,
+                                                    child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                        top: 5,
+                                                      ),
+                                                      child: GestureDetector(
+                                                        onTap: () =>
+                                                            Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                RssFeedArticleScreen(
+                                                              article['title'][
+                                                                      'rendered']
+                                                                  .replaceAll(
+                                                                      '&#8211;',
+                                                                      "'")
+                                                                  .replaceAll(
+                                                                      '&#8216;',
+                                                                      "'")
+                                                                  .replaceAll(
+                                                                      '&#8217;',
+                                                                      "'")
+                                                                  .replaceAll(
+                                                                      '&#8220;',
+                                                                      '"')
+                                                                  .replaceAll(
+                                                                      '&#8221;',
+                                                                      '"'),
+                                                              article['link'],
+                                                            ),
                                                           ),
-                                                          child:
-                                                              GestureDetector(
-                                                            onTap: () =>
-                                                                Navigator.push(
-                                                              context,
-                                                              MaterialPageRoute(
-                                                                builder:
-                                                                    (context) =>
-                                                                        RssFeedArticleScreen(
+                                                        ),
+                                                        child: Card(
+                                                          elevation: 5.0,
+                                                          color: useDarkMode
+                                                              ? const Color(
+                                                                  0xff1d1d28)
+                                                              : Colors.white,
+                                                          child: Column(
+                                                            children: [
+                                                              FutureBuilder<
+                                                                  String>(
+                                                                future: Wordpress()
+                                                                    .getImageUrl(
+                                                                  article['_links']
+                                                                          [
+                                                                          'wp:featuredmedia']
+                                                                      [
+                                                                      0]['href'],
+                                                                ),
+                                                                builder: (context, imageSnapshot) => imageSnapshot
+                                                                        .hasError
+                                                                    ? RequestErrorWidget(
+                                                                        imageSnapshot
+                                                                            .error
+                                                                            .toString(),
+                                                                      )
+                                                                    : imageSnapshot
+                                                                            .hasData
+                                                                        ? Image
+                                                                            .network(
+                                                                            imageSnapshot.data!,
+                                                                          )
+                                                                        : const LoadingIndicatorUtil(),
+                                                              ),
+                                                              ListTile(
+                                                                title: Text(
                                                                   article['title']
                                                                           [
                                                                           'rendered']
@@ -470,91 +523,37 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
                                                                       .replaceAll(
                                                                           '&#8221;',
                                                                           '"'),
-                                                                  article['guid']
-                                                                      [
-                                                                      'rendered'], // here ??
+                                                                  style:
+                                                                      TextStyle(
+                                                                    color: useDarkMode
+                                                                        ? Colors
+                                                                            .white
+                                                                        : Colors
+                                                                            .black,
+                                                                    fontSize:
+                                                                        14,
+                                                                  ),
+                                                                  overflow:
+                                                                      TextOverflow
+                                                                          .ellipsis,
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .justify,
+                                                                  maxLines: 5,
                                                                 ),
                                                               ),
-                                                            ),
-                                                            child: Card(
-                                                              elevation: 5.0,
-                                                              color: useDarkMode
-                                                                  ? const Color(
-                                                                      0xff1d1d28)
-                                                                  : Colors
-                                                                      .white,
-                                                              child: Column(
-                                                                children: [
-                                                                  FutureBuilder<
-                                                                      String>(
-                                                                    future: Wordpress()
-                                                                        .getImageUrl(
-                                                                      article['_links']['wp:featuredmedia']
-                                                                              [
-                                                                              0]
-                                                                          [
-                                                                          'href'],
-                                                                    ),
-                                                                    builder: (context, imageSnapshot) => imageSnapshot
-                                                                            .hasError
-                                                                        ? RequestErrorWidget(
-                                                                            imageSnapshot.error.toString(),
-                                                                          )
-                                                                        : imageSnapshot.hasData
-                                                                            ? Image.network(
-                                                                                imageSnapshot.data!,
-                                                                              )
-                                                                            : const LoadingIndicatorUtil(),
-                                                                  ),
-                                                                  ListTile(
-                                                                    title: Text(
-                                                                      article['title'][
-                                                                              'rendered']
-                                                                          .replaceAll(
-                                                                              '&#8211;',
-                                                                              "'")
-                                                                          .replaceAll(
-                                                                              '&#8216;',
-                                                                              "'")
-                                                                          .replaceAll(
-                                                                              '&#8217;',
-                                                                              "'")
-                                                                          .replaceAll(
-                                                                              '&#8220;',
-                                                                              '"')
-                                                                          .replaceAll(
-                                                                              '&#8221;',
-                                                                              '"'),
-                                                                      style:
-                                                                          TextStyle(
-                                                                        color: useDarkMode
-                                                                            ? Colors.white
-                                                                            : Colors.black,
-                                                                        fontSize:
-                                                                            14,
-                                                                      ),
-                                                                      overflow:
-                                                                          TextOverflow
-                                                                              .ellipsis,
-                                                                      textAlign:
-                                                                          TextAlign
-                                                                              .justify,
-                                                                      maxLines:
-                                                                          5,
-                                                                    ),
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                            ),
+                                                            ],
                                                           ),
                                                         ),
                                                       ),
-                                                  ],
-                                                )
-                                              : const SizedBox(
-                                                  height: 232,
-                                                  child: LoadingIndicatorUtil(),
-                                                ),
+                                                    ),
+                                                  ),
+                                              ],
+                                            )
+                                          : const SizedBox(
+                                              height: 232,
+                                              child: LoadingIndicatorUtil(),
+                                            ),
                                 ),
                               ),
                             ],

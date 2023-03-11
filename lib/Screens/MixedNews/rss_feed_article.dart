@@ -85,7 +85,7 @@ class _RssFeedArticleScreenState extends State<RssFeedArticleScreen> {
         action: ContentBlockerAction(
           type: ContentBlockerActionType.CSS_DISPLAY_NONE,
           selector:
-              ".banner, .banners, .ads, .ad, .advert, .w7e-platform-101, .adgrid-ad-container, .ms-apb-super, .ms-content_sidebar, .ms-apb, .advert-banner-container, .ad-top-margin, .mv-ad-box",
+              ".banner, .banners, .ads, .ad, .advert, .w7e-platform-101, .adgrid-ad-container, .ms-apb, .ms-apb-super, .ms-content_sidebar, .ms-apb, .advert-banner-container, .ad-top-margin, .mv-ad-box, .onetrust-pc-dark-filter",
         ),
       ),
     );
