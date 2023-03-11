@@ -45,6 +45,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:intl/intl.dart';
+import 'package:loading_indicator/loading_indicator.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:url_launcher/url_launcher.dart';
@@ -1030,7 +1031,10 @@ class JoinArticlesParts extends StatelessWidget {
       } else if (element['contentType'] == 'atomQuiz') {
         widgetsList.add(
           Padding(
-            padding: const EdgeInsets.all(5),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 5.0,
+              vertical: 20.0,
+            ),
             child: GestureDetector(
               child: Container(
                 width: double.infinity,
@@ -1147,6 +1151,83 @@ class JoinArticlesParts extends StatelessWidget {
               },
               initialOptions: InAppWebViewGroupOptions(
                 crossPlatform: InAppWebViewOptions(transparentBackground: true),
+              ),
+            ),
+          ),
+        );
+      } else if (element['contentType'] == 'atomLiveBlogScribbleLive') {
+        String embedId = element['fields']['scribbleEventId'].split('/')[2];
+        widgetsList.add(
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 5.0,
+              vertical: 30.0,
+            ),
+            child: GestureDetector(
+              child: Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: useDarkMode
+                      ? const Color(0xff1d1d28)
+                      : Colors.grey.shade400,
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(
+                    20,
+                    10,
+                    20,
+                    10,
+                  ),
+                  child: Row(
+                    children: [
+                      Text(
+                        AppLocalizations.of(context)!.openLiveBlog,
+                        style: TextStyle(
+                          color: useDarkMode ? Colors.white : Colors.black,
+                        ),
+                      ),
+                      const Spacer(),
+                      SizedBox(
+                        width: 30.0,
+                        height: 30.0,
+                        child: LoadingIndicator(
+                          indicatorType: Indicator.ballScaleMultiple,
+                          colors: [
+                            Theme.of(context).primaryColor,
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => Scaffold(
+                    appBar: AppBar(
+                      title: Text(
+                        AppLocalizations.of(context)!.liveBlog,
+                      ),
+                    ),
+                    body: InAppWebView(
+                      initialUrlRequest: URLRequest(
+                        url: Uri.parse(
+                          "https://embed.scribblelive.com/Embed/v7.aspx?Id=$embedId&ThemeId=37480",
+                        ),
+                      ),
+                      gestureRecognizers: {
+                        Factory<VerticalDragGestureRecognizer>(
+                            () => VerticalDragGestureRecognizer()),
+                        Factory<HorizontalDragGestureRecognizer>(
+                            () => HorizontalDragGestureRecognizer()),
+                        Factory<ScaleGestureRecognizer>(
+                            () => ScaleGestureRecognizer()),
+                      },
+                    ),
+                  ),
+                ),
               ),
             ),
           ),
