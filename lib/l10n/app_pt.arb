@@ -268,5 +268,9 @@
   "quiz": "Questionário",
   "@quiz": {},
   "openQuiz": "Abrir questionário",
-  "@openQuiz": {}
+  "@openQuiz": {},
+  "liveBlog": "Blog em directo",
+  "@liveBlog": {},
+  "openLiveBlog": "Abrir blog em directo",
+  "@openLiveBlog": {}
 }
