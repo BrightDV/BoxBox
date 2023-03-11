@@ -26,8 +26,8 @@ class TestScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const ArticleScreen(
-      '1X5oBGNMdRKUzQyksxOygK',
-      'live blog',
+      '6EMC7HizI7vAI0v3W1an5w',
+      'empty caption',
       true,
     );
   }

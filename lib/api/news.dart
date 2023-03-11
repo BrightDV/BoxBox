@@ -2266,13 +2266,13 @@ class _ImageRendererState extends State<ImageRenderer> {
                         ),
                   Container(
                     alignment: Alignment.bottomCenter,
-                    child: widget.caption != null || widget.caption == ''
+                    child: widget.caption != null && widget.caption != ''
                         ? Container(
                             width: double.infinity,
                             padding: const EdgeInsets.all(4),
                             color: Colors.black.withOpacity(0.7),
                             child: Text(
-                              widget.caption ?? '',
+                              widget.caption!,
                               style: const TextStyle(
                                 color: Colors.white,
                               ),
