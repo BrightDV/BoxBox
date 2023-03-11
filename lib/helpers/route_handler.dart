@@ -45,14 +45,6 @@ class ArticleUrlHandler extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
-  Widget nextPage(BuildContext context, Video video) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => VideoScreen(video)),
-    );
-    return Container();
-  }
-
   @override
   Widget build(BuildContext context) {
     int year = DateTime.now().year;
@@ -78,7 +70,7 @@ class ArticleUrlHandler extends StatelessWidget {
                   snapshot.error.toString(),
                 )
               : snapshot.hasData
-                  ? nextPage(context, snapshot.data!)
+                  ? VideoScreen(snapshot.data!)
                   : const Center(
                       child: LoadingIndicatorUtil(),
                     ),
