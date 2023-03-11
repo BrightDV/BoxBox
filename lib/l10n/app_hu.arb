@@ -266,5 +266,9 @@
   "openQuiz": "Nyílt kvíz",
   "@openQuiz": {},
   "quiz": "Kvíz",
-  "@quiz": {}
+  "@quiz": {},
+  "liveBlog": "Élő blog",
+  "@liveBlog": {},
+  "openLiveBlog": "Nyissa meg az élő blogot",
+  "@openLiveBlog": {}
 }
