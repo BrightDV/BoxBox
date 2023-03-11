@@ -198,17 +198,6 @@ class _VideosHeaderState extends State<VideosHeader> {
         controller: controller,
       ),
     );
-    // return CarouselSlider(
-    //   items: widget.videos,
-    //   options: CarouselOptions(
-    //     aspectRatio: 1.93,
-    //     viewportFraction: 0.9,
-    //     enableInfiniteScroll: true,
-    //     enlargeCenterPage: true,
-    //     autoPlay: true,
-    //     enlargeStrategy: CenterPageEnlargeStrategy.scale,
-    //   ),
-    // );
   }
 }
 

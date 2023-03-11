@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:math';
+import 'dart:ui';
 
 import 'package:collection/collection.dart' show IterableExtension;
 import 'package:flutter/material.dart';
@@ -651,6 +652,28 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                     indicatorColor: widget.indicatorColor,
                   ),
                 ),
+              ),
+            ),
+          ),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: _goBack,
+              child: const SizedBox(
+                height: double.infinity,
+                width: 80,
+              ),
+            ),
+          ),
+          Align(
+            alignment: Alignment.centerRight,
+            child: GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: _goForward,
+              child: const SizedBox(
+                height: double.infinity,
+                width: 80,
               ),
             ),
           ),
