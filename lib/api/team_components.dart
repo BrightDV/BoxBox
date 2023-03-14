@@ -17,6 +17,7 @@
  * Copyright (c) 2022-2023, BrightDV
  */
 
+import 'package:boxbox/Screens/team_details.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/request_error.dart';
 import 'package:boxbox/helpers/team_background_color.dart';
@@ -66,107 +67,117 @@ class TeamItem extends StatelessWidget {
     Color finalTeamColors = getTeamColors(item.constructorId);
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
-    return Container(
-      height: 120,
-      color: index % 2 == 1
-          ? useDarkMode
-              ? const Color(0xff22222c)
-              : const Color(0xffffffff)
-          : useDarkMode
-              ? const Color(0xff15151f)
-              : const Color(0xfff4f4f4),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Expanded(
-            flex: 2,
-            child: Center(
-              child: Text(
-                item.position,
-                style: TextStyle(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 18,
-                  color: useDarkMode ? Colors.white : const Color(0xff171717),
-                ),
-              ),
-            ),
-          ),
-          Expanded(
-            flex: 1,
-            child: VerticalDivider(
-              color: finalTeamColors,
-              thickness: 9,
-              width: 40,
-              indent: 30,
-              endIndent: 30,
-            ),
-          ),
-          Expanded(
-            flex: 7,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text(
-                  item.name,
-                  textAlign: TextAlign.center,
+    return GestureDetector(
+      onTap: () => Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) =>
+              TeamDetailsScreen(item.constructorId, item.name),
+        ),
+      ),
+      child: Container(
+        height: 120,
+        color: index % 2 == 1
+            ? useDarkMode
+                ? const Color(0xff22222c)
+                : const Color(0xffffffff)
+            : useDarkMode
+                ? const Color(0xff15151f)
+                : const Color(0xfff4f4f4),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Expanded(
+              flex: 2,
+              child: Center(
+                child: Text(
+                  item.position,
                   style: TextStyle(
                     fontWeight: FontWeight.w600,
                     fontSize: 18,
                     color: useDarkMode ? Colors.white : const Color(0xff171717),
                   ),
                 ),
-                int.parse(item.points) == 1
-                    ? Text(
-                        "${item.points} ${AppLocalizations.of(context)?.point}",
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: useDarkMode
-                              ? Colors.white
-                              : const Color(0xff171717),
-                        ),
-                      )
-                    : Text(
-                        "${item.points} ${AppLocalizations.of(context)?.points}",
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: useDarkMode
-                              ? Colors.white
-                              : const Color(0xff171717),
-                        ),
-                      ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 5),
-                  child: int.parse(item.wins) == 1
+              ),
+            ),
+            Expanded(
+              flex: 1,
+              child: VerticalDivider(
+                color: finalTeamColors,
+                thickness: 9,
+                width: 40,
+                indent: 30,
+                endIndent: 30,
+              ),
+            ),
+            Expanded(
+              flex: 7,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    item.name,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 18,
+                      color:
+                          useDarkMode ? Colors.white : const Color(0xff171717),
+                    ),
+                  ),
+                  int.parse(item.points) == 1
                       ? Text(
-                          "${item.wins} ${AppLocalizations.of(context)?.victory}",
+                          "${item.points} ${AppLocalizations.of(context)?.point}",
                           style: TextStyle(
-                            fontSize: 17,
+                            fontSize: 18,
                             color: useDarkMode
                                 ? Colors.white
                                 : const Color(0xff171717),
                           ),
                         )
                       : Text(
-                          "${item.wins} ${AppLocalizations.of(context)?.victories}",
+                          "${item.points} ${AppLocalizations.of(context)?.points}",
                           style: TextStyle(
-                            fontSize: 17,
+                            fontSize: 18,
                             color: useDarkMode
                                 ? Colors.white
                                 : const Color(0xff171717),
                           ),
                         ),
-                ),
-              ],
+                  Padding(
+                    padding: const EdgeInsets.only(top: 5),
+                    child: int.parse(item.wins) == 1
+                        ? Text(
+                            "${item.wins} ${AppLocalizations.of(context)?.victory}",
+                            style: TextStyle(
+                              fontSize: 17,
+                              color: useDarkMode
+                                  ? Colors.white
+                                  : const Color(0xff171717),
+                            ),
+                          )
+                        : Text(
+                            "${item.wins} ${AppLocalizations.of(context)?.victories}",
+                            style: TextStyle(
+                              fontSize: 17,
+                              color: useDarkMode
+                                  ? Colors.white
+                                  : const Color(0xff171717),
+                            ),
+                          ),
+                  ),
+                ],
+              ),
             ),
-          ),
-          Expanded(
-            flex: 6,
-            child: TeamCarImageProvider(
-              item.constructorId,
+            Expanded(
+              flex: 6,
+              child: TeamCarImageProvider(
+                item.constructorId,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

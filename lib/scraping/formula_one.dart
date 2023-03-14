@@ -299,6 +299,116 @@ class FormulaOneScraper {
     return results;
   }
 
+  Future<Map<String, dynamic>> scrapeTeamDetails(String ergastTeamId) async {
+    final String teamId = Convert().teamsFromErgastToFormulaOne(ergastTeamId);
+    final Uri driverDetailsUrl =
+        Uri.parse('https://www.formula1.com/en/teams/$teamId.html');
+    http.Response response = await http.get(driverDetailsUrl);
+    dom.Document document = parser.parse(
+      utf8.decode(response.bodyBytes),
+    );
+
+    Map<String, dynamic> results = {};
+    results["drivers"] = {"images": [], "names": []};
+    results["teamStats"] = {"attributes": [], "values": []};
+    results["information"] = [];
+    results["medias"] = {"images": [], "captions": []};
+    results["articles"] = [];
+
+    List<dom.Element> tempDetails =
+        document.getElementsByClassName('fom-adaptiveimage');
+    tempDetails = document.getElementsByClassName('driver-teaser');
+    for (int i = 0; i <= 1; i++) {
+      results["drivers"]["images"].add(
+        tempDetails[i]
+            .children[0]
+            .children[0]
+            .children[0]
+            .children[0]
+            .children[0]
+            .attributes['data-path'],
+      );
+      results["drivers"]["names"].add(
+        tempDetails[i]
+            .children[0]
+            .children[1]
+            .text
+            .replaceAll("  ", "")
+            .replaceAll("\n\n\n", "")
+            .replaceAll("\n\n", "\n")
+            .trim(),
+      );
+    }
+    tempDetails = document.getElementsByTagName('tr');
+    for (int i = 0; i < 11; i++) {
+      results["teamStats"]["attributes"].add(
+        tempDetails[i].children[0].text.trim(),
+      );
+      results["teamStats"]["values"].add(
+        tempDetails[i].children[1].text.trim(),
+      );
+    }
+    tempDetails = document.getElementsByClassName('information');
+    for (int i = 0; i < tempDetails.length; i++) {
+      for (var element in tempDetails[i].children) {
+        results["information"].add(
+          element.innerHtml
+              .trim()
+              .replaceAll("\n", "")
+              .replaceAll("<h3>", "# ")
+              .replaceAll("</h3>", "\n")
+              .replaceAll("<p>", "\n")
+              .replaceAll("</p>", "\n")
+              .replaceAll("<a href=\"", "")
+              .replaceAll("</a>", "")
+              .replaceAll("<h4><strong>", "\n\n### ")
+              .replaceAll("</strong></h4>", "\n")
+              .replaceAll("<strong>", "")
+              .replaceAll("</strong>", "")
+              .replaceAll("<br>", ""),
+        );
+      }
+    }
+    List<dom.Element> tempTeamMedias =
+        document.getElementsByClassName('swiper-slide');
+    for (var element in tempTeamMedias) {
+      String imageUrl;
+      if (!element.children[0].children[0].attributes['data-path']!.startsWith(
+        ('https://'),
+      )) {
+        imageUrl =
+            'https://formula1.com${element.children[0].children[0].attributes['data-path']!}';
+      } else {
+        imageUrl = element.children[0].children[0].attributes['data-path']!;
+      }
+      imageUrl +=
+          '.img.640.medium.${element.children[0].children[0].attributes['data-extension']!}${element.children[0].children[0].attributes['data-suffix']!}';
+      results["medias"]["images"].add(imageUrl);
+    }
+
+    tempTeamMedias = document.getElementsByClassName('gallery-description');
+    for (var element in tempTeamMedias) {
+      results["medias"]["captions"].add(element.text);
+    }
+
+    List<dom.Element> tempTeamArticles = document
+        .getElementsByClassName('articles')[0]
+        .getElementsByClassName('article-teaser-link');
+    for (var element in tempTeamArticles) {
+      results["articles"].add(
+        [
+          element.attributes['href']!.split('.')[2],
+          element.children[0].children[0].attributes['style']!
+              .split('(')[1]
+              .split(')')[0],
+          element.children[0].children[1].children[1].text,
+          element.children[0].children[1].children[0].text.trim(),
+        ],
+      );
+    }
+    return results;
+  }
+
   Future<int> whichSessionsAreFinised(
     String circuitId,
     String circuitName,

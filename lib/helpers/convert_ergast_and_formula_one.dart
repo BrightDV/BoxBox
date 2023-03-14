@@ -41,7 +41,7 @@ class Convert {
       'mercedes': 'Mercedes',
       'alpine': 'Alpine',
       'mclaren': 'McLaren',
-      'alphatauri': 'Alphataurai',
+      'alphatauri': 'AlphaTauri',
       'aston_martin': 'Aston-Martin',
       'williams': 'Williams',
       'alfa': 'Alfa-Romeo',

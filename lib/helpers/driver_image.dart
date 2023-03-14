@@ -80,7 +80,6 @@ class DriverStatsImage {
     String driverPath = Convert().driverIdFromErgastForImages(driverId);
     String driverImageUrl =
         "https://media.formula1.com/content/dam/fom-website/drivers/2023Drivers/$driverPath.jpg.img.640.medium.jpg/1677069810695.jpg";
-    print(driverImageUrl);
     return driverImageUrl;
   }
 }
@@ -102,5 +101,3 @@ class DriverFlagImage {
     return driverImageUrl;
   }
 }
-// https://media.formula1.com/content/dam/fom-website/drivers/2023Drivers/bottas.jpg.img.640.medium.jpg/1677069810695.jpg
-// https://media.formula1.com/content/dam/fom-website/drivers/2023Drivers/bottas.jpg
