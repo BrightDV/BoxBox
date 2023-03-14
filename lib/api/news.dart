@@ -2425,16 +2425,22 @@ class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
       betterPlayerConfiguration,
       betterPlayerDataSource: betterPlayerDataSource,
     );
-    _betterPlayerController.addEventsListener((event) {
-      if (event.betterPlayerEventType == BetterPlayerEventType.play) {
-        _setPlaceholderVisibleState(false);
-      }
-    });
+    _betterPlayerController.addEventsListener(
+      (event) {
+        if (event.betterPlayerEventType == BetterPlayerEventType.play) {
+          _setPlaceholderVisibleState(false);
+        }
+      },
+    );
   }
 
   void _setPlaceholderVisibleState(bool hidden) {
     _placeholderStreamController.add(hidden);
     _showPlaceholder = hidden;
+  }
+
+  void play() {
+    _betterPlayerController.play();
   }
 
   Widget _buildVideoPlaceholder() {
@@ -2481,12 +2487,21 @@ class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
                             ),
                           ),
                         ),
-                  const Align(
+                  Align(
                     alignment: Alignment.center,
-                    child: Icon(
-                      Icons.play_arrow_outlined,
-                      color: Colors.white,
-                      size: 48,
+                    child: GestureDetector(
+                      onTap: play,
+                      child: BackdropFilter(
+                        filter: ImageFilter.blur(
+                          sigmaX: 5.0,
+                          sigmaY: 5.0,
+                        ),
+                        child: const Icon(
+                          Icons.play_arrow_outlined,
+                          color: Colors.white,
+                          size: 48,
+                        ),
+                      ),
                     ),
                   ),
                 ],
