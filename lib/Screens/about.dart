@@ -17,6 +17,7 @@
  * Copyright (c) 2022-2023, BrightDV
  */
 
+import 'package:boxbox/Screens/links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -85,6 +86,46 @@ class AboutScreen extends StatelessWidget {
                       ),
                     )
                   : const Text(''),
+            ),
+            GestureDetector(
+              child: Container(
+                width: 150,
+                decoration: BoxDecoration(
+                  color: useDarkMode
+                      ? const Color(0xff1d1d28)
+                      : Colors.grey.shade400,
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(
+                    20,
+                    10,
+                    20,
+                    10,
+                  ),
+                  child: Row(
+                    children: [
+                      Text(
+                        AppLocalizations.of(context)!.links,
+                        style: TextStyle(
+                          color: useDarkMode ? Colors.white : Colors.black,
+                        ),
+                      ),
+                      const Spacer(),
+                      Icon(
+                        Icons.open_in_new_outlined,
+                        color: useDarkMode ? Colors.white : Colors.black,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const LinksScreen(),
+                ),
+              ),
             ),
             Padding(
               padding: const EdgeInsets.all(10),

@@ -19,9 +19,9 @@
 
 import 'package:boxbox/Screens/FormulaYou/home.dart';
 import 'package:boxbox/Screens/about.dart';
+import 'package:boxbox/Screens/compare.dart';
 import 'package:boxbox/Screens/hall_of_fame.dart';
 import 'package:boxbox/Screens/history.dart';
-import 'package:boxbox/Screens/links.dart';
 import 'package:boxbox/Screens/MixedNews/mixed_news.dart';
 import 'package:boxbox/Screens/live_timing.dart';
 import 'package:boxbox/Screens/settings.dart';
@@ -157,13 +157,13 @@ class _MainDrawerState extends State<MainDrawer> {
             ),
             ListTile(
               title: Text(
-                AppLocalizations.of(context)!.links,
+                'Compare',
                 style: TextStyle(
                   color: useDarkMode ? Colors.white : Colors.black,
                 ),
               ),
               leading: Icon(
-                Icons.open_in_new_outlined,
+                Icons.compare_arrows_outlined,
                 color: useDarkMode ? Colors.white : Colors.black,
               ),
               onTap: () {
@@ -171,7 +171,7 @@ class _MainDrawerState extends State<MainDrawer> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const LinksScreen(),
+                    builder: (context) => const CompareScreen(),
                   ),
                 );
               },
