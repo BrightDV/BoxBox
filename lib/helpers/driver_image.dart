@@ -77,9 +77,10 @@ class DriverResultsImage {
 
 class DriverStatsImage {
   Future<String> getDriverImage(String driverId) async {
-    String driverPath = Convert().driverIdFromErgast(driverId);
+    String driverPath = Convert().driverIdFromErgastForImages(driverId);
     String driverImageUrl =
-        "https://www.formula1.com/content/fom-website/en/drivers/$driverPath/_jcr_content/image.img.1920.medium.jpg/1646818893219.jpg";
+        "https://media.formula1.com/content/dam/fom-website/drivers/2023Drivers/$driverPath.jpg.img.640.medium.jpg/1677069810695.jpg";
+    print(driverImageUrl);
     return driverImageUrl;
   }
 }
@@ -101,3 +102,5 @@ class DriverFlagImage {
     return driverImageUrl;
   }
 }
+// https://media.formula1.com/content/dam/fom-website/drivers/2023Drivers/bottas.jpg.img.640.medium.jpg/1677069810695.jpg
+// https://media.formula1.com/content/dam/fom-website/drivers/2023Drivers/bottas.jpg

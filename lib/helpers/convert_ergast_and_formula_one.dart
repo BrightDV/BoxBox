@@ -34,6 +34,22 @@ class Convert {
     return formulaOneToErgast[teamName];
   }
 
+  String teamsFromErgastToFormulaOne(String teamName) {
+    Map formulaOneToErgast = {
+      'red_bull': 'Red-Bull-Racing',
+      'ferrari': 'Ferrari',
+      'mercedes': 'Mercedes',
+      'alpine': 'Alpine',
+      'mclaren': 'McLaren',
+      'alphatauri': 'Alphataurai',
+      'aston_martin': 'Aston-Martin',
+      'williams': 'Williams',
+      'alfa': 'Alfa-Romeo',
+      'haas': 'Haas-F1-Team',
+    };
+    return formulaOneToErgast[teamName];
+  }
+
   String circuitIdFromErgastToFormulaOne(String circuitId) {
     Map ergastToFormulaOne = {
       'bahrain': '1141',
@@ -149,6 +165,32 @@ class Convert {
       "latifi": "nicholas-latifi",
       "vettel": "sebastian-vettel",
       "mick_schumacher": "mick-schumacher",
+    };
+    return ergastToFormulaOne[driverId];
+  }
+
+  String driverIdFromErgastForImages(String driverId) {
+    Map ergastToFormulaOne = {
+      "leclerc": "leclerc",
+      "sainz": "sainz",
+      "max_verstappen": "verstappen",
+      "perez": "perez",
+      "russell": "russell",
+      "hamilton": "hamilton",
+      "ocon": "ocon",
+      "gasly": "gasly",
+      "zhou": "zhou",
+      "bottas": "bottas",
+      "norris": "norris",
+      "piastri": "piastri",
+      "tsunoda": "tsunoda",
+      "de_vries": "de-vries",
+      "alonso": "alonso",
+      "stroll": "stroll",
+      "hulkenberg": "hulkenberg",
+      "kevin_magnussen": "magnussen",
+      "albon": "albon",
+      "sargeant": "sargeant",
     };
     return ergastToFormulaOne[driverId];
   }
