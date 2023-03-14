@@ -20,28 +20,24 @@
 class RaceTracksUrls {
   Map<String, String> trackUrlConverter = {
     "bahrain": "Bahrain",
-    "jeddah": "Saudi_Arabian",
-    "albert_park": "Australian",
+    "jeddah": "Saudi_Arabia",
+    "albert_park": "Australia",
     "baku": "Azerbaijan",
     "miami": "Miami",
-    "imola": "Emilia_Romagna",
+    "imola": "Emilia Romagna",
     "monaco": "Monaco",
     "catalunya": "Spain",
     "villeneuve": "Canada",
     "red_bull_ring": "Austria",
-    "silverstone": "Great_Britain",
+    "silverstone": "Great Britain",
     "hungaroring": "Hungary",
     "spa": "Belgium",
     "zandvoort": "Netherlands",
-    "monza": "Italy",
-    "marina_bay": "Singapore",
-    "suzuka": "Japan",
-    "losail": "Qatar",
     "americas": "USA",
     "rodriguez": "Mexico",
     "interlagos": "Brazil",
-    "vegas": "Las_Vegas",
-    "yas_marina": "Abu_Dhabi",
+    "vegas": "Las Vegas",
+    "yas_marina": "Abu Dhabi",
   };
 
   Map<String, String> trackLayoutConverter = {
@@ -76,7 +72,7 @@ class RaceTracksUrls {
     "albert_park": "Australian",
     "baku": "Azerbaijan",
     "miami": "Miami",
-    "imola": "Emilia Romagna",
+    "imola": "Emilia_Romagna",
     "monaco": "Monaco",
     "catalunya": "Spanish",
     "villeneuve": "Canadian",
@@ -89,11 +85,11 @@ class RaceTracksUrls {
     "marina_bay": "Singapore",
     "suzuka": "Japanese",
     "losail": "Qatar",
-    "americas": "United States",
-    "rodriguez": "Mexico City",
-    "interlagos": "São Paulo",
-    "vegas": "Las Vegas",
-    "yas_marina": "Abu Dhabi",
+    "americas": "United_States",
+    "rodriguez": "Mexico_City",
+    "interlagos": "São_Paulo",
+    "vegas": "Las_Vegas",
+    "yas_marina": "Abu_Dhabi",
   };
   Future<String> getRaceTrackImageUrl(String gpId) async {
     String gpName = trackUrlConverter[gpId]!;
@@ -106,7 +102,7 @@ class RaceTracksUrls {
   }
 
   Future<String> getRaceCoverImageUrl(String gpId) async {
-    String gpName = trackUrlConverter[gpId]!;
+    String gpName = raceCoverImageConverter[gpId]!;
     return "https://www.formula1.com/content/dam/fom-website/races/${DateTime.now().year}/${gpName}_Grand_Prix.png";
   }
 }
