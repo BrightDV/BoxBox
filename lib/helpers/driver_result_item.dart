@@ -17,6 +17,7 @@
  * Copyright (c) 2022-2023, BrightDV
  */
 
+import 'package:boxbox/Screens/driver_details.dart';
 import 'package:boxbox/api/driver_components.dart';
 import 'package:boxbox/helpers/team_background_color.dart';
 import 'package:flutter/material.dart';
@@ -36,122 +37,136 @@ class DriverResultItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Color finalTeamColors = getTeamColors(item.team);
-    return Container(
-      color: item.isFastest
-          ? const Color(0xffff00ff)
-          : index % 2 == 1
-              ? const Color(0xff22222c)
-              : const Color(0xff15151f),
-      height: 45,
-      child: Padding(
-        padding: const EdgeInsets.all(5),
-        child: Row(
-          children: [
-            Expanded(
-              flex: 2,
-              child: Text(
-                item.position,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w600,
-                ),
-                textAlign: TextAlign.center,
-              ),
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => DriverDetailsScreen(
+              item.driverId,
+              item.givenName,
+              item.familyName,
             ),
-            Expanded(
-              flex: 2,
-              child: VerticalDivider(
-                color: finalTeamColors,
-                thickness: 8,
-                width: 25,
-                indent: 7,
-                endIndent: 7,
-              ),
-            ),
-            Expanded(
-              flex: 3,
-              child: Text(
-                item.code,
-                style: const TextStyle(
-                  color: Colors.white,
-                ),
-              ),
-            ),
-            Expanded(
-              flex: 6,
-              child: Padding(
-                padding: const EdgeInsets.only(left: 5, right: 5),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: item.isFastest
-                        ? const Color(0xffab01ab)
-                        : const Color(0xff383840),
-                    borderRadius: BorderRadius.circular(7),
+          ),
+        );
+      },
+      child: Container(
+        color: item.isFastest
+            ? const Color(0xffff00ff)
+            : index % 2 == 1
+                ? const Color(0xff22222c)
+                : const Color(0xff15151f),
+        height: 45,
+        child: Padding(
+          padding: const EdgeInsets.all(5),
+          child: Row(
+            children: [
+              Expanded(
+                flex: 2,
+                child: Text(
+                  item.position,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 7, bottom: 7),
-                    child: Text(
-                      item.time,
-                      style: TextStyle(
-                        color: item.isFastest || item.time == 'DNF'
-                            ? Colors.white
-                            : const Color(0xff00ff00),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              Expanded(
+                flex: 2,
+                child: VerticalDivider(
+                  color: finalTeamColors,
+                  thickness: 8,
+                  width: 25,
+                  indent: 7,
+                  endIndent: 7,
+                ),
+              ),
+              Expanded(
+                flex: 3,
+                child: Text(
+                  item.code,
+                  style: const TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              Expanded(
+                flex: 6,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 5, right: 5),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: item.isFastest
+                          ? const Color(0xffab01ab)
+                          : const Color(0xff383840),
+                      borderRadius: BorderRadius.circular(7),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 7, bottom: 7),
+                      child: Text(
+                        item.time,
+                        style: TextStyle(
+                          color: item.isFastest || item.time == 'DNF'
+                              ? Colors.white
+                              : const Color(0xff00ff00),
+                        ),
+                        textAlign: TextAlign.center,
                       ),
-                      textAlign: TextAlign.center,
                     ),
                   ),
                 ),
               ),
-            ),
-            Expanded(
-              flex: 3,
-              child: Padding(
-                padding: const EdgeInsets.only(left: 5, right: 5),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: item.isFastest
-                        ? const Color(0xffab01ab)
-                        : const Color(0xff383840),
-                    borderRadius: BorderRadius.circular(7),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 5, bottom: 5),
-                    child: Text(
-                      item.lapsDone!,
-                      style: const TextStyle(
-                        color: Colors.white,
+              Expanded(
+                flex: 3,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 5, right: 5),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: item.isFastest
+                          ? const Color(0xffab01ab)
+                          : const Color(0xff383840),
+                      borderRadius: BorderRadius.circular(7),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 5, bottom: 5),
+                      child: Text(
+                        item.lapsDone!,
+                        style: const TextStyle(
+                          color: Colors.white,
+                        ),
+                        textAlign: TextAlign.center,
                       ),
-                      textAlign: TextAlign.center,
                     ),
                   ),
                 ),
               ),
-            ),
-            Expanded(
-              flex: 3,
-              child: Padding(
-                padding: const EdgeInsets.only(left: 5, right: 5),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: item.isFastest
-                        ? const Color(0xffab01ab)
-                        : const Color(0xff383840),
-                    borderRadius: BorderRadius.circular(7),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 5, bottom: 5),
-                    child: Text(
-                      item.points!,
-                      style: const TextStyle(
-                        color: Colors.white,
+              Expanded(
+                flex: 3,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 5, right: 5),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: item.isFastest
+                          ? const Color(0xffab01ab)
+                          : const Color(0xff383840),
+                      borderRadius: BorderRadius.circular(7),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 5, bottom: 5),
+                      child: Text(
+                        item.points!,
+                        style: const TextStyle(
+                          color: Colors.white,
+                        ),
+                        textAlign: TextAlign.center,
                       ),
-                      textAlign: TextAlign.center,
                     ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -263,138 +278,153 @@ class QualificationResultsItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Color finalTeamColors = getTeamColors(item.team);
-    return Container(
-      color: index % 2 == 1 ? const Color(0xff22222c) : const Color(0xff15151f),
-      height: 45,
-      child: Padding(
-        padding: const EdgeInsets.all(5),
-        child: Row(
-          children: [
-            Expanded(
-              flex: 2,
-              child: Padding(
-                padding: const EdgeInsets.only(
-                  right: 7,
-                ),
-                child: Text(
-                  item.position,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600,
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => DriverDetailsScreen(
+              item.driverId,
+              item.givenName,
+              item.familyName,
+            ),
+          ),
+        );
+      },
+      child: Container(
+        color:
+            index % 2 == 1 ? const Color(0xff22222c) : const Color(0xff15151f),
+        height: 45,
+        child: Padding(
+          padding: const EdgeInsets.all(5),
+          child: Row(
+            children: [
+              Expanded(
+                flex: 2,
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                    right: 7,
                   ),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            ),
-            Expanded(
-              flex: 1,
-              child: VerticalDivider(
-                color: finalTeamColors,
-                thickness: 8,
-                width: 25,
-                indent: 7,
-                endIndent: 7,
-              ),
-            ),
-            Expanded(
-              flex: 4,
-              child: Padding(
-                padding: const EdgeInsets.only(
-                  left: 7,
-                ),
-                child: Text(
-                  item.code,
-                  style: const TextStyle(
-                    color: Colors.white,
+                  child: Text(
+                    item.position,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
                 ),
               ),
-            ),
-            Expanded(
-              flex: 6,
-              child: Padding(
-                padding: const EdgeInsets.only(left: 5, right: 5),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: winningTimeQOne == item.timeq1
-                        ? const Color(0xffff00ff)
-                        : const Color(0xff383840),
-                    borderRadius: BorderRadius.circular(7),
+              Expanded(
+                flex: 1,
+                child: VerticalDivider(
+                  color: finalTeamColors,
+                  thickness: 8,
+                  width: 25,
+                  indent: 7,
+                  endIndent: 7,
+                ),
+              ),
+              Expanded(
+                flex: 4,
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                    left: 7,
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 5, bottom: 5),
-                    child: Text(
-                      item.timeq1,
-                      style: TextStyle(
-                        color: winningTimeQOne == item.timeq1
-                            ? Colors.white
-                            : item.timeq1 != '- -' && item.timeq1 != 'DNF'
-                                ? const Color(0xff00ff00)
-                                : Colors.white,
-                      ),
-                      textAlign: TextAlign.center,
+                  child: Text(
+                    item.code,
+                    style: const TextStyle(
+                      color: Colors.white,
                     ),
                   ),
                 ),
               ),
-            ),
-            Expanded(
-              flex: 6,
-              child: Padding(
-                padding: const EdgeInsets.only(left: 5, right: 5),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: winningTimeQTwo == item.timeq2
-                        ? const Color(0xffff00ff)
-                        : const Color(0xff383840),
-                    borderRadius: BorderRadius.circular(7),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 5, bottom: 5),
-                    child: Text(
-                      item.timeq2,
-                      style: TextStyle(
-                        color: winningTimeQTwo == item.timeq2
-                            ? Colors.white
-                            : item.timeq2 != '--'
-                                ? const Color(0xff00ff00)
-                                : Colors.white,
+              Expanded(
+                flex: 6,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 5, right: 5),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: winningTimeQOne == item.timeq1
+                          ? const Color(0xffff00ff)
+                          : const Color(0xff383840),
+                      borderRadius: BorderRadius.circular(7),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 5, bottom: 5),
+                      child: Text(
+                        item.timeq1,
+                        style: TextStyle(
+                          color: winningTimeQOne == item.timeq1
+                              ? Colors.white
+                              : item.timeq1 != '- -' && item.timeq1 != 'DNF'
+                                  ? const Color(0xff00ff00)
+                                  : Colors.white,
+                        ),
+                        textAlign: TextAlign.center,
                       ),
-                      textAlign: TextAlign.center,
                     ),
                   ),
                 ),
               ),
-            ),
-            Expanded(
-              flex: 6,
-              child: Padding(
-                padding: const EdgeInsets.only(left: 5, right: 5),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: index == 0
-                        ? const Color(0xffff00ff)
-                        : const Color(0xff383840),
-                    borderRadius: BorderRadius.circular(7),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 5, bottom: 5),
-                    child: Text(
-                      item.timeq3,
-                      style: TextStyle(
-                        color: index == 0
-                            ? Colors.white
-                            : item.timeq3 != '--'
-                                ? const Color(0xff00ff00)
-                                : Colors.white,
+              Expanded(
+                flex: 6,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 5, right: 5),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: winningTimeQTwo == item.timeq2
+                          ? const Color(0xffff00ff)
+                          : const Color(0xff383840),
+                      borderRadius: BorderRadius.circular(7),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 5, bottom: 5),
+                      child: Text(
+                        item.timeq2,
+                        style: TextStyle(
+                          color: winningTimeQTwo == item.timeq2
+                              ? Colors.white
+                              : item.timeq2 != '--'
+                                  ? const Color(0xff00ff00)
+                                  : Colors.white,
+                        ),
+                        textAlign: TextAlign.center,
                       ),
-                      textAlign: TextAlign.center,
                     ),
                   ),
                 ),
               ),
-            ),
-          ],
+              Expanded(
+                flex: 6,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 5, right: 5),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: index == 0
+                          ? const Color(0xffff00ff)
+                          : const Color(0xff383840),
+                      borderRadius: BorderRadius.circular(7),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 5, bottom: 5),
+                      child: Text(
+                        item.timeq3,
+                        style: TextStyle(
+                          color: index == 0
+                              ? Colors.white
+                              : item.timeq3 != '--'
+                                  ? const Color(0xff00ff00)
+                                  : Colors.white,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

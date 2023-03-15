@@ -2439,10 +2439,6 @@ class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
     _showPlaceholder = hidden;
   }
 
-  void play() {
-    _betterPlayerController.play();
-  }
-
   Widget _buildVideoPlaceholder() {
     return StreamBuilder<bool>(
       stream: _placeholderStreamController.stream,
@@ -2487,21 +2483,12 @@ class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
                             ),
                           ),
                         ),
-                  Align(
+                  const Align(
                     alignment: Alignment.center,
-                    child: GestureDetector(
-                      onTap: play,
-                      child: BackdropFilter(
-                        filter: ImageFilter.blur(
-                          sigmaX: 5.0,
-                          sigmaY: 5.0,
-                        ),
-                        child: const Icon(
-                          Icons.play_arrow_outlined,
-                          color: Colors.white,
-                          size: 48,
-                        ),
-                      ),
+                    child: Icon(
+                      Icons.play_arrow_outlined,
+                      color: Colors.white,
+                      size: 48,
                     ),
                   ),
                 ],
