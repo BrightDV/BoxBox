@@ -107,9 +107,11 @@ class DriverResultItem extends StatelessWidget {
                       child: Text(
                         item.time,
                         style: TextStyle(
-                          color: item.isFastest || item.time == 'DNF'
+                          color: item.isFastest
                               ? Colors.white
-                              : const Color(0xff00ff00),
+                              : item.time == 'DNF'
+                                  ? Colors.yellow
+                                  : const Color(0xff00ff00),
                         ),
                         textAlign: TextAlign.center,
                       ),
@@ -359,7 +361,9 @@ class QualificationResultsItem extends StatelessWidget {
                               ? Colors.white
                               : item.timeq1 != '- -' && item.timeq1 != 'DNF'
                                   ? const Color(0xff00ff00)
-                                  : Colors.white,
+                                  : item.timeq1 == 'DNF'
+                                      ? Colors.yellow
+                                      : Colors.white,
                         ),
                         textAlign: TextAlign.center,
                       ),
