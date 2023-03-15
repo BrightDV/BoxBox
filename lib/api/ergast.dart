@@ -293,7 +293,8 @@ class _ErgastApiCalls {
 
   Future<List<DriverResult>> getDriverResults(String driverId) async {
     var url = Uri.parse(
-        'https://ergast.com/api/f1/2022/drivers/$driverId/results.json');
+      'https://ergast.com/api/f1/${DateTime.now().year}/drivers/$driverId/results.json',
+    );
     var response = await http.get(url);
     Map<String, dynamic> responseAsJson = jsonDecode(response.body);
     List races = responseAsJson['MRData']['RaceTable']['Races'];
