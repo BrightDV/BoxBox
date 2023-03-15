@@ -63,6 +63,8 @@ class DriverResult {
   final String fastestLap;
   final String? lapsDone;
   final String? points;
+  final String? raceId;
+  final String? raceName;
 
   DriverResult(
     this.driverId,
@@ -78,6 +80,8 @@ class DriverResult {
     this.fastestLap, {
     this.lapsDone,
     this.points,
+    this.raceId,
+    this.raceName,
   });
 }
 

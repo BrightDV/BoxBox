@@ -291,6 +291,40 @@ class _ErgastApiCalls {
     return races;
   }
 
+  Future<List<DriverResult>> getDriverResults(String driverId) async {
+    var url = Uri.parse(
+        'https://ergast.com/api/f1/2022/drivers/$driverId/results.json');
+    var response = await http.get(url);
+    Map<String, dynamic> responseAsJson = jsonDecode(response.body);
+    List races = responseAsJson['MRData']['RaceTable']['Races'];
+    List<DriverResult> results = [];
+    for (var race in races) {
+      results.add(
+        DriverResult(
+          driverId,
+          race['Results'][0]['position'],
+          race['Results'][0]['number'],
+          race['Results'][0]['Driver']['givenName'],
+          race['Results'][0]['Driver']['familyName'],
+          race['Results'][0]['Driver']['code'],
+          race['Results'][0]['Constructor']['constructorId'],
+          race['Results'][0]['Time']?['time'] ?? 'DNF',
+          int.parse(race['Results'][0]['FastestLap']?['rank'] ?? '20') == 1
+              ? true
+              : false,
+          race['Results'][0]['FastestLap']?['Time']['time'] ?? '00:00:00',
+          race['Results'][0]['FastestLap']?['rank'] ?? '20',
+          lapsDone: race['Results'][0]['laps'],
+          points: race['Results'][0]['points'],
+          raceId: race['Circuit']['circuitId'],
+          raceName: race['raceName'],
+        ),
+      );
+    }
+
+    return results;
+  }
+
   FutureOr<List<Race>> getLastSchedule(bool toCome) async {
     var url =
         Uri.parse('https://ergast.com/api/f1/${DateTime.now().year}.json');
@@ -410,6 +444,11 @@ class ErgastApi {
 
   List<Race> formatLastSchedule(Map responseAsJson, bool toCome) {
     var data = _ErgastApiCalls().formatLastSchedule(responseAsJson, toCome);
+    return data;
+  }
+
+  Future<List<DriverResult>> getDriverResults(String driverId) async {
+    var data = await _ErgastApiCalls().getDriverResults(driverId);
     return data;
   }
 
