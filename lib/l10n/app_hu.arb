@@ -270,5 +270,9 @@
   "liveBlog": "Élő blog",
   "@liveBlog": {},
   "openLiveBlog": "Nyissa meg az élő blogot",
-  "@openLiveBlog": {}
+  "@openLiveBlog": {},
+  "information": "Információ",
+  "@information": {},
+  "results": "Eredmények",
+  "@results": {}
 }
