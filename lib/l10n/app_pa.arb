@@ -272,5 +272,9 @@
   "liveBlog": "ਲਾਈਵ ਬਲੌਗ",
   "@liveBlog": {},
   "openLiveBlog": "ਲਾਈਵ ਬਲੌਗ ਖੋਲੋ",
-  "@openLiveBlog": {}
+  "@openLiveBlog": {},
+  "information": "ਜਾਣਕਾਰੀ",
+  "@information": {},
+  "results": "ਨਤੀਜੇ",
+  "@results": {}
 }
