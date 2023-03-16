@@ -200,12 +200,26 @@ class _ErgastApiCalls {
   }
 
   FutureOr<List<Driver>> getLastStandings() async {
-    var url =
-        Uri.parse('https://ergast.com/api/f1/current/driverStandings.json');
+    var url = Uri.parse(
+      'https://ergast.com/api/f1/current/driverStandings.json',
+    );
     var response = await http.get(url);
     Map<String, dynamic> responseAsJson = jsonDecode(response.body);
     Hive.box('requests').put('driversStandings', responseAsJson);
     return formatLastStandings(responseAsJson);
+  }
+
+  Future<List<String>> getDriverList(String year) async {
+    var url = Uri.parse(
+      'https://ergast.com/api/f1/$year/drivers.json',
+    );
+    var response = await http.get(url);
+    Map<String, dynamic> responseAsJson = jsonDecode(response.body);
+    List<String> drivers = [];
+    for (var driver in responseAsJson['MRData']['DriverTable']['Drivers']) {
+      drivers.add(driver['familyName']);
+    }
+    return drivers;
   }
 
   List<Race> formatLastSchedule(Map responseAsJson, bool toCome) {
@@ -440,6 +454,11 @@ class ErgastApi {
 
   FutureOr<List<Driver>> getLastStandings() async {
     var data = await _ErgastApiCalls().getLastStandings();
+    return data;
+  }
+
+  Future<List<String>> getDriverList(String year) async {
+    var data = await _ErgastApiCalls().getDriverList(year);
     return data;
   }
 

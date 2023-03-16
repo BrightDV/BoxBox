@@ -19,7 +19,7 @@
 
 import 'package:boxbox/Screens/FormulaYou/home.dart';
 import 'package:boxbox/Screens/about.dart';
-import 'package:boxbox/Screens/compare.dart';
+import 'package:boxbox/Screens/Compare/compare_home.dart';
 import 'package:boxbox/Screens/hall_of_fame.dart';
 import 'package:boxbox/Screens/history.dart';
 import 'package:boxbox/Screens/MixedNews/mixed_news.dart';
@@ -157,27 +157,6 @@ class _MainDrawerState extends State<MainDrawer> {
             ),
             ListTile(
               title: Text(
-                'Compare',
-                style: TextStyle(
-                  color: useDarkMode ? Colors.white : Colors.black,
-                ),
-              ),
-              leading: Icon(
-                Icons.compare_arrows_outlined,
-                color: useDarkMode ? Colors.white : Colors.black,
-              ),
-              onTap: () {
-                Navigator.of(context).pop();
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const CompareScreen(),
-                  ),
-                );
-              },
-            ),
-            ListTile(
-              title: Text(
                 AppLocalizations.of(context)!.settings,
                 style: TextStyle(
                   color: useDarkMode ? Colors.white : Colors.black,
@@ -261,6 +240,29 @@ class _MainDrawerState extends State<MainDrawer> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => const TestScreen(),
+                        ),
+                      );
+                    },
+                  )
+                : Container(),
+            enableExperimentalFeatures
+                ? ListTile(
+                    title: Text(
+                      'Compare',
+                      style: TextStyle(
+                        color: useDarkMode ? Colors.white : Colors.black,
+                      ),
+                    ),
+                    leading: Icon(
+                      Icons.compare_arrows_outlined,
+                      color: useDarkMode ? Colors.white : Colors.black,
+                    ),
+                    onTap: () {
+                      Navigator.of(context).pop();
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const CompareHomeScreen(),
                         ),
                       );
                     },
