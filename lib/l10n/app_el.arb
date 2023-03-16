@@ -1,1 +1,10 @@
-{}
+{
+  "aboutDescription": "Το Box, Box! είναι ελεύθερο λογισμικό με copylefted, με άδεια χρήσης GPLv3+. Στόχος του είναι να επιτρέπει την παρακολούθηση της Formula 1 χωρίς διαφημίσεις ή trackers.",
+  "@aboutDescription": {},
+  "about": "Σχετικά με το",
+  "@about": {},
+  "aboutBottomLine": "Με ❤ από την BrightDV.",
+  "@aboutBottomLine": {},
+  "appearance": "Εμφάνιση",
+  "@appearance": {}
+}
