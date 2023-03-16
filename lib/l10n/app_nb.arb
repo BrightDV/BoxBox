@@ -270,5 +270,9 @@
   "openLiveBlog": "Åpne live-bloggen",
   "@openLiveBlog": {},
   "liveBlog": "Live-blogg",
-  "@liveBlog": {}
+  "@liveBlog": {},
+  "results": "Resultater",
+  "@results": {},
+  "information": "Informasjon",
+  "@information": {}
 }
