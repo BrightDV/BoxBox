@@ -71,7 +71,7 @@ void main() async {
 
   Workmanager().initialize(
     callbackDispatcher,
-    isInDebugMode: true,
+    isInDebugMode: false,
   );
   Workmanager().registerPeriodicTask(
     'newsLoader',
@@ -131,14 +131,14 @@ void callbackDispatcher() {
           );
           hiveBox.put('news', fetchedData);
         } else {
-          await AwesomeNotifications().createNotification(
+          /* await AwesomeNotifications().createNotification(
             content: NotificationContent(
               id: createUniqueId(),
               channelKey: 'newArticle',
               title: 'No new article published.',
               body: 'Nothing to show...',
             ),
-          );
+          ); */
         }
         return Future.value(true);
       } catch (error, stacktrace) {

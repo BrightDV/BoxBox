@@ -1,0 +1,9 @@
+- Add a result tab to the Driver Details screen with the latest race results.
+- Add a Team Details screen.
+- Update static images moved to another domain.
+- Add support for opening a video from a link.
+- Add support for the atomLiveBlogScribbleLive article part.
+- Add more ads & css filters in the mixed news' webview.
+- Switch the video header from a carousel to a story-like view (tap on the sides to skip).
+- Lot of UI improvements.
+- Update translations.
