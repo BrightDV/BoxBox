@@ -52,6 +52,7 @@ class _GrandPrixRunningScreenState extends State<GrandPrixRunningScreen> {
     widget.event.meetingName == 'United States'
         ? meetingName = 'USA'
         : meetingName = widget.event.meetingName;
+    meetingName = meetingName.replaceAll(' ', '_');
     return Scaffold(
       appBar: AppBar(
         title: SizedBox(
@@ -72,7 +73,6 @@ class _GrandPrixRunningScreenState extends State<GrandPrixRunningScreen> {
       body: SlidingUpPanel(
         backdropEnabled: true,
         color: useDarkMode ? const Color(0xff22222c) : Colors.white,
-        parallaxEnabled: true,
         panelBuilder: (scrollController) => Center(
           child: FutureBuilder<List<SessionDocument>>(
             future: FIAScraper().scrapeSessionDocuments(),
@@ -162,7 +162,7 @@ class _GrandPrixRunningScreenState extends State<GrandPrixRunningScreen> {
           children: [
             CachedNetworkImage(
               imageUrl:
-                  'https://www.formula1.com/content/dam/fom-website/2018-redesign-assets/Racehub%20header%20images%2016x9/$meetingName.jpg.transform/12col/image.jpg',
+                  'https://media.formula1.com/image/upload/f_auto/q_auto/v1677245021/content/dam/fom-website/2018-redesign-assets/Racehub%20header%20images%2016x9/$meetingName.jpg.transform/12col/image.jpg',
               placeholder: (context, url) => SizedBox(
                 height: MediaQuery.of(context).size.width / 16 / 9,
                 child: const LoadingIndicatorUtil(),
