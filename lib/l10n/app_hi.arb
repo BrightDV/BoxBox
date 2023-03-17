@@ -272,5 +272,9 @@
   "openLiveBlog": "लाइव ब्लॉग खोलें",
   "@openLiveBlog": {},
   "liveBlog": "लाइव ब्लॉग",
-  "@liveBlog": {}
+  "@liveBlog": {},
+  "information": "जानकारी",
+  "@information": {},
+  "results": "परिणाम",
+  "@results": {}
 }

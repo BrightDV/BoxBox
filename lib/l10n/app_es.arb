@@ -272,5 +272,9 @@
   "openLiveBlog": "Abrir el blog en directo",
   "@openLiveBlog": {},
   "liveBlog": "Blog en directo",
-  "@liveBlog": {}
+  "@liveBlog": {},
+  "information": "Información",
+  "@information": {},
+  "results": "Resultados",
+  "@results": {}
 }

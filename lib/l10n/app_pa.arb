@@ -253,7 +253,7 @@
   "@edit": {},
   "editOrderDescription": "ਕਿਸੇ ਆਈਟਮ ਨੂੰ ਦੇਰ ਤੱਕ ਦਬਾ ਕੇ ਆਰਡਰ ਬਦਲੋ।",
   "@editOrderDescription": {},
-  "from": "ਵੱਲੋਂ ",
+  "from": "ਤੋਂ ",
   "@from": {},
   "newsMix": "ਨਿਊਜ਼ ਮਿਕਸ",
   "@newsMix": {},
@@ -272,5 +272,9 @@
   "liveBlog": "ਲਾਈਵ ਬਲੌਗ",
   "@liveBlog": {},
   "openLiveBlog": "ਲਾਈਵ ਬਲੌਗ ਖੋਲੋ",
-  "@openLiveBlog": {}
+  "@openLiveBlog": {},
+  "information": "ਜਾਣਕਾਰੀ",
+  "@information": {},
+  "results": "ਨਤੀਜੇ",
+  "@results": {}
 }

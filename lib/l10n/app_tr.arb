@@ -270,5 +270,9 @@
   "liveBlog": "Canlı Blog",
   "@liveBlog": {},
   "openLiveBlog": "Canlı blog açın",
-  "@openLiveBlog": {}
+  "@openLiveBlog": {},
+  "information": "Bilgi",
+  "@information": {},
+  "results": "Sonuçlar",
+  "@results": {}
 }
