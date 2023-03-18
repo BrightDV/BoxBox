@@ -737,9 +737,7 @@ class _NewsListState extends State<NewsList> {
               scrollDirection: Axis.vertical,
               shrinkWrap: true,
               builderDelegate: PagedChildBuilderDelegate<News>(
-                itemBuilder: (context, item, index) {
-                  return NewsItem(item, false);
-                },
+                itemBuilder: (context, item, index) => NewsItem(item, false),
                 firstPageProgressIndicatorBuilder: (_) =>
                     const LoadingIndicatorUtil(),
                 firstPageErrorIndicatorBuilder: (_) =>

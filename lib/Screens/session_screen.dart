@@ -132,19 +132,42 @@ class _SessionScreenState extends State<SessionScreen> {
                   ],
                 ),
               )
-            : FreePracticeScreen(
-                widget.sessionFullName,
-                int.parse(
-                  widget.session.sessionsAbbreviation.substring(1),
-                ),
-                '',
-                0,
-                '',
-                raceUrl: widget.session.baseUrl.replaceAll(
-                  'session-type',
-                  'practice-${widget.session.sessionsAbbreviation.substring(1)}',
-                ),
-              )
+            : widget.session.startTime.isBefore(DateTime.now()) &&
+                    widget.session.endTime.isAfter(DateTime.now())
+                ? Scaffold(
+                    appBar: AppBar(
+                      title: Text(
+                        widget.sessionFullName,
+                      ),
+                    ),
+                    body: InAppWebView(
+                      initialUrlRequest: URLRequest(
+                        url: Uri.parse(
+                            "https://www.formula1.com/en/live-experience-webview.html"),
+                      ),
+                      gestureRecognizers: {
+                        Factory<VerticalDragGestureRecognizer>(
+                            () => VerticalDragGestureRecognizer()),
+                        Factory<HorizontalDragGestureRecognizer>(
+                            () => HorizontalDragGestureRecognizer()),
+                        Factory<ScaleGestureRecognizer>(
+                            () => ScaleGestureRecognizer()),
+                      },
+                    ),
+                  )
+                : FreePracticeScreen(
+                    widget.sessionFullName,
+                    int.parse(
+                      widget.session.sessionsAbbreviation.substring(1),
+                    ),
+                    '',
+                    0,
+                    '',
+                    raceUrl: widget.session.baseUrl.replaceAll(
+                      'session-type',
+                      'practice-${widget.session.sessionsAbbreviation.substring(1)}',
+                    ),
+                  )
         : Scaffold(
             appBar: AppBar(
               title: Text(
