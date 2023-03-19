@@ -861,7 +861,7 @@ class JoinArticlesParts extends StatelessWidget {
     List articleContent = article.articleContent;
     List<Widget> widgetsList = [];
     String heroImageUrl = "";
-    if (article.articleHero.isNotEmpty) {
+    if (article.articleHero != null) {
       if (article.articleHero['contentType'] == 'atomVideo') {
         heroImageUrl = article.articleHero['fields']['thumbnail']['url'];
       } else if (article.articleHero['contentType'] == 'atomVideoYouTube') {
@@ -1832,12 +1832,14 @@ class JoinArticlesParts extends StatelessWidget {
             article['title'],
             article['metaDescription'] ?? ' ',
             DateTime.parse(article['updatedAt']),
-            useDataSaverMode
-                ? article['thumbnail']['image']['renditions'] != null
-                    ? article['thumbnail']['image']['renditions']['2col']
-                    : article['thumbnail']['image']['url'] +
-                        '.transform/2col-retina/image.jpg'
-                : article['thumbnail']['image']['url'],
+            article['thumbnail'] != null
+                ? useDataSaverMode
+                    ? article['thumbnail']['image']['renditions'] != null
+                        ? article['thumbnail']['image']['renditions']['2col']
+                        : article['thumbnail']['image']['url'] +
+                            '.transform/2col-retina/image.jpg'
+                    : article['thumbnail']['image']['url']
+                : '',
           ),
           true,
         ),
