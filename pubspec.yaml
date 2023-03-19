@@ -15,7 +15,7 @@ publish_to: none
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 
 # Before releasing a new version, isInDebugMode must be set to false (main.dart#72).
-version: 0.5.3+17 # Read above before bump.
+version: 0.5.4+18 # Read above before bump.
 
 environment:
   sdk: ">=2.19.0 <3.4.4"
