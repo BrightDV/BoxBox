@@ -67,12 +67,16 @@ class F1NewsFetcher {
         element['metaDescription'] =
             element['metaDescription'].replaceAll("\n", "");
       }
-      String imageUrl = element['thumbnail']['image']['url'];
-      if (useDataSaverMode) {
-        if (element['thumbnail']['image']['renditions'] != null) {
-          imageUrl = element['thumbnail']['image']['renditions']['2col-retina'];
-        } else {
-          imageUrl += '.transform/2col-retina/image.jpg';
+      String imageUrl = "";
+      if (element['thumbnail'] != null) {
+        imageUrl = element['thumbnail']['image']['url'];
+        if (useDataSaverMode) {
+          if (element['thumbnail']['image']['renditions'] != null) {
+            imageUrl =
+                element['thumbnail']['image']['renditions']['2col-retina'];
+          } else {
+            imageUrl += '.transform/2col-retina/image.jpg';
+          }
         }
       }
       newsList.add(
@@ -186,8 +190,9 @@ class F1NewsFetcher {
       "apikey": apikey,
       "locale": "en",
     });
-    Map<String, dynamic> responseAsJson =
-        json.decode(utf8.decode(response.bodyBytes));
+    Map<String, dynamic> responseAsJson = json.decode(
+      utf8.decode(response.bodyBytes),
+    );
 
     Article article = Article(
       responseAsJson['id'],
@@ -195,7 +200,7 @@ class F1NewsFetcher {
       responseAsJson['title'],
       DateTime.parse(responseAsJson['createdAt']),
       responseAsJson['articleTags'],
-      responseAsJson['hero'],
+      responseAsJson['hero'] ?? {},
       responseAsJson['body'],
       responseAsJson['relatedArticles'],
     );
@@ -856,53 +861,54 @@ class JoinArticlesParts extends StatelessWidget {
     List articleContent = article.articleContent;
     List<Widget> widgetsList = [];
     String heroImageUrl = "";
-
-    if (article.articleHero['contentType'] == 'atomVideo') {
-      heroImageUrl = article.articleHero['fields']['thumbnail']['url'];
-    } else if (article.articleHero['contentType'] == 'atomVideoYouTube') {
-      heroImageUrl = article.articleHero['fields']['image']['url'];
-    } else if (article.articleHero['contentType'] == 'atomImageGallery') {
-      List<Widget> galleryHeroWidgets = [];
-      article.articleHero['fields']['imageGallery'].forEach(
-        (element) => galleryHeroWidgets.add(
-          ImageRenderer(
-            useDataSaverMode
-                ? element['renditions'] != null
-                    ? element['renditions']['2col-retina']
-                    : element['url'] + '.transform/3col-retina/image.jpg'
-                : element['url'],
+    if (article.articleHero.isNotEmpty) {
+      if (article.articleHero['contentType'] == 'atomVideo') {
+        heroImageUrl = article.articleHero['fields']['thumbnail']['url'];
+      } else if (article.articleHero['contentType'] == 'atomVideoYouTube') {
+        heroImageUrl = article.articleHero['fields']['image']['url'];
+      } else if (article.articleHero['contentType'] == 'atomImageGallery') {
+        List<Widget> galleryHeroWidgets = [];
+        article.articleHero['fields']['imageGallery'].forEach(
+          (element) => galleryHeroWidgets.add(
+            ImageRenderer(
+              useDataSaverMode
+                  ? element['renditions'] != null
+                      ? element['renditions']['2col-retina']
+                      : element['url'] + '.transform/3col-retina/image.jpg'
+                  : element['url'],
+            ),
           ),
-        ),
-      );
-      widgetsList.add(
-        CarouselSlider(
-          items: galleryHeroWidgets,
-          options: CarouselOptions(
-            viewportFraction: 1,
-            enableInfiniteScroll: true,
-            enlargeCenterPage: true,
-            autoPlay: true,
+        );
+        widgetsList.add(
+          CarouselSlider(
+            items: galleryHeroWidgets,
+            options: CarouselOptions(
+              viewportFraction: 1,
+              enableInfiniteScroll: true,
+              enlargeCenterPage: true,
+              autoPlay: true,
+            ),
           ),
-        ),
-      );
-      heroImageUrl = article.articleHero['fields']['imageGallery'][0]['url'];
-    } else {
-      widgetsList.add(
-        Hero(
-          tag: article.articleId,
-          child: ImageRenderer(
-            useDataSaverMode
-                ? article.articleHero['fields']['image']['renditions'] != null
-                    ? article.articleHero['fields']['image']['renditions']
-                        ['2col-retina']
-                    : article.articleHero['fields']['image']['url'] +
-                        '.transform/2col-retina/image.jpg'
-                : article.articleHero['fields']['image']['url'],
-            isHero: true,
+        );
+        heroImageUrl = article.articleHero['fields']['imageGallery'][0]['url'];
+      } else {
+        widgetsList.add(
+          Hero(
+            tag: article.articleId,
+            child: ImageRenderer(
+              useDataSaverMode
+                  ? article.articleHero['fields']['image']['renditions'] != null
+                      ? article.articleHero['fields']['image']['renditions']
+                          ['2col-retina']
+                      : article.articleHero['fields']['image']['url'] +
+                          '.transform/2col-retina/image.jpg'
+                  : article.articleHero['fields']['image']['url'],
+              isHero: true,
+            ),
           ),
-        ),
-      );
-      heroImageUrl = article.articleHero['fields']['image']['url'];
+        );
+        heroImageUrl = article.articleHero['fields']['image']['url'];
+      }
     }
 
     List articlesHistory =
