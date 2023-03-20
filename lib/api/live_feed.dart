@@ -46,6 +46,15 @@ class LiveFeedFetcher {
     return responseAsJson;
   }
 
+  Future<Map> getSessionDetails() async {
+    Map details = {};
+    Map sessionInfo = await getSessionInfo();
+    details["trackStatus"] = await getTrackStatus(sessionInfo);
+    details["lapCount"] = await getLapCount(sessionInfo);
+    details["timingData"] = await getTimingData(sessionInfo);
+    return details;
+  }
+
   Future<Map> getTrackStatus(Map sessionDataPath) async {
     var url = Uri.parse(
         'https://livetiming.formula1.com/static/${sessionDataPath["Path"]}TrackStatus.jsonStream');

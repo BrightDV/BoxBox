@@ -39,7 +39,7 @@ class LiveTimingScreen extends StatelessWidget {
       ),
       backgroundColor: Colors.white,
       body: FutureBuilder<Map>(
-        future: LiveFeedFetcher().getSessionInfo(),
+        future: LiveFeedFetcher().getSessionDetails(),
         builder: (context, snapshot) => snapshot.hasError
             ? RequestErrorWidget(snapshot.error.toString())
             : snapshot.hasData
@@ -51,8 +51,8 @@ class LiveTimingScreen extends StatelessWidget {
 }
 
 class LiveTimingScreenFragment extends StatefulWidget {
-  final Map sessionInfo;
-  const LiveTimingScreenFragment(this.sessionInfo, {Key? key})
+  final Map sessionDetails;
+  const LiveTimingScreenFragment(this.sessionDetails, {Key? key})
       : super(key: key);
 
   @override
@@ -64,7 +64,6 @@ class _LiveTimingScreenFragmentState extends State<LiveTimingScreenFragment> {
   late Timer timer;
   Duration initialDuration = const Duration(hours: 00, minutes: 0, seconds: 0);
   double sliderValue = 0;
-  int offset = 0;
   Widget slider = Container();
   List driverNumbers = [
     "1",
@@ -148,10 +147,11 @@ class _LiveTimingScreenFragmentState extends State<LiveTimingScreenFragment> {
     if (snapshotData[currentDurationFormated] != null) {
       print("ok");
       print(timingData.isEmpty);
+      print(currentDurationFormated);
       if (timingData.isEmpty &&
-          snapshotData[currentDurationFormated]['Lines'].isNotEmpty) {
+          snapshotData[currentDurationFormated][0]['Lines'].isNotEmpty) {
         print("adfding...");
-        timingData = snapshotData[currentDurationFormated];
+        timingData = snapshotData[currentDurationFormated][0];
         print("added!");
       } else {
         // other ossible events
@@ -256,11 +256,6 @@ class _LiveTimingScreenFragmentState extends State<LiveTimingScreenFragment> {
     return Leaderboard(timingData);
   }
 
-  Widget waitForStart() {
-    offset = -timer.tick;
-    return const LoadingIndicatorUtil();
-  }
-
   @override
   void initState() {
     super.initState();
@@ -281,8 +276,7 @@ class _LiveTimingScreenFragmentState extends State<LiveTimingScreenFragment> {
   @override
   Widget build(BuildContext context) {
     Duration currentDuration = Duration(
-      seconds:
-          initialDuration.inSeconds + timer.tick + sliderValue.toInt() + offset,
+      seconds: initialDuration.inSeconds + timer.tick + sliderValue.toInt(),
     );
     if (currentDuration.inSeconds >= 10800) {
       // avoid going above 3 hours
@@ -300,7 +294,7 @@ class _LiveTimingScreenFragmentState extends State<LiveTimingScreenFragment> {
                     7 // time needed to initialize the values
                 ? null
                 : sliderValue =
-                    -(initialDuration.inSeconds + timer.tick + offset) + value,
+                    -(initialDuration.inSeconds + timer.tick) + value,
             max: 10800,
             activeColor: currentDuration.inSeconds <
                     7 // time needed to initialize the values
@@ -310,54 +304,17 @@ class _LiveTimingScreenFragmentState extends State<LiveTimingScreenFragment> {
           Text(
             currentDurationFormated,
           ),
-          FutureBuilder<Map>(
-            future: LiveFeedFetcher().getTrackStatus(
-              widget.sessionInfo,
-            ),
-            builder: (context, snapshot) => Center(
-              child: snapshot.hasError
-                  ? RequestErrorWidget(
-                      snapshot.error.toString(),
-                    )
-                  : snapshot.hasData
-                      ? _updateTrackStatus(
-                          snapshot.data!,
-                          currentDurationFormated,
-                        )
-                      : waitForStart(),
-            ),
+          _updateTrackStatus(
+            widget.sessionDetails["trackStatus"],
+            currentDurationFormated,
           ),
-          FutureBuilder<Map>(
-            future: LiveFeedFetcher().getLapCount(widget.sessionInfo),
-            builder: (context, snapshot) => Center(
-              child: snapshot.hasError
-                  ? RequestErrorWidget(
-                      snapshot.error.toString(),
-                    )
-                  : snapshot.hasData
-                      ? _updateLapCount(
-                          snapshot.data!,
-                          currentDurationFormated,
-                        )
-                      : const LoadingIndicatorUtil(),
-            ),
+          _updateLapCount(
+            widget.sessionDetails["lapCount"],
+            currentDurationFormated,
           ),
-          FutureBuilder<Map>(
-            future: LiveFeedFetcher().getTimingData(
-              widget.sessionInfo,
-            ),
-            builder: (context, snapshot) => Center(
-              child: snapshot.hasError
-                  ? RequestErrorWidget(
-                      snapshot.error.toString(),
-                    )
-                  : snapshot.hasData
-                      ? _updateTimingData(
-                          snapshot.data!,
-                          currentDurationFormated,
-                        )
-                      : const LoadingIndicatorUtil(),
-            ),
+          _updateTimingData(
+            widget.sessionDetails["timingData"],
+            currentDurationFormated,
           ),
         ],
       ),
