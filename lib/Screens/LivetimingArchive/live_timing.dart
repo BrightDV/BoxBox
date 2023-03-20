@@ -64,7 +64,7 @@ class _LiveTimingScreenFragmentState extends State<LiveTimingScreenFragment> {
   late Timer timer;
   Duration initialDuration = const Duration(hours: 00, minutes: 0, seconds: 0);
   double sliderValue = 0;
-  Widget slider = Container();
+  Duration currentDuration = const Duration();
   List driverNumbers = [
     "1",
     "2",
@@ -110,9 +110,10 @@ class _LiveTimingScreenFragmentState extends State<LiveTimingScreenFragment> {
     return utf8.decode(filter.processed() ?? []);
   }
 
-  Widget _updateTrackStatus(Map snapshotData, String currentDurationFormated) {
-    if (snapshotData[currentDurationFormated] != null) {
-      trackStatus = snapshotData[currentDurationFormated];
+  Widget _updateTrackStatus(String currentDurationFormated) {
+    if (widget.sessionDetails["trackStatus"][currentDurationFormated] != null) {
+      trackStatus =
+          widget.sessionDetails["trackStatus"][currentDurationFormated];
     }
     return Container(
       height: 50,
@@ -128,9 +129,9 @@ class _LiveTimingScreenFragmentState extends State<LiveTimingScreenFragment> {
     );
   }
 
-  Widget _updateLapCount(Map snapshotData, String currentDurationFormated) {
-    if (snapshotData[currentDurationFormated] != null) {
-      lapCount = snapshotData[currentDurationFormated];
+  Widget _updateLapCount(String currentDurationFormated) {
+    if (widget.sessionDetails["lapCount"][currentDurationFormated] != null) {
+      lapCount = widget.sessionDetails["lapCount"][currentDurationFormated];
       if ((totalLaps == 0) && (lapCount['TotalLaps'] != null)) {
         totalLaps = lapCount['TotalLaps'];
       }
@@ -142,16 +143,20 @@ class _LiveTimingScreenFragmentState extends State<LiveTimingScreenFragment> {
     }
   }
 
-  Widget _updateTimingData(Map snapshotData, String currentDurationFormated) {
-    if (snapshotData[currentDurationFormated] != null) {
+  Widget _updateTimingData(String currentDurationFormated) {
+    if (widget.sessionDetails["timingData"][currentDurationFormated] != null) {
       if (timingData.isEmpty &&
-          snapshotData[currentDurationFormated][0]['Lines'].isNotEmpty) {
-        timingData = snapshotData[currentDurationFormated][0];
+          widget
+              .sessionDetails["timingData"][currentDurationFormated][0]['Lines']
+              .isNotEmpty) {
+        timingData =
+            widget.sessionDetails["timingData"][currentDurationFormated][0];
       } else {
         // other ossible events
         // {"Lines":{"47":{"Sectors":{"0":{"Segments":{"1":{"Status":0},"2":{"Status":0},"3":{"Status":0},"4":{"Status":0}}},"1":{"Segments":{"0":{"Status":0},"1":{"Status":0},"2":{"Status":0},"3":{"Status":0},"4":{"Status":0},"5":{"Status":0},"6":{"Status":0},"7":{"Status":0},"8":{"Status":0}}},"2":{"Segments":{"0":{"Status":0},"1":{"Status":0},"2":{"Status":0},"3":{"Status":0},"4":{"Status":0},"5":{"Status":0},"6":{"Status":0},"7":{"Status":0},"8":{"Status":0}}}}}}}
         //
-        for (Map element in snapshotData[currentDurationFormated]) {
+        for (Map element in widget.sessionDetails["timingData"]
+            [currentDurationFormated]) {
           String driverNumber = element['Lines'].keys.toList()[0];
           if (timingData['Lines'][driverNumber] == null) {
             element['Lines'][driverNumber] = {};
@@ -250,6 +255,21 @@ class _LiveTimingScreenFragmentState extends State<LiveTimingScreenFragment> {
     return Leaderboard(timingData);
   }
 
+  void skipToTime(Duration actualTime, int targetTimeInSeconds) {
+    print("skipping time...");
+    int i = 1;
+    for (i; i < targetTimeInSeconds; i++) {
+      actualTime = Duration(seconds: actualTime.inSeconds + i);
+      String currentDurationFormated =
+          "${actualTime.inHours.toString().padLeft(2, '0')}:${actualTime.inMinutes.remainder(60).toString().padLeft(2, '0')}:${actualTime.inSeconds.remainder(60).toString().padLeft(2, '0')}";
+      _updateLapCount(currentDurationFormated);
+      _updateTimingData(currentDurationFormated);
+      _updateTrackStatus(currentDurationFormated);
+    }
+    // update here because of the timer (next loop)
+    sliderValue = targetTimeInSeconds.toDouble();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -269,7 +289,7 @@ class _LiveTimingScreenFragmentState extends State<LiveTimingScreenFragment> {
 
   @override
   Widget build(BuildContext context) {
-    Duration currentDuration = Duration(
+    currentDuration = Duration(
       seconds: initialDuration.inSeconds + timer.tick + sliderValue.toInt(),
     );
     if (currentDuration.inSeconds >= 10800) {
@@ -287,8 +307,7 @@ class _LiveTimingScreenFragmentState extends State<LiveTimingScreenFragment> {
             onChanged: (value) => currentDuration.inSeconds <
                     7 // time needed to initialize the values
                 ? null
-                : sliderValue =
-                    -(initialDuration.inSeconds + timer.tick) + value,
+                : skipToTime(currentDuration, value.toInt()),
             max: 10800,
             activeColor: currentDuration.inSeconds <
                     7 // time needed to initialize the values
@@ -299,15 +318,12 @@ class _LiveTimingScreenFragmentState extends State<LiveTimingScreenFragment> {
             currentDurationFormated,
           ),
           _updateTrackStatus(
-            widget.sessionDetails["trackStatus"],
             currentDurationFormated,
           ),
           _updateLapCount(
-            widget.sessionDetails["lapCount"],
             currentDurationFormated,
           ),
           _updateTimingData(
-            widget.sessionDetails["timingData"],
             currentDurationFormated,
           ),
         ],
@@ -376,7 +392,9 @@ class _LeaderboardState extends State<Leaderboard> {
               driverNumbersToCode[values[index]['RacingNumber']] ?? '',
             ),
             subtitle: Text(
-              values[index]['IntervalToPositionAhead']['Value'] ?? '--',
+              values[index]['IntervalToPositionAhead'] != null
+                  ? values[index]['IntervalToPositionAhead']['Value']
+                  : '--',
             ),
           ),
         );
