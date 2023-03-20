@@ -209,15 +209,16 @@ class _ErgastApiCalls {
     return formatLastStandings(responseAsJson);
   }
 
-  Future<List<String>> getDriverList(String year) async {
+  Future<List<List<String>>> getDriverList(String year) async {
     var url = Uri.parse(
       'https://ergast.com/api/f1/$year/drivers.json',
     );
     var response = await http.get(url);
     Map<String, dynamic> responseAsJson = jsonDecode(response.body);
-    List<String> drivers = [];
+    List<List<String>> drivers = [[], []];
     for (var driver in responseAsJson['MRData']['DriverTable']['Drivers']) {
-      drivers.add(driver['familyName']);
+      drivers[0].add(driver['familyName']);
+      drivers[1].add(driver['driverId']);
     }
     return drivers;
   }
@@ -419,6 +420,35 @@ class _ErgastApiCalls {
     Map<String, dynamic> responseAsJson = jsonDecode(response.body);
     return !responseAsJson['MRData']['RaceTable']['Races'].isEmpty;
   }
+
+  Future<List<List<int>>> getCompareDriverResults(
+      String driverOne, String driverTwo) async {
+    List<List<int>> results = [[], []];
+    var url = Uri.parse(
+      //'https://ergast.com/api/f1/${DateTime.now().year}/drivers/$driverOne/results.json',
+      'https://ergast.com/api/f1/2022/drivers/$driverOne/results.json',
+    );
+    var response = await http.get(url);
+    Map<String, dynamic> responseAsJson = jsonDecode(response.body);
+    responseAsJson['MRData']['RaceTable']['Races'].forEach(
+      (race) => results[0].add(
+        int.parse(race["Results"][0]["position"]),
+      ),
+    );
+    url = Uri.parse(
+      //'https://ergast.com/api/f1/${DateTime.now().year}/drivers/$driverTwo/results.json',
+      'https://ergast.com/api/f1/2022/drivers/$driverTwo/results.json',
+    );
+    response = await http.get(url);
+    responseAsJson = jsonDecode(response.body);
+    responseAsJson['MRData']['RaceTable']['Races'].forEach(
+      (race) => results[1].add(
+        int.parse(race["Results"][0]["position"]),
+      ),
+    );
+
+    return results;
+  }
 }
 
 class ErgastApi {
@@ -457,7 +487,7 @@ class ErgastApi {
     return data;
   }
 
-  Future<List<String>> getDriverList(String year) async {
+  Future<List<List<String>>> getDriverList(String year) async {
     var data = await _ErgastApiCalls().getDriverList(year);
     return data;
   }
@@ -493,5 +523,11 @@ class ErgastApi {
 
   Future<Race> getRaceDetails(String round) async {
     return await _ErgastApiCalls().getRaceDetails(round);
+  }
+
+  Future<List<List<int>>> getCompareDriverResults(
+      String driverOne, String driverTwo) async {
+    return await _ErgastApiCalls()
+        .getCompareDriverResults(driverOne, driverTwo);
   }
 }

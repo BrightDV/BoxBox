@@ -44,7 +44,7 @@ class CompareDriversScreen extends StatelessWidget {
           ? Theme.of(context).scaffoldBackgroundColor
           : Colors.white,
       body: SingleChildScrollView(
-        child: FutureBuilder<List<String>>(
+        child: FutureBuilder<List<List<String>>>(
           // multiple years support
           future: ErgastApi().getDriverList('current'),
           builder: (context, snapshot) => snapshot.hasError
@@ -53,8 +53,8 @@ class CompareDriversScreen extends StatelessWidget {
                 )
               : snapshot.hasData
                   ? DriverSelector(
-                      snapshot.data!,
-                      snapshot.data!,
+                      snapshot.data![1],
+                      snapshot.data![0],
                     )
                   : const LoadingIndicatorUtil(),
         ),
@@ -193,6 +193,10 @@ class _DriverSelectorState extends State<DriverSelector> {
                   'drivers',
                   firstDriverSelected,
                   secondDriverSelected,
+                  widget.driverIds[
+                      widget.driverNames.indexOf(firstDriverSelected)],
+                  widget.driverIds[
+                      widget.driverNames.indexOf(secondDriverSelected)],
                 ),
               ),
             ),
