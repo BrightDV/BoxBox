@@ -67,26 +67,25 @@ class _LiveTimingScreenFragmentState extends State<LiveTimingScreenFragment> {
   Widget slider = Container();
   List driverNumbers = [
     "1",
-    "3",
+    "2",
     "4",
-    "5",
-    "6",
     "10",
     "11",
     "14",
     "16",
     "18",
     "20",
+    "21",
     "22",
     "23",
     "24",
     "27",
     "31",
     "44",
-    "47",
     "55",
     "63",
     "77",
+    "81",
   ];
   Map trackStatus = {};
   Map lapCount = {};
@@ -145,14 +144,9 @@ class _LiveTimingScreenFragmentState extends State<LiveTimingScreenFragment> {
 
   Widget _updateTimingData(Map snapshotData, String currentDurationFormated) {
     if (snapshotData[currentDurationFormated] != null) {
-      print("ok");
-      print(timingData.isEmpty);
-      print(currentDurationFormated);
       if (timingData.isEmpty &&
           snapshotData[currentDurationFormated][0]['Lines'].isNotEmpty) {
-        print("adfding...");
         timingData = snapshotData[currentDurationFormated][0];
-        print("added!");
       } else {
         // other ossible events
         // {"Lines":{"47":{"Sectors":{"0":{"Segments":{"1":{"Status":0},"2":{"Status":0},"3":{"Status":0},"4":{"Status":0}}},"1":{"Segments":{"0":{"Status":0},"1":{"Status":0},"2":{"Status":0},"3":{"Status":0},"4":{"Status":0},"5":{"Status":0},"6":{"Status":0},"7":{"Status":0},"8":{"Status":0}}},"2":{"Segments":{"0":{"Status":0},"1":{"Status":0},"2":{"Status":0},"3":{"Status":0},"4":{"Status":0},"5":{"Status":0},"6":{"Status":0},"7":{"Status":0},"8":{"Status":0}}}}}}}
@@ -333,26 +327,25 @@ class Leaderboard extends StatefulWidget {
 class _LeaderboardState extends State<Leaderboard> {
   Map<String, String> driverNumbersToCode = {
     "1": "VER",
-    "3": "RIC",
+    "2": "SAR",
     "4": "NOR",
-    "5": "VET",
-    "6": "LAT",
     "10": "GAS",
     "11": "PER",
     "14": "ALO",
     "16": "LEC",
     "18": "STR",
     "20": "MAG",
+    "21": "DEV",
     "22": "TSU",
     "23": "ALB",
     "24": "ZHO",
     "27": "HUL",
     "31": "OCO",
     "44": "HAM",
-    "47": "MSC",
     "55": "SAI",
     "63": "RUS",
     "77": "BOT",
+    "81": "PIA",
   };
   @override
   Widget build(BuildContext context) {
@@ -383,9 +376,7 @@ class _LeaderboardState extends State<Leaderboard> {
               driverNumbersToCode[values[index]['RacingNumber']] ?? '',
             ),
             subtitle: Text(
-              values[index]['IntervalToPositionAhead']['Value'] == ''
-                  ? '--'
-                  : values[index]['IntervalToPositionAhead']['Value'],
+              values[index]['IntervalToPositionAhead']['Value'] ?? '--',
             ),
           ),
         );

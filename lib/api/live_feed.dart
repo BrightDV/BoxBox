@@ -86,7 +86,6 @@ class LiveFeedFetcher {
         ),
       );
     }
-    print(responseAsJson);
     return responseAsJson;
   }
 
