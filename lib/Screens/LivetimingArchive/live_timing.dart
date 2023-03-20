@@ -258,13 +258,27 @@ class _LiveTimingScreenFragmentState extends State<LiveTimingScreenFragment> {
   void skipToTime(Duration actualTime, int targetTimeInSeconds) {
     print("skipping time...");
     int i = 1;
-    for (i; i < targetTimeInSeconds; i++) {
-      actualTime = Duration(seconds: actualTime.inSeconds + i);
-      String currentDurationFormated =
-          "${actualTime.inHours.toString().padLeft(2, '0')}:${actualTime.inMinutes.remainder(60).toString().padLeft(2, '0')}:${actualTime.inSeconds.remainder(60).toString().padLeft(2, '0')}";
-      _updateLapCount(currentDurationFormated);
-      _updateTimingData(currentDurationFormated);
-      _updateTrackStatus(currentDurationFormated);
+    print(actualTime.inSeconds);
+    print(targetTimeInSeconds);
+    if (actualTime.inSeconds < targetTimeInSeconds) {
+      for (i; i < targetTimeInSeconds; i++) {
+        actualTime = Duration(seconds: actualTime.inSeconds + i);
+        String currentDurationFormated =
+            "${actualTime.inHours.toString().padLeft(2, '0')}:${actualTime.inMinutes.remainder(60).toString().padLeft(2, '0')}:${actualTime.inSeconds.remainder(60).toString().padLeft(2, '0')}";
+        _updateLapCount(currentDurationFormated);
+        _updateTimingData(currentDurationFormated);
+        _updateTrackStatus(currentDurationFormated);
+      }
+    } else {
+      i = 180;
+      for (i; i < targetTimeInSeconds; i++) {
+        actualTime = Duration(seconds: i);
+        String currentDurationFormated =
+            "${actualTime.inHours.toString().padLeft(2, '0')}:${actualTime.inMinutes.remainder(60).toString().padLeft(2, '0')}:${actualTime.inSeconds.remainder(60).toString().padLeft(2, '0')}";
+        _updateLapCount(currentDurationFormated);
+        _updateTimingData(currentDurationFormated);
+        _updateTrackStatus(currentDurationFormated);
+      }
     }
     // update here because of the timer (next loop)
     sliderValue = targetTimeInSeconds.toDouble();
