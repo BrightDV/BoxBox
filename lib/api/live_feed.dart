@@ -46,8 +46,7 @@ class LiveFeedFetcher {
     return responseAsJson;
   }
 
-  Future<Map> getTrackStatus() async {
-    Map sessionDataPath = await getSessionInfo();
+  Future<Map> getTrackStatus(Map sessionDataPath) async {
     var url = Uri.parse(
         'https://livetiming.formula1.com/static/${sessionDataPath["Path"]}TrackStatus.jsonStream');
     var response = await http.get(url);
@@ -64,8 +63,7 @@ class LiveFeedFetcher {
     return responseAsJson;
   }
 
-  Future<Map> getLapCount() async {
-    Map sessionDataPath = await getSessionInfo();
+  Future<Map> getLapCount(Map sessionDataPath) async {
     var url = Uri.parse(
         'https://livetiming.formula1.com/static/${sessionDataPath["Path"]}LapCount.jsonStream');
     var response = await http.get(url);
@@ -79,11 +77,11 @@ class LiveFeedFetcher {
         ),
       );
     }
+    print(responseAsJson);
     return responseAsJson;
   }
 
-  Future<Map> getTimingData() async {
-    Map sessionDataPath = await getSessionInfo();
+  Future<Map> getTimingData(Map sessionDataPath) async {
     var url = Uri.parse(
         'https://livetiming.formula1.com/static/${sessionDataPath["Path"]}TimingData.jsonStream');
     var response = await http.get(url);
@@ -110,8 +108,7 @@ class LiveFeedFetcher {
     return responseAsJson;
   }
 
-  Future<Map> getTimingStats() async {
-    Map sessionDataPath = await getSessionInfo();
+  Future<Map> getTimingStats(Map sessionDataPath) async {
     var url = Uri.parse(
         'https://livetiming.formula1.com/static/${sessionDataPath["Path"]}TimingStats.jsonStream');
     var response = await http.get(url);

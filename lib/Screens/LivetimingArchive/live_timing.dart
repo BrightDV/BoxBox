@@ -20,23 +20,52 @@
  */
 
 import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
 
 import 'package:boxbox/api/live_feed.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/request_error.dart';
 import 'package:flutter/material.dart';
 
-class LiveTimingScreen extends StatefulWidget {
-  const LiveTimingScreen({Key? key}) : super(key: key);
+class LiveTimingScreen extends StatelessWidget {
+  const LiveTimingScreen({super.key});
 
   @override
-  State<LiveTimingScreen> createState() => _LiveTimingScreenState();
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Live Timing Archive'),
+      ),
+      backgroundColor: Colors.white,
+      body: FutureBuilder<Map>(
+        future: LiveFeedFetcher().getSessionInfo(),
+        builder: (context, snapshot) => snapshot.hasError
+            ? RequestErrorWidget(snapshot.error.toString())
+            : snapshot.hasData
+                ? LiveTimingScreenFragment(snapshot.data!)
+                : const LoadingIndicatorUtil(),
+      ),
+    );
+  }
 }
 
-class _LiveTimingScreenState extends State<LiveTimingScreen> {
+class LiveTimingScreenFragment extends StatefulWidget {
+  final Map sessionInfo;
+  const LiveTimingScreenFragment(this.sessionInfo, {Key? key})
+      : super(key: key);
+
+  @override
+  State<LiveTimingScreenFragment> createState() =>
+      _LiveTimingScreenFragmentState();
+}
+
+class _LiveTimingScreenFragmentState extends State<LiveTimingScreenFragment> {
   late Timer timer;
   Duration initialDuration = const Duration(hours: 00, minutes: 0, seconds: 0);
   double sliderValue = 0;
+  int offset = 0;
+  Widget slider = Container();
   List driverNumbers = [
     "1",
     "3",
@@ -74,6 +103,15 @@ class _LiveTimingScreenState extends State<LiveTimingScreen> {
     'VSCEnding': '7'
   };
 
+  String decodeZlibCompressed(String base64Encoded) {
+    final b64decoded = base64.decode(base64Encoded);
+    final filter = RawZLibFilter.inflateFilter(
+      windowBits: -ZLibOption.maxLevel,
+    );
+    filter.process(b64decoded, 0, b64decoded.length);
+    return utf8.decode(filter.processed() ?? []);
+  }
+
   Widget _updateTrackStatus(Map snapshotData, String currentDurationFormated) {
     if (snapshotData[currentDurationFormated] != null) {
       trackStatus = snapshotData[currentDurationFormated];
@@ -108,14 +146,22 @@ class _LiveTimingScreenState extends State<LiveTimingScreen> {
 
   Widget _updateTimingData(Map snapshotData, String currentDurationFormated) {
     if (snapshotData[currentDurationFormated] != null) {
-      if (snapshotData[currentDurationFormated][0]['Withheld'] != null) {
-        timingData = snapshotData[currentDurationFormated][0];
+      print("ok");
+      print(timingData.isEmpty);
+      if (timingData.isEmpty &&
+          snapshotData[currentDurationFormated]['Lines'].isNotEmpty) {
+        print("adfding...");
+        timingData = snapshotData[currentDurationFormated];
+        print("added!");
       } else {
         // other ossible events
         // {"Lines":{"47":{"Sectors":{"0":{"Segments":{"1":{"Status":0},"2":{"Status":0},"3":{"Status":0},"4":{"Status":0}}},"1":{"Segments":{"0":{"Status":0},"1":{"Status":0},"2":{"Status":0},"3":{"Status":0},"4":{"Status":0},"5":{"Status":0},"6":{"Status":0},"7":{"Status":0},"8":{"Status":0}}},"2":{"Segments":{"0":{"Status":0},"1":{"Status":0},"2":{"Status":0},"3":{"Status":0},"4":{"Status":0},"5":{"Status":0},"6":{"Status":0},"7":{"Status":0},"8":{"Status":0}}}}}}}
         //
         for (Map element in snapshotData[currentDurationFormated]) {
           String driverNumber = element['Lines'].keys.toList()[0];
+          if (timingData['Lines'][driverNumber] == null) {
+            element['Lines'][driverNumber] = {};
+          }
           if (element['Lines'][driverNumber]['InPit'] != null) {
             // example: 01:20:52.879{"Lines":{"23":{"InPit":true,"Status":80}}}
             timingData['Lines'][driverNumber]['InPit'] =
@@ -210,6 +256,11 @@ class _LiveTimingScreenState extends State<LiveTimingScreen> {
     return Leaderboard(timingData);
   }
 
+  Widget waitForStart() {
+    offset = -timer.tick;
+    return const LoadingIndicatorUtil();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -230,7 +281,8 @@ class _LiveTimingScreenState extends State<LiveTimingScreen> {
   @override
   Widget build(BuildContext context) {
     Duration currentDuration = Duration(
-      seconds: initialDuration.inSeconds + timer.tick + sliderValue.toInt(),
+      seconds:
+          initialDuration.inSeconds + timer.tick + sliderValue.toInt() + offset,
     );
     if (currentDuration.inSeconds >= 10800) {
       // avoid going above 3 hours
@@ -239,76 +291,75 @@ class _LiveTimingScreenState extends State<LiveTimingScreen> {
     String currentDurationFormated =
         "${currentDuration.inHours.toString().padLeft(2, '0')}:${currentDuration.inMinutes.remainder(60).toString().padLeft(2, '0')}:${currentDuration.inSeconds.remainder(60).toString().padLeft(2, '0')}";
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Live Timing Archive'),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Slider(
-              value: currentDuration.inSeconds.toDouble(),
-              onChanged: (value) => currentDuration.inSeconds <
-                      7 // time needed to initialize the values
-                  ? null
-                  : sliderValue =
-                      -(initialDuration.inSeconds + timer.tick) + value,
-              max: 10800,
-              activeColor: currentDuration.inSeconds <
-                      7 // time needed to initialize the values
-                  ? Theme.of(context).primaryColor.withOpacity(0.5)
-                  : Theme.of(context).primaryColor,
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          Slider(
+            value: currentDuration.inSeconds.toDouble(),
+            onChanged: (value) => currentDuration.inSeconds <
+                    7 // time needed to initialize the values
+                ? null
+                : sliderValue =
+                    -(initialDuration.inSeconds + timer.tick + offset) + value,
+            max: 10800,
+            activeColor: currentDuration.inSeconds <
+                    7 // time needed to initialize the values
+                ? Theme.of(context).primaryColor.withOpacity(0.5)
+                : Theme.of(context).primaryColor,
+          ),
+          Text(
+            currentDurationFormated,
+          ),
+          FutureBuilder<Map>(
+            future: LiveFeedFetcher().getTrackStatus(
+              widget.sessionInfo,
             ),
-            Text(
-              currentDurationFormated,
+            builder: (context, snapshot) => Center(
+              child: snapshot.hasError
+                  ? RequestErrorWidget(
+                      snapshot.error.toString(),
+                    )
+                  : snapshot.hasData
+                      ? _updateTrackStatus(
+                          snapshot.data!,
+                          currentDurationFormated,
+                        )
+                      : waitForStart(),
             ),
-            FutureBuilder<Map>(
-              future: LiveFeedFetcher().getTrackStatus(),
-              builder: (context, snapshot) => Center(
-                child: snapshot.hasError
-                    ? RequestErrorWidget(
-                        snapshot.error.toString(),
-                      )
-                    : snapshot.hasData
-                        ? _updateTrackStatus(
-                            snapshot.data!,
-                            currentDurationFormated,
-                          )
-                        : const LoadingIndicatorUtil(),
-              ),
+          ),
+          FutureBuilder<Map>(
+            future: LiveFeedFetcher().getLapCount(widget.sessionInfo),
+            builder: (context, snapshot) => Center(
+              child: snapshot.hasError
+                  ? RequestErrorWidget(
+                      snapshot.error.toString(),
+                    )
+                  : snapshot.hasData
+                      ? _updateLapCount(
+                          snapshot.data!,
+                          currentDurationFormated,
+                        )
+                      : const LoadingIndicatorUtil(),
             ),
-            FutureBuilder<Map>(
-              future: LiveFeedFetcher().getLapCount(),
-              builder: (context, snapshot) => Center(
-                child: snapshot.hasError
-                    ? RequestErrorWidget(
-                        snapshot.error.toString(),
-                      )
-                    : snapshot.hasData
-                        ? _updateLapCount(
-                            snapshot.data!,
-                            currentDurationFormated,
-                          )
-                        : const LoadingIndicatorUtil(),
-              ),
+          ),
+          FutureBuilder<Map>(
+            future: LiveFeedFetcher().getTimingData(
+              widget.sessionInfo,
             ),
-            FutureBuilder<Map>(
-              future: LiveFeedFetcher().getTimingData(),
-              builder: (context, snapshot) => Center(
-                child: snapshot.hasError
-                    ? RequestErrorWidget(
-                        snapshot.error.toString(),
-                      )
-                    : snapshot.hasData
-                        ? _updateTimingData(
-                            snapshot.data!,
-                            currentDurationFormated,
-                          )
-                        : const LoadingIndicatorUtil(),
-              ),
+            builder: (context, snapshot) => Center(
+              child: snapshot.hasError
+                  ? RequestErrorWidget(
+                      snapshot.error.toString(),
+                    )
+                  : snapshot.hasData
+                      ? _updateTimingData(
+                          snapshot.data!,
+                          currentDurationFormated,
+                        )
+                      : const LoadingIndicatorUtil(),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
