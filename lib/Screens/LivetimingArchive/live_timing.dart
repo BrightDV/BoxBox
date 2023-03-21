@@ -157,97 +157,105 @@ class _LiveTimingScreenFragmentState extends State<LiveTimingScreenFragment> {
         //
         for (Map element in widget.sessionDetails["timingData"]
             [currentDurationFormated]) {
-          String driverNumber = element['Lines'].keys.toList()[0];
-          if (timingData['Lines'][driverNumber] == null) {
-            element['Lines'][driverNumber] = {};
-          }
-          if (element['Lines'][driverNumber]['InPit'] != null) {
-            // example: 01:20:52.879{"Lines":{"23":{"InPit":true,"Status":80}}}
-            timingData['Lines'][driverNumber]['InPit'] =
-                element['Lines'][driverNumber]['InPit'];
-            timingData['Lines'][driverNumber]['Status'] =
-                element['Lines'][driverNumber]['Status'];
-            if (element['Lines'][driverNumber]['NumberOfPitStops'] != null) {
-              // update the number of pits
-              // example: 01:20:52.879{"Lines":{"23":{"InPit":true,"Status":80,"NumberOfPitStops":1}}}
-              timingData['Lines'][driverNumber]['NumberOfPitStops'] =
-                  element['Lines'][driverNumber]['NumberOfPitStops'];
+          List<String> driverNumbers = element['Lines'].keys.toList();
+          for (var driverNumber in driverNumbers) {
+            if (timingData['Lines'][driverNumber] == null) {
+              element['Lines'][driverNumber] = {};
             }
-          }
-          if (element['Lines'][driverNumber]['GapToLeader'] != null) {
-            // example: {"Lines":{"11":{"GapToLeader":"+0.238","IntervalToPositionAhead":{"Value":"+0.238"}}}}
-            timingData['Lines'][driverNumber]['GapToLeader'] =
-                element['Lines'][driverNumber]['GapToLeader'];
-            timingData['Lines'][driverNumber]['IntervalToPositionAhead'] =
-                element['Lines'][driverNumber]['IntervalToPositionAhead'];
-
-            if (element['Lines'][driverNumber]['Sectors'] != null) {
-              String sector =
-                  element['Lines'][driverNumber]['Sectors'].keys.toList()[0];
-              if ((element['Lines'][driverNumber]['Sectors'][sector]['Segments']
-                          .runtimeType ==
-                      List) &&
-                  (element['Lines'][driverNumber]['Sectors'][sector]['Segments']
-                          [0]['Status'] !=
-                      null)) {
-                // first values sent, they initiate the Segments' matrix
-                for (int i = 0; i < 3; i++) {
-                  timingData['Lines'][driverNumber]['Sectors'][i]['Segments'] =
-                      element['Lines'][driverNumber]['Sectors'][sector]
-                          ['Segments'][i];
-                }
-              } else if (element['Lines'][driverNumber]['Sectors'][sector]
-                      ['Segments'] !=
-                  null) {
-                // {31: {Sectors: {2: {Segments: {6: {Status: 2048}}}}}}
-                String segment = element['Lines'][driverNumber]['Sectors']
-                        [sector]['Segments']
-                    .keys
-                    .toList()[0];
-                timingData['Lines'][driverNumber]['Sectors'][int.parse(sector)]
-                    ['Value'] = segment;
-                timingData['Lines'][driverNumber]['Sectors'][int.parse(sector)]
-                    ['Status'] = element['Lines']
-                        [driverNumber]['Sectors'][sector]['Segments'][segment]
-                    ['Status'];
-              } else if (element['Lines'][driverNumber]['Speeds'] != null) {
-                // example: {11: {Sectors: {1: {Value: 39.188}}, Speeds: {I2: {Value: 295}}}}
-                List<String> speeds =
-                    element['Lines'][driverNumber]['Speeds'].keys.toList();
-                for (String speed in speeds) {
-                  timingData['Lines'][driverNumber]['Speeds'][speed]['Value'] =
-                      element['Lines'][driverNumber]['Speeds'][speed]['Value'];
-                  if (element['Lines'][driverNumber]['Speeds'][speed]
-                          ['PersonalFastest'] !=
-                      null) {
-                    timingData['Lines'][driverNumber]['Speeds'][speed]
-                            ['PersonalFastest'] =
-                        element['Lines'][driverNumber]['Speeds'][speed]
-                            ['PersonalFastest'];
-                  }
-                  if (element['Lines'][driverNumber]['Speeds'][speed]
-                          ['OverallFastest'] !=
-                      null) {
-                    timingData['Lines'][driverNumber]['Speeds'][speed]
-                            ['OverallFastest'] =
-                        element['Lines'][driverNumber]['Speeds'][speed]
-                            ['OverallFastest'];
-                  }
-                }
-              } else {
-                //print("Unfound!");
-                //print(element['Lines']);
+            if (element['Lines'][driverNumber]['InPit'] != null) {
+              // example: 01:20:52.879{"Lines":{"23":{"InPit":true,"Status":80}}}
+              timingData['Lines'][driverNumber]['InPit'] =
+                  element['Lines'][driverNumber]['InPit'];
+              timingData['Lines'][driverNumber]['Status'] =
+                  element['Lines'][driverNumber]['Status'];
+              if (element['Lines'][driverNumber]['NumberOfPitStops'] != null) {
+                // update the number of pits
+                // example: 01:20:52.879{"Lines":{"23":{"InPit":true,"Status":80,"NumberOfPitStops":1}}}
+                timingData['Lines'][driverNumber]['NumberOfPitStops'] =
+                    element['Lines'][driverNumber]['NumberOfPitStops'];
               }
             }
-          }
-          if (element['Lines'][driverNumber]['Position'] != null) {
-            print("updating!!!");
-            // {"20":{"IntervalToPositionAhead":{"Value":""},"Line":17,"Position":"17"},"23":{"Line":18,"Position":"18"}}
-            timingData['Lines'][driverNumber]['Position'] =
-                element['Lines'][driverNumber]['Position'];
-            timingData['Lines'][driverNumber]['Line'] =
-                element['Lines'][driverNumber]['Line'];
-            print("updated");
+            if (element['Lines'][driverNumber]['GapToLeader'] != null) {
+              // example: {"Lines":{"11":{"GapToLeader":"+0.238","IntervalToPositionAhead":{"Value":"+0.238"}}}}
+              timingData['Lines'][driverNumber]['GapToLeader'] =
+                  element['Lines'][driverNumber]['GapToLeader'];
+              timingData['Lines'][driverNumber]['IntervalToPositionAhead'] =
+                  element['Lines'][driverNumber]['IntervalToPositionAhead'];
+
+              if (element['Lines'][driverNumber]['Sectors'] != null) {
+                String sector =
+                    element['Lines'][driverNumber]['Sectors'].keys.toList()[0];
+                if ((element['Lines'][driverNumber]['Sectors'][sector]
+                                ['Segments']
+                            .runtimeType ==
+                        List) &&
+                    (element['Lines'][driverNumber]['Sectors'][sector]
+                            ['Segments'][0]['Status'] !=
+                        null)) {
+                  // first values sent, they initiate the Segments' matrix
+                  for (int i = 0; i < 3; i++) {
+                    timingData['Lines'][driverNumber]['Sectors'][i]
+                            ['Segments'] =
+                        element['Lines'][driverNumber]['Sectors'][sector]
+                            ['Segments'][i];
+                  }
+                } else if (element['Lines'][driverNumber]['Sectors'][sector]
+                        ['Segments'] !=
+                    null) {
+                  // {31: {Sectors: {2: {Segments: {6: {Status: 2048}}}}}}
+                  String segment = element['Lines'][driverNumber]['Sectors']
+                          [sector]['Segments']
+                      .keys
+                      .toList()[0];
+                  timingData['Lines'][driverNumber]['Sectors']
+                      [int.parse(sector)]['Value'] = segment;
+                  timingData['Lines'][driverNumber]['Sectors']
+                      [int.parse(sector)]['Status'] = element['Lines']
+                          [driverNumber]['Sectors'][sector]['Segments'][segment]
+                      ['Status'];
+                } else if (element['Lines'][driverNumber]['Speeds'] != null) {
+                  // example: {11: {Sectors: {1: {Value: 39.188}}, Speeds: {I2: {Value: 295}}}}
+                  List<String> speeds =
+                      element['Lines'][driverNumber]['Speeds'].keys.toList();
+                  for (String speed in speeds) {
+                    timingData['Lines'][driverNumber]['Speeds'][speed]
+                            ['Value'] =
+                        element['Lines'][driverNumber]['Speeds'][speed]
+                            ['Value'];
+                    if (element['Lines'][driverNumber]['Speeds'][speed]
+                            ['PersonalFastest'] !=
+                        null) {
+                      timingData['Lines'][driverNumber]['Speeds'][speed]
+                              ['PersonalFastest'] =
+                          element['Lines'][driverNumber]['Speeds'][speed]
+                              ['PersonalFastest'];
+                    }
+                    if (element['Lines'][driverNumber]['Speeds'][speed]
+                            ['OverallFastest'] !=
+                        null) {
+                      timingData['Lines'][driverNumber]['Speeds'][speed]
+                              ['OverallFastest'] =
+                          element['Lines'][driverNumber]['Speeds'][speed]
+                              ['OverallFastest'];
+                    }
+                  }
+                } else {
+                  print("Unfound!");
+                  print(element['Lines']);
+                }
+              }
+            }
+            if (element['Lines'][driverNumber]['Position'] != null) {
+              // {"20":{"IntervalToPositionAhead":{"Value":""},"Line":17,"Position":"17"},"23":{"Line":18,"Position":"18"}}
+              print(
+                  '$driverNumber: From ${timingData['Lines'][driverNumber]['Position']}');
+
+              timingData['Lines'][driverNumber]['Position'] =
+                  element['Lines'][driverNumber]['Position'];
+              timingData['Lines'][driverNumber]['Line'] =
+                  element['Lines'][driverNumber]['Line'];
+              print('to ${timingData['Lines'][driverNumber]['Position']}\n');
+            }
           }
         }
       }
@@ -256,10 +264,7 @@ class _LiveTimingScreenFragmentState extends State<LiveTimingScreenFragment> {
   }
 
   void skipToTime(Duration actualTime, int targetTimeInSeconds) {
-    print("skipping time...");
     int i = 1;
-    print(actualTime.inSeconds);
-    print(targetTimeInSeconds);
     if (actualTime.inSeconds < targetTimeInSeconds) {
       for (i; i + actualTime.inSeconds < targetTimeInSeconds; i++) {
         actualTime = Duration(seconds: actualTime.inSeconds + i);
@@ -270,7 +275,7 @@ class _LiveTimingScreenFragmentState extends State<LiveTimingScreenFragment> {
         _updateTrackStatus(currentDurationFormated);
       }
     } else {
-      i = 180;
+      i = 320; // it should be equal to zero at first
       for (i; i < targetTimeInSeconds; i++) {
         actualTime = Duration(seconds: i);
         String currentDurationFormated =
@@ -280,6 +285,7 @@ class _LiveTimingScreenFragmentState extends State<LiveTimingScreenFragment> {
         _updateTrackStatus(currentDurationFormated);
       }
     }
+    // need to update here because of the timer (next loop) -> time backward lol
     sliderValue = targetTimeInSeconds.toDouble();
   }
 
@@ -345,16 +351,11 @@ class _LiveTimingScreenFragmentState extends State<LiveTimingScreenFragment> {
   }
 }
 
-class Leaderboard extends StatefulWidget {
+class Leaderboard extends StatelessWidget {
   final Map items;
-  const Leaderboard(this.items, {Key? key}) : super(key: key);
+  Leaderboard(this.items, {Key? key}) : super(key: key);
 
-  @override
-  State<Leaderboard> createState() => _LeaderboardState();
-}
-
-class _LeaderboardState extends State<Leaderboard> {
-  Map<String, String> driverNumbersToCode = {
+  final Map<String, String> driverNumbersToCode = {
     "1": "VER",
     "2": "SAR",
     "4": "NOR",
@@ -378,35 +379,37 @@ class _LeaderboardState extends State<Leaderboard> {
   };
   @override
   Widget build(BuildContext context) {
-    if (widget.items.isEmpty) {
+    if (items.isEmpty) {
       return const LoadingIndicatorUtil();
     } else {
-      if (widget.items['Lines'] == null) {
+      if (items['Lines'] == null) {
         return const LoadingIndicatorUtil();
       } else {
-        List values = widget.items['Lines'].values.toList();
+        List values = items['Lines'].values.toList();
         values.sort(
           (a, b) => int.parse(
-            a['Position'],
+            a['Position'] ?? '20',
           ).compareTo(
             int.parse(
-              b['Position'],
+              b['Position'] ?? '20',
             ),
           ),
         );
         return ListView.builder(
-          itemCount: widget.items['Lines'].length,
+          itemCount: items['Lines'].length,
           shrinkWrap: true,
           itemBuilder: (context, index) => ListTile(
             leading: Text(
               values[index]['Position'],
             ),
             title: Text(
-              driverNumbersToCode[values[index]['RacingNumber']] ?? '',
+              "${values[index]['RacingNumber']} - ${driverNumbersToCode[values[index]['RacingNumber']] ?? ''}",
             ),
             subtitle: Text(
               values[index]['IntervalToPositionAhead'] != null
-                  ? values[index]['IntervalToPositionAhead']['Value']
+                  ? values[index]['IntervalToPositionAhead']['Value'] == ''
+                      ? '--'
+                      : values[index]['IntervalToPositionAhead']['Value']
                   : '--',
             ),
           ),
