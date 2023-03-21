@@ -251,7 +251,7 @@ class _LiveTimingScreenFragmentState extends State<LiveTimingScreenFragment> {
           }
         }
       }
-    } // how to handle overtakes which are skipped????
+    }
     return Leaderboard(timingData);
   }
 
@@ -261,7 +261,7 @@ class _LiveTimingScreenFragmentState extends State<LiveTimingScreenFragment> {
     print(actualTime.inSeconds);
     print(targetTimeInSeconds);
     if (actualTime.inSeconds < targetTimeInSeconds) {
-      for (i; i < targetTimeInSeconds; i++) {
+      for (i; i + actualTime.inSeconds < targetTimeInSeconds; i++) {
         actualTime = Duration(seconds: actualTime.inSeconds + i);
         String currentDurationFormated =
             "${actualTime.inHours.toString().padLeft(2, '0')}:${actualTime.inMinutes.remainder(60).toString().padLeft(2, '0')}:${actualTime.inSeconds.remainder(60).toString().padLeft(2, '0')}";
@@ -280,7 +280,6 @@ class _LiveTimingScreenFragmentState extends State<LiveTimingScreenFragment> {
         _updateTrackStatus(currentDurationFormated);
       }
     }
-    // update here because of the timer (next loop)
     sliderValue = targetTimeInSeconds.toDouble();
   }
 
