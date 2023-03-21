@@ -130,6 +130,7 @@ class _LiveTimingScreenFragmentState extends State<LiveTimingScreenFragment> {
   }
 
   Widget _updateLapCount(String currentDurationFormated) {
+    // needs a global string
     if (widget.sessionDetails["lapCount"][currentDurationFormated] != null) {
       lapCount = widget.sessionDetails["lapCount"][currentDurationFormated];
       if ((totalLaps == 0) && (lapCount['TotalLaps'] != null)) {
@@ -247,14 +248,14 @@ class _LiveTimingScreenFragmentState extends State<LiveTimingScreenFragment> {
             }
             if (element['Lines'][driverNumber]['Position'] != null) {
               // {"20":{"IntervalToPositionAhead":{"Value":""},"Line":17,"Position":"17"},"23":{"Line":18,"Position":"18"}}
-              print(
-                  '$driverNumber: From ${timingData['Lines'][driverNumber]['Position']}');
+              //print(
+              //    '$driverNumber: From ${timingData['Lines'][driverNumber]['Position']}');
 
               timingData['Lines'][driverNumber]['Position'] =
                   element['Lines'][driverNumber]['Position'];
               timingData['Lines'][driverNumber]['Line'] =
                   element['Lines'][driverNumber]['Line'];
-              print('to ${timingData['Lines'][driverNumber]['Position']}\n');
+              //print('to ${timingData['Lines'][driverNumber]['Position']}\n');
             }
           }
         }
@@ -398,6 +399,7 @@ class Leaderboard extends StatelessWidget {
         return ListView.builder(
           itemCount: items['Lines'].length,
           shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
           itemBuilder: (context, index) => ListTile(
             leading: Text(
               values[index]['Position'],
