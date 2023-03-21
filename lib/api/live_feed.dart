@@ -19,6 +19,7 @@
 
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:http/http.dart' as http;
 
@@ -86,6 +87,8 @@ class LiveFeedFetcher {
         ),
       );
     }
+    print(responseAsJson);
+    print("#### Lap Count ####");
     return responseAsJson;
   }
 
@@ -130,6 +133,36 @@ class LiveFeedFetcher {
         ),
       );
     }
+    return responseAsJson;
+  }
+
+  String decodeZlibCompressed(String base64Encoded) {
+    final b64decoded = base64.decode(base64Encoded);
+    final filter = RawZLibFilter.inflateFilter(
+      windowBits: -ZLibOption.maxLevel,
+    );
+    filter.process(b64decoded, 0, b64decoded.length);
+    return utf8.decode(filter.processed() ?? []);
+  }
+
+  Future<Map> getDetailsForTheMap() async {
+    Map sessionInfo = await getSessionInfo();
+    return getPosition(sessionInfo);
+  }
+
+  Future<Map> getPosition(Map sessionDataPath) async {
+    var url = Uri.parse(
+        'https://livetiming.formula1.com/static/${sessionDataPath["Path"]}Position.z.jsonStream');
+    var response = await http.get(url);
+    Map<String, dynamic> responseAsJson = {};
+    List responseAsList = utf8.decode(response.bodyBytes).split('\n');
+    responseAsList.removeAt(responseAsList.length - 1);
+    for (String line in responseAsList) {
+      responseAsJson[line.split('{')[0].split('.')[0]] = json.decode(
+        decodeZlibCompressed(line),
+      );
+    }
+    print(responseAsJson);
     return responseAsJson;
   }
 }

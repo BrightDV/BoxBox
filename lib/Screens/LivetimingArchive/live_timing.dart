@@ -20,9 +20,8 @@
  */
 
 import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
 
+import 'package:boxbox/Screens/LivetimingArchive/drivers_map.dart';
 import 'package:boxbox/api/live_feed.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/request_error.dart';
@@ -36,6 +35,16 @@ class LiveTimingScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Live Timing Archive'),
+        actions: [
+          IconButton(
+              onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const DriversMapScreen(),
+                    ),
+                  ),
+              icon: const Icon(Icons.map_outlined))
+        ],
       ),
       backgroundColor: Colors.white,
       body: FutureBuilder<Map>(
@@ -62,7 +71,6 @@ class LiveTimingScreenFragment extends StatefulWidget {
 
 class _LiveTimingScreenFragmentState extends State<LiveTimingScreenFragment> {
   late Timer timer;
-  Duration initialDuration = const Duration(hours: 00, minutes: 0, seconds: 0);
   double sliderValue = 0;
   Duration currentDuration = const Duration();
   List driverNumbers = [
@@ -100,15 +108,6 @@ class _LiveTimingScreenFragmentState extends State<LiveTimingScreenFragment> {
     'VSCDeployed': '6',
     'VSCEnding': '7'
   };
-
-  String decodeZlibCompressed(String base64Encoded) {
-    final b64decoded = base64.decode(base64Encoded);
-    final filter = RawZLibFilter.inflateFilter(
-      windowBits: -ZLibOption.maxLevel,
-    );
-    filter.process(b64decoded, 0, b64decoded.length);
-    return utf8.decode(filter.processed() ?? []);
-  }
 
   Widget _updateTrackStatus(String currentDurationFormated) {
     if (widget.sessionDetails["trackStatus"][currentDurationFormated] != null) {
@@ -264,13 +263,14 @@ class _LiveTimingScreenFragmentState extends State<LiveTimingScreenFragment> {
     return Leaderboard(timingData);
   }
 
-  void skipToTime(Duration actualTime, int targetTimeInSeconds) {
+  void skipToTime(int currentTimeInSeconds, int targetTimeInSeconds) {
     int i = 1;
-    if (actualTime.inSeconds < targetTimeInSeconds) {
-      for (i; i + actualTime.inSeconds < targetTimeInSeconds; i++) {
-        actualTime = Duration(seconds: actualTime.inSeconds + i);
+    final Duration j = Duration(seconds: currentTimeInSeconds);
+    if (j.inSeconds < targetTimeInSeconds) {
+      for (i; i + j.inSeconds < targetTimeInSeconds; i++) {
+        Duration k = Duration(seconds: i + j.inSeconds);
         String currentDurationFormated =
-            "${actualTime.inHours.toString().padLeft(2, '0')}:${actualTime.inMinutes.remainder(60).toString().padLeft(2, '0')}:${actualTime.inSeconds.remainder(60).toString().padLeft(2, '0')}";
+            "${k.toString().padLeft(2, '0')}:${k.inMinutes.remainder(60).toString().padLeft(2, '0')}:${k.inSeconds.remainder(60).toString().padLeft(2, '0')}";
         _updateLapCount(currentDurationFormated);
         _updateTimingData(currentDurationFormated);
         _updateTrackStatus(currentDurationFormated);
@@ -278,15 +278,14 @@ class _LiveTimingScreenFragmentState extends State<LiveTimingScreenFragment> {
     } else {
       i = 320; // it should be equal to zero at first
       for (i; i < targetTimeInSeconds; i++) {
-        actualTime = Duration(seconds: i);
+        Duration k = Duration(seconds: i + j.inSeconds);
         String currentDurationFormated =
-            "${actualTime.inHours.toString().padLeft(2, '0')}:${actualTime.inMinutes.remainder(60).toString().padLeft(2, '0')}:${actualTime.inSeconds.remainder(60).toString().padLeft(2, '0')}";
+            "${k.toString().padLeft(2, '0')}:${k.inMinutes.remainder(60).toString().padLeft(2, '0')}:${k.inSeconds.remainder(60).toString().padLeft(2, '0')}";
         _updateLapCount(currentDurationFormated);
         _updateTimingData(currentDurationFormated);
         _updateTrackStatus(currentDurationFormated);
       }
     }
-    // need to update here because of the timer (next loop) -> time backward lol
     sliderValue = targetTimeInSeconds.toDouble();
   }
 
@@ -310,7 +309,7 @@ class _LiveTimingScreenFragmentState extends State<LiveTimingScreenFragment> {
   @override
   Widget build(BuildContext context) {
     currentDuration = Duration(
-      seconds: initialDuration.inSeconds + timer.tick + sliderValue.toInt(),
+      seconds: timer.tick + sliderValue.toInt(),
     );
     if (currentDuration.inSeconds >= 10800) {
       // avoid going above 3 hours
@@ -327,7 +326,7 @@ class _LiveTimingScreenFragmentState extends State<LiveTimingScreenFragment> {
             onChanged: (value) => currentDuration.inSeconds <
                     7 // time needed to initialize the values
                 ? null
-                : skipToTime(currentDuration, value.toInt()),
+                : skipToTime(currentDuration.inSeconds, value.toInt()),
             max: 10800,
             activeColor: currentDuration.inSeconds <
                     7 // time needed to initialize the values
