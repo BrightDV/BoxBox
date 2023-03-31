@@ -21,6 +21,7 @@ import 'dart:async';
 import 'dart:ui';
 
 import 'package:boxbox/api/live_feed.dart';
+import 'package:boxbox/helpers/circuit_points.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/request_error.dart';
 import 'package:flutter/material.dart';
@@ -63,9 +64,19 @@ class _DriversMapFragmentState extends State<DriversMapFragment> {
 
   Widget _updatePositions(String currentDurationFormated) {
     return CustomPaint(
-      painter: CurvePainter(),
-      child: Center(
-        child: Text("Blade Runner"),
+      painter: CurvePainter(widget.positions['Position'][0]['Entries']),
+      child: SizedBox(
+        height: 450,
+        child: FutureBuilder(
+          future: GetTrackGeoJSONPoints().getCircuitPoints(
+            widget.positions['ErgastFormatedRaceName'],
+          ),
+          builder: (context, snapshot) => CustomPaint(
+            painter: BackgroundCurvePainter(
+              snapshot.data![0],
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -109,6 +120,9 @@ class _DriversMapFragmentState extends State<DriversMapFragment> {
 
   @override
   Widget build(BuildContext context) {
+    String currentDurationFormated =
+        "${currentDuration.inHours.toString().padLeft(2, '0')}:${currentDuration.inMinutes.remainder(60).toString().padLeft(2, '0')}:${currentDuration.inSeconds.remainder(60).toString().padLeft(2, '0')}";
+
     return Column(
       children: [
         Slider(
@@ -123,14 +137,77 @@ class _DriversMapFragmentState extends State<DriversMapFragment> {
               ? Theme.of(context).primaryColor.withOpacity(0.5)
               : Theme.of(context).primaryColor,
         ),
+        _updatePositions(currentDurationFormated)
       ],
     );
   }
 }
 
 class CurvePainter extends CustomPainter {
+  final Map points;
+  const CurvePainter(
+    this.points,
+  );
   @override
-  void paint(Canvas canvas, Size size) {}
+  void paint(Canvas canvas, Size size) {
+    final List<Offset> positions = [];
+    final height = size.height;
+    final width = size.width;
+    points.forEach(
+      (key, value) => positions.add(
+        Offset(
+          points[key]['X'] / 60 + width / 2,
+          -points[key]['Y'] / 60 + height,
+        ),
+      ),
+    );
+    var paint = Paint()..color = Colors.black;
+    for (var element in positions) {
+      canvas.drawCircle(element, 5.0, paint);
+    }
+    canvas.drawPoints(
+      PointMode.points,
+      positions,
+      paint,
+    );
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) {
+    return false;
+  }
+}
+
+class BackgroundCurvePainter extends CustomPainter {
+  final List points;
+  const BackgroundCurvePainter(
+    this.points,
+  );
+  @override
+  void paint(Canvas canvas, Size size) {
+    final List<Offset> positions = [];
+    for (var point in points) {
+      String one = (point[0] * 1000000).round().toString();
+      String two = (point[1] * 1000000).round().toString();
+      positions.add(
+        Offset(
+          double.parse(one.substring(3, one.length)) / 50 - 120,
+          -double.parse(two.substring(3, two.length)) / 50 + 1080,
+        ),
+      );
+    }
+    var paint = Paint()
+      ..color = Colors.green
+      ..strokeWidth = 5.0
+      ..;
+
+    canvas.drawPoints(
+      PointMode.lines,
+      positions,
+      paint,
+    );
+    print("points added!");
+  }
 
   @override
   bool shouldRepaint(CustomPainter oldDelegate) {
