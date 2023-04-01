@@ -22,8 +22,10 @@ import 'dart:ui';
 
 import 'package:boxbox/api/live_feed.dart';
 import 'package:boxbox/helpers/circuit_points.dart';
+import 'package:boxbox/helpers/convert_ergast_and_formula_one.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/request_error.dart';
+import 'package:boxbox/helpers/team_background_color.dart';
 import 'package:flutter/material.dart';
 
 class DriversMapScreen extends StatelessWidget {
@@ -36,13 +38,15 @@ class DriversMapScreen extends StatelessWidget {
         title: const Text('Drivers Map'),
       ),
       backgroundColor: Colors.white,
-      body: FutureBuilder<Map>(
-        future: LiveFeedFetcher().getDetailsForTheMap(),
-        builder: (context, snapshot) => snapshot.hasError
-            ? RequestErrorWidget(snapshot.error.toString())
-            : snapshot.hasData
-                ? DriversMapFragment(snapshot.data!)
-                : const LoadingIndicatorUtil(),
+      body: SingleChildScrollView(
+        child: FutureBuilder<Map>(
+          future: LiveFeedFetcher().getDetailsForTheMap(),
+          builder: (context, snapshot) => snapshot.hasError
+              ? RequestErrorWidget(snapshot.error.toString())
+              : snapshot.hasData
+                  ? DriversMapFragment(snapshot.data!)
+                  : const LoadingIndicatorUtil(),
+        ),
       ),
     );
   }
@@ -63,21 +67,27 @@ class _DriversMapFragmentState extends State<DriversMapFragment> {
   double sliderValue = 0;
 
   Widget _updatePositions(String currentDurationFormated) {
-    return CustomPaint(
-      painter: CurvePainter(widget.positions['Position'][0]['Entries']),
-      child: SizedBox(
-        height: 450,
-        child: FutureBuilder(
-          future: GetTrackGeoJSONPoints().getCircuitPoints(
-            widget.positions['ErgastFormatedRaceName'],
-          ),
-          builder: (context, snapshot) => CustomPaint(
-            painter: BackgroundCurvePainter(
-              snapshot.data![0],
-            ),
-          ),
-        ),
+    return FutureBuilder(
+      future: GetTrackGeoJSONPoints().getCircuitPoints(
+        widget.positions['ErgastFormatedRaceName'],
       ),
+      builder: (context, snapshot) => snapshot.hasError
+          ? RequestErrorWidget(
+              snapshot.error.toString(),
+            )
+          : snapshot.hasData
+              ? SizedBox(
+                  height: 750,
+                  child: CustomPaint(
+                    foregroundPainter: CurvePainter(
+                      widget.positions['Position'][0]['Entries'],
+                    ),
+                    painter: BackgroundCurvePainter(
+                      snapshot.data![0],
+                    ),
+                  ),
+                )
+              : const Center(child: LoadingIndicatorUtil()),
     );
   }
 
@@ -151,18 +161,23 @@ class CurvePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final List<Offset> positions = [];
-    final height = size.height;
     final width = size.width;
     points.forEach(
       (key, value) => positions.add(
         Offset(
-          points[key]['X'] / 60 + width / 2,
-          -points[key]['Y'] / 60 + height,
+          points[key]['X'] / 55 + width / 2 + 5,
+          -points[key]['Y'] / 55 + 480,
         ),
       ),
     );
-    var paint = Paint()..color = Colors.black;
+    var paint = Paint();
     for (var element in positions) {
+      var paint = Paint()
+        ..color = TeamBackgroundColor().getTeamColors(
+          Convert().driverCodeToTeam(
+            points.keys.toList()[positions.indexOf(element)],
+          ),
+        );
       canvas.drawCircle(element, 5.0, paint);
     }
     canvas.drawPoints(
@@ -191,22 +206,21 @@ class BackgroundCurvePainter extends CustomPainter {
       String two = (point[1] * 1000000).round().toString();
       positions.add(
         Offset(
-          double.parse(one.substring(3, one.length)) / 50 - 120,
-          -double.parse(two.substring(3, two.length)) / 50 + 1080,
+          double.parse(one.substring(3, one.length)) / 49 - 120,
+          -double.parse(two.substring(3, two.length)) / 49 + 1105,
         ),
       );
     }
     var paint = Paint()
-      ..color = Colors.green
+      ..color = Colors.grey
       ..strokeWidth = 5.0
-      ..;
+      ..strokeCap = StrokeCap.round;
 
     canvas.drawPoints(
-      PointMode.lines,
+      PointMode.polygon,
       positions,
       paint,
     );
-    print("points added!");
   }
 
   @override

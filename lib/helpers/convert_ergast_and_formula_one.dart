@@ -252,4 +252,30 @@ class Convert {
     };
     return ergastToFormulaOne[circuitId];
   }
+
+  String driverCodeToTeam(String driverCode) {
+    Map dict = {
+      "1": "red_bull",
+      "2": "williams",
+      "4": "mclaren",
+      "10": "alpine",
+      "11": "red_bull",
+      "14": "aston_martin",
+      "16": "ferrari",
+      "18": "aston_martin",
+      "20": "haas",
+      "21": "alphatauri",
+      "22": "alphatauri",
+      "23": "williams",
+      "24": "alfa",
+      "27": "haas",
+      "31": "alpine",
+      "44": "mercedes",
+      "55": "ferrari",
+      "63": "mercedes",
+      "77": "alfa",
+      "81": "mclaren",
+    };
+    return dict[driverCode];
+  }
 }
