@@ -37,13 +37,14 @@ class LiveTimingScreen extends StatelessWidget {
         title: const Text('Live Timing Archive'),
         actions: [
           IconButton(
-              onPressed: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const DriversMapScreen(),
-                    ),
-                  ),
-              icon: const Icon(Icons.map_outlined))
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const DriversMapScreen(),
+              ),
+            ),
+            icon: const Icon(Icons.map_outlined),
+          )
         ],
       ),
       backgroundColor: Colors.white,

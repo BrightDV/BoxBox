@@ -21,7 +21,6 @@ import 'dart:async';
 import 'dart:ui';
 
 import 'package:boxbox/api/live_feed.dart';
-import 'package:boxbox/helpers/circuit_points.dart';
 import 'package:boxbox/helpers/convert_ergast_and_formula_one.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/request_error.dart';
@@ -65,29 +64,24 @@ class _DriversMapFragmentState extends State<DriversMapFragment> {
   final PictureRecorder recorder = PictureRecorder();
   Duration currentDuration = const Duration();
   double sliderValue = 0;
+  Map currentPositions = {};
 
   Widget _updatePositions(String currentDurationFormated) {
-    return FutureBuilder(
-      future: GetTrackGeoJSONPoints().getCircuitPoints(
-        widget.positions['ErgastFormatedRaceName'],
+    if (widget.positions['Position'][currentDurationFormated] != null) {
+      currentPositions = widget.positions['Position'][currentDurationFormated]
+          ['Position'][0]['Entries'];
+      // TODO: needs a more precise check -> multiple values per second or a transition animation
+    }
+    return SizedBox(
+      height: 750,
+      child: CustomPaint(
+        foregroundPainter: CurvePainter(
+          currentPositions,
+        ),
+        painter: BackgroundCurvePainter(
+          widget.positions['Points'][0],
+        ),
       ),
-      builder: (context, snapshot) => snapshot.hasError
-          ? RequestErrorWidget(
-              snapshot.error.toString(),
-            )
-          : snapshot.hasData
-              ? SizedBox(
-                  height: 750,
-                  child: CustomPaint(
-                    foregroundPainter: CurvePainter(
-                      widget.positions['Position'][0]['Entries'],
-                    ),
-                    painter: BackgroundCurvePainter(
-                      snapshot.data![0],
-                    ),
-                  ),
-                )
-              : const Center(child: LoadingIndicatorUtil()),
     );
   }
 
@@ -99,13 +93,15 @@ class _DriversMapFragmentState extends State<DriversMapFragment> {
         Duration k = Duration(seconds: i + j.inSeconds);
         String currentDurationFormated =
             "${k.toString().padLeft(2, '0')}:${k.inMinutes.remainder(60).toString().padLeft(2, '0')}:${k.inSeconds.remainder(60).toString().padLeft(2, '0')}";
+        _updatePositions(currentDurationFormated);
       }
     } else {
-      i = 320; // it should be equal to zero at first
+      i = targetTimeInSeconds - 3;
       for (i; i < targetTimeInSeconds; i++) {
         Duration k = Duration(seconds: i + j.inSeconds);
         String currentDurationFormated =
             "${k.toString().padLeft(2, '0')}:${k.inMinutes.remainder(60).toString().padLeft(2, '0')}:${k.inSeconds.remainder(60).toString().padLeft(2, '0')}";
+        _updatePositions(currentDurationFormated);
       }
     }
     sliderValue = targetTimeInSeconds.toDouble();
@@ -130,6 +126,13 @@ class _DriversMapFragmentState extends State<DriversMapFragment> {
 
   @override
   Widget build(BuildContext context) {
+    currentDuration = Duration(
+      seconds: timer.tick + sliderValue.toInt(),
+    );
+    if (currentDuration.inSeconds >= 10800) {
+      // avoid going above 3 hours
+      currentDuration = const Duration(seconds: 10800);
+    }
     String currentDurationFormated =
         "${currentDuration.inHours.toString().padLeft(2, '0')}:${currentDuration.inMinutes.remainder(60).toString().padLeft(2, '0')}:${currentDuration.inSeconds.remainder(60).toString().padLeft(2, '0')}";
 
@@ -162,6 +165,7 @@ class CurvePainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final List<Offset> positions = [];
     final width = size.width;
+    // TODO: if points[key]["Status"] != "Pit"/"on track" -> do not show it on the map.
     points.forEach(
       (key, value) => positions.add(
         Offset(
