@@ -2404,6 +2404,10 @@ class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
         imageUrl: widget.videoUrls['poster'],
         activityName: "MainActivity",
       ),
+      bufferingConfiguration: const BetterPlayerBufferingConfiguration(
+        maxBufferMs: 1000 * 30,
+        bufferForPlaybackMs: 2500,
+      ),
       headers: {
         'user-agent':
             'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36',
