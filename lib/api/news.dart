@@ -861,7 +861,7 @@ class JoinArticlesParts extends StatelessWidget {
     List articleContent = article.articleContent;
     List<Widget> widgetsList = [];
     String heroImageUrl = "";
-    if (article.articleHero != null) {
+    if (article.articleHero.isNotEmpty) {
       if (article.articleHero['contentType'] == 'atomVideo') {
         heroImageUrl = article.articleHero['fields']['thumbnail']['url'];
       } else if (article.articleHero['contentType'] == 'atomVideoYouTube') {
@@ -1888,7 +1888,7 @@ class JoinArticlesParts extends StatelessWidget {
               ),
             ),
           )
-        : MediaQuery.of(context).size.width > 600
+        : MediaQuery.of(context).size.width > 1400
             ? Scrollbar(
                 interactive: true,
                 controller: articleScrollController,
@@ -2403,6 +2403,10 @@ class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
         author: "Formula 1",
         imageUrl: widget.videoUrls['poster'],
         activityName: "MainActivity",
+      ),
+      bufferingConfiguration: const BetterPlayerBufferingConfiguration(
+        maxBufferMs: 1000 * 30,
+        bufferForPlaybackMs: 2500,
       ),
       headers: {
         'user-agent':

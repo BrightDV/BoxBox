@@ -67,7 +67,7 @@ dependencies:
   syncfusion_flutter_pdfviewer: ^20.4.50
   timeago: ^3.3.0
   url_launcher: ^6.0.13
-  video_player: ^2.4.5
+  video_player: ^2.6.0
   webfeed: # fork using null-safety
     git:
       url: https://github.com/marcjoha/webfeed.git
