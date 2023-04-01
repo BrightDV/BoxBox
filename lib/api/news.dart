@@ -861,7 +861,7 @@ class JoinArticlesParts extends StatelessWidget {
     List articleContent = article.articleContent;
     List<Widget> widgetsList = [];
     String heroImageUrl = "";
-    if (article.articleHero != null) {
+    if (article.articleHero.isNotEmpty) {
       if (article.articleHero['contentType'] == 'atomVideo') {
         heroImageUrl = article.articleHero['fields']['thumbnail']['url'];
       } else if (article.articleHero['contentType'] == 'atomVideoYouTube') {
