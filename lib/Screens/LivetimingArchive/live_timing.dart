@@ -32,29 +32,68 @@ class LiveTimingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Live Timing Archive'),
-        actions: [
-          IconButton(
-            onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const DriversMapScreen(),
+    return DefaultTabController(
+      length: 3,
+      child: Scaffold(
+        appBar: AppBar(
+          flexibleSpace: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 50.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: const [
+                TabBar(
+                  indicatorSize: TabBarIndicatorSize.label,
+                  indicatorColor: Colors.white,
+                  tabs: [
+                    SizedBox(
+                      width: 50,
+                      child: Tab(
+                        child: Icon(Icons.timer_outlined),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 50,
+                      child: Tab(
+                        child: Icon(Icons.map_outlined),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 50,
+                      child: Tab(
+                        child: Icon(Icons.wb_sunny_outlined),
+                      ),
+                    ),
+                  ],
+                )
+              ],
+            ),
+          ),
+        ),
+        backgroundColor: Colors.white,
+        // TODO: move the slider to a bottom navbar
+        body: TabBarView(
+          children: [
+            FutureBuilder<Map>(
+              future: LiveFeedFetcher().getSessionDetails(),
+              builder: (context, snapshot) => snapshot.hasError
+                  ? RequestErrorWidget(snapshot.error.toString())
+                  : snapshot.hasData
+                      ? LiveTimingScreenFragment(snapshot.data!)
+                      : const LoadingIndicatorUtil(),
+            ),
+            SingleChildScrollView(
+              child: FutureBuilder<Map>(
+                future: LiveFeedFetcher().getDetailsForTheMap(),
+                builder: (context, snapshot) => snapshot.hasError
+                    ? RequestErrorWidget(snapshot.error.toString())
+                    : snapshot.hasData
+                        ? DriversMapFragment(snapshot.data!)
+                        : const LoadingIndicatorUtil(),
               ),
             ),
-            icon: const Icon(Icons.map_outlined),
-          )
-        ],
-      ),
-      backgroundColor: Colors.white,
-      body: FutureBuilder<Map>(
-        future: LiveFeedFetcher().getSessionDetails(),
-        builder: (context, snapshot) => snapshot.hasError
-            ? RequestErrorWidget(snapshot.error.toString())
-            : snapshot.hasData
-                ? LiveTimingScreenFragment(snapshot.data!)
-                : const LoadingIndicatorUtil(),
+            const Text("Weather screen?"),
+          ],
+        ),
       ),
     );
   }
