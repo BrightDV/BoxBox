@@ -25,7 +25,11 @@ import 'package:boxbox/Screens/LivetimingArchive/drivers_map.dart';
 import 'package:boxbox/api/live_feed.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/request_error.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
 class LiveTimingScreen extends StatelessWidget {
   const LiveTimingScreen({super.key});
@@ -60,7 +64,7 @@ class LiveTimingScreen extends StatelessWidget {
                     SizedBox(
                       width: 50,
                       child: Tab(
-                        child: Icon(Icons.wb_sunny_outlined),
+                        child: Icon(Icons.mic_outlined),
                       ),
                     ),
                   ],
@@ -70,6 +74,38 @@ class LiveTimingScreen extends StatelessWidget {
           ),
         ),
         backgroundColor: Colors.white,
+        bottomNavigationBar: SizedBox(
+          height: 100,
+          child: Stack(
+            children: [
+              Align(
+                alignment: Alignment.bottomRight,
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 55, right: 10),
+                  child: FloatingActionButton(
+                    onPressed: () {
+                      print("show weather ;)");
+                    },
+                    child: const Icon(Icons.wb_sunny_outlined),
+                  ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: SizedBox(
+                  height: 50,
+                  width: double.infinity,
+                  child: Slider(
+                    value: 30,
+                    max: 100,
+                    onChanged: (value) {},
+                    activeColor: Theme.of(context).primaryColor,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
         // TODO: move the slider to a bottom navbar
         body: TabBarView(
           children: [
@@ -91,7 +127,14 @@ class LiveTimingScreen extends StatelessWidget {
                         : const LoadingIndicatorUtil(),
               ),
             ),
-            const Text("Weather screen?"),
+            FutureBuilder<List>(
+              future: LiveFeedFetcher().getContentStreams(),
+              builder: (context, snapshot) => snapshot.hasError
+                  ? RequestErrorWidget(snapshot.error.toString())
+                  : snapshot.hasData
+                      ? ContentStreamsFragment(snapshot.data!)
+                      : const LoadingIndicatorUtil(),
+            ),
           ],
         ),
       ),
@@ -457,5 +500,76 @@ class Leaderboard extends StatelessWidget {
         );
       }
     }
+  }
+}
+
+class ContentStreamsFragment extends StatelessWidget {
+  final List streams;
+  const ContentStreamsFragment(this.streams, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      itemCount: streams.length,
+      itemBuilder: (context, index) => Padding(
+        padding: const EdgeInsets.all(5),
+        child: GestureDetector(
+          child: Container(
+            width: double.infinity,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(5),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(
+                20,
+                10,
+                20,
+                10,
+              ),
+              child: Row(
+                children: [
+                  Text(
+                    streams[index]['Type'],
+                  ),
+                  const Spacer(),
+                  const Icon(
+                    Icons.arrow_forward_rounded,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          onTap: () => streams[index]['Type'] == 'Commentary'
+              ? Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => Scaffold(
+                      appBar: AppBar(
+                        title: Text(
+                          AppLocalizations.of(context)!.liveBlog,
+                        ),
+                      ),
+                      body: InAppWebView(
+                        initialUrlRequest: URLRequest(
+                          url: Uri.parse(
+                            streams[index]['Uri'],
+                          ),
+                        ),
+                        gestureRecognizers: {
+                          Factory<VerticalDragGestureRecognizer>(
+                              () => VerticalDragGestureRecognizer()),
+                          Factory<HorizontalDragGestureRecognizer>(
+                              () => HorizontalDragGestureRecognizer()),
+                          Factory<ScaleGestureRecognizer>(
+                              () => ScaleGestureRecognizer()),
+                        },
+                      ),
+                    ),
+                  ),
+                )
+              : const Text('unavailable'),
+        ),
+      ),
+    );
   }
 }

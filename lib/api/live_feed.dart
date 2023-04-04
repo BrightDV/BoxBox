@@ -176,6 +176,18 @@ class LiveFeedFetcher {
 
     return responseAsJson;
   }
+
+  Future<List> getContentStreams() async {
+    Map sessionInfo = await getSessionInfo();
+    var url = Uri.parse(
+      'https://livetiming.formula1.com/static/${sessionInfo["Path"]}ContentStreams.json',
+    );
+    var response = await http.get(url);
+    Map<String, dynamic> responseAsJson = json.decode(
+      utf8.decode(response.bodyBytes),
+    );
+    return responseAsJson['Streams'];
+  }
 }
 
 // pages = {
