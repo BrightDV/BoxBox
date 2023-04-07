@@ -58,6 +58,9 @@ class MainFragment extends StatefulWidget {
 class _MainFragmentState extends State<MainFragment> {
   int _selectedIndex = 0;
   List<Widget> actions = [];
+  late Timer timer;
+  double sliderValue = 0;
+  Duration currentDuration = const Duration(seconds: 0);
   final ScrollController scrollController = ScrollController();
 
   void _onItemTapped(int index) {
@@ -77,6 +80,23 @@ class _MainFragmentState extends State<MainFragment> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    timer = Timer.periodic(
+      const Duration(seconds: 1),
+      (Timer t) => setState(
+        () {},
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    timer.cancel();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     List<Widget> fragments = [
       LiveTimingScreenFragment(widget.data['sessionDetails']),
@@ -84,6 +104,16 @@ class _MainFragmentState extends State<MainFragment> {
       Text('disabled for debug'),
       ContentStreamsFragment(widget.data['contentStreams']),
     ];
+    currentDuration = Duration(
+      seconds: timer.tick + sliderValue.toInt(),
+    );
+    if (currentDuration.inSeconds >= 10800) {
+      // avoid going above 3 hours
+      currentDuration = const Duration(seconds: 10800);
+    }
+    String currentDurationFormated =
+        "${currentDuration.inHours.toString().padLeft(2, '0')}:${currentDuration.inMinutes.remainder(60).toString().padLeft(2, '0')}:${currentDuration.inSeconds.remainder(60).toString().padLeft(2, '0')}";
+
     return Scaffold(
       appBar: AppBar(
         flexibleSpace: Padding(
@@ -155,12 +185,16 @@ class _MainFragmentState extends State<MainFragment> {
                 height: 50,
                 width: double.infinity,
                 child: Slider(
-                  value: 30,
-                  max: 100,
+                  value: sliderValue,
+                  max: 10800,
                   onChanged: (value) {},
                   activeColor: Theme.of(context).primaryColor,
                 ),
               ),
+            ),
+            Align(
+              alignment: Alignment.center,
+              child: Text('$currentDurationFormated / 03:00:00'),
             ),
           ],
         ),
