@@ -20,36 +20,9 @@
 import 'dart:async';
 import 'dart:ui';
 
-import 'package:boxbox/api/live_feed.dart';
 import 'package:boxbox/helpers/convert_ergast_and_formula_one.dart';
-import 'package:boxbox/helpers/loading_indicator_util.dart';
-import 'package:boxbox/helpers/request_error.dart';
 import 'package:boxbox/helpers/team_background_color.dart';
 import 'package:flutter/material.dart';
-
-class DriversMapScreen extends StatelessWidget {
-  const DriversMapScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Drivers Map'),
-      ),
-      backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        child: FutureBuilder<Map>(
-          future: LiveFeedFetcher().getDetailsForTheMap(),
-          builder: (context, snapshot) => snapshot.hasError
-              ? RequestErrorWidget(snapshot.error.toString())
-              : snapshot.hasData
-                  ? DriversMapFragment(snapshot.data!)
-                  : const LoadingIndicatorUtil(),
-        ),
-      ),
-    );
-  }
-}
 
 class DriversMapFragment extends StatefulWidget {
   final Map positions;

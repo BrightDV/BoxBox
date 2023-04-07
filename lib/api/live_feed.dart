@@ -51,9 +51,8 @@ class LiveFeedFetcher {
     return responseAsJson;
   }
 
-  Future<Map> getSessionDetails() async {
+  Future<Map> getSessionDetails(Map sessionInfo) async {
     Map details = {};
-    Map sessionInfo = await getSessionInfo();
     details["trackStatus"] = await getTrackStatus(sessionInfo);
     details["lapCount"] = await getLapCount(sessionInfo);
     details["timingData"] = await getTimingData(sessionInfo);
@@ -147,8 +146,7 @@ class LiveFeedFetcher {
     return utf8.decode(filter.processed() ?? []);
   }
 
-  Future<Map> getDetailsForTheMap() async {
-    Map sessionInfo = await getSessionInfo();
+  Future<Map> getDetailsForTheMap(Map sessionInfo) async {
     Map positions = await getPosition(sessionInfo);
     List points = await GetTrackGeoJSONPoints().getCircuitPoints(
       positions['ErgastFormatedRaceName'],
@@ -177,8 +175,7 @@ class LiveFeedFetcher {
     return responseAsJson;
   }
 
-  Future<List> getContentStreams() async {
-    Map sessionInfo = await getSessionInfo();
+  Future<List> getContentStreams(Map sessionInfo) async {
     var url = Uri.parse(
       'https://livetiming.formula1.com/static/${sessionInfo["Path"]}ContentStreams.json',
     );
@@ -187,6 +184,16 @@ class LiveFeedFetcher {
       utf8.decode(response.bodyBytes),
     );
     return responseAsJson['Streams'];
+  }
+
+  Future<Map> getData() async {
+    Map sessionInfo = await getSessionInfo();
+    Map data = {
+      'sessionDetails': await getSessionDetails(sessionInfo),
+      //'detailsForTheMap': await getDetailsForTheMap(sessionInfo),
+      'contentStreams': await getContentStreams(sessionInfo),
+    };
+    return data;
   }
 }
 

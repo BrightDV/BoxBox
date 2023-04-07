@@ -36,108 +36,137 @@ class LiveTimingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 3,
-      child: Scaffold(
-        appBar: AppBar(
-          flexibleSpace: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 50.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: const [
-                TabBar(
-                  indicatorSize: TabBarIndicatorSize.label,
-                  indicatorColor: Colors.white,
-                  tabs: [
-                    SizedBox(
-                      width: 50,
-                      child: Tab(
-                        child: Icon(Icons.timer_outlined),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 50,
-                      child: Tab(
-                        child: Icon(Icons.map_outlined),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 50,
-                      child: Tab(
-                        child: Icon(Icons.mic_outlined),
-                      ),
-                    ),
-                  ],
-                )
-              ],
-            ),
+    return FutureBuilder<Map>(
+      future: LiveFeedFetcher().getData(),
+      builder: (context, snapshot) => snapshot.hasError
+          ? RequestErrorWidget(snapshot.error.toString())
+          : snapshot.hasData
+              ? MainFragment(snapshot.data!)
+              : const LoadingIndicatorUtil(),
+    );
+  }
+}
+
+class MainFragment extends StatefulWidget {
+  final Map data;
+  const MainFragment(this.data, {super.key});
+
+  @override
+  State<MainFragment> createState() => _MainFragmentState();
+}
+
+class _MainFragmentState extends State<MainFragment> {
+  int _selectedIndex = 0;
+  List<Widget> actions = [];
+  final ScrollController scrollController = ScrollController();
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+      if (_selectedIndex == 0) {
+        actions = [
+          IconButton(
+            icon: const Icon(Icons.close),
+            onPressed: () {},
           ),
-        ),
-        backgroundColor: Colors.white,
-        bottomNavigationBar: SizedBox(
-          height: 100,
-          child: Stack(
-            children: [
-              Align(
-                alignment: Alignment.bottomRight,
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 55, right: 10),
-                  child: FloatingActionButton(
-                    onPressed: () {
-                      print("show weather ;)");
-                    },
-                    child: const Icon(Icons.wb_sunny_outlined),
-                  ),
+        ];
+      } else {
+        actions = [];
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    List<Widget> fragments = [
+      LiveTimingScreenFragment(widget.data['sessionDetails']),
+      //DriversMapFragment(widget.data['detailsForTheMap']),
+      Text('disabled for debug'),
+      ContentStreamsFragment(widget.data['contentStreams']),
+    ];
+    return Scaffold(
+      appBar: AppBar(
+        flexibleSpace: Padding(
+          padding: const EdgeInsets.fromLTRB(50, 8, 50, 0),
+          child: BottomNavigationBar(
+            type: BottomNavigationBarType.fixed,
+            currentIndex: _selectedIndex,
+            backgroundColor: Theme.of(context).primaryColor,
+            elevation: 0,
+            items: <BottomNavigationBarItem>[
+              BottomNavigationBarItem(
+                icon: Icon(
+                  Icons.timer_outlined,
+                  color: Colors.grey.shade200,
                 ),
+                activeIcon: const Icon(
+                  Icons.timer,
+                  color: Colors.white,
+                ),
+                label: '',
               ),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: SizedBox(
-                  height: 50,
-                  width: double.infinity,
-                  child: Slider(
-                    value: 30,
-                    max: 100,
-                    onChanged: (value) {},
-                    activeColor: Theme.of(context).primaryColor,
-                  ),
+              BottomNavigationBarItem(
+                icon: Icon(
+                  Icons.map_outlined,
+                  color: Colors.grey.shade200,
                 ),
+                activeIcon: const Icon(
+                  Icons.map,
+                  color: Colors.white,
+                ),
+                label: '',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(
+                  Icons.headset_outlined,
+                  color: Colors.grey.shade200,
+                ),
+                activeIcon: const Icon(
+                  Icons.headset,
+                  color: Colors.white,
+                ),
+                label: '',
               ),
             ],
+            onTap: _onItemTapped,
           ),
         ),
-        // TODO: move the slider to a bottom navbar
-        body: TabBarView(
+      ),
+      backgroundColor: Colors.white,
+      bottomNavigationBar: SizedBox(
+        height: 100,
+        child: Stack(
           children: [
-            FutureBuilder<Map>(
-              future: LiveFeedFetcher().getSessionDetails(),
-              builder: (context, snapshot) => snapshot.hasError
-                  ? RequestErrorWidget(snapshot.error.toString())
-                  : snapshot.hasData
-                      ? LiveTimingScreenFragment(snapshot.data!)
-                      : const LoadingIndicatorUtil(),
-            ),
-            SingleChildScrollView(
-              child: FutureBuilder<Map>(
-                future: LiveFeedFetcher().getDetailsForTheMap(),
-                builder: (context, snapshot) => snapshot.hasError
-                    ? RequestErrorWidget(snapshot.error.toString())
-                    : snapshot.hasData
-                        ? DriversMapFragment(snapshot.data!)
-                        : const LoadingIndicatorUtil(),
+            Align(
+              alignment: Alignment.bottomRight,
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 55, right: 10),
+                child: FloatingActionButton(
+                  onPressed: () {
+                    print("show weather ;)");
+                  },
+                  child: const Icon(Icons.wb_sunny_outlined),
+                ),
               ),
             ),
-            FutureBuilder<List>(
-              future: LiveFeedFetcher().getContentStreams(),
-              builder: (context, snapshot) => snapshot.hasError
-                  ? RequestErrorWidget(snapshot.error.toString())
-                  : snapshot.hasData
-                      ? ContentStreamsFragment(snapshot.data!)
-                      : const LoadingIndicatorUtil(),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: SizedBox(
+                height: 50,
+                width: double.infinity,
+                child: Slider(
+                  value: 30,
+                  max: 100,
+                  onChanged: (value) {},
+                  activeColor: Theme.of(context).primaryColor,
+                ),
+              ),
             ),
           ],
         ),
       ),
+      // TODO: move the slider to a bottom navbar
+      body: fragments.elementAt(_selectedIndex),
     );
   }
 }
