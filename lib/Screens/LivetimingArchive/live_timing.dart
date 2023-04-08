@@ -79,6 +79,10 @@ class _MainFragmentState extends State<MainFragment> {
     });
   }
 
+  void skipToTime(int targetTimeInSeconds) {
+    sliderValue = targetTimeInSeconds.toDouble();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -98,12 +102,6 @@ class _MainFragmentState extends State<MainFragment> {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> fragments = [
-      LiveTimingScreenFragment(widget.data['sessionDetails']),
-      //DriversMapFragment(widget.data['detailsForTheMap']),
-      Text('disabled for debug'),
-      ContentStreamsFragment(widget.data['contentStreams']),
-    ];
     currentDuration = Duration(
       seconds: timer.tick + sliderValue.toInt(),
     );
@@ -113,7 +111,15 @@ class _MainFragmentState extends State<MainFragment> {
     }
     String currentDurationFormated =
         "${currentDuration.inHours.toString().padLeft(2, '0')}:${currentDuration.inMinutes.remainder(60).toString().padLeft(2, '0')}:${currentDuration.inSeconds.remainder(60).toString().padLeft(2, '0')}";
-
+    List<Widget> fragments = [
+      LiveTimingScreenFragment(
+        widget.data['sessionDetails'],
+        currentDuration,
+      ),
+      //DriversMapFragment(widget.data['detailsForTheMap']),
+      Text('disabled for debug'),
+      ContentStreamsFragment(widget.data['contentStreams']),
+    ];
     return Scaffold(
       appBar: AppBar(
         flexibleSpace: Padding(
@@ -185,10 +191,14 @@ class _MainFragmentState extends State<MainFragment> {
                 height: 50,
                 width: double.infinity,
                 child: Slider(
-                  value: sliderValue,
+                  value: currentDuration.inSeconds.toDouble(),
                   max: 10800,
-                  onChanged: (value) {},
-                  activeColor: Theme.of(context).primaryColor,
+                  onChanged: (value) => currentDuration.inSeconds < 7
+                      ? null
+                      : skipToTime(value.toInt()),
+                  activeColor: currentDuration.inSeconds < 7
+                      ? Theme.of(context).primaryColor.withOpacity(0.5)
+                      : Theme.of(context).primaryColor,
                 ),
               ),
             ),
@@ -199,7 +209,6 @@ class _MainFragmentState extends State<MainFragment> {
           ],
         ),
       ),
-      // TODO: move the slider to a bottom navbar
       body: fragments.elementAt(_selectedIndex),
     );
   }
@@ -207,8 +216,12 @@ class _MainFragmentState extends State<MainFragment> {
 
 class LiveTimingScreenFragment extends StatefulWidget {
   final Map sessionDetails;
-  const LiveTimingScreenFragment(this.sessionDetails, {Key? key})
-      : super(key: key);
+  final Duration currentDurationNotFormated;
+  const LiveTimingScreenFragment(
+    this.sessionDetails,
+    this.currentDurationNotFormated, {
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<LiveTimingScreenFragment> createState() =>
@@ -218,7 +231,7 @@ class LiveTimingScreenFragment extends StatefulWidget {
 class _LiveTimingScreenFragmentState extends State<LiveTimingScreenFragment> {
   late Timer timer;
   double sliderValue = 0;
-  Duration currentDuration = const Duration();
+  bool shouldLoadTimingData = true;
   List driverNumbers = [
     "1",
     "2",
@@ -275,7 +288,6 @@ class _LiveTimingScreenFragmentState extends State<LiveTimingScreenFragment> {
   }
 
   Widget _updateLapCount(String currentDurationFormated) {
-    // needs a global string
     if (widget.sessionDetails["lapCount"][currentDurationFormated] != null) {
       lapCount = widget.sessionDetails["lapCount"][currentDurationFormated];
       if ((totalLaps == 0) && (lapCount['TotalLaps'] != null)) {
@@ -303,104 +315,109 @@ class _LiveTimingScreenFragmentState extends State<LiveTimingScreenFragment> {
         //
         for (Map element in widget.sessionDetails["timingData"]
             [currentDurationFormated]) {
-          List<String> driverNumbers = element['Lines'].keys.toList();
-          for (var driverNumber in driverNumbers) {
-            if (timingData['Lines'][driverNumber] == null) {
-              element['Lines'][driverNumber] = {};
-            }
-            if (element['Lines'][driverNumber]['InPit'] != null) {
-              // example: 01:20:52.879{"Lines":{"23":{"InPit":true,"Status":80}}}
-              timingData['Lines'][driverNumber]['InPit'] =
-                  element['Lines'][driverNumber]['InPit'];
-              timingData['Lines'][driverNumber]['Status'] =
-                  element['Lines'][driverNumber]['Status'];
-              if (element['Lines'][driverNumber]['NumberOfPitStops'] != null) {
-                // update the number of pits
-                // example: 01:20:52.879{"Lines":{"23":{"InPit":true,"Status":80,"NumberOfPitStops":1}}}
-                timingData['Lines'][driverNumber]['NumberOfPitStops'] =
-                    element['Lines'][driverNumber]['NumberOfPitStops'];
+          if (element['Lines'].runtimeType != List) {
+            List<String> driverNumbers = element['Lines'].keys.toList();
+            for (var driverNumber in driverNumbers) {
+              if (timingData['Lines'][driverNumber] == null) {
+                element['Lines'][driverNumber] = {};
               }
-            }
-            if (element['Lines'][driverNumber]['GapToLeader'] != null) {
-              // example: {"Lines":{"11":{"GapToLeader":"+0.238","IntervalToPositionAhead":{"Value":"+0.238"}}}}
-              timingData['Lines'][driverNumber]['GapToLeader'] =
-                  element['Lines'][driverNumber]['GapToLeader'];
-              timingData['Lines'][driverNumber]['IntervalToPositionAhead'] =
-                  element['Lines'][driverNumber]['IntervalToPositionAhead'];
-
-              if (element['Lines'][driverNumber]['Sectors'] != null) {
-                String sector =
-                    element['Lines'][driverNumber]['Sectors'].keys.toList()[0];
-                if ((element['Lines'][driverNumber]['Sectors'][sector]
-                                ['Segments']
-                            .runtimeType ==
-                        List) &&
-                    (element['Lines'][driverNumber]['Sectors'][sector]
-                            ['Segments'][0]['Status'] !=
-                        null)) {
-                  // first values sent, they initiate the Segments' matrix
-                  for (int i = 0; i < 3; i++) {
-                    timingData['Lines'][driverNumber]['Sectors'][i]
-                            ['Segments'] =
-                        element['Lines'][driverNumber]['Sectors'][sector]
-                            ['Segments'][i];
-                  }
-                } else if (element['Lines'][driverNumber]['Sectors'][sector]
-                        ['Segments'] !=
+              if (element['Lines'][driverNumber]['InPit'] != null) {
+                // example: 01:20:52.879{"Lines":{"23":{"InPit":true,"Status":80}}}
+                timingData['Lines'][driverNumber]['InPit'] =
+                    element['Lines'][driverNumber]['InPit'];
+                timingData['Lines'][driverNumber]['Status'] =
+                    element['Lines'][driverNumber]['Status'];
+                if (element['Lines'][driverNumber]['NumberOfPitStops'] !=
                     null) {
-                  // {31: {Sectors: {2: {Segments: {6: {Status: 2048}}}}}}
-                  String segment = element['Lines'][driverNumber]['Sectors']
-                          [sector]['Segments']
-                      .keys
-                      .toList()[0];
-                  timingData['Lines'][driverNumber]['Sectors']
-                      [int.parse(sector)]['Value'] = segment;
-                  timingData['Lines'][driverNumber]['Sectors']
-                      [int.parse(sector)]['Status'] = element['Lines']
-                          [driverNumber]['Sectors'][sector]['Segments'][segment]
-                      ['Status'];
-                } else if (element['Lines'][driverNumber]['Speeds'] != null) {
-                  // example: {11: {Sectors: {1: {Value: 39.188}}, Speeds: {I2: {Value: 295}}}}
-                  List<String> speeds =
-                      element['Lines'][driverNumber]['Speeds'].keys.toList();
-                  for (String speed in speeds) {
-                    timingData['Lines'][driverNumber]['Speeds'][speed]
-                            ['Value'] =
-                        element['Lines'][driverNumber]['Speeds'][speed]
-                            ['Value'];
-                    if (element['Lines'][driverNumber]['Speeds'][speed]
-                            ['PersonalFastest'] !=
-                        null) {
-                      timingData['Lines'][driverNumber]['Speeds'][speed]
-                              ['PersonalFastest'] =
-                          element['Lines'][driverNumber]['Speeds'][speed]
-                              ['PersonalFastest'];
-                    }
-                    if (element['Lines'][driverNumber]['Speeds'][speed]
-                            ['OverallFastest'] !=
-                        null) {
-                      timingData['Lines'][driverNumber]['Speeds'][speed]
-                              ['OverallFastest'] =
-                          element['Lines'][driverNumber]['Speeds'][speed]
-                              ['OverallFastest'];
-                    }
-                  }
-                } else {
-                  print("Unfound!");
-                  print(element['Lines']);
+                  // update the number of pits
+                  // example: 01:20:52.879{"Lines":{"23":{"InPit":true,"Status":80,"NumberOfPitStops":1}}}
+                  timingData['Lines'][driverNumber]['NumberOfPitStops'] =
+                      element['Lines'][driverNumber]['NumberOfPitStops'];
                 }
               }
-            }
-            if (element['Lines'][driverNumber]['Position'] != null) {
-              // {"20":{"IntervalToPositionAhead":{"Value":""},"Line":17,"Position":"17"},"23":{"Line":18,"Position":"18"}}
-              //print(
-              //    '$driverNumber: From ${timingData['Lines'][driverNumber]['Position']}');
+              if (element['Lines'][driverNumber]['GapToLeader'] != null) {
+                // example: {"Lines":{"11":{"GapToLeader":"+0.238","IntervalToPositionAhead":{"Value":"+0.238"}}}}
+                timingData['Lines'][driverNumber]['GapToLeader'] =
+                    element['Lines'][driverNumber]['GapToLeader'];
+                timingData['Lines'][driverNumber]['IntervalToPositionAhead'] =
+                    element['Lines'][driverNumber]['IntervalToPositionAhead'];
 
-              timingData['Lines'][driverNumber]['Position'] =
-                  element['Lines'][driverNumber]['Position'];
-              timingData['Lines'][driverNumber]['Line'] =
-                  element['Lines'][driverNumber]['Line'];
-              //print('to ${timingData['Lines'][driverNumber]['Position']}\n');
+                if (element['Lines'][driverNumber]['Sectors'] != null) {
+                  String sector = element['Lines'][driverNumber]['Sectors']
+                      .keys
+                      .toList()[0];
+                  if ((element['Lines'][driverNumber]['Sectors'][sector]
+                                  ['Segments']
+                              .runtimeType ==
+                          List) &&
+                      (element['Lines'][driverNumber]['Sectors'][sector]
+                              ['Segments'][0]['Status'] !=
+                          null)) {
+                    // first values sent, they initiate the Segments' matrix
+                    for (int i = 0; i < 3; i++) {
+                      timingData['Lines'][driverNumber]['Sectors'][i]
+                              ['Segments'] =
+                          element['Lines'][driverNumber]['Sectors'][sector]
+                              ['Segments'][i];
+                    }
+                  } else if (element['Lines'][driverNumber]['Sectors'][sector]
+                          ['Segments'] !=
+                      null) {
+                    // {31: {Sectors: {2: {Segments: {6: {Status: 2048}}}}}}
+                    String segment = element['Lines'][driverNumber]['Sectors']
+                            [sector]['Segments']
+                        .keys
+                        .toList()[0];
+                    timingData['Lines'][driverNumber]['Sectors']
+                        [int.parse(sector)]['Value'] = segment;
+                    timingData['Lines'][driverNumber]['Sectors']
+                        [int.parse(sector)]['Status'] = element['Lines']
+                            [driverNumber]['Sectors'][sector]['Segments']
+                        [segment]['Status'];
+                  } else if (element['Lines'][driverNumber]['Speeds'] != null) {
+                    // example: {11: {Sectors: {1: {Value: 39.188}}, Speeds: {I2: {Value: 295}}}}
+                    List<String> speeds =
+                        element['Lines'][driverNumber]['Speeds'].keys.toList();
+                    for (String speed in speeds) {
+                      timingData['Lines'][driverNumber]['Speeds'][speed]
+                              ['Value'] =
+                          element['Lines'][driverNumber]['Speeds'][speed]
+                              ['Value'];
+                      if (element['Lines'][driverNumber]['Speeds'][speed]
+                              ['PersonalFastest'] !=
+                          null) {
+                        timingData['Lines'][driverNumber]['Speeds'][speed]
+                                ['PersonalFastest'] =
+                            element['Lines'][driverNumber]['Speeds'][speed]
+                                ['PersonalFastest'];
+                      }
+                      if (element['Lines'][driverNumber]['Speeds'][speed]
+                              ['OverallFastest'] !=
+                          null) {
+                        timingData['Lines'][driverNumber]['Speeds'][speed]
+                                ['OverallFastest'] =
+                            element['Lines'][driverNumber]['Speeds'][speed]
+                                ['OverallFastest'];
+                      }
+                    }
+                  } else {
+                    print("Unfound!");
+                    print(element['Lines']);
+                  }
+                }
+              }
+
+              if (element['Lines'][driverNumber]['Position'] != null) {
+                // {"20":{"IntervalToPositionAhead":{"Value":""},"Line":17,"Position":"17"},"23":{"Line":18,"Position":"18"}}
+                //print(
+                //    '$driverNumber: From ${timingData['Lines'][driverNumber]['Position']}');
+
+                timingData['Lines'][driverNumber]['Position'] =
+                    element['Lines'][driverNumber]['Position'];
+                timingData['Lines'][driverNumber]['Line'] =
+                    element['Lines'][driverNumber]['Line'];
+                //print('to ${timingData['Lines'][driverNumber]['Position']}\n');
+              }
             }
           }
         }
@@ -410,13 +427,13 @@ class _LiveTimingScreenFragmentState extends State<LiveTimingScreenFragment> {
   }
 
   void skipToTime(int currentTimeInSeconds, int targetTimeInSeconds) {
-    int i = 1;
+    int i = 0;
     final Duration j = Duration(seconds: currentTimeInSeconds);
     if (j.inSeconds < targetTimeInSeconds) {
       for (i; i + j.inSeconds < targetTimeInSeconds; i++) {
         Duration k = Duration(seconds: i + j.inSeconds);
         String currentDurationFormated =
-            "${k.toString().padLeft(2, '0')}:${k.inMinutes.remainder(60).toString().padLeft(2, '0')}:${k.inSeconds.remainder(60).toString().padLeft(2, '0')}";
+            "${k.inHours.toString().padLeft(2, '0')}:${k.inMinutes.remainder(60).toString().padLeft(2, '0')}:${k.inSeconds.remainder(60).toString().padLeft(2, '0')}";
         _updateLapCount(currentDurationFormated);
         _updateTimingData(currentDurationFormated);
         _updateTrackStatus(currentDurationFormated);
@@ -426,7 +443,7 @@ class _LiveTimingScreenFragmentState extends State<LiveTimingScreenFragment> {
       for (i; i < targetTimeInSeconds; i++) {
         Duration k = Duration(seconds: i + j.inSeconds);
         String currentDurationFormated =
-            "${k.toString().padLeft(2, '0')}:${k.inMinutes.remainder(60).toString().padLeft(2, '0')}:${k.inSeconds.remainder(60).toString().padLeft(2, '0')}";
+            "${k.inHours.toString().padLeft(2, '0')}:${k.inMinutes.remainder(60).toString().padLeft(2, '0')}:${k.inSeconds.remainder(60).toString().padLeft(2, '0')}";
         _updateLapCount(currentDurationFormated);
         _updateTimingData(currentDurationFormated);
         _updateTrackStatus(currentDurationFormated);
@@ -441,7 +458,9 @@ class _LiveTimingScreenFragmentState extends State<LiveTimingScreenFragment> {
     timer = Timer.periodic(
       const Duration(seconds: 1),
       (Timer t) => setState(
-        () {},
+        () {
+          timer.tick > 0 ? shouldLoadTimingData = false : null;
+        },
       ),
     );
   }
@@ -454,34 +473,15 @@ class _LiveTimingScreenFragmentState extends State<LiveTimingScreenFragment> {
 
   @override
   Widget build(BuildContext context) {
-    currentDuration = Duration(
-      seconds: timer.tick + sliderValue.toInt(),
-    );
-    if (currentDuration.inSeconds >= 10800) {
-      // avoid going above 3 hours
-      currentDuration = const Duration(seconds: 10800);
+    if (shouldLoadTimingData) {
+      skipToTime(0, widget.currentDurationNotFormated.inSeconds);
     }
     String currentDurationFormated =
-        "${currentDuration.inHours.toString().padLeft(2, '0')}:${currentDuration.inMinutes.remainder(60).toString().padLeft(2, '0')}:${currentDuration.inSeconds.remainder(60).toString().padLeft(2, '0')}";
+        "${widget.currentDurationNotFormated.inHours.toString().padLeft(2, '0')}:${widget.currentDurationNotFormated.inMinutes.remainder(60).toString().padLeft(2, '0')}:${widget.currentDurationNotFormated.inSeconds.remainder(60).toString().padLeft(2, '0')}";
 
     return SingleChildScrollView(
       child: Column(
         children: [
-          Slider(
-            value: currentDuration.inSeconds.toDouble(),
-            onChanged: (value) => currentDuration.inSeconds <
-                    7 // time needed to initialize the values
-                ? null
-                : skipToTime(currentDuration.inSeconds, value.toInt()),
-            max: 10800,
-            activeColor: currentDuration.inSeconds <
-                    7 // time needed to initialize the values
-                ? Theme.of(context).primaryColor.withOpacity(0.5)
-                : Theme.of(context).primaryColor,
-          ),
-          Text(
-            currentDurationFormated,
-          ),
           _updateTrackStatus(
             currentDurationFormated,
           ),
