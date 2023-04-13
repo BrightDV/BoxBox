@@ -116,55 +116,61 @@ class _MainFragmentState extends State<MainFragment> {
         widget.data['sessionDetails'],
         currentDuration,
       ),
-      //DriversMapFragment(widget.data['detailsForTheMap']),
-      Text('disabled for debug'),
+      DriversMapFragment(
+        widget.data['detailsForTheMap'],
+        currentDurationFormated,
+      ),
       ContentStreamsFragment(widget.data['contentStreams']),
     ];
     return Scaffold(
       appBar: AppBar(
-        flexibleSpace: Padding(
-          padding: const EdgeInsets.fromLTRB(50, 8, 50, 0),
-          child: BottomNavigationBar(
-            type: BottomNavigationBarType.fixed,
-            currentIndex: _selectedIndex,
-            backgroundColor: Theme.of(context).primaryColor,
-            elevation: 0,
-            items: <BottomNavigationBarItem>[
-              BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.timer_outlined,
-                  color: Colors.grey.shade200,
+        title: SizedBox(
+          height: AppBar().preferredSize.height,
+          width: AppBar().preferredSize.width,
+          child: Padding(
+            padding: EdgeInsets.only(top: 8),
+            child: BottomNavigationBar(
+              type: BottomNavigationBarType.fixed,
+              currentIndex: _selectedIndex,
+              backgroundColor: Theme.of(context).primaryColor,
+              elevation: 0,
+              items: <BottomNavigationBarItem>[
+                BottomNavigationBarItem(
+                  icon: Icon(
+                    Icons.timer_outlined,
+                    color: Colors.grey.shade200,
+                  ),
+                  activeIcon: const Icon(
+                    Icons.timer,
+                    color: Colors.white,
+                  ),
+                  label: '',
                 ),
-                activeIcon: const Icon(
-                  Icons.timer,
-                  color: Colors.white,
+                BottomNavigationBarItem(
+                  icon: Icon(
+                    Icons.map_outlined,
+                    color: Colors.grey.shade200,
+                  ),
+                  activeIcon: const Icon(
+                    Icons.map,
+                    color: Colors.white,
+                  ),
+                  label: '',
                 ),
-                label: '',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.map_outlined,
-                  color: Colors.grey.shade200,
+                BottomNavigationBarItem(
+                  icon: Icon(
+                    Icons.headset_outlined,
+                    color: Colors.grey.shade200,
+                  ),
+                  activeIcon: const Icon(
+                    Icons.headset,
+                    color: Colors.white,
+                  ),
+                  label: '',
                 ),
-                activeIcon: const Icon(
-                  Icons.map,
-                  color: Colors.white,
-                ),
-                label: '',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.headset_outlined,
-                  color: Colors.grey.shade200,
-                ),
-                activeIcon: const Icon(
-                  Icons.headset,
-                  color: Colors.white,
-                ),
-                label: '',
-              ),
-            ],
-            onTap: _onItemTapped,
+              ],
+              onTap: _onItemTapped,
+            ),
           ),
         ),
       ),
@@ -178,6 +184,7 @@ class _MainFragmentState extends State<MainFragment> {
               child: Padding(
                 padding: const EdgeInsets.only(bottom: 55, right: 10),
                 child: FloatingActionButton(
+                  backgroundColor: Theme.of(context).primaryColor,
                   onPressed: () {
                     print("show weather ;)");
                   },
@@ -315,7 +322,7 @@ class _LiveTimingScreenFragmentState extends State<LiveTimingScreenFragment> {
         //
         for (Map element in widget.sessionDetails["timingData"]
             [currentDurationFormated]) {
-          if (element['Lines'].runtimeType != List) {
+          if (element['Lines'].runtimeType != List<dynamic>) {
             List<String> driverNumbers = element['Lines'].keys.toList();
             for (var driverNumber in driverNumbers) {
               if (timingData['Lines'][driverNumber] == null) {

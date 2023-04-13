@@ -26,7 +26,8 @@ import 'package:flutter/material.dart';
 
 class DriversMapFragment extends StatefulWidget {
   final Map positions;
-  const DriversMapFragment(this.positions, {super.key});
+  final String currentDuration;
+  const DriversMapFragment(this.positions, this.currentDuration, {super.key});
 
   @override
   State<DriversMapFragment> createState() => _DriversMapFragmentState();
@@ -35,7 +36,6 @@ class DriversMapFragment extends StatefulWidget {
 class _DriversMapFragmentState extends State<DriversMapFragment> {
   late Timer timer;
   final PictureRecorder recorder = PictureRecorder();
-  Duration currentDuration = const Duration();
   double sliderValue = 0;
   Map currentPositions = {};
 
@@ -59,21 +59,20 @@ class _DriversMapFragmentState extends State<DriversMapFragment> {
   }
 
   void skipToTime(int currentTimeInSeconds, int targetTimeInSeconds) {
-    int i = 1;
+    int i = targetTimeInSeconds - 2;
     final Duration j = Duration(seconds: currentTimeInSeconds);
     if (j.inSeconds < targetTimeInSeconds) {
       for (i; i + j.inSeconds < targetTimeInSeconds; i++) {
         Duration k = Duration(seconds: i + j.inSeconds);
         String currentDurationFormated =
-            "${k.toString().padLeft(2, '0')}:${k.inMinutes.remainder(60).toString().padLeft(2, '0')}:${k.inSeconds.remainder(60).toString().padLeft(2, '0')}";
+            "${k.inHours.toString().padLeft(2, '0')}:${k.inMinutes.remainder(60).toString().padLeft(2, '0')}:${k.inSeconds.remainder(60).toString().padLeft(2, '0')}";
         _updatePositions(currentDurationFormated);
       }
     } else {
-      i = targetTimeInSeconds - 3;
       for (i; i < targetTimeInSeconds; i++) {
         Duration k = Duration(seconds: i + j.inSeconds);
         String currentDurationFormated =
-            "${k.toString().padLeft(2, '0')}:${k.inMinutes.remainder(60).toString().padLeft(2, '0')}:${k.inSeconds.remainder(60).toString().padLeft(2, '0')}";
+            "${k.inHours.toString().padLeft(2, '0')}:${k.inMinutes.remainder(60).toString().padLeft(2, '0')}:${k.inSeconds.remainder(60).toString().padLeft(2, '0')}";
         _updatePositions(currentDurationFormated);
       }
     }
@@ -99,33 +98,7 @@ class _DriversMapFragmentState extends State<DriversMapFragment> {
 
   @override
   Widget build(BuildContext context) {
-    currentDuration = Duration(
-      seconds: timer.tick + sliderValue.toInt(),
-    );
-    if (currentDuration.inSeconds >= 10800) {
-      // avoid going above 3 hours
-      currentDuration = const Duration(seconds: 10800);
-    }
-    String currentDurationFormated =
-        "${currentDuration.inHours.toString().padLeft(2, '0')}:${currentDuration.inMinutes.remainder(60).toString().padLeft(2, '0')}:${currentDuration.inSeconds.remainder(60).toString().padLeft(2, '0')}";
-
-    return Column(
-      children: [
-        Slider(
-          value: currentDuration.inSeconds.toDouble(),
-          onChanged: (value) => currentDuration.inSeconds <
-                  7 // time needed to initialize the values
-              ? null
-              : skipToTime(currentDuration.inSeconds, value.toInt()),
-          max: 10800,
-          activeColor: currentDuration.inSeconds <
-                  7 // time needed to initialize the values
-              ? Theme.of(context).primaryColor.withOpacity(0.5)
-              : Theme.of(context).primaryColor,
-        ),
-        _updatePositions(currentDurationFormated)
-      ],
-    );
+    return _updatePositions(widget.currentDuration);
   }
 }
 
@@ -142,7 +115,7 @@ class CurvePainter extends CustomPainter {
     points.forEach(
       (key, value) => positions.add(
         Offset(
-          points[key]['X'] / 55 + width / 2 + 5,
+          points[key]['X'] / 55 + width / 2 + 245,
           -points[key]['Y'] / 55 + 480,
         ),
       ),
@@ -183,7 +156,7 @@ class BackgroundCurvePainter extends CustomPainter {
       String two = (point[1] * 1000000).round().toString();
       positions.add(
         Offset(
-          double.parse(one.substring(3, one.length)) / 49 - 120,
+          double.parse(one.substring(3, one.length)) / 49 + 120,
           -double.parse(two.substring(3, two.length)) / 49 + 1105,
         ),
       );

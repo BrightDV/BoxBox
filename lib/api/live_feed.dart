@@ -27,7 +27,8 @@ import 'package:http/http.dart' as http;
 class LiveFeedFetcher {
   Future<bool> getSessionStatus() async {
     var url = Uri.parse(
-        'https://livetiming.formula1.com/static/StreamingStatus.json');
+      'https://livetiming.formula1.com/static/StreamingStatus.json',
+    );
     var response = await http.get(url);
     Map<String, dynamic> responseAsJson =
         json.decode(utf8.decode(response.bodyBytes));
@@ -190,7 +191,7 @@ class LiveFeedFetcher {
     Map sessionInfo = await getSessionInfo();
     Map data = {
       'sessionDetails': await getSessionDetails(sessionInfo),
-      //'detailsForTheMap': await getDetailsForTheMap(sessionInfo),
+      'detailsForTheMap': await getDetailsForTheMap(sessionInfo),
       'contentStreams': await getContentStreams(sessionInfo),
     };
     return data;
