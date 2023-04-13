@@ -23,7 +23,7 @@ import 'package:boxbox/Screens/Compare/compare_home.dart';
 import 'package:boxbox/Screens/hall_of_fame.dart';
 import 'package:boxbox/Screens/history.dart';
 import 'package:boxbox/Screens/MixedNews/mixed_news.dart';
-import 'package:boxbox/Screens/live_timing.dart';
+import 'package:boxbox/Screens/LivetimingArchive/live_timing.dart';
 import 'package:boxbox/Screens/settings.dart';
 import 'package:boxbox/Screens/test.dart';
 import 'package:flutter/material.dart';
