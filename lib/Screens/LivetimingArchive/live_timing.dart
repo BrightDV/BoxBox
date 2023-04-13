@@ -57,7 +57,6 @@ class MainFragment extends StatefulWidget {
 
 class _MainFragmentState extends State<MainFragment> {
   int _selectedIndex = 0;
-  List<Widget> actions = [];
   late Timer timer;
   double sliderValue = 0;
   Duration currentDuration = const Duration(seconds: 0);
@@ -66,16 +65,6 @@ class _MainFragmentState extends State<MainFragment> {
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
-      if (_selectedIndex == 0) {
-        actions = [
-          IconButton(
-            icon: const Icon(Icons.close),
-            onPressed: () {},
-          ),
-        ];
-      } else {
-        actions = [];
-      }
     });
   }
 
@@ -98,6 +87,69 @@ class _MainFragmentState extends State<MainFragment> {
   void dispose() {
     timer.cancel();
     super.dispose();
+  }
+
+  void weatherPopup(int targetTimeInSeconds) {
+    Map weatherData = {};
+    int i = 0;
+    for (i; i < targetTimeInSeconds; i++) {
+      Duration k = Duration(seconds: i);
+      String currentDurationFormated =
+          "${k.inHours.toString().padLeft(2, '0')}:${k.inMinutes.remainder(60).toString().padLeft(2, '0')}:${k.inSeconds.remainder(60).toString().padLeft(2, '0')}";
+      if (widget.data['weatherData'][currentDurationFormated] != null) {
+        weatherData = widget.data['weatherData'][currentDurationFormated];
+      }
+    }
+    if (weatherData == {}) {
+      weatherData = widget.data['weatherData'].keys?.toList().first ?? {};
+    }
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(
+                Radius.circular(
+                  20.0,
+                ),
+              ),
+            ),
+            contentPadding: const EdgeInsets.only(
+              top: 10.0,
+            ),
+            title: const Text(
+              "Weather",
+              style: TextStyle(fontSize: 24.0),
+              textAlign: TextAlign.center,
+            ),
+            content: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Text('Temperature: ${weatherData["AirTemp"]}°C'),
+                Text(
+                  'Humidity: ${weatherData["Humidity"]}%',
+                ), // maybe absolute humidity in g/m3
+                Text('Pression: ${weatherData["Pressure"]}hPa'),
+                Text('Rainfall: ${weatherData["Rainfall"]}mm'),
+                Text('Track temperature: ${weatherData["TrackTemp"]}°C'),
+                Text('Wind direction: ${weatherData["WindDirection"]}°'),
+                Text('Wind speed: ${weatherData["WindSpeed"]}km/h'),
+              ],
+            ),
+            actions: <Widget>[
+              Center(
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('Close'),
+                ),
+              ),
+            ],
+          );
+        });
   }
 
   @override
@@ -128,7 +180,7 @@ class _MainFragmentState extends State<MainFragment> {
           height: AppBar().preferredSize.height,
           width: AppBar().preferredSize.width,
           child: Padding(
-            padding: EdgeInsets.only(top: 8),
+            padding: const EdgeInsets.only(top: 8),
             child: BottomNavigationBar(
               type: BottomNavigationBarType.fixed,
               currentIndex: _selectedIndex,
@@ -185,9 +237,7 @@ class _MainFragmentState extends State<MainFragment> {
                 padding: const EdgeInsets.only(bottom: 55, right: 10),
                 child: FloatingActionButton(
                   backgroundColor: Theme.of(context).primaryColor,
-                  onPressed: () {
-                    print("show weather ;)");
-                  },
+                  onPressed: () => weatherPopup(currentDuration.inSeconds),
                   child: const Icon(Icons.wb_sunny_outlined),
                 ),
               ),

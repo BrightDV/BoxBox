@@ -187,12 +187,31 @@ class LiveFeedFetcher {
     return responseAsJson['Streams'];
   }
 
+  Future<Map> getWeatherData(Map sessionInfo) async {
+    var url = Uri.parse(
+      'https://livetiming.formula1.com/static/${sessionInfo['Path']}WeatherData.jsonStream',
+    );
+    var response = await http.get(url);
+    Map<String, dynamic> responseAsJson = {};
+    List responseAsList = utf8.decode(response.bodyBytes).split('\n');
+    responseAsList.removeAt(responseAsList.length - 1);
+    for (String line in responseAsList) {
+      responseAsJson[line.split('{')[0].split('.')[0]] = json.decode(
+        line.substring(
+          line.indexOf('{'),
+        ),
+      );
+    }
+    return responseAsJson;
+  }
+
   Future<Map> getData() async {
     Map sessionInfo = await getSessionInfo();
     Map data = {
       'sessionDetails': await getSessionDetails(sessionInfo),
       'detailsForTheMap': await getDetailsForTheMap(sessionInfo),
       'contentStreams': await getContentStreams(sessionInfo),
+      'weatherData': await getWeatherData(sessionInfo),
     };
     return data;
   }
