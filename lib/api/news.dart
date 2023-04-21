@@ -386,7 +386,9 @@ class _NewsItemState extends State<NewsItem> {
                         imageUrl: imageUrl,
                         placeholder: (context, url) => const SizedBox(
                           height: 90,
-                          child: LoadingIndicatorUtil(),
+                          child: LoadingIndicatorUtil(
+                            replaceImage: true,
+                          ),
                         ),
                         errorWidget: (context, url, error) => Icon(
                           Icons.error_outlined,
@@ -467,7 +469,9 @@ class _NewsItemState extends State<NewsItem> {
                                                 false)
                                             ? height / (16 / 9) - 58
                                             : width / (16 / 9) - 10,
-                                        child: const LoadingIndicatorUtil(),
+                                        child: const LoadingIndicatorUtil(
+                                          replaceImage: true,
+                                        ),
                                       ),
                                       errorWidget: (context, url, error) =>
                                           SizedBox(
@@ -2105,7 +2109,9 @@ class _ImageRendererState extends State<ImageRenderer> {
               imageUrl: widget.imageUrl,
               placeholder: (context, url) => SizedBox(
                 height: MediaQuery.of(context).size.width / (16 / 9),
-                child: const LoadingIndicatorUtil(),
+                child: const LoadingIndicatorUtil(
+                  replaceImage: true,
+                ),
               ),
               errorWidget: (context, url, error) =>
                   const Icon(Icons.error_outlined),
@@ -2162,7 +2168,9 @@ class _ImageRendererState extends State<ImageRenderer> {
                                                         .width /
                                                     (16 / 9),
                                                 child:
-                                                    const LoadingIndicatorUtil(),
+                                                    const LoadingIndicatorUtil(
+                                                  replaceImage: true,
+                                                ),
                                               ),
                                               errorWidget:
                                                   (context, url, error) =>
@@ -2198,7 +2206,9 @@ class _ImageRendererState extends State<ImageRenderer> {
                                                                   .width /
                                                               (16 / 9),
                                                           child:
-                                                              const LoadingIndicatorUtil(),
+                                                              const LoadingIndicatorUtil(
+                                                            replaceImage: true,
+                                                          ),
                                                         ),
                                               errorBuilder:
                                                   (context, url, error) => Icon(
@@ -2240,7 +2250,9 @@ class _ImageRendererState extends State<ImageRenderer> {
                           placeholder: (context, url) => SizedBox(
                             height:
                                 MediaQuery.of(context).size.width / (16 / 9),
-                            child: const LoadingIndicatorUtil(),
+                            child: const LoadingIndicatorUtil(
+                              replaceImage: true,
+                            ),
                           ),
                           errorWidget: (context, url, error) =>
                               const Icon(Icons.error_outlined),
@@ -2262,7 +2274,9 @@ class _ImageRendererState extends State<ImageRenderer> {
                                       height:
                                           MediaQuery.of(context).size.width /
                                               (16 / 9),
-                                      child: const LoadingIndicatorUtil(),
+                                      child: const LoadingIndicatorUtil(
+                                        replaceImage: true,
+                                      ),
                                     ),
                           errorBuilder: (context, url, error) => Icon(
                             Icons.error_outlined,
@@ -2466,7 +2480,9 @@ class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
                               placeholder: (context, url) => SizedBox(
                                 height: MediaQuery.of(context).size.width /
                                     (16 / 9),
-                                child: const LoadingIndicatorUtil(),
+                                child: const LoadingIndicatorUtil(
+                                  replaceImage: true,
+                                ),
                               ),
                               errorWidget: (context, url, error) => Icon(
                                 Icons.error_outlined,

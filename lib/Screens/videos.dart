@@ -284,7 +284,9 @@ class _VideoItemState extends State<VideoItem> {
                     imageUrl: videos[widget.index].thumbnailUrl,
                     placeholder: (context, url) => SizedBox(
                       height: MediaQuery.of(context).size.width / (16 / 9) - 7,
-                      child: const LoadingIndicatorUtil(),
+                      child: const LoadingIndicatorUtil(
+                        replaceImage: true,
+                      ),
                     ),
                     errorWidget: (context, url, error) => Icon(
                       Icons.error_outlined,
