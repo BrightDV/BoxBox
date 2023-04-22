@@ -268,8 +268,11 @@ class _VideoItemState extends State<VideoItem> {
             },
             itemCount: videos.length,
             scrollDirection: Axis.vertical,
-            control: const SwiperControl(),
+            control: SwiperControl(
+              disableColor: Theme.of(context).primaryColor,
+            ),
             index: widget.index,
+            loop: false,
           ),
           closedBuilder: (context, action) => Stack(
             alignment: Alignment.bottomLeft,
