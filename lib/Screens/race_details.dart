@@ -139,26 +139,36 @@ class _RaceDetailsScreenState extends State<RaceDetailsScreen> {
                     ? TabBarView(
                         children: [
                           FreePracticesResultsProvider(race, widget.hasSprint),
-                          SingleChildScrollView(
-                            child: QualificationResultsProvider(
-                              race: race,
-                              hasSprint: widget.hasSprint,
+                          SafeArea(
+                            child: SingleChildScrollView(
+                              child: QualificationResultsProvider(
+                                race: race,
+                                hasSprint: widget.hasSprint,
+                              ),
                             ),
                           ),
-                          SprintResultsProvider(race: race),
-                          RaceResultsProvider(race: race),
+                          SafeArea(
+                            child: SprintResultsProvider(race: race),
+                          ),
+                          SafeArea(
+                            child: RaceResultsProvider(race: race),
+                          ),
                         ],
                       )
                     : TabBarView(
                         children: [
                           FreePracticesResultsProvider(race, widget.hasSprint),
-                          SingleChildScrollView(
-                            child: QualificationResultsProvider(
-                              race: race,
-                              hasSprint: widget.hasSprint,
+                          SafeArea(
+                            child: SingleChildScrollView(
+                              child: QualificationResultsProvider(
+                                race: race,
+                                hasSprint: widget.hasSprint,
+                              ),
                             ),
                           ),
-                          RaceResultsProvider(race: race),
+                          SafeArea(
+                            child: RaceResultsProvider(race: race),
+                          ),
                         ],
                       ),
               );
