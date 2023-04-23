@@ -78,7 +78,7 @@ void main() async {
     "Load news in background",
     existingWorkPolicy: ExistingWorkPolicy.replace,
     frequency: const Duration(hours: 2),
-    //initialDelay: const Duration(hours: 2),
+    initialDelay: const Duration(hours: 2),
   );
 
   runApp(const MyApp());
@@ -142,17 +142,17 @@ void callbackDispatcher() {
         }; */
         return Future.value(true);
       } catch (error, stacktrace) {
-        // print(error.toString());
-        // print("Notification error. Stacktrace:");
-        // print(stacktrace.toString());
-        await AwesomeNotifications().createNotification(
+        print(error.toString());
+        print("Notification error. Stacktrace:");
+        print(stacktrace.toString());
+        /* await AwesomeNotifications().createNotification(
           content: NotificationContent(
             id: createUniqueId(),
             channelKey: 'newArticle',
             title: 'An error occured.',
             body: stacktrace.toString(),
           ),
-        );
+        ); */
         return Future.value(false);
       }
     },

@@ -1,0 +1,8 @@
+- Fix going fullscreen in the player and add a maxbuffer
+- Fix the video tab
+- Update the images of some tracks
+- Update some static URLs
+- Show a placeholder instead of a loading indicator while loading an image
+- Lot of improvements to the Archive Live Timing Screen (still in alpha / Settings > Experimental Features)
+- Update translations
+- Some other UI fixes and improvements
