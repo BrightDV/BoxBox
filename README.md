@@ -77,6 +77,7 @@ Theses files are used by Flutter to provide you the translation.
 The app is currently available in:
 - 🇬🇧 English
 - 🇫🇷 French
+- 🇩🇪 German, thanks to @RekZix
 - 🇭🇺 Hungarian, thanks to @thereeroyz
 - 🇮🇹 Italian, thanks to @atilluF
 - 🇳🇴 Norwegian, thanks to @comradekingu
@@ -85,7 +86,7 @@ The app is currently available in:
 - 🇪🇸 Spanish, thanks to @inigochoa
 - 🇹🇷 Turkish, thanks to @metezd
 
-... and many others!
+and thanks to the other translators!
 
 ## License
 [![GNU GPLv3 Image](https://www.gnu.org/graphics/gplv3-127x51.png)](https://www.gnu.org/licenses/gpl-3.0.en.html)  
