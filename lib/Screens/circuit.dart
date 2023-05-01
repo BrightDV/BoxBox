@@ -214,8 +214,7 @@ class _CircuitScreenState extends State<CircuitScreen> {
                                     ),
                                   )
                                 : Container(),
-                            snapshot.data!['raceResults']
-                                    .isNotEmpty // TODO: fix upcoming gp
+                            snapshot.data!['raceResults'].isNotEmpty
                                 ? Padding(
                                     padding: const EdgeInsets.all(
                                       10,

@@ -56,17 +56,16 @@ class _RaceDetailsScreenState extends State<RaceDetailsScreen> {
     final Race race = widget.race;
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
+
     return Scaffold(
         backgroundColor: useDarkMode
             ? Theme.of(context).scaffoldBackgroundColor
             : Colors.white,
         body: DefaultTabController(
-          length: widget.hasSprint ? 4 : 3,
+          length: 3,
           initialIndex: widget.tab != null
               ? widget.tab == 10
-                  ? widget.hasSprint
-                      ? 3
-                      : 2
+                  ? 2
                   : widget.tab!
               : 0,
           child: Builder(
@@ -94,20 +93,16 @@ class _RaceDetailsScreenState extends State<RaceDetailsScreen> {
                               ? <Widget>[
                                   Tab(
                                     text: AppLocalizations.of(context)!
-                                        .freePracticeFirstLetter,
+                                        .freePracticeShort,
                                   ),
                                   Tab(
                                     text: AppLocalizations.of(context)!
-                                        .qualifyingsFirstLetter,
-                                  ),
-                                  Tab(
-                                    text: AppLocalizations.of(context)!
-                                        .sprintFirstLetter
+                                        .sprint
                                         .toUpperCase(),
                                   ),
                                   Tab(
                                     text: AppLocalizations.of(context)!
-                                        .raceFirstLetter
+                                        .race
                                         .toUpperCase(),
                                   ),
                                 ]
@@ -140,18 +135,45 @@ class _RaceDetailsScreenState extends State<RaceDetailsScreen> {
                         children: [
                           FreePracticesResultsProvider(race, widget.hasSprint),
                           SafeArea(
-                            child: SingleChildScrollView(
-                              child: QualificationResultsProvider(
-                                race: race,
-                                hasSprint: widget.hasSprint,
-                              ),
-                            ),
-                          ),
-                          SafeArea(
                             child: SprintResultsProvider(race: race),
                           ),
-                          SafeArea(
-                            child: RaceResultsProvider(race: race),
+                          DefaultTabController(
+                            length: 2,
+                            initialIndex: 0, // TODO: widget.tab to list
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                TabBar(
+                                  tabs: <Widget>[
+                                    Tab(
+                                      text: AppLocalizations.of(context)!
+                                          .qualifyings
+                                          .toUpperCase(),
+                                    ),
+                                    Tab(
+                                      text: AppLocalizations.of(context)!
+                                          .race
+                                          .toUpperCase(),
+                                    ),
+                                  ],
+                                ),
+                                Expanded(
+                                  child: TabBarView(
+                                    children: [
+                                      SafeArea(
+                                        child: SingleChildScrollView(
+                                          child: QualificationResultsProvider(
+                                            race: race,
+                                            hasSprint: widget.hasSprint,
+                                          ),
+                                        ),
+                                      ),
+                                      RaceResultsProvider(race: race),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       )
@@ -233,7 +255,7 @@ class FreePracticesResultsProvider extends StatelessWidget {
             )
           : snapshot.hasData
               ? ListView.builder(
-                  itemCount: hasSprint ? 2 : 3,
+                  itemCount: hasSprint ? 1 : 3,
                   itemBuilder: (context, index) => snapshot.data! > index
                       ? ListTile(
                           title: Text(
