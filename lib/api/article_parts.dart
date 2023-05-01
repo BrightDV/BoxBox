@@ -538,7 +538,7 @@ class WidgetsList extends StatelessWidget {
                                                                 ['sessionType']
                                                             .startsWith(
                                                                 'Starting Grid')
-                                                        ? 375
+                                                        ? 378
                                                         : 255,
                                                     decoration: BoxDecoration(
                                                       border: Border.all(
@@ -618,58 +618,19 @@ class WidgetsList extends StatelessWidget {
                                                             left: 15,
                                                           ),
                                                           child: Row(
-                                                            children: [
-                                                              Expanded(
-                                                                flex: element['fields']['sessionType'] ==
-                                                                            'Race' ||
-                                                                        element['fields']['sessionType'] ==
-                                                                            'Sprint'
-                                                                    ? 5
-                                                                    : 4,
-                                                                child: Text(
-                                                                  AppLocalizations.of(
-                                                                          context)!
-                                                                      .positionAbbreviation,
-                                                                  style:
-                                                                      TextStyle(
-                                                                    color: useDarkMode
-                                                                        ? Colors
-                                                                            .white
-                                                                        : Colors
-                                                                            .black,
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                              const Spacer(),
-                                                              Expanded(
-                                                                flex: 5,
-                                                                child: Text(
-                                                                  AppLocalizations.of(
-                                                                          context)!
-                                                                      .time,
-                                                                  style:
-                                                                      TextStyle(
-                                                                    color: useDarkMode
-                                                                        ? Colors
-                                                                            .white
-                                                                        : Colors
-                                                                            .black,
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                              element['fields'][
-                                                                              'sessionType'] ==
-                                                                          'Race' ||
-                                                                      element['fields']
-                                                                              [
-                                                                              'sessionType'] ==
-                                                                          'Sprint'
-                                                                  ? Expanded(
-                                                                      flex: 3,
+                                                            children: element[
+                                                                            'fields']
+                                                                        [
+                                                                        'sessionType']
+                                                                    .startsWith(
+                                                                        'Starting Grid')
+                                                                ? [
+                                                                    Expanded(
+                                                                      flex: 2,
                                                                       child:
                                                                           Text(
                                                                         AppLocalizations.of(context)!
-                                                                            .pointsAbbreviation,
+                                                                            .positionAbbreviation,
                                                                         style:
                                                                             TextStyle(
                                                                           color: useDarkMode
@@ -677,9 +638,92 @@ class WidgetsList extends StatelessWidget {
                                                                               : Colors.black,
                                                                         ),
                                                                       ),
-                                                                    )
-                                                                  : Container(),
-                                                            ],
+                                                                    ),
+                                                                    Expanded(
+                                                                      flex: 1,
+                                                                      child:
+                                                                          Container(),
+                                                                    ),
+                                                                    Expanded(
+                                                                      flex: 4,
+                                                                      child:
+                                                                          Text(
+                                                                        AppLocalizations.of(context)!
+                                                                            .driverAbbreviation,
+                                                                        style:
+                                                                            TextStyle(
+                                                                          color: useDarkMode
+                                                                              ? Colors.white
+                                                                              : Colors.black,
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                    Expanded(
+                                                                      flex: 6,
+                                                                      child:
+                                                                          Text(
+                                                                        AppLocalizations.of(context)!
+                                                                            .team
+                                                                            .toUpperCase(),
+                                                                        style:
+                                                                            TextStyle(
+                                                                          color: useDarkMode
+                                                                              ? Colors.white
+                                                                              : Colors.black,
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ]
+                                                                : [
+                                                                    Expanded(
+                                                                      flex: element['fields']['sessionType'] == 'Race' ||
+                                                                              element['fields']['sessionType'] == 'Sprint'
+                                                                          ? 5
+                                                                          : 4,
+                                                                      child:
+                                                                          Text(
+                                                                        AppLocalizations.of(context)!
+                                                                            .positionAbbreviation,
+                                                                        style:
+                                                                            TextStyle(
+                                                                          color: useDarkMode
+                                                                              ? Colors.white
+                                                                              : Colors.black,
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                    const Spacer(),
+                                                                    Expanded(
+                                                                      flex: 5,
+                                                                      child:
+                                                                          Text(
+                                                                        AppLocalizations.of(context)!
+                                                                            .time,
+                                                                        style:
+                                                                            TextStyle(
+                                                                          color: useDarkMode
+                                                                              ? Colors.white
+                                                                              : Colors.black,
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                    element['fields']['sessionType'] ==
+                                                                                'Race' ||
+                                                                            element['fields']['sessionType'] ==
+                                                                                'Sprint'
+                                                                        ? Expanded(
+                                                                            flex:
+                                                                                3,
+                                                                            child:
+                                                                                Text(
+                                                                              AppLocalizations.of(context)!.pointsAbbreviation,
+                                                                              style: TextStyle(
+                                                                                color: useDarkMode ? Colors.white : Colors.black,
+                                                                              ),
+                                                                            ),
+                                                                          )
+                                                                        : Container(),
+                                                                  ],
                                                           ),
                                                         ),
                                                         for (Map driverResults in element['fields']
@@ -837,7 +881,7 @@ class WidgetsList extends StatelessWidget {
                                                                           ),
                                                                           Expanded(
                                                                             flex:
-                                                                                3,
+                                                                                4,
                                                                             child:
                                                                                 Text(
                                                                               driverResults['driverLastName'],
@@ -979,7 +1023,7 @@ class WidgetsList extends StatelessWidget {
                                                                               element['fields']['meetingOfficialName'],
                                                                               raceUrl: element['fields']['cta'],
                                                                             )
-                                                                          : // TODO: sprint shootout results
+                                                                          : // TODO: sprint shootout results -> not yet supported by Ergast
                                                                           Scaffold(
                                                                               appBar: AppBar(
                                                                                 title: Text(

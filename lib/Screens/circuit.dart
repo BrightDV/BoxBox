@@ -444,7 +444,7 @@ class _CircuitScreenState extends State<CircuitScreen> {
                                                                       [
                                                                       'timetables']
                                                                   [
-                                                                  2]['session'] ==
+                                                                  1]['session'] ==
                                                               's',
                                                           tab: 10,
                                                         ),

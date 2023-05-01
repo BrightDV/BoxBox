@@ -139,7 +139,7 @@ class _RaceDetailsScreenState extends State<RaceDetailsScreen> {
                           ),
                           DefaultTabController(
                             length: 2,
-                            initialIndex: 0, // TODO: widget.tab to list
+                            initialIndex: widget.tab == 10 ? 1 : 0,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
@@ -152,7 +152,7 @@ class _RaceDetailsScreenState extends State<RaceDetailsScreen> {
                                     ),
                                     Tab(
                                       text: AppLocalizations.of(context)!
-                                          .race
+                                          .results
                                           .toUpperCase(),
                                     ),
                                   ],
