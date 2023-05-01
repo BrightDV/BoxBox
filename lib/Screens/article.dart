@@ -17,6 +17,7 @@
  * Copyright (c) 2022-2023, BrightDV
  */
 
+import 'package:boxbox/api/article_parts.dart';
 import 'package:boxbox/api/news.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/request_error.dart';
@@ -137,7 +138,7 @@ class ArticleProvider extends StatelessWidget {
           return RequestErrorWidget(snapshot.error.toString());
         }
         return snapshot.hasData
-            ? JoinArticlesParts(snapshot.data!)
+            ? ArticleParts(snapshot.data!)
             : const LoadingIndicatorUtil();
       },
     );
