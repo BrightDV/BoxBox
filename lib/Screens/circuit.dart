@@ -155,7 +155,7 @@ class _CircuitScreenState extends State<CircuitScreen> {
                                     builder: (context) => RaceDetailsScreen(
                                       race,
                                       snapshot.data!['meetingContext']
-                                              ['timetables'][2]['session'] ==
+                                              ['timetables'][1]['session'] ==
                                           's',
                                     ),
                                   ),
@@ -214,7 +214,8 @@ class _CircuitScreenState extends State<CircuitScreen> {
                                     ),
                                   )
                                 : Container(),
-                            snapshot.data!['raceResults'] == []
+                            snapshot.data!['raceResults']
+                                    .isNotEmpty // TODO: fix upcoming gp
                                 ? Padding(
                                     padding: const EdgeInsets.all(
                                       10,
@@ -786,7 +787,7 @@ class _CircuitScreenState extends State<CircuitScreen> {
                                                     RaceDetailsScreen(
                                                   circuitSnapshot.data!,
                                                   snapshot.data!['meetingContext']
-                                                              ['timetables'][2]
+                                                              ['timetables'][1]
                                                           ['session'] ==
                                                       's',
                                                 ),
@@ -1085,7 +1086,7 @@ class _CircuitScreenState extends State<CircuitScreen> {
                                                                             RaceDetailsScreen(
                                                                       circuitSnapshot
                                                                           .data!,
-                                                                      snapshot.data!['meetingContext']['timetables'][2]
+                                                                      snapshot.data!['meetingContext']['timetables'][1]
                                                                               [
                                                                               'session'] ==
                                                                           's',
