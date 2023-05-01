@@ -214,6 +214,55 @@ class _CircuitScreenState extends State<CircuitScreen> {
                                     ),
                                   )
                                 : Container(),
+                            Padding(
+                              padding: const EdgeInsets.all(5),
+                              child: GestureDetector(
+                                child: Container(
+                                  width: double.infinity,
+                                  decoration: BoxDecoration(
+                                    color: useDarkMode
+                                        ? const Color(0xff1d1d28)
+                                        : Colors.grey.shade400,
+                                    borderRadius: BorderRadius.circular(5),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.fromLTRB(
+                                      20,
+                                      10,
+                                      20,
+                                      10,
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        Text(
+                                          AppLocalizations.of(context)!
+                                              .grandPrixMap,
+                                          style: TextStyle(
+                                            color: useDarkMode
+                                                ? Colors.white
+                                                : Colors.black,
+                                          ),
+                                        ),
+                                        const Spacer(),
+                                        Icon(
+                                          Icons.map_outlined,
+                                          color: useDarkMode
+                                              ? Colors.white
+                                              : Colors.black,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                onTap: () => showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) =>
+                                      CircuitMapScreen(
+                                    race.circuitId,
+                                  ),
+                                ),
+                              ),
+                            ),
                             snapshot.data!['raceResults'].isNotEmpty
                                 ? Padding(
                                     padding: const EdgeInsets.all(
@@ -427,55 +476,6 @@ class _CircuitScreenState extends State<CircuitScreen> {
                                     ),
                                   )
                                 : Container(),
-                            Padding(
-                              padding: const EdgeInsets.all(5),
-                              child: GestureDetector(
-                                child: Container(
-                                  width: double.infinity,
-                                  decoration: BoxDecoration(
-                                    color: useDarkMode
-                                        ? const Color(0xff1d1d28)
-                                        : Colors.grey.shade400,
-                                    borderRadius: BorderRadius.circular(5),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.fromLTRB(
-                                      20,
-                                      10,
-                                      20,
-                                      10,
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        Text(
-                                          AppLocalizations.of(context)!
-                                              .grandPrixMap,
-                                          style: TextStyle(
-                                            color: useDarkMode
-                                                ? Colors.white
-                                                : Colors.black,
-                                          ),
-                                        ),
-                                        const Spacer(),
-                                        Icon(
-                                          Icons.map_outlined,
-                                          color: useDarkMode
-                                              ? Colors.white
-                                              : Colors.black,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                onTap: () => showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) =>
-                                      CircuitMapScreen(
-                                    race.circuitId,
-                                  ),
-                                ),
-                              ),
-                            ),
                             snapshot.data!['curatedSection'] != null
                                 ? SingleChildScrollView(
                                     scrollDirection: Axis.horizontal,
