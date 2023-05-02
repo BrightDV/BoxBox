@@ -134,8 +134,46 @@ class _RaceDetailsScreenState extends State<RaceDetailsScreen> {
                     ? TabBarView(
                         children: [
                           FreePracticesResultsProvider(race, widget.hasSprint),
-                          SafeArea(
-                            child: SprintResultsProvider(race: race),
+                          DefaultTabController(
+                            length: 2,
+                            initialIndex: widget.tab == 10 ? 1 : 0,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                TabBar(
+                                  tabs: <Widget>[
+                                    const Tab(
+                                      text: 'SHOOTOUT',
+                                    ),
+                                    Tab(
+                                      text: AppLocalizations.of(context)!
+                                          .results
+                                          .toUpperCase(),
+                                    ),
+                                  ],
+                                ),
+                                Expanded(
+                                  child: TabBarView(
+                                    children: [
+                                      SafeArea(
+                                        child: SingleChildScrollView(
+                                          child: QualificationResultsProvider(
+                                            raceUrl:
+                                                'https://www.formula1.com/en/results.html/2023/races/${Convert().circuitIdFromErgastToFormulaOne(widget.race.circuitId)}/${Convert().circuitNameFromErgastToFormulaOne(widget.race.circuitId)}/sprint-shootout.html',
+                                            hasSprint: widget.hasSprint,
+                                          ),
+                                        ),
+                                      ),
+                                      SafeArea(
+                                        child: SprintResultsProvider(
+                                          race: race,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
                           ),
                           DefaultTabController(
                             length: 2,
