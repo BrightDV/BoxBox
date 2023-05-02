@@ -143,15 +143,19 @@ class _SessionScreenState extends State<SessionScreen> {
                     body: InAppWebView(
                       initialUrlRequest: URLRequest(
                         url: Uri.parse(
-                            "https://www.formula1.com/en/live-experience-webview.html"),
+                          "https://www.formula1.com/en/live-experience-webview.html",
+                        ),
                       ),
                       gestureRecognizers: {
                         Factory<VerticalDragGestureRecognizer>(
-                            () => VerticalDragGestureRecognizer()),
+                          () => VerticalDragGestureRecognizer(),
+                        ),
                         Factory<HorizontalDragGestureRecognizer>(
-                            () => HorizontalDragGestureRecognizer()),
+                          () => HorizontalDragGestureRecognizer(),
+                        ),
                         Factory<ScaleGestureRecognizer>(
-                            () => ScaleGestureRecognizer()),
+                          () => ScaleGestureRecognizer(),
+                        ),
                       },
                     ),
                   )
@@ -243,26 +247,36 @@ class _SessionScreenState extends State<SessionScreen> {
                                 ? widget.session.baseUrl
                                     .replaceAll('session-type', 'race-result')
                                 : widget.session.baseUrl.replaceAll(
-                                    'session-type', 'sprint-results'),
+                                    'session-type',
+                                    'sprint-results',
+                                  ),
                           )
                         : SingleChildScrollView(
                             child: QualificationResultsProvider(
-                              raceUrl: widget.session.baseUrl
-                                  .replaceAll('session-type', 'qualifying'),
+                              raceUrl: widget.session.baseUrl.replaceAll(
+                                'session-type',
+                                widget.session.sessionsAbbreviation == 'ss'
+                                    ? 'sprint-shootout'
+                                    : 'qualifying',
+                              ),
                             ),
                           )
                     : InAppWebView(
                         initialUrlRequest: URLRequest(
                           url: Uri.parse(
-                              "https://www.formula1.com/en/live-experience-webview.html"),
+                            "https://www.formula1.com/en/live-experience-webview.html",
+                          ),
                         ),
                         gestureRecognizers: {
                           Factory<VerticalDragGestureRecognizer>(
-                              () => VerticalDragGestureRecognizer()),
+                            () => VerticalDragGestureRecognizer(),
+                          ),
                           Factory<HorizontalDragGestureRecognizer>(
-                              () => HorizontalDragGestureRecognizer()),
+                            () => HorizontalDragGestureRecognizer(),
+                          ),
                           Factory<ScaleGestureRecognizer>(
-                              () => ScaleGestureRecognizer()),
+                            () => ScaleGestureRecognizer(),
+                          ),
                         },
                       ),
           );

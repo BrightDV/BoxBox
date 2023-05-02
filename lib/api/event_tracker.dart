@@ -218,8 +218,9 @@ class EventTracker {
   }
 
   Future<Map> getCircuitDetails(String formulaOneCircuitId) async {
-    Uri uri =
-        Uri.parse('$endpoint/v1/event-tracker/meeting/$formulaOneCircuitId');
+    Uri uri = Uri.parse(
+      '$endpoint/v1/event-tracker/meeting/$formulaOneCircuitId',
+    );
     Response res = await get(
       uri,
       headers: {

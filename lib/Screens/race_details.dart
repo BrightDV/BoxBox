@@ -757,7 +757,7 @@ class QualificationResultsProvider extends StatelessWidget {
                               final raceYear = race!.date.split('-')[0];
                               final List<Video> searchResults =
                                   await yt.search.search(
-                                "Formula 1 Qualification Highlights ${race!.raceName} $raceYear",
+                                raceUrl?.contains('sprint-shootout') ?? false ? "Formula 1 Sprint Shootout Highlights ${race!.raceName} $raceYear": "Formula 1 Qualification Highlights ${race!.raceName} $raceYear",
                               );
                               final Video bestVideoMatch = searchResults[0];
                               await launchUrl(

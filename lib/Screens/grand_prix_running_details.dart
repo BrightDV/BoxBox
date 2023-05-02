@@ -289,7 +289,7 @@ class _SessionItemState extends State<SessionItem> {
       'r': AppLocalizations.of(context)!.race,
       'q': AppLocalizations.of(context)!.qualifyings,
       's': AppLocalizations.of(context)!.sprint,
-      'sq': AppLocalizations.of(context)!.sprintQualifyings,
+      'ss': 'Sprint Shootout',
       'p1': AppLocalizations.of(context)!.freePracticeOne,
       'p2': AppLocalizations.of(context)!.freePracticeTwo,
       'p3': AppLocalizations.of(context)!.freePracticeThree,
