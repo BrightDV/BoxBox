@@ -274,5 +274,7 @@
   "results": "Resultater",
   "@results": {},
   "information": "Informasjon",
-  "@information": {}
+  "@information": {},
+  "startingGrid": "Startoppstilling",
+  "@startingGrid": {}
 }
