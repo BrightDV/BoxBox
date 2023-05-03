@@ -19,7 +19,6 @@
 
 import 'dart:async';
 
-import 'package:boxbox/Screens/driver_details.dart';
 import 'package:boxbox/api/driver_components.dart';
 import 'package:boxbox/api/ergast.dart';
 import 'package:boxbox/api/race_components.dart';
