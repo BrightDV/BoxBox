@@ -111,6 +111,24 @@ class DriverQualificationResult {
   );
 }
 
+class StartingGridPosition {
+  final String position;
+  final String number;
+  final String driver;
+  final String team;
+  final String teamFullName;
+  final String time;
+
+  StartingGridPosition(
+    this.position,
+    this.number,
+    this.driver,
+    this.team,
+    this.teamFullName,
+    this.time,
+  );
+}
+
 class DriversList extends StatelessWidget {
   final List<Driver> items;
   final ScrollController? scrollController;

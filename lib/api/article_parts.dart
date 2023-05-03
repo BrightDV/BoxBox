@@ -1023,15 +1023,16 @@ class WidgetsList extends StatelessWidget {
                                                                               element['fields']['meetingOfficialName'],
                                                                               raceUrl: element['fields']['cta'],
                                                                             )
-                                                                          : // TODO: sprint shootout results -> not yet supported by Ergast
-                                                                          Scaffold(
+                                                                          : Scaffold(
                                                                               appBar: AppBar(
                                                                                 title: Text(
                                                                                   element['fields']['sessionType'] == 'Race'
                                                                                       ? AppLocalizations.of(context)!.race
                                                                                       : element['fields']['sessionType'] == 'Sprint'
                                                                                           ? AppLocalizations.of(context)!.sprint
-                                                                                          : AppLocalizations.of(context)!.qualifyings,
+                                                                                          : element['fields']['cta'].endsWith('starting-grid.html')
+                                                                                              ? AppLocalizations.of(context)!.startingGrid
+                                                                                              : AppLocalizations.of(context)!.qualifyings,
                                                                                 ),
                                                                               ),
                                                                               backgroundColor: Theme.of(context).colorScheme.background,
@@ -1040,9 +1041,11 @@ class WidgetsList extends StatelessWidget {
                                                                                       raceUrl: element['fields']['cta'],
                                                                                     )
                                                                                   : SingleChildScrollView(
-                                                                                      child: QualificationResultsProvider(
-                                                                                        raceUrl: element['fields']['cta'],
-                                                                                      ),
+                                                                                      child: element['fields']['cta'].endsWith('starting-grid.html')
+                                                                                          ? StartingGridProvider(element['fields']['cta'])
+                                                                                          : QualificationResultsProvider(
+                                                                                              raceUrl: element['fields']['cta'],
+                                                                                            ),
                                                                                     ),
                                                                             ),
                                                                     ),

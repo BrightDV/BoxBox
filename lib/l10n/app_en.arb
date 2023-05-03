@@ -237,6 +237,8 @@
   "@sprintQualifyings": {},
   "standings": "Standings",
   "@standings": {},
+  "startingGrid": "Starting Grid",
+  "@startingGrid": {},
   "statistics": "Stats",
   "@statistics": {},
   "tapToCheckForUpdate": "Tap to check for new update.",

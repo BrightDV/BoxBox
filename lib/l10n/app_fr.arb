@@ -237,6 +237,8 @@
   "@sprintQualifyings": {},
   "standings": "Classements",
   "@standings": {},
+  "startingGrid": "Grille de Départ",
+  "@startingGrid": {},
   "statistics": "Statistiques",
   "@statistics": {},
   "tapToCheckForUpdate": "Appuyez pour vérifier les mises à jour.",

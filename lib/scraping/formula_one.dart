@@ -224,6 +224,34 @@ class FormulaOneScraper {
     }
   }
 
+  Future<List<StartingGridPosition>> scrapeStartingGrid(
+      String startingGridUrl) async {
+    http.Response response = await http.get(
+      Uri.parse(startingGridUrl),
+    );
+    dom.Document document = parser.parse(response.body);
+    List<dom.Element> tempResults = document.getElementsByTagName('tr');
+    List<StartingGridPosition> results = [];
+
+    tempResults.removeAt(0);
+    for (var result in tempResults) {
+      results.add(
+        StartingGridPosition(
+          result.children[1].text,
+          result.children[2].text,
+          result.children[3].children[1].text,
+          Convert().teamsFromFormulaOneToErgast(
+            result.children[4].text,
+          ),
+          result.children[4].text,
+          result.children[5].text != '' ? result.children[5].text : '--',
+        ),
+      );
+    }
+
+    return results;
+  }
+
   Future<List<List>> scrapeDriversDetails(
     String ergastDriverId,
   ) async {

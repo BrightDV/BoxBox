@@ -19,6 +19,7 @@
 
 import 'dart:async';
 
+import 'package:boxbox/Screens/driver_details.dart';
 import 'package:boxbox/api/driver_components.dart';
 import 'package:boxbox/api/ergast.dart';
 import 'package:boxbox/api/race_components.dart';
@@ -28,6 +29,7 @@ import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/racetracks_url.dart';
 import 'package:boxbox/helpers/request_error.dart';
 import 'package:boxbox/Screens/free_practice_screen.dart';
+import 'package:boxbox/helpers/team_background_color.dart';
 import 'package:boxbox/scraping/formula_one.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -757,7 +759,9 @@ class QualificationResultsProvider extends StatelessWidget {
                               final raceYear = race!.date.split('-')[0];
                               final List<Video> searchResults =
                                   await yt.search.search(
-                                raceUrl?.contains('sprint-shootout') ?? false ? "Formula 1 Sprint Shootout Highlights ${race!.raceName} $raceYear": "Formula 1 Qualification Highlights ${race!.raceName} $raceYear",
+                                raceUrl?.contains('sprint-shootout') ?? false
+                                    ? "Formula 1 Sprint Shootout Highlights ${race!.raceName} $raceYear"
+                                    : "Formula 1 Qualification Highlights ${race!.raceName} $raceYear",
                               );
                               final Video bestVideoMatch = searchResults[0];
                               await launchUrl(
@@ -777,6 +781,211 @@ class QualificationResultsProvider extends StatelessWidget {
                     )
                   : SessionCountdownTimer(race, 3)
               : const LoadingIndicatorUtil(),
+    );
+  }
+}
+
+class StartingGridProvider extends StatelessWidget {
+  final String raceUrl;
+  const StartingGridProvider(this.raceUrl, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<List<StartingGridPosition>>(
+      future: FormulaOneScraper().scrapeStartingGrid(raceUrl),
+      builder: (context, snapshot) => snapshot.hasError
+          ? RequestErrorWidget(
+              snapshot.error.toString(),
+            )
+          : snapshot.hasData
+              ? ListView.builder(
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
+                  itemCount: snapshot.data!.length + 1,
+                  physics: const ClampingScrollPhysics(),
+                  itemBuilder: (context, index) => index == 0
+                      ? Container(
+                          color: const Color(0xff383840),
+                          height: 45,
+                          child: Padding(
+                            padding: const EdgeInsets.all(5),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  flex: 2,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(
+                                      right: 4,
+                                    ),
+                                    child: Text(
+                                      AppLocalizations.of(context)!
+                                          .positionAbbreviation,
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                ),
+                                const Expanded(
+                                  flex: 1,
+                                  child: Text(''),
+                                ),
+                                Expanded(
+                                  flex: 4,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(
+                                      left: 4,
+                                    ),
+                                    child: Text(
+                                      AppLocalizations.of(context)!
+                                          .driverAbbreviation,
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 7,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(
+                                      left: 8,
+                                    ),
+                                    child: Text(
+                                      AppLocalizations.of(context)!
+                                          .team
+                                          .toUpperCase(),
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 4,
+                                  child: Text(
+                                    AppLocalizations.of(context)!.time,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
+                      : StartingGridPositionItem(
+                          snapshot.data![index - 1],
+                          index - 1,
+                        ),
+                )
+              : const LoadingIndicatorUtil(),
+    );
+  }
+}
+
+class StartingGridPositionItem extends StatelessWidget {
+  final StartingGridPosition startingGridPosition;
+  final int index;
+  const StartingGridPositionItem(this.startingGridPosition, this.index,
+      {super.key});
+
+  Color getTeamColors(String teamId) {
+    Color tC = TeamBackgroundColor().getTeamColors(teamId);
+    return tC;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    Color finalTeamColors = getTeamColors(startingGridPosition.team);
+    return Container(
+      color: index % 2 == 1 ? const Color(0xff22222c) : const Color(0xff15151f),
+      height: 45,
+      child: Padding(
+        padding: const EdgeInsets.all(5),
+        child: Row(
+          children: [
+            Expanded(
+              flex: 2,
+              child: Padding(
+                padding: const EdgeInsets.only(
+                  right: 4,
+                ),
+                child: Text(
+                  startingGridPosition.position,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+            Expanded(
+              flex: 1,
+              child: VerticalDivider(
+                color: finalTeamColors,
+                thickness: 8,
+                width: 25,
+                indent: 7,
+                endIndent: 7,
+              ),
+            ),
+            Expanded(
+              flex: 5,
+              child: Padding(
+                padding: const EdgeInsets.only(
+                  left: 4,
+                ),
+                child: Text(
+                  startingGridPosition.driver,
+                  style: const TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+            Expanded(
+              flex: 7,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 4, right: 4),
+                child: Text(
+                  startingGridPosition.teamFullName,
+                  style: const TextStyle(
+                    color: Colors.white,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+            Expanded(
+              flex: 4,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 2, right: 2),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: const Color(0xff383840),
+                    borderRadius: BorderRadius.circular(7),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 5, bottom: 5),
+                    child: Text(
+                      startingGridPosition.time,
+                      style: const TextStyle(
+                        color: Colors.white,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
