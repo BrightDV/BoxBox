@@ -127,6 +127,7 @@ class TeamDetailsFragment extends StatelessWidget {
                 Image.network(
                   teamDetails["drivers"]["images"][0],
                   height: (MediaQuery.of(context).size.width - 10) / 2,
+                  width: (MediaQuery.of(context).size.width - 10) / 2,
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 7),
@@ -146,6 +147,7 @@ class TeamDetailsFragment extends StatelessWidget {
                 Image.network(
                   teamDetails["drivers"]["images"][1],
                   height: (MediaQuery.of(context).size.width - 10) / 2,
+                  width: (MediaQuery.of(context).size.width - 10) / 2,
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 7),
