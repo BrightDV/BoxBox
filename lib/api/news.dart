@@ -1224,7 +1224,7 @@ class _ImageRendererState extends State<ImageRenderer> {
   }
 }
 
-class VideoRenderer extends StatefulWidget {
+class VideoRenderer extends StatelessWidget {
   final String videoId;
   final bool? autoplay;
   final String? youtubeId;
@@ -1237,43 +1237,32 @@ class VideoRenderer extends StatefulWidget {
     this.youtubeId,
     this.heroTag,
   }) : super(key: key);
-  @override
-  State<VideoRenderer> createState() => _VideoRendererState();
-}
-
-class _VideoRendererState extends State<VideoRenderer> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
 
   Future<Map<String, dynamic>> getYouTubeVideoLinks(String videoId) async {
     Map<String, dynamic> urls = {};
     urls['videos'] = [];
     YoutubeExplode yt = YoutubeExplode();
     var manifest = await yt.videos.streamsClient.getManifest(videoId);
+    var video = await yt.videos.get(videoId);
+
     urls['poster'] = 'https://img.youtube.com/vi/$videoId/0.jpg';
+    urls['name'] = video.title;
+    urls['auhor'] = video.author;
 
     for (var stream in manifest.muxed) {
       urls['videos'].add(stream.url.toString());
     }
     urls['videos'].add(manifest.muxed[1].url.toString());
     urls['videos'] = urls['videos'].reversed.toList();
-    urls['videos'].add(manifest.muxed[1].url.toString());
     return urls;
   }
 
   @override
-  Widget build(BuildContext build) {
+  Widget build(BuildContext context) {
     return FutureBuilder<Map<String, dynamic>>(
-      future: (widget.youtubeId ?? '') != ''
-          ? getYouTubeVideoLinks(widget.youtubeId!)
-          : BrightCove().getVideoLinks(widget.videoId),
+      future: (youtubeId ?? '') != ''
+          ? getYouTubeVideoLinks(youtubeId!)
+          : BrightCove().getVideoLinks(videoId),
       builder: (context, snapshot) => snapshot.hasError
           ? RequestErrorWidget(
               snapshot.error.toString(),
@@ -1281,8 +1270,8 @@ class _VideoRendererState extends State<VideoRenderer> {
           : snapshot.hasData
               ? BetterPlayerVideoPlayer(
                   snapshot.data!,
-                  widget.autoplay == null ? false : widget.autoplay!,
-                  widget.heroTag ?? '',
+                  autoplay == null ? false : autoplay!,
+                  heroTag ?? '',
                 )
               : SizedBox(
                   height: MediaQuery.of(context).size.width / (16 / 9),
@@ -1322,21 +1311,26 @@ class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
     BetterPlayerDataSource betterPlayerDataSource = BetterPlayerDataSource(
       BetterPlayerDataSourceType.network,
       widget.videoUrls['videos'][0],
-      resolutions: {
-        '720p': widget.videoUrls['videos'][1],
-        '360p': widget.videoUrls['videos'][2],
-        '180p': widget.videoUrls['videos'][3],
-      },
+      resolutions: widget.videoUrls['videos'].length == 4
+          ? {
+              '720p': widget.videoUrls['videos'][1],
+              '360p': widget.videoUrls['videos'][2],
+              '180p': widget.videoUrls['videos'][3],
+            }
+          : {
+              '720p': widget.videoUrls['videos'][1],
+              '360p': widget.videoUrls['videos'][2],
+            },
       notificationConfiguration: BetterPlayerNotificationConfiguration(
         showNotification: true,
-        title: widget.videoUrls['name'],
-        author: "Formula 1",
+        title: widget.videoUrls['name'] ?? 'Video',
+        author: widget.videoUrls['author'] ?? "Formula 1",
         imageUrl: widget.videoUrls['poster'],
         activityName: "MainActivity",
       ),
       bufferingConfiguration: const BetterPlayerBufferingConfiguration(
         maxBufferMs: 1000 * 30,
-        bufferForPlaybackMs: 2500,
+        bufferForPlaybackMs: 3000,
       ),
       headers: {
         'user-agent':
