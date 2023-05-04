@@ -23,6 +23,7 @@ import 'dart:ui';
 
 import 'package:better_player/better_player.dart';
 import 'package:boxbox/Screens/circuit.dart';
+import 'package:boxbox/Screens/schedule.dart';
 import 'package:boxbox/api/brightcove.dart';
 import 'package:boxbox/api/race_components.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
@@ -920,9 +921,26 @@ class TextParagraphRenderer extends StatelessWidget {
             } else {
               launchUrl(Uri.parse(url));
             }
-          } else if (url.startsWith("https://www.formula1.com/en/racing/202") ||
-              url.startsWith(
-                  "https://www.formula1.com/content/fom-website/en/racing/202")) {
+          } else if (url ==
+              "https://www.formula1.com/en/racing/${DateTime.now().year}.html") {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => Scaffold(
+                  appBar: AppBar(
+                    title: Text(
+                      AppLocalizations.of(context)!.schedule,
+                    ),
+                  ),
+                  body: const ScheduleScreen(),
+                ),
+              ),
+            );
+          } else if ((url
+                      .startsWith("https://www.formula1.com/en/racing/202") ||
+                  url.startsWith(
+                      "https://www.formula1.com/content/fom-website/en/racing/202")) &&
+              url.split('/').length > 5) {
             Navigator.push(
               context,
               MaterialPageRoute(
@@ -932,7 +950,7 @@ class TextParagraphRenderer extends StatelessWidget {
                     '',
                     '',
                     '',
-                    url.split('/')[8].split('.')[0],
+                    url.split('/').last.split('.')[0],
                     '',
                     '',
                     '',

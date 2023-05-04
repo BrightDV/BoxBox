@@ -794,7 +794,7 @@ class _CircuitScreenState extends State<CircuitScreen> {
                                             ),
                                           ),
                                         ),
-                                        snapshot.data!['links'][1] != null
+                                        snapshot.data!['links'].isNotEmpty
                                             ? Padding(
                                                 padding:
                                                     const EdgeInsets.all(5),
@@ -861,7 +861,59 @@ class _CircuitScreenState extends State<CircuitScreen> {
                                                 ),
                                               )
                                             : Container(),
-                                        snapshot.data!['raceResults'] != null
+                                        Padding(
+                                          padding: const EdgeInsets.all(5),
+                                          child: GestureDetector(
+                                            child: Container(
+                                              width: double.infinity,
+                                              decoration: BoxDecoration(
+                                                color: useDarkMode
+                                                    ? const Color(0xff1d1d28)
+                                                    : Colors.grey.shade400,
+                                                borderRadius:
+                                                    BorderRadius.circular(5),
+                                              ),
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.fromLTRB(
+                                                  20,
+                                                  10,
+                                                  20,
+                                                  10,
+                                                ),
+                                                child: Row(
+                                                  children: [
+                                                    Text(
+                                                      AppLocalizations.of(
+                                                              context)!
+                                                          .grandPrixMap,
+                                                      style: TextStyle(
+                                                        color: useDarkMode
+                                                            ? Colors.white
+                                                            : Colors.black,
+                                                      ),
+                                                    ),
+                                                    const Spacer(),
+                                                    Icon(
+                                                      Icons.map_outlined,
+                                                      color: useDarkMode
+                                                          ? Colors.white
+                                                          : Colors.black,
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                            onTap: () => showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) =>
+                                                  CircuitMapScreen(
+                                                circuitSnapshot.data!.circuitId,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        snapshot.data!['raceResults'].isNotEmpty
                                             ? Padding(
                                                 padding: const EdgeInsets.all(
                                                   10,
@@ -1174,58 +1226,6 @@ class _CircuitScreenState extends State<CircuitScreen> {
                                                 ),
                                               )
                                             : Container(),
-                                        Padding(
-                                          padding: const EdgeInsets.all(5),
-                                          child: GestureDetector(
-                                            child: Container(
-                                              width: double.infinity,
-                                              decoration: BoxDecoration(
-                                                color: useDarkMode
-                                                    ? const Color(0xff1d1d28)
-                                                    : Colors.grey.shade400,
-                                                borderRadius:
-                                                    BorderRadius.circular(5),
-                                              ),
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.fromLTRB(
-                                                  20,
-                                                  10,
-                                                  20,
-                                                  10,
-                                                ),
-                                                child: Row(
-                                                  children: [
-                                                    Text(
-                                                      AppLocalizations.of(
-                                                              context)!
-                                                          .grandPrixMap,
-                                                      style: TextStyle(
-                                                        color: useDarkMode
-                                                            ? Colors.white
-                                                            : Colors.black,
-                                                      ),
-                                                    ),
-                                                    const Spacer(),
-                                                    Icon(
-                                                      Icons.map_outlined,
-                                                      color: useDarkMode
-                                                          ? Colors.white
-                                                          : Colors.black,
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                            onTap: () => showDialog(
-                                              context: context,
-                                              builder: (BuildContext context) =>
-                                                  CircuitMapScreen(
-                                                circuitSnapshot.data!.circuitId,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
                                         Padding(
                                           padding: const EdgeInsets.all(5),
                                           child: TrackLayoutImage(
