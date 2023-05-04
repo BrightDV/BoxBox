@@ -374,9 +374,9 @@ class WidgetsList extends StatelessWidget {
                               : element['contentType'] == 'atomImageGallery'
                                   ? CarouselSlider(
                                       items: [
-                                        element['fields']['imageGallery']
-                                            .forEach(
-                                          (element) => SizedBox(
+                                        for (element in element['fields']
+                                            ['imageGallery'])
+                                          SizedBox(
                                             width: MediaQuery.of(context)
                                                 .size
                                                 .width,
@@ -391,7 +391,6 @@ class WidgetsList extends StatelessWidget {
                                                   : element['url'],
                                             ),
                                           ),
-                                        ),
                                       ],
                                       options: CarouselOptions(
                                         viewportFraction: 1,
