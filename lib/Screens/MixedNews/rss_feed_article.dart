@@ -58,6 +58,16 @@ class _RssFeedArticleScreenState extends State<RssFeedArticleScreen> {
     ".*.teads.tv/.*",
     ".*.taboola.com/.*",
     ".*.aaxads.com/.*",
+    ".*.googleapis.com/.*",
+    ".*.btloader.com/.*",
+    ".*.avantisvideo.com/.*",
+    ".*.cookiepro.com/.*",
+    ".*.wknd.ai/.*",
+    ".*.webspectator.com/.*",
+    ".*.googletagmanager.com/.*",
+    ".*.id5-sync.com/.*",
+    ".*.revcontent.com/.*",
+    ".*.omnitagjs.com/.*",
   ];
   final List<ContentBlocker> contentBlockers = [];
 
@@ -100,6 +110,11 @@ class _RssFeedArticleScreenState extends State<RssFeedArticleScreen> {
       ".ot-sdk-container",
       ".GoogleActiveViewElement",
       ".widget_text",
+      ".topbanmobile",
+      ".primisslate",
+      ".snackStickyParent",
+      ".region-banner",
+      ".inarticle-wrapper",
     ];
     contentBlockers.add(
       ContentBlocker(
