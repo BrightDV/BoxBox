@@ -274,5 +274,7 @@
   "results": "Risultati",
   "@results": {},
   "information": "Informazioni",
-  "@information": {}
+  "@information": {},
+  "startingGrid": "Griglia di partenza",
+  "@startingGrid": {}
 }
