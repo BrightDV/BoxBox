@@ -1,0 +1,7 @@
+- Fix the new Sprint format in the race hub and the schedule.
+- Fix the Circuit Screen layout and opening it from an article.
+- Add a result tab to the Team Details Screen.
+- Improve article webview for the Mixed News.
+- Add the starting grid article part and its screen.
+- Improve the loading of the YouTube videos.
+- Update Weblate and add a German translation.
