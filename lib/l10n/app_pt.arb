@@ -276,5 +276,9 @@
   "information": "Informação",
   "@information": {},
   "results": "Resultados",
-  "@results": {}
+  "@results": {},
+  "openingWithInAppBrowser": "Abrir com o navegador na aplicação",
+  "@openingWithInAppBrowser": {},
+  "startingGrid": "Grelha de partida",
+  "@startingGrid": {}
 }
