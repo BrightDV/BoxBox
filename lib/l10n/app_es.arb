@@ -276,5 +276,7 @@
   "information": "Información",
   "@information": {},
   "results": "Resultados",
-  "@results": {}
+  "@results": {},
+  "startingGrid": "Parrilla de salida",
+  "@startingGrid": {}
 }
