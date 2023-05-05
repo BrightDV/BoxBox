@@ -35,6 +35,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
@@ -959,6 +960,18 @@ class TextParagraphRenderer extends StatelessWidget {
                   isFetched: false,
                 ),
               ),
+            );
+          } else if (url == 'https://e-m.media/f1/') {
+            Fluttertoast.showToast(
+              msg: AppLocalizations.of(context)!.openingWithInAppBrowser,
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.CENTER,
+              timeInSecForIosWeb: 1,
+              textColor: Colors.white,
+              fontSize: 16.0,
+            );
+            launchUrl(
+              Uri.parse("https://raceprogramme.formula1.com/#/catalogue"),
             );
           } else {
             launchUrl(Uri.parse(url));

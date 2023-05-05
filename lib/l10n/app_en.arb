@@ -171,6 +171,8 @@
   "@openLiveBlog": {},
   "openQuiz": "Open quiz",
   "@openQuiz": {},
+  "openingWithInAppBrowser": "Opening with the in-app browser",
+  "@openingWithInAppBrowser": {},
   "other": "Other",
   "@other": {},
   "placeOfBirth": "Place of birth",
