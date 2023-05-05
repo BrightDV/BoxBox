@@ -17,7 +17,9 @@
  * Copyright (c) 2022-2023, BrightDV
  */
 
+import 'package:boxbox/Screens/circuit.dart';
 import 'package:boxbox/api/event_tracker.dart';
+import 'package:boxbox/api/race_components.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/request_error.dart';
 import 'package:boxbox/scraping/fia.dart';
@@ -32,6 +34,7 @@ import 'package:loading_indicator/loading_indicator.dart';
 import 'package:marquee/marquee.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class GrandPrixRunningScreen extends StatefulWidget {
   final Event event;
@@ -199,6 +202,108 @@ class _GrandPrixRunningScreenState extends State<GrandPrixRunningScreen> {
               widget.event.raceId,
               widget.event.meetingCountryName,
             ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+              child: Divider(
+                color: useDarkMode ? Colors.grey[700]! : Colors.grey[400]!,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(5),
+              child: GestureDetector(
+                child: Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: useDarkMode
+                        ? const Color(0xff1d1d28)
+                        : Colors.grey.shade400,
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(
+                      20,
+                      10,
+                      20,
+                      10,
+                    ),
+                    child: Row(
+                      children: [
+                        Text(
+                          'Race Programme',
+                          style: TextStyle(
+                            color: useDarkMode ? Colors.white : Colors.black,
+                          ),
+                        ),
+                        const Spacer(),
+                        Icon(
+                          Icons.open_in_new_outlined,
+                          color: useDarkMode ? Colors.white : Colors.black,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                onTap: () => launchUrl(
+                  Uri.parse("https://raceprogramme.formula1.com/#/catalogue"),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(5),
+              child: GestureDetector(
+                child: Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: useDarkMode
+                        ? const Color(0xff1d1d28)
+                        : Colors.grey.shade400,
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(
+                      20,
+                      10,
+                      20,
+                      10,
+                    ),
+                    child: Row(
+                      children: [
+                        Text(
+                          AppLocalizations.of(context)!.information,
+                          style: TextStyle(
+                            color: useDarkMode ? Colors.white : Colors.black,
+                          ),
+                        ),
+                        const Spacer(),
+                        Icon(
+                          Icons.open_in_new_outlined,
+                          color: useDarkMode ? Colors.white : Colors.black,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CircuitScreen(
+                      Race(
+                        '0',
+                        '',
+                        '',
+                        '',
+                        widget.event.circuitImage.split('/').last.split('.')[0],
+                        '',
+                        '',
+                        '',
+                        [],
+                      ),
+                      isFetched: false,
+                    ),
+                  ),
+                ),
+              ),
+            ),
             Container(height: 160),
           ],
         ),
@@ -333,10 +438,12 @@ class _SessionItemState extends State<SessionItem> {
         padding: const EdgeInsets.only(top: 10),
         height: 70,
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Expanded(
               flex: 3,
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
                     widget.session.startTime.day.toString(),
@@ -372,6 +479,7 @@ class _SessionItemState extends State<SessionItem> {
             Expanded(
               flex: 8,
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
                     sessionsAbbreviations[widget.session.sessionsAbbreviation],
