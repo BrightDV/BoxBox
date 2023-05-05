@@ -274,5 +274,9 @@
   "monthAbbreviationMay": "MAI",
   "@monthAbbreviationMay": {},
   "monthAbbreviationJune": "JUN",
-  "@monthAbbreviationJune": {}
+  "@monthAbbreviationJune": {},
+  "startingGrid": "Startraster",
+  "@startingGrid": {},
+  "openingWithInAppBrowser": "Öffnen mit dem In-App-Browser",
+  "@openingWithInAppBrowser": {}
 }
