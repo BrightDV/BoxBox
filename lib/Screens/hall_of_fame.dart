@@ -144,32 +144,29 @@ class HallOfFameDriverDetailsScreen extends StatelessWidget {
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.only(
-                              top: 10,
-                            ),
-                            child: Image(
-                              image: NetworkImage(
-                                'https://www.formula1.com/content/fom-website/en/drivers/hall-of-fame/${driverName.replaceAll(' ', '_')}/jcr:content/featureContent/manual_gallery/image1.img.1920.medium.jpg/1421331223448.jpg',
-                              ),
-                            ),
-                          ),
-                          Text(
-                            snapshot.data!['metaDescription'],
-                            textAlign: TextAlign.justify,
-                            style: TextStyle(
-                              color: useDarkMode ? Colors.white : Colors.black,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          for (String textParagraph in snapshot.data!['parts'])
-                            Text(
-                              textParagraph,
+                            padding: const EdgeInsets.symmetric(vertical: 10),
+                            child: Text(
+                              snapshot.data!['metaDescription'],
                               textAlign: TextAlign.justify,
                               style: TextStyle(
                                 color:
                                     useDarkMode ? Colors.white : Colors.black,
-                                fontSize: 14,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                          for (String textParagraph in snapshot.data!['parts'])
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 4),
+                              child: Text(
+                                textParagraph,
+                                textAlign: TextAlign.justify,
+                                style: TextStyle(
+                                  color:
+                                      useDarkMode ? Colors.white : Colors.black,
+                                  fontSize: 14,
+                                ),
                               ),
                             ),
                         ],

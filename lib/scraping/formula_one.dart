@@ -493,17 +493,34 @@ class FormulaOneScraper {
     final Uri driverDetailsUrl = Uri.parse(pageUrl);
     http.Response response = await http.get(driverDetailsUrl);
     dom.Document document = parser.parse(utf8.decode(response.bodyBytes));
-    dom.Element tempResult = document.getElementsByTagName('main')[0];
-    results['metaDescription'] =
-        tempResult.getElementsByClassName('strapline')[0].text;
-    List parts = [];
-    tempResult.getElementsByClassName('text parbase').forEach(
-          (paragraph) => paragraph.getElementsByTagName('p').forEach(
-                (element) => parts.add(element.text),
-              ),
-        );
-    results['parts'] = parts;
-    return results;
+    if (pageUrl.endsWith('Max_Verstappen.html')) {
+      dom.Element tempResult =
+          document.getElementsByClassName('f1-article--content')[1];
+      results['metaDescription'] = tempResult
+          .getElementsByClassName('f1-article--rich-text')[0]
+          .getElementsByTagName("strong")[0]
+          .text;
+      List parts = [];
+      tempResult.getElementsByClassName('f1-article--rich-text').forEach(
+            (paragraph) => paragraph.getElementsByTagName('p').forEach(
+                  (element) => parts.add(element.text),
+                ),
+          );
+      results['parts'] = parts.sublist(1);
+      return results;
+    } else {
+      dom.Element tempResult = document.getElementsByTagName('main')[0];
+      results['metaDescription'] =
+          tempResult.getElementsByClassName('strapline')[0].text;
+      List parts = [];
+      tempResult.getElementsByClassName('text parbase').forEach(
+            (paragraph) => paragraph.getElementsByTagName('p').forEach(
+                  (element) => parts.add(element.text),
+                ),
+          );
+      results['parts'] = parts;
+      return results;
+    }
   }
 
   Future<Map> scrapeCircuitFacts(
