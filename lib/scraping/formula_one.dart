@@ -492,7 +492,7 @@ class FormulaOneScraper {
     Map results = {};
     final Uri driverDetailsUrl = Uri.parse(pageUrl);
     http.Response response = await http.get(driverDetailsUrl);
-    dom.Document document = parser.parse(response.body);
+    dom.Document document = parser.parse(utf8.decode(response.bodyBytes));
     dom.Element tempResult = document.getElementsByTagName('main')[0];
     results['metaDescription'] =
         tempResult.getElementsByClassName('strapline')[0].text;
