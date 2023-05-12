@@ -21,7 +21,9 @@
 
 import 'dart:async';
 
+import 'package:boxbox/Screens/MixedNews/rss_feed.dart';
 import 'package:boxbox/api/news.dart';
+import 'package:boxbox/api/rss.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/request_error.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -66,42 +68,64 @@ class _NewsFeedWidgetState extends State<NewsFeedWidget> {
   @override
   Widget build(BuildContext context) {
     Map latestNews = Hive.box('requests').get('news', defaultValue: {}) as Map;
-    return FutureBuilder<List<News>>(
-      future: getLatestNewsItems(
-        tagId: widget.tagId,
-        articleType: widget.articleType,
-      ),
-      builder: (context, snapshot) => snapshot.hasError
-          ? (snapshot.error.toString() == 'XMLHttpRequest error.' ||
-                      snapshot.error.toString() ==
-                          "Failed host lookup: 'api.formula1.com'") &&
-                  latestNews['items'] != null &&
-                  widget.tagId == null &&
-                  widget.articleType == null
-              ? OfflineNewsList(
-                  items: F1NewsFetcher().formatResponse(latestNews),
-                  scrollController: widget.scrollController,
-                )
-              : RequestErrorWidget(
-                  snapshot.error.toString(),
-                )
-          : snapshot.hasData
-              ? NewsList(
-                  items: snapshot.data!,
-                  scrollController: widget.scrollController,
-                  tagId: widget.tagId,
-                  articleType: widget.articleType,
-                )
-              : widget.tagId == null &&
-                      widget.articleType == null &&
-                      latestNews['items'] != null
-                  ? NewsList(
-                      items: F1NewsFetcher().formatResponse(latestNews),
-                      scrollController: widget.scrollController,
-                      tagId: widget.tagId,
-                    )
-                  : const LoadingIndicatorUtil(),
+    String savedFeedUrl = Hive.box('settings').get(
+      'homeFeed',
+      defaultValue: 'Official',
     );
+    return savedFeedUrl == 'Official'
+        ? FutureBuilder<List<News>>(
+            future: getLatestNewsItems(
+              tagId: widget.tagId,
+              articleType: widget.articleType,
+            ),
+            builder: (context, snapshot) => snapshot.hasError
+                ? (snapshot.error.toString() == 'XMLHttpRequest error.' ||
+                            snapshot.error.toString() ==
+                                "Failed host lookup: 'api.formula1.com'") &&
+                        latestNews['items'] != null &&
+                        widget.tagId == null &&
+                        widget.articleType == null
+                    ? OfflineNewsList(
+                        items: F1NewsFetcher().formatResponse(latestNews),
+                        scrollController: widget.scrollController,
+                      )
+                    : RequestErrorWidget(
+                        snapshot.error.toString(),
+                      )
+                : snapshot.hasData
+                    ? NewsList(
+                        items: snapshot.data!,
+                        scrollController: widget.scrollController,
+                        tagId: widget.tagId,
+                        articleType: widget.articleType,
+                      )
+                    : widget.tagId == null &&
+                            widget.articleType == null &&
+                            latestNews['items'] != null
+                        ? NewsList(
+                            items: F1NewsFetcher().formatResponse(latestNews),
+                            scrollController: widget.scrollController,
+                            tagId: widget.tagId,
+                          )
+                        : const LoadingIndicatorUtil(),
+          )
+        : FutureBuilder<Map<String, dynamic>>(
+            future: RssFeeds().getFeedArticles(
+              savedFeedUrl.contains('motorsport.com')
+                  ? '$savedFeedUrl/rss/f1/news/'
+                  : savedFeedUrl,
+            ),
+            builder: (context, snapshot) => snapshot.hasError
+                ? RequestErrorWidget(
+                    snapshot.error.toString(),
+                  )
+                : snapshot.hasData
+                    ? RssFeedItemsList(
+                        snapshot,
+                        homeFeed: true,
+                      )
+                    : const LoadingIndicatorUtil(),
+          );
   }
 
   void showOfflineSnackBar() async {

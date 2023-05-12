@@ -21,7 +21,9 @@ import 'package:boxbox/Screens/MixedNews/rss_feed_article.dart';
 import 'package:boxbox/api/rss.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/request_error.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -40,6 +42,41 @@ class RssFeedScreen extends StatefulWidget {
 }
 
 class _RssFeedScreenState extends State<RssFeedScreen> {
+  @override
+  Widget build(BuildContext context) {
+    bool useDarkMode =
+        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
+
+    return Scaffold(
+      backgroundColor: useDarkMode
+          ? Theme.of(context).scaffoldBackgroundColor
+          : Colors.white,
+      appBar: AppBar(
+        title: Text(
+          widget.feedTitle,
+        ),
+      ),
+      body: FutureBuilder<Map<String, dynamic>>(
+        future: RssFeeds().getFeedArticles(
+          widget.feedUrl,
+        ),
+        builder: (context, snapshot) => snapshot.hasError
+            ? RequestErrorWidget(
+                snapshot.error.toString(),
+              )
+            : snapshot.hasData
+                ? RssFeedItemsList(snapshot)
+                : const LoadingIndicatorUtil(),
+      ),
+    );
+  }
+}
+
+class RssFeedItemsList extends StatelessWidget {
+  final AsyncSnapshot snapshot;
+  final bool homeFeed;
+  const RssFeedItemsList(this.snapshot, {this.homeFeed = false, super.key});
+
   @override
   Widget build(BuildContext context) {
     bool useDarkMode =
@@ -120,204 +157,208 @@ class _RssFeedScreenState extends State<RssFeedScreen> {
       );
     }
 
-    return Scaffold(
-      backgroundColor: useDarkMode
-          ? Theme.of(context).scaffoldBackgroundColor
-          : Colors.white,
-      appBar: AppBar(
-        title: Text(
-          widget.feedTitle,
-        ),
-      ),
-      body: FutureBuilder<Map<String, dynamic>>(
-        future: RssFeeds().getFeedArticles(
-          widget.feedUrl,
-        ),
-        builder: (context, snapshot) => snapshot.hasError
-            ? RequestErrorWidget(
-                snapshot.error.toString(),
-              )
-            : snapshot.hasData
-                ? ListView.builder(
-                    itemCount: snapshot.data!['feedArticles'].length,
-                    shrinkWrap: true,
-                    itemBuilder: (context, index) => Padding(
-                      padding: const EdgeInsets.only(top: 5),
-                      child: Card(
-                        elevation: 10.0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15.0),
+    return ListView.builder(
+      itemCount: snapshot.data!['feedArticles'].length,
+      shrinkWrap: true,
+      itemBuilder: (context, index) => Padding(
+        padding: const EdgeInsets.only(top: 5),
+        child: Card(
+          elevation: 10.0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15.0),
+          ),
+          color: useDarkMode ? const Color(0xff1d1d28) : Colors.white,
+          child: InkWell(
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => RssFeedArticleScreen(
+                  snapshot.data!['feedArticles'][index].title!,
+                  snapshot.data!['feedArticles'][index].link!.indexOf('?utm') ==
+                          -1
+                      ? snapshot.data!['feedArticles'][index].link!
+                      : snapshot.data!['feedArticles'][index].link!.substring(
+                          0,
+                          snapshot.data!['feedArticles'][index].link!
+                              .indexOf('?utm'),
                         ),
-                        color: useDarkMode
-                            ? const Color(0xff1d1d28)
-                            : Colors.white,
-                        child: InkWell(
-                          onTap: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => RssFeedArticleScreen(
-                                snapshot.data!['feedArticles'][index].title!,
-                                snapshot.data!['feedArticles'][index].link!
-                                            .indexOf('?utm') ==
-                                        -1
-                                    ? snapshot
-                                        .data!['feedArticles'][index].link!
-                                    : snapshot
-                                        .data!['feedArticles'][index].link!
-                                        .substring(
+                ),
+              ),
+            ),
+            onTapDown: (position) => storePosition(position),
+            onLongPress: () {
+              Feedback.forLongPress(context);
+              showDetailsMenu();
+            },
+            child: Column(
+              children: [
+                newsLayout != 'condensed' &&
+                        newsLayout != 'small' &&
+                        (snapshot.data!['feedArticles'][index].enclosure !=
+                                null ||
+                            snapshot.data!['feedArticles'][index].media
+                                .thumbnails.isNotEmpty ||
+                            snapshot.data!['feedArticles'][index].media.contents
+                                .isNotEmpty)
+                    ? ClipRRect(
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(15),
+                          topRight: Radius.circular(15),
+                        ),
+                        child: homeFeed
+                            ? CachedNetworkImage(
+                                imageUrl: snapshot.data!['feedArticles'][index]
+                                            .enclosure !=
+                                        null
+                                    ? snapshot.data!['feedArticles'][index]
+                                        .enclosure!.url!
+                                    : snapshot.data!['feedArticles'][index]
+                                            .media.thumbnails.isNotEmpty
+                                        ? snapshot.data!['feedArticles'][index]
+                                            .media.thumbnails[0].url
+                                        : snapshot.data!['feedArticles'][index]
+                                            .media.contents[0].url,
+                                placeholder: (context, url) => const SizedBox(
+                                  height: 90,
+                                  child: LoadingIndicatorUtil(
+                                    replaceImage: true,
+                                  ),
+                                ),
+                                errorWidget: (context, url, error) => Icon(
+                                  Icons.error_outlined,
+                                  color:
+                                      useDarkMode ? Colors.white : Colors.black,
+                                ),
+                                fadeOutDuration: const Duration(seconds: 1),
+                                fadeInDuration: const Duration(seconds: 1),
+                                cacheManager: CacheManager(
+                                  Config(
+                                    "newsImages",
+                                    stalePeriod: const Duration(days: 7),
+                                  ),
+                                ),
+                              )
+                            : Image.network(
+                                snapshot.data!['feedArticles'][index]
+                                            .enclosure !=
+                                        null
+                                    ? snapshot.data!['feedArticles'][index]
+                                        .enclosure!.url!
+                                    : snapshot.data!['feedArticles'][index]
+                                            .media.thumbnails.isNotEmpty
+                                        ? snapshot.data!['feedArticles'][index]
+                                            .media.thumbnails[0].url
+                                        : snapshot.data!['feedArticles'][index]
+                                            .media.contents[0].url,
+                              ),
+                      )
+                    : const SizedBox(
+                        height: 0.0,
+                        width: 0.0,
+                      ),
+                ListTile(
+                  title: Text(
+                    snapshot.data!['feedArticles'][index].title!,
+                    style: TextStyle(
+                      color: useDarkMode ? Colors.white : Colors.black,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 5,
+                    textAlign: TextAlign.justify,
+                  ),
+                  subtitle: newsLayout != 'big' && newsLayout != 'condensed'
+                      ? null
+                      : homeFeed
+                          ? Text(
+                              snapshot.data!['feedArticles'][index].description!
+                                          .indexOf("<a ") ==
+                                      -1
+                                  ? snapshot
+                                      .data!['feedArticles'][index].description!
+                                  : snapshot
+                                      .data!['feedArticles'][index].description!
+                                      .substring(
                                         0,
-                                        snapshot
-                                            .data!['feedArticles'][index].link!
-                                            .indexOf('?utm'),
-                                      ),
+                                        snapshot.data!['feedArticles'][index]
+                                            .description!
+                                            .indexOf("<a "),
+                                      )
+                                      .replaceAll('<br>', ''),
+                              maxLines: 5,
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.justify,
+                              style: TextStyle(
+                                color: useDarkMode
+                                    ? Colors.grey[400]
+                                    : Colors.grey[800],
+                              ),
+                            )
+                          : MarkdownBody(
+                              data: snapshot.data!['feedArticles'][index]
+                                          .description!
+                                          .indexOf("<a ") ==
+                                      -1
+                                  ? snapshot
+                                      .data!['feedArticles'][index].description!
+                                  : snapshot
+                                      .data!['feedArticles'][index].description!
+                                      .substring(
+                                        0,
+                                        snapshot.data!['feedArticles'][index]
+                                            .description!
+                                            .indexOf("<a "),
+                                      )
+                                      .replaceAll('<br>', ''),
+                              styleSheet: MarkdownStyleSheet(
+                                textAlign: WrapAlignment.spaceBetween,
+                                p: TextStyle(
+                                  color: useDarkMode
+                                      ? Colors.grey[400]
+                                      : Colors.grey[800],
+                                ),
                               ),
                             ),
-                          ),
-                          onTapDown: (position) => storePosition(position),
-                          onLongPress: () {
-                            Feedback.forLongPress(context);
-                            showDetailsMenu();
-                          },
-                          child: Column(
-                            children: [
-                              newsLayout != 'condensed' &&
-                                      newsLayout != 'small' &&
-                                      (snapshot.data!['feedArticles'][index]
-                                                  .enclosure !=
-                                              null ||
-                                          snapshot.data!['feedArticles'][index]
-                                              .media.thumbnails.isNotEmpty ||
-                                          snapshot.data!['feedArticles'][index]
-                                              .media.contents.isNotEmpty)
-                                  ? ClipRRect(
-                                      borderRadius: const BorderRadius.only(
-                                        topLeft: Radius.circular(15),
-                                        topRight: Radius.circular(15),
-                                      ),
-                                      child: Image.network(
-                                        snapshot.data!['feedArticles'][index]
-                                                    .enclosure !=
-                                                null
-                                            ? snapshot
-                                                .data!['feedArticles'][index]
-                                                .enclosure!
-                                                .url!
-                                            : snapshot
-                                                    .data!['feedArticles']
-                                                        [index]
-                                                    .media
-                                                    .thumbnails
-                                                    .isNotEmpty
-                                                ? snapshot
-                                                    .data!['feedArticles']
-                                                        [index]
-                                                    .media
-                                                    .thumbnails[0]
-                                                    .url
-                                                : snapshot
-                                                    .data!['feedArticles']
-                                                        [index]
-                                                    .media
-                                                    .contents[0]
-                                                    .url,
-                                      ),
-                                    )
-                                  : const SizedBox(
-                                      height: 0.0,
-                                      width: 0.0,
-                                    ),
-                              ListTile(
-                                title: Text(
-                                  snapshot.data!['feedArticles'][index].title!,
-                                  style: TextStyle(
-                                    color: useDarkMode
-                                        ? Colors.white
-                                        : Colors.black,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 5,
-                                  textAlign: TextAlign.justify,
-                                ),
-                                subtitle: newsLayout != 'big' &&
-                                        newsLayout != 'condensed'
-                                    ? null
-                                    : MarkdownBody(
-                                        data: snapshot
-                                                    .data!['feedArticles']
-                                                        [index]
-                                                    .description!
-                                                    .indexOf("<a ") ==
-                                                -1
-                                            ? snapshot
-                                                .data!['feedArticles'][index]
-                                                .description!
-                                            : snapshot
-                                                .data!['feedArticles'][index]
-                                                .description!
-                                                .substring(
-                                                  0,
-                                                  snapshot
-                                                      .data!['feedArticles']
-                                                          [index]
-                                                      .description!
-                                                      .indexOf("<a "),
-                                                )
-                                                .replaceAll('<br>', ''),
-                                        styleSheet: MarkdownStyleSheet(
-                                          textAlign: WrapAlignment.spaceBetween,
-                                          p: TextStyle(
-                                            color: useDarkMode
-                                                ? Colors.grey[400]
-                                                : Colors.grey[800],
-                                          ),
-                                        ),
-                                      ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                  right: 16,
-                                  bottom: 5,
-                                ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                        right: 8,
-                                      ),
-                                      child: Icon(
-                                        Icons.schedule,
-                                        color: useDarkMode
-                                            ? Colors.grey.shade300
-                                            : Colors.grey[800],
-                                        size: 20.0,
-                                      ),
-                                    ),
-                                    Text(
-                                      timeago.format(
-                                        snapshot.data!['feedArticles'][index]
-                                            .pubDate!,
-                                        locale: Localizations.localeOf(context)
-                                            .toString(),
-                                      ),
-                                      style: TextStyle(
-                                        color: useDarkMode
-                                            ? Colors.grey.shade300
-                                            : Colors.grey[700],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(
+                    right: 16,
+                    bottom: 5,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          right: 8,
+                        ),
+                        child: Icon(
+                          Icons.schedule,
+                          color: useDarkMode
+                              ? Colors.grey.shade300
+                              : Colors.grey[800],
+                          size: 20.0,
                         ),
                       ),
-                    ),
-                  )
-                : const LoadingIndicatorUtil(),
+                      Text(
+                        timeago.format(
+                          snapshot.data!['feedArticles'][index].pubDate!,
+                          locale: Localizations.localeOf(context).toString(),
+                        ),
+                        style: TextStyle(
+                          color: useDarkMode
+                              ? Colors.grey.shade300
+                              : Colors.grey[700],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
