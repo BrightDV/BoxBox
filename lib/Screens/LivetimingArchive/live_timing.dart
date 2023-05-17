@@ -33,12 +33,13 @@ import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
 class LiveTimingScreen extends StatelessWidget {
   final String path;
-  const LiveTimingScreen(this.path, {super.key});
+  final String ergastRaceName;
+  const LiveTimingScreen(this.path, this.ergastRaceName, {super.key});
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<Map>(
-      future: LiveFeedFetcher().getData(path),
+      future: LiveFeedFetcher().getData(path, ergastRaceName),
       builder: (context, snapshot) => snapshot.hasError
           ? RequestErrorWidget(snapshot.error.toString())
           : snapshot.hasData

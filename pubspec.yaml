@@ -58,9 +58,9 @@ dependencies:
       url: https://github.com/mpinkard/map_controller.git
       ref: null_safety
   marquee: ^2.2.0
-  package_info_plus: ^3.1.2
+  package_info_plus: 3.0.3
   receive_sharing_intent: ^1.4.5
-  share_plus: ^6.3.4
+  share_plus: 6.3.1
   # signalr_flutter: ^0.2.0 # uses (non-foss?) .jar
   sliding_up_panel: ^2.0.0+1
   story_view: # Updated packages with custom features. Origninally: https://github.com/blackmann/story_view

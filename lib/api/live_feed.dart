@@ -147,8 +147,8 @@ class LiveFeedFetcher {
     return utf8.decode(filter.processed() ?? []);
   }
 
-  Future<Map> getDetailsForTheMap(String path) async {
-    Map positions = await getPosition(path);
+  Future<Map> getDetailsForTheMap(String path, String ergastRaceName) async {
+    Map positions = await getPosition(path, ergastRaceName);
     List points = await GetTrackGeoJSONPoints().getCircuitPoints(
       positions['ErgastFormatedRaceName'],
     );
@@ -156,12 +156,12 @@ class LiveFeedFetcher {
     return positions;
   }
 
-  Future<Map> getPosition(String path) async {
+  Future<Map> getPosition(String path, String ergastRaceName) async {
     var url = Uri.parse(
         'https://livetiming.formula1.com/static/${path}Position.z.jsonStream');
     var response = await http.get(url);
     Map<String, dynamic> responseAsJson = {
-      "ErgastFormatedRaceName": "jeddah",
+      "ErgastFormatedRaceName": ergastRaceName,
       "Position": {},
     };
     List responseAsList = utf8.decode(response.bodyBytes).split('\n');
@@ -205,10 +205,10 @@ class LiveFeedFetcher {
     return responseAsJson;
   }
 
-  Future<Map> getData(String path) async {
+  Future<Map> getData(String path, String ergastRaceName) async {
     Map data = {
       'sessionDetails': await getSessionDetails(path),
-      'detailsForTheMap': await getDetailsForTheMap(path),
+      'detailsForTheMap': await getDetailsForTheMap(path, ergastRaceName),
       'contentStreams': await getContentStreams(path),
       'weatherData': await getWeatherData(path),
     };
