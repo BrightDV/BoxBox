@@ -278,4 +278,17 @@ class Convert {
     };
     return dict[driverCode];
   }
+
+  String circuitNameToLiveTimingArchivePath(String raceName) {
+    // event-tracker for special meeting,
+    //then event['sessionLinkSets']['replayLinks'].last['url'].split('/static/')[1]
+    Map dict = {
+      'bahrain': '2023/2023-03-05_Bahrain_Grand_Prix/2023-03-05_Race/',
+      'jeddah': '2023/2023-03-19_Saudi_Arabian_Grand_Prix/2023-03-19_Race/',
+      'albert_park': '2023/2023-04-02_Australian_Grand_Prix/2023-04-02_Race/',
+      'baku': '2023/2023-04-30_Azerbaijan_Grand_Prix/2023-04-30_Race/',
+      'miami': '2023/2023-05-07_Miami_Grand_Prix/2023-05-07_Race/',
+    };
+    return dict[raceName];
+  }
 }
