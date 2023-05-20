@@ -46,7 +46,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 class F1NewsFetcher {
-  final String endpoint = "https://api.formula1.com";
+  final String defaultEndpoint = "https://api.formula1.com";
   final String apikey = "qPgPPRJyGCIPxFT3el4MF7thXHyJCzAP";
 
   List<News> formatResponse(Map responseAsJson) {
@@ -93,6 +93,9 @@ class F1NewsFetcher {
     String? articleType,
   }) async {
     Uri url;
+    String endpoint = Hive.box('settings')
+        .get('homeFeed', defaultValue: [defaultEndpoint, 'bbs'])[0] as String;
+    print(endpoint);
     if (tagId != null) {
       url = Uri.parse('$endpoint/v1/editorial/articles?limit=16&tags=$tagId');
     } else if (articleType != null) {
@@ -101,11 +104,18 @@ class F1NewsFetcher {
     } else {
       url = Uri.parse('$endpoint/v1/editorial/articles?limit=16');
     }
-    var response = await http.get(url, headers: {
-      "Accept": "application/json",
-      "apikey": apikey,
-      "locale": "en",
-    });
+    var response = await http.get(
+      url,
+      headers: endpoint != defaultEndpoint
+          ? {
+              "Accept": "application/json",
+            }
+          : {
+              "Accept": "application/json",
+              "apikey": apikey,
+              "locale": "en",
+            },
+    );
 
     Map<String, dynamic> responseAsJson = json.decode(
       utf8.decode(response.bodyBytes),
@@ -132,6 +142,8 @@ class F1NewsFetcher {
     String? articleType,
   }) async {
     Uri url;
+    String endpoint = Hive.box('settings')
+        .get('homeFeed', defaultValue: [defaultEndpoint, 'bbs'])[0] as String;
     if (tagId != null) {
       url = Uri.parse(
           '$endpoint/v1/editorial/articles?limit=16&offset=$offset&tags=$tagId');
@@ -142,11 +154,18 @@ class F1NewsFetcher {
       url =
           Uri.parse('$endpoint/v1/editorial/articles?limit=16&offset=$offset');
     }
-    var response = await http.get(url, headers: {
-      "Accept": "application/json",
-      "apikey": apikey,
-      "locale": "en",
-    });
+    var response = await http.get(
+      url,
+      headers: endpoint != defaultEndpoint
+          ? {
+              "Accept": "application/json",
+            }
+          : {
+              "Accept": "application/json",
+              "apikey": apikey,
+              "locale": "en",
+            },
+    );
 
     Map<String, dynamic> responseAsJson =
         json.decode(utf8.decode(response.bodyBytes));
@@ -158,6 +177,8 @@ class F1NewsFetcher {
     String? articleType,
   }) async {
     Uri url;
+    String endpoint = Hive.box('settings')
+        .get('homeFeed', defaultValue: [defaultEndpoint, 'bbs'])[0] as String;
     if (articleType != null) {
       url = Uri.parse(
         '$endpoint/v1/editorial/articles?limit=16&tags=${tags.join(',')}&articleTypes=$articleType',
@@ -166,11 +187,18 @@ class F1NewsFetcher {
       url = Uri.parse(
           '$endpoint/v1/editorial/articles?limit=16&tags=${tags.join(',')}');
     }
-    var response = await http.get(url, headers: {
-      "Accept": "application/json",
-      "apikey": apikey,
-      "locale": "en",
-    });
+    var response = await http.get(
+      url,
+      headers: endpoint != defaultEndpoint
+          ? {
+              "Accept": "application/json",
+            }
+          : {
+              "Accept": "application/json",
+              "apikey": apikey,
+              "locale": "en",
+            },
+    );
 
     Map<String, dynamic> responseAsJson =
         json.decode(utf8.decode(response.bodyBytes));
@@ -178,12 +206,21 @@ class F1NewsFetcher {
   }
 
   Future<Article> getArticleData(String articleId) async {
+    String endpoint = Hive.box('settings')
+        .get('homeFeed', defaultValue: [defaultEndpoint, 'bbs'])[0] as String;
     Uri url = Uri.parse('$endpoint/v1/editorial/articles/$articleId');
-    var response = await http.get(url, headers: {
-      "Accept": "application/json",
-      "apikey": apikey,
-      "locale": "en",
-    });
+    var response = await http.get(
+      url,
+      headers: endpoint != defaultEndpoint
+          ? {
+              "Accept": "application/json",
+            }
+          : {
+              "Accept": "application/json",
+              "apikey": apikey,
+              "locale": "en",
+            },
+    );
     Map<String, dynamic> responseAsJson = json.decode(
       utf8.decode(response.bodyBytes),
     );

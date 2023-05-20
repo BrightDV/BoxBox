@@ -22,6 +22,7 @@
 import 'dart:async';
 
 import 'package:boxbox/Screens/MixedNews/rss_feed.dart';
+import 'package:boxbox/Screens/MixedNews/wordpress.dart';
 import 'package:boxbox/api/news.dart';
 import 'package:boxbox/api/rss.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
@@ -67,12 +68,11 @@ class _NewsFeedWidgetState extends State<NewsFeedWidget> {
 
   @override
   Widget build(BuildContext context) {
+    const String officialFeed = "https://api.formula1.com";
     Map latestNews = Hive.box('requests').get('news', defaultValue: {}) as Map;
-    String savedFeedUrl = Hive.box('settings').get(
-      'homeFeed',
-      defaultValue: 'Official',
-    );
-    return savedFeedUrl == 'Official'
+    List savedFeedUrl = Hive.box('settings')
+        .get('homeFeed', defaultValue: [officialFeed, 'bbs']) as List;
+    return savedFeedUrl[1] == "bbs"
         ? FutureBuilder<List<News>>(
             future: getLatestNewsItems(
               tagId: widget.tagId,
@@ -109,23 +109,28 @@ class _NewsFeedWidgetState extends State<NewsFeedWidget> {
                           )
                         : const LoadingIndicatorUtil(),
           )
-        : FutureBuilder<Map<String, dynamic>>(
-            future: RssFeeds().getFeedArticles(
-              savedFeedUrl.contains('motorsport.com')
-                  ? '$savedFeedUrl/rss/f1/news/'
-                  : savedFeedUrl,
-            ),
-            builder: (context, snapshot) => snapshot.hasError
-                ? RequestErrorWidget(
-                    snapshot.error.toString(),
-                  )
-                : snapshot.hasData
-                    ? RssFeedItemsList(
-                        snapshot,
-                        homeFeed: true,
+        : savedFeedUrl[1] == "rss"
+            ? FutureBuilder<Map<String, dynamic>>(
+                future: RssFeeds().getFeedArticles(
+                  savedFeedUrl[0].contains('motorsport.com')
+                      ? '${savedFeedUrl[0]}/rss/f1/news/'
+                      : savedFeedUrl[0],
+                ),
+                builder: (context, snapshot) => snapshot.hasError
+                    ? RequestErrorWidget(
+                        snapshot.error.toString(),
                       )
-                    : const LoadingIndicatorUtil(),
-          );
+                    : snapshot.hasData
+                        ? RssFeedItemsList(
+                            snapshot,
+                            homeFeed: true,
+                          )
+                        : const LoadingIndicatorUtil(),
+              )
+            : WordpressNewsList(
+                savedFeedUrl[0],
+                scrollController: widget.scrollController,
+              );
   }
 
   void showOfflineSnackBar() async {
