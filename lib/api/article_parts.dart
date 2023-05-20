@@ -70,7 +70,7 @@ class ArticleParts extends StatelessWidget {
               ),
             ),
           )
-        : MediaQuery.of(context).size.width > 1400
+        : MediaQuery.of(context).size.width > 1000
             ? Scrollbar(
                 interactive: true,
                 controller: articleScrollController,
