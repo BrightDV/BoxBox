@@ -81,7 +81,11 @@ class _NewsFeedWidgetState extends State<NewsFeedWidget> {
             builder: (context, snapshot) => snapshot.hasError
                 ? (snapshot.error.toString() == 'XMLHttpRequest error.' ||
                             snapshot.error.toString() ==
-                                "Failed host lookup: 'api.formula1.com'") &&
+                                "Failed host lookup: ${savedFeedUrl[0].removeAll(
+                                      'http://',
+                                    ).removeAll(
+                                      'https://',
+                                    )}") &&
                         latestNews['items'] != null &&
                         widget.tagId == null &&
                         widget.articleType == null

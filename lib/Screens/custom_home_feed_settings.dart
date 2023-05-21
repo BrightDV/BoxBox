@@ -44,7 +44,7 @@ class _CustomeHomeFeedSettingsScreenState
 
     Map<String, String> customFeedUrls = {
       'France': 'https://fr.motorsport.com',
-      'Espana': 'https://es.motorsport.com',
+      'España': 'https://es.motorsport.com',
       'Brasil': 'https://motorsport.uol.com.br',
       'Deutschland': 'https://de.motorsport.com',
       'Italia': 'https://it.motorsport.com',
@@ -68,7 +68,9 @@ class _CustomeHomeFeedSettingsScreenState
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Custom Home Feed'),
+        title: Text(
+          AppLocalizations.of(context)!.customHomeFeed,
+        ),
       ),
       backgroundColor: useDarkMode
           ? Theme.of(context).scaffoldBackgroundColor
@@ -84,7 +86,7 @@ class _CustomeHomeFeedSettingsScreenState
               RadioListTile(
                 value: officialFeed,
                 title: Text(
-                  "Official",
+                  AppLocalizations.of(context)!.official,
                   style: TextStyle(
                     color: useDarkMode ? Colors.white : Colors.black,
                   ),
@@ -101,7 +103,7 @@ class _CustomeHomeFeedSettingsScreenState
               ),
               ExpansionTile(
                 title: Text(
-                  "Motorsport Localized Feeds",
+                  AppLocalizations.of(context)!.motorsportLocalizeFeeds,
                   style: TextStyle(
                     color: useDarkMode ? Colors.white : Colors.black,
                   ),
@@ -149,7 +151,7 @@ class _CustomeHomeFeedSettingsScreenState
                             50.0,
                           ),
                           title: Text(
-                            "Delete Custom Feed",
+                            AppLocalizations.of(context)!.deleteCustomFeed,
                             style: TextStyle(
                               fontSize: 24.0,
                               color: useDarkMode ? Colors.white : Colors.black,
@@ -162,7 +164,7 @@ class _CustomeHomeFeedSettingsScreenState
                             mainAxisSize: MainAxisSize.min,
                             children: <Widget>[
                               Text(
-                                'Delete URL?',
+                                AppLocalizations.of(context)!.deleteUrl,
                                 style: TextStyle(
                                   color:
                                       useDarkMode ? Colors.white : Colors.black,
@@ -175,7 +177,9 @@ class _CustomeHomeFeedSettingsScreenState
                               onPressed: () {
                                 Navigator.of(context).pop();
                               },
-                              child: const Text('Cancel'),
+                              child: Text(
+                                AppLocalizations.of(context)!.cancel,
+                              ),
                             ),
                             ElevatedButton(
                               onPressed: () {
@@ -194,7 +198,9 @@ class _CustomeHomeFeedSettingsScreenState
                                 _setState();
                                 widget.updateParent();
                               },
-                              child: const Text('Yes'),
+                              child: Text(
+                                AppLocalizations.of(context)!.yes,
+                              ),
                             ),
                           ],
                         );
@@ -221,7 +227,7 @@ class _CustomeHomeFeedSettingsScreenState
                 ),
               ListTile(
                 title: Text(
-                  'Custom Feed',
+                  AppLocalizations.of(context)!.customFeed,
                   style: TextStyle(
                     color: useDarkMode ? Colors.white : Colors.black,
                   ),
@@ -252,7 +258,7 @@ class _CustomeHomeFeedSettingsScreenState
                           50.0,
                         ),
                         title: Text(
-                          "Custom Feed",
+                          AppLocalizations.of(context)!.customFeed,
                           style: TextStyle(
                             fontSize: 24.0,
                             color: useDarkMode ? Colors.white : Colors.black,
@@ -267,10 +273,11 @@ class _CustomeHomeFeedSettingsScreenState
                             TextField(
                               controller: controller,
                               decoration: InputDecoration(
-                                hintText: 'URL',
+                                hintText: 'https://example.com',
                                 hintStyle: TextStyle(
-                                  color:
-                                      useDarkMode ? Colors.white : Colors.black,
+                                  color: useDarkMode
+                                      ? Colors.grey.shade400
+                                      : Colors.grey.shade600,
                                 ),
                               ),
                               cursorColor:

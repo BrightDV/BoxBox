@@ -95,7 +95,6 @@ class F1NewsFetcher {
     Uri url;
     String endpoint = Hive.box('settings')
         .get('homeFeed', defaultValue: [defaultEndpoint, 'bbs'])[0] as String;
-    print(endpoint);
     if (tagId != null) {
       url = Uri.parse('$endpoint/v1/editorial/articles?limit=16&tags=$tagId');
     } else if (articleType != null) {
