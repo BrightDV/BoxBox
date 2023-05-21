@@ -24,7 +24,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
 
 class F1VideosFetcher {
-  final String endpoint = "https://api.formula1.com";
+  final String defaultEndpoint = "https://api.formula1.com";
   final String apikey = "qPgPPRJyGCIPxFT3el4MF7thXHyJCzAP";
 
   List<Video> formatResponse(Map responseAsJson) {
@@ -62,14 +62,28 @@ class F1VideosFetcher {
     int offset, {
     String tag = '',
   }) async {
-    Uri url = Uri.parse(
-      "$endpoint/v1/video-assets/videos?limit=$limit&tag=$tag&offset=$offset",
+    String endpoint = Hive.box('settings')
+        .get('homeFeed', defaultValue: [defaultEndpoint, 'bbs'])[0] as String;
+    Uri url;
+    if (tag != '') {
+      url = Uri.parse(
+          '$endpoint/v1/video-assets/videos?limit=$limit&tag=$tag&offset=$offset');
+    } else {
+      url = Uri.parse(
+          '$endpoint/v1/video-assets/videos?limit=$limit&offset=$offset');
+    }
+    var response = await http.get(
+      url,
+      headers: endpoint != defaultEndpoint
+          ? {
+              "Accept": "application/json",
+            }
+          : {
+              "Accept": "application/json",
+              "apikey": apikey,
+              "locale": "en",
+            },
     );
-    var response = await http.get(url, headers: {
-      "Accept": "application/json",
-      "apikey": apikey,
-      "locale": "en",
-    });
 
     Map<String, dynamic> responseAsJson = json.decode(
       utf8.decode(response.bodyBytes),
@@ -78,14 +92,23 @@ class F1VideosFetcher {
   }
 
   Future<Video> getVideoDetails(String videoId) async {
+    String endpoint = Hive.box('settings')
+        .get('homeFeed', defaultValue: [defaultEndpoint, 'bbs'])[0] as String;
     Uri url = Uri.parse(
       "$endpoint/v1/video-assets/videos/$videoId",
     );
-    var response = await http.get(url, headers: {
-      "Accept": "application/json",
-      "apikey": apikey,
-      "locale": "en",
-    });
+    var response = await http.get(
+      url,
+      headers: endpoint != defaultEndpoint
+          ? {
+              "Accept": "application/json",
+            }
+          : {
+              "Accept": "application/json",
+              "apikey": apikey,
+              "locale": "en",
+            },
+    );
 
     Map<String, dynamic> responseAsJson = json.decode(
       utf8.decode(response.bodyBytes),

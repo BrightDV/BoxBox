@@ -23,11 +23,14 @@ import 'package:boxbox/api/driver_components.dart';
 import 'package:boxbox/helpers/convert_ergast_and_formula_one.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' as parser;
 import 'package:html/dom.dart' as dom;
 
 class FormulaOneScraper {
+  final String defaultEndpoint = "https://api.formula1.com";
+
   Future<List<DriverResult>> scrapeRaceResult(
     String originalCircuitId,
     int practiceSession,
@@ -37,8 +40,19 @@ class FormulaOneScraper {
     String? raceUrl,
   }) async {
     late Uri resultsUrl;
+    List endpoint = Hive.box('settings')
+        .get('homeFeed', defaultValue: [defaultEndpoint, 'bbs']) as List;
     if (raceUrl != null) {
-      resultsUrl = Uri.parse(raceUrl);
+      if (endpoint[1] == "bbs" && endpoint[0] != defaultEndpoint) {
+        resultsUrl = Uri.parse(
+          raceUrl.replaceAll(
+            'https://www.formula1.com',
+            endpoint[0],
+          ),
+        );
+      } else {
+        resultsUrl = Uri.parse(raceUrl);
+      }
     } else {
       String circuitId;
       String circuitName;
@@ -52,9 +66,15 @@ class FormulaOneScraper {
         circuitId = originalCircuitId;
         circuitName = originalCircuitName!;
       }
-
-      resultsUrl = Uri.parse(
-          'https://www.formula1.com/en/results.html/${DateTime.now().year}/races/$circuitId/$circuitName/$sessionName.html');
+      if (endpoint[1] == "bbs" && endpoint[0] != defaultEndpoint) {
+        resultsUrl = Uri.parse(
+          '${endpoint[0]}/results/${DateTime.now().year}/races/$circuitId/$circuitName/$sessionName.html',
+        );
+      } else {
+        resultsUrl = Uri.parse(
+          'https://www.formula1.com/en/results.html/${DateTime.now().year}/races/$circuitId/$circuitName/$sessionName.html',
+        );
+      }
     }
     http.Response response = await http.get(resultsUrl);
     dom.Document document = parser.parse(response.body);
@@ -95,7 +115,9 @@ class FormulaOneScraper {
   }) async {
     late String circuitId;
     late String circuitName;
-
+    late Uri resultsUrl;
+    List endpoint = Hive.box('settings')
+        .get('homeFeed', defaultValue: [defaultEndpoint, 'bbs']) as List;
     if (fromErgast) {
       circuitId = Convert().circuitIdFromErgastToFormulaOne(originalCircuitId);
       circuitName =
@@ -104,8 +126,19 @@ class FormulaOneScraper {
       circuitId = originalCircuitId;
       circuitName = originalCircuitName!;
     }
-    final Uri resultsUrl = Uri.parse(qualifyingResultsUrl ??
-        'https://www.formula1.com/en/results.html/${DateTime.now().year}/races/$circuitId/$circuitName/$sessionName.html');
+    if (endpoint[1] == "bbs" && endpoint[0] != defaultEndpoint) {
+      resultsUrl = Uri.parse(
+        qualifyingResultsUrl?.replaceAll(
+              'https://www.formula1.com',
+              endpoint[0],
+            ) ??
+            '${endpoint[0]}/en/results.html/${DateTime.now().year}/races/$circuitId/$circuitName/$sessionName.html',
+      );
+    } else {
+      resultsUrl = Uri.parse(
+        'https://www.formula1.com/en/results.html/${DateTime.now().year}/races/$circuitId/$circuitName/$sessionName.html',
+      );
+    }
 
     http.Response response = await http.get(resultsUrl);
     dom.Document document = parser.parse(response.body);
@@ -159,8 +192,20 @@ class FormulaOneScraper {
     String? raceUrl,
   }) async {
     late Uri resultsUrl;
+    List endpoint = Hive.box('settings')
+        .get('homeFeed', defaultValue: [defaultEndpoint, 'bbs']) as List;
     if (raceUrl != null) {
       resultsUrl = Uri.parse(raceUrl);
+      if (endpoint[1] == "bbs" && endpoint[0] != defaultEndpoint) {
+        resultsUrl = Uri.parse(
+          raceUrl.replaceAll(
+            'https://www.formula1.com',
+            endpoint[0],
+          ),
+        );
+      } else {
+        resultsUrl = Uri.parse(raceUrl);
+      }
     } else {
       String circuitId;
       String circuitName;
@@ -175,8 +220,15 @@ class FormulaOneScraper {
         circuitName = originalCircuitName!;
       }
 
-      resultsUrl = Uri.parse(
-          'https://www.formula1.com/en/results.html/${DateTime.now().year}/races/$circuitId/$circuitName/$sessionName.html');
+      if (endpoint[1] == "bbs" && endpoint[0] != defaultEndpoint) {
+        resultsUrl = Uri.parse(
+          '${endpoint[0]}/en/results.html/${DateTime.now().year}/races/$circuitId/$circuitName/$sessionName.html',
+        );
+      } else {
+        resultsUrl = Uri.parse(
+          'https://www.formula1.com/en/results.html/${DateTime.now().year}/races/$circuitId/$circuitName/$sessionName.html',
+        );
+      }
     }
     http.Response response = await http.get(resultsUrl);
     dom.Document document = parser.parse(response.body);
@@ -226,8 +278,23 @@ class FormulaOneScraper {
 
   Future<List<StartingGridPosition>> scrapeStartingGrid(
       String startingGridUrl) async {
+    late Uri startingGridUri;
+    List endpoint = Hive.box('settings')
+        .get('homeFeed', defaultValue: [defaultEndpoint, 'bbs']) as List;
+    if (endpoint[1] == "bbs" && endpoint[0] != defaultEndpoint) {
+      startingGridUri = Uri.parse(
+        startingGridUrl.replaceAll(
+          'https://www.formula1.com',
+          endpoint[0],
+        ),
+      );
+    } else {
+      startingGridUri = Uri.parse(
+        startingGridUrl,
+      );
+    }
     http.Response response = await http.get(
-      Uri.parse(startingGridUrl),
+      startingGridUri,
     );
     dom.Document document = parser.parse(response.body);
     List<dom.Element> tempResults = document.getElementsByTagName('tr');
@@ -256,8 +323,16 @@ class FormulaOneScraper {
     String ergastDriverId,
   ) async {
     final String driverId = Convert().driverIdFromErgast(ergastDriverId);
-    final Uri driverDetailsUrl =
-        Uri.parse('https://www.formula1.com/en/drivers/$driverId.html');
+    late Uri driverDetailsUrl;
+    List endpoint = Hive.box('settings')
+        .get('homeFeed', defaultValue: [defaultEndpoint, 'bbs']) as List;
+    if (endpoint[1] == "bbs" && endpoint[0] != defaultEndpoint) {
+      driverDetailsUrl = Uri.parse("${endpoint[0]}/en/drivers/$driverId.html");
+    } else {
+      driverDetailsUrl = Uri.parse(
+        "https://www.formula1.com/en/drivers/$driverId.html",
+      );
+    }
     http.Response response = await http.get(driverDetailsUrl);
     List<List> results = [
       [],
@@ -329,9 +404,17 @@ class FormulaOneScraper {
 
   Future<Map<String, dynamic>> scrapeTeamDetails(String ergastTeamId) async {
     final String teamId = Convert().teamsFromErgastToFormulaOne(ergastTeamId);
-    final Uri driverDetailsUrl =
-        Uri.parse('https://www.formula1.com/en/teams/$teamId.html');
-    http.Response response = await http.get(driverDetailsUrl);
+    late Uri teamDetailsUrl;
+    List endpoint = Hive.box('settings')
+        .get('homeFeed', defaultValue: [defaultEndpoint, 'bbs']) as List;
+    if (endpoint[1] == "bbs" && endpoint[0] != defaultEndpoint) {
+      teamDetailsUrl = Uri.parse("${endpoint[0]}/en/teams/$teamId.html");
+    } else {
+      teamDetailsUrl = Uri.parse(
+        "https://www.formula1.com/en/teams/$teamId.html",
+      );
+    }
+    http.Response response = await http.get(teamDetailsUrl);
     dom.Document document = parser.parse(
       utf8.decode(response.bodyBytes),
     );
@@ -441,8 +524,18 @@ class FormulaOneScraper {
     String circuitId,
     String circuitName,
   ) async {
-    final Uri resultsUrl = Uri.parse(
-        'https://www.formula1.com/en/results.html/${DateTime.now().year}/races/$circuitId/$circuitName.html');
+    late Uri resultsUrl;
+    List endpoint = Hive.box('settings')
+        .get('homeFeed', defaultValue: [defaultEndpoint, 'bbs']) as List;
+    if (endpoint[1] == "bbs" && endpoint[0] != defaultEndpoint) {
+      resultsUrl = Uri.parse(
+        '${endpoint[0]}/en/results.html/${DateTime.now().year}/races/$circuitId/$circuitName.html',
+      );
+    } else {
+      resultsUrl = Uri.parse(
+        'https://www.formula1.com/en/results.html/${DateTime.now().year}/races/$circuitId/$circuitName.html',
+      );
+    }
     http.Response response = await http.get(resultsUrl);
     dom.Document document = parser.parse(response.body);
     if (document.getElementsByClassName("no-results").isNotEmpty) {
@@ -465,8 +558,18 @@ class FormulaOneScraper {
 
   Future<List<HallOfFameDriver>> scrapeHallOfFame() async {
     List<HallOfFameDriver> results = [];
-    final Uri driverDetailsUrl =
-        Uri.parse('https://www.formula1.com/en/drivers/hall-of-fame.html');
+    late Uri driverDetailsUrl;
+    List endpoint = Hive.box('settings')
+        .get('homeFeed', defaultValue: [defaultEndpoint, 'bbs']) as List;
+    if (endpoint[1] == "bbs" && endpoint[0] != defaultEndpoint) {
+      driverDetailsUrl = Uri.parse(
+        '${endpoint[0]}/en/drivers/hall-of-fame.html',
+      );
+    } else {
+      driverDetailsUrl = Uri.parse(
+        'https://www.formula1.com/en/drivers/hall-of-fame.html',
+      );
+    }
     http.Response response = await http.get(driverDetailsUrl);
     dom.Document document = parser.parse(response.body);
     List<dom.Element>? tempResults =
@@ -480,7 +583,9 @@ class FormulaOneScraper {
           element.children[0].children[1].attributes['alt']!
               .toString()
               .split(' - ')[1],
-          'https://www.formula1.com/content/fom-website/en/drivers/hall-of-fame/${element.children[0].children[1].attributes['alt']!.toString().split(' - ')[0].replaceAll(' ', '_')}.html',
+          (endpoint[1] == "bbs" && endpoint[0] != defaultEndpoint)
+              ? '${endpoint[0]}/content/fom-website/en/drivers/hall-of-fame/${element.children[0].children[1].attributes['alt']!.toString().split(' - ')[0].replaceAll(' ', '_')}.html'
+              : 'https://www.formula1.com/content/fom-website/en/drivers/hall-of-fame/${element.children[0].children[1].attributes['alt']!.toString().split(' - ')[0].replaceAll(' ', '_')}.html',
           'https://www.formula1.com/content/fom-website/en/drivers/hall-of-fame/${element.children[0].children[1].attributes['alt']!.toString().split(' - ')[0].replaceAll(' ', '_')}/_jcr_content/image16x9.img.640.medium.jpg',
         ),
       );
@@ -526,8 +631,18 @@ class FormulaOneScraper {
   Future<Map> scrapeCircuitFacts(
       String formulaOneCircuitName, BuildContext context) async {
     Map results = {};
-    final Uri formulaOneCircuitPageUrl = Uri.parse(
-        'https://www.formula1.com/en/racing/${DateTime.now().year}/$formulaOneCircuitName/Circuit.html');
+    late Uri formulaOneCircuitPageUrl;
+    List endpoint = Hive.box('settings')
+        .get('homeFeed', defaultValue: [defaultEndpoint, 'bbs']) as List;
+    if (endpoint[1] == "bbs" && endpoint[0] != defaultEndpoint) {
+      formulaOneCircuitPageUrl = Uri.parse(
+        '${endpoint[0]}/en/racing/${DateTime.now().year}/$formulaOneCircuitName/Circuit.html',
+      );
+    } else {
+      formulaOneCircuitPageUrl = Uri.parse(
+        'https://www.formula1.com/en/racing/${DateTime.now().year}/$formulaOneCircuitName/Circuit.html',
+      );
+    }
     http.Response response = await http.get(formulaOneCircuitPageUrl);
     dom.Document document = parser.parse(response.body);
     dom.Element tempResult = document.getElementsByTagName('main')[0];
@@ -557,8 +672,18 @@ class FormulaOneScraper {
   }
 
   Future<String> scrapeCircuitHistory(String formulaOneCircuitName) async {
-    final Uri formulaOneCircuitPageUrl = Uri.parse(
-        'https://www.formula1.com/en/racing/${DateTime.now().year}/$formulaOneCircuitName/Circuit.html');
+    late Uri formulaOneCircuitPageUrl;
+    List endpoint = Hive.box('settings')
+        .get('homeFeed', defaultValue: [defaultEndpoint, 'bbs']) as List;
+    if (endpoint[1] == "bbs" && endpoint[0] != defaultEndpoint) {
+      formulaOneCircuitPageUrl = Uri.parse(
+        '${endpoint[0]}/en/racing/${DateTime.now().year}/$formulaOneCircuitName/Circuit.html',
+      );
+    } else {
+      formulaOneCircuitPageUrl = Uri.parse(
+        'https://www.formula1.com/en/racing/${DateTime.now().year}/$formulaOneCircuitName/Circuit.html',
+      );
+    }
     http.Response response = await http.get(formulaOneCircuitPageUrl);
     dom.Document document = parser.parse(
       utf8.decode(response.bodyBytes),

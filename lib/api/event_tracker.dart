@@ -75,7 +75,7 @@ class Session {
 }
 
 class EventTracker {
-  final String endpoint = "https://api.formula1.com";
+  final String defaultEndpoint = "https://api.formula1.com";
   final String apikey = "qPgPPRJyGCIPxFT3el4MF7thXHyJCzAP";
 
   bool isEventRunning(DateTime meetingStartDate, DateTime meetingEndDate) {
@@ -88,14 +88,29 @@ class EventTracker {
   }
 
   Future<Map> fetchEvent() async {
-    Uri uri = Uri.parse('$endpoint/v1/event-tracker');
+    List endpoint = Hive.box('settings')
+        .get('homeFeed', defaultValue: [defaultEndpoint, 'bbs']) as List;
+    Uri uri;
+    if (endpoint[1] == "bbs" && endpoint[0] != defaultEndpoint) {
+      uri = Uri.parse(
+        '${endpoint[0]}/v1/event-tracker',
+      );
+    } else {
+      uri = Uri.parse(
+        '$defaultEndpoint/v1/event-tracker',
+      );
+    }
     Response res = await get(
       uri,
-      headers: {
-        'Accept': 'application/json',
-        'apikey': apikey,
-        'locale': 'en',
-      },
+      headers: endpoint[0] != defaultEndpoint
+          ? {
+              "Accept": "application/json",
+            }
+          : {
+              "Accept": "application/json",
+              "apikey": apikey,
+              "locale": "en",
+            },
     );
     Map formatedResponse = jsonDecode(res.body);
     Hive.box('requests').put('event-tracker', formatedResponse);
@@ -218,16 +233,30 @@ class EventTracker {
   }
 
   Future<Map> getCircuitDetails(String formulaOneCircuitId) async {
-    Uri uri = Uri.parse(
-      '$endpoint/v1/event-tracker/meeting/$formulaOneCircuitId',
-    );
+    Uri uri;
+    List endpoint = Hive.box('settings')
+        .get('homeFeed', defaultValue: [defaultEndpoint, 'bbs']) as List;
+
+    if (endpoint[1] == "bbs" && endpoint[0] != defaultEndpoint) {
+      uri = Uri.parse(
+        '${endpoint[0]}/v1/event-tracker/meeting/$formulaOneCircuitId',
+      );
+    } else {
+      uri = Uri.parse(
+        '$defaultEndpoint/v1/event-tracker/meeting/$formulaOneCircuitId',
+      );
+    }
     Response res = await get(
       uri,
-      headers: {
-        'Accept': 'application/json',
-        'apikey': apikey,
-        'locale': 'en',
-      },
+      headers: endpoint[0] != defaultEndpoint
+          ? {
+              "Accept": "application/json",
+            }
+          : {
+              "Accept": "application/json",
+              "apikey": apikey,
+              "locale": "en",
+            },
     );
     Map formatedResponse = jsonDecode(res.body);
 
