@@ -36,7 +36,7 @@ class _CustomeHomeFeedSettingsScreenState
   Widget build(BuildContext context) {
     const String officialFeed = "https://api.formula1.com";
     List savedFeedUrl = Hive.box('settings')
-        .get('homeFeed', defaultValue: [officialFeed, "bbs"]) as List;
+        .get('homeFeed', defaultValue: [officialFeed, "api"]) as List;
     List customFeeds =
         Hive.box('settings').get('customFeeds', defaultValue: []) as List;
     bool useDarkMode =
@@ -69,7 +69,7 @@ class _CustomeHomeFeedSettingsScreenState
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          AppLocalizations.of(context)!.customHomeFeed,
+          AppLocalizations.of(context)!.news,
         ),
       ),
       backgroundColor: useDarkMode
@@ -83,6 +83,22 @@ class _CustomeHomeFeedSettingsScreenState
           ),
           child: Column(
             children: [
+              Padding(
+                padding: const EdgeInsets.only(
+                  top: 20,
+                  left: 10,
+                  right: 10,
+                ),
+                child: Text(
+                  AppLocalizations.of(context)!.customHomeFeed,
+                  style: TextStyle(
+                    color: useDarkMode ? Colors.white : Colors.black,
+                    fontSize: 22,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
               RadioListTile(
                 value: officialFeed,
                 title: Text(
@@ -95,7 +111,7 @@ class _CustomeHomeFeedSettingsScreenState
                 activeColor: Theme.of(context).primaryColor,
                 onChanged: (value) => setState(
                   () {
-                    savedFeedUrl = [value, "bbs"];
+                    savedFeedUrl = [value, "api"];
                     Hive.box('settings').put('homeFeed', savedFeedUrl);
                     widget.updateParent();
                   },
@@ -188,10 +204,11 @@ class _CustomeHomeFeedSettingsScreenState
                                   'customFeeds',
                                   customFeeds,
                                 );
-                                if (savedFeedUrl == feed) {
+                                if (savedFeedUrl[0] == feed[0]) {
+                                  savedFeedUrl = [officialFeed, "api"];
                                   Hive.box('settings').put(
                                     'homeFeed',
-                                    [officialFeed, "bbs"],
+                                    savedFeedUrl,
                                   );
                                 }
                                 Navigator.of(context).pop();
@@ -227,7 +244,7 @@ class _CustomeHomeFeedSettingsScreenState
                 ),
               ListTile(
                 title: Text(
-                  AppLocalizations.of(context)!.customFeed,
+                  AppLocalizations.of(context)!.addCustomFeed,
                   style: TextStyle(
                     color: useDarkMode ? Colors.white : Colors.black,
                   ),
@@ -255,7 +272,7 @@ class _CustomeHomeFeedSettingsScreenState
                           ),
                         ),
                         contentPadding: const EdgeInsets.all(
-                          50.0,
+                          30.0,
                         ),
                         title: Text(
                           AppLocalizations.of(context)!.customFeed,
@@ -293,57 +310,49 @@ class _CustomeHomeFeedSettingsScreenState
                                     useDarkMode ? Colors.white : Colors.black,
                                 fontFamily: 'Formula1',
                               ),
-                              child: Row(
-                                children: [
-                                  Radio(
-                                    value: "rss",
-                                    groupValue: type,
-                                    activeColor: Theme.of(context).primaryColor,
-                                    onChanged: (String? value) => setState(() {
-                                      type = value!;
-                                    }),
-                                  ),
-                                  Text(
-                                    'RSS',
-                                    style: TextStyle(
-                                      color: useDarkMode
-                                          ? Colors.white
-                                          : Colors.black,
+                              child: SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Radio(
+                                      value: "rss",
+                                      groupValue: type,
+                                      activeColor:
+                                          Theme.of(context).primaryColor,
+                                      onChanged: (String? value) =>
+                                          setState(() {
+                                        type = value!;
+                                      }),
                                     ),
-                                  ),
-                                  Radio(
-                                    value: "wp",
-                                    groupValue: type,
-                                    activeColor: Theme.of(context).primaryColor,
-                                    onChanged: (String? value) => setState(() {
-                                      type = value!;
-                                    }),
-                                  ),
-                                  Text(
-                                    'WordPress',
-                                    style: TextStyle(
-                                      color: useDarkMode
-                                          ? Colors.white
-                                          : Colors.black,
+                                    Text(
+                                      'RSS',
+                                      style: TextStyle(
+                                        color: useDarkMode
+                                            ? Colors.white
+                                            : Colors.black,
+                                      ),
                                     ),
-                                  ),
-                                  Radio(
-                                    value: "bbs",
-                                    groupValue: type,
-                                    activeColor: Theme.of(context).primaryColor,
-                                    onChanged: (String? value) => setState(() {
-                                      type = value!;
-                                    }),
-                                  ),
-                                  Text(
-                                    'Box, Box! server',
-                                    style: TextStyle(
-                                      color: useDarkMode
-                                          ? Colors.white
-                                          : Colors.black,
+                                    Radio(
+                                      value: "wp",
+                                      groupValue: type,
+                                      activeColor:
+                                          Theme.of(context).primaryColor,
+                                      onChanged: (String? value) =>
+                                          setState(() {
+                                        type = value!;
+                                      }),
                                     ),
-                                  ),
-                                ],
+                                    Text(
+                                      'WordPress',
+                                      style: TextStyle(
+                                        color: useDarkMode
+                                            ? Colors.white
+                                            : Colors.black,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ],
@@ -365,7 +374,7 @@ class _CustomeHomeFeedSettingsScreenState
                               widget.updateParent();
                             },
                             child: Text(
-                              AppLocalizations.of(context)!.apply,
+                              AppLocalizations.of(context)!.save,
                             ),
                           ),
                           ElevatedButton(

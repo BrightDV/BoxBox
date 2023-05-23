@@ -63,7 +63,7 @@ class F1VideosFetcher {
     String tag = '',
   }) async {
     String endpoint = Hive.box('settings')
-        .get('homeFeed', defaultValue: [defaultEndpoint, 'bbs'])[0] as String;
+        .get('server', defaultValue: defaultEndpoint) as String;
     Uri url;
     if (tag != '') {
       url = Uri.parse(
@@ -93,7 +93,7 @@ class F1VideosFetcher {
 
   Future<Video> getVideoDetails(String videoId) async {
     String endpoint = Hive.box('settings')
-        .get('homeFeed', defaultValue: [defaultEndpoint, 'bbs'])[0] as String;
+        .get('server', defaultValue: defaultEndpoint) as String;
     Uri url = Uri.parse(
       "$endpoint/v1/video-assets/videos/$videoId",
     );

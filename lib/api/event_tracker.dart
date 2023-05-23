@@ -88,12 +88,12 @@ class EventTracker {
   }
 
   Future<Map> fetchEvent() async {
-    List endpoint = Hive.box('settings')
-        .get('homeFeed', defaultValue: [defaultEndpoint, 'bbs']) as List;
+    String endpoint = Hive.box('settings')
+        .get('server', defaultValue: defaultEndpoint) as String;
     Uri uri;
-    if (endpoint[1] == "bbs" && endpoint[0] != defaultEndpoint) {
+    if (endpoint != defaultEndpoint) {
       uri = Uri.parse(
-        '${endpoint[0]}/v1/event-tracker',
+        '$endpoint/v1/event-tracker',
       );
     } else {
       uri = Uri.parse(
@@ -102,7 +102,7 @@ class EventTracker {
     }
     Response res = await get(
       uri,
-      headers: endpoint[0] != defaultEndpoint
+      headers: endpoint != defaultEndpoint
           ? {
               "Accept": "application/json",
             }
@@ -234,12 +234,12 @@ class EventTracker {
 
   Future<Map> getCircuitDetails(String formulaOneCircuitId) async {
     Uri uri;
-    List endpoint = Hive.box('settings')
-        .get('homeFeed', defaultValue: [defaultEndpoint, 'bbs']) as List;
+    String endpoint = Hive.box('settings')
+        .get('server', defaultValue: defaultEndpoint) as String;
 
-    if (endpoint[1] == "bbs" && endpoint[0] != defaultEndpoint) {
+    if (endpoint != defaultEndpoint) {
       uri = Uri.parse(
-        '${endpoint[0]}/v1/event-tracker/meeting/$formulaOneCircuitId',
+        '$endpoint/v1/event-tracker/meeting/$formulaOneCircuitId',
       );
     } else {
       uri = Uri.parse(
@@ -248,7 +248,7 @@ class EventTracker {
     }
     Response res = await get(
       uri,
-      headers: endpoint[0] != defaultEndpoint
+      headers: endpoint != defaultEndpoint
           ? {
               "Accept": "application/json",
             }

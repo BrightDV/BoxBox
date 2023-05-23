@@ -94,7 +94,7 @@ class F1NewsFetcher {
   }) async {
     Uri url;
     String endpoint = Hive.box('settings')
-        .get('homeFeed', defaultValue: [defaultEndpoint, 'bbs'])[0] as String;
+        .get('server', defaultValue: defaultEndpoint) as String;
     if (tagId != null) {
       url = Uri.parse('$endpoint/v1/editorial/articles?limit=16&tags=$tagId');
     } else if (articleType != null) {
@@ -142,7 +142,7 @@ class F1NewsFetcher {
   }) async {
     Uri url;
     String endpoint = Hive.box('settings')
-        .get('homeFeed', defaultValue: [defaultEndpoint, 'bbs'])[0] as String;
+        .get('server', defaultValue: defaultEndpoint) as String;
     if (tagId != null) {
       url = Uri.parse(
           '$endpoint/v1/editorial/articles?limit=16&offset=$offset&tags=$tagId');
@@ -177,7 +177,7 @@ class F1NewsFetcher {
   }) async {
     Uri url;
     String endpoint = Hive.box('settings')
-        .get('homeFeed', defaultValue: [defaultEndpoint, 'bbs'])[0] as String;
+        .get('server', defaultValue: defaultEndpoint) as String;
     if (articleType != null) {
       url = Uri.parse(
         '$endpoint/v1/editorial/articles?limit=16&tags=${tags.join(',')}&articleTypes=$articleType',
@@ -206,7 +206,7 @@ class F1NewsFetcher {
 
   Future<Article> getArticleData(String articleId) async {
     String endpoint = Hive.box('settings')
-        .get('homeFeed', defaultValue: [defaultEndpoint, 'bbs'])[0] as String;
+        .get('server', defaultValue: defaultEndpoint) as String;
     Uri url = Uri.parse('$endpoint/v1/editorial/articles/$articleId');
     var response = await http.get(
       url,

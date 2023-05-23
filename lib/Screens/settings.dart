@@ -19,6 +19,7 @@
 
 import 'package:boxbox/Screens/FormulaYou/settings.dart';
 import 'package:boxbox/Screens/custom_home_feed_settings.dart';
+import 'package:boxbox/Screens/server_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -533,6 +534,26 @@ class _OtherCardstate extends State<OtherCard> {
             context,
             MaterialPageRoute(
               builder: (context) => CustomeHomeFeedSettingsScreen(
+                widget.update,
+              ),
+            ),
+          ),
+          trailing: Icon(
+            Icons.arrow_forward_rounded,
+            color: useDarkMode ? Colors.white : Colors.black,
+          ),
+        ),
+        ListTile(
+          title: Text(
+            AppLocalizations.of(context)!.server,
+            style: TextStyle(
+              color: useDarkMode ? Colors.white : Colors.black,
+            ),
+          ),
+          onTap: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ServerSettingsScreen(
                 widget.update,
               ),
             ),

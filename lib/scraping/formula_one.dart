@@ -40,14 +40,14 @@ class FormulaOneScraper {
     String? raceUrl,
   }) async {
     late Uri resultsUrl;
-    List endpoint = Hive.box('settings')
-        .get('homeFeed', defaultValue: [defaultEndpoint, 'bbs']) as List;
+    String endpoint = Hive.box('settings')
+        .get('server', defaultValue: defaultEndpoint) as String;
     if (raceUrl != null) {
-      if (endpoint[1] == "bbs" && endpoint[0] != defaultEndpoint) {
+      if (endpoint != defaultEndpoint) {
         resultsUrl = Uri.parse(
           raceUrl.replaceAll(
             'https://www.formula1.com',
-            endpoint[0],
+            endpoint,
           ),
         );
       } else {
@@ -66,9 +66,9 @@ class FormulaOneScraper {
         circuitId = originalCircuitId;
         circuitName = originalCircuitName!;
       }
-      if (endpoint[1] == "bbs" && endpoint[0] != defaultEndpoint) {
+      if (endpoint != defaultEndpoint) {
         resultsUrl = Uri.parse(
-          '${endpoint[0]}/results/${DateTime.now().year}/races/$circuitId/$circuitName/$sessionName.html',
+          '$endpoint/results/${DateTime.now().year}/races/$circuitId/$circuitName/$sessionName.html',
         );
       } else {
         resultsUrl = Uri.parse(
@@ -116,8 +116,8 @@ class FormulaOneScraper {
     late String circuitId;
     late String circuitName;
     late Uri resultsUrl;
-    List endpoint = Hive.box('settings')
-        .get('homeFeed', defaultValue: [defaultEndpoint, 'bbs']) as List;
+    String endpoint = Hive.box('settings')
+        .get('server', defaultValue: defaultEndpoint) as String;
     if (fromErgast) {
       circuitId = Convert().circuitIdFromErgastToFormulaOne(originalCircuitId);
       circuitName =
@@ -126,13 +126,13 @@ class FormulaOneScraper {
       circuitId = originalCircuitId;
       circuitName = originalCircuitName!;
     }
-    if (endpoint[1] == "bbs" && endpoint[0] != defaultEndpoint) {
+    if (endpoint != defaultEndpoint) {
       resultsUrl = Uri.parse(
         qualifyingResultsUrl?.replaceAll(
               'https://www.formula1.com',
-              endpoint[0],
+              endpoint,
             ) ??
-            '${endpoint[0]}/en/results.html/${DateTime.now().year}/races/$circuitId/$circuitName/$sessionName.html',
+            '$endpoint/en/results.html/${DateTime.now().year}/races/$circuitId/$circuitName/$sessionName.html',
       );
     } else {
       resultsUrl = Uri.parse(
@@ -192,15 +192,15 @@ class FormulaOneScraper {
     String? raceUrl,
   }) async {
     late Uri resultsUrl;
-    List endpoint = Hive.box('settings')
-        .get('homeFeed', defaultValue: [defaultEndpoint, 'bbs']) as List;
+    String endpoint = Hive.box('settings')
+        .get('server', defaultValue: defaultEndpoint) as String;
     if (raceUrl != null) {
       resultsUrl = Uri.parse(raceUrl);
-      if (endpoint[1] == "bbs" && endpoint[0] != defaultEndpoint) {
+      if (endpoint != defaultEndpoint) {
         resultsUrl = Uri.parse(
           raceUrl.replaceAll(
             'https://www.formula1.com',
-            endpoint[0],
+            endpoint,
           ),
         );
       } else {
@@ -220,9 +220,9 @@ class FormulaOneScraper {
         circuitName = originalCircuitName!;
       }
 
-      if (endpoint[1] == "bbs" && endpoint[0] != defaultEndpoint) {
+      if (endpoint != defaultEndpoint) {
         resultsUrl = Uri.parse(
-          '${endpoint[0]}/en/results.html/${DateTime.now().year}/races/$circuitId/$circuitName/$sessionName.html',
+          '$endpoint/en/results.html/${DateTime.now().year}/races/$circuitId/$circuitName/$sessionName.html',
         );
       } else {
         resultsUrl = Uri.parse(
@@ -279,13 +279,13 @@ class FormulaOneScraper {
   Future<List<StartingGridPosition>> scrapeStartingGrid(
       String startingGridUrl) async {
     late Uri startingGridUri;
-    List endpoint = Hive.box('settings')
-        .get('homeFeed', defaultValue: [defaultEndpoint, 'bbs']) as List;
-    if (endpoint[1] == "bbs" && endpoint[0] != defaultEndpoint) {
+    String endpoint = Hive.box('settings')
+        .get('server', defaultValue: defaultEndpoint) as String;
+    if (endpoint != defaultEndpoint) {
       startingGridUri = Uri.parse(
         startingGridUrl.replaceAll(
           'https://www.formula1.com',
-          endpoint[0],
+          endpoint,
         ),
       );
     } else {
@@ -324,10 +324,10 @@ class FormulaOneScraper {
   ) async {
     final String driverId = Convert().driverIdFromErgast(ergastDriverId);
     late Uri driverDetailsUrl;
-    List endpoint = Hive.box('settings')
-        .get('homeFeed', defaultValue: [defaultEndpoint, 'bbs']) as List;
-    if (endpoint[1] == "bbs" && endpoint[0] != defaultEndpoint) {
-      driverDetailsUrl = Uri.parse("${endpoint[0]}/en/drivers/$driverId.html");
+    String endpoint = Hive.box('settings')
+        .get('server', defaultValue: defaultEndpoint) as String;
+    if (endpoint != defaultEndpoint) {
+      driverDetailsUrl = Uri.parse("$endpoint/en/drivers/$driverId.html");
     } else {
       driverDetailsUrl = Uri.parse(
         "https://www.formula1.com/en/drivers/$driverId.html",
@@ -405,10 +405,10 @@ class FormulaOneScraper {
   Future<Map<String, dynamic>> scrapeTeamDetails(String ergastTeamId) async {
     final String teamId = Convert().teamsFromErgastToFormulaOne(ergastTeamId);
     late Uri teamDetailsUrl;
-    List endpoint = Hive.box('settings')
-        .get('homeFeed', defaultValue: [defaultEndpoint, 'bbs']) as List;
-    if (endpoint[1] == "bbs" && endpoint[0] != defaultEndpoint) {
-      teamDetailsUrl = Uri.parse("${endpoint[0]}/en/teams/$teamId.html");
+    String endpoint = Hive.box('settings')
+        .get('server', defaultValue: defaultEndpoint) as String;
+    if (endpoint != defaultEndpoint) {
+      teamDetailsUrl = Uri.parse("$endpoint/en/teams/$teamId.html");
     } else {
       teamDetailsUrl = Uri.parse(
         "https://www.formula1.com/en/teams/$teamId.html",
@@ -525,11 +525,11 @@ class FormulaOneScraper {
     String circuitName,
   ) async {
     late Uri resultsUrl;
-    List endpoint = Hive.box('settings')
-        .get('homeFeed', defaultValue: [defaultEndpoint, 'bbs']) as List;
-    if (endpoint[1] == "bbs" && endpoint[0] != defaultEndpoint) {
+    String endpoint = Hive.box('settings')
+        .get('server', defaultValue: defaultEndpoint) as String;
+    if (endpoint != defaultEndpoint) {
       resultsUrl = Uri.parse(
-        '${endpoint[0]}/en/results.html/${DateTime.now().year}/races/$circuitId/$circuitName.html',
+        '$endpoint/en/results.html/${DateTime.now().year}/races/$circuitId/$circuitName.html',
       );
     } else {
       resultsUrl = Uri.parse(
@@ -559,11 +559,11 @@ class FormulaOneScraper {
   Future<List<HallOfFameDriver>> scrapeHallOfFame() async {
     List<HallOfFameDriver> results = [];
     late Uri driverDetailsUrl;
-    List endpoint = Hive.box('settings')
-        .get('homeFeed', defaultValue: [defaultEndpoint, 'bbs']) as List;
-    if (endpoint[1] == "bbs" && endpoint[0] != defaultEndpoint) {
+    String endpoint = Hive.box('settings')
+        .get('server', defaultValue: defaultEndpoint) as String;
+    if (endpoint != defaultEndpoint) {
       driverDetailsUrl = Uri.parse(
-        '${endpoint[0]}/en/drivers/hall-of-fame.html',
+        '$endpoint/en/drivers/hall-of-fame.html',
       );
     } else {
       driverDetailsUrl = Uri.parse(
@@ -583,8 +583,8 @@ class FormulaOneScraper {
           element.children[0].children[1].attributes['alt']!
               .toString()
               .split(' - ')[1],
-          (endpoint[1] == "bbs" && endpoint[0] != defaultEndpoint)
-              ? '${endpoint[0]}/content/fom-website/en/drivers/hall-of-fame/${element.children[0].children[1].attributes['alt']!.toString().split(' - ')[0].replaceAll(' ', '_')}.html'
+          (endpoint != defaultEndpoint)
+              ? '$endpoint/content/fom-website/en/drivers/hall-of-fame/${element.children[0].children[1].attributes['alt']!.toString().split(' - ')[0].replaceAll(' ', '_')}.html'
               : 'https://www.formula1.com/content/fom-website/en/drivers/hall-of-fame/${element.children[0].children[1].attributes['alt']!.toString().split(' - ')[0].replaceAll(' ', '_')}.html',
           'https://www.formula1.com/content/fom-website/en/drivers/hall-of-fame/${element.children[0].children[1].attributes['alt']!.toString().split(' - ')[0].replaceAll(' ', '_')}/_jcr_content/image16x9.img.640.medium.jpg',
         ),
@@ -632,11 +632,11 @@ class FormulaOneScraper {
       String formulaOneCircuitName, BuildContext context) async {
     Map results = {};
     late Uri formulaOneCircuitPageUrl;
-    List endpoint = Hive.box('settings')
-        .get('homeFeed', defaultValue: [defaultEndpoint, 'bbs']) as List;
-    if (endpoint[1] == "bbs" && endpoint[0] != defaultEndpoint) {
+    String endpoint = Hive.box('settings')
+        .get('server', defaultValue: defaultEndpoint) as String;
+    if (endpoint != defaultEndpoint) {
       formulaOneCircuitPageUrl = Uri.parse(
-        '${endpoint[0]}/en/racing/${DateTime.now().year}/$formulaOneCircuitName/Circuit.html',
+        '$endpoint/en/racing/${DateTime.now().year}/$formulaOneCircuitName/Circuit.html',
       );
     } else {
       formulaOneCircuitPageUrl = Uri.parse(
@@ -673,11 +673,11 @@ class FormulaOneScraper {
 
   Future<String> scrapeCircuitHistory(String formulaOneCircuitName) async {
     late Uri formulaOneCircuitPageUrl;
-    List endpoint = Hive.box('settings')
-        .get('homeFeed', defaultValue: [defaultEndpoint, 'bbs']) as List;
-    if (endpoint[1] == "bbs" && endpoint[0] != defaultEndpoint) {
+    String endpoint = Hive.box('settings')
+        .get('server', defaultValue: defaultEndpoint) as String;
+    if (endpoint != defaultEndpoint) {
       formulaOneCircuitPageUrl = Uri.parse(
-        '${endpoint[0]}/en/racing/${DateTime.now().year}/$formulaOneCircuitName/Circuit.html',
+        '$endpoint/en/racing/${DateTime.now().year}/$formulaOneCircuitName/Circuit.html',
       );
     } else {
       formulaOneCircuitPageUrl = Uri.parse(

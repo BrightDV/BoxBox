@@ -71,8 +71,10 @@ class _NewsFeedWidgetState extends State<NewsFeedWidget> {
     const String officialFeed = "https://api.formula1.com";
     Map latestNews = Hive.box('requests').get('news', defaultValue: {}) as Map;
     List savedFeedUrl = Hive.box('settings')
-        .get('homeFeed', defaultValue: [officialFeed, 'bbs']) as List;
-    return savedFeedUrl[1] == "bbs"
+        .get('homeFeed', defaultValue: [officialFeed, 'api']) as List;
+    String savedServer = Hive.box('settings')
+        .get('server', defaultValue: officialFeed) as String;
+    return savedFeedUrl[1] == "api"
         ? FutureBuilder<List<News>>(
             future: getLatestNewsItems(
               tagId: widget.tagId,
@@ -81,10 +83,12 @@ class _NewsFeedWidgetState extends State<NewsFeedWidget> {
             builder: (context, snapshot) => snapshot.hasError
                 ? (snapshot.error.toString() == 'XMLHttpRequest error.' ||
                             snapshot.error.toString() ==
-                                "Failed host lookup: ${savedFeedUrl[0].removeAll(
+                                "Failed host lookup: ${savedServer.replaceAll(
                                       'http://',
-                                    ).removeAll(
+                                      '',
+                                    ).replaceAll(
                                       'https://',
+                                      '',
                                     )}") &&
                         latestNews['items'] != null &&
                         widget.tagId == null &&
@@ -117,7 +121,9 @@ class _NewsFeedWidgetState extends State<NewsFeedWidget> {
             ? FutureBuilder<Map<String, dynamic>>(
                 future: RssFeeds().getFeedArticles(
                   savedFeedUrl[0].contains('motorsport.com')
-                      ? '${savedFeedUrl[0]}/rss/f1/news/'
+                      ? savedServer != officialFeed
+                          ? "$savedServer/rss/${savedFeedUrl[0].replaceAll('https://', '').split('.')[0]}"
+                          : '${savedFeedUrl[0]}/rss/f1/news/'
                       : savedFeedUrl[0],
                 ),
                 builder: (context, snapshot) => snapshot.hasError

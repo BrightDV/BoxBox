@@ -34,11 +34,11 @@ class FIAScraper {
   Future<List<SessionDocument>> scrapeSessionDocuments() async {
     const String defaultEndpoint = "https://api.formula1.com";
     late Uri latestDocumentsUrl;
-    List endpoint = Hive.box('settings')
-        .get('homeFeed', defaultValue: [defaultEndpoint, 'bbs']) as List;
-    if (endpoint[1] == "bbs" && endpoint[0] != defaultEndpoint) {
+    String endpoint = Hive.box('settings')
+        .get('server', defaultValue: defaultEndpoint) as String;
+    if (endpoint != defaultEndpoint) {
       latestDocumentsUrl = Uri.parse(
-        '${endpoint[0]}/documents',
+        '$endpoint/documents',
       );
     } else {
       latestDocumentsUrl = Uri.parse(
