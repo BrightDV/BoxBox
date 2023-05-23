@@ -276,5 +276,7 @@
   "information": "Informazioni",
   "@information": {},
   "startingGrid": "Griglia di partenza",
-  "@startingGrid": {}
+  "@startingGrid": {},
+  "openingWithInAppBrowser": "Apertura con il browser in-app",
+  "@openingWithInAppBrowser": {}
 }

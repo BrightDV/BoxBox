@@ -275,6 +275,8 @@
   "@results": {},
   "information": "Informasjon",
   "@information": {},
-  "startingGrid": "Startoppstilling",
-  "@startingGrid": {}
+  "startingGrid": "Startgrid",
+  "@startingGrid": {},
+  "openingWithInAppBrowser": "Åpne med nettleseren i appen",
+  "@openingWithInAppBrowser": {}
 }
