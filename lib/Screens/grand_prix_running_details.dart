@@ -331,6 +331,9 @@ class _PdfViewerState extends State<PdfViewer> {
 
   @override
   Widget build(BuildContext context) {
+    const String defaultServer = "https://api.formula1.com";
+    String server = Hive.box('settings')
+        .get('server', defaultValue: defaultServer) as String;
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -339,7 +342,9 @@ class _PdfViewerState extends State<PdfViewer> {
         ),
       ),
       body: SfPdfViewer.network(
-        widget.src,
+        server != defaultServer
+            ? "$server/documents/${widget.src.split('/').last}"
+            : widget.src,
         key: _pdfViewerKey,
         enableTextSelection: true,
         onDocumentLoadFailed: (PdfDocumentLoadFailedDetails details) {
