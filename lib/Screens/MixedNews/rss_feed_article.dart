@@ -36,7 +36,7 @@ class RssFeedArticleScreen extends StatefulWidget {
 }
 
 class _RssFeedArticleScreenState extends State<RssFeedArticleScreen> {
-  final List<String> adUrlFilters = [
+  final List adUrlFilters = [
     ".*.doubleclick.net/.*",
     ".*.crashlytics.com/.*",
     ".*.scorecardresearch.com/.*",
@@ -74,68 +74,64 @@ class _RssFeedArticleScreenState extends State<RssFeedArticleScreen> {
   @override
   void initState() {
     super.initState();
-
-    for (final String adUrlFilter in adUrlFilters) {
-      print(adUrlFilter);
-      contentBlockers.add(
-        ContentBlocker(
-          trigger: ContentBlockerTrigger(
-            urlFilter: adUrlFilter,
+    if (!kIsWeb) {
+      for (final adUrlFilter in adUrlFilters) {
+        contentBlockers.add(
+          ContentBlocker(
+            trigger: ContentBlockerTrigger(
+              urlFilter: adUrlFilter,
+            ),
+            action: ContentBlockerAction(
+              type: ContentBlockerActionType.BLOCK,
+            ),
           ),
-          action: ContentBlockerAction(
-            type: ContentBlockerActionType.BLOCK,
+        );
+        List<String> selectors = [
+          ".banner",
+          ".banners",
+          ".ads",
+          ".ad",
+          ".advert",
+          ".w7e-platform-101",
+          ".adgrid-ad-container",
+          ".ms-apb-inarticle-after-preview-without-sidebar",
+          ".ms-apb-super",
+          ".ms-content_sidebar",
+          ".ms-apb",
+          ".ms-footer_piano-footer",
+          ".advert-banner-container",
+          ".ad-top-margin",
+          ".mv-ad-box",
+          ".onetrust-pc-dark-filter",
+          ".ms-ap",
+          ".ms-hapb",
+          ".ci-ad",
+          ".ot-sdk-container",
+          ".GoogleActiveViewElement",
+          ".widget_text",
+          ".topbanmobile",
+          ".primisslate",
+          ".snackStickyParent",
+          ".region-banner",
+          ".inarticle-wrapper",
+        ];
+        contentBlockers.add(
+          ContentBlocker(
+            trigger: ContentBlockerTrigger(
+              urlFilter: ".*",
+            ),
+            action: ContentBlockerAction(
+              type: ContentBlockerActionType.CSS_DISPLAY_NONE,
+              selector: selectors.join(', '),
+            ),
           ),
-        ),
-      );
+        );
+      }
     }
-    print("content blockers");
-    List<String> selectors = [
-      ".banner",
-      ".banners",
-      ".ads",
-      ".ad",
-      ".advert",
-      ".w7e-platform-101",
-      ".adgrid-ad-container",
-      ".ms-apb-inarticle-after-preview-without-sidebar",
-      ".ms-apb-super",
-      ".ms-content_sidebar",
-      ".ms-apb",
-      ".ms-footer_piano-footer",
-      ".advert-banner-container",
-      ".ad-top-margin",
-      ".mv-ad-box",
-      ".onetrust-pc-dark-filter",
-      ".ms-ap",
-      ".ms-hapb",
-      ".ci-ad",
-      ".ot-sdk-container",
-      ".GoogleActiveViewElement",
-      ".widget_text",
-      ".topbanmobile",
-      ".primisslate",
-      ".snackStickyParent",
-      ".region-banner",
-      ".inarticle-wrapper",
-    ];
-    contentBlockers.add(
-      ContentBlocker(
-        trigger: ContentBlockerTrigger(
-          urlFilter: ".*",
-        ),
-        action: ContentBlockerAction(
-          type: ContentBlockerActionType.CSS_DISPLAY_NONE,
-          selector: selectors.join(', '),
-        ),
-      ),
-    );
-    print("finished!");
   }
 
   @override
   Widget build(BuildContext context) {
-    print(widget.articleUrl);
-    print("url");
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     return Scaffold(
