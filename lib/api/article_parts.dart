@@ -341,18 +341,15 @@ class WidgetsList extends StatelessWidget {
                                           ),
                                           body: InAppWebView(
                                             initialUrlRequest: URLRequest(
-                                              url: Uri.parse(
+                                              url: WebUri(
                                                 "https://www.riddle.com/view/${element['fields']['riddleId']}",
                                               ),
                                             ),
-                                            initialOptions:
-                                                InAppWebViewGroupOptions(
-                                              crossPlatform:
-                                                  InAppWebViewOptions(
-                                                preferredContentMode:
-                                                    UserPreferredContentMode
-                                                        .DESKTOP,
-                                              ),
+                                            initialSettings:
+                                                InAppWebViewSettings(
+                                              preferredContentMode:
+                                                  UserPreferredContentMode
+                                                      .DESKTOP,
                                             ),
                                             gestureRecognizers: {
                                               Factory<VerticalDragGestureRecognizer>(
@@ -423,12 +420,9 @@ class WidgetsList extends StatelessWidget {
                                                   () =>
                                                       ScaleGestureRecognizer()),
                                             },
-                                            initialOptions:
-                                                InAppWebViewGroupOptions(
-                                              crossPlatform:
-                                                  InAppWebViewOptions(
-                                                      transparentBackground:
-                                                          true),
+                                            initialSettings:
+                                                InAppWebViewSettings(
+                                              transparentBackground: true,
                                             ),
                                           ),
                                         )
@@ -505,7 +499,7 @@ class WidgetsList extends StatelessWidget {
                                                       body: InAppWebView(
                                                         initialUrlRequest:
                                                             URLRequest(
-                                                          url: Uri.parse(
+                                                          url: WebUri(
                                                             "https://embed.scribblelive.com/Embed/v7.aspx?Id=${element['fields']['scribbleEventId'].split('/')[2]}&ThemeId=37480",
                                                           ),
                                                         ),
@@ -1195,7 +1189,7 @@ class WidgetsList extends StatelessWidget {
                                                           child: InAppWebView(
                                                             initialUrlRequest:
                                                                 URLRequest(
-                                                              url: Uri.parse(
+                                                              url: WebUri(
                                                                 'https:${element['fields']['audioPodcast']['iFrameSrc']}',
                                                               ),
                                                             ),
@@ -1210,13 +1204,10 @@ class WidgetsList extends StatelessWidget {
                                                                   () =>
                                                                       ScaleGestureRecognizer()),
                                                             },
-                                                            initialOptions:
-                                                                InAppWebViewGroupOptions(
-                                                              crossPlatform:
-                                                                  InAppWebViewOptions(
-                                                                      transparentBackground:
-                                                                          true),
-                                                            ),
+                                                            initialSettings:
+                                                                InAppWebViewSettings(
+                                                                    transparentBackground:
+                                                                        true),
                                                           ),
                                                         )
                                                       : element['contentType'] ==

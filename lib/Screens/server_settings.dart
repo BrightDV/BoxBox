@@ -182,7 +182,6 @@ class _ServerSettingsScreenState extends State<ServerSettingsScreen> {
                 builder: (context) {
                   final TextEditingController controller =
                       TextEditingController();
-                  String type = "rss";
                   return StatefulBuilder(
                     builder: (context, setState) => AlertDialog(
                       backgroundColor: useDarkMode

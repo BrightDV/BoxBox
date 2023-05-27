@@ -671,7 +671,7 @@ class ContentStreamsFragment extends StatelessWidget {
                       ),
                       body: InAppWebView(
                         initialUrlRequest: URLRequest(
-                          url: Uri.parse(
+                          url: WebUri(
                             streams[index]['Uri'],
                           ),
                         ),

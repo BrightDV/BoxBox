@@ -36,7 +36,7 @@ class RssFeedArticleScreen extends StatefulWidget {
 }
 
 class _RssFeedArticleScreenState extends State<RssFeedArticleScreen> {
-  final adUrlFilters = [
+  final List<String> adUrlFilters = [
     ".*.doubleclick.net/.*",
     ".*.crashlytics.com/.*",
     ".*.scorecardresearch.com/.*",
@@ -75,7 +75,8 @@ class _RssFeedArticleScreenState extends State<RssFeedArticleScreen> {
   void initState() {
     super.initState();
 
-    for (final adUrlFilter in adUrlFilters) {
+    for (final String adUrlFilter in adUrlFilters) {
+      print(adUrlFilter);
       contentBlockers.add(
         ContentBlocker(
           trigger: ContentBlockerTrigger(
@@ -87,6 +88,7 @@ class _RssFeedArticleScreenState extends State<RssFeedArticleScreen> {
         ),
       );
     }
+    print("content blockers");
     List<String> selectors = [
       ".banner",
       ".banners",
@@ -127,10 +129,13 @@ class _RssFeedArticleScreenState extends State<RssFeedArticleScreen> {
         ),
       ),
     );
+    print("finished!");
   }
 
   @override
   Widget build(BuildContext context) {
+    print(widget.articleUrl);
+    print("url");
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     return Scaffold(
@@ -168,7 +173,7 @@ class _RssFeedArticleScreenState extends State<RssFeedArticleScreen> {
           : Colors.white,
       body: InAppWebView(
         initialUrlRequest: URLRequest(
-          url: Uri.parse(
+          url: WebUri(
             widget.articleUrl,
           ),
         ),
@@ -179,10 +184,8 @@ class _RssFeedArticleScreenState extends State<RssFeedArticleScreen> {
               () => HorizontalDragGestureRecognizer()),
           Factory<ScaleGestureRecognizer>(() => ScaleGestureRecognizer()),
         },
-        initialOptions: InAppWebViewGroupOptions(
-          crossPlatform: InAppWebViewOptions(
-            contentBlockers: contentBlockers,
-          ),
+        initialSettings: InAppWebViewSettings(
+          contentBlockers: contentBlockers,
         ),
       ),
     );
