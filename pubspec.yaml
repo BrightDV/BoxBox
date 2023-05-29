@@ -15,7 +15,7 @@ publish_to: none
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 
 # Before releasing a new version, isInDebugMode must be set to false (main.dart#74).
-version: 0.5.7+21 # Read above before bump.
+version: 0.5.8+22 # Read above before bump.
 
 environment:
   sdk: ">=2.19.0 <3.4.4"
@@ -65,7 +65,7 @@ dependencies:
   sliding_up_panel: ^2.0.0+1
   story_view: # Updated packages with custom features. Origninally: https://github.com/blackmann/story_view
     path: ./story_view
-  syncfusion_flutter_pdfviewer: ^21.2.5
+  syncfusion_flutter_pdfviewer: 21.2.5
   timeago: ^3.4.0
   url_launcher: ^6.1.11
   video_player: ^2.6.0
