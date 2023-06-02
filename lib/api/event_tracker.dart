@@ -97,7 +97,9 @@ class EventTracker {
         'locale': 'en',
       },
     );
-    Map formatedResponse = jsonDecode(res.body);
+    Map formatedResponse = jsonDecode(
+      utf8.decode(res.bodyBytes),
+    );
     Hive.box('requests').put('event-tracker', formatedResponse);
 
     return formatedResponse;
@@ -229,7 +231,9 @@ class EventTracker {
         'locale': 'en',
       },
     );
-    Map formatedResponse = jsonDecode(res.body);
+    Map formatedResponse = jsonDecode(
+      utf8.decode(res.bodyBytes),
+    );
 
     return formatedResponse;
   }
