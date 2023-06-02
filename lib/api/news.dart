@@ -34,7 +34,9 @@ import 'package:boxbox/Screens/standings.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -1448,6 +1450,12 @@ class VideoRenderer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    width = width > 1400
+        ? 800
+        : width > 1000
+            ? 500
+            : 400;
     return FutureBuilder<Map<String, dynamic>>(
       future: (youtubeId ?? '') != ''
           ? getYouTubeVideoLinks(youtubeId!)
@@ -1457,11 +1465,28 @@ class VideoRenderer extends StatelessWidget {
               snapshot.error.toString(),
             )
           : snapshot.hasData
-              ? BetterPlayerVideoPlayer(
-                  snapshot.data!,
-                  autoplay == null ? false : autoplay!,
-                  heroTag ?? '',
-                )
+              ? kIsWeb
+                  ? SizedBox(
+                      height: width / (16 / 9),
+                      child: InAppWebView(
+                        initialUrlRequest: URLRequest(
+                          url: WebUri(
+                            snapshot.data!['videos'][0],
+                          ),
+                        ),
+                        initialSettings: InAppWebViewSettings(
+                          preferredContentMode:
+                              UserPreferredContentMode.DESKTOP,
+                          transparentBackground: true,
+                          iframeAllowFullscreen: true,
+                        ),
+                      ),
+                    )
+                  : BetterPlayerVideoPlayer(
+                      snapshot.data!,
+                      autoplay == null ? false : autoplay!,
+                      heroTag ?? '',
+                    )
               : SizedBox(
                   height: MediaQuery.of(context).size.width / (16 / 9),
                   child: const LoadingIndicatorUtil(),
