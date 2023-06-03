@@ -152,17 +152,25 @@ class EventTrackerItem extends StatelessWidget {
                           SizedBox(
                             width: MediaQuery.of(context).size.width - 160,
                             height: 20,
-                            child: Marquee(
-                              text: event.meetingOfficialName,
-                              style: const TextStyle(
-                                fontSize: 12,
-                                color: Colors.white,
-                              ),
-                              pauseAfterRound: const Duration(seconds: 1),
-                              startAfter: const Duration(seconds: 1),
-                              velocity: 85,
-                              blankSpace: 100,
-                            ),
+                            child: MediaQuery.of(context).size.width >= 768
+                                ? Text(
+                                    event.meetingOfficialName,
+                                    style: const TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.white,
+                                    ),
+                                  )
+                                : Marquee(
+                                    text: event.meetingOfficialName,
+                                    style: const TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.white,
+                                    ),
+                                    pauseAfterRound: const Duration(seconds: 1),
+                                    startAfter: const Duration(seconds: 1),
+                                    velocity: 85,
+                                    blankSpace: 100,
+                                  ),
                           ),
                         ],
                       ),
