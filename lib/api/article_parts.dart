@@ -156,6 +156,16 @@ class WidgetsList extends StatelessWidget {
     articlesHistory =
         Hive.box('history').get('articlesHistory', defaultValue: []) as List;
 
+    // values for the related articles in web
+
+    ScrollController scrollController = ScrollController();
+    double width = MediaQuery.of(context).size.width;
+    width = width > 1400
+        ? 800
+        : width > 1000
+            ? 500
+            : 400;
+
     // return the different parts
 
     return Column(
@@ -1361,36 +1371,121 @@ class WidgetsList extends StatelessWidget {
 
         // related articles
 
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              for (var article in article.relatedArticles)
-                NewsItem(
-                  News(
-                    article['id'],
-                    article['articleType'],
-                    article['slug'],
-                    article['title'],
-                    article['metaDescription'] ?? ' ',
-                    DateTime.parse(article['updatedAt']),
-                    article['thumbnail'] != null
-                        ? useDataSaverMode
-                            ? article['thumbnail']['image']['renditions'] !=
-                                    null
-                                ? article['thumbnail']['image']['renditions']
-                                    ['2col']
-                                : article['thumbnail']['image']['url'] +
-                                    '.transform/2col-retina/image.jpg'
-                            : article['thumbnail']['image']['url']
-                        : '',
+        kIsWeb
+            ? Stack(
+                alignment: Alignment.center,
+                children: [
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    controller: scrollController,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        for (var article in article.relatedArticles)
+                          NewsItem(
+                            News(
+                              article['id'],
+                              article['articleType'],
+                              article['slug'],
+                              article['title'],
+                              article['metaDescription'] ?? ' ',
+                              DateTime.parse(article['updatedAt']),
+                              article['thumbnail'] != null
+                                  ? useDataSaverMode
+                                      ? article['thumbnail']['image']
+                                                  ['renditions'] !=
+                                              null
+                                          ? article['thumbnail']['image']
+                                              ['renditions']['2col']
+                                          : article['thumbnail']['image']
+                                                  ['url'] +
+                                              '.transform/2col-retina/image.jpg'
+                                      : article['thumbnail']['image']['url']
+                                  : '',
+                            ),
+                            true,
+                          ),
+                      ],
+                    ),
                   ),
-                  true,
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: GestureDetector(
+                      onTap: () => scrollController.animateTo(
+                        scrollController.offset - width + 100,
+                        duration: const Duration(milliseconds: 200),
+                        curve: Curves.easeInOut,
+                      ),
+                      child: Container(
+                        width: 48,
+                        height: 48,
+                        decoration: BoxDecoration(
+                          color: Colors.black.withOpacity(0.75),
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          Icons.arrow_back,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: GestureDetector(
+                      onTap: () => scrollController.animateTo(
+                        scrollController.offset + width - 100,
+                        duration: const Duration(milliseconds: 200),
+                        curve: Curves.easeInOut,
+                      ),
+                      child: Container(
+                        width: 48,
+                        height: 48,
+                        decoration: BoxDecoration(
+                          color: Colors.black.withOpacity(0.75),
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          Icons.arrow_forward,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              )
+            : SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                controller: scrollController,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    for (var article in article.relatedArticles)
+                      NewsItem(
+                        News(
+                          article['id'],
+                          article['articleType'],
+                          article['slug'],
+                          article['title'],
+                          article['metaDescription'] ?? ' ',
+                          DateTime.parse(article['updatedAt']),
+                          article['thumbnail'] != null
+                              ? useDataSaverMode
+                                  ? article['thumbnail']['image']
+                                              ['renditions'] !=
+                                          null
+                                      ? article['thumbnail']['image']
+                                          ['renditions']['2col']
+                                      : article['thumbnail']['image']['url'] +
+                                          '.transform/2col-retina/image.jpg'
+                                  : article['thumbnail']['image']['url']
+                              : '',
+                        ),
+                        true,
+                      ),
+                  ],
                 ),
-            ],
-          ),
-        ),
+              ),
       ],
     );
   }
