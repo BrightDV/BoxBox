@@ -24,6 +24,7 @@ import 'package:boxbox/Screens/schedule.dart';
 import 'package:boxbox/Screens/search.dart';
 import 'package:boxbox/Screens/standings.dart';
 import 'package:boxbox/helpers/news_feed_widget.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hidable/hidable.dart';
@@ -256,58 +257,110 @@ class _MainBottomNavigationBarState extends State<MainBottomNavigationBar> {
       ),
       drawer: MainDrawer(_homeSetState),
       drawerEdgeDragWidth: MediaQuery.of(context).size.width / 4,
-      bottomNavigationBar: Hidable(
-        controller: scrollController,
-        child: BottomNavigationBar(
-          type: BottomNavigationBarType.fixed,
-          backgroundColor: useDarkMode
-              ? const Color.fromARGB(255, 16, 16, 24)
-              : Colors.white,
-          selectedItemColor: Theme.of(context).primaryColor,
-          unselectedItemColor: useDarkMode ? Colors.white : Colors.grey[600],
-          currentIndex: _selectedIndex,
-          elevation: 10.0,
-          items: <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: const Icon(
-                Icons.feed_outlined,
+      bottomNavigationBar: kIsWeb
+          ? BottomNavigationBar(
+              type: BottomNavigationBarType.fixed,
+              backgroundColor: useDarkMode
+                  ? const Color.fromARGB(255, 16, 16, 24)
+                  : Colors.white,
+              selectedItemColor: Theme.of(context).primaryColor,
+              unselectedItemColor:
+                  useDarkMode ? Colors.white : Colors.grey[600],
+              currentIndex: _selectedIndex,
+              elevation: 10.0,
+              items: <BottomNavigationBarItem>[
+                BottomNavigationBarItem(
+                  icon: const Icon(
+                    Icons.feed_outlined,
+                  ),
+                  activeIcon: const Icon(
+                    Icons.feed,
+                  ),
+                  label: AppLocalizations.of(context)?.news,
+                ),
+                BottomNavigationBarItem(
+                  icon: const Icon(
+                    Icons.play_circle_outline,
+                  ),
+                  activeIcon: const Icon(
+                    Icons.play_circle,
+                  ),
+                  label: AppLocalizations.of(context)?.videos,
+                ),
+                BottomNavigationBarItem(
+                  icon: const Icon(
+                    Icons.emoji_events_outlined,
+                  ),
+                  activeIcon: const Icon(
+                    Icons.emoji_events,
+                  ),
+                  label: AppLocalizations.of(context)?.standings,
+                ),
+                BottomNavigationBarItem(
+                  icon: const Icon(
+                    Icons.calendar_today_outlined,
+                  ),
+                  activeIcon: const Icon(
+                    Icons.calendar_today,
+                  ),
+                  label: AppLocalizations.of(context)?.schedule,
+                ),
+              ],
+              onTap: _onItemTapped,
+            )
+          : Hidable(
+              controller: scrollController,
+              child: BottomNavigationBar(
+                type: BottomNavigationBarType.fixed,
+                backgroundColor: useDarkMode
+                    ? const Color.fromARGB(255, 16, 16, 24)
+                    : Colors.white,
+                selectedItemColor: Theme.of(context).primaryColor,
+                unselectedItemColor:
+                    useDarkMode ? Colors.white : Colors.grey[600],
+                currentIndex: _selectedIndex,
+                elevation: 10.0,
+                items: <BottomNavigationBarItem>[
+                  BottomNavigationBarItem(
+                    icon: const Icon(
+                      Icons.feed_outlined,
+                    ),
+                    activeIcon: const Icon(
+                      Icons.feed,
+                    ),
+                    label: AppLocalizations.of(context)?.news,
+                  ),
+                  BottomNavigationBarItem(
+                    icon: const Icon(
+                      Icons.play_circle_outline,
+                    ),
+                    activeIcon: const Icon(
+                      Icons.play_circle,
+                    ),
+                    label: AppLocalizations.of(context)?.videos,
+                  ),
+                  BottomNavigationBarItem(
+                    icon: const Icon(
+                      Icons.emoji_events_outlined,
+                    ),
+                    activeIcon: const Icon(
+                      Icons.emoji_events,
+                    ),
+                    label: AppLocalizations.of(context)?.standings,
+                  ),
+                  BottomNavigationBarItem(
+                    icon: const Icon(
+                      Icons.calendar_today_outlined,
+                    ),
+                    activeIcon: const Icon(
+                      Icons.calendar_today,
+                    ),
+                    label: AppLocalizations.of(context)?.schedule,
+                  ),
+                ],
+                onTap: _onItemTapped,
               ),
-              activeIcon: const Icon(
-                Icons.feed,
-              ),
-              label: AppLocalizations.of(context)?.news,
             ),
-            BottomNavigationBarItem(
-              icon: const Icon(
-                Icons.play_circle_outline,
-              ),
-              activeIcon: const Icon(
-                Icons.play_circle,
-              ),
-              label: AppLocalizations.of(context)?.videos,
-            ),
-            BottomNavigationBarItem(
-              icon: const Icon(
-                Icons.emoji_events_outlined,
-              ),
-              activeIcon: const Icon(
-                Icons.emoji_events,
-              ),
-              label: AppLocalizations.of(context)?.standings,
-            ),
-            BottomNavigationBarItem(
-              icon: const Icon(
-                Icons.calendar_today_outlined,
-              ),
-              activeIcon: const Icon(
-                Icons.calendar_today,
-              ),
-              label: AppLocalizations.of(context)?.schedule,
-            ),
-          ],
-          onTap: _onItemTapped,
-        ),
-      ),
       body: screens.elementAt(_selectedIndex),
       backgroundColor: useDarkMode
           ? Theme.of(context).scaffoldBackgroundColor
