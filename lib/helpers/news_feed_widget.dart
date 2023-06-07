@@ -48,16 +48,6 @@ class NewsFeedWidget extends StatefulWidget {
 }
 
 class _NewsFeedWidgetState extends State<NewsFeedWidget> {
-  Future<List<News>> getLatestNewsItems({
-    String? tagId,
-    String? articleType,
-  }) async {
-    return await F1NewsFetcher().getLatestNews(
-      tagId: tagId,
-      articleType: articleType,
-    );
-  }
-
   @override
   void initState() {
     super.initState();
@@ -69,53 +59,15 @@ class _NewsFeedWidgetState extends State<NewsFeedWidget> {
   @override
   Widget build(BuildContext context) {
     const String officialFeed = "https://api.formula1.com";
-    Map latestNews = Hive.box('requests').get('news', defaultValue: {}) as Map;
     List savedFeedUrl = Hive.box('settings')
         .get('homeFeed', defaultValue: [officialFeed, 'api']) as List;
     String savedServer = Hive.box('settings')
         .get('server', defaultValue: officialFeed) as String;
     return savedFeedUrl[1] == "api"
-        ? FutureBuilder<List<News>>(
-            future: getLatestNewsItems(
-              tagId: widget.tagId,
-              articleType: widget.articleType,
-            ),
-            builder: (context, snapshot) => snapshot.hasError
-                ? (snapshot.error.toString() == 'XMLHttpRequest error.' ||
-                            snapshot.error.toString() ==
-                                "Failed host lookup: ${savedServer.replaceAll(
-                                      'http://',
-                                      '',
-                                    ).replaceAll(
-                                      'https://',
-                                      '',
-                                    )}") &&
-                        latestNews['items'] != null &&
-                        widget.tagId == null &&
-                        widget.articleType == null
-                    ? OfflineNewsList(
-                        items: F1NewsFetcher().formatResponse(latestNews),
-                        scrollController: widget.scrollController,
-                      )
-                    : RequestErrorWidget(
-                        snapshot.error.toString(),
-                      )
-                : snapshot.hasData
-                    ? NewsList(
-                        items: snapshot.data!,
-                        scrollController: widget.scrollController,
-                        tagId: widget.tagId,
-                        articleType: widget.articleType,
-                      )
-                    : widget.tagId == null &&
-                            widget.articleType == null &&
-                            latestNews['items'] != null
-                        ? NewsList(
-                            items: F1NewsFetcher().formatResponse(latestNews),
-                            scrollController: widget.scrollController,
-                            tagId: widget.tagId,
-                          )
-                        : const LoadingIndicatorUtil(),
+        ? NewsList(
+            scrollController: widget.scrollController,
+            tagId: widget.tagId,
+            articleType: widget.articleType,
           )
         : savedFeedUrl[1] == "rss"
             ? FutureBuilder<Map<String, dynamic>>(

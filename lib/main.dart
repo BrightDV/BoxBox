@@ -69,7 +69,7 @@ void main() async {
     ],
   );
 
-  Workmanager().initialize(
+  /* Workmanager().initialize(
     callbackDispatcher,
     isInDebugMode: false,
   );
@@ -79,12 +79,12 @@ void main() async {
     existingWorkPolicy: ExistingWorkPolicy.replace,
     frequency: const Duration(hours: 2),
     initialDelay: const Duration(hours: 2),
-  );
+  ); */
 
   runApp(const MyApp());
 }
 
-int createUniqueId() {
+/* int createUniqueId() {
   return DateTime.now().millisecondsSinceEpoch.remainder(100000);
 }
 
@@ -157,7 +157,7 @@ void callbackDispatcher() {
       }
     },
   );
-}
+} */
 
 void setTimeagoLocaleMessages() {
   timeago.setLocaleMessages('ar', timeago.ArMessages());

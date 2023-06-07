@@ -90,53 +90,6 @@ class F1NewsFetcher {
     return newsList;
   }
 
-  Future<Map<String, dynamic>> getRawNews({
-    String? tagId,
-    String? articleType,
-  }) async {
-    Uri url;
-    String endpoint = Hive.box('settings')
-        .get('server', defaultValue: defaultEndpoint) as String;
-    if (tagId != null) {
-      url = Uri.parse('$endpoint/v1/editorial/articles?limit=16&tags=$tagId');
-    } else if (articleType != null) {
-      url = Uri.parse(
-          '$endpoint/v1/editorial/articles?limit=16&articleTypes=$articleType');
-    } else {
-      url = Uri.parse('$endpoint/v1/editorial/articles?limit=16');
-    }
-    var response = await http.get(
-      url,
-      headers: endpoint != defaultEndpoint
-          ? {
-              "Accept": "application/json",
-            }
-          : {
-              "Accept": "application/json",
-              "apikey": apikey,
-              "locale": "en",
-            },
-    );
-
-    Map<String, dynamic> responseAsJson = json.decode(
-      utf8.decode(response.bodyBytes),
-    );
-    return responseAsJson;
-  }
-
-  FutureOr<List<News>> getLatestNews(
-      {String? tagId, String? articleType}) async {
-    Map<String, dynamic> responseAsJson = await getRawNews(
-      tagId: tagId,
-      articleType: articleType,
-    );
-
-    if (tagId == null && articleType == null) {
-      Hive.box('requests').put('news', responseAsJson);
-    }
-    return formatResponse(responseAsJson);
-  }
-
   FutureOr<List<News>> getMoreNews(
     int offset, {
     String? tagId,
@@ -839,13 +792,11 @@ class _NewsItemState extends State<NewsItem> with TickerProviderStateMixin {
 }
 
 class NewsList extends StatefulWidget {
-  final List items;
   final ScrollController? scrollController;
   final String? tagId;
   final String? articleType;
 
   const NewsList({
-    required this.items,
     this.scrollController,
     this.tagId,
     this.articleType,
@@ -884,71 +835,96 @@ class _NewsListState extends State<NewsList> {
       }
     } catch (error) {
       _pagingController.error = error;
+      setState(() {});
     }
   }
 
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    return width < 500
-        ? RefreshIndicator(
-            onRefresh: () => Future.sync(
-              () => _pagingController.refresh(),
-            ),
-            child: PagedListView<int, News>(
-              pagingController: _pagingController,
-              scrollController: widget.scrollController,
-              scrollDirection: Axis.vertical,
-              shrinkWrap: true,
-              builderDelegate: PagedChildBuilderDelegate<News>(
-                itemBuilder: (context, item, index) => NewsItem(item, false),
-                firstPageProgressIndicatorBuilder: (_) =>
-                    const LoadingIndicatorUtil(),
-                firstPageErrorIndicatorBuilder: (_) =>
-                    FirstPageExceptionIndicator(
-                  title: AppLocalizations.of(context)!.errorOccurred,
-                  message: AppLocalizations.of(context)!.errorOccurredDetails,
-                  onTryAgain: () => _pagingController.refresh(),
-                ),
-                newPageProgressIndicatorBuilder: (_) =>
-                    const LoadingIndicatorUtil(),
-              ),
-            ),
+    const String officialFeed = "https://api.formula1.com";
+    Map latestNews = Hive.box('requests').get('news', defaultValue: {}) as Map;
+    String savedServer = Hive.box('settings')
+        .get('server', defaultValue: officialFeed) as String;
+    return (_pagingController.error.toString() == 'XMLHttpRequest error.' ||
+                _pagingController.error ==
+                    "Failed host lookup: ${savedServer.replaceAll(
+                          'http://',
+                          '',
+                        ).replaceAll(
+                          'https://',
+                          '',
+                        )}") &&
+            latestNews['items'] != null &&
+            widget.tagId == null &&
+            widget.articleType == null
+        ? OfflineNewsList(
+            items: F1NewsFetcher().formatResponse(latestNews),
+            scrollController: widget.scrollController,
           )
-        : Padding(
-            padding: const EdgeInsets.only(top: 15),
-            child: PagedGridView<int, News>(
-              pagingController: _pagingController,
-              scrollController: widget.scrollController,
-              scrollDirection: Axis.vertical,
-              shrinkWrap: true,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: width < 750 ? 2 : 3,
-                crossAxisSpacing: 5.0,
-                mainAxisSpacing: 5.0,
-              ),
-              builderDelegate: PagedChildBuilderDelegate<News>(
-                itemBuilder: (context, item, index) {
-                  return NewsItem(
-                    item,
-                    false,
-                    showSmallDescription: true,
-                    itemPerRow: width < 750 ? 2 : 3,
-                  );
-                },
-                firstPageProgressIndicatorBuilder: (_) =>
-                    const LoadingIndicatorUtil(),
-                firstPageErrorIndicatorBuilder: (_) =>
-                    FirstPageExceptionIndicator(
-                  title: AppLocalizations.of(context)!.errorOccurred,
-                  message: AppLocalizations.of(context)!.errorOccurredDetails,
-                  onTryAgain: () => _pagingController.refresh(),
+        : width < 500
+            ? RefreshIndicator(
+                onRefresh: () => Future.sync(
+                  () => _pagingController.refresh(),
                 ),
-                newPageProgressIndicatorBuilder: (_) =>
-                    const LoadingIndicatorUtil(),
-              ),
-            ),
-          );
+                child: PagedListView<int, News>(
+                  pagingController: _pagingController,
+                  scrollController: widget.scrollController,
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
+                  builderDelegate: PagedChildBuilderDelegate<News>(
+                    itemBuilder: (context, item, index) =>
+                        NewsItem(item, false),
+                    firstPageProgressIndicatorBuilder: (_) =>
+                        const LoadingIndicatorUtil(),
+                    firstPageErrorIndicatorBuilder: (_) =>
+                        FirstPageExceptionIndicator(
+                      title: AppLocalizations.of(context)!.errorOccurred,
+                      message:
+                          AppLocalizations.of(context)!.errorOccurredDetails,
+                      onTryAgain: () => _pagingController.refresh(),
+                    ),
+                    newPageProgressIndicatorBuilder: (_) =>
+                        const LoadingIndicatorUtil(),
+                  ),
+                ),
+              )
+            : Padding(
+                padding: const EdgeInsets.only(top: 15),
+                child: PagedGridView<int, News>(
+                  pagingController: _pagingController,
+                  scrollController: widget.scrollController,
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: width < 750 ? 2 : 3,
+                    crossAxisSpacing: 5.0,
+                    mainAxisSpacing: 5.0,
+                  ),
+                  builderDelegate: PagedChildBuilderDelegate<News>(
+                    itemBuilder: (context, item, index) {
+                      return NewsItem(
+                        item,
+                        false,
+                        showSmallDescription: true,
+                        itemPerRow: width < 750 ? 2 : 3,
+                      );
+                    },
+                    firstPageProgressIndicatorBuilder: (_) =>
+                        const LoadingIndicatorUtil(),
+                    firstPageErrorIndicatorBuilder: (_) {
+                      return FirstPageExceptionIndicator(
+                        title: AppLocalizations.of(context)!.errorOccurred,
+                        message:
+                            AppLocalizations.of(context)!.errorOccurredDetails,
+                        onTryAgain: () => _pagingController.refresh(),
+                      );
+                    },
+                    newPageProgressIndicatorBuilder: (_) =>
+                        const LoadingIndicatorUtil(),
+                  ),
+                ),
+              );
   }
 
   @override
