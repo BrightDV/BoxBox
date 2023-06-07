@@ -200,13 +200,32 @@ class _ErgastApiCalls {
   }
 
   FutureOr<List<Driver>> getLastStandings() async {
-    var url = Uri.parse(
-      'https://ergast.com/api/f1/current/driverStandings.json',
-    );
-    var response = await http.get(url);
-    Map<String, dynamic> responseAsJson = jsonDecode(response.body);
-    Hive.box('requests').put('driversStandings', responseAsJson);
-    return formatLastStandings(responseAsJson);
+    Map driverStandings =
+        Hive.box('requests').get('driversStandings', defaultValue: {});
+    DateTime latestQuery = Hive.box('requests').get(
+      'driversStandingsLatestQuery',
+      defaultValue: DateTime.now(),
+    ) as DateTime;
+    if (latestQuery
+            .add(
+              const Duration(minutes: 10),
+            )
+            .isAfter(DateTime.now()) &&
+        driverStandings != {}) {
+      return formatLastStandings(driverStandings);
+    } else {
+      var url = Uri.parse(
+        'https://ergast.com/api/f1/current/driverStandings.json',
+      );
+      var response = await http.get(url);
+      Map<String, dynamic> responseAsJson = jsonDecode(response.body);
+      Hive.box('requests').put('driversStandings', responseAsJson);
+      Hive.box('requests').put(
+        'driversStandingsLatestQuery',
+        DateTime.now(),
+      );
+      return formatLastStandings(responseAsJson);
+    }
   }
 
   Future<List<String>> getDriverList(String year) async {
@@ -394,12 +413,26 @@ class _ErgastApiCalls {
   }
 
   FutureOr<List<Race>> getLastSchedule(bool toCome) async {
-    var url =
-        Uri.parse('https://ergast.com/api/f1/${DateTime.now().year}.json');
-    var response = await http.get(url);
-    Map<String, dynamic> responseAsJson = jsonDecode(response.body);
-    Hive.box('requests').put('schedule', responseAsJson);
-    return formatLastSchedule(responseAsJson, toCome);
+    Map schedule = Hive.box('requests').get('schedule', defaultValue: {});
+    DateTime latestQuery = Hive.box('requests').get(
+      'scheduleLatestQuery',
+      defaultValue: DateTime.now(),
+    ) as DateTime;
+    if (latestQuery
+            .add(
+              const Duration(hours: 1),
+            )
+            .isAfter(DateTime.now()) &&
+        schedule != {}) {
+      return formatLastSchedule(schedule, toCome);
+    } else {
+      var url =
+          Uri.parse('https://ergast.com/api/f1/${DateTime.now().year}.json');
+      var response = await http.get(url);
+      Map<String, dynamic> responseAsJson = jsonDecode(response.body);
+      Hive.box('requests').put('schedule', responseAsJson);
+      return formatLastSchedule(responseAsJson, toCome);
+    }
   }
 
   Future<Race> getRaceDetails(String round) async {
