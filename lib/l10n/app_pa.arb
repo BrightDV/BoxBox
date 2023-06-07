@@ -276,5 +276,9 @@
   "information": "ਜਾਣਕਾਰੀ",
   "@information": {},
   "results": "ਨਤੀਜੇ",
-  "@results": {}
+  "@results": {},
+  "openingWithInAppBrowser": "ਐਪ-ਵਿਚਲੇ ਬ੍ਰਾਊਜ਼ਰ ਨਾਲ ਖੋਲ੍ਹ ਰਿਹਾ",
+  "@openingWithInAppBrowser": {},
+  "startingGrid": "ਸ਼ੁਰੂਆਤ ਗਰਿੱਡ",
+  "@startingGrid": {}
 }
