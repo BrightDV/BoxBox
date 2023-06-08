@@ -1159,7 +1159,7 @@ class _SessionCountdownTimerState extends State<SessionCountdownTimer> {
             : Padding(
                 padding: const EdgeInsets.all(15.5),
                 child: Text(
-                  '${raceFullDateParsed.day} ${months[raceFullDateParsed.month - 1]} - ${raceFullDateParsed.toIso8601String().split('T')[1].split('.')[0]}',
+                  '${raceFullDateParsed.day} ${months[raceFullDateParsed.month - 1]} - ${raceFullDateParsed.toLocal().toIso8601String().split('T')[1].split('.')[0]}',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 23,
