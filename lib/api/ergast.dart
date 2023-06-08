@@ -74,13 +74,32 @@ class _ErgastApiCalls {
   }
 
   FutureOr<List<DriverResult>> getRaceStandings(String round) async {
-    var url = Uri.parse(
-        'https://ergast.com/api/f1/${DateTime.now().year}/$round/results.json');
-    var response = await http.get(url);
-    Map<String, dynamic> responseAsJson = jsonDecode(response.body);
-    Hive.box('requests').put('race-$round', responseAsJson);
-    List<DriverResult> driversResults = formatRaceStandings(responseAsJson);
-    return driversResults;
+    Map results = Hive.box('requests').get('race-$round', defaultValue: {});
+    DateTime latestQuery = Hive.box('requests').get(
+      'race-$round-LatestQuery',
+      defaultValue: DateTime.now(),
+    ) as DateTime;
+    if (latestQuery
+            .add(
+              const Duration(minutes: 10),
+            )
+            .isAfter(DateTime.now()) &&
+        results != {}) {
+      return formatRaceStandings(results);
+    } else {
+      var url = Uri.parse(
+        'https://ergast.com/api/f1/${DateTime.now().year}/$round/results.json',
+      );
+      var response = await http.get(url);
+      Map<String, dynamic> responseAsJson = jsonDecode(response.body);
+      Hive.box('requests').put('race-$round', responseAsJson);
+      Hive.box('requests').put(
+        'race-$round-LatestQuery',
+        DateTime.now(),
+      );
+      List<DriverResult> driversResults = formatRaceStandings(responseAsJson);
+      return driversResults;
+    }
   }
 
   FutureOr<List<DriverResult>> getSprintStandings(String round) async {
@@ -490,12 +509,31 @@ class _ErgastApiCalls {
   }
 
   FutureOr<List<Team>> getLastTeamsStandings() async {
-    var url = Uri.parse(
-        'https://ergast.com/api/f1/current/constructorStandings.json');
-    var response = await http.get(url);
-    Map<String, dynamic> responseAsJson = jsonDecode(response.body);
-    Hive.box('requests').put('teamsStandings', responseAsJson);
-    return formatLastTeamsStandings(responseAsJson);
+    Map teamsStandings =
+        Hive.box('requests').get('teamsStandings', defaultValue: {});
+    DateTime latestQuery = Hive.box('requests').get(
+      'teamsStandingsLatestQuery',
+      defaultValue: DateTime.now(),
+    ) as DateTime;
+    if (latestQuery
+            .add(
+              const Duration(minutes: 10),
+            )
+            .isAfter(DateTime.now()) &&
+        teamsStandings != {}) {
+      return formatLastTeamsStandings(teamsStandings);
+    } else {
+      var url = Uri.parse(
+          'https://ergast.com/api/f1/current/constructorStandings.json');
+      var response = await http.get(url);
+      Map<String, dynamic> responseAsJson = jsonDecode(response.body);
+      Hive.box('requests').put('teamsStandings', responseAsJson);
+      Hive.box('requests').put(
+        'teamsStandingsLatestQuery',
+        DateTime.now(),
+      );
+      return formatLastTeamsStandings(responseAsJson);
+    }
   }
 
   FutureOr<bool> hasSprintQualifyings(round) async {
