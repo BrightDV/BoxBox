@@ -19,6 +19,7 @@
 
 import 'dart:async';
 
+import 'package:boxbox/Screens/FormulaYou/settings.dart';
 import 'package:boxbox/api/driver_components.dart';
 import 'package:boxbox/api/ergast.dart';
 import 'package:boxbox/api/race_components.dart';
@@ -268,14 +269,28 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   }
 }
 
-class FreePracticesResultsProvider extends StatelessWidget {
+class FreePracticesResultsProvider extends StatefulWidget {
   final Race race;
   final bool hasSprint;
   const FreePracticesResultsProvider(this.race, this.hasSprint, {Key? key})
       : super(key: key);
 
   @override
+  State<FreePracticesResultsProvider> createState() =>
+      _FreePracticesResultsProviderState();
+}
+
+class _FreePracticesResultsProviderState
+    extends State<FreePracticesResultsProvider> {
+  void update() {
+    print("setstate");
+    setState(() {});
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final Race race = widget.race;
+    final bool hasSprint = widget.hasSprint;
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     final List<String> sessionsTitle = [
@@ -336,6 +351,7 @@ class FreePracticesResultsProvider extends StatelessWidget {
                               SessionCountdownTimer(
                                 race,
                                 index,
+                                update: update,
                               ),
                               Padding(
                                 padding: const EdgeInsets.only(
@@ -1023,7 +1039,13 @@ class RaceImageProvider extends StatelessWidget {
 class SessionCountdownTimer extends StatefulWidget {
   final Race? race;
   final int sessionIndex;
-  const SessionCountdownTimer(this.race, this.sessionIndex, {super.key});
+  final Function? update;
+  const SessionCountdownTimer(
+    this.race,
+    this.sessionIndex, {
+    super.key,
+    this.update,
+  });
 
   @override
   State<SessionCountdownTimer> createState() => _SessionCountdownTimerState();
@@ -1034,6 +1056,23 @@ class _SessionCountdownTimerState extends State<SessionCountdownTimer> {
   Widget build(BuildContext context) {
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
+    bool shouldUseCountdown = Hive.box('settings')
+        .get('shouldUseCountdown', defaultValue: true) as bool;
+    List months = [
+      AppLocalizations.of(context)?.monthAbbreviationJanuary,
+      AppLocalizations.of(context)?.monthAbbreviationFebruary,
+      AppLocalizations.of(context)?.monthAbbreviationMarch,
+      AppLocalizations.of(context)?.monthAbbreviationApril,
+      AppLocalizations.of(context)?.monthAbbreviationMay,
+      AppLocalizations.of(context)?.monthAbbreviationJune,
+      AppLocalizations.of(context)?.monthAbbreviationJuly,
+      AppLocalizations.of(context)?.monthAbbreviationAugust,
+      AppLocalizations.of(context)?.monthAbbreviationSeptember,
+      AppLocalizations.of(context)?.monthAbbreviationOctober,
+      AppLocalizations.of(context)?.monthAbbreviationNovember,
+      AppLocalizations.of(context)?.monthAbbreviationDecember,
+    ];
+
     late int timeToRace;
     late int days;
     late int hours;
@@ -1070,8 +1109,12 @@ class _SessionCountdownTimerState extends State<SessionCountdownTimer> {
           padding: const EdgeInsets.all(10),
           child: Text(
             widget.sessionIndex == 4
-                ? AppLocalizations.of(context)!.raceStartsIn
-                : AppLocalizations.of(context)!.sessionStartsIn,
+                ? shouldUseCountdown
+                    ? AppLocalizations.of(context)!.raceStartsIn
+                    : AppLocalizations.of(context)!.raceStartsOn
+                : shouldUseCountdown
+                    ? AppLocalizations.of(context)!.sessionStartsIn
+                    : AppLocalizations.of(context)!.sessionStartsOn,
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 20,
@@ -1079,36 +1122,97 @@ class _SessionCountdownTimerState extends State<SessionCountdownTimer> {
             ),
           ),
         ),
-        TimerCountdown(
-          format: CountDownTimerFormat.daysHoursMinutesSeconds,
-          endTime: DateTime.now().add(
-            Duration(
-              days: days,
-              hours: hours,
-              minutes: minutes,
-              seconds: seconds,
-            ),
+        shouldUseCountdown
+            ? TimerCountdown(
+                format: CountDownTimerFormat.daysHoursMinutesSeconds,
+                endTime: DateTime.now().add(
+                  Duration(
+                    days: days,
+                    hours: hours,
+                    minutes: minutes,
+                    seconds: seconds,
+                  ),
+                ),
+                timeTextStyle: TextStyle(
+                  fontSize: 25,
+                  color: useDarkMode ? Colors.white : Colors.black,
+                ),
+                colonsTextStyle: TextStyle(
+                  fontSize: 23,
+                  color: useDarkMode ? Colors.white : Colors.black,
+                ),
+                descriptionTextStyle: TextStyle(
+                  color: Theme.of(context).primaryColor,
+                  fontSize: 20,
+                ),
+                spacerWidth: 15,
+                daysDescription: AppLocalizations.of(context)!.dayFirstLetter,
+                hoursDescription: AppLocalizations.of(context)!.hourFirstLetter,
+                minutesDescription:
+                    AppLocalizations.of(context)!.minuteAbbreviation,
+                secondsDescription:
+                    AppLocalizations.of(context)!.secondAbbreviation,
+                onEnd: () {
+                  setState(() {});
+                },
+              )
+            : Padding(
+                padding: const EdgeInsets.all(15.5),
+                child: Text(
+                  '${raceFullDateParsed.day} ${months[raceFullDateParsed.month - 1]} - ${raceFullDateParsed.toIso8601String().split('T')[1].split('.')[0]}',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 23,
+                    color: useDarkMode ? Colors.white : Colors.black,
+                  ),
+                ),
+              ),
+        SizedBox(
+          width: 400,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Expanded(
+                flex: 6,
+                child: Text(
+                  AppLocalizations.of(context)!.time.capitalize(),
+                  style: TextStyle(
+                    color: useDarkMode ? Colors.white : Colors.black,
+                  ),
+                  textAlign: TextAlign.end,
+                ),
+              ),
+              Expanded(
+                flex: 2,
+                child: Switch(
+                  value: shouldUseCountdown,
+                  activeColor: Theme.of(context).primaryColor,
+                  onChanged: (value) => setState(
+                    () {
+                      shouldUseCountdown = value;
+                      Hive.box('settings')
+                          .put('shouldUseCountdown', shouldUseCountdown);
+                      if (widget.update != null) {
+                        widget.update!();
+                      } else {
+                        setState(() {});
+                      }
+                    },
+                  ),
+                ),
+              ),
+              Expanded(
+                flex: 6,
+                child: Text(
+                  AppLocalizations.of(context)!.countdown,
+                  style: TextStyle(
+                    color: useDarkMode ? Colors.white : Colors.black,
+                  ),
+                ),
+              ),
+            ],
           ),
-          timeTextStyle: TextStyle(
-            fontSize: 25,
-            color: useDarkMode ? Colors.white : Colors.black,
-          ),
-          colonsTextStyle: TextStyle(
-            fontSize: 23,
-            color: useDarkMode ? Colors.white : Colors.black,
-          ),
-          descriptionTextStyle: TextStyle(
-            color: Theme.of(context).primaryColor,
-            fontSize: 20,
-          ),
-          spacerWidth: 15,
-          daysDescription: AppLocalizations.of(context)!.dayFirstLetter,
-          hoursDescription: AppLocalizations.of(context)!.hourFirstLetter,
-          minutesDescription: AppLocalizations.of(context)!.minuteAbbreviation,
-          secondsDescription: AppLocalizations.of(context)!.secondAbbreviation,
-          onEnd: () {
-            setState(() {});
-          },
         ),
       ],
     );
