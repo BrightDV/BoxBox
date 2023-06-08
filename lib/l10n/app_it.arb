@@ -278,5 +278,7 @@
   "startingGrid": "Griglia di partenza",
   "@startingGrid": {},
   "openingWithInAppBrowser": "Apertura con il browser in-app",
-  "@openingWithInAppBrowser": {}
+  "@openingWithInAppBrowser": {},
+  "countdown": "Conto alla rovescia",
+  "@countdown": {}
 }
