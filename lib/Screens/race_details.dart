@@ -19,6 +19,7 @@
 
 import 'dart:async';
 
+import 'package:add_2_calendar/add_2_calendar.dart';
 import 'package:boxbox/Screens/FormulaYou/settings.dart';
 import 'package:boxbox/api/driver_components.dart';
 import 'package:boxbox/api/ergast.dart';
@@ -283,7 +284,6 @@ class FreePracticesResultsProvider extends StatefulWidget {
 class _FreePracticesResultsProviderState
     extends State<FreePracticesResultsProvider> {
   void update() {
-    print("setstate");
     setState(() {});
   }
 
@@ -1167,6 +1167,54 @@ class _SessionCountdownTimerState extends State<SessionCountdownTimer> {
                   ),
                 ),
               ),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          child: TextButton.icon(
+            label: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 7),
+              child: Text(
+                'Add to calendar',
+                style: TextStyle(
+                  color: useDarkMode ? Colors.white : Colors.black,
+                ),
+              ),
+            ),
+            icon: Icon(
+              Icons.add_alert_outlined,
+              color: useDarkMode ? Colors.white : Colors.black,
+            ),
+            style: TextButton.styleFrom(
+              side: BorderSide(
+                color: useDarkMode ? Colors.white : Colors.black,
+                width: 1,
+              ),
+            ),
+            onPressed: () {
+              Event event = Event(
+                title: race.raceName,
+                location: race.country,
+                startDate: DateTime(
+                  raceFullDateParsed.toLocal().year,
+                  raceFullDateParsed.toLocal().month,
+                  raceFullDateParsed.toLocal().day,
+                  raceFullDateParsed.toLocal().hour,
+                  raceFullDateParsed.toLocal().minute,
+                  raceFullDateParsed.toLocal().second,
+                ),
+                endDate: DateTime(
+                  raceFullDateParsed.toLocal().year,
+                  raceFullDateParsed.toLocal().month,
+                  raceFullDateParsed.toLocal().day,
+                  raceFullDateParsed.toLocal().hour +
+                      (widget.sessionIndex == 4 ? 3 : 1),
+                  raceFullDateParsed.toLocal().minute,
+                  raceFullDateParsed.toLocal().second,
+                ),
+              );
+              Add2Calendar.addEvent2Cal(event);
+            },
+          ),
+        ),
         SizedBox(
           width: 400,
           child: Row(
