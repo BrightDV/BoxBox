@@ -155,7 +155,7 @@
   "@positionAbbreviation": {},
   "previous": "ANTERIORES",
   "@previous": {},
-  "qualifyings": "Clasificaciones",
+  "qualifyings": "Calificaciones",
   "@qualifyings": {},
   "qualifyingsFirstLetter": "Q",
   "@qualifyingsFirstLetter": {},
@@ -191,7 +191,7 @@
   "@sprintFirstLetter": {},
   "sprintQualifyings": "Clasificación al sprint",
   "@sprintQualifyings": {},
-  "standings": "Clasificaciones",
+  "standings": "Posiciones",
   "@standings": {},
   "statistics": "Estadísticas",
   "@statistics": {},
@@ -286,5 +286,7 @@
   "raceStartsOn": "La carrera empieza en:",
   "@raceStartsOn": {},
   "sessionStartsOn": "La sesión empieza el:",
-  "@sessionStartsOn": {}
+  "@sessionStartsOn": {},
+  "addToCalendar": "Añadir al calendario",
+  "@addToCalendar": {}
 }
