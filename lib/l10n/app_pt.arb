@@ -135,7 +135,7 @@
   "@openInBrowser": {},
   "other": "Outros",
   "@other": {},
-  "placeOfBirth": "Data de Nascimento",
+  "placeOfBirth": "Local de Nascimento",
   "@placeOfBirth": {},
   "player": "Reprodutor",
   "@player": {},
@@ -285,6 +285,8 @@
   "@countdown": {},
   "raceStartsOn": "A corrida começa em:",
   "@raceStartsOn": {},
-  "sessionStartsOn": "A sessão tem início em",
-  "@sessionStartsOn": {}
+  "sessionStartsOn": "A sessão tem início em:",
+  "@sessionStartsOn": {},
+  "addToCalendar": "Adicionar ao calendário",
+  "@addToCalendar": {}
 }
