@@ -1,21 +1,21 @@
 {
-    "name": "flutter_web_app",
-    "short_name": "flutter_web_app",
+    "name": "Box, Box!",
+    "short_name": "Box, Box!",
     "start_url": ".",
     "display": "minimal-ui",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "A webapp for Formula 1 lovers!",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
         {
-            "src": "icons/Icon-192.png",
+            "src": "favicon.png",
             "sizes": "192x192",
             "type": "image/png"
         },
         {
-            "src": "icons/Icon-512.png",
+            "src": "favicon.png",
             "sizes": "512x512",
             "type": "image/png"
         }
