@@ -280,5 +280,11 @@
   "openingWithInAppBrowser": "Abrir com o navegador na aplicação",
   "@openingWithInAppBrowser": {},
   "startingGrid": "Grelha de partida",
-  "@startingGrid": {}
+  "@startingGrid": {},
+  "countdown": "Contagem decrescente",
+  "@countdown": {},
+  "raceStartsOn": "A corrida começa em:",
+  "@raceStartsOn": {},
+  "sessionStartsOn": "A sessão tem início em",
+  "@sessionStartsOn": {}
 }

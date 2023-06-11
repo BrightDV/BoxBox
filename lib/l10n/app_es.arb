@@ -280,5 +280,11 @@
   "startingGrid": "Parrilla de salida",
   "@startingGrid": {},
   "openingWithInAppBrowser": "Abrir con el navegador de la aplicación",
-  "@openingWithInAppBrowser": {}
+  "@openingWithInAppBrowser": {},
+  "countdown": "Cuenta atrás",
+  "@countdown": {},
+  "raceStartsOn": "La carrera empieza en:",
+  "@raceStartsOn": {},
+  "sessionStartsOn": "La sesión empieza el:",
+  "@sessionStartsOn": {}
 }
