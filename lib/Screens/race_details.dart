@@ -351,6 +351,7 @@ class _FreePracticesResultsProviderState
                               SessionCountdownTimer(
                                 race,
                                 index,
+                                sessionsTitle[index],
                                 update: update,
                               ),
                               Padding(
@@ -424,7 +425,11 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
       );
     }
     if (timeToRace > 0) {
-      return SessionCountdownTimer(race, 4);
+      return SessionCountdownTimer(
+        race,
+        4,
+        AppLocalizations.of(context)!.race,
+      );
     } else {
       return raceUrl != ''
           ? FutureBuilder<List<DriverResult>>(
@@ -654,7 +659,11 @@ class SprintResultsProvider extends StatelessWidget {
               )
             : snapshot.hasData
                 ? snapshot.data!.isEmpty
-                    ? SessionCountdownTimer(race, 2)
+                    ? SessionCountdownTimer(
+                        race,
+                        2,
+                        AppLocalizations.of(context)!.sprint,
+                      )
                     : Column(
                         children: [
                           GestureDetector(
@@ -738,7 +747,11 @@ class QualificationResultsProvider extends StatelessWidget {
                         DateTime.now(),
                       ) ??
                       false)
-              ? SessionCountdownTimer(race, 3)
+              ? SessionCountdownTimer(
+                  race,
+                  3,
+                  AppLocalizations.of(context)!.qualifyings,
+                )
               : Padding(
                   padding: const EdgeInsets.all(15),
                   child: Center(
@@ -794,7 +807,11 @@ class QualificationResultsProvider extends StatelessWidget {
                         ),
                       ],
                     )
-                  : SessionCountdownTimer(race, 3)
+                  : SessionCountdownTimer(
+                      race,
+                      3,
+                      AppLocalizations.of(context)!.qualifyings,
+                    )
               : const LoadingIndicatorUtil(),
     );
   }
@@ -1039,10 +1056,12 @@ class RaceImageProvider extends StatelessWidget {
 class SessionCountdownTimer extends StatefulWidget {
   final Race? race;
   final int sessionIndex;
+  final String sessionName;
   final Function? update;
   const SessionCountdownTimer(
     this.race,
-    this.sessionIndex, {
+    this.sessionIndex,
+    this.sessionName, {
     super.key,
     this.update,
   });
@@ -1167,53 +1186,50 @@ class _SessionCountdownTimerState extends State<SessionCountdownTimer> {
                   ),
                 ),
               ),
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10),
-          child: TextButton.icon(
-            label: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 7),
-              child: Text(
-                'Add to calendar',
-                style: TextStyle(
-                  color: useDarkMode ? Colors.white : Colors.black,
-                ),
-              ),
-            ),
-            icon: Icon(
-              Icons.add_alert_outlined,
-              color: useDarkMode ? Colors.white : Colors.black,
-            ),
-            style: TextButton.styleFrom(
-              side: BorderSide(
+        TextButton.icon(
+          label: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 7),
+            child: Text(
+              AppLocalizations.of(context)!.addToCalendar,
+              style: TextStyle(
                 color: useDarkMode ? Colors.white : Colors.black,
-                width: 1,
               ),
             ),
-            onPressed: () {
-              Event event = Event(
-                title: race.raceName,
-                location: race.country,
-                startDate: DateTime(
-                  raceFullDateParsed.toLocal().year,
-                  raceFullDateParsed.toLocal().month,
-                  raceFullDateParsed.toLocal().day,
-                  raceFullDateParsed.toLocal().hour,
-                  raceFullDateParsed.toLocal().minute,
-                  raceFullDateParsed.toLocal().second,
-                ),
-                endDate: DateTime(
-                  raceFullDateParsed.toLocal().year,
-                  raceFullDateParsed.toLocal().month,
-                  raceFullDateParsed.toLocal().day,
-                  raceFullDateParsed.toLocal().hour +
-                      (widget.sessionIndex == 4 ? 3 : 1),
-                  raceFullDateParsed.toLocal().minute,
-                  raceFullDateParsed.toLocal().second,
-                ),
-              );
-              Add2Calendar.addEvent2Cal(event);
-            },
           ),
+          icon: Icon(
+            Icons.add_alert_outlined,
+            color: useDarkMode ? Colors.white : Colors.black,
+          ),
+          style: TextButton.styleFrom(
+            side: BorderSide(
+              color: useDarkMode ? Colors.white : Colors.black,
+              width: 1,
+            ),
+          ),
+          onPressed: () {
+            Event event = Event(
+              title: '${widget.sessionName} - ${race.raceName}',
+              location: race.country,
+              startDate: DateTime(
+                raceFullDateParsed.toLocal().year,
+                raceFullDateParsed.toLocal().month,
+                raceFullDateParsed.toLocal().day,
+                raceFullDateParsed.toLocal().hour,
+                raceFullDateParsed.toLocal().minute,
+                raceFullDateParsed.toLocal().second,
+              ),
+              endDate: DateTime(
+                raceFullDateParsed.toLocal().year,
+                raceFullDateParsed.toLocal().month,
+                raceFullDateParsed.toLocal().day,
+                raceFullDateParsed.toLocal().hour +
+                    (widget.sessionIndex == 4 ? 3 : 1),
+                raceFullDateParsed.toLocal().minute,
+                raceFullDateParsed.toLocal().second,
+              ),
+            );
+            Add2Calendar.addEvent2Cal(event);
+          },
         ),
         SizedBox(
           width: 400,
