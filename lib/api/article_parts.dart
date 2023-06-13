@@ -71,18 +71,20 @@ class ArticleParts extends StatelessWidget {
             ),
           )
         : MediaQuery.of(context).size.width > 1000
-            ? Scrollbar(
-                interactive: true,
-                controller: articleScrollController,
-                child: SingleChildScrollView(
+            ? SafeArea(
+                child: Scrollbar(
+                  interactive: true,
                   controller: articleScrollController,
-                  child: Center(
-                    child: ConstrainedBox(
-                      constraints: const BoxConstraints(
-                        minWidth: 300,
-                        maxWidth: 800,
+                  child: SingleChildScrollView(
+                    controller: articleScrollController,
+                    child: Center(
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(
+                          minWidth: 300,
+                          maxWidth: 800,
+                        ),
+                        child: WidgetsList(article),
                       ),
-                      child: WidgetsList(article),
                     ),
                   ),
                 ),
