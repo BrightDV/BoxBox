@@ -38,6 +38,7 @@ class HoverState extends State<Hover> {
     return MouseRegion(
       onEnter: (_) => onEntered(true),
       onExit: (_) => onEntered(false),
+      cursor: SystemMouseCursors.click,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 300),
         transform: transform,
