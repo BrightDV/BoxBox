@@ -63,7 +63,10 @@ class ArticleParts extends StatelessWidget {
               child: Scrollbar(
                 interactive: true,
                 controller: articleScrollController,
-                child: WidgetsList(article, articleScrollController),
+                child: SingleChildScrollView(
+                  controller: articleScrollController,
+                  child: WidgetsList(article, articleScrollController),
+                ),
               ),
             ),
           )
@@ -90,7 +93,10 @@ class ArticleParts extends StatelessWidget {
                 child: Scrollbar(
                   interactive: true,
                   controller: articleScrollController,
-                  child: WidgetsList(article, articleScrollController),
+                  child: SingleChildScrollView(
+                    controller: articleScrollController,
+                    child: WidgetsList(article, articleScrollController),
+                  ),
                 ),
               );
   }
@@ -158,14 +164,14 @@ class WidgetsList extends StatelessWidget {
     ScrollController scrollController = ScrollController();
     double width = MediaQuery.of(context).size.width;
     width = width > 1400
-        ? 800
+        ? 450
         : width > 1000
             ? 500
             : 400;
 
     // return the different parts
 
-    return ListView(
+    return Column(
       children: [
         // hero
         article.articleHero['contentType'] == 'atomImageGallery'
@@ -1407,44 +1413,50 @@ class WidgetsList extends StatelessWidget {
                   ),
                   Align(
                     alignment: Alignment.centerLeft,
-                    child: GestureDetector(
-                      onTap: () => scrollController.animateTo(
-                        scrollController.offset - width + 100,
-                        duration: const Duration(milliseconds: 200),
-                        curve: Curves.easeInOut,
-                      ),
-                      child: Container(
-                        width: 48,
-                        height: 48,
-                        decoration: BoxDecoration(
-                          color: Colors.black.withOpacity(0.75),
-                          shape: BoxShape.circle,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 5),
+                      child: GestureDetector(
+                        onTap: () => scrollController.animateTo(
+                          scrollController.offset - width + 100,
+                          duration: const Duration(milliseconds: 200),
+                          curve: Curves.easeInOut,
                         ),
-                        child: const Icon(
-                          Icons.arrow_back,
-                          color: Colors.white,
+                        child: Container(
+                          width: 48,
+                          height: 48,
+                          decoration: BoxDecoration(
+                            color: Colors.black.withOpacity(0.75),
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
+                            Icons.arrow_back,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     ),
                   ),
                   Align(
                     alignment: Alignment.centerRight,
-                    child: GestureDetector(
-                      onTap: () => scrollController.animateTo(
-                        scrollController.offset + width - 100,
-                        duration: const Duration(milliseconds: 200),
-                        curve: Curves.easeInOut,
-                      ),
-                      child: Container(
-                        width: 48,
-                        height: 48,
-                        decoration: BoxDecoration(
-                          color: Colors.black.withOpacity(0.75),
-                          shape: BoxShape.circle,
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 5),
+                      child: GestureDetector(
+                        onTap: () => scrollController.animateTo(
+                          scrollController.offset + width - 100,
+                          duration: const Duration(milliseconds: 200),
+                          curve: Curves.easeInOut,
                         ),
-                        child: const Icon(
-                          Icons.arrow_forward,
-                          color: Colors.white,
+                        child: Container(
+                          width: 48,
+                          height: 48,
+                          decoration: BoxDecoration(
+                            color: Colors.black.withOpacity(0.75),
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
+                            Icons.arrow_forward,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     ),

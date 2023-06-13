@@ -438,6 +438,7 @@ class _NewsItemState extends State<NewsItem> with TickerProviderStateMixin {
                                 maxLines: 3,
                                 textAlign: TextAlign.justify,
                               ),
+                              mouseCursor: SystemMouseCursors.click,
                             ),
                           ],
                         ),
@@ -683,6 +684,7 @@ class _NewsItemState extends State<NewsItem> with TickerProviderStateMixin {
                                       maxLines: width > 1360 ? 4 : 5,
                                       overflow: TextOverflow.ellipsis,
                                     ),
+                              mouseCursor: SystemMouseCursors.click,
                             ),
                             width > 1360
                                 ? Expanded(
@@ -1179,7 +1181,9 @@ class _ImageRendererState extends State<ImageRenderer> {
           ? CachedNetworkImage(
               imageUrl: widget.imageUrl,
               placeholder: (context, url) => SizedBox(
-                height: MediaQuery.of(context).size.width / (16 / 9),
+                height: MediaQuery.of(context).size.width > 1000
+                    ? 800
+                    : MediaQuery.of(context).size.width / (16 / 9),
                 child: const LoadingIndicatorUtil(
                   replaceImage: true,
                 ),

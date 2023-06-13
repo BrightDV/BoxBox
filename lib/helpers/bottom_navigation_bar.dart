@@ -85,16 +85,18 @@ class _MainBottomNavigationBarState extends State<MainBottomNavigationBar> {
     ];
     if (_selectedIndex == 0) {
       actions = [
-        IconButton(
-          icon: const Icon(Icons.search),
-          tooltip: 'Search',
-          onPressed: () => Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const SearchScreen(),
-            ),
-          ),
-        ),
+        !kIsWeb
+            ? IconButton(
+                icon: const Icon(Icons.search),
+                tooltip: 'Search',
+                onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const SearchScreen(),
+                  ),
+                ),
+              )
+            : Container(),
         IconButton(
           icon: const Icon(Icons.sort_outlined),
           tooltip: 'Filter',
