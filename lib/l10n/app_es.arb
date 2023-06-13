@@ -278,5 +278,13 @@
   "results": "Resultados",
   "@results": {},
   "startingGrid": "Parrilla de salida",
-  "@startingGrid": {}
+  "@startingGrid": {},
+  "openingWithInAppBrowser": "Abrir con el navegador de la aplicación",
+  "@openingWithInAppBrowser": {},
+  "countdown": "Cuenta atrás",
+  "@countdown": {},
+  "raceStartsOn": "La carrera empieza en:",
+  "@raceStartsOn": {},
+  "sessionStartsOn": "La sesión empieza el:",
+  "@sessionStartsOn": {}
 }

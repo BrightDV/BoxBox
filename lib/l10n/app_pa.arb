@@ -276,5 +276,15 @@
   "information": "ਜਾਣਕਾਰੀ",
   "@information": {},
   "results": "ਨਤੀਜੇ",
-  "@results": {}
+  "@results": {},
+  "openingWithInAppBrowser": "ਐਪ-ਵਿਚਲੇ ਬ੍ਰਾਊਜ਼ਰ ਨਾਲ ਖੋਲ੍ਹ ਰਿਹਾ",
+  "@openingWithInAppBrowser": {},
+  "startingGrid": "ਸ਼ੁਰੂਆਤ ਗਰਿੱਡ",
+  "@startingGrid": {},
+  "countdown": "ਉਲਟੀ ਗਿਣਤੀ",
+  "@countdown": {},
+  "raceStartsOn": "ਦੌੜ ਏਦਣ ਸ਼ੁਰੂ ਹੁੰਦੀ ਹੈ:",
+  "@raceStartsOn": {},
+  "sessionStartsOn": "ਸ਼ੈਸ਼ਨ ਏਦਣ ਸ਼ੁਰੂ ਹੁੰਦਾ ਹੈ:",
+  "@sessionStartsOn": {}
 }

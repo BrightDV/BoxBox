@@ -1,0 +1,7 @@
+- Fix cancelled Emilia Romagna GP.
+- Add localized sources from Motorpsport.com to the Home News.
+- Fix the parsing of the Hall of Fame.
+- Add support for Verstappen's bio.
+- Add link to the circuit and the Race Programme in the Race Hub. 
+- Update dependencies.
+- Update translations.

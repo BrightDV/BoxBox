@@ -276,5 +276,15 @@
   "information": "जानकारी",
   "@information": {},
   "results": "परिणाम",
-  "@results": {}
+  "@results": {},
+  "openingWithInAppBrowser": "इन-ऐप ब्राउज़र के साथ खोल रहा",
+  "@openingWithInAppBrowser": {},
+  "startingGrid": "शुरुआती ग्रिड",
+  "@startingGrid": {},
+  "countdown": "उलटी गिनती",
+  "@countdown": {},
+  "raceStartsOn": "दौड़ शुरू होती है:",
+  "@raceStartsOn": {},
+  "sessionStartsOn": "सत्र शुरू होता है:",
+  "@sessionStartsOn": {}
 }
