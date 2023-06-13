@@ -20,6 +20,7 @@
 import 'package:animations/animations.dart';
 import 'package:boxbox/Screens/video.dart';
 import 'package:boxbox/api/videos.dart';
+import 'package:boxbox/helpers/hover.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/request_error.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -251,104 +252,112 @@ class _VideoItemState extends State<VideoItem> {
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     return Padding(
       padding: const EdgeInsets.fromLTRB(2, 2, 2, 2),
-      child: Card(
-        elevation: 5.0,
-        color: Colors.transparent,
-        child: OpenContainer(
-          closedColor: useDarkMode
-              ? Theme.of(context).scaffoldBackgroundColor
-              : Colors.white,
-          openColor: useDarkMode
-              ? Theme.of(context).scaffoldBackgroundColor
-              : Colors.white,
-          transitionDuration: const Duration(milliseconds: 500),
-          openBuilder: (context, action) => Swiper(
-            itemBuilder: (context, index) {
-              return VideoScreen(videos[index]);
-            },
-            itemCount: videos.length,
-            scrollDirection: Axis.vertical,
-            control: SwiperControl(
-              disableColor: Theme.of(context).primaryColor,
+      child: Hover(
+        builder: (isHovered) => PhysicalModel(
+          color: Colors.transparent,
+          elevation: isHovered ? 16 : 0,
+          child: Card(
+            elevation: 5.0,
+            color: Colors.transparent,
+            child: OpenContainer(
+              closedColor: useDarkMode
+                  ? Theme.of(context).scaffoldBackgroundColor
+                  : Colors.white,
+              openColor: useDarkMode
+                  ? Theme.of(context).scaffoldBackgroundColor
+                  : Colors.white,
+              transitionDuration: const Duration(milliseconds: 500),
+              openBuilder: (context, action) => Swiper(
+                itemBuilder: (context, index) {
+                  return VideoScreen(videos[index]);
+                },
+                itemCount: videos.length,
+                scrollDirection: Axis.vertical,
+                control: SwiperControl(
+                  disableColor: Theme.of(context).primaryColor,
+                ),
+                index: widget.index,
+                loop: false,
+              ),
+              closedBuilder: (context, action) => Stack(
+                alignment: Alignment.bottomLeft,
+                children: [
+                  Hero(
+                    tag: videos[widget.index].videoId,
+                    child: ClipRRect(
+                      borderRadius: const BorderRadius.all(
+                        Radius.circular(10),
+                      ),
+                      child: CachedNetworkImage(
+                        imageUrl: videos[widget.index].thumbnailUrl,
+                        placeholder: (context, url) => SizedBox(
+                          height:
+                              MediaQuery.of(context).size.width / (16 / 9) - 7,
+                          child: const LoadingIndicatorUtil(
+                            replaceImage: true,
+                          ),
+                        ),
+                        errorWidget: (context, url, error) => Icon(
+                          Icons.error_outlined,
+                          color: useDarkMode ? Colors.white : Colors.black,
+                        ),
+                        fadeOutDuration: const Duration(seconds: 1),
+                        fadeInDuration: const Duration(seconds: 1),
+                        colorBlendMode: BlendMode.darken,
+                        color: Colors.black.withOpacity(0.5),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(15, 0, 20, 15),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Padding(
+                          padding: EdgeInsets.only(
+                            bottom: 8,
+                          ),
+                          child: Icon(
+                            Icons.play_circle_fill_rounded,
+                            color: Colors.white,
+                            size: 40,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(
+                            left: 5,
+                            bottom: 2,
+                          ),
+                          child: Text(
+                            videos[widget.index].videoDuration,
+                            style: const TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(
+                            left: 5,
+                          ),
+                          child: Text(
+                            videos[widget.index].caption,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 22,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
-            index: widget.index,
-            loop: false,
-          ),
-          closedBuilder: (context, action) => Stack(
-            alignment: Alignment.bottomLeft,
-            children: [
-              Hero(
-                tag: videos[widget.index].videoId,
-                child: ClipRRect(
-                  borderRadius: const BorderRadius.all(
-                    Radius.circular(10),
-                  ),
-                  child: CachedNetworkImage(
-                    imageUrl: videos[widget.index].thumbnailUrl,
-                    placeholder: (context, url) => SizedBox(
-                      height: MediaQuery.of(context).size.width / (16 / 9) - 7,
-                      child: const LoadingIndicatorUtil(
-                        replaceImage: true,
-                      ),
-                    ),
-                    errorWidget: (context, url, error) => Icon(
-                      Icons.error_outlined,
-                      color: useDarkMode ? Colors.white : Colors.black,
-                    ),
-                    fadeOutDuration: const Duration(milliseconds: 300),
-                    fadeInDuration: const Duration(milliseconds: 300),
-                    colorBlendMode: BlendMode.darken,
-                    color: Colors.black.withOpacity(0.5),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(15, 0, 20, 15),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.only(
-                        bottom: 8,
-                      ),
-                      child: Icon(
-                        Icons.play_circle_fill_rounded,
-                        color: Colors.white,
-                        size: 40,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        left: 5,
-                        bottom: 2,
-                      ),
-                      child: Text(
-                        videos[widget.index].videoDuration,
-                        style: const TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        left: 5,
-                      ),
-                      child: Text(
-                        videos[widget.index].caption,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 22,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
           ),
         ),
       ),

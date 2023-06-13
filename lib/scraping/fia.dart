@@ -17,6 +17,7 @@
  * Copyright (c) 2022-2023, BrightDV
  */
 
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' as parser;
 import 'package:html/dom.dart' as dom;
@@ -31,9 +32,19 @@ class SessionDocument {
 
 class FIAScraper {
   Future<List<SessionDocument>> scrapeSessionDocuments() async {
-    final Uri latestDocumentsUrl = Uri.parse(
-      'https://www.fia.com/documents/championships/fia-formula-one-world-championship-14/season/season-2023-2042',
-    );
+    const String defaultEndpoint = "https://api.formula1.com";
+    late Uri latestDocumentsUrl;
+    String endpoint = Hive.box('settings')
+        .get('server', defaultValue: defaultEndpoint) as String;
+    if (endpoint != defaultEndpoint) {
+      latestDocumentsUrl = Uri.parse(
+        '$endpoint/documents',
+      );
+    } else {
+      latestDocumentsUrl = Uri.parse(
+        'https://www.fia.com/documents/championships/fia-formula-one-world-championship-14/season/season-2023-2042',
+      );
+    }
     http.Response response = await http.get(latestDocumentsUrl);
     dom.Document document = parser.parse(response.body);
     List<SessionDocument> documents = [];

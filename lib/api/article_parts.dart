@@ -63,21 +63,29 @@ class ArticleParts extends StatelessWidget {
               child: Scrollbar(
                 interactive: true,
                 controller: articleScrollController,
-                child: WidgetsList(article, articleScrollController),
+                child: SingleChildScrollView(
+                  controller: articleScrollController,
+                  child: WidgetsList(article, articleScrollController),
+                ),
               ),
             ),
           )
-        : MediaQuery.of(context).size.width > 1400
-            ? Scrollbar(
-                interactive: true,
-                controller: articleScrollController,
-                child: Center(
-                  child: ConstrainedBox(
-                    constraints: const BoxConstraints(
-                      minWidth: 300,
-                      maxWidth: 800,
+        : MediaQuery.of(context).size.width > 1000
+            ? SafeArea(
+                child: Scrollbar(
+                  interactive: true,
+                  controller: articleScrollController,
+                  child: SingleChildScrollView(
+                    controller: articleScrollController,
+                    child: Center(
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(
+                          minWidth: 300,
+                          maxWidth: 800,
+                        ),
+                        child: WidgetsList(article, articleScrollController),
+                      ),
                     ),
-                    child: WidgetsList(article, articleScrollController),
                   ),
                 ),
               )
@@ -85,7 +93,10 @@ class ArticleParts extends StatelessWidget {
                 child: Scrollbar(
                   interactive: true,
                   controller: articleScrollController,
-                  child: WidgetsList(article, articleScrollController),
+                  child: SingleChildScrollView(
+                    controller: articleScrollController,
+                    child: WidgetsList(article, articleScrollController),
+                  ),
                 ),
               );
   }
@@ -148,9 +159,19 @@ class WidgetsList extends StatelessWidget {
     articlesHistory =
         Hive.box('history').get('articlesHistory', defaultValue: []) as List;
 
+    // values for the related articles in web
+
+    ScrollController scrollController = ScrollController();
+    double width = MediaQuery.of(context).size.width;
+    width = width > 1400
+        ? 450
+        : width > 1000
+            ? 500
+            : 400;
+
     // return the different parts
 
-    return ListView(
+    return Column(
       children: [
         // hero
         article.articleHero['contentType'] == 'atomImageGallery'
@@ -333,18 +354,15 @@ class WidgetsList extends StatelessWidget {
                                           ),
                                           body: InAppWebView(
                                             initialUrlRequest: URLRequest(
-                                              url: Uri.parse(
+                                              url: WebUri(
                                                 "https://www.riddle.com/view/${element['fields']['riddleId']}",
                                               ),
                                             ),
-                                            initialOptions:
-                                                InAppWebViewGroupOptions(
-                                              crossPlatform:
-                                                  InAppWebViewOptions(
-                                                preferredContentMode:
-                                                    UserPreferredContentMode
-                                                        .DESKTOP,
-                                              ),
+                                            initialSettings:
+                                                InAppWebViewSettings(
+                                              preferredContentMode:
+                                                  UserPreferredContentMode
+                                                      .DESKTOP,
                                             ),
                                             gestureRecognizers: {
                                               Factory<VerticalDragGestureRecognizer>(
@@ -415,12 +433,9 @@ class WidgetsList extends StatelessWidget {
                                                   () =>
                                                       ScaleGestureRecognizer()),
                                             },
-                                            initialOptions:
-                                                InAppWebViewGroupOptions(
-                                              crossPlatform:
-                                                  InAppWebViewOptions(
-                                                      transparentBackground:
-                                                          true),
+                                            initialSettings:
+                                                InAppWebViewSettings(
+                                              transparentBackground: true,
                                             ),
                                           ),
                                         )
@@ -497,7 +512,7 @@ class WidgetsList extends StatelessWidget {
                                                       body: InAppWebView(
                                                         initialUrlRequest:
                                                             URLRequest(
-                                                          url: Uri.parse(
+                                                          url: WebUri(
                                                             "https://embed.scribblelive.com/Embed/v7.aspx?Id=${element['fields']['scribbleEventId'].split('/')[2]}&ThemeId=37480",
                                                           ),
                                                         ),
@@ -1187,7 +1202,7 @@ class WidgetsList extends StatelessWidget {
                                                           child: InAppWebView(
                                                             initialUrlRequest:
                                                                 URLRequest(
-                                                              url: Uri.parse(
+                                                              url: WebUri(
                                                                 'https:${element['fields']['audioPodcast']['iFrameSrc']}',
                                                               ),
                                                             ),
@@ -1202,13 +1217,10 @@ class WidgetsList extends StatelessWidget {
                                                                   () =>
                                                                       ScaleGestureRecognizer()),
                                                             },
-                                                            initialOptions:
-                                                                InAppWebViewGroupOptions(
-                                                              crossPlatform:
-                                                                  InAppWebViewOptions(
-                                                                      transparentBackground:
-                                                                          true),
-                                                            ),
+                                                            initialSettings:
+                                                                InAppWebViewSettings(
+                                                                    transparentBackground:
+                                                                        true),
                                                           ),
                                                         )
                                                       : element['contentType'] ==
@@ -1362,36 +1374,127 @@ class WidgetsList extends StatelessWidget {
 
         // related articles
 
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              for (var article in article.relatedArticles)
-                NewsItem(
-                  News(
-                    article['id'],
-                    article['articleType'],
-                    article['slug'],
-                    article['title'],
-                    article['metaDescription'] ?? ' ',
-                    DateTime.parse(article['updatedAt']),
-                    article['thumbnail'] != null
-                        ? useDataSaverMode
-                            ? article['thumbnail']['image']['renditions'] !=
-                                    null
-                                ? article['thumbnail']['image']['renditions']
-                                    ['2col']
-                                : article['thumbnail']['image']['url'] +
-                                    '.transform/2col-retina/image.jpg'
-                            : article['thumbnail']['image']['url']
-                        : '',
+        kIsWeb
+            ? Stack(
+                alignment: Alignment.center,
+                children: [
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    controller: scrollController,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        for (var article in article.relatedArticles)
+                          NewsItem(
+                            News(
+                              article['id'],
+                              article['articleType'],
+                              article['slug'],
+                              article['title'],
+                              article['metaDescription'] ?? ' ',
+                              DateTime.parse(article['updatedAt']),
+                              article['thumbnail'] != null
+                                  ? useDataSaverMode
+                                      ? article['thumbnail']['image']
+                                                  ['renditions'] !=
+                                              null
+                                          ? article['thumbnail']['image']
+                                              ['renditions']['2col']
+                                          : article['thumbnail']['image']
+                                                  ['url'] +
+                                              '.transform/2col-retina/image.jpg'
+                                      : article['thumbnail']['image']['url']
+                                  : '',
+                            ),
+                            true,
+                          ),
+                      ],
+                    ),
                   ),
-                  true,
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 5),
+                      child: GestureDetector(
+                        onTap: () => scrollController.animateTo(
+                          scrollController.offset - width + 100,
+                          duration: const Duration(milliseconds: 200),
+                          curve: Curves.easeInOut,
+                        ),
+                        child: Container(
+                          width: 48,
+                          height: 48,
+                          decoration: BoxDecoration(
+                            color: Colors.black.withOpacity(0.75),
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
+                            Icons.arrow_back,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 5),
+                      child: GestureDetector(
+                        onTap: () => scrollController.animateTo(
+                          scrollController.offset + width - 100,
+                          duration: const Duration(milliseconds: 200),
+                          curve: Curves.easeInOut,
+                        ),
+                        child: Container(
+                          width: 48,
+                          height: 48,
+                          decoration: BoxDecoration(
+                            color: Colors.black.withOpacity(0.75),
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
+                            Icons.arrow_forward,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              )
+            : SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                controller: scrollController,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    for (var article in article.relatedArticles)
+                      NewsItem(
+                        News(
+                          article['id'],
+                          article['articleType'],
+                          article['slug'],
+                          article['title'],
+                          article['metaDescription'] ?? ' ',
+                          DateTime.parse(article['updatedAt']),
+                          article['thumbnail'] != null
+                              ? useDataSaverMode
+                                  ? article['thumbnail']['image']
+                                              ['renditions'] !=
+                                          null
+                                      ? article['thumbnail']['image']
+                                          ['renditions']['2col']
+                                      : article['thumbnail']['image']['url'] +
+                                          '.transform/2col-retina/image.jpg'
+                                  : article['thumbnail']['image']['url']
+                              : '',
+                        ),
+                        true,
+                      ),
+                  ],
                 ),
-            ],
-          ),
-        ),
+              ),
       ],
     );
   }

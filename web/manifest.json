@@ -1,11 +1,11 @@
 {
-    "name": "flutter_web_app",
-    "short_name": "flutter_web_app",
+    "name": "Box, Box!",
+    "short_name": "Box, Box!",
     "start_url": ".",
     "display": "minimal-ui",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#12121A",
+    "theme_color": "#12121A",
+    "description": "A webapp for Formula 1 lovers!",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

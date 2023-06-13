@@ -22,6 +22,7 @@
 import 'dart:async';
 
 import 'package:boxbox/Screens/MixedNews/rss_feed.dart';
+import 'package:boxbox/Screens/MixedNews/wordpress.dart';
 import 'package:boxbox/api/news.dart';
 import 'package:boxbox/api/rss.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
@@ -47,16 +48,6 @@ class NewsFeedWidget extends StatefulWidget {
 }
 
 class _NewsFeedWidgetState extends State<NewsFeedWidget> {
-  Future<List<News>> getLatestNewsItems({
-    String? tagId,
-    String? articleType,
-  }) async {
-    return await F1NewsFetcher().getLatestNews(
-      tagId: tagId,
-      articleType: articleType,
-    );
-  }
-
   @override
   void initState() {
     super.initState();
@@ -67,65 +58,41 @@ class _NewsFeedWidgetState extends State<NewsFeedWidget> {
 
   @override
   Widget build(BuildContext context) {
-    Map latestNews = Hive.box('requests').get('news', defaultValue: {}) as Map;
-    String savedFeedUrl = Hive.box('settings').get(
-      'homeFeed',
-      defaultValue: 'Official',
-    );
-    return savedFeedUrl == 'Official'
-        ? FutureBuilder<List<News>>(
-            future: getLatestNewsItems(
-              tagId: widget.tagId,
-              articleType: widget.articleType,
-            ),
-            builder: (context, snapshot) => snapshot.hasError
-                ? (snapshot.error.toString() == 'XMLHttpRequest error.' ||
-                            snapshot.error.toString() ==
-                                "Failed host lookup: 'api.formula1.com'") &&
-                        latestNews['items'] != null &&
-                        widget.tagId == null &&
-                        widget.articleType == null
-                    ? OfflineNewsList(
-                        items: F1NewsFetcher().formatResponse(latestNews),
-                        scrollController: widget.scrollController,
-                      )
-                    : RequestErrorWidget(
+    const String officialFeed = "https://api.formula1.com";
+    List savedFeedUrl = Hive.box('settings')
+        .get('homeFeed', defaultValue: [officialFeed, 'api']) as List;
+    String savedServer = Hive.box('settings')
+        .get('server', defaultValue: officialFeed) as String;
+    return savedFeedUrl[1] == "api"
+        ? NewsList(
+            scrollController: widget.scrollController,
+            tagId: widget.tagId,
+            articleType: widget.articleType,
+          )
+        : savedFeedUrl[1] == "rss"
+            ? FutureBuilder<Map<String, dynamic>>(
+                future: RssFeeds().getFeedArticles(
+                  savedFeedUrl[0].contains('motorsport.com')
+                      ? savedServer != officialFeed
+                          ? "$savedServer/rss/${savedFeedUrl[0].replaceAll('https://', '').split('.')[0]}"
+                          : '${savedFeedUrl[0]}/rss/f1/news/'
+                      : savedFeedUrl[0],
+                ),
+                builder: (context, snapshot) => snapshot.hasError
+                    ? RequestErrorWidget(
                         snapshot.error.toString(),
                       )
-                : snapshot.hasData
-                    ? NewsList(
-                        items: snapshot.data!,
-                        scrollController: widget.scrollController,
-                        tagId: widget.tagId,
-                        articleType: widget.articleType,
-                      )
-                    : widget.tagId == null &&
-                            widget.articleType == null &&
-                            latestNews['items'] != null
-                        ? NewsList(
-                            items: F1NewsFetcher().formatResponse(latestNews),
-                            scrollController: widget.scrollController,
-                            tagId: widget.tagId,
+                    : snapshot.hasData
+                        ? RssFeedItemsList(
+                            snapshot,
+                            homeFeed: true,
                           )
                         : const LoadingIndicatorUtil(),
-          )
-        : FutureBuilder<Map<String, dynamic>>(
-            future: RssFeeds().getFeedArticles(
-              savedFeedUrl.contains('motorsport.com')
-                  ? '$savedFeedUrl/rss/f1/news/'
-                  : savedFeedUrl,
-            ),
-            builder: (context, snapshot) => snapshot.hasError
-                ? RequestErrorWidget(
-                    snapshot.error.toString(),
-                  )
-                : snapshot.hasData
-                    ? RssFeedItemsList(
-                        snapshot,
-                        homeFeed: true,
-                      )
-                    : const LoadingIndicatorUtil(),
-          );
+              )
+            : WordpressNewsList(
+                savedFeedUrl[0],
+                scrollController: widget.scrollController,
+              );
   }
 
   void showOfflineSnackBar() async {

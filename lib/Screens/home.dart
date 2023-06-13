@@ -36,6 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
     return SingleChildScrollView(
       physics: const NeverScrollableScrollPhysics(),
       child: Column(
@@ -43,6 +44,15 @@ class _HomeScreenState extends State<HomeScreen> {
           const LiveSessionStatusIndicator(),
           SizedBox(
             height: MediaQuery.of(context).size.height - 60,
+            width: width > 1360
+                ? 1320
+                : width > 1024
+                    ? 986
+                    : width > 768
+                        ? 768
+                        : width > 576
+                            ? 576
+                            : width,
             child: NewsFeedWidget(scrollController: widget._scrollController),
           ),
         ],

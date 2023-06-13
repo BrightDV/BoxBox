@@ -20,18 +20,17 @@
 import 'dart:async';
 
 import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:boxbox/api/news.dart';
 import 'package:boxbox/helpers/bottom_navigation_bar.dart';
 import 'package:boxbox/helpers/handle_native.dart';
 import 'package:boxbox/helpers/route_handler.dart';
 import 'package:boxbox/Screens/article.dart';
 import 'package:boxbox/theme/teams_themes.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:timeago/timeago.dart' as timeago;
-import 'package:workmanager/workmanager.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -46,30 +45,32 @@ void main() async {
   final feedsBox = await Hive.openBox('feeds');
   // ignore: unused_local_variable
   final compareBox = await Hive.openBox('compare');
-  AwesomeNotifications().initialize(
-    'resource://drawable/notification_icon',
-    [
-      NotificationChannel(
-        channelKey: 'eventTracker',
-        channelName: 'New Grand Prix notifications',
-        channelDescription: 'Show a notification before each GP.',
-        defaultColor: Colors.white,
-        importance: NotificationImportance.High,
-        channelShowBadge: true,
-      ),
-      NotificationChannel(
-        channelKey: 'newArticle',
-        channelName: 'New article',
-        channelDescription:
-            'Show a notification when a new article is published.',
-        defaultColor: Colors.white,
-        importance: NotificationImportance.High,
-        channelShowBadge: true,
-      ),
-    ],
-  );
+  if (!kIsWeb) {
+    AwesomeNotifications().initialize(
+      'resource://drawable/notification_icon',
+      [
+        NotificationChannel(
+          channelKey: 'eventTracker',
+          channelName: 'New Grand Prix notifications',
+          channelDescription: 'Show a notification before each GP.',
+          defaultColor: Colors.white,
+          importance: NotificationImportance.High,
+          channelShowBadge: true,
+        ),
+        NotificationChannel(
+          channelKey: 'newArticle',
+          channelName: 'New article',
+          channelDescription:
+              'Show a notification when a new article is published.',
+          defaultColor: Colors.white,
+          importance: NotificationImportance.High,
+          channelShowBadge: true,
+        ),
+      ],
+    );
+  }
 
-  Workmanager().initialize(
+  /* Workmanager().initialize(
     callbackDispatcher,
     isInDebugMode: false,
   );
@@ -79,12 +80,12 @@ void main() async {
     existingWorkPolicy: ExistingWorkPolicy.replace,
     frequency: const Duration(hours: 2),
     initialDelay: const Duration(hours: 2),
-  );
+  ); */
 
   runApp(const MyApp());
 }
 
-int createUniqueId() {
+/* int createUniqueId() {
   return DateTime.now().millisecondsSinceEpoch.remainder(100000);
 }
 
@@ -157,7 +158,7 @@ void callbackDispatcher() {
       }
     },
   );
-}
+} */
 
 void setTimeagoLocaleMessages() {
   timeago.setLocaleMessages('ar', timeago.ArMessages());
@@ -286,25 +287,28 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void initState() {
-    NotificationController.startListeningNotificationEvents(context);
     super.initState();
+    if (!kIsWeb) {
+      NotificationController.startListeningNotificationEvents(context);
 
-    // For sharing or opening urls/text coming from outside the app while the app is in the memory
-    _intentDataStreamSubscription = ReceiveSharingIntent.getTextStream().listen(
-      (String value) {
-        handleSharedText(value, navigatorKey);
-      },
-      onError: (err) {
-        // print("ERROR in getTextStream: $err");
-      },
-    );
+      // For sharing or opening urls/text coming from outside the app while the app is in the memory
+      _intentDataStreamSubscription =
+          ReceiveSharingIntent.getTextStream().listen(
+        (String value) {
+          handleSharedText(value, navigatorKey);
+        },
+        onError: (err) {
+          // print("ERROR in getTextStream: $err");
+        },
+      );
 
-    // For sharing or opening urls/text coming from outside the app while the app is closed
-    ReceiveSharingIntent.getInitialText().then(
-      (String? value) {
-        if (value != null) handleSharedText(value, navigatorKey);
-      },
-    );
+      // For sharing or opening urls/text coming from outside the app while the app is closed
+      ReceiveSharingIntent.getInitialText().then(
+        (String? value) {
+          if (value != null) handleSharedText(value, navigatorKey);
+        },
+      );
+    }
   }
 
   @override
