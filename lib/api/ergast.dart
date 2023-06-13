@@ -475,10 +475,7 @@ class _ErgastApiCalls {
     }
     Race race = Race(
       responseAsJson['round'],
-      responseAsJson['raceName'].substring(
-        0,
-        responseAsJson['raceName'].indexOf(' Grand Prix'),
-      ),
+      responseAsJson['raceName'],
       responseAsJson['date'],
       responseAsJson['time'],
       responseAsJson['Circuit']['circuitId'],

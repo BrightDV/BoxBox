@@ -1,19 +1,3 @@
-import 'package:boxbox/Screens/article.dart';
-import 'package:boxbox/Screens/free_practice_screen.dart';
-import 'package:boxbox/Screens/race_details.dart';
-import 'package:boxbox/api/news.dart';
-import 'package:boxbox/helpers/news_feed_widget.dart';
-import 'package:carousel_slider/carousel_slider.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
-import 'package:hive_flutter/hive_flutter.dart';
-import 'package:intl/intl.dart';
-import 'package:loading_indicator/loading_indicator.dart';
-import 'package:share_plus/share_plus.dart';
-
 /*
  *  This file is part of BoxBox (https://github.com/BrightDV/BoxBox).
  * 
@@ -32,6 +16,22 @@ import 'package:share_plus/share_plus.dart';
  * 
  * Copyright (c) 2022-2023, BrightDV
  */
+
+import 'package:boxbox/Screens/article.dart';
+import 'package:boxbox/Screens/free_practice_screen.dart';
+import 'package:boxbox/Screens/race_details.dart';
+import 'package:boxbox/api/news.dart';
+import 'package:boxbox/helpers/news_feed_widget.dart';
+import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:intl/intl.dart';
+import 'package:loading_indicator/loading_indicator.dart';
+import 'package:share_plus/share_plus.dart';
 
 class ArticleParts extends StatelessWidget {
   final Article article;
@@ -63,10 +63,7 @@ class ArticleParts extends StatelessWidget {
               child: Scrollbar(
                 interactive: true,
                 controller: articleScrollController,
-                child: SingleChildScrollView(
-                  controller: articleScrollController,
-                  child: WidgetsList(article),
-                ),
+                child: WidgetsList(article, articleScrollController),
               ),
             ),
           )
@@ -74,16 +71,13 @@ class ArticleParts extends StatelessWidget {
             ? Scrollbar(
                 interactive: true,
                 controller: articleScrollController,
-                child: SingleChildScrollView(
-                  controller: articleScrollController,
-                  child: Center(
-                    child: ConstrainedBox(
-                      constraints: const BoxConstraints(
-                        minWidth: 300,
-                        maxWidth: 800,
-                      ),
-                      child: WidgetsList(article),
+                child: Center(
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(
+                      minWidth: 300,
+                      maxWidth: 800,
                     ),
+                    child: WidgetsList(article, articleScrollController),
                   ),
                 ),
               )
@@ -91,10 +85,7 @@ class ArticleParts extends StatelessWidget {
                 child: Scrollbar(
                   interactive: true,
                   controller: articleScrollController,
-                  child: SingleChildScrollView(
-                    controller: articleScrollController,
-                    child: WidgetsList(article),
-                  ),
+                  child: WidgetsList(article, articleScrollController),
                 ),
               );
   }
@@ -102,7 +93,8 @@ class ArticleParts extends StatelessWidget {
 
 class WidgetsList extends StatelessWidget {
   final Article article;
-  const WidgetsList(this.article, {super.key});
+  final ScrollController articleScrollController;
+  const WidgetsList(this.article, this.articleScrollController, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -168,7 +160,7 @@ class WidgetsList extends StatelessWidget {
 
     // return the different parts
 
-    return Column(
+    return ListView(
       children: [
         // hero
         article.articleHero['contentType'] == 'atomImageGallery'
