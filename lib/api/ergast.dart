@@ -84,7 +84,7 @@ class _ErgastApiCalls {
               const Duration(minutes: 10),
             )
             .isAfter(DateTime.now()) &&
-        results != {}) {
+        results.isNotEmpty) {
       return formatRaceStandings(results);
     } else {
       var url = Uri.parse(
@@ -230,7 +230,7 @@ class _ErgastApiCalls {
               const Duration(minutes: 10),
             )
             .isAfter(DateTime.now()) &&
-        driverStandings != {}) {
+        driverStandings.isNotEmpty) {
       return formatLastStandings(driverStandings);
     } else {
       var url = Uri.parse(
@@ -442,7 +442,7 @@ class _ErgastApiCalls {
               const Duration(hours: 1),
             )
             .isAfter(DateTime.now()) &&
-        schedule != {}) {
+        schedule.isNotEmpty) {
       return formatLastSchedule(schedule, toCome);
     } else {
       var url =
@@ -520,7 +520,7 @@ class _ErgastApiCalls {
               const Duration(minutes: 10),
             )
             .isAfter(DateTime.now()) &&
-        teamsStandings != {}) {
+        teamsStandings.isNotEmpty) {
       return formatLastTeamsStandings(teamsStandings);
     } else {
       var url = Uri.parse(
