@@ -41,6 +41,12 @@ class ArticleParts extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ScrollController articleScrollController = ScrollController();
+    double width = MediaQuery.of(context).size.width;
+    width = width > 1400
+        ? 800
+        : width > 1000
+            ? 500
+            : width;
     return (article.articleHero['contentType'] == 'atomVideo') ||
             (article.articleHero['contentType'] == 'atomVideoYouTube')
         ? NestedScrollView(
@@ -49,13 +55,22 @@ class ArticleParts extends StatelessWidget {
               SliverPersistentHeader(
                 pinned: true,
                 delegate: PinnedVideoPlayer(
-                  VideoRenderer(
-                    article.articleHero['fields']['videoId'] ?? '',
-                    autoplay: true,
-                    youtubeId:
-                        article.articleHero['fields']['youTubeVideoId'] ?? '',
+                  Center(
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(
+                        minWidth: 300,
+                        maxWidth: 800,
+                      ),
+                      child: VideoRenderer(
+                        article.articleHero['fields']['videoId'] ?? '',
+                        autoplay: true,
+                        youtubeId: article.articleHero['fields']
+                                ['youTubeVideoId'] ??
+                            '',
+                      ),
+                    ),
                   ),
-                  MediaQuery.of(context).size.width / (16 / 9),
+                  width / (16 / 9),
                 ),
               ),
             ],
@@ -65,7 +80,15 @@ class ArticleParts extends StatelessWidget {
                 controller: articleScrollController,
                 child: SingleChildScrollView(
                   controller: articleScrollController,
-                  child: WidgetsList(article, articleScrollController),
+                  child: Center(
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(
+                        minWidth: 300,
+                        maxWidth: 800,
+                      ),
+                      child: WidgetsList(article, articleScrollController),
+                    ),
+                  ),
                 ),
               ),
             ),
