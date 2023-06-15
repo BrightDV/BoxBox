@@ -1447,6 +1447,8 @@ class VideoRenderer extends StatelessWidget {
                               UserPreferredContentMode.DESKTOP,
                           transparentBackground: true,
                           iframeAllowFullscreen: true,
+                          mediaPlaybackRequiresUserGesture:
+                              !(autoplay ?? false),
                         ),
                       ),
                     )
