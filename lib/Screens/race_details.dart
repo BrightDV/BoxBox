@@ -33,6 +33,7 @@ import 'package:boxbox/Screens/free_practice_screen.dart';
 import 'package:boxbox/helpers/team_background_color.dart';
 import 'package:boxbox/scraping/formula_one.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_timer_countdown/flutter_timer_countdown.dart';
@@ -1186,51 +1187,53 @@ class _SessionCountdownTimerState extends State<SessionCountdownTimer> {
                   ),
                 ),
               ),
-        TextButton.icon(
-          label: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 7),
-            child: Text(
-              AppLocalizations.of(context)!.addToCalendar,
-              style: TextStyle(
-                color: useDarkMode ? Colors.white : Colors.black,
-              ),
-            ),
-          ),
-          icon: Icon(
-            Icons.add_alert_outlined,
-            color: useDarkMode ? Colors.white : Colors.black,
-          ),
-          style: TextButton.styleFrom(
-            side: BorderSide(
-              color: useDarkMode ? Colors.white : Colors.black,
-              width: 1,
-            ),
-          ),
-          onPressed: () {
-            Event event = Event(
-              title: '${widget.sessionName} - ${race.raceName}',
-              location: race.country,
-              startDate: DateTime(
-                raceFullDateParsed.toLocal().year,
-                raceFullDateParsed.toLocal().month,
-                raceFullDateParsed.toLocal().day,
-                raceFullDateParsed.toLocal().hour,
-                raceFullDateParsed.toLocal().minute,
-                raceFullDateParsed.toLocal().second,
-              ),
-              endDate: DateTime(
-                raceFullDateParsed.toLocal().year,
-                raceFullDateParsed.toLocal().month,
-                raceFullDateParsed.toLocal().day,
-                raceFullDateParsed.toLocal().hour +
-                    (widget.sessionIndex == 4 ? 3 : 1),
-                raceFullDateParsed.toLocal().minute,
-                raceFullDateParsed.toLocal().second,
-              ),
-            );
-            Add2Calendar.addEvent2Cal(event);
-          },
-        ),
+        !kIsWeb
+            ? TextButton.icon(
+                label: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 7),
+                  child: Text(
+                    AppLocalizations.of(context)!.addToCalendar,
+                    style: TextStyle(
+                      color: useDarkMode ? Colors.white : Colors.black,
+                    ),
+                  ),
+                ),
+                icon: Icon(
+                  Icons.add_alert_outlined,
+                  color: useDarkMode ? Colors.white : Colors.black,
+                ),
+                style: TextButton.styleFrom(
+                  side: BorderSide(
+                    color: useDarkMode ? Colors.white : Colors.black,
+                    width: 1,
+                  ),
+                ),
+                onPressed: () {
+                  Event event = Event(
+                    title: '${widget.sessionName} - ${race.raceName}',
+                    location: race.country,
+                    startDate: DateTime(
+                      raceFullDateParsed.toLocal().year,
+                      raceFullDateParsed.toLocal().month,
+                      raceFullDateParsed.toLocal().day,
+                      raceFullDateParsed.toLocal().hour,
+                      raceFullDateParsed.toLocal().minute,
+                      raceFullDateParsed.toLocal().second,
+                    ),
+                    endDate: DateTime(
+                      raceFullDateParsed.toLocal().year,
+                      raceFullDateParsed.toLocal().month,
+                      raceFullDateParsed.toLocal().day,
+                      raceFullDateParsed.toLocal().hour +
+                          (widget.sessionIndex == 4 ? 3 : 1),
+                      raceFullDateParsed.toLocal().minute,
+                      raceFullDateParsed.toLocal().second,
+                    ),
+                  );
+                  Add2Calendar.addEvent2Cal(event);
+                },
+              )
+            : Container(),
         SizedBox(
           width: 400,
           child: Row(
