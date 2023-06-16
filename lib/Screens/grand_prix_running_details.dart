@@ -229,46 +229,6 @@ class _GrandPrixRunningScreenState extends State<GrandPrixRunningScreen> {
                     child: Row(
                       children: [
                         Text(
-                          'Race Programme',
-                          style: TextStyle(
-                            color: useDarkMode ? Colors.white : Colors.black,
-                          ),
-                        ),
-                        const Spacer(),
-                        Icon(
-                          Icons.open_in_new_outlined,
-                          color: useDarkMode ? Colors.white : Colors.black,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                onTap: () => launchUrl(
-                  Uri.parse("https://raceprogramme.formula1.com/#/catalogue"),
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(5),
-              child: GestureDetector(
-                child: Container(
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: useDarkMode
-                        ? const Color(0xff1d1d28)
-                        : Colors.grey.shade400,
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(
-                      20,
-                      10,
-                      20,
-                      10,
-                    ),
-                    child: Row(
-                      children: [
-                        Text(
                           AppLocalizations.of(context)!.information,
                           style: TextStyle(
                             color: useDarkMode ? Colors.white : Colors.black,
@@ -276,7 +236,7 @@ class _GrandPrixRunningScreenState extends State<GrandPrixRunningScreen> {
                         ),
                         const Spacer(),
                         Icon(
-                          Icons.open_in_new_outlined,
+                          Icons.arrow_forward_rounded,
                           color: useDarkMode ? Colors.white : Colors.black,
                         ),
                       ],
@@ -301,6 +261,46 @@ class _GrandPrixRunningScreenState extends State<GrandPrixRunningScreen> {
                       isFetched: false,
                     ),
                   ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(5),
+              child: GestureDetector(
+                child: Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: useDarkMode
+                        ? const Color(0xff1d1d28)
+                        : Colors.grey.shade400,
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(
+                      20,
+                      10,
+                      20,
+                      10,
+                    ),
+                    child: Row(
+                      children: [
+                        Text(
+                          'Race Programme',
+                          style: TextStyle(
+                            color: useDarkMode ? Colors.white : Colors.black,
+                          ),
+                        ),
+                        const Spacer(),
+                        Icon(
+                          Icons.open_in_new_outlined,
+                          color: useDarkMode ? Colors.white : Colors.black,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                onTap: () => launchUrl(
+                  Uri.parse("https://raceprogramme.formula1.com/#/catalogue"),
                 ),
               ),
             ),
@@ -331,6 +331,9 @@ class _PdfViewerState extends State<PdfViewer> {
 
   @override
   Widget build(BuildContext context) {
+    const String defaultServer = "https://api.formula1.com";
+    String server = Hive.box('settings')
+        .get('server', defaultValue: defaultServer) as String;
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -339,7 +342,9 @@ class _PdfViewerState extends State<PdfViewer> {
         ),
       ),
       body: SfPdfViewer.network(
-        widget.src,
+        server != defaultServer
+            ? "$server/documents/${widget.src.split('/').last}"
+            : widget.src,
         key: _pdfViewerKey,
         enableTextSelection: true,
         onDocumentLoadFailed: (PdfDocumentLoadFailedDetails details) {

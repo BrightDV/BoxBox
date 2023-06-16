@@ -1,19 +1,3 @@
-import 'package:boxbox/Screens/article.dart';
-import 'package:boxbox/Screens/free_practice_screen.dart';
-import 'package:boxbox/Screens/race_details.dart';
-import 'package:boxbox/api/news.dart';
-import 'package:boxbox/helpers/news_feed_widget.dart';
-import 'package:carousel_slider/carousel_slider.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
-import 'package:hive_flutter/hive_flutter.dart';
-import 'package:intl/intl.dart';
-import 'package:loading_indicator/loading_indicator.dart';
-import 'package:share_plus/share_plus.dart';
-
 /*
  *  This file is part of BoxBox (https://github.com/BrightDV/BoxBox).
  * 
@@ -33,6 +17,22 @@ import 'package:share_plus/share_plus.dart';
  * Copyright (c) 2022-2023, BrightDV
  */
 
+import 'package:boxbox/Screens/article.dart';
+import 'package:boxbox/Screens/free_practice_screen.dart';
+import 'package:boxbox/Screens/race_details.dart';
+import 'package:boxbox/api/news.dart';
+import 'package:boxbox/helpers/news_feed_widget.dart';
+import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:intl/intl.dart';
+import 'package:loading_indicator/loading_indicator.dart';
+import 'package:share_plus/share_plus.dart';
+
 class ArticleParts extends StatelessWidget {
   final Article article;
 
@@ -41,6 +41,12 @@ class ArticleParts extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ScrollController articleScrollController = ScrollController();
+    double width = MediaQuery.of(context).size.width;
+    width = width > 1400
+        ? 800
+        : width > 1000
+            ? 500
+            : width;
     return (article.articleHero['contentType'] == 'atomVideo') ||
             (article.articleHero['contentType'] == 'atomVideoYouTube')
         ? NestedScrollView(
@@ -49,29 +55,27 @@ class ArticleParts extends StatelessWidget {
               SliverPersistentHeader(
                 pinned: true,
                 delegate: PinnedVideoPlayer(
-                  VideoRenderer(
-                    article.articleHero['fields']['videoId'] ?? '',
-                    autoplay: true,
-                    youtubeId:
-                        article.articleHero['fields']['youTubeVideoId'] ?? '',
+                  Center(
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(
+                        minWidth: 300,
+                        maxWidth: 800,
+                      ),
+                      child: VideoRenderer(
+                        article.articleHero['fields']['videoId'] ?? '',
+                        autoplay: true,
+                        youtubeId: article.articleHero['fields']
+                                ['youTubeVideoId'] ??
+                            '',
+                      ),
+                    ),
                   ),
-                  MediaQuery.of(context).size.width / (16 / 9),
+                  width / (16 / 9),
                 ),
               ),
             ],
             body: SafeArea(
               child: Scrollbar(
-                interactive: true,
-                controller: articleScrollController,
-                child: SingleChildScrollView(
-                  controller: articleScrollController,
-                  child: WidgetsList(article),
-                ),
-              ),
-            ),
-          )
-        : MediaQuery.of(context).size.width > 1400
-            ? Scrollbar(
                 interactive: true,
                 controller: articleScrollController,
                 child: SingleChildScrollView(
@@ -82,7 +86,28 @@ class ArticleParts extends StatelessWidget {
                         minWidth: 300,
                         maxWidth: 800,
                       ),
-                      child: WidgetsList(article),
+                      child: WidgetsList(article, articleScrollController),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          )
+        : MediaQuery.of(context).size.width > 1000
+            ? SafeArea(
+                child: Scrollbar(
+                  interactive: true,
+                  controller: articleScrollController,
+                  child: SingleChildScrollView(
+                    controller: articleScrollController,
+                    child: Center(
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(
+                          minWidth: 300,
+                          maxWidth: 800,
+                        ),
+                        child: WidgetsList(article, articleScrollController),
+                      ),
                     ),
                   ),
                 ),
@@ -93,7 +118,7 @@ class ArticleParts extends StatelessWidget {
                   controller: articleScrollController,
                   child: SingleChildScrollView(
                     controller: articleScrollController,
-                    child: WidgetsList(article),
+                    child: WidgetsList(article, articleScrollController),
                   ),
                 ),
               );
@@ -102,7 +127,8 @@ class ArticleParts extends StatelessWidget {
 
 class WidgetsList extends StatelessWidget {
   final Article article;
-  const WidgetsList(this.article, {super.key});
+  final ScrollController articleScrollController;
+  const WidgetsList(this.article, this.articleScrollController, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -155,6 +181,16 @@ class WidgetsList extends StatelessWidget {
     Hive.box('history').put('articlesHistory', articlesHistory);
     articlesHistory =
         Hive.box('history').get('articlesHistory', defaultValue: []) as List;
+
+    // values for the related articles in web
+
+    ScrollController scrollController = ScrollController();
+    double width = MediaQuery.of(context).size.width;
+    width = width > 1400
+        ? 450
+        : width > 1000
+            ? 500
+            : 400;
 
     // return the different parts
 
@@ -341,18 +377,15 @@ class WidgetsList extends StatelessWidget {
                                           ),
                                           body: InAppWebView(
                                             initialUrlRequest: URLRequest(
-                                              url: Uri.parse(
+                                              url: WebUri(
                                                 "https://www.riddle.com/view/${element['fields']['riddleId']}",
                                               ),
                                             ),
-                                            initialOptions:
-                                                InAppWebViewGroupOptions(
-                                              crossPlatform:
-                                                  InAppWebViewOptions(
-                                                preferredContentMode:
-                                                    UserPreferredContentMode
-                                                        .DESKTOP,
-                                              ),
+                                            initialSettings:
+                                                InAppWebViewSettings(
+                                              preferredContentMode:
+                                                  UserPreferredContentMode
+                                                      .DESKTOP,
                                             ),
                                             gestureRecognizers: {
                                               Factory<VerticalDragGestureRecognizer>(
@@ -423,12 +456,9 @@ class WidgetsList extends StatelessWidget {
                                                   () =>
                                                       ScaleGestureRecognizer()),
                                             },
-                                            initialOptions:
-                                                InAppWebViewGroupOptions(
-                                              crossPlatform:
-                                                  InAppWebViewOptions(
-                                                      transparentBackground:
-                                                          true),
+                                            initialSettings:
+                                                InAppWebViewSettings(
+                                              transparentBackground: true,
                                             ),
                                           ),
                                         )
@@ -505,7 +535,7 @@ class WidgetsList extends StatelessWidget {
                                                       body: InAppWebView(
                                                         initialUrlRequest:
                                                             URLRequest(
-                                                          url: Uri.parse(
+                                                          url: WebUri(
                                                             "https://embed.scribblelive.com/Embed/v7.aspx?Id=${element['fields']['scribbleEventId'].split('/')[2]}&ThemeId=37480",
                                                           ),
                                                         ),
@@ -1195,7 +1225,7 @@ class WidgetsList extends StatelessWidget {
                                                           child: InAppWebView(
                                                             initialUrlRequest:
                                                                 URLRequest(
-                                                              url: Uri.parse(
+                                                              url: WebUri(
                                                                 'https:${element['fields']['audioPodcast']['iFrameSrc']}',
                                                               ),
                                                             ),
@@ -1210,13 +1240,10 @@ class WidgetsList extends StatelessWidget {
                                                                   () =>
                                                                       ScaleGestureRecognizer()),
                                                             },
-                                                            initialOptions:
-                                                                InAppWebViewGroupOptions(
-                                                              crossPlatform:
-                                                                  InAppWebViewOptions(
-                                                                      transparentBackground:
-                                                                          true),
-                                                            ),
+                                                            initialSettings:
+                                                                InAppWebViewSettings(
+                                                                    transparentBackground:
+                                                                        true),
                                                           ),
                                                         )
                                                       : element['contentType'] ==
@@ -1370,36 +1397,127 @@ class WidgetsList extends StatelessWidget {
 
         // related articles
 
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              for (var article in article.relatedArticles)
-                NewsItem(
-                  News(
-                    article['id'],
-                    article['articleType'],
-                    article['slug'],
-                    article['title'],
-                    article['metaDescription'] ?? ' ',
-                    DateTime.parse(article['updatedAt']),
-                    article['thumbnail'] != null
-                        ? useDataSaverMode
-                            ? article['thumbnail']['image']['renditions'] !=
-                                    null
-                                ? article['thumbnail']['image']['renditions']
-                                    ['2col']
-                                : article['thumbnail']['image']['url'] +
-                                    '.transform/2col-retina/image.jpg'
-                            : article['thumbnail']['image']['url']
-                        : '',
+        kIsWeb
+            ? Stack(
+                alignment: Alignment.center,
+                children: [
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    controller: scrollController,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        for (var article in article.relatedArticles)
+                          NewsItem(
+                            News(
+                              article['id'],
+                              article['articleType'],
+                              article['slug'],
+                              article['title'],
+                              article['metaDescription'] ?? ' ',
+                              DateTime.parse(article['updatedAt']),
+                              article['thumbnail'] != null
+                                  ? useDataSaverMode
+                                      ? article['thumbnail']['image']
+                                                  ['renditions'] !=
+                                              null
+                                          ? article['thumbnail']['image']
+                                              ['renditions']['2col']
+                                          : article['thumbnail']['image']
+                                                  ['url'] +
+                                              '.transform/2col-retina/image.jpg'
+                                      : article['thumbnail']['image']['url']
+                                  : '',
+                            ),
+                            true,
+                          ),
+                      ],
+                    ),
                   ),
-                  true,
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 5),
+                      child: GestureDetector(
+                        onTap: () => scrollController.animateTo(
+                          scrollController.offset - width + 100,
+                          duration: const Duration(milliseconds: 200),
+                          curve: Curves.easeInOut,
+                        ),
+                        child: Container(
+                          width: 48,
+                          height: 48,
+                          decoration: BoxDecoration(
+                            color: Colors.black.withOpacity(0.75),
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
+                            Icons.arrow_back,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 5),
+                      child: GestureDetector(
+                        onTap: () => scrollController.animateTo(
+                          scrollController.offset + width - 100,
+                          duration: const Duration(milliseconds: 200),
+                          curve: Curves.easeInOut,
+                        ),
+                        child: Container(
+                          width: 48,
+                          height: 48,
+                          decoration: BoxDecoration(
+                            color: Colors.black.withOpacity(0.75),
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
+                            Icons.arrow_forward,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              )
+            : SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                controller: scrollController,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    for (var article in article.relatedArticles)
+                      NewsItem(
+                        News(
+                          article['id'],
+                          article['articleType'],
+                          article['slug'],
+                          article['title'],
+                          article['metaDescription'] ?? ' ',
+                          DateTime.parse(article['updatedAt']),
+                          article['thumbnail'] != null
+                              ? useDataSaverMode
+                                  ? article['thumbnail']['image']
+                                              ['renditions'] !=
+                                          null
+                                      ? article['thumbnail']['image']
+                                          ['renditions']['2col']
+                                      : article['thumbnail']['image']['url'] +
+                                          '.transform/2col-retina/image.jpg'
+                                  : article['thumbnail']['image']['url']
+                              : '',
+                        ),
+                        true,
+                      ),
+                  ],
                 ),
-            ],
-          ),
-        ),
+              ),
       ],
     );
   }

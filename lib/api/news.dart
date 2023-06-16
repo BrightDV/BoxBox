@@ -26,6 +26,7 @@ import 'package:boxbox/Screens/circuit.dart';
 import 'package:boxbox/Screens/schedule.dart';
 import 'package:boxbox/api/brightcove.dart';
 import 'package:boxbox/api/race_components.dart';
+import 'package:boxbox/helpers/hover.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/request_error.dart';
 import 'package:boxbox/Screens/article.dart';
@@ -33,7 +34,9 @@ import 'package:boxbox/Screens/standings.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -45,7 +48,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 class F1NewsFetcher {
-  final String endpoint = "https://api.formula1.com";
+  final String defaultEndpoint = "https://api.formula1.com";
   final String apikey = "qPgPPRJyGCIPxFT3el4MF7thXHyJCzAP";
 
   List<News> formatResponse(Map responseAsJson) {
@@ -87,50 +90,14 @@ class F1NewsFetcher {
     return newsList;
   }
 
-  Future<Map<String, dynamic>> getRawNews({
-    String? tagId,
-    String? articleType,
-  }) async {
-    Uri url;
-    if (tagId != null) {
-      url = Uri.parse('$endpoint/v1/editorial/articles?limit=16&tags=$tagId');
-    } else if (articleType != null) {
-      url = Uri.parse(
-          '$endpoint/v1/editorial/articles?limit=16&articleTypes=$articleType');
-    } else {
-      url = Uri.parse('$endpoint/v1/editorial/articles?limit=16');
-    }
-    var response = await http.get(url, headers: {
-      "Accept": "application/json",
-      "apikey": apikey,
-      "locale": "en",
-    });
-
-    Map<String, dynamic> responseAsJson = json.decode(
-      utf8.decode(response.bodyBytes),
-    );
-    return responseAsJson;
-  }
-
-  FutureOr<List<News>> getLatestNews(
-      {String? tagId, String? articleType}) async {
-    Map<String, dynamic> responseAsJson = await getRawNews(
-      tagId: tagId,
-      articleType: articleType,
-    );
-
-    if (tagId == null && articleType == null) {
-      Hive.box('requests').put('news', responseAsJson);
-    }
-    return formatResponse(responseAsJson);
-  }
-
   FutureOr<List<News>> getMoreNews(
     int offset, {
     String? tagId,
     String? articleType,
   }) async {
     Uri url;
+    String endpoint = Hive.box('settings')
+        .get('server', defaultValue: defaultEndpoint) as String;
     if (tagId != null) {
       url = Uri.parse(
           '$endpoint/v1/editorial/articles?limit=16&offset=$offset&tags=$tagId');
@@ -141,11 +108,18 @@ class F1NewsFetcher {
       url =
           Uri.parse('$endpoint/v1/editorial/articles?limit=16&offset=$offset');
     }
-    var response = await http.get(url, headers: {
-      "Accept": "application/json",
-      "apikey": apikey,
-      "locale": "en",
-    });
+    var response = await http.get(
+      url,
+      headers: endpoint != defaultEndpoint
+          ? {
+              "Accept": "application/json",
+            }
+          : {
+              "Accept": "application/json",
+              "apikey": apikey,
+              "locale": "en",
+            },
+    );
 
     Map<String, dynamic> responseAsJson =
         json.decode(utf8.decode(response.bodyBytes));
@@ -157,6 +131,8 @@ class F1NewsFetcher {
     String? articleType,
   }) async {
     Uri url;
+    String endpoint = Hive.box('settings')
+        .get('server', defaultValue: defaultEndpoint) as String;
     if (articleType != null) {
       url = Uri.parse(
         '$endpoint/v1/editorial/articles?limit=16&tags=${tags.join(',')}&articleTypes=$articleType',
@@ -165,11 +141,18 @@ class F1NewsFetcher {
       url = Uri.parse(
           '$endpoint/v1/editorial/articles?limit=16&tags=${tags.join(',')}');
     }
-    var response = await http.get(url, headers: {
-      "Accept": "application/json",
-      "apikey": apikey,
-      "locale": "en",
-    });
+    var response = await http.get(
+      url,
+      headers: endpoint != defaultEndpoint
+          ? {
+              "Accept": "application/json",
+            }
+          : {
+              "Accept": "application/json",
+              "apikey": apikey,
+              "locale": "en",
+            },
+    );
 
     Map<String, dynamic> responseAsJson =
         json.decode(utf8.decode(response.bodyBytes));
@@ -177,12 +160,21 @@ class F1NewsFetcher {
   }
 
   Future<Article> getArticleData(String articleId) async {
+    String endpoint = Hive.box('settings')
+        .get('server', defaultValue: defaultEndpoint) as String;
     Uri url = Uri.parse('$endpoint/v1/editorial/articles/$articleId');
-    var response = await http.get(url, headers: {
-      "Accept": "application/json",
-      "apikey": apikey,
-      "locale": "en",
-    });
+    var response = await http.get(
+      url,
+      headers: endpoint != defaultEndpoint
+          ? {
+              "Accept": "application/json",
+            }
+          : {
+              "Accept": "application/json",
+              "apikey": apikey,
+              "locale": "en",
+            },
+    );
     Map<String, dynamic> responseAsJson = json.decode(
       utf8.decode(response.bodyBytes),
     );
@@ -247,18 +239,20 @@ class NewsItem extends StatefulWidget {
   final News item;
   final bool inRelated;
   final bool? showSmallDescription;
+  final int itemPerRow;
 
   const NewsItem(
     this.item,
     this.inRelated, {
     Key? key,
     this.showSmallDescription,
+    this.itemPerRow = 1,
   }) : super(key: key);
   @override
   State<NewsItem> createState() => _NewsItemState();
 }
 
-class _NewsItemState extends State<NewsItem> {
+class _NewsItemState extends State<NewsItem> with TickerProviderStateMixin {
   final String endpoint = 'https://formula1.com';
   final String articleLink = '/en/latest/article.';
 
@@ -348,342 +342,837 @@ class _NewsItemState extends State<NewsItem> {
       );
     }
 
-    return inRelated
-        ? ConstrainedBox(
-            constraints: BoxConstraints(
-              minWidth: width / 2.1 > 300 ? 160 : width / 2.1,
-              maxWidth: 300,
-              minHeight: 232,
-            ),
-            child: Padding(
+    return ConstrainedBox(
+      constraints: BoxConstraints(
+        minWidth: width / 2.1 > 300 ? 230 : width / 2.1,
+        maxWidth: width > 1400
+            ? 600
+            : width > 1000
+                ? 400
+                : 300,
+        minHeight: 232,
+      ),
+      child: inRelated
+          ? Padding(
               padding: const EdgeInsets.only(top: 5),
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ArticleScreen(
-                        item.newsId,
-                        item.title,
-                        false,
-                      ),
-                    ),
-                  );
-                },
-                child: Card(
-                  elevation: 5.0,
-                  color: useDarkMode ? const Color(0xff1d1d28) : Colors.white,
-                  child: Column(
-                    children: [
-                      CachedNetworkImage(
-                        imageUrl: imageUrl,
-                        placeholder: (context, url) => const SizedBox(
-                          height: 90,
-                          child: LoadingIndicatorUtil(
-                            replaceImage: true,
-                          ),
-                        ),
-                        errorWidget: (context, url, error) => Icon(
-                          Icons.error_outlined,
-                          color: useDarkMode ? Colors.white : Colors.black,
-                        ),
-                        fadeOutDuration: const Duration(seconds: 1),
-                        fadeInDuration: const Duration(seconds: 1),
-                        cacheManager: CacheManager(
-                          Config(
-                            "newsImages",
-                            stalePeriod: const Duration(days: 7),
-                          ),
-                        ),
-                      ),
-                      ListTile(
-                        title: Text(
-                          item.title,
-                          style: TextStyle(
-                            color: useDarkMode ? Colors.white : Colors.black,
-                            fontSize: 14,
-                          ),
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 3,
-                          textAlign: TextAlign.justify,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          )
-        : Padding(
-            padding: const EdgeInsets.only(top: 5),
-            child: Card(
-              elevation: 10.0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15.0),
-              ),
-              color: useDarkMode ? const Color(0xff1d1d28) : Colors.white,
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 200),
-                child: InkWell(
+              child: Card(
+                elevation: 10.0,
+                shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15.0),
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ArticleScreen(
-                        item.newsId,
-                        item.title,
-                        false,
+                ),
+                color: useDarkMode ? const Color(0xff1d1d28) : Colors.white,
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(15.0),
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ArticleScreen(
+                          item.newsId,
+                          item.title,
+                          false,
+                        ),
                       ),
                     ),
-                  ),
-                  hoverColor: Colors.grey.shade700,
-                  onTapDown: (position) => storePosition(position),
-                  onLongPress: () {
-                    Feedback.forLongPress(context);
-                    showDetailsMenu();
-                  },
-                  child: Column(
-                    children: [
-                      newsLayout != 'condensed' && newsLayout != 'small'
-                          ? Stack(
-                              alignment: Alignment.bottomLeft,
-                              children: [
-                                ClipRRect(
-                                  borderRadius: const BorderRadius.only(
-                                    topLeft: Radius.circular(15),
-                                    topRight: Radius.circular(15),
+                    hoverColor: useDarkMode
+                        ? Colors.grey.shade700
+                        : Colors.grey.shade400,
+                    onTapDown: (position) => storePosition(position),
+                    onLongPress: () {
+                      Feedback.forLongPress(context);
+                      showDetailsMenu();
+                    },
+                    child: kIsWeb
+                        ? Hover(
+                            builder: (isHovered) => PhysicalModel(
+                              color: Colors.transparent,
+                              elevation: isHovered ? 16 : 0,
+                              child: Column(
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: const BorderRadius.only(
+                                      topLeft: Radius.circular(15),
+                                      topRight: Radius.circular(15),
+                                    ),
+                                    child: Hero(
+                                      tag: widget.item.newsId,
+                                      child: CachedNetworkImage(
+                                        imageUrl: imageUrl,
+                                        placeholder: (context, url) =>
+                                            const SizedBox(
+                                          width: 300,
+                                          child: LoadingIndicatorUtil(
+                                            replaceImage: true,
+                                          ),
+                                        ),
+                                        errorWidget: (context, url, error) =>
+                                            SizedBox(
+                                          height: 50,
+                                          child: Icon(
+                                            Icons.error_outlined,
+                                            color: useDarkMode
+                                                ? const Color(0xff1d1d28)
+                                                : Colors.white,
+                                          ),
+                                        ),
+                                        fadeOutDuration:
+                                            const Duration(seconds: 1),
+                                        fadeInDuration:
+                                            const Duration(seconds: 1),
+                                        cacheManager: CacheManager(
+                                          Config(
+                                            "newsImages",
+                                            stalePeriod:
+                                                const Duration(days: 7),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
                                   ),
-                                  child: Hero(
-                                    tag: widget.item.newsId,
-                                    child: CachedNetworkImage(
-                                      imageUrl: imageUrl,
-                                      placeholder: (context, url) => SizedBox(
-                                        height: (widget.showSmallDescription ??
-                                                false)
-                                            ? height / (16 / 9) - 58
-                                            : width / (16 / 9) - 10,
-                                        child: const LoadingIndicatorUtil(
-                                          replaceImage: true,
-                                        ),
+                                  ListTile(
+                                    title: Text(
+                                      item.title,
+                                      style: TextStyle(
+                                        color: useDarkMode
+                                            ? Colors.white
+                                            : Colors.black,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w500,
                                       ),
-                                      errorWidget: (context, url, error) =>
-                                          SizedBox(
-                                        height: 50,
-                                        child: Icon(
-                                          Icons.error_outlined,
-                                          color: useDarkMode
-                                              ? const Color(0xff1d1d28)
-                                              : Colors.white,
-                                        ),
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 3,
+                                      textAlign: TextAlign.justify,
+                                    ),
+                                    mouseCursor: SystemMouseCursors.click,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          )
+                        : Column(
+                            children: [
+                              ClipRRect(
+                                borderRadius: const BorderRadius.only(
+                                  topLeft: Radius.circular(15),
+                                  topRight: Radius.circular(15),
+                                ),
+                                child: Hero(
+                                  tag: widget.item.newsId,
+                                  child: CachedNetworkImage(
+                                    imageUrl: imageUrl,
+                                    placeholder: (context, url) =>
+                                        const SizedBox(
+                                      width: 300,
+                                      child: LoadingIndicatorUtil(
+                                        replaceImage: true,
                                       ),
-                                      fadeOutDuration:
-                                          const Duration(seconds: 1),
-                                      fadeInDuration:
-                                          const Duration(seconds: 1),
-                                      cacheManager: CacheManager(
-                                        Config(
-                                          "newsImages",
-                                          stalePeriod: const Duration(days: 7),
-                                        ),
+                                    ),
+                                    errorWidget: (context, url, error) =>
+                                        SizedBox(
+                                      height: 50,
+                                      child: Icon(
+                                        Icons.error_outlined,
+                                        color: useDarkMode
+                                            ? const Color(0xff1d1d28)
+                                            : Colors.white,
+                                      ),
+                                    ),
+                                    fadeOutDuration: const Duration(seconds: 1),
+                                    fadeInDuration: const Duration(seconds: 1),
+                                    cacheManager: CacheManager(
+                                      Config(
+                                        "newsImages",
+                                        stalePeriod: const Duration(days: 7),
                                       ),
                                     ),
                                   ),
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                    left: 8,
+                              ),
+                              ListTile(
+                                title: Text(
+                                  item.title,
+                                  style: TextStyle(
+                                    color: useDarkMode
+                                        ? Colors.white
+                                        : Colors.black,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w500,
                                   ),
-                                  child: Container(
-                                    width: item.newsType == 'Podcast' ||
-                                            item.newsType == 'Feature' ||
-                                            item.newsType == 'Opinion' ||
-                                            item.newsType == 'Report'
-                                        ? 110
-                                        : item.newsType == 'Technical' ||
-                                                item.newsType == 'Live Blog' ||
-                                                item.newsType == 'Interview'
-                                            ? 120
-                                            : item.newsType == 'Image Gallery'
-                                                ? 150
-                                                : 90,
-                                    height: 27,
-                                    alignment: Alignment.bottomLeft,
-                                    decoration: BoxDecoration(
-                                      borderRadius: const BorderRadius.only(
-                                        topLeft: Radius.circular(3),
-                                        topRight: Radius.circular(8),
-                                        bottomRight: Radius.circular(3),
-                                      ),
-                                      boxShadow: const [
-                                        BoxShadow(
-                                          blurRadius: 2,
-                                          offset: Offset(0, 0),
-                                        ),
-                                      ],
-                                      color: Theme.of(context).primaryColor,
-                                    ),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                            left: 6,
-                                          ),
-                                          child: Icon(
-                                            item.newsType == 'Video'
-                                                ? Icons.play_arrow_outlined
-                                                : item.newsType ==
-                                                        'Image Gallery'
-                                                    ? Icons.image_outlined
-                                                    : item.newsType == 'Podcast'
-                                                        ? Icons
-                                                            .podcasts_outlined
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 3,
+                                  textAlign: TextAlign.justify,
+                                ),
+                                mouseCursor: SystemMouseCursors.click,
+                              ),
+                            ],
+                          ),
+                  ),
+                ),
+              ),
+            )
+          : Padding(
+              padding: const EdgeInsets.only(top: 5),
+              child: Card(
+                elevation: 10.0,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15.0),
+                ),
+                color: useDarkMode ? const Color(0xff1d1d28) : Colors.white,
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(15.0),
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ArticleScreen(
+                          item.newsId,
+                          item.title,
+                          false,
+                        ),
+                      ),
+                    ),
+                    hoverColor: useDarkMode
+                        ? Colors.grey.shade700
+                        : Colors.grey.shade400,
+                    onTapDown: (position) => storePosition(position),
+                    onLongPress: () {
+                      Feedback.forLongPress(context);
+                      showDetailsMenu();
+                    },
+                    child: kIsWeb
+                        ? Hover(
+                            builder: (isHovered) => PhysicalModel(
+                              color: Colors.transparent,
+                              elevation: isHovered ? 16 : 0,
+                              child: Column(
+                                children: [
+                                  newsLayout != 'condensed' &&
+                                          newsLayout != 'small'
+                                      ? Stack(
+                                          alignment: Alignment.bottomLeft,
+                                          children: [
+                                            ClipRRect(
+                                              borderRadius:
+                                                  const BorderRadius.only(
+                                                topLeft: Radius.circular(15),
+                                                topRight: Radius.circular(15),
+                                              ),
+                                              child: Hero(
+                                                tag: widget.item.newsId,
+                                                child: CachedNetworkImage(
+                                                  imageUrl: imageUrl,
+                                                  placeholder: (context, url) =>
+                                                      SizedBox(
+                                                    height: (MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .width >
+                                                            500)
+                                                        ? (MediaQuery.of(context)
+                                                                        .size
+                                                                        .width /
+                                                                    widget
+                                                                        .itemPerRow -
+                                                                8 *
+                                                                    widget
+                                                                        .itemPerRow) /
+                                                            (16 / 9)
+                                                        : (widget.showSmallDescription ??
+                                                                false)
+                                                            ? height /
+                                                                    (16 / 9) -
+                                                                58
+                                                            : width / (16 / 9) -
+                                                                10,
+                                                    child:
+                                                        const LoadingIndicatorUtil(
+                                                      replaceImage: true,
+                                                    ),
+                                                  ),
+                                                  errorWidget:
+                                                      (context, url, error) =>
+                                                          SizedBox(
+                                                    height: 50,
+                                                    child: Icon(
+                                                      Icons.error_outlined,
+                                                      color: useDarkMode
+                                                          ? const Color(
+                                                              0xff1d1d28)
+                                                          : Colors.white,
+                                                    ),
+                                                  ),
+                                                  fadeOutDuration:
+                                                      const Duration(
+                                                    milliseconds: 400,
+                                                  ),
+                                                  fadeInDuration:
+                                                      const Duration(
+                                                    milliseconds: 400,
+                                                  ),
+                                                  cacheManager: CacheManager(
+                                                    Config(
+                                                      "newsImages",
+                                                      stalePeriod:
+                                                          const Duration(
+                                                              days: 5),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                left: 8,
+                                              ),
+                                              child: Container(
+                                                width: item.newsType ==
+                                                            'Podcast' ||
+                                                        item.newsType ==
+                                                            'Feature' ||
+                                                        item.newsType ==
+                                                            'Opinion' ||
+                                                        item.newsType ==
+                                                            'Report'
+                                                    ? 110
+                                                    : item.newsType ==
+                                                                'Technical' ||
+                                                            item.newsType ==
+                                                                'Live Blog' ||
+                                                            item.newsType ==
+                                                                'Interview'
+                                                        ? 120
                                                         : item.newsType ==
-                                                                'Poll'
-                                                            ? Icons.bar_chart
+                                                                'Image Gallery'
+                                                            ? 150
+                                                            : 90,
+                                                height: 27,
+                                                alignment: Alignment.bottomLeft,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      const BorderRadius.only(
+                                                    topLeft: Radius.circular(3),
+                                                    topRight:
+                                                        Radius.circular(8),
+                                                    bottomRight:
+                                                        Radius.circular(3),
+                                                  ),
+                                                  boxShadow: const [
+                                                    BoxShadow(
+                                                      blurRadius: 2,
+                                                      offset: Offset(0, 0),
+                                                    ),
+                                                  ],
+                                                  color: Theme.of(context)
+                                                      .primaryColor,
+                                                ),
+                                                child: Row(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: [
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                        left: 6,
+                                                      ),
+                                                      child: Icon(
+                                                        item.newsType == 'Video'
+                                                            ? Icons
+                                                                .play_arrow_outlined
                                                             : item.newsType ==
-                                                                    'News'
+                                                                    'Image Gallery'
                                                                 ? Icons
-                                                                    .feed_outlined
+                                                                    .image_outlined
                                                                 : item.newsType ==
-                                                                        'Report'
+                                                                        'Podcast'
                                                                     ? Icons
-                                                                        .report_outlined
+                                                                        .podcasts_outlined
                                                                     : item.newsType ==
-                                                                            'Interview'
+                                                                            'Poll'
                                                                         ? Icons
-                                                                            .mic_outlined
+                                                                            .bar_chart
                                                                         : item.newsType ==
-                                                                                'Feature'
-                                                                            ? Icons.star_outline_outlined
-                                                                            : item.newsType == 'Opinion'
-                                                                                ? Icons.chat_outlined
-                                                                                : item.newsType == 'Technical'
-                                                                                    ? Icons.construction_outlined
-                                                                                    : item.newsType == 'Live Blog'
-                                                                                        ? Icons.live_tv_outlined
-                                                                                        : Icons.info_outlined,
-                                            color: Colors.white,
-                                            size: 24,
+                                                                                'News'
+                                                                            ? Icons.feed_outlined
+                                                                            : item.newsType == 'Report'
+                                                                                ? Icons.report_outlined
+                                                                                : item.newsType == 'Interview'
+                                                                                    ? Icons.mic_outlined
+                                                                                    : item.newsType == 'Feature'
+                                                                                        ? Icons.star_outline_outlined
+                                                                                        : item.newsType == 'Opinion'
+                                                                                            ? Icons.chat_outlined
+                                                                                            : item.newsType == 'Technical'
+                                                                                                ? Icons.construction_outlined
+                                                                                                : item.newsType == 'Live Blog'
+                                                                                                    ? Icons.live_tv_outlined
+                                                                                                    : Icons.info_outlined,
+                                                        color: Colors.white,
+                                                        size: 24,
+                                                      ),
+                                                    ),
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                        left: 5,
+                                                      ),
+                                                      child: Text(
+                                                        item.newsType,
+                                                        style: const TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize: 14,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        )
+                                      : const SizedBox(
+                                          height: 0.0,
+                                          width: 0.0,
+                                        ),
+                                  ListTile(
+                                    title: Text(
+                                      item.title,
+                                      style: TextStyle(
+                                        color: useDarkMode
+                                            ? Colors.white
+                                            : Colors.black,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines:
+                                          (widget.showSmallDescription ?? false)
+                                              ? 3
+                                              : 5,
+                                      textAlign: TextAlign.justify,
+                                    ),
+                                    subtitle: (newsLayout != 'big' &&
+                                                newsLayout != 'condensed') ||
+                                            ((widget.showSmallDescription ??
+                                                    false) &&
+                                                width < 1361)
+                                        ? null
+                                        : Text(
+                                            item.subtitle,
+                                            style: TextStyle(
+                                              color: useDarkMode
+                                                  ? Colors.grey[400]
+                                                  : Colors.grey[800],
+                                            ),
+                                            textAlign: TextAlign.justify,
+                                            maxLines: width > 1360 ? 4 : 5,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                    mouseCursor: SystemMouseCursors.click,
+                                  ),
+                                  width > 1360
+                                      ? Expanded(
+                                          child: Align(
+                                            alignment: Alignment.bottomCenter,
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(
+                                                right: 16,
+                                                bottom: 10,
+                                              ),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.end,
+                                                children: [
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                      right: 8,
+                                                    ),
+                                                    child: Icon(
+                                                      Icons.schedule,
+                                                      color: useDarkMode
+                                                          ? Colors.grey.shade300
+                                                          : Colors.grey[800],
+                                                      size: 20.0,
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    timeago.format(
+                                                      item.datePosted,
+                                                      locale: Localizations
+                                                              .localeOf(context)
+                                                          .toString(),
+                                                    ),
+                                                    style: TextStyle(
+                                                      color: useDarkMode
+                                                          ? Colors.grey.shade300
+                                                          : Colors.grey[700],
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        )
+                                      : Align(
+                                          alignment: Alignment.bottomCenter,
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(
+                                              right: 16,
+                                              bottom: 5,
+                                            ),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.end,
+                                              children: [
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                    right: 8,
+                                                  ),
+                                                  child: Icon(
+                                                    Icons.schedule,
+                                                    color: useDarkMode
+                                                        ? Colors.grey.shade300
+                                                        : Colors.grey[800],
+                                                    size: 20.0,
+                                                  ),
+                                                ),
+                                                Text(
+                                                  timeago.format(
+                                                    item.datePosted,
+                                                    locale:
+                                                        Localizations.localeOf(
+                                                                context)
+                                                            .toString(),
+                                                  ),
+                                                  style: TextStyle(
+                                                    color: useDarkMode
+                                                        ? Colors.grey.shade300
+                                                        : Colors.grey[700],
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                ],
+                              ),
+                            ),
+                          )
+                        : Column(
+                            children: [
+                              newsLayout != 'condensed' && newsLayout != 'small'
+                                  ? Stack(
+                                      alignment: Alignment.bottomLeft,
+                                      children: [
+                                        ClipRRect(
+                                          borderRadius: const BorderRadius.only(
+                                            topLeft: Radius.circular(15),
+                                            topRight: Radius.circular(15),
+                                          ),
+                                          child: Hero(
+                                            tag: widget.item.newsId,
+                                            child: CachedNetworkImage(
+                                              imageUrl: imageUrl,
+                                              placeholder: (context, url) =>
+                                                  SizedBox(
+                                                height: (MediaQuery.of(context)
+                                                            .size
+                                                            .width >
+                                                        500)
+                                                    ? (MediaQuery.of(context)
+                                                                    .size
+                                                                    .width /
+                                                                widget
+                                                                    .itemPerRow -
+                                                            8 *
+                                                                widget
+                                                                    .itemPerRow) /
+                                                        (16 / 9)
+                                                    : (widget.showSmallDescription ??
+                                                            false)
+                                                        ? height / (16 / 9) - 58
+                                                        : width / (16 / 9) - 10,
+                                                child:
+                                                    const LoadingIndicatorUtil(
+                                                  replaceImage: true,
+                                                ),
+                                              ),
+                                              errorWidget:
+                                                  (context, url, error) =>
+                                                      SizedBox(
+                                                height: 50,
+                                                child: Icon(
+                                                  Icons.error_outlined,
+                                                  color: useDarkMode
+                                                      ? const Color(0xff1d1d28)
+                                                      : Colors.white,
+                                                ),
+                                              ),
+                                              fadeOutDuration: const Duration(
+                                                milliseconds: 400,
+                                              ),
+                                              fadeInDuration: const Duration(
+                                                milliseconds: 400,
+                                              ),
+                                              cacheManager: CacheManager(
+                                                Config(
+                                                  "newsImages",
+                                                  stalePeriod:
+                                                      const Duration(days: 5),
+                                                ),
+                                              ),
+                                            ),
                                           ),
                                         ),
                                         Padding(
                                           padding: const EdgeInsets.only(
-                                            left: 5,
+                                            left: 8,
                                           ),
-                                          child: Text(
-                                            item.newsType,
-                                            style: const TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 14,
+                                          child: Container(
+                                            width: item.newsType == 'Podcast' ||
+                                                    item.newsType ==
+                                                        'Feature' ||
+                                                    item.newsType ==
+                                                        'Opinion' ||
+                                                    item.newsType == 'Report'
+                                                ? 110
+                                                : item.newsType ==
+                                                            'Technical' ||
+                                                        item.newsType ==
+                                                            'Live Blog' ||
+                                                        item.newsType ==
+                                                            'Interview'
+                                                    ? 120
+                                                    : item.newsType ==
+                                                            'Image Gallery'
+                                                        ? 150
+                                                        : 90,
+                                            height: 27,
+                                            alignment: Alignment.bottomLeft,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  const BorderRadius.only(
+                                                topLeft: Radius.circular(3),
+                                                topRight: Radius.circular(8),
+                                                bottomRight: Radius.circular(3),
+                                              ),
+                                              boxShadow: const [
+                                                BoxShadow(
+                                                  blurRadius: 2,
+                                                  offset: Offset(0, 0),
+                                                ),
+                                              ],
+                                              color: Theme.of(context)
+                                                  .primaryColor,
+                                            ),
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                    left: 6,
+                                                  ),
+                                                  child: Icon(
+                                                    item.newsType == 'Video'
+                                                        ? Icons
+                                                            .play_arrow_outlined
+                                                        : item.newsType ==
+                                                                'Image Gallery'
+                                                            ? Icons
+                                                                .image_outlined
+                                                            : item.newsType ==
+                                                                    'Podcast'
+                                                                ? Icons
+                                                                    .podcasts_outlined
+                                                                : item.newsType ==
+                                                                        'Poll'
+                                                                    ? Icons
+                                                                        .bar_chart
+                                                                    : item.newsType ==
+                                                                            'News'
+                                                                        ? Icons
+                                                                            .feed_outlined
+                                                                        : item.newsType ==
+                                                                                'Report'
+                                                                            ? Icons.report_outlined
+                                                                            : item.newsType == 'Interview'
+                                                                                ? Icons.mic_outlined
+                                                                                : item.newsType == 'Feature'
+                                                                                    ? Icons.star_outline_outlined
+                                                                                    : item.newsType == 'Opinion'
+                                                                                        ? Icons.chat_outlined
+                                                                                        : item.newsType == 'Technical'
+                                                                                            ? Icons.construction_outlined
+                                                                                            : item.newsType == 'Live Blog'
+                                                                                                ? Icons.live_tv_outlined
+                                                                                                : Icons.info_outlined,
+                                                    color: Colors.white,
+                                                    size: 24,
+                                                  ),
+                                                ),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                    left: 5,
+                                                  ),
+                                                  child: Text(
+                                                    item.newsType,
+                                                    style: const TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 14,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
                                             ),
                                           ),
                                         ),
                                       ],
+                                    )
+                                  : const SizedBox(
+                                      height: 0.0,
+                                      width: 0.0,
                                     ),
+                              ListTile(
+                                title: Text(
+                                  item.title,
+                                  style: TextStyle(
+                                    color: useDarkMode
+                                        ? Colors.white
+                                        : Colors.black,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w500,
                                   ),
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines:
+                                      (widget.showSmallDescription ?? false)
+                                          ? 3
+                                          : 5,
+                                  textAlign: TextAlign.justify,
                                 ),
-                              ],
-                            )
-                          : const SizedBox(
-                              height: 0.0,
-                              width: 0.0,
-                            ),
-                      ListTile(
-                        title: Text(
-                          item.title,
-                          style: TextStyle(
-                            color: useDarkMode ? Colors.white : Colors.black,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w500,
+                                subtitle: (newsLayout != 'big' &&
+                                            newsLayout != 'condensed') ||
+                                        ((widget.showSmallDescription ??
+                                                false) &&
+                                            width < 1361)
+                                    ? null
+                                    : Text(
+                                        item.subtitle,
+                                        style: TextStyle(
+                                          color: useDarkMode
+                                              ? Colors.grey[400]
+                                              : Colors.grey[800],
+                                        ),
+                                        textAlign: TextAlign.justify,
+                                        maxLines: width > 1360 ? 4 : 5,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                mouseCursor: SystemMouseCursors.click,
+                              ),
+                              width > 1360
+                                  ? Expanded(
+                                      child: Align(
+                                        alignment: Alignment.bottomCenter,
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                            right: 16,
+                                            bottom: 10,
+                                          ),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.end,
+                                            children: [
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                  right: 8,
+                                                ),
+                                                child: Icon(
+                                                  Icons.schedule,
+                                                  color: useDarkMode
+                                                      ? Colors.grey.shade300
+                                                      : Colors.grey[800],
+                                                  size: 20.0,
+                                                ),
+                                              ),
+                                              Text(
+                                                timeago.format(
+                                                  item.datePosted,
+                                                  locale:
+                                                      Localizations.localeOf(
+                                                              context)
+                                                          .toString(),
+                                                ),
+                                                style: TextStyle(
+                                                  color: useDarkMode
+                                                      ? Colors.grey.shade300
+                                                      : Colors.grey[700],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  : Align(
+                                      alignment: Alignment.bottomCenter,
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(
+                                          right: 16,
+                                          bottom: 5,
+                                        ),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                right: 8,
+                                              ),
+                                              child: Icon(
+                                                Icons.schedule,
+                                                color: useDarkMode
+                                                    ? Colors.grey.shade300
+                                                    : Colors.grey[800],
+                                                size: 20.0,
+                                              ),
+                                            ),
+                                            Text(
+                                              timeago.format(
+                                                item.datePosted,
+                                                locale: Localizations.localeOf(
+                                                        context)
+                                                    .toString(),
+                                              ),
+                                              style: TextStyle(
+                                                color: useDarkMode
+                                                    ? Colors.grey.shade300
+                                                    : Colors.grey[700],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                            ],
                           ),
-                          overflow: TextOverflow.ellipsis,
-                          maxLines:
-                              (widget.showSmallDescription ?? false) ? 3 : 5,
-                          textAlign: TextAlign.justify,
-                        ),
-                        subtitle: (newsLayout != 'big' &&
-                                    newsLayout != 'condensed') ||
-                                (widget.showSmallDescription ?? false)
-                            ? null
-                            : Text(
-                                item.subtitle,
-                                style: TextStyle(
-                                  color: useDarkMode
-                                      ? Colors.grey[400]
-                                      : Colors.grey[800],
-                                ),
-                                textAlign: TextAlign.justify,
-                                maxLines: 5,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                          right: 16,
-                          bottom: 5,
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                right: 8,
-                              ),
-                              child: Icon(
-                                Icons.schedule,
-                                color: useDarkMode
-                                    ? Colors.grey.shade300
-                                    : Colors.grey[800],
-                                size: 20.0,
-                              ),
-                            ),
-                            Text(
-                              timeago.format(
-                                item.datePosted,
-                                locale:
-                                    Localizations.localeOf(context).toString(),
-                              ),
-                              style: TextStyle(
-                                color: useDarkMode
-                                    ? Colors.grey.shade300
-                                    : Colors.grey[700],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
                   ),
                 ),
               ),
             ),
-          );
-  }
-}
-
-class CachedNewsImage extends StatefulWidget {
-  const CachedNewsImage({Key? key}) : super(key: key);
-
-  @override
-  State<CachedNewsImage> createState() => _CachedNewsImageState();
-}
-
-class _CachedNewsImageState extends State<CachedNewsImage> {
-  @override
-  Widget build(BuildContext context) {
-    return Container();
+    );
   }
 }
 
 class NewsList extends StatefulWidget {
-  final List items;
   final ScrollController? scrollController;
   final String? tagId;
   final String? articleType;
 
   const NewsList({
-    required this.items,
     this.scrollController,
     this.tagId,
     this.articleType,
@@ -722,73 +1211,96 @@ class _NewsListState extends State<NewsList> {
       }
     } catch (error) {
       _pagingController.error = error;
+      setState(() {});
     }
   }
 
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    return width < 500
-        ? RefreshIndicator(
-            onRefresh: () => Future.sync(
-              () => _pagingController.refresh(),
-            ),
-            child: PagedListView<int, News>(
-              pagingController: _pagingController,
-              scrollController: widget.scrollController,
-              scrollDirection: Axis.vertical,
-              shrinkWrap: true,
-              builderDelegate: PagedChildBuilderDelegate<News>(
-                itemBuilder: (context, item, index) => NewsItem(item, false),
-                firstPageProgressIndicatorBuilder: (_) =>
-                    const LoadingIndicatorUtil(),
-                firstPageErrorIndicatorBuilder: (_) =>
-                    FirstPageExceptionIndicator(
-                  title: AppLocalizations.of(context)!.errorOccurred,
-                  message: AppLocalizations.of(context)!.errorOccurredDetails,
-                  onTryAgain: () => _pagingController.refresh(),
-                ),
-                newPageProgressIndicatorBuilder: (_) =>
-                    const LoadingIndicatorUtil(),
-              ),
-            ),
-          )
-        : PagedGridView<int, News>(
-            pagingController: _pagingController,
+    const String officialFeed = "https://api.formula1.com";
+    Map latestNews = Hive.box('requests').get('news', defaultValue: {}) as Map;
+    String savedServer = Hive.box('settings')
+        .get('server', defaultValue: officialFeed) as String;
+    return (_pagingController.error.toString() == 'XMLHttpRequest error.' ||
+                _pagingController.error ==
+                    "Failed host lookup: ${savedServer.replaceAll(
+                          'http://',
+                          '',
+                        ).replaceAll(
+                          'https://',
+                          '',
+                        )}") &&
+            latestNews['items'] != null &&
+            widget.tagId == null &&
+            widget.articleType == null
+        ? OfflineNewsList(
+            items: F1NewsFetcher().formatResponse(latestNews),
             scrollController: widget.scrollController,
-            scrollDirection: Axis.vertical,
-            shrinkWrap: true,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: width < 750
-                  ? 2
-                  : width < 1000
-                      ? 3
-                      : width < 1400
-                          ? 4
-                          : 5,
-              crossAxisSpacing: 5.0,
-              mainAxisSpacing: 5.0,
-            ),
-            builderDelegate: PagedChildBuilderDelegate<News>(
-              itemBuilder: (context, item, index) {
-                return NewsItem(
-                  item,
-                  false,
-                  showSmallDescription: true,
-                );
-              },
-              firstPageProgressIndicatorBuilder: (_) =>
-                  const LoadingIndicatorUtil(),
-              firstPageErrorIndicatorBuilder: (_) =>
-                  FirstPageExceptionIndicator(
-                title: AppLocalizations.of(context)!.errorOccurred,
-                message: AppLocalizations.of(context)!.errorOccurredDetails,
-                onTryAgain: () => _pagingController.refresh(),
-              ),
-              newPageProgressIndicatorBuilder: (_) =>
-                  const LoadingIndicatorUtil(),
-            ),
-          );
+          )
+        : width < 500
+            ? RefreshIndicator(
+                onRefresh: () => Future.sync(
+                  () => _pagingController.refresh(),
+                ),
+                child: PagedListView<int, News>(
+                  pagingController: _pagingController,
+                  scrollController: widget.scrollController,
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
+                  builderDelegate: PagedChildBuilderDelegate<News>(
+                    itemBuilder: (context, item, index) =>
+                        NewsItem(item, false),
+                    firstPageProgressIndicatorBuilder: (_) =>
+                        const LoadingIndicatorUtil(),
+                    firstPageErrorIndicatorBuilder: (_) =>
+                        FirstPageExceptionIndicator(
+                      title: AppLocalizations.of(context)!.errorOccurred,
+                      message:
+                          AppLocalizations.of(context)!.errorOccurredDetails,
+                      onTryAgain: () => _pagingController.refresh(),
+                    ),
+                    newPageProgressIndicatorBuilder: (_) =>
+                        const LoadingIndicatorUtil(),
+                  ),
+                ),
+              )
+            : Padding(
+                padding: const EdgeInsets.only(top: 15),
+                child: PagedGridView<int, News>(
+                  pagingController: _pagingController,
+                  scrollController: widget.scrollController,
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: width < 750 ? 2 : 3,
+                    crossAxisSpacing: 5.0,
+                    mainAxisSpacing: 5.0,
+                  ),
+                  builderDelegate: PagedChildBuilderDelegate<News>(
+                    itemBuilder: (context, item, index) {
+                      return NewsItem(
+                        item,
+                        false,
+                        showSmallDescription: true,
+                        itemPerRow: width < 750 ? 2 : 3,
+                      );
+                    },
+                    firstPageProgressIndicatorBuilder: (_) =>
+                        const LoadingIndicatorUtil(),
+                    firstPageErrorIndicatorBuilder: (_) {
+                      return FirstPageExceptionIndicator(
+                        title: AppLocalizations.of(context)!.errorOccurred,
+                        message:
+                            AppLocalizations.of(context)!.errorOccurredDetails,
+                        onTryAgain: () => _pagingController.refresh(),
+                      );
+                    },
+                    newPageProgressIndicatorBuilder: (_) =>
+                        const LoadingIndicatorUtil(),
+                  ),
+                ),
+              );
   }
 
   @override
@@ -1055,7 +1567,9 @@ class _ImageRendererState extends State<ImageRenderer> {
           ? CachedNetworkImage(
               imageUrl: widget.imageUrl,
               placeholder: (context, url) => SizedBox(
-                height: MediaQuery.of(context).size.width / (16 / 9),
+                height: MediaQuery.of(context).size.width > 1000
+                    ? 800
+                    : MediaQuery.of(context).size.width / (16 / 9),
                 child: const LoadingIndicatorUtil(
                   replaceImage: true,
                 ),
@@ -1290,6 +1804,12 @@ class VideoRenderer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    width = width > 1400
+        ? 800
+        : width > 1000
+            ? 500
+            : 400;
     return FutureBuilder<Map<String, dynamic>>(
       future: (youtubeId ?? '') != ''
           ? getYouTubeVideoLinks(youtubeId!)
@@ -1299,11 +1819,30 @@ class VideoRenderer extends StatelessWidget {
               snapshot.error.toString(),
             )
           : snapshot.hasData
-              ? BetterPlayerVideoPlayer(
-                  snapshot.data!,
-                  autoplay == null ? false : autoplay!,
-                  heroTag ?? '',
-                )
+              ? kIsWeb
+                  ? SizedBox(
+                      height: width / (16 / 9),
+                      child: InAppWebView(
+                        initialUrlRequest: URLRequest(
+                          url: WebUri(
+                            snapshot.data!['videos'][0],
+                          ),
+                        ),
+                        initialSettings: InAppWebViewSettings(
+                          preferredContentMode:
+                              UserPreferredContentMode.DESKTOP,
+                          transparentBackground: true,
+                          iframeAllowFullscreen: true,
+                          mediaPlaybackRequiresUserGesture:
+                              !(autoplay ?? false),
+                        ),
+                      ),
+                    )
+                  : BetterPlayerVideoPlayer(
+                      snapshot.data!,
+                      autoplay == null ? false : autoplay!,
+                      heroTag ?? '',
+                    )
               : SizedBox(
                   height: MediaQuery.of(context).size.width / (16 / 9),
                   child: const LoadingIndicatorUtil(),

@@ -19,6 +19,8 @@
 
 import 'dart:async';
 
+import 'package:add_2_calendar/add_2_calendar.dart';
+import 'package:boxbox/Screens/FormulaYou/settings.dart';
 import 'package:boxbox/api/driver_components.dart';
 import 'package:boxbox/api/ergast.dart';
 import 'package:boxbox/api/race_components.dart';
@@ -31,6 +33,7 @@ import 'package:boxbox/Screens/free_practice_screen.dart';
 import 'package:boxbox/helpers/team_background_color.dart';
 import 'package:boxbox/scraping/formula_one.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_timer_countdown/flutter_timer_countdown.dart';
@@ -268,14 +271,27 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   }
 }
 
-class FreePracticesResultsProvider extends StatelessWidget {
+class FreePracticesResultsProvider extends StatefulWidget {
   final Race race;
   final bool hasSprint;
   const FreePracticesResultsProvider(this.race, this.hasSprint, {Key? key})
       : super(key: key);
 
   @override
+  State<FreePracticesResultsProvider> createState() =>
+      _FreePracticesResultsProviderState();
+}
+
+class _FreePracticesResultsProviderState
+    extends State<FreePracticesResultsProvider> {
+  void update() {
+    setState(() {});
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final Race race = widget.race;
+    final bool hasSprint = widget.hasSprint;
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     final List<String> sessionsTitle = [
@@ -336,6 +352,8 @@ class FreePracticesResultsProvider extends StatelessWidget {
                               SessionCountdownTimer(
                                 race,
                                 index,
+                                sessionsTitle[index],
+                                update: update,
                               ),
                               Padding(
                                 padding: const EdgeInsets.only(
@@ -408,7 +426,11 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
       );
     }
     if (timeToRace > 0) {
-      return SessionCountdownTimer(race, 4);
+      return SessionCountdownTimer(
+        race,
+        4,
+        AppLocalizations.of(context)!.race,
+      );
     } else {
       return raceUrl != ''
           ? FutureBuilder<List<DriverResult>>(
@@ -638,7 +660,11 @@ class SprintResultsProvider extends StatelessWidget {
               )
             : snapshot.hasData
                 ? snapshot.data!.isEmpty
-                    ? SessionCountdownTimer(race, 2)
+                    ? SessionCountdownTimer(
+                        race,
+                        2,
+                        AppLocalizations.of(context)!.sprint,
+                      )
                     : Column(
                         children: [
                           GestureDetector(
@@ -722,7 +748,11 @@ class QualificationResultsProvider extends StatelessWidget {
                         DateTime.now(),
                       ) ??
                       false)
-              ? SessionCountdownTimer(race, 3)
+              ? SessionCountdownTimer(
+                  race,
+                  3,
+                  AppLocalizations.of(context)!.qualifyings,
+                )
               : Padding(
                   padding: const EdgeInsets.all(15),
                   child: Center(
@@ -778,7 +808,11 @@ class QualificationResultsProvider extends StatelessWidget {
                         ),
                       ],
                     )
-                  : SessionCountdownTimer(race, 3)
+                  : SessionCountdownTimer(
+                      race,
+                      3,
+                      AppLocalizations.of(context)!.qualifyings,
+                    )
               : const LoadingIndicatorUtil(),
     );
   }
@@ -1023,7 +1057,15 @@ class RaceImageProvider extends StatelessWidget {
 class SessionCountdownTimer extends StatefulWidget {
   final Race? race;
   final int sessionIndex;
-  const SessionCountdownTimer(this.race, this.sessionIndex, {super.key});
+  final String sessionName;
+  final Function? update;
+  const SessionCountdownTimer(
+    this.race,
+    this.sessionIndex,
+    this.sessionName, {
+    super.key,
+    this.update,
+  });
 
   @override
   State<SessionCountdownTimer> createState() => _SessionCountdownTimerState();
@@ -1034,6 +1076,23 @@ class _SessionCountdownTimerState extends State<SessionCountdownTimer> {
   Widget build(BuildContext context) {
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
+    bool shouldUseCountdown = Hive.box('settings')
+        .get('shouldUseCountdown', defaultValue: true) as bool;
+    List months = [
+      AppLocalizations.of(context)?.monthAbbreviationJanuary,
+      AppLocalizations.of(context)?.monthAbbreviationFebruary,
+      AppLocalizations.of(context)?.monthAbbreviationMarch,
+      AppLocalizations.of(context)?.monthAbbreviationApril,
+      AppLocalizations.of(context)?.monthAbbreviationMay,
+      AppLocalizations.of(context)?.monthAbbreviationJune,
+      AppLocalizations.of(context)?.monthAbbreviationJuly,
+      AppLocalizations.of(context)?.monthAbbreviationAugust,
+      AppLocalizations.of(context)?.monthAbbreviationSeptember,
+      AppLocalizations.of(context)?.monthAbbreviationOctober,
+      AppLocalizations.of(context)?.monthAbbreviationNovember,
+      AppLocalizations.of(context)?.monthAbbreviationDecember,
+    ];
+
     late int timeToRace;
     late int days;
     late int hours;
@@ -1070,8 +1129,12 @@ class _SessionCountdownTimerState extends State<SessionCountdownTimer> {
           padding: const EdgeInsets.all(10),
           child: Text(
             widget.sessionIndex == 4
-                ? AppLocalizations.of(context)!.raceStartsIn
-                : AppLocalizations.of(context)!.sessionStartsIn,
+                ? shouldUseCountdown
+                    ? AppLocalizations.of(context)!.raceStartsIn
+                    : AppLocalizations.of(context)!.raceStartsOn
+                : shouldUseCountdown
+                    ? AppLocalizations.of(context)!.sessionStartsIn
+                    : AppLocalizations.of(context)!.sessionStartsOn,
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 20,
@@ -1079,36 +1142,144 @@ class _SessionCountdownTimerState extends State<SessionCountdownTimer> {
             ),
           ),
         ),
-        TimerCountdown(
-          format: CountDownTimerFormat.daysHoursMinutesSeconds,
-          endTime: DateTime.now().add(
-            Duration(
-              days: days,
-              hours: hours,
-              minutes: minutes,
-              seconds: seconds,
-            ),
+        shouldUseCountdown
+            ? TimerCountdown(
+                format: CountDownTimerFormat.daysHoursMinutesSeconds,
+                endTime: DateTime.now().add(
+                  Duration(
+                    days: days,
+                    hours: hours,
+                    minutes: minutes,
+                    seconds: seconds,
+                  ),
+                ),
+                timeTextStyle: TextStyle(
+                  fontSize: 25,
+                  color: useDarkMode ? Colors.white : Colors.black,
+                ),
+                colonsTextStyle: TextStyle(
+                  fontSize: 23,
+                  color: useDarkMode ? Colors.white : Colors.black,
+                ),
+                descriptionTextStyle: TextStyle(
+                  color: Theme.of(context).primaryColor,
+                  fontSize: 20,
+                ),
+                spacerWidth: 15,
+                daysDescription: AppLocalizations.of(context)!.dayFirstLetter,
+                hoursDescription: AppLocalizations.of(context)!.hourFirstLetter,
+                minutesDescription:
+                    AppLocalizations.of(context)!.minuteAbbreviation,
+                secondsDescription:
+                    AppLocalizations.of(context)!.secondAbbreviation,
+                onEnd: () {
+                  setState(() {});
+                },
+              )
+            : Padding(
+                padding: const EdgeInsets.all(15.5),
+                child: Text(
+                  '${raceFullDateParsed.day} ${months[raceFullDateParsed.month - 1]} - ${raceFullDateParsed.toLocal().toIso8601String().split('T')[1].split('.')[0]}',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 23,
+                    color: useDarkMode ? Colors.white : Colors.black,
+                  ),
+                ),
+              ),
+        !kIsWeb
+            ? TextButton.icon(
+                label: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 7),
+                  child: Text(
+                    AppLocalizations.of(context)!.addToCalendar,
+                    style: TextStyle(
+                      color: useDarkMode ? Colors.white : Colors.black,
+                    ),
+                  ),
+                ),
+                icon: Icon(
+                  Icons.add_alert_outlined,
+                  color: useDarkMode ? Colors.white : Colors.black,
+                ),
+                style: TextButton.styleFrom(
+                  side: BorderSide(
+                    color: useDarkMode ? Colors.white : Colors.black,
+                    width: 1,
+                  ),
+                ),
+                onPressed: () {
+                  Event event = Event(
+                    title: '${widget.sessionName} - ${race.raceName}',
+                    location: race.country,
+                    startDate: DateTime(
+                      raceFullDateParsed.toLocal().year,
+                      raceFullDateParsed.toLocal().month,
+                      raceFullDateParsed.toLocal().day,
+                      raceFullDateParsed.toLocal().hour,
+                      raceFullDateParsed.toLocal().minute,
+                      raceFullDateParsed.toLocal().second,
+                    ),
+                    endDate: DateTime(
+                      raceFullDateParsed.toLocal().year,
+                      raceFullDateParsed.toLocal().month,
+                      raceFullDateParsed.toLocal().day,
+                      raceFullDateParsed.toLocal().hour +
+                          (widget.sessionIndex == 4 ? 3 : 1),
+                      raceFullDateParsed.toLocal().minute,
+                      raceFullDateParsed.toLocal().second,
+                    ),
+                  );
+                  Add2Calendar.addEvent2Cal(event);
+                },
+              )
+            : Container(),
+        SizedBox(
+          width: 400,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Expanded(
+                flex: 6,
+                child: Text(
+                  AppLocalizations.of(context)!.time.capitalize(),
+                  style: TextStyle(
+                    color: useDarkMode ? Colors.white : Colors.black,
+                  ),
+                  textAlign: TextAlign.end,
+                ),
+              ),
+              Expanded(
+                flex: 2,
+                child: Switch(
+                  value: shouldUseCountdown,
+                  activeColor: Theme.of(context).primaryColor,
+                  onChanged: (value) => setState(
+                    () {
+                      shouldUseCountdown = value;
+                      Hive.box('settings')
+                          .put('shouldUseCountdown', shouldUseCountdown);
+                      if (widget.update != null) {
+                        widget.update!();
+                      } else {
+                        setState(() {});
+                      }
+                    },
+                  ),
+                ),
+              ),
+              Expanded(
+                flex: 6,
+                child: Text(
+                  AppLocalizations.of(context)!.countdown,
+                  style: TextStyle(
+                    color: useDarkMode ? Colors.white : Colors.black,
+                  ),
+                ),
+              ),
+            ],
           ),
-          timeTextStyle: TextStyle(
-            fontSize: 25,
-            color: useDarkMode ? Colors.white : Colors.black,
-          ),
-          colonsTextStyle: TextStyle(
-            fontSize: 23,
-            color: useDarkMode ? Colors.white : Colors.black,
-          ),
-          descriptionTextStyle: TextStyle(
-            color: Theme.of(context).primaryColor,
-            fontSize: 20,
-          ),
-          spacerWidth: 15,
-          daysDescription: AppLocalizations.of(context)!.dayFirstLetter,
-          hoursDescription: AppLocalizations.of(context)!.hourFirstLetter,
-          minutesDescription: AppLocalizations.of(context)!.minuteAbbreviation,
-          secondsDescription: AppLocalizations.of(context)!.secondAbbreviation,
-          onEnd: () {
-            setState(() {});
-          },
         ),
       ],
     );

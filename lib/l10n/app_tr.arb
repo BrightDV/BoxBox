@@ -274,5 +274,9 @@
   "information": "Bilgi",
   "@information": {},
   "results": "Sonuçlar",
-  "@results": {}
+  "@results": {},
+  "openingWithInAppBrowser": "Uygulama içi tarayıcı ile açma",
+  "@openingWithInAppBrowser": {},
+  "startingGrid": "Başlangıç Izgarası",
+  "@startingGrid": {}
 }

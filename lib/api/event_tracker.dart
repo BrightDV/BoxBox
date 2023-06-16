@@ -75,7 +75,7 @@ class Session {
 }
 
 class EventTracker {
-  final String endpoint = "https://api.formula1.com";
+  final String defaultEndpoint = "https://api.formula1.com";
   final String apikey = "qPgPPRJyGCIPxFT3el4MF7thXHyJCzAP";
 
   bool isEventRunning(DateTime meetingStartDate, DateTime meetingEndDate) {
@@ -88,16 +88,33 @@ class EventTracker {
   }
 
   Future<Map> fetchEvent() async {
-    Uri uri = Uri.parse('$endpoint/v1/event-tracker');
+    String endpoint = Hive.box('settings')
+        .get('server', defaultValue: defaultEndpoint) as String;
+    Uri uri;
+    if (endpoint != defaultEndpoint) {
+      uri = Uri.parse(
+        '$endpoint/v1/event-tracker',
+      );
+    } else {
+      uri = Uri.parse(
+        '$defaultEndpoint/v1/event-tracker',
+      );
+    }
     Response res = await get(
       uri,
-      headers: {
-        'Accept': 'application/json',
-        'apikey': apikey,
-        'locale': 'en',
-      },
+      headers: endpoint != defaultEndpoint
+          ? {
+              "Accept": "application/json",
+            }
+          : {
+              "Accept": "application/json",
+              "apikey": apikey,
+              "locale": "en",
+            },
     );
-    Map formatedResponse = jsonDecode(res.body);
+    Map formatedResponse = jsonDecode(
+      utf8.decode(res.bodyBytes),
+    );
     Hive.box('requests').put('event-tracker', formatedResponse);
 
     return formatedResponse;
@@ -218,18 +235,34 @@ class EventTracker {
   }
 
   Future<Map> getCircuitDetails(String formulaOneCircuitId) async {
-    Uri uri = Uri.parse(
-      '$endpoint/v1/event-tracker/meeting/$formulaOneCircuitId',
-    );
+    Uri uri;
+    String endpoint = Hive.box('settings')
+        .get('server', defaultValue: defaultEndpoint) as String;
+
+    if (endpoint != defaultEndpoint) {
+      uri = Uri.parse(
+        '$endpoint/v1/event-tracker/meeting/$formulaOneCircuitId',
+      );
+    } else {
+      uri = Uri.parse(
+        '$defaultEndpoint/v1/event-tracker/meeting/$formulaOneCircuitId',
+      );
+    }
     Response res = await get(
       uri,
-      headers: {
-        'Accept': 'application/json',
-        'apikey': apikey,
-        'locale': 'en',
-      },
+      headers: endpoint != defaultEndpoint
+          ? {
+              "Accept": "application/json",
+            }
+          : {
+              "Accept": "application/json",
+              "apikey": apikey,
+              "locale": "en",
+            },
     );
-    Map formatedResponse = jsonDecode(res.body);
+    Map formatedResponse = jsonDecode(
+      utf8.decode(res.bodyBytes),
+    );
 
     return formatedResponse;
   }

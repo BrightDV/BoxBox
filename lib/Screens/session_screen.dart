@@ -142,7 +142,7 @@ class _SessionScreenState extends State<SessionScreen> {
                     ),
                     body: InAppWebView(
                       initialUrlRequest: URLRequest(
-                        url: Uri.parse(
+                        url: WebUri(
                           "https://www.formula1.com/en/live-experience-webview.html",
                         ),
                       ),
@@ -263,7 +263,7 @@ class _SessionScreenState extends State<SessionScreen> {
                           )
                     : InAppWebView(
                         initialUrlRequest: URLRequest(
-                          url: Uri.parse(
+                          url: WebUri(
                             "https://www.formula1.com/en/live-experience-webview.html",
                           ),
                         ),

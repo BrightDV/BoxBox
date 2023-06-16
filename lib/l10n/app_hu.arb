@@ -274,5 +274,9 @@
   "information": "Információ",
   "@information": {},
   "results": "Eredmények",
-  "@results": {}
+  "@results": {},
+  "startingGrid": "Kezdő rács",
+  "@startingGrid": {},
+  "openingWithInAppBrowser": "Megnyitás az alkalmazáson belüli böngészővel",
+  "@openingWithInAppBrowser": {}
 }

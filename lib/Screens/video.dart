@@ -46,16 +46,21 @@ class _VideoScreenState extends State<VideoScreen> {
         title: SizedBox(
           height: AppBar().preferredSize.height,
           width: AppBar().preferredSize.width,
-          child: Marquee(
-            text: video.caption,
-            style: const TextStyle(
-              fontWeight: FontWeight.w600,
-            ),
-            pauseAfterRound: const Duration(seconds: 1),
-            startAfter: const Duration(seconds: 1),
-            velocity: 85,
-            blankSpace: 100,
-          ),
+          child: MediaQuery.of(context).size.width > 1000
+              ? Padding(
+                  padding: const EdgeInsets.only(top: 15),
+                  child: Text(video.caption),
+                )
+              : Marquee(
+                  text: video.caption,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w600,
+                  ),
+                  pauseAfterRound: const Duration(seconds: 1),
+                  startAfter: const Duration(seconds: 1),
+                  velocity: 85,
+                  blankSpace: 100,
+                ),
         ),
         actions: [
           Padding(

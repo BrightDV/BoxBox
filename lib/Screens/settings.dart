@@ -18,6 +18,8 @@
  */
 
 import 'package:boxbox/Screens/FormulaYou/settings.dart';
+import 'package:boxbox/Screens/custom_home_feed_settings.dart';
+import 'package:boxbox/Screens/server_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -482,39 +484,10 @@ class _OtherCardstate extends State<OtherCard> {
   Widget build(BuildContext context) {
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
-    String savedFeedUrl = Hive.box('settings').get(
-      'homeFeed',
-      defaultValue: 'Official',
-    );
     bool useDataSaverMode = Hive.box('settings')
         .get('useDataSaverMode', defaultValue: false) as bool;
     bool enableExperimentalFeatures = Hive.box('settings')
         .get('enableExperimentalFeatures', defaultValue: false) as bool;
-    Map<String, String> customFeedUrls = {
-      'Official': 'Official',
-      'France': 'https://fr.motorsport.com',
-      'Espana': 'https://es.motorsport.com',
-      'Brasil': 'https://motorsport.uol.com.br',
-      'Deutschland': 'https://de.motorsport.com',
-      'Italia': 'https://it.motorsport.com',
-      'Россия': 'https://ru.motorsport.com',
-      '中文': 'https://cn.motorsport.com',
-      'Magyarország': 'https://hu.motorsport.com',
-      'Indonesia': 'https://id.motorsport.com',
-      '日本': 'https://jp.motorsport.com',
-      'Nederland': 'https://nl.motorsport.com',
-      'Türkİye': 'https://tr.motorsport.com',
-      'USA': 'https://us.motorsport.com',
-      'Latinoamérica': 'https://lat.motorsport.com',
-      'Switzerland': 'https://ch.motorsport.com',
-      'Australia': 'https://au.motorsport.com',
-      'Polska': 'https://pl.motorsport.com',
-    };
-
-    String homeFeed = customFeedUrls.keys.firstWhere(
-      (k) => customFeedUrls[k] == savedFeedUrl,
-      orElse: () => '',
-    );
 
     return Column(
       children: [
@@ -557,59 +530,37 @@ class _OtherCardstate extends State<OtherCard> {
               color: useDarkMode ? Colors.white : Colors.black,
             ),
           ),
-          onTap: () {},
-          trailing: DropdownButton(
-            value: homeFeed,
-            dropdownColor: useDarkMode
-                ? Theme.of(context).scaffoldBackgroundColor
-                : Colors.white,
-            onChanged: (String? newValue) {
-              if (newValue != null) {
-                setState(
-                  () {
-                    homeFeed = newValue;
-                    Hive.box('settings').put(
-                      'homeFeed',
-                      customFeedUrls[newValue],
-                    );
-                    widget.update();
-                  },
-                );
-              }
-            },
-            items: <String>[
-              'Official',
-              'France',
-              'Espana',
-              'Brasil',
-              'Deutschland',
-              'Italia',
-              'Россия',
-              '中文',
-              'Magyarország',
-              'Indonesia',
-              '日本',
-              'Nederland',
-              'Türkİye',
-              'USA',
-              'Latinoamérica',
-              'Switzerland',
-              'Australia',
-              'Polska',
-            ].map<DropdownMenuItem<String>>(
-              (String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(
-                    value,
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: useDarkMode ? Colors.white : Colors.black,
-                    ),
-                  ),
-                );
-              },
-            ).toList(),
+          onTap: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => CustomeHomeFeedSettingsScreen(
+                widget.update,
+              ),
+            ),
+          ),
+          trailing: Icon(
+            Icons.arrow_forward_rounded,
+            color: useDarkMode ? Colors.white : Colors.black,
+          ),
+        ),
+        ListTile(
+          title: Text(
+            AppLocalizations.of(context)!.server,
+            style: TextStyle(
+              color: useDarkMode ? Colors.white : Colors.black,
+            ),
+          ),
+          onTap: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ServerSettingsScreen(
+                widget.update,
+              ),
+            ),
+          ),
+          trailing: Icon(
+            Icons.arrow_forward_rounded,
+            color: useDarkMode ? Colors.white : Colors.black,
           ),
         ),
         SwitchListTile(
