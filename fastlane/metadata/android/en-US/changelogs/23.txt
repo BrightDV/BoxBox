@@ -1,0 +1,10 @@
+1st year of Box, Box! You can now open Box, Box! with a browser at https://brightdv.github.io/boxbox/
+- Add a session to your calendar
+- Switch between countdown and time views.
+- Fix the event parsing
+- Add cache to Ergast's requests
+- Add all the past races to the Livetiming Archive (WIP)
+- Add support for Box, Box! Server
+- Add support for custom home feed URLs (RSS/WordPress).
+- Update translations
+- A lot of other small UI/performances improvements
