@@ -31,7 +31,7 @@
   "@playerQualitySub": {},
   "podiums": "ਪੋਡੀਅਮ",
   "@podiums": {},
-  "raceStartsIn": "ਦੌੜ ਸ਼ੁਰੂ ਹੁੰਦੀ ਹੈ:",
+  "raceStartsIn": "ਦੌੜ ਸ਼ੁਰੂ ਹੁੰਦੀ ਹੈ ਇੰਨੇ ਵਕਫੇ ਵਿੱਚ:",
   "@raceStartsIn": {},
   "sessionRunning": "ਸੈਸ਼ਨ ਚੱਲ ਰਿਹਾ ਹੈ",
   "@sessionRunning": {},
@@ -161,7 +161,7 @@
   "@schedule": {},
   "sessionCompletedShort": "ਸੈਸ਼ਨ ਪੂਰਾ ਹੋਇਆ",
   "@sessionCompletedShort": {},
-  "sessionStartsIn": "ਸੈਸ਼ਨ ਸ਼ੁਰੂ ਹੁੰਦਾ ਹੈ:",
+  "sessionStartsIn": "ਸੈਸ਼ਨ ਸ਼ੁਰੂ ਹੁੰਦਾ ਹੈ ਇੰਨੇ ਵਕਫੇ ਵਿੱਚ:",
   "@sessionStartsIn": {},
   "settings": "ਸੈਟਿੰਗਾਂ",
   "@settings": {},
@@ -283,8 +283,10 @@
   "@startingGrid": {},
   "countdown": "ਉਲਟੀ ਗਿਣਤੀ",
   "@countdown": {},
-  "raceStartsOn": "ਦੌੜ ਏਦਣ ਸ਼ੁਰੂ ਹੁੰਦੀ ਹੈ:",
+  "raceStartsOn": "ਦੌੜ ਸ਼ੁਰੂ ਹੁੰਦੀ ਹੈ:",
   "@raceStartsOn": {},
-  "sessionStartsOn": "ਸ਼ੈਸ਼ਨ ਏਦਣ ਸ਼ੁਰੂ ਹੁੰਦਾ ਹੈ:",
-  "@sessionStartsOn": {}
+  "sessionStartsOn": "ਸ਼ੈਸ਼ਨ ਸ਼ੁਰੂ ਹੁੰਦਾ ਹੈ:",
+  "@sessionStartsOn": {},
+  "addToCalendar": "ਕੈਲੰਡਰ ਵਿੱਚ ਸ਼ਾਮਿਲ ਕਰੋ",
+  "@addToCalendar": {}
 }

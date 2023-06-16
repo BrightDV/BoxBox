@@ -278,5 +278,13 @@
   "startingGrid": "Startgrid",
   "@startingGrid": {},
   "openingWithInAppBrowser": "Åpne med nettleseren i appen",
-  "@openingWithInAppBrowser": {}
+  "@openingWithInAppBrowser": {},
+  "countdown": "Nedtelling",
+  "@countdown": {},
+  "raceStartsOn": "Løpet starter:",
+  "@raceStartsOn": {},
+  "addToCalendar": "Legg til i kalender",
+  "@addToCalendar": {},
+  "sessionStartsOn": "Økten starter:",
+  "@sessionStartsOn": {}
 }

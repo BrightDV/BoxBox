@@ -23,7 +23,7 @@
   "@dataNotAvailable": {},
   "country": "देश",
   "@country": {},
-  "crashError": "त्रुटि",
+  "crashError": "त्रुटि:",
   "@crashError": {},
   "checkUpdates": "नए अपडेट के लिए जाँच करें",
   "@checkUpdates": {},
@@ -37,7 +37,7 @@
   "@noResults": {},
   "player": "प्लेयर",
   "@player": {},
-  "sessionStartsIn": "सत्र शुरू होता है:",
+  "sessionStartsIn": "सत्र शुरू होता है इतनी अवधि में:",
   "@sessionStartsIn": {},
   "settings": "सेटिंग्स",
   "@settings": {},
@@ -193,7 +193,7 @@
   "@raceDistance": {},
   "raceFirstLetter": "आर",
   "@raceFirstLetter": {},
-  "raceStartsIn": "दौड़ शुरू होती है:",
+  "raceStartsIn": "दौड़ शुरू होती है इतनी अवधि में:",
   "@raceStartsIn": {},
   "requestError": "डेटा लाने में असफल।",
   "@requestError": {},
@@ -286,5 +286,7 @@
   "raceStartsOn": "दौड़ शुरू होती है:",
   "@raceStartsOn": {},
   "sessionStartsOn": "सत्र शुरू होता है:",
-  "@sessionStartsOn": {}
+  "@sessionStartsOn": {},
+  "addToCalendar": "कैलेंडर में जोड़ें",
+  "@addToCalendar": {}
 }
