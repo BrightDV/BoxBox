@@ -9,7 +9,7 @@
 [![GitHub license](https://img.shields.io/github/license/BrightDV/BoxBox?style=for-the-badge)](https://github.com/BrightDV/BoxBox/blob/main/LICENSE)
 [![Github all releases](https://img.shields.io/github/downloads/BrightDV/BoxBox/total.svg?style=for-the-badge)](https://github.com/BrightDV/BoxBox/releases)
 [![Codeberg mirror](https://img.shields.io/badge/Mirror-Codeberg-blue?style=for-the-badge)](https://codeberg.org/BrightDV/BoxBox)
-![https://hosted.weblate.org/engage/box-box/](https://hosted.weblate.org/widgets/box-box/-/translations/svg-badge.svg)
+![https://hosted.weblate.org/engage/box-box/](https://img.shields.io/weblate/progress/box-box?style=for-the-badge)
 
 
 ## Download
@@ -47,7 +47,10 @@ If you want, you can know where he is born and other personal info (not very use
 
 *You need to have Internet connection in order to refresh the data…
 
-See the live demo [here (outdated). It is broken because of the CORS.](https://brightdv.github.io)
+## Instances
+| Host    | URL |
+| -------- | ------- |
+| Official  | https://brightdv.github.io/boxbox/ |
 
 ## Services used
 | Screen  | Service          | URL |
