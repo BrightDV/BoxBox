@@ -184,7 +184,7 @@ class TeamItem extends StatelessWidget {
 }
 
 class TeamCarImageProvider extends StatelessWidget {
-  Future<String> getCircuitImageUrl(String teamId) async {
+  Future<String> getTeamCarImageURL(String teamId) async {
     return await TeamCarImage().getTeamCarImageURL(teamId);
   }
 
@@ -193,31 +193,25 @@ class TeamCarImageProvider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<String>(
-      future: getCircuitImageUrl(teamId),
+      future: getTeamCarImageURL(teamId),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return RequestErrorWidget(snapshot.error.toString());
         }
-        return snapshot.hasData
-            ? AspectRatio(
-                aspectRatio: 200 / 100,
-                child: Transform(
-                  transform: Matrix4.rotationY(60.0),
-                  alignment: Alignment.center,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        fit: BoxFit.fitHeight,
-                        alignment: const Alignment(0.9, 0.0),
-                        image: CachedNetworkImageProvider(
-                          snapshot.data!,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              )
-            : const LoadingIndicatorUtil();
+        return Padding(
+          padding: const EdgeInsets.only(right: 5.0),
+          child: CachedNetworkImage(
+            imageUrl: snapshot.data!,
+            placeholder: (context, url) => const SizedBox(
+              width: 100,
+              child: LoadingIndicatorUtil(),
+            ),
+            errorWidget: (context, url, error) =>
+                const Icon(Icons.error_outlined),
+            fadeOutDuration: const Duration(milliseconds: 500),
+            fadeInDuration: const Duration(milliseconds: 500),
+          ),
+        );
       },
     );
   }

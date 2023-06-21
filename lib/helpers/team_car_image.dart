@@ -20,25 +20,25 @@
 class TeamCarImage {
   Map<String, String> teamCarDecoder = {
     "ferrari":
-        "https://www.formula1.com/content/dam/fom-website/teams/2023/ferrari.png",
+        "https://media.formula1.com/content/dam/fom-website/teams/2023/ferrari-left.png",
     "mercedes":
-        "https://www.formula1.com/content/dam/fom-website/teams/2023/mercedes.png",
+        "https://media.formula1.com/content/dam/fom-website/teams/2023/mercedes-left.png",
     "red_bull":
-        "https://www.formula1.com/content/dam/fom-website/teams/2023/red-bull-racing.png",
+        "https://media.formula1.com/content/dam/fom-website/teams/2023/red-bull-left.png",
     "alpine":
-        "https://www.formula1.com/content/dam/fom-website/teams/2023/alpine.png",
+        "https://media.formula1.com/content/dam/fom-website/teams/2023/alpine-left.png",
     "haas":
-        "https://www.formula1.com/content/dam/fom-website/teams/2023/haas-f1-team.png",
+        "https://media.formula1.com/content/dam/fom-website/teams/2023/haas-f1-team-left.png",
     "alfa":
-        "https://www.formula1.com/content/dam/fom-website/teams/2023/alfa-romeo.png",
+        "https://media.formula1.com/content/dam/fom-website/teams/2023/alfa-romeo-racing-left.png",
     "alphatauri":
-        "https://www.formula1.com/content/dam/fom-website/teams/2023/alphatauri.png",
+        "https://media.formula1.com/content/dam/fom-website/teams/2023/alphatauri-left.png",
     "mclaren":
-        "https://www.formula1.com/content/dam/fom-website/teams/2023/mclaren.png",
+        "https://media.formula1.com/content/dam/fom-website/teams/2023/mclaren-left.png",
     "aston_martin":
-        "https://www.formula1.com/content/dam/fom-website/teams/2023/aston-martin.png",
+        "https://media.formula1.com/content/dam/fom-website/teams/2023/aston-martin-left.png",
     "williams":
-        "https://www.formula1.com/content/dam/fom-website/teams/2023/williams.png",
+        "https://media.formula1.com/content/dam/fom-website/teams/2023/williams-left.png",
   };
   Future<String> getTeamCarImageURL(String teamId) async {
     String teamCarImageUrl = teamCarDecoder[teamId]!;
