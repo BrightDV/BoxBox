@@ -327,6 +327,13 @@ class _MyAppState extends State<MyApp> {
         MaterialColor(TeamsThemes().getTeamColor(teamTheme), color);
     setTimeagoLocaleMessages();
 
+    // move english as the first locale
+    List<Locale> supportedLocales = List.from(
+      AppLocalizations.supportedLocales,
+    );
+    supportedLocales.removeAt(supportedLocales.indexOf(const Locale('en')));
+    supportedLocales.insert(0, const Locale('en'));
+
     return MaterialApp(
       title: 'Box, Box!',
       theme: ThemeData(
@@ -335,7 +342,7 @@ class _MyAppState extends State<MyApp> {
         scaffoldBackgroundColor: const Color(0xff12121a),
       ),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
+      supportedLocales: supportedLocales,
       home: const MainBottomNavigationBar(),
       debugShowCheckedModeBanner: false,
       navigatorKey: navigatorKey,
