@@ -123,6 +123,9 @@ class F1NewsFetcher {
 
     Map<String, dynamic> responseAsJson =
         json.decode(utf8.decode(response.bodyBytes));
+    if (offset == 0 && tagId == null && articleType == null) {
+      Hive.box('requests').put('news', responseAsJson);
+    }
     return formatResponse(responseAsJson);
   }
 
@@ -1332,22 +1335,47 @@ class _OfflineNewsListState extends State<OfflineNewsList> {
   @override
   Widget build(BuildContext context) {
     Map cachedNews = Hive.box('requests').get('news', defaultValue: {}) as Map;
+    double width = MediaQuery.of(context).size.width;
     List<News> formatedNews = F1NewsFetcher().formatResponse(cachedNews);
-    return ListView.builder(
-      controller: widget.scrollController,
-      scrollDirection: Axis.vertical,
-      shrinkWrap: true,
-      itemCount: formatedNews.length,
-      physics: const BouncingScrollPhysics(),
-      itemBuilder: (context, index) => index == formatedNews.length - 1
-          ? const Padding(
-              padding: EdgeInsets.all(15),
-            )
-          : NewsItem(
-              formatedNews[index],
-              false,
+
+    return width < 500
+        ? ListView.builder(
+            controller: widget.scrollController,
+            scrollDirection: Axis.vertical,
+            shrinkWrap: true,
+            itemCount: formatedNews.length,
+            physics: const BouncingScrollPhysics(),
+            itemBuilder: (context, index) => index == formatedNews.length - 1
+                ? const Padding(
+                    padding: EdgeInsets.all(15),
+                  )
+                : NewsItem(
+                    formatedNews[index],
+                    false,
+                  ),
+          )
+        : GridView.builder(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: width < 750 ? 2 : 3,
+              crossAxisSpacing: 5.0,
+              mainAxisSpacing: 5.0,
             ),
-    );
+            controller: widget.scrollController,
+            scrollDirection: Axis.vertical,
+            shrinkWrap: true,
+            itemCount: formatedNews.length,
+            physics: const BouncingScrollPhysics(),
+            itemBuilder: (context, index) => index == formatedNews.length - 1
+                ? const Padding(
+                    padding: EdgeInsets.all(15),
+                  )
+                : NewsItem(
+                    formatedNews[index],
+                    false,
+                    showSmallDescription: true,
+                    itemPerRow: width < 750 ? 2 : 3,
+                  ),
+          );
   }
 
   @override
