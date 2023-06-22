@@ -1330,6 +1330,65 @@ class WidgetsList extends StatelessWidget {
                                                               ),
                                                             ),
 
+        // author
+
+        if (article.authorDetails.isNotEmpty)
+          Padding(
+            padding: const EdgeInsets.all(5),
+            child: Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: useDarkMode
+                    ? const Color(0xff1d1d28)
+                    : Colors.grey.shade400,
+                borderRadius: BorderRadius.circular(5),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(
+                  20,
+                  10,
+                  20,
+                  10,
+                ),
+                child: Row(
+                  children: [
+                    SizedBox(
+                      height: 70,
+                      child:
+                          Image.network(article.authorDetails['image']['url']),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            article.authorDetails["fullName"],
+                            style: TextStyle(
+                              color: Theme.of(context).primaryColor,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 14,
+                            ),
+                            textAlign: TextAlign.start,
+                          ),
+                          Text(
+                            article.authorDetails["shortDescription"],
+                            style: TextStyle(
+                              color: Colors.grey.shade50,
+                              fontSize: 12,
+                            ),
+                            textAlign: TextAlign.start,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+
         // bottom action bar
         Padding(
           padding: const EdgeInsets.all(5),

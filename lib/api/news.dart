@@ -191,6 +191,7 @@ class F1NewsFetcher {
       responseAsJson['hero'] ?? {},
       responseAsJson['body'],
       responseAsJson['relatedArticles'],
+      responseAsJson['author'] ?? {},
     );
     return article;
   }
@@ -225,6 +226,7 @@ class Article {
   final Map articleHero;
   final List articleContent;
   final List relatedArticles;
+  final Map authorDetails;
 
   Article(
     this.articleId,
@@ -235,6 +237,7 @@ class Article {
     this.articleHero,
     this.articleContent,
     this.relatedArticles,
+    this.authorDetails,
   );
 }
 
