@@ -300,5 +300,19 @@
   "customHomeFeed": "ਕਸਟਮ ਹੋਮ ਫੀਡ",
   "@customHomeFeed": {},
   "customServer": "ਕਸਟਮ ਸਰਵਰ",
-  "@customServer": {}
+  "@customServer": {},
+  "deleteCustomFeed": "ਫੀਡ ਹਟਾਓ",
+  "@deleteCustomFeed": {},
+  "yes": "ਠੀਕ ਹੈ",
+  "@yes": {},
+  "deleteUrl": "ਕੀ ਤੁਸੀਂ ਇਸ URL ਨੂੰ ਮਿਟਾਉਣਾ ਚਾਹੁੰਦੇ ਹੋ?",
+  "@deleteUrl": {},
+  "motorsportLocalizeFeeds": "ਮੋਟਰਸਪੋਰਟ.com ਦੀਆਂ ਸਥਾਨਕ ਫੀਡਾਂ",
+  "@motorsportLocalizeFeeds": {},
+  "official": "ਆਫੀਸ਼ੀਅਲ",
+  "@official": {},
+  "save": "ਸੰਭਾਲੋ",
+  "@save": {},
+  "server": "ਸਰਵਰ",
+  "@server": {}
 }
