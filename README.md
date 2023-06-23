@@ -80,6 +80,7 @@ Theses files are used by Flutter to provide you the translation.
 The app is currently available in:
 - 🇬🇧 English
 - 🇫🇷 French
+- 🇨🇳 Chinese, thanks to Ahoo Ng (五号电)
 - 🇩🇪 German, thanks to @RekZix
 - 🇭🇺 Hungarian, thanks to @thereeroyz
 - 🇮🇹 Italian, thanks to @atilluF
