@@ -288,5 +288,17 @@
   "sessionStartsOn": "ਸ਼ੈਸ਼ਨ ਸ਼ੁਰੂ ਹੁੰਦਾ ਹੈ:",
   "@sessionStartsOn": {},
   "addToCalendar": "ਕੈਲੰਡਰ ਵਿੱਚ ਸ਼ਾਮਿਲ ਕਰੋ",
-  "@addToCalendar": {}
+  "@addToCalendar": {},
+  "addCustomFeed": "ਪਸੰਦੀਦਾ ਫੀਡ ਸ਼ਾਮਲ ਕਰੋ",
+  "@addCustomFeed": {},
+  "addCustomServer": "ਪਸੰਦੀਦਾ ਸਰਵਰ ਸ਼ਾਮਲ ਕਰੋ",
+  "@addCustomServer": {},
+  "cancel": "ਰੱਦ ਕਰੋ",
+  "@cancel": {},
+  "customFeed": "ਕਸਟਮ ਫੀਡ",
+  "@customFeed": {},
+  "customHomeFeed": "ਕਸਟਮ ਹੋਮ ਫੀਡ",
+  "@customHomeFeed": {},
+  "customServer": "ਕਸਟਮ ਸਰਵਰ",
+  "@customServer": {}
 }
