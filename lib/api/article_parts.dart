@@ -991,7 +991,7 @@ class WidgetsList extends StatelessWidget {
                                                                                 6,
                                                                             child:
                                                                                 Text(
-                                                                              element['fields']['sessionType'].startsWith('Practice') ? driverResults['classifiedTime'] : driverResults['q3']['classifiedTime'],
+                                                                              element['fields']['sessionType'].startsWith('Practice') ? driverResults['classifiedTime'] ?? '--' : driverResults['q3']?['classifiedTime'] ?? '--',
                                                                               style: TextStyle(
                                                                                 color: useDarkMode ? Colors.white : Colors.black,
                                                                               ),

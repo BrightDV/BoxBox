@@ -347,7 +347,8 @@ class QualificationResultsItem extends StatelessWidget {
                   padding: const EdgeInsets.only(left: 5, right: 5),
                   child: Container(
                     decoration: BoxDecoration(
-                      color: winningTimeQOne == item.timeq1
+                      color: (winningTimeQOne == item.timeq1) &&
+                              (item.timeq1 != '--')
                           ? const Color(0xffff00ff)
                           : const Color(0xff383840),
                       borderRadius: BorderRadius.circular(7),
@@ -359,7 +360,7 @@ class QualificationResultsItem extends StatelessWidget {
                         style: TextStyle(
                           color: winningTimeQOne == item.timeq1
                               ? Colors.white
-                              : item.timeq1 != '- -' && item.timeq1 != 'DNF'
+                              : item.timeq1 != '--' && item.timeq1 != 'DNF'
                                   ? const Color(0xff00ff00)
                                   : item.timeq1 == 'DNF'
                                       ? Colors.yellow
@@ -377,7 +378,8 @@ class QualificationResultsItem extends StatelessWidget {
                   padding: const EdgeInsets.only(left: 5, right: 5),
                   child: Container(
                     decoration: BoxDecoration(
-                      color: winningTimeQTwo == item.timeq2
+                      color: (winningTimeQTwo == item.timeq2) &&
+                              (item.timeq2 != '--')
                           ? const Color(0xffff00ff)
                           : const Color(0xff383840),
                       borderRadius: BorderRadius.circular(7),
@@ -405,7 +407,7 @@ class QualificationResultsItem extends StatelessWidget {
                   padding: const EdgeInsets.only(left: 5, right: 5),
                   child: Container(
                     decoration: BoxDecoration(
-                      color: index == 0
+                      color: (index == 0) && (item.timeq3 != '--')
                           ? const Color(0xffff00ff)
                           : const Color(0xff383840),
                       borderRadius: BorderRadius.circular(7),
@@ -541,8 +543,8 @@ class QualificationDriversResultsList extends StatelessWidget {
           : QualificationResultsItem(
               items[index - 1],
               index - 1,
-              resultsQOne[0],
-              resultsQTwo[0],
+              resultsQOne.isNotEmpty ? resultsQOne[0] : '--',
+              resultsQTwo.isNotEmpty ? resultsQTwo[0] : '--',
             ),
     );
   }

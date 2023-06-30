@@ -134,13 +134,18 @@ class FormulaOneScraper {
             ) ??
             '$endpoint/en/results.html/${DateTime.now().year}/races/$circuitId/$circuitName/$sessionName.html',
       );
-    } else {
+    } else if (qualifyingResultsUrl == null) {
       resultsUrl = Uri.parse(
         'https://www.formula1.com/en/results.html/${DateTime.now().year}/races/$circuitId/$circuitName/$sessionName.html',
       );
     }
-
-    http.Response response = await http.get(resultsUrl);
+    http.Response response = await http.get(
+      resultsUrl,
+      headers: {
+        'user-agent':
+            'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36',
+      },
+    );
     dom.Document document = parser.parse(response.body);
     List<dom.Element> finishedSessions =
         document.getElementsByClassName('side-nav-item');
@@ -156,6 +161,7 @@ class FormulaOneScraper {
       List<DriverQualificationResult> results = [];
 
       tempResults.removeAt(0);
+
       for (var result in tempResults) {
         results.add(
           DriverQualificationResult(
