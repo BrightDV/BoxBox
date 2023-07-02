@@ -155,6 +155,9 @@ class _RaceDetailsScreenState extends State<RaceDetailsScreen> {
                                           .toUpperCase(),
                                     ),
                                   ],
+                                  labelColor: useDarkMode
+                                      ? Colors.white
+                                      : Theme.of(context).scaffoldBackgroundColor,
                                 ),
                                 Expanded(
                                   child: TabBarView(
@@ -198,6 +201,9 @@ class _RaceDetailsScreenState extends State<RaceDetailsScreen> {
                                           .toUpperCase(),
                                     ),
                                   ],
+                                  labelColor: useDarkMode
+                                      ? Colors.white
+                                      : Theme.of(context).scaffoldBackgroundColor,
                                 ),
                                 Expanded(
                                   child: TabBarView(
