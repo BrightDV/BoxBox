@@ -19,8 +19,6 @@
  * Copyright (c) 2022-2023, BrightDV
  */
 
-import 'dart:async';
-
 import 'package:boxbox/Screens/MixedNews/rss_feed.dart';
 import 'package:boxbox/Screens/MixedNews/wordpress.dart';
 import 'package:boxbox/api/news.dart';

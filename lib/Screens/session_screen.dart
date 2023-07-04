@@ -239,7 +239,8 @@ class _SessionScreenState extends State<SessionScreen> {
                       ),
                     ],
                   )
-                : widget.session.state == 'completed'
+                : widget.session.state == 'completed' ||
+                        widget.session.endTime.isBefore(DateTime.now())
                     ? widget.session.sessionsAbbreviation == 'r' ||
                             widget.session.sessionsAbbreviation == 's'
                         ? RaceResultsProvider(

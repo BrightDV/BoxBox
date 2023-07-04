@@ -21,8 +21,13 @@ import 'package:flutter/material.dart';
 
 class Hover extends StatefulWidget {
   final Widget Function(bool isHovered) builder;
+  final bool isRaceHubSession;
 
-  const Hover({Key? key, required this.builder}) : super(key: key);
+  const Hover({
+    Key? key,
+    required this.builder,
+    this.isRaceHubSession = false,
+  }) : super(key: key);
 
   @override
   HoverState createState() => HoverState();
@@ -32,7 +37,8 @@ class HoverState extends State<Hover> {
   bool isHovered = false;
   @override
   Widget build(BuildContext context) {
-    final hovered = Matrix4.identity()..translate(0, -10, 0);
+    final hovered = Matrix4.identity()
+      ..translate(0, widget.isRaceHubSession ? 0 : -10, 0);
     final transform = isHovered ? hovered : Matrix4.identity();
 
     return MouseRegion(
