@@ -581,18 +581,31 @@ class FormulaOneScraper {
     List<dom.Element>? tempResults =
         document.getElementsByClassName('fom-teaser');
     for (var element in tempResults) {
+      final String driverName = element
+          .children[0].children[1].attributes['alt']!
+          .toString()
+          .split(' - ')[0];
+
+
+      String driverLastName = driverName.substring(driverName.indexOf(' ') + 1, driverName.length).replaceAll(' ', '_').toLowerCase();
+      print('driverLastName: $driverLastName');
+
+
+      final String driverNameReplaced = driverName.replaceAll(' ', '_');
+
+      print('DriverName: $driverName');
+      print('DriverNameReplaced: $driverNameReplaced');
+      print('driverLastName: $driverLastName');
       results.add(
         HallOfFameDriver(
-          element.children[0].children[1].attributes['alt']!
-              .toString()
-              .split(' - ')[0],
+          driverName,
           element.children[0].children[1].attributes['alt']!
               .toString()
               .split(' - ')[1],
           (endpoint != defaultEndpoint)
-              ? '$endpoint/content/fom-website/en/drivers/hall-of-fame/${element.children[0].children[1].attributes['alt']!.toString().split(' - ')[0].replaceAll(' ', '_')}.html'
-              : 'https://www.formula1.com/content/fom-website/en/drivers/hall-of-fame/${element.children[0].children[1].attributes['alt']!.toString().split(' - ')[0].replaceAll(' ', '_')}.html',
-          'https://www.formula1.com/content/fom-website/en/drivers/hall-of-fame/${element.children[0].children[1].attributes['alt']!.toString().split(' - ')[0].replaceAll(' ', '_')}/_jcr_content/image16x9.img.640.medium.jpg',
+              ? '$endpoint/content/fom-website/en/drivers/hall-of-fame/$driverNameReplaced..html'
+              : 'https://media.formula1.com/content/dam/fom-website/manual/drivers/hall-of-fame/$driverLastName.jpg.img.320.medium.jpg',
+          'https://media.formula1.com/content/dam/fom-website/manual/drivers/hall-of-fame/$driverLastName.jpg.img.320.medium.jpg',
         ),
       );
     }
