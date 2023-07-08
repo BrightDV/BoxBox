@@ -566,27 +566,38 @@ class FormulaOneScraper {
   Future<List<HallOfFameDriver>> scrapeHallOfFame() async {
     List<HallOfFameDriver> results = [];
 
-    String endpoint = Hive.box('settings').get('server', defaultValue: defaultEndpoint) as String;
-    String f1Endpoint = endpoint != defaultEndpoint ? endpoint : 'https://www.formula1.com';
-    Uri driverDetailsUrl = Uri.parse('$f1Endpoint/en/drivers/hall-of-fame.html');
+    String endpoint = Hive.box('settings')
+        .get('server', defaultValue: defaultEndpoint) as String;
+    String f1Endpoint =
+        endpoint != defaultEndpoint ? endpoint : 'https://www.formula1.com';
+    Uri driverDetailsUrl =
+        Uri.parse('$f1Endpoint/en/drivers/hall-of-fame.html');
 
     http.Response response = await http.get(driverDetailsUrl);
     if (response.statusCode == HttpStatus.ok) {
       dom.Document document = parser.parse(response.body);
-      List<dom.Element> elements = document.querySelectorAll('a.column.column-4[href*="/en/drivers/hall-of-fame/"][href\$=".html"]');
+      List<dom.Element> elements = document.querySelectorAll(
+          'a.column.column-4[href*="/en/drivers/hall-of-fame/"][href\$=".html"]');
 
       for (dom.Element element in elements) {
-
-        List<String> driverInfo = element.getElementsByClassName('teaser-info-title').first.text.trim().split(' - ');
+        List<String> driverInfo = element
+            .getElementsByClassName('teaser-info-title')
+            .first
+            .text
+            .trim()
+            .split(' - ');
         String driverName = driverInfo[0];
         String driverYears = driverInfo[1];
 
-        dom.Element imageElement = element.getElementsByTagName('img').firstWhere((e) => e.classes.contains('hidden'));
+        dom.Element imageElement = element
+            .getElementsByTagName('img')
+            .firstWhere((e) => e.classes.contains('hidden'));
         String driverImage = imageElement.attributes['src'] ?? '';
 
         String driverUrl = f1Endpoint + element.attributes['href']!;
 
-        results.add(HallOfFameDriver(driverName, driverYears, driverUrl, driverImage));
+        results.add(
+            HallOfFameDriver(driverName, driverYears, driverUrl, driverImage));
       }
     }
 

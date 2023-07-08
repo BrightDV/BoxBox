@@ -62,20 +62,20 @@ class SearXSearch {
     List<Map> results = [];
     List<dom.Element> tempResults = document.getElementsByTagName('article');
     for (var element in tempResults) {
-        if (element.firstChild!.attributes['href']!
-            .contains('formula1.com/en/latest/article')) {
-          results.add(
-            {
-              'url': element.firstChild!.attributes['href'],
-              'title': element.children[1].firstChild!.text,
-              'content': element.children[2].innerHtml
-                  .replaceAll('<span class="highlight">', '**')
-                  .replaceAll('</span>', '**')
-                  .substring(4),
-            },
-          );
-        }
+      if (element.firstChild!.attributes['href']!
+          .contains('formula1.com/en/latest/article')) {
+        results.add(
+          {
+            'url': element.firstChild!.attributes['href'],
+            'title': element.children[1].firstChild!.text,
+            'content': element.children[2].innerHtml
+                .replaceAll('<span class="highlight">', '**')
+                .replaceAll('</span>', '**')
+                .substring(4),
+          },
+        );
       }
+    }
     return results;
   }
 }

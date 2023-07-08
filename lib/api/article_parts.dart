@@ -1177,8 +1177,7 @@ class WidgetsList extends StatelessWidget {
                                                                       [
                                                                       'tableContent'])
                                                                 Row(
-                                                                  children: <
-                                                                      Widget>[
+                                                                  children: <Widget>[
                                                                     for (Map driverDetails
                                                                         in driverItem)
                                                                       Container(
