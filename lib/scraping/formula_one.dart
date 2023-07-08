@@ -18,6 +18,7 @@
  */
 
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:boxbox/api/driver_components.dart';
 import 'package:boxbox/helpers/convert_ergast_and_formula_one.dart';
@@ -564,38 +565,31 @@ class FormulaOneScraper {
 
   Future<List<HallOfFameDriver>> scrapeHallOfFame() async {
     List<HallOfFameDriver> results = [];
-    late Uri driverDetailsUrl;
-    String endpoint = Hive.box('settings')
-        .get('server', defaultValue: defaultEndpoint) as String;
-    if (endpoint != defaultEndpoint) {
-      driverDetailsUrl = Uri.parse(
-        '$endpoint/en/drivers/hall-of-fame.html',
-      );
-    } else {
-      driverDetailsUrl = Uri.parse(
-        'https://www.formula1.com/en/drivers/hall-of-fame.html',
-      );
-    }
+
+    String endpoint = Hive.box('settings').get('server', defaultValue: defaultEndpoint) as String;
+    String f1Endpoint = endpoint != defaultEndpoint ? endpoint : 'https://www.formula1.com';
+    Uri driverDetailsUrl = Uri.parse('$f1Endpoint/en/drivers/hall-of-fame.html');
+
     http.Response response = await http.get(driverDetailsUrl);
-    dom.Document document = parser.parse(response.body);
-    List<dom.Element>? tempResults =
-        document.getElementsByClassName('fom-teaser');
-    for (var element in tempResults) {
-      results.add(
-        HallOfFameDriver(
-          element.children[0].children[1].attributes['alt']!
-              .toString()
-              .split(' - ')[0],
-          element.children[0].children[1].attributes['alt']!
-              .toString()
-              .split(' - ')[1],
-          (endpoint != defaultEndpoint)
-              ? '$endpoint/content/fom-website/en/drivers/hall-of-fame/${element.children[0].children[1].attributes['alt']!.toString().split(' - ')[0].replaceAll(' ', '_')}.html'
-              : 'https://www.formula1.com/content/fom-website/en/drivers/hall-of-fame/${element.children[0].children[1].attributes['alt']!.toString().split(' - ')[0].replaceAll(' ', '_')}.html',
-          'https://www.formula1.com/content/fom-website/en/drivers/hall-of-fame/${element.children[0].children[1].attributes['alt']!.toString().split(' - ')[0].replaceAll(' ', '_')}/_jcr_content/image16x9.img.640.medium.jpg',
-        ),
-      );
+    if (response.statusCode == HttpStatus.ok) {
+      dom.Document document = parser.parse(response.body);
+      List<dom.Element> elements = document.querySelectorAll('a.column.column-4[href*="/en/drivers/hall-of-fame/"][href\$=".html"]');
+
+      for (dom.Element element in elements) {
+
+        List<String> driverInfo = element.getElementsByClassName('teaser-info-title').first.text.trim().split(' - ');
+        String driverName = driverInfo[0];
+        String driverYears = driverInfo[1];
+
+        dom.Element imageElement = element.getElementsByTagName('img').firstWhere((e) => e.classes.contains('hidden'));
+        String driverImage = imageElement.attributes['src'] ?? '';
+
+        String driverUrl = f1Endpoint + element.attributes['href']!;
+
+        results.add(HallOfFameDriver(driverName, driverYears, driverUrl, driverImage));
+      }
     }
+
     return results;
   }
 
