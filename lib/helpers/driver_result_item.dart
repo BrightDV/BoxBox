@@ -17,7 +17,7 @@
  * Copyright (c) 2022-2023, BrightDV
  */
 
-import 'package:boxbox/Screens/driver_details.dart';
+import 'package:boxbox/Screens/DriverDetails/details.dart';
 import 'package:boxbox/api/driver_components.dart';
 import 'package:boxbox/helpers/team_background_color.dart';
 import 'package:flutter/material.dart';
