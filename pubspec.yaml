@@ -76,6 +76,8 @@ dependencies:
       ref: master
   workmanager: ^0.5.1
   youtube_explode_dart: ^1.12.4
+  dev: ^1.0.0
+  syncfusion_flutter_charts: ^21.2.10
 
 dev_dependencies:
   flutter_test:

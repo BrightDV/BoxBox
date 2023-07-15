@@ -1,77 +1,88 @@
-import 'package:html/parser.dart' as htmlParser;
-import 'package:http/http.dart' as http;
+import 'package:file/src/interface/file.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:html/parser.dart' as parser;
 
 class Chicanef1 {
   static const String baseUrl = 'https://www.chicanef1.com';
 
+  static const key = 'customCacheKey';
+  static CacheManager instance = CacheManager(
+    Config(
+      key,
+      stalePeriod: const Duration(days: 7),
+      maxNrOfCacheObjects: 20,
+      repo: JsonCacheInfoRepository(databaseName: key),
+      fileService: HttpFileService(),
+    ),
+  );
+
   Future<List<TeamMateData>> teammateComparison(String driverName) async {
-    final response = await http.get(Uri.parse(
-        'https://www.f1-fansite.com/f1-drivers/max-verstappen-information-statistics/'));
-    final driverInfo = <String, String>{};
+
+    print('DriverId -> $driverName');
+    final url =
+        'https://www.f1-fansite.com/f1-drivers/${driverName.replaceAll('_', '-')}-information-statistics/';
+
+    final Future<File> fileStream = instance.getSingleFile(url);
+    final response = await fileStream;
 
     final teamMateDataList = <TeamMateData>[];
 
-    if (response.statusCode == 200) {
-      final document = htmlParser.parse(response.body);
+    final document = parser.parse(await response.readAsBytes());
 
-      final table = document.querySelector('table.msr_team_mates');
-      final rows = table?.querySelectorAll('tbody tr');
+    final table = document.querySelector('table.msr_team_mates');
+    final rows = table?.querySelectorAll('tbody tr');
 
-      if (rows != null) {
+    String? previousYear;
 
-        print('Rows length: ${rows.length}');
+    if (rows != null) {
 
-        for (final row in rows) {
-          print (row.text);
-          final cells = row.querySelectorAll('td');
-          if (cells.isEmpty) {
-            continue;
-          }
-
-          print('cells length: ${cells.length}');
-
-          final year = cells[0].text.trim();
-          final team = cells[1].text.trim();
-          final teamMate = cells[2].text.trim();
-          final bestPos = cells[3].text.trim();
-          final bestPosTeamMate = cells[4].text.trim();
-          final points = cells[5].text.trim();
-          final pointsTeamMate = cells[6].text.trim();
-          final wins = cells[7].text.trim();
-          final winsTeamMate = cells[8].text.trim();
-          final poles = cells[9].text.trim();
-          final polesTeamMate = cells[10].text.trim();
-          final pos = cells[11].text.trim();
-          final posTeamMate = cells[12].text.trim();
-          final quali = cells[13].text.trim();
-          final qualiTeamMate = cells[14].text.trim();
-
-          final teamMateData = TeamMateData(
-            year: year,
-            team: team,
-            teamMate: teamMate,
-            bestPos: bestPos,
-            bestPosTeamMate: bestPosTeamMate,
-            points: points,
-            pointsTeamMate: pointsTeamMate,
-            wins: wins,
-            winsTeamMate: winsTeamMate,
-            poles: poles,
-            polesTeamMate: polesTeamMate,
-            pos: pos,
-            posTeamMate: posTeamMate,
-            quali: quali,
-            qualiTeamMate: qualiTeamMate,
-          );
-
-          teamMateDataList.add(teamMateData);
+      for (final row in rows) {
+        final cells = row.querySelectorAll('td');
+        if (cells.isEmpty) {
+          continue;
         }
+
+        final year = cells[0].text.trim().isNotEmpty ? cells[0].text.trim() : previousYear;        final team = cells[1].text.trim();
+        final teamMate = cells[2].text.trim();
+        final bestPos = cells[3].text.trim();
+        final bestPosTeamMate = cells[4].text.trim();
+        final points = cells[5].text.trim();
+        final pointsTeamMate = cells[6].text.trim();
+        final wins = cells[7].text.trim();
+        final winsTeamMate = cells[8].text.trim();
+        final poles = cells[9].text.trim();
+        final polesTeamMate = cells[10].text.trim();
+        final pos = cells[11].text.trim();
+        final posTeamMate = cells[12].text.trim();
+        final quali = cells[13].text.trim();
+        final qualiTeamMate = cells[14].text.trim();
+
+        final teamMateData = TeamMateData(
+          year: year!,
+          team: team,
+          teamMate: teamMate,
+          bestPos: bestPos,
+          bestPosTeamMate: bestPosTeamMate,
+          points: points,
+          pointsTeamMate: pointsTeamMate,
+          wins: wins,
+          winsTeamMate: winsTeamMate,
+          poles: poles,
+          polesTeamMate: polesTeamMate,
+          pos: pos,
+          posTeamMate: posTeamMate,
+          quali: quali,
+          qualiTeamMate: qualiTeamMate,
+        );
+
+        teamMateDataList.add(teamMateData);
+        previousYear = year;
       }
     }
+
     return teamMateDataList;
   }
 }
-
 
 class TeamMateData {
   final String year;

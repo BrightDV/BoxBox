@@ -10,7 +10,7 @@ class DriverStats extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => FutureBuilder<List<TeamMateData>>(
-        future: Chicanef1().teammateComparison('Lando Norris'),
+        future: Chicanef1().teammateComparison(driverId),
         builder: (BuildContext context,
                 AsyncSnapshot<List<TeamMateData>> snapshot) =>
             snapshot.hasError
@@ -18,10 +18,30 @@ class DriverStats extends StatelessWidget {
                     snapshot.error.toString(),
                   )
                 : snapshot.hasData
-                    ? _buildContent(snapshot.data!)
+                    ? Padding(
+                        padding: const EdgeInsets.all(5),
+                        child: _buildContent(snapshot.data!))
                     : const LoadingIndicatorUtil(),
       );
 
-  Widget _buildContent(List<TeamMateData> data) => ListView(
-      children: data.map((TeamMateData e) => Text(e.teamMate)).toList());
+  Widget _buildContent(final List<TeamMateData> data) => Column(
+    // children: [_buildTeamMateTitle(data.first)]);
+      children: data
+          .map((TeamMateData teamMateData) => _buildTeamMateTitle(teamMateData))
+          .toList());
+
+  Widget _buildTeamMateTitle(final TeamMateData teamMateData) => Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Row(children: <Widget>[
+              Expanded(
+                  child: Text(teamMateData.teamMate!,
+                      style: const TextStyle(fontSize: 16.0))),
+              Text(teamMateData.year!, style: const TextStyle(fontSize: 16.0)),
+            ]),
+            Text(teamMateData.poles!)
+          ]);
+
+  Widget _buildTeamMateGraph() => Container();
 }
