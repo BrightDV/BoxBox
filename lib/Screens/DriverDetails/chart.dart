@@ -26,8 +26,8 @@ class _DriverDetailsStatsChartState extends State<DriverDetailsStatsChart> {
       });
 
       _xAxisCategories.add(CategoricalMultiLevelLabel(
-          start: values.teamMates.keys.first,
-          end: values.teamMates.keys.last,
+          start: '$year-${values.teamMates.keys.first}',
+          end: '$year-${values.teamMates.keys.last}',
           text: year.toString()));
     });
 
