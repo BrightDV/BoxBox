@@ -19,16 +19,27 @@ class _DriverDetailsStatsChartState extends State<DriverDetailsStatsChart> {
 
   @override
   void initState() {
+    String? lastEndValue;
+
     widget.comparison.resultMap.forEach((year, YearData values) {
       values.teamMates.forEach((teamMate, values) {
         _chartData.add(
             ChartData('$year-$teamMate', values.points, values.pointsTeamMate));
       });
 
+      String start = '$year-${values.teamMates.keys.first}';
+      String end = '$year-${values.teamMates.keys.last}';
+
+      if (start == end && lastEndValue != null) {
+        start = lastEndValue!;
+      }
+
       _xAxisCategories.add(CategoricalMultiLevelLabel(
-          start: '$year-${values.teamMates.keys.first}',
-          end: '$year-${values.teamMates.keys.last}',
+          start: start,
+          end: end,
           text: year.toString()));
+
+      lastEndValue = end;
     });
 
     super.initState();
