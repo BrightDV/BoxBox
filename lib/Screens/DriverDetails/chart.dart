@@ -14,32 +14,18 @@ class DriverDetailsStatsChart extends StatefulWidget {
 
 class _DriverDetailsStatsChartState extends State<DriverDetailsStatsChart> {
   final List<ChartData> _chartData = <ChartData>[];
-  final List<CategoricalMultiLevelLabel> _xAxisCategories =
-      <CategoricalMultiLevelLabel>[];
+  TrackballBehavior? _trackballBehavior;
 
   @override
   void initState() {
-    String? lastEndValue;
+    _trackballBehavior = TrackballBehavior(
+        enable: true, activationMode: ActivationMode.singleTap);
 
     widget.comparison.resultMap.forEach((year, YearData values) {
       values.teamMates.forEach((teamMate, values) {
         _chartData.add(
-            ChartData('$year-$teamMate', values.points, values.pointsTeamMate));
+            ChartData('$teamMate $year', values.points, values.pointsTeamMate));
       });
-
-      String start = '$year-${values.teamMates.keys.first}';
-      String end = '$year-${values.teamMates.keys.last}';
-
-      if (start == end && lastEndValue != null) {
-        start = lastEndValue!;
-      }
-
-      _xAxisCategories.add(CategoricalMultiLevelLabel(
-          start: start,
-          end: end,
-          text: year.toString()));
-
-      lastEndValue = end;
     });
 
     super.initState();
@@ -53,26 +39,17 @@ class _DriverDetailsStatsChartState extends State<DriverDetailsStatsChart> {
         title: ChartTitle(text: 'most points'),
         legend:
             Legend(isVisible: false, overflowMode: LegendItemOverflowMode.wrap),
-        // primaryXAxis: CategoryAxis(
-        //     interval: 1,
-        //     labelRotation: -90,
-        //     edgeLabelPlacement: EdgeLabelPlacement.shift,
-        //     majorGridLines: const MajorGridLines(width: 0)),
         primaryXAxis: CategoryAxis(
+            edgeLabelPlacement: EdgeLabelPlacement.shift,
             interval: 1,
             labelRotation: -90,
-            majorGridLines: const MajorGridLines(width: 0),
-            majorTickLines: const MajorTickLines(size: 5),
-            borderWidth: 0,
-            axisLine: const AxisLine(width: 0),
-            multiLevelLabelStyle: const MultiLevelLabelStyle(borderWidth: 1),
-            multiLevelLabels: _xAxisCategories),
+            majorGridLines: const MajorGridLines(width: 0)),
         primaryYAxis: NumericAxis(
             // labelFormat: '{value}%',
             axisLine: const AxisLine(width: 0),
             majorTickLines: const MajorTickLines(color: Colors.transparent)),
-        series: <LineSeries<ChartData, String>>[
-          LineSeries<ChartData, String>(
+        series: <StackedLineSeries<ChartData, String>>[
+          StackedLineSeries<ChartData, String>(
               animationDuration: 2500,
               dataSource: _chartData,
               xValueMapper: (ChartData data, _) => data.teamMate,
@@ -80,7 +57,7 @@ class _DriverDetailsStatsChartState extends State<DriverDetailsStatsChart> {
               width: 1,
               name: 'Max Verstappen',
               markerSettings: const MarkerSettings(isVisible: true)),
-          LineSeries<ChartData, String>(
+          StackedLineSeries<ChartData, String>(
               animationDuration: 2500,
               dataSource: _chartData,
               width: 1,
@@ -90,12 +67,12 @@ class _DriverDetailsStatsChartState extends State<DriverDetailsStatsChart> {
               markerSettings: const MarkerSettings(isVisible: true))
         ],
         tooltipBehavior: TooltipBehavior(enable: true),
+        trackballBehavior: _trackballBehavior,
       ));
 
   @override
   void dispose() {
     _chartData.clear();
-    _xAxisCategories.clear();
     super.dispose();
   }
 }
