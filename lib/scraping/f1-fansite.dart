@@ -32,7 +32,6 @@ class Chicanef1 {
     final rows = table?.querySelectorAll('tbody tr');
 
     int? previousYear;
-    String? previousTeam;
 
     final resultMap = <int, YearData>{};
 
@@ -43,6 +42,10 @@ class Chicanef1 {
           continue;
         }
 
+        for (int i = 0; i < cells.length; i++) {
+          print('i -> ${cells[i].text.trim()}');
+        }
+
         final int year = cells[0].text.trim().isNotEmpty
             ? int.parse(cells[0].text.trim())
             : previousYear!;
@@ -51,35 +54,24 @@ class Chicanef1 {
         final yearData =
             resultMap.putIfAbsent(year, () => YearData(teamMates: {}));
         final teamMateData = TeamMateData(
-          bestPos: int.parse(cells[3].text.trim()),
-          bestPosTeamMate: int.parse(cells[4].text.trim()),
-          points: double.parse(cells[5].text.trim()),
-          pointsTeamMate: double.parse(cells[6].text.trim()),
-          wins: int.parse(cells[7].text.trim()),
-          winsTeamMate: int.parse(cells[8].text.trim()),
-          poles: int.parse(cells[9].text.trim()),
-          polesTeamMate: int.parse(cells[10].text.trim()),
-          pos: int.parse(cells[11].text.trim()),
-          posTeamMate: int.parse(cells[12].text.trim()),
-          quali: int.parse(cells[13].text.trim()),
-          qualiTeamMate: int.parse(cells[14].text.trim()),
+          bestPos: num.parse(cells[3].text.trim()),
+          bestPosTeamMate: num.parse(cells[4].text.trim()),
+          points: num.parse(cells[5].text.trim()),
+          pointsTeamMate: num.parse(cells[6].text.trim()),
+          wins: num.parse(cells[7].text.trim()),
+          winsTeamMate: num.parse(cells[8].text.trim()),
+          poles: num.parse(cells[9].text.trim()),
+          polesTeamMate: num.parse(cells[10].text.trim()),
+          pos: num.parse(cells[11].text.trim()),
+          posTeamMate: num.parse(cells[12].text.trim()),
+          quali: num.parse(cells[13].text.trim()),
+          qualiTeamMate: num.parse(cells[14].text.trim()),
         );
 
         yearData.teamMates[teamMate] = teamMateData;
         previousYear = year;
       }
     }
-
-    resultMap.forEach((year, YearData values) {
-      values.teamMates.forEach((teamMate, values) {
-        print('$year-$teamMate');
-        print(values.points);
-        print(values.pointsTeamMate);
-      });
-
-      print('First -> ${values.teamMates.keys.first}');
-      print('Last -> ${values.teamMates.keys.last}');
-    });
 
     return TeamMateComparison(resultMap: resultMap);
 
@@ -136,18 +128,18 @@ class Chicanef1 {
 }
 
 class TeamMateData {
-  int bestPos;
-  int bestPosTeamMate;
-  double points;
-  double pointsTeamMate;
-  int wins;
-  int winsTeamMate;
-  int poles;
-  int polesTeamMate;
-  int pos;
-  int posTeamMate;
-  int quali;
-  int qualiTeamMate;
+  num bestPos;
+  num bestPosTeamMate;
+  num points;
+  num pointsTeamMate;
+  num wins;
+  num winsTeamMate;
+  num poles;
+  num polesTeamMate;
+  num pos;
+  num posTeamMate;
+  num quali;
+  num qualiTeamMate;
 
   TeamMateData({
     required this.bestPos,
