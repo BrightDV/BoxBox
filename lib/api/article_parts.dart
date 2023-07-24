@@ -200,16 +200,16 @@ class WidgetsList extends StatelessWidget {
         article.articleHero['contentType'] == 'atomImageGallery'
             ? CarouselSlider(
                 items: [
-                  article.articleHero['fields']['imageGallery'].forEach(
-                    (element) => ImageRenderer(
+                  for (var image in article.articleHero['fields']
+                      ['imageGallery'])
+                    ImageRenderer(
                       useDataSaverMode
-                          ? element['renditions'] != null
-                              ? element['renditions']['2col-retina']
-                              : element['url'] +
+                          ? image['renditions'] != null
+                              ? image['renditions']['2col-retina']
+                              : image['url'] +
                                   '.transform/3col-retina/image.jpg'
-                          : element['url'],
+                          : image['url'],
                     ),
-                  ),
                 ],
                 options: CarouselOptions(
                   viewportFraction: 1,
@@ -1177,7 +1177,8 @@ class WidgetsList extends StatelessWidget {
                                                                       [
                                                                       'tableContent'])
                                                                 Row(
-                                                                  children: <Widget>[
+                                                                  children: <
+                                                                      Widget>[
                                                                     for (Map driverDetails
                                                                         in driverItem)
                                                                       Container(
