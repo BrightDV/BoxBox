@@ -32,6 +32,7 @@ import 'package:boxbox/helpers/request_error.dart';
 import 'package:boxbox/Screens/article.dart';
 import 'package:boxbox/Screens/standings.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
@@ -2296,5 +2297,80 @@ class PinnedVideoPlayer extends SliverPersistentHeaderDelegate {
   @override
   bool shouldRebuild(SliverPersistentHeaderDelegate oldDelegate) {
     return true;
+  }
+}
+
+class ImageGallery extends StatefulWidget {
+  final List images;
+  const ImageGallery(
+    this.images, {
+    Key? key,
+  }) : super(key: key);
+  @override
+  State<StatefulWidget> createState() => _ImageGalleryState();
+}
+
+class _ImageGalleryState extends State<ImageGallery> {
+  int _current = 0;
+  final CarouselController _controller = CarouselController();
+
+  @override
+  Widget build(BuildContext context) {
+    bool useDataSaverMode = Hive.box('settings')
+        .get('useDataSaverMode', defaultValue: false) as bool;
+    bool useDarkMode =
+        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
+
+    return Column(
+      children: [
+        CarouselSlider(
+          carouselController: _controller,
+          items: [
+            for (var image in widget.images)
+              SizedBox(
+                width: MediaQuery.of(context).size.width,
+                child: ImageRenderer(
+                  useDataSaverMode
+                      ? image['renditions'] != null
+                          ? image['renditions']['2col-retina']
+                          : image['url'] + '.transform/2col-retina/image.jpg'
+                      : image['url'],
+                ),
+              ),
+          ],
+          options: CarouselOptions(
+              viewportFraction: 1,
+              aspectRatio: 16 / 9,
+              enableInfiniteScroll: false,
+              enlargeCenterPage: true,
+              autoPlay: true,
+              autoPlayInterval: const Duration(seconds: 7),
+              onPageChanged: (index, reason) {
+                setState(() {
+                  _current = index;
+                });
+              }),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            for (var image in widget.images)
+              Container(
+                width: 12.0,
+                height: 12.0,
+                margin:
+                    const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color:
+                      (useDarkMode ? Colors.white : Colors.black).withOpacity(
+                    _current == widget.images.indexOf(image) ? 0.9 : 0.4,
+                  ),
+                ),
+              ),
+          ],
+        ),
+      ],
+    );
   }
 }
