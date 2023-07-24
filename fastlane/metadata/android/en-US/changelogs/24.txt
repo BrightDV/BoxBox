@@ -1,6 +1,5 @@
 - Fix language selected by default
 - Add the author of an article, if present
-- Bring back the home cache
 - Show qualifs results when there are no time
 - Fix subtabs white textcolor on white background
 - Show results sooner (Race Hub)
