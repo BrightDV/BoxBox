@@ -1,0 +1,12 @@
+- Fix language selected by default
+- Add the author of an article, if present
+- Bring back the home cache
+- Show qualifs results when there are no time
+- Fix subtabs white textcolor on white background
+- Show results sooner (Race Hub)
+- Fix Hall of Fame images
+- Add Ricciardo's image
+- Fix and improve the Image Gallery
+- Add a caption under the video player, if present
+- Improve the Race Hub layout
+- Update translations
