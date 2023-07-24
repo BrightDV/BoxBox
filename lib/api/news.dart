@@ -2016,6 +2016,7 @@ class VideoRenderer extends StatelessWidget {
   final bool? autoplay;
   final String? youtubeId;
   final String? heroTag;
+  final String? caption;
 
   const VideoRenderer(
     this.videoId, {
@@ -2023,6 +2024,7 @@ class VideoRenderer extends StatelessWidget {
     this.autoplay,
     this.youtubeId,
     this.heroTag,
+    this.caption,
   }) : super(key: key);
 
   Future<Map<String, dynamic>> getYouTubeVideoLinks(String videoId) async {
@@ -2046,6 +2048,8 @@ class VideoRenderer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool useDarkMode =
+        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     double width = MediaQuery.of(context).size.width;
     width = width > 1400
         ? 800
@@ -2061,30 +2065,51 @@ class VideoRenderer extends StatelessWidget {
               snapshot.error.toString(),
             )
           : snapshot.hasData
-              ? kIsWeb
-                  ? SizedBox(
-                      height: width / (16 / 9),
-                      child: InAppWebView(
-                        initialUrlRequest: URLRequest(
-                          url: WebUri(
-                            snapshot.data!['videos'][0],
+              ? Column(
+                  children: [
+                    kIsWeb
+                        ? SizedBox(
+                            height: width / (16 / 9),
+                            child: InAppWebView(
+                              initialUrlRequest: URLRequest(
+                                url: WebUri(
+                                  snapshot.data!['videos'][0],
+                                ),
+                              ),
+                              initialSettings: InAppWebViewSettings(
+                                preferredContentMode:
+                                    UserPreferredContentMode.DESKTOP,
+                                transparentBackground: true,
+                                iframeAllowFullscreen: true,
+                                mediaPlaybackRequiresUserGesture:
+                                    !(autoplay ?? false),
+                              ),
+                            ),
+                          )
+                        : BetterPlayerVideoPlayer(
+                            snapshot.data!,
+                            autoplay == null ? false : autoplay!,
+                            heroTag ?? '',
                           ),
+                    if (caption != '')
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          top: 7,
+                          left: 10,
+                          right: 10,
                         ),
-                        initialSettings: InAppWebViewSettings(
-                          preferredContentMode:
-                              UserPreferredContentMode.DESKTOP,
-                          transparentBackground: true,
-                          iframeAllowFullscreen: true,
-                          mediaPlaybackRequiresUserGesture:
-                              !(autoplay ?? false),
+                        child: Text(
+                          caption!,
+                          style: TextStyle(
+                            color: useDarkMode
+                                ? Colors.grey[500]
+                                : Colors.grey[800],
+                          ),
+                          textAlign: TextAlign.center,
                         ),
-                      ),
-                    )
-                  : BetterPlayerVideoPlayer(
-                      snapshot.data!,
-                      autoplay == null ? false : autoplay!,
-                      heroTag ?? '',
-                    )
+                      ), // here
+                  ],
+                )
               : SizedBox(
                   height: MediaQuery.of(context).size.width / (16 / 9),
                   child: const LoadingIndicatorUtil(),
