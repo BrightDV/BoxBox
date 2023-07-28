@@ -32,6 +32,7 @@ import 'package:boxbox/helpers/request_error.dart';
 import 'package:boxbox/Screens/article.dart';
 import 'package:boxbox/Screens/standings.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
@@ -1616,186 +1617,396 @@ class _ImageRendererState extends State<ImageRenderer> {
                 ),
               ),
             )
-          : GestureDetector(
-              onTap: () {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      contentPadding: const EdgeInsets.only(
-                        top: 52,
-                        bottom: 50,
-                      ),
-                      insetPadding: EdgeInsets.zero,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      backgroundColor: Colors.transparent,
-                      content: Builder(
-                        builder: (context) {
-                          return SizedBox(
-                            width: double.infinity - 10,
-                            child: InteractiveViewer(
-                              minScale: 0.1,
-                              maxScale: 8,
-                              child: Stack(
-                                children: [
-                                  GestureDetector(
-                                    onTap: () => Navigator.pop(context),
-                                  ),
-                                  Card(
-                                      elevation: 5.0,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(5),
+          : kIsWeb
+              ? GestureDetector(
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          contentPadding: const EdgeInsets.only(
+                            top: 52,
+                            bottom: 50,
+                          ),
+                          insetPadding: EdgeInsets.zero,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          backgroundColor: Colors.transparent,
+                          content: Builder(
+                            builder: (context) {
+                              return SizedBox(
+                                width: double.infinity - 10,
+                                child: InteractiveViewer(
+                                  minScale: 0.1,
+                                  maxScale: 8,
+                                  child: Stack(
+                                    children: [
+                                      GestureDetector(
+                                        onTap: () => Navigator.pop(context),
                                       ),
-                                      clipBehavior: Clip.antiAlias,
-                                      child: widget.isHero != null &&
-                                              widget.isHero!
-                                          ? CachedNetworkImage(
-                                              imageUrl: widget.imageUrl,
-                                              placeholder: (context, url) =>
-                                                  SizedBox(
-                                                height: MediaQuery.of(context)
-                                                        .size
-                                                        .width /
-                                                    (16 / 9),
-                                                child:
-                                                    const LoadingIndicatorUtil(
-                                                  replaceImage: true,
-                                                ),
-                                              ),
-                                              errorWidget:
-                                                  (context, url, error) =>
+                                      Card(
+                                          elevation: 5.0,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                          ),
+                                          clipBehavior: Clip.antiAlias,
+                                          child: widget.isHero != null &&
+                                                  widget.isHero!
+                                              ? CachedNetworkImage(
+                                                  imageUrl: widget.imageUrl,
+                                                  placeholder: (context, url) =>
+                                                      SizedBox(
+                                                    height:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width /
+                                                            (16 / 9),
+                                                    child:
+                                                        const LoadingIndicatorUtil(
+                                                      replaceImage: true,
+                                                    ),
+                                                  ),
+                                                  errorWidget: (context, url,
+                                                          error) =>
                                                       const Icon(
                                                           Icons.error_outlined),
-                                              fadeOutDuration:
-                                                  const Duration(seconds: 1),
-                                              fadeInDuration: widget.isHero ??
-                                                      false
-                                                  ? const Duration(
-                                                      milliseconds: 300)
-                                                  : const Duration(seconds: 1),
-                                              cacheManager: CacheManager(
-                                                Config(
-                                                  "newsImages",
-                                                  stalePeriod:
-                                                      const Duration(days: 7),
-                                                ),
+                                                  fadeOutDuration:
+                                                      const Duration(
+                                                          seconds: 1),
+                                                  fadeInDuration:
+                                                      widget.isHero ?? false
+                                                          ? const Duration(
+                                                              milliseconds: 300)
+                                                          : const Duration(
+                                                              seconds: 1),
+                                                  cacheManager: CacheManager(
+                                                    Config(
+                                                      "newsImages",
+                                                      stalePeriod:
+                                                          const Duration(
+                                                              days: 7),
+                                                    ),
+                                                  ),
+                                                )
+                                              : Image(
+                                                  image: NetworkImage(
+                                                    widget.imageUrl,
+                                                  ),
+                                                  loadingBuilder: (context,
+                                                          child,
+                                                          loadingProgress) =>
+                                                      loadingProgress == null
+                                                          ? child
+                                                          : SizedBox(
+                                                              height: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width /
+                                                                  (16 / 9),
+                                                              child:
+                                                                  const LoadingIndicatorUtil(
+                                                                replaceImage:
+                                                                    true,
+                                                              ),
+                                                            ),
+                                                  errorBuilder:
+                                                      (context, url, error) =>
+                                                          Icon(
+                                                    Icons.error_outlined,
+                                                    color: useDarkMode
+                                                        ? Colors.white
+                                                        : Colors.black,
+                                                    size: 30,
+                                                  ),
+                                                )),
+                                      Align(
+                                        alignment: Alignment.topRight,
+                                        child: IconButton(
+                                          onPressed: () =>
+                                              Navigator.pop(context),
+                                          icon: Icon(
+                                            Icons.close_rounded,
+                                            color: useDarkMode
+                                                ? Colors.white
+                                                : Colors.black,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        );
+                      },
+                    );
+                  },
+                  child: Stack(
+                    alignment: Alignment.bottomCenter,
+                    children: [
+                      widget.isHero != null && widget.isHero!
+                          ? CachedNetworkImage(
+                              imageUrl: widget.imageUrl,
+                              placeholder: (context, url) => SizedBox(
+                                height: MediaQuery.of(context).size.width /
+                                    (16 / 9),
+                                child: const LoadingIndicatorUtil(
+                                  replaceImage: true,
+                                ),
+                              ),
+                              errorWidget: (context, url, error) =>
+                                  const Icon(Icons.error_outlined),
+                              fadeOutDuration: const Duration(seconds: 1),
+                              fadeInDuration: const Duration(seconds: 1),
+                              cacheManager: CacheManager(
+                                Config(
+                                  "newsImages",
+                                  stalePeriod: const Duration(days: 7),
+                                ),
+                              ),
+                            )
+                          : Image.network(
+                              widget.imageUrl,
+                              loadingBuilder:
+                                  (context, child, loadingProgress) =>
+                                      loadingProgress == null
+                                          ? child
+                                          : SizedBox(
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  (16 / 9),
+                                              child: const LoadingIndicatorUtil(
+                                                replaceImage: true,
                                               ),
-                                            )
-                                          : Image(
-                                              image: NetworkImage(
-                                                widget.imageUrl,
-                                              ),
-                                              loadingBuilder: (context, child,
-                                                      loadingProgress) =>
-                                                  loadingProgress == null
-                                                      ? child
-                                                      : SizedBox(
-                                                          height: MediaQuery.of(
-                                                                      context)
+                                            ),
+                              errorBuilder: (context, url, error) => Icon(
+                                Icons.error_outlined,
+                                color:
+                                    useDarkMode ? Colors.white : Colors.black,
+                                size: 30,
+                              ),
+                            ),
+                      Container(
+                        alignment: Alignment.bottomCenter,
+                        child: widget.caption != null && widget.caption != ''
+                            ? Container(
+                                width: double.infinity,
+                                padding: const EdgeInsets.all(4),
+                                color: Colors.black.withOpacity(0.7),
+                                child: Text(
+                                  widget.caption!,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              )
+                            : Container(),
+                      ),
+                    ],
+                  ),
+                )
+              : SizedBox(
+                  height: MediaQuery.of(context).size.width / (16 / 9),
+                  child: GestureDetector(
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            contentPadding: const EdgeInsets.only(
+                              top: 52,
+                              bottom: 50,
+                            ),
+                            insetPadding: EdgeInsets.zero,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            backgroundColor: Colors.transparent,
+                            content: Builder(
+                              builder: (context) {
+                                return SizedBox(
+                                  width: double.infinity - 10,
+                                  child: InteractiveViewer(
+                                    minScale: 0.1,
+                                    maxScale: 8,
+                                    child: Stack(
+                                      children: [
+                                        GestureDetector(
+                                          onTap: () => Navigator.pop(context),
+                                        ),
+                                        Card(
+                                            elevation: 5.0,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                            ),
+                                            clipBehavior: Clip.antiAlias,
+                                            child: widget.isHero != null &&
+                                                    widget.isHero!
+                                                ? CachedNetworkImage(
+                                                    imageUrl: widget.imageUrl,
+                                                    placeholder:
+                                                        (context, url) =>
+                                                            SizedBox(
+                                                      height:
+                                                          MediaQuery.of(context)
                                                                   .size
                                                                   .width /
                                                               (16 / 9),
-                                                          child:
-                                                              const LoadingIndicatorUtil(
-                                                            replaceImage: true,
-                                                          ),
-                                                        ),
-                                              errorBuilder:
-                                                  (context, url, error) => Icon(
-                                                Icons.error_outlined,
-                                                color: useDarkMode
-                                                    ? Colors.white
-                                                    : Colors.black,
-                                                size: 30,
-                                              ),
-                                            )),
-                                  Align(
-                                    alignment: Alignment.topRight,
-                                    child: IconButton(
-                                      onPressed: () => Navigator.pop(context),
-                                      icon: Icon(
-                                        Icons.close_rounded,
-                                        color: useDarkMode
-                                            ? Colors.white
-                                            : Colors.black,
-                                      ),
+                                                      child:
+                                                          const LoadingIndicatorUtil(
+                                                        replaceImage: true,
+                                                      ),
+                                                    ),
+                                                    errorWidget: (context, url,
+                                                            error) =>
+                                                        const Icon(Icons
+                                                            .error_outlined),
+                                                    fadeOutDuration:
+                                                        const Duration(
+                                                            seconds: 1),
+                                                    fadeInDuration:
+                                                        widget.isHero ?? false
+                                                            ? const Duration(
+                                                                milliseconds:
+                                                                    300)
+                                                            : const Duration(
+                                                                seconds: 1),
+                                                    cacheManager: CacheManager(
+                                                      Config(
+                                                        "newsImages",
+                                                        stalePeriod:
+                                                            const Duration(
+                                                                days: 7),
+                                                      ),
+                                                    ),
+                                                  )
+                                                : Image(
+                                                    image: NetworkImage(
+                                                      widget.imageUrl,
+                                                    ),
+                                                    loadingBuilder: (context,
+                                                            child,
+                                                            loadingProgress) =>
+                                                        loadingProgress == null
+                                                            ? child
+                                                            : SizedBox(
+                                                                height: MediaQuery.of(
+                                                                            context)
+                                                                        .size
+                                                                        .width /
+                                                                    (16 / 9),
+                                                                child:
+                                                                    const LoadingIndicatorUtil(
+                                                                  replaceImage:
+                                                                      true,
+                                                                ),
+                                                              ),
+                                                    errorBuilder:
+                                                        (context, url, error) =>
+                                                            Icon(
+                                                      Icons.error_outlined,
+                                                      color: useDarkMode
+                                                          ? Colors.white
+                                                          : Colors.black,
+                                                      size: 30,
+                                                    ),
+                                                  )),
+                                        Align(
+                                          alignment: Alignment.topRight,
+                                          child: IconButton(
+                                            onPressed: () =>
+                                                Navigator.pop(context),
+                                            icon: Icon(
+                                              Icons.close_rounded,
+                                              color: useDarkMode
+                                                  ? Colors.white
+                                                  : Colors.black,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                ],
-                              ),
+                                );
+                              },
                             ),
                           );
                         },
-                      ),
-                    );
-                  },
-                );
-              },
-              child: Stack(
-                alignment: Alignment.bottomCenter,
-                children: [
-                  widget.isHero != null && widget.isHero!
-                      ? CachedNetworkImage(
-                          imageUrl: widget.imageUrl,
-                          placeholder: (context, url) => SizedBox(
-                            height:
-                                MediaQuery.of(context).size.width / (16 / 9),
-                            child: const LoadingIndicatorUtil(
-                              replaceImage: true,
-                            ),
-                          ),
-                          errorWidget: (context, url, error) =>
-                              const Icon(Icons.error_outlined),
-                          fadeOutDuration: const Duration(seconds: 1),
-                          fadeInDuration: const Duration(seconds: 1),
-                          cacheManager: CacheManager(
-                            Config(
-                              "newsImages",
-                              stalePeriod: const Duration(days: 7),
-                            ),
-                          ),
-                        )
-                      : Image.network(
-                          widget.imageUrl,
-                          loadingBuilder: (context, child, loadingProgress) =>
-                              loadingProgress == null
-                                  ? child
-                                  : SizedBox(
-                                      height:
-                                          MediaQuery.of(context).size.width /
-                                              (16 / 9),
-                                      child: const LoadingIndicatorUtil(
-                                        replaceImage: true,
-                                      ),
-                                    ),
-                          errorBuilder: (context, url, error) => Icon(
-                            Icons.error_outlined,
-                            color: useDarkMode ? Colors.white : Colors.black,
-                            size: 30,
-                          ),
-                        ),
-                  Container(
-                    alignment: Alignment.bottomCenter,
-                    child: widget.caption != null && widget.caption != ''
-                        ? Container(
-                            width: double.infinity,
-                            padding: const EdgeInsets.all(4),
-                            color: Colors.black.withOpacity(0.7),
-                            child: Text(
-                              widget.caption!,
-                              style: const TextStyle(
-                                color: Colors.white,
+                      );
+                    },
+                    child: Stack(
+                      alignment: Alignment.bottomCenter,
+                      children: [
+                        widget.isHero != null && widget.isHero!
+                            ? CachedNetworkImage(
+                                imageUrl: widget.imageUrl,
+                                placeholder: (context, url) => SizedBox(
+                                  height: MediaQuery.of(context).size.width /
+                                      (16 / 9),
+                                  child: const LoadingIndicatorUtil(
+                                    replaceImage: true,
+                                  ),
+                                ),
+                                errorWidget: (context, url, error) =>
+                                    const Icon(Icons.error_outlined),
+                                fadeOutDuration: const Duration(seconds: 1),
+                                fadeInDuration: const Duration(seconds: 1),
+                                cacheManager: CacheManager(
+                                  Config(
+                                    "newsImages",
+                                    stalePeriod: const Duration(days: 7),
+                                  ),
+                                ),
+                              )
+                            : Image.network(
+                                widget.imageUrl,
+                                loadingBuilder: (context, child,
+                                        loadingProgress) =>
+                                    loadingProgress == null
+                                        ? child
+                                        : SizedBox(
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .width /
+                                                (16 / 9),
+                                            child: const LoadingIndicatorUtil(
+                                              replaceImage: true,
+                                            ),
+                                          ),
+                                errorBuilder: (context, url, error) => Icon(
+                                  Icons.error_outlined,
+                                  color:
+                                      useDarkMode ? Colors.white : Colors.black,
+                                  size: 30,
+                                ),
                               ),
-                              textAlign: TextAlign.center,
-                            ),
-                          )
-                        : Container(),
+                        Container(
+                          alignment: Alignment.bottomCenter,
+                          child: widget.caption != null && widget.caption != ''
+                              ? Container(
+                                  width: double.infinity,
+                                  padding: const EdgeInsets.all(4),
+                                  color: Colors.black.withOpacity(0.7),
+                                  child: Text(
+                                    widget.caption!,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                )
+                              : Container(),
+                        ),
+                      ],
+                    ),
                   ),
-                ],
-              ),
-            ),
+                ),
     );
   }
 }
@@ -1805,6 +2016,7 @@ class VideoRenderer extends StatelessWidget {
   final bool? autoplay;
   final String? youtubeId;
   final String? heroTag;
+  final String? caption;
 
   const VideoRenderer(
     this.videoId, {
@@ -1812,6 +2024,7 @@ class VideoRenderer extends StatelessWidget {
     this.autoplay,
     this.youtubeId,
     this.heroTag,
+    this.caption,
   }) : super(key: key);
 
   Future<Map<String, dynamic>> getYouTubeVideoLinks(String videoId) async {
@@ -1835,6 +2048,8 @@ class VideoRenderer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool useDarkMode =
+        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     double width = MediaQuery.of(context).size.width;
     width = width > 1400
         ? 800
@@ -1850,30 +2065,51 @@ class VideoRenderer extends StatelessWidget {
               snapshot.error.toString(),
             )
           : snapshot.hasData
-              ? kIsWeb
-                  ? SizedBox(
-                      height: width / (16 / 9),
-                      child: InAppWebView(
-                        initialUrlRequest: URLRequest(
-                          url: WebUri(
-                            snapshot.data!['videos'][0],
+              ? Column(
+                  children: [
+                    kIsWeb
+                        ? SizedBox(
+                            height: width / (16 / 9),
+                            child: InAppWebView(
+                              initialUrlRequest: URLRequest(
+                                url: WebUri(
+                                  snapshot.data!['videos'][0],
+                                ),
+                              ),
+                              initialSettings: InAppWebViewSettings(
+                                preferredContentMode:
+                                    UserPreferredContentMode.DESKTOP,
+                                transparentBackground: true,
+                                iframeAllowFullscreen: true,
+                                mediaPlaybackRequiresUserGesture:
+                                    !(autoplay ?? false),
+                              ),
+                            ),
+                          )
+                        : BetterPlayerVideoPlayer(
+                            snapshot.data!,
+                            autoplay == null ? false : autoplay!,
+                            heroTag ?? '',
                           ),
+                    if (caption != '')
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          top: 7,
+                          left: 10,
+                          right: 10,
                         ),
-                        initialSettings: InAppWebViewSettings(
-                          preferredContentMode:
-                              UserPreferredContentMode.DESKTOP,
-                          transparentBackground: true,
-                          iframeAllowFullscreen: true,
-                          mediaPlaybackRequiresUserGesture:
-                              !(autoplay ?? false),
+                        child: Text(
+                          caption!,
+                          style: TextStyle(
+                            color: useDarkMode
+                                ? Colors.grey[500]
+                                : Colors.grey[800],
+                          ),
+                          textAlign: TextAlign.center,
                         ),
-                      ),
-                    )
-                  : BetterPlayerVideoPlayer(
-                      snapshot.data!,
-                      autoplay == null ? false : autoplay!,
-                      heroTag ?? '',
-                    )
+                      ), // here
+                  ],
+                )
               : SizedBox(
                   height: MediaQuery.of(context).size.width / (16 / 9),
                   child: const LoadingIndicatorUtil(),
@@ -2086,5 +2322,80 @@ class PinnedVideoPlayer extends SliverPersistentHeaderDelegate {
   @override
   bool shouldRebuild(SliverPersistentHeaderDelegate oldDelegate) {
     return true;
+  }
+}
+
+class ImageGallery extends StatefulWidget {
+  final List images;
+  const ImageGallery(
+    this.images, {
+    Key? key,
+  }) : super(key: key);
+  @override
+  State<StatefulWidget> createState() => _ImageGalleryState();
+}
+
+class _ImageGalleryState extends State<ImageGallery> {
+  int _current = 0;
+  final CarouselController _controller = CarouselController();
+
+  @override
+  Widget build(BuildContext context) {
+    bool useDataSaverMode = Hive.box('settings')
+        .get('useDataSaverMode', defaultValue: false) as bool;
+    bool useDarkMode =
+        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
+
+    return Column(
+      children: [
+        CarouselSlider(
+          carouselController: _controller,
+          items: [
+            for (var image in widget.images)
+              SizedBox(
+                width: MediaQuery.of(context).size.width,
+                child: ImageRenderer(
+                  useDataSaverMode
+                      ? image['renditions'] != null
+                          ? image['renditions']['2col-retina']
+                          : image['url'] + '.transform/2col-retina/image.jpg'
+                      : image['url'],
+                ),
+              ),
+          ],
+          options: CarouselOptions(
+              viewportFraction: 1,
+              aspectRatio: 16 / 9,
+              enableInfiniteScroll: false,
+              enlargeCenterPage: true,
+              autoPlay: true,
+              autoPlayInterval: const Duration(seconds: 7),
+              onPageChanged: (index, reason) {
+                setState(() {
+                  _current = index;
+                });
+              }),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            for (var image in widget.images)
+              Container(
+                width: 12.0,
+                height: 12.0,
+                margin:
+                    const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color:
+                      (useDarkMode ? Colors.white : Colors.black).withOpacity(
+                    _current == widget.images.indexOf(image) ? 0.9 : 0.4,
+                  ),
+                ),
+              ),
+          ],
+        ),
+      ],
+    );
   }
 }

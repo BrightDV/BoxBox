@@ -198,26 +198,7 @@ class WidgetsList extends StatelessWidget {
       children: [
         // hero
         article.articleHero['contentType'] == 'atomImageGallery'
-            ? CarouselSlider(
-                items: [
-                  article.articleHero['fields']['imageGallery'].forEach(
-                    (element) => ImageRenderer(
-                      useDataSaverMode
-                          ? element['renditions'] != null
-                              ? element['renditions']['2col-retina']
-                              : element['url'] +
-                                  '.transform/3col-retina/image.jpg'
-                          : element['url'],
-                    ),
-                  ),
-                ],
-                options: CarouselOptions(
-                  viewportFraction: 1,
-                  enableInfiniteScroll: true,
-                  enlargeCenterPage: true,
-                  autoPlay: true,
-                ),
-              )
+            ? ImageGallery(article.articleHero['fields']['imageGallery'])
             : (article.articleHero['contentType'] != 'atomVideo') &&
                     (article.articleHero['contentType'] != 'atomVideoYouTube')
                 ? Hero(
@@ -303,6 +284,7 @@ class WidgetsList extends StatelessWidget {
               : element['contentType'] == 'atomVideo'
                   ? VideoRenderer(
                       element['fields']['videoId'],
+                      caption: element['fields']['caption'] ?? '',
                     )
                   : element['contentType'] == 'atomVideoYouTube'
                       ? VideoRenderer(
@@ -405,36 +387,8 @@ class WidgetsList extends StatelessWidget {
                                   ),
                                 )
                               : element['contentType'] == 'atomImageGallery'
-                                  ? CarouselSlider(
-                                      items: [
-                                        for (element in element['fields']
-                                            ['imageGallery'])
-                                          SizedBox(
-                                            width: MediaQuery.of(context)
-                                                .size
-                                                .width,
-                                            child: ImageRenderer(
-                                              useDataSaverMode
-                                                  ? element['renditions'] !=
-                                                          null
-                                                      ? element['renditions']
-                                                          ['2col-retina']
-                                                      : element['url'] +
-                                                          '.transform/2col-retina/image.jpg'
-                                                  : element['url'],
-                                            ),
-                                          ),
-                                      ],
-                                      options: CarouselOptions(
-                                        viewportFraction: 1,
-                                        aspectRatio: 16 / 9,
-                                        enableInfiniteScroll: false,
-                                        enlargeCenterPage: true,
-                                        autoPlay: true,
-                                        autoPlayInterval:
-                                            const Duration(seconds: 7),
-                                      ),
-                                    )
+                                  ? ImageGallery(
+                                      element['fields']['imageGallery'])
                                   : element['contentType'] ==
                                               'atomSocialPost' &&
                                           element['fields']['postType'] ==
@@ -1177,7 +1131,8 @@ class WidgetsList extends StatelessWidget {
                                                                       [
                                                                       'tableContent'])
                                                                 Row(
-                                                                  children: <Widget>[
+                                                                  children: <
+                                                                      Widget>[
                                                                     for (Map driverDetails
                                                                         in driverItem)
                                                                       Container(

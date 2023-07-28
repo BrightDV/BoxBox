@@ -191,6 +191,7 @@ class Convert {
       "kevin_magnussen": "magnussen",
       "albon": "albon",
       "sargeant": "sargeant",
+      "ricciardo": "ricciardo",
     };
     return ergastToFormulaOne[driverId];
   }
