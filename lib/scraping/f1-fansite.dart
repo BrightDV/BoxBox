@@ -24,8 +24,6 @@ class Chicanef1 {
     final Future<File> fileStream = instance.getSingleFile(url);
     final response = await fileStream;
 
-    final teamMateDataList = <TeamMateComparison>[];
-
     final document = parser.parse(await response.readAsBytes());
 
     final table = document.querySelector('table.msr_team_mates');
@@ -35,6 +33,11 @@ class Chicanef1 {
 
     final resultMap = <int, YearData>{};
 
+    final List<ComparisonValues> pointsComparision =
+        <ComparisonValues>[];
+    final List<MostPolesComparison> mostPolesComparison =
+        <MostPolesComparison>[];
+
     if (rows != null) {
       for (final row in rows) {
         final cells = row.querySelectorAll('td');
@@ -42,38 +45,50 @@ class Chicanef1 {
           continue;
         }
 
-        for (int i = 0; i < cells.length; i++) {
-          print('i -> ${cells[i].text.trim()}');
-        }
-
         final int year = cells[0].text.trim().isNotEmpty
             ? int.parse(cells[0].text.trim())
             : previousYear!;
         final teamMate = cells[2].text.trim();
 
-        final yearData =
-            resultMap.putIfAbsent(year, () => YearData(teamMates: {}));
-        final teamMateData = TeamMateData(
-          bestPos: num.parse(cells[3].text.trim()),
-          bestPosTeamMate: num.parse(cells[4].text.trim()),
-          points: num.parse(cells[5].text.trim()),
-          pointsTeamMate: num.parse(cells[6].text.trim()),
-          wins: num.parse(cells[7].text.trim()),
-          winsTeamMate: num.parse(cells[8].text.trim()),
-          poles: num.parse(cells[9].text.trim()),
-          polesTeamMate: num.parse(cells[10].text.trim()),
-          pos: num.parse(cells[11].text.trim()),
-          posTeamMate: num.parse(cells[12].text.trim()),
-          quali: num.parse(cells[13].text.trim()),
-          qualiTeamMate: num.parse(cells[14].text.trim()),
-        );
+        final String rowKey = '$teamMate $year';
 
-        yearData.teamMates[teamMate] = teamMateData;
+        pointsComparision.add(ComparisonValues(rowKey, num.parse(cells[5].text.trim()), num.parse(cells[6].text.trim())));
+
+        // print('points : $driverName -> ${pointsComparision.driverValue}');
+        // print('points : $teamMate -> ${pointsComparision.teamMateValue}');
+
+        // final yearData =
+        //     resultMap.putIfAbsent(year, () => YearData(teamMates: {}));
+        // final teamMateData = TeamMateData(
+        //   bestPos: num.parse(cells[3].text.trim()),
+        //   bestPosTeamMate: num.parse(cells[4].text.trim()),
+        //   points: num.parse(cells[5].text.trim()),
+        //   pointsTeamMate: num.parse(cells[6].text.trim()),
+        //   wins: num.parse(cells[7].text.trim()),
+        //   winsTeamMate: num.parse(cells[8].text.trim()),
+        //   poles: num.parse(cells[9].text.trim()),
+        //   polesTeamMate: num.parse(cells[10].text.trim()),
+        //   pos: num.parse(cells[11].text.trim()),
+        //   posTeamMate: num.parse(cells[12].text.trim()),
+        //   quali: num.parse(cells[13].text.trim()),
+        //   qualiTeamMate: num.parse(cells[14].text.trim()),
+        // );
+
+        // final String rowKey = '$teamMate $year';
+        // mostPointsComparison.add(MostPointsComparison(rowKey,
+        //     num.parse(cells[5].text.trim()), num.parse(cells[6].text.trim())));
+        // mostPolesComparison.add(MostPolesComparison(rowKey,
+        //     num.parse(cells[9].text.trim()), num.parse(cells[10].text.trim())));
+        //
+        // yearData.teamMates[teamMate] = teamMateData;
         previousYear = year;
       }
     }
 
-    return TeamMateComparison(resultMap: resultMap);
+    return TeamMateComparison(
+      pointsComparision: pointsComparision,
+      // mostPolesComparison: mostPolesComparison,
+    );
 
     // if (rows != null) {
     //
@@ -164,9 +179,41 @@ class YearData {
 }
 
 class TeamMateComparison {
-  Map<int, YearData> resultMap;
+  final List<ComparisonValues> pointsComparision;
+  // final List<MostPolesComparison> mostPolesComparison;
 
-  TeamMateComparison({required this.resultMap});
+  // Map<int, YearData> resultMap;
+  //
+  TeamMateComparison(
+      {required this.pointsComparision});
+}
+
+class MostPointsComparison {
+  final String rowKey;
+  final num points;
+  final num pointsTeamMate;
+
+  MostPointsComparison(this.rowKey, this.points, this.pointsTeamMate);
+}
+
+class MostPolesComparison {
+  final String rowKey;
+  final num poles;
+  final num polesTeamMate;
+
+  MostPolesComparison(this.rowKey, this.poles, this.polesTeamMate);
+}
+class ComparisonValues {
+  final String rowKey;
+  final num driverValue;
+  final num teamMateValue;
+
+  ComparisonValues(this.rowKey, this.driverValue, this.teamMateValue);
+
+  @override
+  String toString() {
+    return '$rowKey -> [$driverValue : $teamMateValue]';
+  }
 }
 
 // class TeamMateComparison {
