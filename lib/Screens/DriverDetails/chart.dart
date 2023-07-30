@@ -15,13 +15,9 @@ class DriverDetailsStatsChart extends StatefulWidget {
 class _DriverDetailsStatsChartState extends State<DriverDetailsStatsChart> {
   // final List<ChartData> _chartData = <ChartData>[];
   final List<ComparisonData> _chartData = <ComparisonData>[];
-  TrackballBehavior? _trackballBehavior;
 
   @override
   void initState() {
-    // _trackballBehavior = TrackballBehavior(
-    //     enable: true, activationMode: ActivationMode.singleTap);
-
     for (ComparisonValues element in widget.comparison.pointsComparision) {
       _chartData.add(ComparisonData(
           element.rowKey, element.driverValue, element.teamMateValue));
@@ -31,22 +27,44 @@ class _DriverDetailsStatsChartState extends State<DriverDetailsStatsChart> {
   }
 
   @override
-  Widget build(BuildContext context) =>
-      SfCartesianChart(primaryXAxis: CategoryAxis(), series: <ChartSeries>[
-        // Renders line chart
-        LineSeries<ComparisonData, String>(
-          dataSource: _chartData,
-          xValueMapper: (ComparisonData sales, _) => sales.rowKey,
-          yValueMapper: (ComparisonData sales, _) => sales.driverValue,
-          name: 'Max Verstappen',
+  Widget build(BuildContext context) => Expanded(
+        child: SfCartesianChart(
+          title: ChartTitle(text: 'Points comparison between Max verstappen and team mates'),
+          enableAxisAnimation: true,
+          tooltipBehavior: TooltipBehavior(enable: true),
+          legend: Legend(isVisible: true),
+          primaryXAxis: CategoryAxis(
+            edgeLabelPlacement: EdgeLabelPlacement.shift,
+            interval: 1,
+            labelRotation: -90,
+            majorGridLines: const MajorGridLines(width: 0),
+            axisLabelFormatter: (AxisLabelRenderDetails details) {
+              return ChartAxisLabel(details.text.split(' ')[1], details.textStyle);
+            }
+          ),
+          primaryYAxis: NumericAxis(
+            labelFormat: '{value}',
+            axisLine: const AxisLine(width: 0),
+            majorTickLines: const MajorTickLines(size: 0),
+          ),
+          series: <ChartSeries>[
+            LineSeries<ComparisonData, String>(
+                dataSource: _chartData,
+                xValueMapper: (ComparisonData sales, _) => sales.rowKey,
+                yValueMapper: (ComparisonData sales, _) => sales.driverValue,
+                name: 'Max Verstappen',
+                width: 2,
+                markerSettings: const MarkerSettings(isVisible: true)),
+            LineSeries<ComparisonData, String>(
+                dataSource: _chartData,
+                xValueMapper: (ComparisonData sales, _) => sales.rowKey,
+                yValueMapper: (ComparisonData sales, _) => sales.teamMateValue,
+                name: 'Team mate',
+                width: 2,
+                markerSettings: const MarkerSettings(isVisible: true)),
+          ],
         ),
-        LineSeries<ComparisonData, String>(
-          dataSource: _chartData,
-          xValueMapper: (ComparisonData sales, _) => sales.rowKey,
-          yValueMapper: (ComparisonData sales, _) => sales.teamMateValue,
-          name: 'Team mate',
-        )
-      ]);
+      );
 
   // @override
   // Widget build(BuildContext context) => /*const Placeholder();*/
