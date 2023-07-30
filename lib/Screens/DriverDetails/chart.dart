@@ -1,5 +1,6 @@
 import 'package:boxbox/scraping/f1-fansite.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class DriverDetailsStatsChart extends StatefulWidget {
@@ -29,21 +30,39 @@ class _DriverDetailsStatsChartState extends State<DriverDetailsStatsChart> {
   @override
   Widget build(BuildContext context) => Expanded(
         child: SfCartesianChart(
-          title: ChartTitle(text: 'Points comparison between Max verstappen and team mates'),
+          title: ChartTitle(
+              text: 'Points comparison between Max verstappen and team mates'),
           enableAxisAnimation: true,
-          tooltipBehavior: TooltipBehavior(enable: true),
+          // tooltipBehavior: TooltipBehavior(
+          //   enable: true,
+          //   format: 'point.y',
+          //   header: '',
+          // ),
+          trackballBehavior: TrackballBehavior(
+            enable: true,
+            markerSettings: const TrackballMarkerSettings(
+              markerVisibility: TrackballVisibilityMode.visible,
+              height: 10,
+              width: 10,
+              borderWidth: 1,
+            ),
+            activationMode: ActivationMode.singleTap,
+            tooltipSettings:
+                const InteractiveTooltip(format: null, canShowMarker: true),
+            shouldAlwaysShow: true,
+          ),
           legend: Legend(isVisible: true),
           primaryXAxis: CategoryAxis(
-            edgeLabelPlacement: EdgeLabelPlacement.shift,
-            interval: 1,
-            labelRotation: -90,
-            majorGridLines: const MajorGridLines(width: 0),
-            axisLabelFormatter: (AxisLabelRenderDetails details) {
-              return ChartAxisLabel(details.text.split(' ')[1], details.textStyle);
-            }
-          ),
+              edgeLabelPlacement: EdgeLabelPlacement.shift,
+              interval: 1,
+              labelRotation: -90,
+              majorGridLines: const MajorGridLines(width: 0),
+              axisLabelFormatter: (AxisLabelRenderDetails details) {
+                return ChartAxisLabel(
+                    details.text.split(' ')[1], details.textStyle);
+              }),
           primaryYAxis: NumericAxis(
-            labelFormat: '{value}',
+            numberFormat: NumberFormat.decimalPattern(),
             axisLine: const AxisLine(width: 0),
             majorTickLines: const MajorTickLines(size: 0),
           ),
