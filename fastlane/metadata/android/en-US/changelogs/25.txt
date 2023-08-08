@@ -1,0 +1,2 @@
+- Fix the video without title (video tab & in the articles)
+- Reduce the size of the indicator of the Image Gallery
