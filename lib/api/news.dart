@@ -2036,7 +2036,7 @@ class VideoRenderer extends StatelessWidget {
 
     urls['poster'] = 'https://img.youtube.com/vi/$videoId/0.jpg';
     urls['name'] = video.title;
-    urls['auhor'] = video.author;
+    urls['author'] = video.author;
 
     for (var stream in manifest.muxed) {
       urls['videos'].add(stream.url.toString());
@@ -2091,7 +2091,7 @@ class VideoRenderer extends StatelessWidget {
                             autoplay == null ? false : autoplay!,
                             heroTag ?? '',
                           ),
-                    if (caption != '')
+                    if (caption != null)
                       Padding(
                         padding: const EdgeInsets.only(
                           top: 7,

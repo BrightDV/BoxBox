@@ -284,7 +284,7 @@ class WidgetsList extends StatelessWidget {
               : element['contentType'] == 'atomVideo'
                   ? VideoRenderer(
                       element['fields']['videoId'],
-                      caption: element['fields']['caption'] ?? '',
+                      caption: element['fields']?['caption'] ?? '',
                     )
                   : element['contentType'] == 'atomVideoYouTube'
                       ? VideoRenderer(
