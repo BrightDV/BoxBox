@@ -2381,8 +2381,8 @@ class _ImageGalleryState extends State<ImageGallery> {
           children: [
             for (var image in widget.images)
               Container(
-                width: 12.0,
-                height: 12.0,
+                width: 6.0,
+                height: 6.0,
                 margin:
                     const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
                 decoration: BoxDecoration(
