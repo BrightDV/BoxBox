@@ -1230,14 +1230,22 @@ class _NewsListState extends State<NewsList> {
     String savedServer = Hive.box('settings')
         .get('server', defaultValue: officialFeed) as String;
     return (_pagingController.error.toString() == 'XMLHttpRequest error.' ||
-                _pagingController.error ==
+                _pagingController.error.toString() ==
                     "Failed host lookup: ${savedServer.replaceAll(
                           'http://',
                           '',
                         ).replaceAll(
                           'https://',
                           '',
-                        )}") &&
+                        )}" ||
+                _pagingController.error.toString() ==
+                    "Failed host lookup: '${savedServer.replaceAll(
+                          'http://',
+                          '',
+                        ).replaceAll(
+                          'https://',
+                          '',
+                        )}'") &&
             latestNews['items'] != null &&
             widget.tagId == null &&
             widget.articleType == null
