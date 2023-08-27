@@ -816,11 +816,25 @@ class QualificationResultsProvider extends StatelessWidget {
                         ),
                       ],
                     )
-                  : SessionCountdownTimer(
-                      race,
-                      3,
-                      AppLocalizations.of(context)!.qualifyings,
-                    )
+                  : race!.sessionDates[3].isBefore(DateTime.now())
+                      ? Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: Center(
+                            child: Text(
+                              AppLocalizations.of(context)!.dataNotAvailable,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color:
+                                    useDarkMode ? Colors.white : Colors.black,
+                              ),
+                            ),
+                          ),
+                        )
+                      : SessionCountdownTimer(
+                          race,
+                          3,
+                          AppLocalizations.of(context)!.qualifyings,
+                        )
               : const LoadingIndicatorUtil(),
     );
   }
