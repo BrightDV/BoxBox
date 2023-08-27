@@ -1230,14 +1230,22 @@ class _NewsListState extends State<NewsList> {
     String savedServer = Hive.box('settings')
         .get('server', defaultValue: officialFeed) as String;
     return (_pagingController.error.toString() == 'XMLHttpRequest error.' ||
-                _pagingController.error ==
+                _pagingController.error.toString() ==
                     "Failed host lookup: ${savedServer.replaceAll(
                           'http://',
                           '',
                         ).replaceAll(
                           'https://',
                           '',
-                        )}") &&
+                        )}" ||
+                _pagingController.error.toString() ==
+                    "Failed host lookup: '${savedServer.replaceAll(
+                          'http://',
+                          '',
+                        ).replaceAll(
+                          'https://',
+                          '',
+                        )}'") &&
             latestNews['items'] != null &&
             widget.tagId == null &&
             widget.articleType == null
@@ -2036,7 +2044,7 @@ class VideoRenderer extends StatelessWidget {
 
     urls['poster'] = 'https://img.youtube.com/vi/$videoId/0.jpg';
     urls['name'] = video.title;
-    urls['auhor'] = video.author;
+    urls['author'] = video.author;
 
     for (var stream in manifest.muxed) {
       urls['videos'].add(stream.url.toString());
@@ -2091,7 +2099,7 @@ class VideoRenderer extends StatelessWidget {
                             autoplay == null ? false : autoplay!,
                             heroTag ?? '',
                           ),
-                    if (caption != '')
+                    if (caption != null)
                       Padding(
                         padding: const EdgeInsets.only(
                           top: 7,
@@ -2381,8 +2389,8 @@ class _ImageGalleryState extends State<ImageGallery> {
           children: [
             for (var image in widget.images)
               Container(
-                width: 12.0,
-                height: 12.0,
+                width: 6.0,
+                height: 6.0,
                 margin:
                     const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
                 decoration: BoxDecoration(

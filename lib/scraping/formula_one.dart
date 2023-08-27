@@ -139,6 +139,8 @@ class FormulaOneScraper {
       resultsUrl = Uri.parse(
         'https://www.formula1.com/en/results.html/${DateTime.now().year}/races/$circuitId/$circuitName/$sessionName.html',
       );
+    } else {
+      resultsUrl = Uri.parse(qualifyingResultsUrl);
     }
     http.Response response = await http.get(
       resultsUrl,
