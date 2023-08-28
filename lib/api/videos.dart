@@ -47,7 +47,7 @@ class F1VideosFetcher {
           element['videoId'],
           'https://formula1.com${element['url']}',
           element['caption'],
-          element['description'],
+          element?['description'] ?? '',
           element['videoDuration'],
           imageUrl,
           DateTime.parse(element['publishedAt']),
