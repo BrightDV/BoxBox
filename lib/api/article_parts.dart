@@ -1103,7 +1103,8 @@ class WidgetsList extends StatelessWidget {
                                                                 child: Padding(
                                                                   padding:
                                                                       const EdgeInsets
-                                                                          .all(10),
+                                                                          .all(
+                                                                          10),
                                                                   child: Text(
                                                                     element['fields']
                                                                         [
@@ -1131,8 +1132,7 @@ class WidgetsList extends StatelessWidget {
                                                                       [
                                                                       'tableContent'])
                                                                 Row(
-                                                                  children: <
-                                                                      Widget>[
+                                                                  children: <Widget>[
                                                                     for (Map driverDetails
                                                                         in driverItem)
                                                                       Container(
@@ -1306,11 +1306,14 @@ class WidgetsList extends StatelessWidget {
                 ),
                 child: Row(
                   children: [
-                    SizedBox(
-                      height: 70,
-                      child:
-                          Image.network(article.authorDetails['image']['url']),
-                    ),
+                    article.authorDetails['image'] != null
+                        ? SizedBox(
+                            height: 70,
+                            child: Image.network(
+                              article.authorDetails['image']['url'],
+                            ),
+                          )
+                        : Container(),
                     Padding(
                       padding: const EdgeInsets.only(left: 10),
                       child: Column(
@@ -1327,7 +1330,7 @@ class WidgetsList extends StatelessWidget {
                             textAlign: TextAlign.start,
                           ),
                           Text(
-                            article.authorDetails["shortDescription"],
+                            article.authorDetails["shortDescription"] ?? '',
                             style: TextStyle(
                               color: Colors.grey.shade50,
                               fontSize: 12,
