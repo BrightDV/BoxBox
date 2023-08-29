@@ -19,22 +19,56 @@
 
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
+import 'package:flutter_cache_manager/file.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart';
 
 class BrightCove {
+  static const key = 'brightCoveVideoCache';
+  static CacheManager videoCache = CacheManager(
+    Config(
+      key,
+      stalePeriod: const Duration(hours: 1),
+      maxNrOfCacheObjects: 10,
+      repo: JsonCacheInfoRepository(databaseName: key),
+      fileService: HttpFileService(),
+    ),
+  );
+
   Future<Map> fetchStreamData(String videoId) async {
-    Uri uri = Uri.parse(
-      'https://edge.api.brightcove.com/playback/v1/accounts/6057949432001/videos/$videoId',
-    );
-    Response res = await get(
-      uri,
-      headers: {
-        'Accept':
-            ' application/json;pk=BCpkADawqM1hQVBuXkSlsl6hUsBZQMmrLbIfOjJQ3_n8zmPOhlNSwZhQBF6d5xggxm0t052lQjYyhqZR3FW2eP03YGOER9ihJkUnIhRZGBxuLhnL-QiFpvcDWIh_LvwN5j8zkjTtGKarhsdV',
-      },
-    );
-    Map responseAsJson = jsonDecode(res.body);
+    late Map responseAsJson;
+    if (kIsWeb) {
+      Uri uri = Uri.parse(
+        'https://edge.api.brightcove.com/playback/v1/accounts/6057949432001/videos/$videoId',
+      );
+      Response res = await get(
+        uri,
+        headers: {
+          'Accept':
+              ' application/json;pk=BCpkADawqM1hQVBuXkSlsl6hUsBZQMmrLbIfOjJQ3_n8zmPOhlNSwZhQBF6d5xggxm0t052lQjYyhqZR3FW2eP03YGOER9ihJkUnIhRZGBxuLhnL-QiFpvcDWIh_LvwN5j8zkjTtGKarhsdV',
+        },
+      );
+      responseAsJson = jsonDecode(res.body);
+    } else {
+      String url =
+          'https://edge.api.brightcove.com/playback/v1/accounts/6057949432001/videos/$videoId';
+      final Future<File> fileStream = videoCache.getSingleFile(
+        url,
+        headers: {
+          'Accept':
+              ' application/json;pk=BCpkADawqM1hQVBuXkSlsl6hUsBZQMmrLbIfOjJQ3_n8zmPOhlNSwZhQBF6d5xggxm0t052lQjYyhqZR3FW2eP03YGOER9ihJkUnIhRZGBxuLhnL-QiFpvcDWIh_LvwN5j8zkjTtGKarhsdV',
+        },
+      );
+      final response = await fileStream;
+
+      responseAsJson = jsonDecode(
+        utf8.decode(
+          await response.readAsBytes(),
+        ),
+      );
+    }
     return responseAsJson;
   }
 
