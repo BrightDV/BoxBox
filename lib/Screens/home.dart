@@ -38,6 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     return SingleChildScrollView(
+      key: GlobalKey(),
       physics: const NeverScrollableScrollPhysics(),
       child: Column(
         children: <Widget>[
