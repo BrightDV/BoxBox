@@ -1818,8 +1818,10 @@ class _ImageRendererState extends State<ImageRenderer> {
                     ],
                   ),
                 )
-              : SizedBox(
-                  height: MediaQuery.of(context).size.width / (16 / 9),
+              : ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minHeight: MediaQuery.of(context).size.width / (16 / 9),
+                  ),
                   child: GestureDetector(
                     onTap: () {
                       showDialog(
