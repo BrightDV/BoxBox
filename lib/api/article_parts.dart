@@ -22,16 +22,17 @@ import 'package:boxbox/Screens/free_practice_screen.dart';
 import 'package:boxbox/Screens/race_details.dart';
 import 'package:boxbox/api/news.dart';
 import 'package:boxbox/helpers/news_feed_widget.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ArticleParts extends StatelessWidget {
   final Article article;
@@ -389,33 +390,80 @@ class WidgetsList extends StatelessWidget {
                               : element['contentType'] == 'atomImageGallery'
                                   ? ImageGallery(
                                       element['fields']['imageGallery'])
-                                  : element['contentType'] ==
-                                              'atomSocialPost' &&
-                                          element['fields']['postType'] ==
+                                  : element['contentType'] == 'atomSocialPost'
+                                      ? element['fields']['postType'] ==
                                               'Twitter'
-                                      ? SizedBox(
-                                          height: 400,
-                                          child: InAppWebView(
-                                            initialData: InAppWebViewInitialData(
-                                                data:
-                                                    '<blockquote class="twitter-tweet"><a href="https://twitter.com/x/status/${element['fields']['postId']}"></a> </blockquote><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>'),
-                                            gestureRecognizers: {
-                                              Factory<VerticalDragGestureRecognizer>(
-                                                  () =>
-                                                      VerticalDragGestureRecognizer()),
-                                              Factory<HorizontalDragGestureRecognizer>(
-                                                  () =>
-                                                      HorizontalDragGestureRecognizer()),
-                                              Factory<ScaleGestureRecognizer>(
-                                                  () =>
-                                                      ScaleGestureRecognizer()),
-                                            },
-                                            initialSettings:
-                                                InAppWebViewSettings(
-                                              transparentBackground: true,
-                                            ),
-                                          ),
-                                        )
+                                          ? SizedBox(
+                                              height: 400,
+                                              child: InAppWebView(
+                                                initialData:
+                                                    InAppWebViewInitialData(
+                                                        data:
+                                                            '<blockquote class="twitter-tweet"><a href="https://twitter.com/x/status/${element['fields']['postId']}"></a> </blockquote><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>'),
+                                                gestureRecognizers: {
+                                                  Factory<VerticalDragGestureRecognizer>(
+                                                      () =>
+                                                          VerticalDragGestureRecognizer()),
+                                                  Factory<HorizontalDragGestureRecognizer>(
+                                                      () =>
+                                                          HorizontalDragGestureRecognizer()),
+                                                  Factory<ScaleGestureRecognizer>(
+                                                      () =>
+                                                          ScaleGestureRecognizer()),
+                                                },
+                                                initialSettings:
+                                                    InAppWebViewSettings(
+                                                  transparentBackground: true,
+                                                ),
+                                              ),
+                                            )
+                                          : element['fields']['postType'] ==
+                                                  'Instagram'
+                                              ? Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(10),
+                                                  child: SizedBox(
+                                                    height: 40,
+                                                    child: TextButton.icon(
+                                                      onPressed: () async =>
+                                                          await launchUrl(
+                                                        Uri.parse(
+                                                            element['fields']
+                                                                ['postUrl']),
+                                                        mode: LaunchMode
+                                                            .externalApplication,
+                                                      ),
+                                                      icon: const FaIcon(
+                                                        FontAwesomeIcons
+                                                            .instagram,
+                                                      ),
+                                                      label: const Text(
+                                                        "Instagram Post",
+                                                      ),
+                                                      style: ButtonStyle(
+                                                        foregroundColor:
+                                                            MaterialStateProperty
+                                                                .all<Color>(
+                                                          Colors.white,
+                                                        ),
+                                                        backgroundColor:
+                                                            MaterialStateProperty
+                                                                .all<Color>(
+                                                          const Color.fromARGB(
+                                                            255,
+                                                            241,
+                                                            77,
+                                                            90,
+                                                          ),
+                                                        ),
+                                                        elevation:
+                                                            MaterialStateProperty
+                                                                .all<double>(5),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                )
+                                              : Container()
                                       : element['contentType'] ==
                                               'atomLiveBlogScribbleLive'
                                           ? Padding(
