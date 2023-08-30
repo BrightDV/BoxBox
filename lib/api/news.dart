@@ -2373,24 +2373,8 @@ class _ImageGalleryState extends State<ImageGallery> {
                               : image['url'] +
                                   '.transform/2col-retina/image.jpg'
                           : image['url'],
+                      caption: image['caption'] ?? '',
                     ),
-                    if (image['caption'] != null)
-                      Padding(
-                        padding: const EdgeInsets.only(
-                          top: 7,
-                          left: 10,
-                          right: 10,
-                        ),
-                        child: Text(
-                          image['caption'],
-                          style: TextStyle(
-                            color: useDarkMode
-                                ? Colors.grey[500]
-                                : Colors.grey[800],
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ), //
                   ],
                 ),
               ),
