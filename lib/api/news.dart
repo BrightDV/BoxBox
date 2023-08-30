@@ -2364,12 +2364,34 @@ class _ImageGalleryState extends State<ImageGallery> {
             for (var image in widget.images)
               SizedBox(
                 width: MediaQuery.of(context).size.width,
-                child: ImageRenderer(
-                  useDataSaverMode
-                      ? image['renditions'] != null
-                          ? image['renditions']['2col-retina']
-                          : image['url'] + '.transform/2col-retina/image.jpg'
-                      : image['url'],
+                child: Column(
+                  children: [
+                    ImageRenderer(
+                      useDataSaverMode
+                          ? image['renditions'] != null
+                              ? image['renditions']['2col-retina']
+                              : image['url'] +
+                                  '.transform/2col-retina/image.jpg'
+                          : image['url'],
+                    ),
+                    if (image['caption'] != null)
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          top: 7,
+                          left: 10,
+                          right: 10,
+                        ),
+                        child: Text(
+                          image['caption'],
+                          style: TextStyle(
+                            color: useDarkMode
+                                ? Colors.grey[500]
+                                : Colors.grey[800],
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ), //
+                  ],
                 ),
               ),
           ],
