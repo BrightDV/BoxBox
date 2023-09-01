@@ -1764,6 +1764,7 @@ class _ImageRendererState extends State<ImageRenderer> {
                                     (16 / 9),
                                 child: const LoadingIndicatorUtil(
                                   replaceImage: true,
+                                  borderRadius: false,
                                 ),
                               ),
                               errorWidget: (context, url, error) =>
@@ -1790,6 +1791,7 @@ class _ImageRendererState extends State<ImageRenderer> {
                                                   (16 / 9),
                                               child: const LoadingIndicatorUtil(
                                                 replaceImage: true,
+                                                borderRadius: false,
                                               ),
                                             ),
                               errorBuilder: (context, url, error) => Icon(
@@ -1872,6 +1874,7 @@ class _ImageRendererState extends State<ImageRenderer> {
                                                       child:
                                                           const LoadingIndicatorUtil(
                                                         replaceImage: true,
+                                                        borderRadius: false,
                                                       ),
                                                     ),
                                                     errorWidget: (context, url,
@@ -1916,6 +1919,8 @@ class _ImageRendererState extends State<ImageRenderer> {
                                                                     const LoadingIndicatorUtil(
                                                                   replaceImage:
                                                                       true,
+                                                                  borderRadius:
+                                                                      false,
                                                                 ),
                                                               ),
                                                     errorBuilder:
@@ -1962,6 +1967,7 @@ class _ImageRendererState extends State<ImageRenderer> {
                                       (16 / 9),
                                   child: const LoadingIndicatorUtil(
                                     replaceImage: true,
+                                    borderRadius: false,
                                   ),
                                 ),
                                 errorWidget: (context, url, error) =>
@@ -1988,6 +1994,7 @@ class _ImageRendererState extends State<ImageRenderer> {
                                                 (16 / 9),
                                             child: const LoadingIndicatorUtil(
                                               replaceImage: true,
+                                              borderRadius: false,
                                             ),
                                           ),
                                 errorBuilder: (context, url, error) => Icon(
