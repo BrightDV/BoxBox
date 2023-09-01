@@ -1,0 +1,11 @@
+- Fix scraping the qualifying results
+- Fix the home cache
+- Fix the video tab crashing
+- Add Lawson's image to the standings
+- Fix articles with no author image
+- Cache links of the videos to improve performances
+- Improve rendering of images and image galleries
+- Add a button to open externally Instagram posts
+- Improve mobile view of the Race Hub (scroll)
+- Some other small UI improvements
+- Update translations
