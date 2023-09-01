@@ -2117,12 +2117,15 @@ class VideoRenderer extends StatelessWidget {
                           ),
                           textAlign: TextAlign.center,
                         ),
-                      ), // here
+                      ),
                   ],
                 )
               : SizedBox(
                   height: MediaQuery.of(context).size.width / (16 / 9),
-                  child: const LoadingIndicatorUtil(),
+                  child: const LoadingIndicatorUtil(
+                    replaceImage: true,
+                    borderRadius: false,
+                  ),
                 ),
     );
   }
@@ -2230,26 +2233,21 @@ class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
                   widget.heroTag != ''
                       ? Hero(
                           tag: widget.heroTag,
-                          child: ImageFiltered(
-                            imageFilter: ImageFilter.blur(),
-                            child: CachedNetworkImage(
-                              imageUrl: widget.videoUrls['poster'],
-                              placeholder: (context, url) => SizedBox(
-                                height: MediaQuery.of(context).size.width /
-                                    (16 / 9),
-                                child: const LoadingIndicatorUtil(
-                                  replaceImage: true,
-                                ),
+                          child: CachedNetworkImage(
+                            imageUrl: widget.videoUrls['poster'],
+                            placeholder: (context, url) => SizedBox(
+                              height:
+                                  MediaQuery.of(context).size.width / (16 / 9),
+                              child: const LoadingIndicatorUtil(
+                                replaceImage: true,
                               ),
-                              errorWidget: (context, url, error) => Icon(
-                                Icons.error_outlined,
-                                color:
-                                    useDarkMode ? Colors.white : Colors.black,
-                              ),
-                              fadeOutDuration:
-                                  const Duration(milliseconds: 100),
-                              fadeInDuration: const Duration(seconds: 1),
                             ),
+                            errorWidget: (context, url, error) => Icon(
+                              Icons.error_outlined,
+                              color: useDarkMode ? Colors.white : Colors.black,
+                            ),
+                            fadeOutDuration: const Duration(milliseconds: 100),
+                            fadeInDuration: const Duration(seconds: 1),
                           ),
                         )
                       : Container(

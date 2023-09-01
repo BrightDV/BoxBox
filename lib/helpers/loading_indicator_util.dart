@@ -23,17 +23,19 @@ import 'package:loading_indicator/loading_indicator.dart';
 class LoadingIndicatorUtil extends StatelessWidget {
   final double? width;
   final bool replaceImage;
+  final bool borderRadius;
   const LoadingIndicatorUtil({
     Key? key,
     this.width,
     this.replaceImage = false,
+    this.borderRadius = true,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return replaceImage
         ? ClipRRect(
-            borderRadius: BorderRadius.circular(16.0),
+            borderRadius: BorderRadius.circular(borderRadius ? 16.0 : 0),
             child: Image.asset('assets/images/image_loading_bg.png'),
           )
         : Padding(
