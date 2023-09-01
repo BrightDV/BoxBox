@@ -1612,6 +1612,7 @@ class _ImageRendererState extends State<ImageRenderer> {
                     : MediaQuery.of(context).size.width / (16 / 9),
                 child: const LoadingIndicatorUtil(
                   replaceImage: true,
+                  borderRadius: false,
                 ),
               ),
               errorWidget: (context, url, error) =>

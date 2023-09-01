@@ -90,8 +90,8 @@ class RaceTracksUrls {
     "suzuka": "Japanese",
     "losail": "Qatar",
     "americas": "United_States",
-    "rodriguez": "Mexico_City",
-    "interlagos": "São_Paulo",
+    "rodriguez": "Mexican",
+    "interlagos": "Brazilian",
     "vegas": "Las_Vegas",
     "yas_marina": "Abu_Dhabi",
   };
