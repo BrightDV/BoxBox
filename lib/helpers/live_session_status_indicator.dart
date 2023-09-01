@@ -97,7 +97,7 @@ class EventTrackerItem extends StatelessWidget {
         color: Colors.transparent,
         child: GestureDetector(
           child: Container(
-            height: 146,
+            height: 143,
             decoration: BoxDecoration(
               borderRadius: const BorderRadius.only(
                 bottomLeft: Radius.circular(5),
@@ -142,10 +142,8 @@ class EventTrackerItem extends StatelessWidget {
                           haveRunningSession
                               ? Text(
                                   AppLocalizations.of(context)!.sessionRunning,
-                                  style: TextStyle(
-                                    color: useDarkMode
-                                        ? Colors.white
-                                        : Colors.black,
+                                  style: const TextStyle(
+                                    color: Colors.white,
                                   ),
                                 )
                               : Container(),

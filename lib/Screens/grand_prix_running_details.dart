@@ -86,7 +86,22 @@ class _GrandPrixRunningScreenState extends State<GrandPrixRunningScreen> {
       body: SlidingUpPanel(
         backdropEnabled: true,
         color: useDarkMode ? const Color(0xff22222c) : Colors.white,
-        panelBuilder: (scrollController) => Center(
+        collapsed: Container(
+          color: useDarkMode ? const Color(0xff22222c) : Colors.white,
+          child: Padding(
+            padding: const EdgeInsets.all(40),
+            child: Center(
+              child: Text(
+                "Grand-Prix documents",
+                style: TextStyle(
+                  color: useDarkMode ? Colors.white : Colors.black,
+                  fontSize: 16,
+                ),
+              ),
+            ),
+          ),
+        ),
+        panel: Center(
           child: FutureBuilder<List<SessionDocument>>(
             future: FIAScraper().scrapeSessionDocuments(),
             builder: (context, snapshot) => snapshot.hasError
@@ -95,67 +110,48 @@ class _GrandPrixRunningScreenState extends State<GrandPrixRunningScreen> {
                     ? ListView.builder(
                         shrinkWrap: true,
                         itemCount: snapshot.data!.length,
-                        controller: scrollController,
-                        itemBuilder: (context, index) => index == 0
-                            ? Padding(
-                                padding: const EdgeInsets.all(40),
-                                child: Center(
-                                  child: Text(
-                                    "Grand-Prix documents",
-                                    style: TextStyle(
-                                      color: useDarkMode
-                                          ? Colors.white
-                                          : Colors.black,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                ),
-                              )
-                            : GestureDetector(
-                                onTap: () =>
-                                    !snapshot.data![index].src.endsWith('pdf')
-                                        ? {}
-                                        : Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) => PdfViewer(
-                                                snapshot.data![index].src,
-                                                snapshot.data![index].name,
-                                              ),
-                                            ),
-                                          ),
-                                child: Card(
-                                  color: useDarkMode
-                                      ? const Color.fromARGB(255, 45, 45, 58)
-                                      : Colors.white,
-                                  elevation: 5,
-                                  child: ListTile(
-                                    title: Text(
-                                      snapshot.data?[index].name ?? '',
-                                      style: TextStyle(
-                                        color: useDarkMode
-                                            ? Colors.white
-                                            : Colors.black,
+                        itemBuilder: (context, index) => GestureDetector(
+                          onTap: () =>
+                              !snapshot.data![index].src.endsWith('pdf')
+                                  ? {}
+                                  : Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => PdfViewer(
+                                          snapshot.data![index].src,
+                                          snapshot.data![index].name,
+                                        ),
                                       ),
                                     ),
-                                    subtitle: Text(
-                                      'Published on ${snapshot.data?[index].postedDate}',
-                                      style: TextStyle(
-                                        color: useDarkMode
-                                            ? Colors.white
-                                            : Colors.black,
-                                        fontSize: 12,
-                                      ),
-                                    ),
-                                    leading: Icon(
-                                      Icons.picture_as_pdf_outlined,
-                                      color: useDarkMode
-                                          ? Colors.white
-                                          : Colors.black,
-                                    ),
-                                  ),
+                          child: Card(
+                            color: useDarkMode
+                                ? const Color.fromARGB(255, 45, 45, 58)
+                                : Colors.white,
+                            elevation: 5,
+                            child: ListTile(
+                              title: Text(
+                                snapshot.data?[index].name ?? '',
+                                style: TextStyle(
+                                  color:
+                                      useDarkMode ? Colors.white : Colors.black,
                                 ),
                               ),
+                              subtitle: Text(
+                                'Published on ${snapshot.data?[index].postedDate}',
+                                style: TextStyle(
+                                  color:
+                                      useDarkMode ? Colors.white : Colors.black,
+                                  fontSize: 12,
+                                ),
+                              ),
+                              leading: Icon(
+                                Icons.picture_as_pdf_outlined,
+                                color:
+                                    useDarkMode ? Colors.white : Colors.black,
+                              ),
+                            ),
+                          ),
+                        ),
                       )
                     : Padding(
                         padding: const EdgeInsets.all(15),
@@ -381,7 +377,7 @@ class _GrandPrixRunningScreenState extends State<GrandPrixRunningScreen> {
                         ),
                       ),
                     ),
-                    Container(height: 160),
+                    const SizedBox(height: 160),
                   ],
                 ),
               )
@@ -549,7 +545,7 @@ class _GrandPrixRunningScreenState extends State<GrandPrixRunningScreen> {
                           ),
                         ),
                       ),
-                      Container(height: 160),
+                      const SizedBox(height: 200),
                     ],
                   ),
                 ),
