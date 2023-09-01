@@ -235,7 +235,6 @@ class DriverItem extends StatelessWidget {
                               color: finalTeamColor,
                               thickness: 9,
                               width: 30,
-                              //endIndent: 20,
                             ),
                           ),
                           Expanded(

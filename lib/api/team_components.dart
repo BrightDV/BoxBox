@@ -172,8 +172,11 @@ class TeamItem extends StatelessWidget {
             ),
             Expanded(
               flex: 6,
-              child: TeamCarImageProvider(
-                item.constructorId,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 10),
+                child: TeamCarImageProvider(
+                  item.constructorId,
+                ),
               ),
             ),
           ],
@@ -198,19 +201,28 @@ class TeamCarImageProvider extends StatelessWidget {
         if (snapshot.hasError) {
           return RequestErrorWidget(snapshot.error.toString());
         }
-        return Padding(
-          padding: const EdgeInsets.only(right: 5.0),
-          child: CachedNetworkImage(
-            imageUrl: snapshot.data!,
-            placeholder: (context, url) => const SizedBox(
-              width: 100,
-              child: LoadingIndicatorUtil(),
+        return CachedNetworkImage(
+          imageBuilder: (context, imageProvider) => Transform.scale(
+            scale: 1.5,
+            child: Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: imageProvider,
+                  fit: BoxFit.fitHeight,
+                  alignment: FractionalOffset.centerLeft,
+                ),
+              ),
             ),
-            errorWidget: (context, url, error) =>
-                const Icon(Icons.error_outlined),
-            fadeOutDuration: const Duration(milliseconds: 500),
-            fadeInDuration: const Duration(milliseconds: 500),
           ),
+          imageUrl: snapshot.data!,
+          placeholder: (context, url) => const SizedBox(
+            width: 100,
+            child: LoadingIndicatorUtil(),
+          ),
+          errorWidget: (context, url, error) =>
+              const Icon(Icons.error_outlined),
+          fadeOutDuration: const Duration(milliseconds: 500),
+          fadeInDuration: const Duration(milliseconds: 500),
         );
       },
     );
