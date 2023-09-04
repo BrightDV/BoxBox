@@ -22,6 +22,8 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:boxbox/helpers/circuit_points.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 
 class LiveFeedFetcher {
@@ -47,8 +49,8 @@ class LiveFeedFetcher {
     Map<String, dynamic> responseAsJson =
         json.decode(utf8.decode(response.bodyBytes));
     // for test purposes (map)
-    responseAsJson['Path'] =
-        "2023/2023-03-19_Saudi_Arabian_Grand_Prix/2023-03-19_Race/";
+    //responseAsJson['Path'] =
+    //    "2023/2023-03-19_Saudi_Arabian_Grand_Prix/2023-03-19_Race/";
     return responseAsJson;
   }
 
@@ -95,12 +97,28 @@ class LiveFeedFetcher {
   }
 
   Future<Map> getTimingData(String path) async {
-    var url = Uri.parse(
-        'https://livetiming.formula1.com/static/${path}TimingData.jsonStream');
-    var response = await http.get(url);
+    late Uint8List fileAsBytes;
+
+    if (kDebugMode) {
+      String assetPath = "assets/testAssets/TimingData.gz";
+      ByteData bytes = await rootBundle.load(assetPath);
+      fileAsBytes = decodeGlibCompressed(
+        bytes.buffer.asUint8List(
+          bytes.offsetInBytes,
+          bytes.lengthInBytes,
+        ),
+      );
+    } else {
+      var url = Uri.parse(
+          'https://livetiming.formula1.com/static/${path}TimingData.jsonStream');
+      var response = await http.get(url);
+      fileAsBytes = response.bodyBytes;
+    }
+    String fileContent = utf8.decode(fileAsBytes);
+    List responseAsList = fileContent.split('\n');
     Map<String, dynamic> responseAsJson = {};
-    List responseAsList = utf8.decode(response.bodyBytes).split('\n');
     responseAsList.removeAt(responseAsList.length - 1);
+    if (kDebugMode) responseAsList.removeAt(responseAsList.length - 1);
     for (String line in responseAsList) {
       responseAsJson[line.split('{')[0].split('.')[0]] != null
           ? responseAsJson[line.split('{')[0].split('.')[0]] += [
@@ -147,6 +165,10 @@ class LiveFeedFetcher {
     return utf8.decode(filter.processed() ?? []);
   }
 
+  Uint8List decodeGlibCompressed(Uint8List fileAsBytes) {
+    return GZipCodec().decode(fileAsBytes) as Uint8List;
+  }
+
   Future<Map> getDetailsForTheMap(String path, String ergastRaceName) async {
     Map positions = await getPosition(path, ergastRaceName);
     List points = await GetTrackGeoJSONPoints().getCircuitPoints(
@@ -157,15 +179,31 @@ class LiveFeedFetcher {
   }
 
   Future<Map> getPosition(String path, String ergastRaceName) async {
-    var url = Uri.parse(
-        'https://livetiming.formula1.com/static/${path}Position.z.jsonStream');
-    var response = await http.get(url);
     Map<String, dynamic> responseAsJson = {
       "ErgastFormatedRaceName": ergastRaceName,
       "Position": {},
     };
-    List responseAsList = utf8.decode(response.bodyBytes).split('\n');
+    late Uint8List fileAsBytes;
+
+    if (kDebugMode) {
+      String assetPath = "assets/testAssets/Position.gz";
+      ByteData bytes = await rootBundle.load(assetPath);
+      fileAsBytes = decodeGlibCompressed(
+        bytes.buffer.asUint8List(
+          bytes.offsetInBytes,
+          bytes.lengthInBytes,
+        ),
+      );
+    } else {
+      var url = Uri.parse(
+          'https://livetiming.formula1.com/static/${path}Position.z.jsonStream');
+      var response = await http.get(url);
+      fileAsBytes = response.bodyBytes;
+    }
+    String fileContent = utf8.decode(fileAsBytes);
+    List responseAsList = fileContent.split('\n');
     responseAsList.removeAt(responseAsList.length - 1);
+    if (kDebugMode) responseAsList.removeAt(responseAsList.length - 1);
     for (String line in responseAsList) {
       responseAsJson['Position'][line.split('"')[0].split('.')[0]] =
           json.decode(

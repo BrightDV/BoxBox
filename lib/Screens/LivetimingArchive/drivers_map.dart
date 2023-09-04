@@ -21,13 +21,16 @@ import 'dart:async';
 import 'dart:ui';
 
 import 'package:boxbox/helpers/convert_ergast_and_formula_one.dart';
+import 'package:boxbox/helpers/livetiming_tracks_coefficients.dart';
 import 'package:boxbox/helpers/team_background_color.dart';
 import 'package:flutter/material.dart';
 
 class DriversMapFragment extends StatefulWidget {
   final Map positions;
   final String currentDuration;
-  const DriversMapFragment(this.positions, this.currentDuration, {super.key});
+  final String round;
+  const DriversMapFragment(this.positions, this.currentDuration, this.round,
+      {super.key});
 
   @override
   State<DriversMapFragment> createState() => _DriversMapFragmentState();
@@ -39,7 +42,7 @@ class _DriversMapFragmentState extends State<DriversMapFragment> {
   double sliderValue = 0;
   Map currentPositions = {};
 
-  Widget _updatePositions(String currentDurationFormated) {
+  Widget _updatePositions(String currentDurationFormated, Map coefficients) {
     if (widget.positions['Position'][currentDurationFormated] != null) {
       currentPositions = widget.positions['Position'][currentDurationFormated]
           ['Position'][0]['Entries'];
@@ -50,33 +53,14 @@ class _DriversMapFragmentState extends State<DriversMapFragment> {
       child: CustomPaint(
         foregroundPainter: CurvePainter(
           currentPositions,
+          coefficients,
         ),
         painter: BackgroundCurvePainter(
           widget.positions['Points'][0],
+          coefficients,
         ),
       ),
     );
-  }
-
-  void skipToTime(int currentTimeInSeconds, int targetTimeInSeconds) {
-    int i = targetTimeInSeconds - 2;
-    final Duration j = Duration(seconds: currentTimeInSeconds);
-    if (j.inSeconds < targetTimeInSeconds) {
-      for (i; i + j.inSeconds < targetTimeInSeconds; i++) {
-        Duration k = Duration(seconds: i + j.inSeconds);
-        String currentDurationFormated =
-            "${k.inHours.toString().padLeft(2, '0')}:${k.inMinutes.remainder(60).toString().padLeft(2, '0')}:${k.inSeconds.remainder(60).toString().padLeft(2, '0')}";
-        _updatePositions(currentDurationFormated);
-      }
-    } else {
-      for (i; i < targetTimeInSeconds; i++) {
-        Duration k = Duration(seconds: i + j.inSeconds);
-        String currentDurationFormated =
-            "${k.inHours.toString().padLeft(2, '0')}:${k.inMinutes.remainder(60).toString().padLeft(2, '0')}:${k.inSeconds.remainder(60).toString().padLeft(2, '0')}";
-        _updatePositions(currentDurationFormated);
-      }
-    }
-    sliderValue = targetTimeInSeconds.toDouble();
   }
 
   @override
@@ -98,26 +82,35 @@ class _DriversMapFragmentState extends State<DriversMapFragment> {
 
   @override
   Widget build(BuildContext context) {
-    return _updatePositions(widget.currentDuration);
+    Map coefficients = LiveTimingTracksCoefficients().getCoefficients(
+      widget.round,
+    );
+    return _updatePositions(widget.currentDuration, coefficients);
   }
 }
 
 class CurvePainter extends CustomPainter {
   final Map points;
+  final Map coefficients;
   const CurvePainter(
     this.points,
+    this.coefficients,
   );
+
+  Offset getOffset(int x, int y) {
+    return Offset(
+      coefficients['drivers']['x'](x),
+      coefficients['drivers']['y'](y),
+    );
+  }
+
   @override
   void paint(Canvas canvas, Size size) {
     final List<Offset> positions = [];
-    final width = size.width;
     // TODO: if points[key]["Status"] != "Pit"/"on track" -> do not show it on the map.
     points.forEach(
       (key, value) => positions.add(
-        Offset(
-          points[key]['X'] / 55 + width / 2 + 245,
-          -points[key]['Y'] / 55 + 480,
-        ),
+        getOffset(points[key]['X'], points[key]['Y']),
       ),
     );
     var paint = Paint();
@@ -145,20 +138,25 @@ class CurvePainter extends CustomPainter {
 
 class BackgroundCurvePainter extends CustomPainter {
   final List points;
+  final Map coefficients;
   const BackgroundCurvePainter(
     this.points,
+    this.coefficients,
   );
+
+  Offset getOffset(double x, double y) {
+    return Offset(
+      coefficients['map']['x'](x),
+      coefficients['map']['y'](y),
+    );
+  }
+
   @override
   void paint(Canvas canvas, Size size) {
     final List<Offset> positions = [];
     for (var point in points) {
-      String one = (point[0] * 1000000).round().toString();
-      String two = (point[1] * 1000000).round().toString();
       positions.add(
-        Offset(
-          double.parse(one.substring(3, one.length)) / 49 + 120,
-          -double.parse(two.substring(3, two.length)) / 49 + 1105,
-        ),
+        getOffset(point[0], point[1]),
       );
     }
     var paint = Paint()

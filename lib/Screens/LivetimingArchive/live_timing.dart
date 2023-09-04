@@ -34,7 +34,9 @@ import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 class LiveTimingScreen extends StatelessWidget {
   final String path;
   final String ergastRaceName;
-  const LiveTimingScreen(this.path, this.ergastRaceName, {super.key});
+  final String round;
+  const LiveTimingScreen(this.path, this.ergastRaceName, this.round,
+      {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +45,7 @@ class LiveTimingScreen extends StatelessWidget {
       builder: (context, snapshot) => snapshot.hasError
           ? RequestErrorWidget(snapshot.error.toString())
           : snapshot.hasData
-              ? MainFragment(snapshot.data!)
+              ? MainFragment(snapshot.data!, round)
               : const LoadingIndicatorUtil(),
     );
   }
@@ -51,7 +53,8 @@ class LiveTimingScreen extends StatelessWidget {
 
 class MainFragment extends StatefulWidget {
   final Map data;
-  const MainFragment(this.data, {super.key});
+  final String round;
+  const MainFragment(this.data, this.round, {super.key});
 
   @override
   State<MainFragment> createState() => _MainFragmentState();
@@ -61,6 +64,8 @@ class _MainFragmentState extends State<MainFragment> {
   int _selectedIndex = 0;
   late Timer timer;
   double sliderValue = 0;
+  bool shouldSkip = false;
+  bool didSkip = false;
   Duration currentDuration = const Duration(seconds: 0);
   final ScrollController scrollController = ScrollController();
 
@@ -72,6 +77,7 @@ class _MainFragmentState extends State<MainFragment> {
 
   void skipToTime(int targetTimeInSeconds) {
     sliderValue = targetTimeInSeconds.toDouble();
+    didSkip = true;
   }
 
   @override
@@ -80,7 +86,14 @@ class _MainFragmentState extends State<MainFragment> {
     timer = Timer.periodic(
       const Duration(seconds: 1),
       (Timer t) => setState(
-        () {},
+        () {
+          if (didSkip) {
+            shouldSkip = true;
+            didSkip = false;
+          } else {
+            shouldSkip = false;
+          }
+        },
       ),
     );
   }
@@ -169,10 +182,12 @@ class _MainFragmentState extends State<MainFragment> {
       LiveTimingScreenFragment(
         widget.data['sessionDetails'],
         currentDuration,
+        shouldSkip,
       ),
       DriversMapFragment(
         widget.data['detailsForTheMap'],
         currentDurationFormated,
+        widget.round,
       ),
       ContentStreamsFragment(widget.data['contentStreams']),
     ];
@@ -276,9 +291,11 @@ class _MainFragmentState extends State<MainFragment> {
 class LiveTimingScreenFragment extends StatefulWidget {
   final Map sessionDetails;
   final Duration currentDurationNotFormated;
+  final bool shouldSkip;
   const LiveTimingScreenFragment(
     this.sessionDetails,
-    this.currentDurationNotFormated, {
+    this.currentDurationNotFormated,
+    this.shouldSkip, {
     Key? key,
   }) : super(key: key);
 
@@ -327,11 +344,15 @@ class _LiveTimingScreenFragmentState extends State<LiveTimingScreenFragment> {
     'VSCEnding': '7'
   };
 
-  Widget _updateTrackStatus(String currentDurationFormated) {
+  void _updateTrackStatusVars(String currentDurationFormated) {
     if (widget.sessionDetails["trackStatus"][currentDurationFormated] != null) {
       trackStatus =
           widget.sessionDetails["trackStatus"][currentDurationFormated];
     }
+  }
+
+  Widget _updateTrackStatus(String currentDurationFormated) {
+    _updateTrackStatusVars(currentDurationFormated);
     return Container(
       height: 50,
       color: trackStatus['Status'] == '1'
@@ -346,13 +367,17 @@ class _LiveTimingScreenFragmentState extends State<LiveTimingScreenFragment> {
     );
   }
 
-  Widget _updateLapCount(String currentDurationFormated) {
+  void _updateLapCountVars(String currentDurationFormated) {
     if (widget.sessionDetails["lapCount"][currentDurationFormated] != null) {
       lapCount = widget.sessionDetails["lapCount"][currentDurationFormated];
       if ((totalLaps == 0) && (lapCount['TotalLaps'] != null)) {
         totalLaps = lapCount['TotalLaps'];
       }
     }
+  }
+
+  Widget _updateLapCount(String currentDurationFormated) {
+    _updateLapCountVars(currentDurationFormated);
     if ((lapCount != {}) && (totalLaps != 0)) {
       return Text("LAP ${lapCount['CurrentLap'].toString()} / $totalLaps");
     } else {
@@ -360,7 +385,7 @@ class _LiveTimingScreenFragmentState extends State<LiveTimingScreenFragment> {
     }
   }
 
-  Widget _updateTimingData(String currentDurationFormated) {
+  void _updateTimingDataVars(String currentDurationFormated) {
     if (widget.sessionDetails["timingData"][currentDurationFormated] != null) {
       if (timingData.isEmpty &&
           widget
@@ -401,7 +426,9 @@ class _LiveTimingScreenFragmentState extends State<LiveTimingScreenFragment> {
                 timingData['Lines'][driverNumber]['IntervalToPositionAhead'] =
                     element['Lines'][driverNumber]['IntervalToPositionAhead'];
 
-                if (element['Lines'][driverNumber]['Sectors'] != null) {
+                if (element['Lines'][driverNumber]['Sectors'] != null &&
+                    element['Lines'][driverNumber]['Sectors'].runtimeType !=
+                        List<dynamic>) {
                   String sector = element['Lines'][driverNumber]['Sectors']
                       .keys
                       .toList()[0];
@@ -482,6 +509,10 @@ class _LiveTimingScreenFragmentState extends State<LiveTimingScreenFragment> {
         }
       }
     }
+  }
+
+  Widget _updateTimingData(String currentDurationFormated) {
+    _updateTimingDataVars(currentDurationFormated);
     return Leaderboard(timingData);
   }
 
@@ -493,9 +524,9 @@ class _LiveTimingScreenFragmentState extends State<LiveTimingScreenFragment> {
         Duration k = Duration(seconds: i + j.inSeconds);
         String currentDurationFormated =
             "${k.inHours.toString().padLeft(2, '0')}:${k.inMinutes.remainder(60).toString().padLeft(2, '0')}:${k.inSeconds.remainder(60).toString().padLeft(2, '0')}";
-        _updateLapCount(currentDurationFormated);
-        _updateTimingData(currentDurationFormated);
-        _updateTrackStatus(currentDurationFormated);
+        _updateLapCountVars(currentDurationFormated);
+        _updateTimingDataVars(currentDurationFormated);
+        _updateTrackStatusVars(currentDurationFormated);
       }
     } else {
       i = 320; // it should be equal to zero at first
@@ -503,9 +534,9 @@ class _LiveTimingScreenFragmentState extends State<LiveTimingScreenFragment> {
         Duration k = Duration(seconds: i + j.inSeconds);
         String currentDurationFormated =
             "${k.inHours.toString().padLeft(2, '0')}:${k.inMinutes.remainder(60).toString().padLeft(2, '0')}:${k.inSeconds.remainder(60).toString().padLeft(2, '0')}";
-        _updateLapCount(currentDurationFormated);
-        _updateTimingData(currentDurationFormated);
-        _updateTrackStatus(currentDurationFormated);
+        _updateLapCountVars(currentDurationFormated);
+        _updateTimingDataVars(currentDurationFormated);
+        _updateTrackStatusVars(currentDurationFormated);
       }
     }
     sliderValue = targetTimeInSeconds.toDouble();
@@ -534,6 +565,9 @@ class _LiveTimingScreenFragmentState extends State<LiveTimingScreenFragment> {
   Widget build(BuildContext context) {
     if (shouldLoadTimingData) {
       skipToTime(0, widget.currentDurationNotFormated.inSeconds);
+    }
+    if (widget.shouldSkip) {
+      skipToTime(320, widget.currentDurationNotFormated.inSeconds);
     }
     String currentDurationFormated =
         "${widget.currentDurationNotFormated.inHours.toString().padLeft(2, '0')}:${widget.currentDurationNotFormated.inMinutes.remainder(60).toString().padLeft(2, '0')}:${widget.currentDurationNotFormated.inSeconds.remainder(60).toString().padLeft(2, '0')}";
@@ -576,6 +610,7 @@ class Leaderboard extends StatelessWidget {
     "24": "ZHO",
     "27": "HUL",
     "31": "OCO",
+    "40": "LAW",
     "44": "HAM",
     "55": "SAI",
     "63": "RUS",
@@ -606,7 +641,7 @@ class Leaderboard extends StatelessWidget {
           physics: const NeverScrollableScrollPhysics(),
           itemBuilder: (context, index) => ListTile(
             leading: Text(
-              values[index]['Position'],
+              (index + 1).toString(),
             ),
             title: Text(
               "${values[index]['RacingNumber']} - ${driverNumbersToCode[values[index]['RacingNumber']] ?? ''}",
