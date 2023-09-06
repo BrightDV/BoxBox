@@ -18,11 +18,11 @@
  */
 
 class LiveTimingTracksCoefficients {
-  List<Map> coefficients = [
-    {
+  Map<String, Map> coefficients = {
+    "bahrain": {
       "drivers": {
-        "x": (int x) => x / 55 + 245,
-        "y": (int y) => -y / 54 + 480,
+        "x": (int x) => x / 30.5 + 112,
+        "y": (int y) => -y / 33.5 + 422,
       },
       "map": {
         "x": (double x) =>
@@ -41,7 +41,7 @@ class LiveTimingTracksCoefficients {
             1400,
       },
     },
-    {
+    "jeddah": {
       "drivers": {
         "x": (int x) => x / 55 + 245,
         "y": (int y) => -y / 54 + 480,
@@ -63,8 +63,30 @@ class LiveTimingTracksCoefficients {
             1100,
       },
     },
-  ];
-  Map getCoefficients(String round) {
-    return coefficients[int.parse(round) - 1];
+    "albert_park": {
+      "drivers": {
+        "x": (int x) => x / 50.5 + 210,
+        "y": (int y) => -y / 61.3 + 385,
+      },
+      "map": {
+        "x": (double x) =>
+            double.parse((x * 1000000)
+                    .round()
+                    .toString()
+                    .substring(4, (x * 1000000).round().toString().length)) /
+                55 -
+            1066,
+        "y": (double y) =>
+            double.parse((y * 1000000)
+                    .round()
+                    .toString()
+                    .substring(4, (y * 1000000).round().toString().length)) /
+                55 -
+            500,
+      },
+    },
+  };
+  Map getCoefficients(String raceName) {
+    return coefficients[raceName] ?? {};
   }
 }

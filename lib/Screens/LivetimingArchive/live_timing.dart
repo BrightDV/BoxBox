@@ -33,19 +33,17 @@ import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
 class LiveTimingScreen extends StatelessWidget {
   final String path;
-  final String ergastRaceName;
-  final String round;
-  const LiveTimingScreen(this.path, this.ergastRaceName, this.round,
-      {super.key});
+  final String circuitId;
+  const LiveTimingScreen(this.path, this.circuitId, {super.key});
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<Map>(
-      future: LiveFeedFetcher().getData(path, ergastRaceName),
+      future: LiveFeedFetcher().getData(path, circuitId),
       builder: (context, snapshot) => snapshot.hasError
           ? RequestErrorWidget(snapshot.error.toString())
           : snapshot.hasData
-              ? MainFragment(snapshot.data!, round)
+              ? MainFragment(snapshot.data!, circuitId)
               : const LoadingIndicatorUtil(),
     );
   }
@@ -53,8 +51,8 @@ class LiveTimingScreen extends StatelessWidget {
 
 class MainFragment extends StatefulWidget {
   final Map data;
-  final String round;
-  const MainFragment(this.data, this.round, {super.key});
+  final String circuitId;
+  const MainFragment(this.data, this.circuitId, {super.key});
 
   @override
   State<MainFragment> createState() => _MainFragmentState();
@@ -187,7 +185,7 @@ class _MainFragmentState extends State<MainFragment> {
       DriversMapFragment(
         widget.data['detailsForTheMap'],
         currentDurationFormated,
-        widget.round,
+        widget.circuitId,
       ),
       ContentStreamsFragment(widget.data['contentStreams']),
     ];

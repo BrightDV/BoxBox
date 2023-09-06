@@ -116,7 +116,6 @@ class ArchiveRaceItem extends StatelessWidget {
             '2023/${item.date}_${item.raceName.replaceAll(' ', '_')}/${item.date}_Race/',
             // ex: 2023/2023-03-05_Bahrain_Grand_Prix/2023-03-05_Race/
             item.circuitId,
-            item.round,
           ),
         ),
       ),

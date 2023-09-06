@@ -28,9 +28,13 @@ import 'package:flutter/material.dart';
 class DriversMapFragment extends StatefulWidget {
   final Map positions;
   final String currentDuration;
-  final String round;
-  const DriversMapFragment(this.positions, this.currentDuration, this.round,
-      {super.key});
+  final String circuitId;
+  const DriversMapFragment(
+    this.positions,
+    this.currentDuration,
+    this.circuitId, {
+    super.key,
+  });
 
   @override
   State<DriversMapFragment> createState() => _DriversMapFragmentState();
@@ -83,7 +87,7 @@ class _DriversMapFragmentState extends State<DriversMapFragment> {
   @override
   Widget build(BuildContext context) {
     Map coefficients = LiveTimingTracksCoefficients().getCoefficients(
-      widget.round,
+      widget.circuitId,
     );
     return _updatePositions(widget.currentDuration, coefficients);
   }
