@@ -1,6 +1,6 @@
 <p align="center"><img src="assets/images/icon.png" width="150"></a></p> 
 <h2 align="center"><b>Box, Box!</b></h2>
-<h4 align="center">A new way to follow Formula 1</h4>
+<h4 align="center">Unofficial Android and web app for Formula 1 lovers!</h4>
 
 [![GitHub releases](https://img.shields.io/github/release/BrightDV/BoxBox?style=for-the-badge)](https://github.com/BrightDV/BoxBox/releases/latest)
 [![GitHub issues](https://img.shields.io/github/issues/BrightDV/BoxBox?style=for-the-badge)](https://github.com/BrightDV/BoxBox/issues)
@@ -29,6 +29,8 @@
 [<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/3.png" width="235">](fastlane/metadata/android/en-US/images/phoneScreenshots/3.png)
 [<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/4.png" width="235">](fastlane/metadata/android/en-US/images/phoneScreenshots/4.png)
 [<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/5.png" width="235">](fastlane/metadata/android/en-US/images/phoneScreenshots/5.png)
+[<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/6.png" width="235">](fastlane/metadata/android/en-US/images/phoneScreenshots/6.png)
+[<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/7.png" width="235">](fastlane/metadata/android/en-US/images/phoneScreenshots/7.png)
 
 ## Features
 
