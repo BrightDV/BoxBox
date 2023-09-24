@@ -23,8 +23,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  add_2_calendar: ^2.2.3
-  animations: ^2.0.7
+  add_2_calendar: ^2.2.4
+  animations: ^2.0.8
   awesome_notifications: ^0.7.4+1
   better_player:
     git:
@@ -32,32 +32,32 @@ dependencies:
       ref: master
   cached_network_image: ^3.2.0
   carousel_slider: ^4.1.1
-  connectivity_plus: ^4.0.0
-  dotted_line: ^3.1.0
+  connectivity_plus: ^4.0.2
+  dotted_line: ^3.2.2
   flutter_cache_manager: ^3.3.0
   flutter_inappwebview: ^6.0.0-beta.23
   flutter_localizations:
     sdk: flutter
-  flutter_map: ^0.14.0
+  flutter_map: ^4.0.0
   flutter_markdown: ^0.6.10
   flutter_swiper_view: ^1.1.8
   flutter_timer_countdown: ^1.0.3
   fluttertoast: ^8.2.1
   font_awesome_flutter: ^10.2.1
   geojson_vi: ^2.0.7
-  hidable: ^1.0.4
+  hidable: ^1.0.5
   hive: ^2.1.0
   hive_flutter: ^1.1.0
-  html: ^0.15.3
+  html: ^0.15.4
   http: ^0.13.6
   infinite_scroll_pagination: ^3.2.0
   intl: ^0.18.0
   latlong2: ^0.8.1
   loading_indicator: ^3.0.3
-  map_controller: # fork using null-safety
+  map_controller_plus: # fork using null-safety
     git:
-      url: https://github.com/mpinkard/map_controller.git
-      ref: null_safety
+      url: https://github.com/TesteurManiak/map_controller_plus.git
+      ref: master
   marquee: ^2.2.0
   package_info_plus: ^3.0.3
   receive_sharing_intent: ^1.4.5
@@ -67,9 +67,9 @@ dependencies:
   story_view: # Updated packages with custom features. Origninally: https://github.com/blackmann/story_view
     path: ./story_view
   syncfusion_flutter_pdfviewer: 21.2.5
-  timeago: ^3.4.0
+  timeago: ^3.5.0
   url_launcher: ^6.1.11
-  video_player: ^2.6.0
+  video_player: ^2.7.2
   webfeed: # fork using null-safety
     git:
       url: https://github.com/marcjoha/webfeed.git

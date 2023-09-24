@@ -26,8 +26,9 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:map_controller/map_controller.dart';
+import 'package:map_controller_plus/map_controller_plus.dart';
 import 'package:boxbox/helpers/circuit_points.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class CircuitMapScreen extends StatelessWidget {
   final String circuitId;
@@ -154,12 +155,23 @@ class _MarkersPageState extends State<MarkersPage> {
       options: MapOptions(
         zoom: 14.0,
       ),
-      layers: [
-        TileLayerOptions(
-          urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-          subdomains: ['a', 'b', 'c'],
+      nonRotatedChildren: [
+        RichAttributionWidget(
+          attributions: [
+            TextSourceAttribution(
+              'OpenStreetMap contributors',
+              onTap: () =>
+                  launchUrl(Uri.parse('https://openstreetmap.org/copyright')),
+            ),
+          ],
         ),
-        PolylineLayerOptions(
+      ],
+      children: [
+        TileLayer(
+          urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+          subdomains: const ['a', 'b', 'c'],
+        ),
+        PolylineLayer(
           polylines: statefulMapController.lines,
         ),
       ],
