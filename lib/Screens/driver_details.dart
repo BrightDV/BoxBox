@@ -25,6 +25,7 @@ import 'package:boxbox/helpers/convert_ergast_and_formula_one.dart';
 import 'package:boxbox/helpers/driver_result_item.dart';
 import 'package:boxbox/scraping/formula_one.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -314,7 +315,7 @@ class DriverImageProvider extends StatelessWidget {
         return snapshot.hasData
             ? Image.network(
                 snapshot.data!,
-                height: MediaQuery.of(context).size.width - 10,
+                height: kIsWeb ? 400 : MediaQuery.of(context).size.width - 10,
                 //width: idOfImage == 'driver' ? 400 : 200,
               )
             : SizedBox(
@@ -481,6 +482,8 @@ class DriverDetailsFragment extends StatelessWidget {
               CarouselSlider(
                 items: [
                   for (int i = 0; i < driverDetails[3][0].length; i++)
+                    Image.network(driverDetails[3][0][i]),
+                  /* removed on website
                     Column(
                       children: [
                         Image.network(driverDetails[3][0][i]),
@@ -498,10 +501,10 @@ class DriverDetailsFragment extends StatelessWidget {
                           ),
                         ),
                       ],
-                    ),
+                    ), */
                 ],
                 options: CarouselOptions(
-                  height: 350,
+                  height: kIsWeb ? 350 : 250,
                   autoPlay: true,
                   viewportFraction: 0.85,
                   autoPlayInterval: const Duration(seconds: 7),
