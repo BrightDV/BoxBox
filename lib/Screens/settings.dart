@@ -61,7 +61,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 AppearanceCard(_settingsSetState),
-                const PlayerCard(),
+                PlayerCard(useDarkMode),
                 OtherCard(_settingsSetState),
               ],
             ),
@@ -389,7 +389,9 @@ class _AppearanceCardState extends State<AppearanceCard> {
 }
 
 class PlayerCard extends StatefulWidget {
-  const PlayerCard({Key? key}) : super(key: key);
+  final bool useDarkMode;
+  const PlayerCard(this.useDarkMode, {Key? key}) : super(key: key);
+
   @override
   State<PlayerCard> createState() => _PlayerCardState();
 }
@@ -397,8 +399,6 @@ class PlayerCard extends StatefulWidget {
 class _PlayerCardState extends State<PlayerCard> {
   @override
   Widget build(BuildContext context) {
-    bool useDarkMode =
-        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     int playerQuality =
         Hive.box('settings').get('playerQuality', defaultValue: 360) as int;
     return Column(
@@ -411,7 +411,7 @@ class _PlayerCardState extends State<PlayerCard> {
           child: Text(
             AppLocalizations.of(context)!.player,
             style: TextStyle(
-              color: useDarkMode ? Colors.white : Colors.black,
+              color: widget.useDarkMode ? Colors.white : Colors.black,
               fontWeight: FontWeight.w500,
               fontSize: 20,
             ),
@@ -421,20 +421,20 @@ class _PlayerCardState extends State<PlayerCard> {
           title: Text(
             AppLocalizations.of(context)!.playerQuality,
             style: TextStyle(
-              color: useDarkMode ? Colors.white : Colors.black,
+              color: widget.useDarkMode ? Colors.white : Colors.black,
             ),
           ),
           subtitle: Text(
             AppLocalizations.of(context)!.playerQualitySub,
             style: TextStyle(
-              color: useDarkMode ? Colors.white : Colors.black,
+              color: widget.useDarkMode ? Colors.white : Colors.black,
               fontSize: 13,
             ),
           ),
           onTap: () {},
           trailing: DropdownButton(
             value: playerQuality,
-            dropdownColor: useDarkMode
+            dropdownColor: widget.useDarkMode
                 ? Theme.of(context).scaffoldBackgroundColor
                 : Colors.white,
             onChanged: (int? newValue) {
@@ -459,7 +459,7 @@ class _PlayerCardState extends State<PlayerCard> {
                     '${value}p',
                     style: TextStyle(
                       fontSize: 12,
-                      color: useDarkMode ? Colors.white : Colors.black,
+                      color: widget.useDarkMode ? Colors.white : Colors.black,
                     ),
                   ),
                 );
