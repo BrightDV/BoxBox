@@ -26,6 +26,7 @@ import 'package:boxbox/Screens/standings.dart';
 import 'package:boxbox/helpers/news_feed_widget.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hidable/hidable.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -61,6 +62,23 @@ class _MainBottomNavigationBarState extends State<MainBottomNavigationBar> {
 
   void _homeSetState() {
     setState(() {});
+  }
+
+  // ref: https://github.com/insolite-dev/hidable/issues/26#issuecomment-1752105018
+  double customHidableVisibility(
+      ScrollPosition position, double currentVisibility) {
+    const double deltaFactor = 0.04;
+
+    // scrolls down
+    if (position.userScrollDirection == ScrollDirection.reverse) {
+      return (currentVisibility - deltaFactor).clamp(0, 1);
+    }
+
+    // scrolls up
+    if (position.userScrollDirection == ScrollDirection.forward) {
+      return (currentVisibility + deltaFactor).clamp(0, 1);
+    }
+    return currentVisibility;
   }
 
   @override
@@ -312,6 +330,11 @@ class _MainBottomNavigationBarState extends State<MainBottomNavigationBar> {
             )
           : Hidable(
               controller: scrollController,
+              visibility: (position, currentVisibility) =>
+                  customHidableVisibility(
+                position,
+                currentVisibility,
+              ),
               child: BottomNavigationBar(
                 type: BottomNavigationBarType.fixed,
                 backgroundColor: useDarkMode

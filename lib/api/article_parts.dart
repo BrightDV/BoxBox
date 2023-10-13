@@ -1462,7 +1462,7 @@ class WidgetsList extends StatelessWidget {
 
         // related articles
 
-        kIsWeb && false
+        kIsWeb
             ? Stack(
                 alignment: Alignment.center,
                 children: [
@@ -1556,7 +1556,7 @@ class WidgetsList extends StatelessWidget {
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
                   controller: scrollController,
-                  physics: PagingScrollPhysics(
+                  physics: const PagingScrollPhysics(
                     itemDimension: 300,
                   ),
                   itemCount: article.relatedArticles.length,
