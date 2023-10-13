@@ -21,6 +21,7 @@ import 'package:boxbox/Screens/article.dart';
 import 'package:boxbox/Screens/free_practice_screen.dart';
 import 'package:boxbox/Screens/race_details.dart';
 import 'package:boxbox/api/news.dart';
+import 'package:boxbox/helpers/custom_physics.dart';
 import 'package:boxbox/helpers/news_feed_widget.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
@@ -1151,8 +1152,7 @@ class WidgetsList extends StatelessWidget {
                                                                 child: Padding(
                                                                   padding:
                                                                       const EdgeInsets
-                                                                          .all(
-                                                                          10),
+                                                                          .all(10),
                                                                   child: Text(
                                                                     element['fields']
                                                                         [
@@ -1180,7 +1180,8 @@ class WidgetsList extends StatelessWidget {
                                                                       [
                                                                       'tableContent'])
                                                                 Row(
-                                                                  children: <Widget>[
+                                                                  children: <
+                                                                      Widget>[
                                                                     for (Map driverDetails
                                                                         in driverItem)
                                                                       Container(
@@ -1461,7 +1462,7 @@ class WidgetsList extends StatelessWidget {
 
         // related articles
 
-        kIsWeb
+        kIsWeb && false
             ? Stack(
                 alignment: Alignment.center,
                 children: [
@@ -1550,36 +1551,41 @@ class WidgetsList extends StatelessWidget {
                   ),
                 ],
               )
-            : SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                controller: scrollController,
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    for (var article in article.relatedArticles)
-                      NewsItem(
-                        News(
-                          article['id'],
-                          article['articleType'],
-                          article['slug'],
-                          article['title'],
-                          article['metaDescription'] ?? ' ',
-                          DateTime.parse(article['updatedAt']),
-                          article['thumbnail'] != null
-                              ? useDataSaverMode
-                                  ? article['thumbnail']['image']
-                                              ['renditions'] !=
-                                          null
-                                      ? article['thumbnail']['image']
-                                          ['renditions']['2col']
-                                      : article['thumbnail']['image']['url'] +
-                                          '.transform/2col-retina/image.jpg'
-                                  : article['thumbnail']['image']['url']
-                              : '',
-                        ),
-                        true,
-                      ),
-                  ],
+            : SizedBox(
+                height: 275,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  controller: scrollController,
+                  physics: PagingScrollPhysics(
+                    itemDimension: 300,
+                  ),
+                  itemCount: article.relatedArticles.length,
+                  itemBuilder: (context, index) => NewsItem(
+                    News(
+                      article.relatedArticles[index]['id'],
+                      article.relatedArticles[index]['articleType'],
+                      article.relatedArticles[index]['slug'],
+                      article.relatedArticles[index]['title'],
+                      article.relatedArticles[index]['metaDescription'] ?? ' ',
+                      DateTime.parse(
+                          article.relatedArticles[index]['updatedAt']),
+                      article.relatedArticles[index]['thumbnail'] != null
+                          ? useDataSaverMode
+                              ? article.relatedArticles[index]['thumbnail']
+                                          ['image']['renditions'] !=
+                                      null
+                                  ? article.relatedArticles[index]['thumbnail']
+                                      ['image']['renditions']['2col']
+                                  : article.relatedArticles[index]['thumbnail']
+                                          ['image']['url'] +
+                                      '.transform/2col-retina/image.jpg'
+                              : article.relatedArticles[index]['thumbnail']
+                                  ['image']['url']
+                          : '',
+                    ),
+                    true,
+                    width: 300,
+                  ),
                 ),
               ),
       ],

@@ -246,6 +246,7 @@ class NewsItem extends StatefulWidget {
   final News item;
   final bool inRelated;
   final bool? showSmallDescription;
+  final double? width;
   final int itemPerRow;
 
   const NewsItem(
@@ -253,6 +254,7 @@ class NewsItem extends StatefulWidget {
     this.inRelated, {
     Key? key,
     this.showSmallDescription,
+    this.width,
     this.itemPerRow = 1,
   }) : super(key: key);
   @override
@@ -396,6 +398,7 @@ class _NewsItemState extends State<NewsItem> with TickerProviderStateMixin {
                               color: Colors.transparent,
                               elevation: isHovered ? 16 : 0,
                               child: Column(
+                                mainAxisSize: MainAxisSize.min,
                                 children: [
                                   ClipRRect(
                                     borderRadius: const BorderRadius.only(
@@ -458,6 +461,7 @@ class _NewsItemState extends State<NewsItem> with TickerProviderStateMixin {
                             ),
                           )
                         : Column(
+                            mainAxisSize: MainAxisSize.min,
                             children: [
                               ClipRRect(
                                 borderRadius: const BorderRadius.only(
