@@ -284,32 +284,28 @@ class _VideoItemState extends State<VideoItem> {
                     closedBuilder: (context, action) => Stack(
                       alignment: Alignment.bottomLeft,
                       children: [
-                        Hero(
-                          tag: videos[widget.index].videoId,
-                          child: ClipRRect(
-                            borderRadius: const BorderRadius.all(
-                              Radius.circular(10),
-                            ),
-                            child: CachedNetworkImage(
-                              imageUrl: videos[widget.index].thumbnailUrl,
-                              placeholder: (context, url) => SizedBox(
-                                height: MediaQuery.of(context).size.width /
-                                        (16 / 9) -
-                                    7,
-                                child: const LoadingIndicatorUtil(
-                                  replaceImage: true,
-                                ),
+                        ClipRRect(
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(10),
+                          ),
+                          child: CachedNetworkImage(
+                            imageUrl: videos[widget.index].thumbnailUrl,
+                            placeholder: (context, url) => SizedBox(
+                              height:
+                                  MediaQuery.of(context).size.width / (16 / 9) -
+                                      7,
+                              child: const LoadingIndicatorUtil(
+                                replaceImage: true,
                               ),
-                              errorWidget: (context, url, error) => Icon(
-                                Icons.error_outlined,
-                                color:
-                                    useDarkMode ? Colors.white : Colors.black,
-                              ),
-                              fadeOutDuration: const Duration(seconds: 1),
-                              fadeInDuration: const Duration(seconds: 1),
-                              colorBlendMode: BlendMode.darken,
-                              color: Colors.black.withOpacity(0.5),
                             ),
+                            errorWidget: (context, url, error) => Icon(
+                              Icons.error_outlined,
+                              color: useDarkMode ? Colors.white : Colors.black,
+                            ),
+                            fadeOutDuration: const Duration(seconds: 1),
+                            fadeInDuration: const Duration(seconds: 1),
+                            colorBlendMode: BlendMode.darken,
+                            color: Colors.black.withOpacity(0.5),
                           ),
                         ),
                         Padding(
@@ -391,31 +387,27 @@ class _VideoItemState extends State<VideoItem> {
                 closedBuilder: (context, action) => Stack(
                   alignment: Alignment.bottomLeft,
                   children: [
-                    Hero(
-                      tag: videos[widget.index].videoId,
-                      child: ClipRRect(
-                        borderRadius: const BorderRadius.all(
-                          Radius.circular(10),
-                        ),
-                        child: CachedNetworkImage(
-                          imageUrl: videos[widget.index].thumbnailUrl,
-                          placeholder: (context, url) => SizedBox(
-                            height:
-                                MediaQuery.of(context).size.width / (16 / 9) -
-                                    7,
-                            child: const LoadingIndicatorUtil(
-                              replaceImage: true,
-                            ),
+                    ClipRRect(
+                      borderRadius: const BorderRadius.all(
+                        Radius.circular(10),
+                      ),
+                      child: CachedNetworkImage(
+                        imageUrl: videos[widget.index].thumbnailUrl,
+                        placeholder: (context, url) => SizedBox(
+                          height:
+                              MediaQuery.of(context).size.width / (16 / 9) - 7,
+                          child: const LoadingIndicatorUtil(
+                            replaceImage: true,
                           ),
-                          errorWidget: (context, url, error) => Icon(
-                            Icons.error_outlined,
-                            color: useDarkMode ? Colors.white : Colors.black,
-                          ),
-                          fadeOutDuration: const Duration(seconds: 1),
-                          fadeInDuration: const Duration(seconds: 1),
-                          colorBlendMode: BlendMode.darken,
-                          color: Colors.black.withOpacity(0.5),
                         ),
+                        errorWidget: (context, url, error) => Icon(
+                          Icons.error_outlined,
+                          color: useDarkMode ? Colors.white : Colors.black,
+                        ),
+                        fadeOutDuration: const Duration(seconds: 1),
+                        fadeInDuration: const Duration(seconds: 1),
+                        colorBlendMode: BlendMode.darken,
+                        color: Colors.black.withOpacity(0.5),
                       ),
                     ),
                     Padding(

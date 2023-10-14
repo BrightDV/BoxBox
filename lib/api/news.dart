@@ -404,37 +404,33 @@ class _NewsItemState extends State<NewsItem> with TickerProviderStateMixin {
                                       topLeft: Radius.circular(15),
                                       topRight: Radius.circular(15),
                                     ),
-                                    child: Hero(
-                                      tag: widget.item.newsId,
-                                      child: CachedNetworkImage(
-                                        imageUrl: imageUrl,
-                                        placeholder: (context, url) =>
-                                            const SizedBox(
-                                          width: 300,
-                                          child: LoadingIndicatorUtil(
-                                            replaceImage: true,
-                                          ),
+                                    child: CachedNetworkImage(
+                                      imageUrl: imageUrl,
+                                      placeholder: (context, url) =>
+                                          const SizedBox(
+                                        width: 300,
+                                        child: LoadingIndicatorUtil(
+                                          replaceImage: true,
                                         ),
-                                        errorWidget: (context, url, error) =>
-                                            SizedBox(
-                                          height: 50,
-                                          child: Icon(
-                                            Icons.error_outlined,
-                                            color: useDarkMode
-                                                ? const Color(0xff1d1d28)
-                                                : Colors.white,
-                                          ),
+                                      ),
+                                      errorWidget: (context, url, error) =>
+                                          SizedBox(
+                                        height: 50,
+                                        child: Icon(
+                                          Icons.error_outlined,
+                                          color: useDarkMode
+                                              ? const Color(0xff1d1d28)
+                                              : Colors.white,
                                         ),
-                                        fadeOutDuration:
-                                            const Duration(seconds: 1),
-                                        fadeInDuration:
-                                            const Duration(seconds: 1),
-                                        cacheManager: CacheManager(
-                                          Config(
-                                            "newsImages",
-                                            stalePeriod:
-                                                const Duration(days: 7),
-                                          ),
+                                      ),
+                                      fadeOutDuration:
+                                          const Duration(seconds: 1),
+                                      fadeInDuration:
+                                          const Duration(seconds: 1),
+                                      cacheManager: CacheManager(
+                                        Config(
+                                          "newsImages",
+                                          stalePeriod: const Duration(days: 7),
                                         ),
                                       ),
                                     ),
@@ -467,34 +463,30 @@ class _NewsItemState extends State<NewsItem> with TickerProviderStateMixin {
                                   topLeft: Radius.circular(15),
                                   topRight: Radius.circular(15),
                                 ),
-                                child: Hero(
-                                  tag: widget.item.newsId,
-                                  child: CachedNetworkImage(
-                                    imageUrl: imageUrl,
-                                    placeholder: (context, url) =>
-                                        const SizedBox(
-                                      width: 300,
-                                      child: LoadingIndicatorUtil(
-                                        replaceImage: true,
-                                      ),
+                                child: CachedNetworkImage(
+                                  imageUrl: imageUrl,
+                                  placeholder: (context, url) => const SizedBox(
+                                    width: 300,
+                                    child: LoadingIndicatorUtil(
+                                      replaceImage: true,
                                     ),
-                                    errorWidget: (context, url, error) =>
-                                        SizedBox(
-                                      height: 50,
-                                      child: Icon(
-                                        Icons.error_outlined,
-                                        color: useDarkMode
-                                            ? const Color(0xff1d1d28)
-                                            : Colors.white,
-                                      ),
+                                  ),
+                                  errorWidget: (context, url, error) =>
+                                      SizedBox(
+                                    height: 50,
+                                    child: Icon(
+                                      Icons.error_outlined,
+                                      color: useDarkMode
+                                          ? const Color(0xff1d1d28)
+                                          : Colors.white,
                                     ),
-                                    fadeOutDuration: const Duration(seconds: 1),
-                                    fadeInDuration: const Duration(seconds: 1),
-                                    cacheManager: CacheManager(
-                                      Config(
-                                        "newsImages",
-                                        stalePeriod: const Duration(days: 7),
-                                      ),
+                                  ),
+                                  fadeOutDuration: const Duration(seconds: 1),
+                                  fadeInDuration: const Duration(seconds: 1),
+                                  cacheManager: CacheManager(
+                                    Config(
+                                      "newsImages",
+                                      stalePeriod: const Duration(days: 7),
                                     ),
                                   ),
                                 ),
@@ -569,65 +561,58 @@ class _NewsItemState extends State<NewsItem> with TickerProviderStateMixin {
                                                 topLeft: Radius.circular(15),
                                                 topRight: Radius.circular(15),
                                               ),
-                                              child: Hero(
-                                                tag: widget.item.newsId,
-                                                child: CachedNetworkImage(
-                                                  imageUrl: imageUrl,
-                                                  placeholder: (context, url) =>
-                                                      SizedBox(
-                                                    height: (MediaQuery.of(
-                                                                    context)
-                                                                .size
-                                                                .width >
-                                                            500)
-                                                        ? (MediaQuery.of(context)
-                                                                        .size
-                                                                        .width /
-                                                                    widget
-                                                                        .itemPerRow -
-                                                                8 *
-                                                                    widget
-                                                                        .itemPerRow) /
-                                                            (16 / 9)
-                                                        : (widget.showSmallDescription ??
-                                                                false)
-                                                            ? height /
-                                                                    (16 / 9) -
-                                                                58
-                                                            : width / (16 / 9) -
-                                                                10,
-                                                    child:
-                                                        const LoadingIndicatorUtil(
-                                                      replaceImage: true,
-                                                    ),
+                                              child: CachedNetworkImage(
+                                                imageUrl: imageUrl,
+                                                placeholder: (context, url) =>
+                                                    SizedBox(
+                                                  height: (MediaQuery.of(
+                                                                  context)
+                                                              .size
+                                                              .width >
+                                                          500)
+                                                      ? (MediaQuery.of(context)
+                                                                      .size
+                                                                      .width /
+                                                                  widget
+                                                                      .itemPerRow -
+                                                              8 *
+                                                                  widget
+                                                                      .itemPerRow) /
+                                                          (16 / 9)
+                                                      : (widget.showSmallDescription ??
+                                                              false)
+                                                          ? height / (16 / 9) -
+                                                              58
+                                                          : width / (16 / 9) -
+                                                              10,
+                                                  child:
+                                                      const LoadingIndicatorUtil(
+                                                    replaceImage: true,
                                                   ),
-                                                  errorWidget:
-                                                      (context, url, error) =>
-                                                          SizedBox(
-                                                    height: 50,
-                                                    child: Icon(
-                                                      Icons.error_outlined,
-                                                      color: useDarkMode
-                                                          ? const Color(
-                                                              0xff1d1d28)
-                                                          : Colors.white,
-                                                    ),
+                                                ),
+                                                errorWidget:
+                                                    (context, url, error) =>
+                                                        SizedBox(
+                                                  height: 50,
+                                                  child: Icon(
+                                                    Icons.error_outlined,
+                                                    color: useDarkMode
+                                                        ? const Color(
+                                                            0xff1d1d28)
+                                                        : Colors.white,
                                                   ),
-                                                  fadeOutDuration:
-                                                      const Duration(
-                                                    milliseconds: 400,
-                                                  ),
-                                                  fadeInDuration:
-                                                      const Duration(
-                                                    milliseconds: 400,
-                                                  ),
-                                                  cacheManager: CacheManager(
-                                                    Config(
-                                                      "newsImages",
-                                                      stalePeriod:
-                                                          const Duration(
-                                                              days: 5),
-                                                    ),
+                                                ),
+                                                fadeOutDuration: const Duration(
+                                                  milliseconds: 400,
+                                                ),
+                                                fadeInDuration: const Duration(
+                                                  milliseconds: 400,
+                                                ),
+                                                cacheManager: CacheManager(
+                                                  Config(
+                                                    "newsImages",
+                                                    stalePeriod:
+                                                        const Duration(days: 5),
                                                   ),
                                                 ),
                                               ),
@@ -882,57 +867,53 @@ class _NewsItemState extends State<NewsItem> with TickerProviderStateMixin {
                                             topLeft: Radius.circular(15),
                                             topRight: Radius.circular(15),
                                           ),
-                                          child: Hero(
-                                            tag: widget.item.newsId,
-                                            child: CachedNetworkImage(
-                                              imageUrl: imageUrl,
-                                              placeholder: (context, url) =>
-                                                  SizedBox(
-                                                height: (MediaQuery.of(context)
-                                                            .size
-                                                            .width >
-                                                        500)
-                                                    ? (MediaQuery.of(context)
-                                                                    .size
-                                                                    .width /
-                                                                widget
-                                                                    .itemPerRow -
-                                                            8 *
-                                                                widget
-                                                                    .itemPerRow) /
-                                                        (16 / 9)
-                                                    : (widget.showSmallDescription ??
-                                                            false)
-                                                        ? height / (16 / 9) - 58
-                                                        : width / (16 / 9) - 10,
-                                                child:
-                                                    const LoadingIndicatorUtil(
-                                                  replaceImage: true,
-                                                ),
+                                          child: CachedNetworkImage(
+                                            imageUrl: imageUrl,
+                                            placeholder: (context, url) =>
+                                                SizedBox(
+                                              height: (MediaQuery.of(context)
+                                                          .size
+                                                          .width >
+                                                      500)
+                                                  ? (MediaQuery.of(context)
+                                                                  .size
+                                                                  .width /
+                                                              widget
+                                                                  .itemPerRow -
+                                                          8 *
+                                                              widget
+                                                                  .itemPerRow) /
+                                                      (16 / 9)
+                                                  : (widget.showSmallDescription ??
+                                                          false)
+                                                      ? height / (16 / 9) - 58
+                                                      : width / (16 / 9) - 10,
+                                              child: const LoadingIndicatorUtil(
+                                                replaceImage: true,
                                               ),
-                                              errorWidget:
-                                                  (context, url, error) =>
-                                                      SizedBox(
-                                                height: 50,
-                                                child: Icon(
-                                                  Icons.error_outlined,
-                                                  color: useDarkMode
-                                                      ? const Color(0xff1d1d28)
-                                                      : Colors.white,
-                                                ),
+                                            ),
+                                            errorWidget:
+                                                (context, url, error) =>
+                                                    SizedBox(
+                                              height: 50,
+                                              child: Icon(
+                                                Icons.error_outlined,
+                                                color: useDarkMode
+                                                    ? const Color(0xff1d1d28)
+                                                    : Colors.white,
                                               ),
-                                              fadeOutDuration: const Duration(
-                                                milliseconds: 400,
-                                              ),
-                                              fadeInDuration: const Duration(
-                                                milliseconds: 400,
-                                              ),
-                                              cacheManager: CacheManager(
-                                                Config(
-                                                  "newsImages",
-                                                  stalePeriod:
-                                                      const Duration(days: 5),
-                                                ),
+                                            ),
+                                            fadeOutDuration: const Duration(
+                                              milliseconds: 400,
+                                            ),
+                                            fadeInDuration: const Duration(
+                                              milliseconds: 400,
+                                            ),
+                                            cacheManager: CacheManager(
+                                              Config(
+                                                "newsImages",
+                                                stalePeriod:
+                                                    const Duration(days: 5),
                                               ),
                                             ),
                                           ),
@@ -2242,24 +2223,21 @@ class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
             ? Stack(
                 children: [
                   widget.heroTag != ''
-                      ? Hero(
-                          tag: widget.heroTag,
-                          child: CachedNetworkImage(
-                            imageUrl: widget.videoUrls['poster'],
-                            placeholder: (context, url) => SizedBox(
-                              height:
-                                  MediaQuery.of(context).size.width / (16 / 9),
-                              child: const LoadingIndicatorUtil(
-                                replaceImage: true,
-                              ),
+                      ? CachedNetworkImage(
+                          imageUrl: widget.videoUrls['poster'],
+                          placeholder: (context, url) => SizedBox(
+                            height:
+                                MediaQuery.of(context).size.width / (16 / 9),
+                            child: const LoadingIndicatorUtil(
+                              replaceImage: true,
                             ),
-                            errorWidget: (context, url, error) => Icon(
-                              Icons.error_outlined,
-                              color: useDarkMode ? Colors.white : Colors.black,
-                            ),
-                            fadeOutDuration: const Duration(milliseconds: 100),
-                            fadeInDuration: const Duration(seconds: 1),
                           ),
+                          errorWidget: (context, url, error) => Icon(
+                            Icons.error_outlined,
+                            color: useDarkMode ? Colors.white : Colors.black,
+                          ),
+                          fadeOutDuration: const Duration(milliseconds: 100),
+                          fadeInDuration: const Duration(seconds: 1),
                         )
                       : Container(
                           decoration: BoxDecoration(

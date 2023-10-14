@@ -203,20 +203,17 @@ class WidgetsList extends StatelessWidget {
             ? ImageGallery(article.articleHero['fields']['imageGallery'])
             : (article.articleHero['contentType'] != 'atomVideo') &&
                     (article.articleHero['contentType'] != 'atomVideoYouTube')
-                ? Hero(
-                    tag: article.articleId,
-                    child: ImageRenderer(
-                      useDataSaverMode
-                          ? article.articleHero['fields']['image']
-                                      ['renditions'] !=
-                                  null
-                              ? article.articleHero['fields']['image']
-                                  ['renditions']['2col-retina']
-                              : article.articleHero['fields']['image']['url'] +
-                                  '.transform/2col-retina/image.jpg'
-                          : article.articleHero['fields']['image']['url'],
-                      isHero: true,
-                    ),
+                ? ImageRenderer(
+                    useDataSaverMode
+                        ? article.articleHero['fields']['image']
+                                    ['renditions'] !=
+                                null
+                            ? article.articleHero['fields']['image']
+                                ['renditions']['2col-retina']
+                            : article.articleHero['fields']['image']['url'] +
+                                '.transform/2col-retina/image.jpg'
+                        : article.articleHero['fields']['image']['url'],
+                    isHero: true,
                   )
                 : Container(),
 
