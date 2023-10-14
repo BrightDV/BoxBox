@@ -22,6 +22,7 @@ import 'package:boxbox/api/driver_components.dart';
 import 'package:boxbox/api/ergast.dart';
 import 'package:boxbox/api/news.dart';
 import 'package:boxbox/helpers/convert_ergast_and_formula_one.dart';
+import 'package:boxbox/helpers/custom_physics.dart';
 import 'package:boxbox/helpers/driver_result_item.dart';
 import 'package:boxbox/scraping/formula_one.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -393,52 +394,53 @@ class DriverDetailsFragment extends StatelessWidget {
                 fontSize: 18,
               ),
             ),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  for (var item in driverDetails[1])
-                    FutureBuilder<Article>(
-                      future: F1NewsFetcher().getArticleData(item[0]),
-                      builder: (context, snapshot) {
-                        return snapshot.hasError
-                            ? RequestErrorWidget(
-                                snapshot.error.toString(),
-                              )
-                            : snapshot.hasData
-                                ? NewsItem(
-                                    News(
-                                      snapshot.data!.articleId,
-                                      'News',
-                                      snapshot.data!.articleSlug,
-                                      snapshot.data!.articleName,
-                                      '',
-                                      snapshot.data!.publishedDate,
-                                      snapshot.data!
+            SizedBox(
+              height: 275,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                //controller: scrollController,
+                physics: const PagingScrollPhysics(
+                  itemDimension: 300,
+                ),
+                itemCount: driverDetails[1].length,
+                itemBuilder: (context, index) => FutureBuilder<Article>(
+                  future: F1NewsFetcher().getArticleData(
+                    driverDetails[1][index][0],
+                  ),
+                  builder: (context, snapshot) {
+                    return snapshot.hasError
+                        ? RequestErrorWidget(
+                            snapshot.error.toString(),
+                          )
+                        : snapshot.hasData
+                            ? NewsItem(
+                                News(
+                                  snapshot.data!.articleId,
+                                  'News',
+                                  snapshot.data!.articleSlug,
+                                  snapshot.data!.articleName,
+                                  '',
+                                  snapshot.data!.publishedDate,
+                                  snapshot.data!.articleHero['contentType'] ==
+                                          'atomVideo'
+                                      ? snapshot.data!.articleHero['fields']
+                                          ['thumbnail']['url']
+                                      : snapshot.data!
                                                   .articleHero['contentType'] ==
-                                              'atomVideo'
+                                              'atomImageGallery'
                                           ? snapshot.data!.articleHero['fields']
-                                              ['thumbnail']['url']
-                                          : snapshot.data!.articleHero[
-                                                      'contentType'] ==
-                                                  'atomImageGallery'
-                                              ? snapshot.data!
-                                                      .articleHero['fields']
-                                                  ['imageGallery'][0]['url']
-                                              : snapshot.data!
-                                                      .articleHero['fields']
-                                                  ['image']['url'],
-                                    ),
-                                    true,
-                                  )
-                                : const SizedBox(
-                                    height: 200,
-                                    child: LoadingIndicatorUtil(),
-                                  );
-                      },
-                    ),
-                ],
+                                              ['imageGallery'][0]['url']
+                                          : snapshot.data!.articleHero['fields']
+                                              ['image']['url'],
+                                ),
+                                true,
+                              )
+                            : const SizedBox(
+                                height: 200,
+                                child: LoadingIndicatorUtil(),
+                              );
+                  },
+                ),
               ),
             ),
           ],
