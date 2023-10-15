@@ -394,10 +394,11 @@ class WidgetsList extends StatelessWidget {
                                           ? SizedBox(
                                               height: 400,
                                               child: InAppWebView(
-                                                initialData:
-                                                    InAppWebViewInitialData(
-                                                        data:
-                                                            '<blockquote class="twitter-tweet"><a href="https://twitter.com/x/status/${element['fields']['postId']}"></a> </blockquote><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>'),
+                                                initialUrlRequest: URLRequest(
+                                                  url: WebUri(
+                                                    "https://nitter.net/x/status/${element['fields']['postId']}/embed",
+                                                  ),
+                                                ),
                                                 gestureRecognizers: {
                                                   Factory<VerticalDragGestureRecognizer>(
                                                       () =>
