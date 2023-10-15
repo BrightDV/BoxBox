@@ -79,6 +79,7 @@ class BrightCove {
     Map<String, dynamic> streamUrls = {};
     streamUrls['poster'] = streamsData['poster'];
     streamUrls['videos'] = [];
+    streamUrls['qualities'] = [];
     bool foundPreferedQuality = false;
     List<int> resSelected = [];
     for (var element in streamsData['sources']) {
@@ -89,6 +90,7 @@ class BrightCove {
           !resSelected.contains(element['height'])) {
         resSelected.add(element['height']);
         streamUrls['videos'].add(element['src']);
+        streamUrls['qualities'].add('${element['height']}p');
       }
     }
     int c = 0;

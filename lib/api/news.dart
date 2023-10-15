@@ -41,11 +41,11 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:url_launcher/url_launcher.dart';
-import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 class F1NewsFetcher {
   final String defaultEndpoint = "https://api.formula1.com";
@@ -2030,21 +2030,44 @@ class VideoRenderer extends StatelessWidget {
   }) : super(key: key);
 
   Future<Map<String, dynamic>> getYouTubeVideoLinks(String videoId) async {
+    String playerQuality =
+        "${Hive.box('settings').get('playerQuality', defaultValue: 360) as int}p";
+    String pipedApiUrl = Hive.box('settings')
+        .get('pipedApiUrl', defaultValue: 'pipedapi.kavin.rocks') as String;
+    // 144p is not available as a muxed stream
+    if (playerQuality == '180p') {
+      playerQuality = '360p';
+    }
+    String defaultUrl = '';
     Map<String, dynamic> urls = {};
     urls['videos'] = [];
-    YoutubeExplode yt = YoutubeExplode();
-    var manifest = await yt.videos.streamsClient.getManifest(videoId);
-    var video = await yt.videos.get(videoId);
+    urls['qualities'] = [];
+    Response response = await get(
+      Uri.parse("https://$pipedApiUrl/streams/$videoId"),
+    );
+    Map videoDetails = json.decode(utf8.decode(response.bodyBytes));
 
-    urls['poster'] = 'https://img.youtube.com/vi/$videoId/0.jpg';
-    urls['name'] = video.title;
-    urls['author'] = video.author;
-
-    for (var stream in manifest.muxed) {
-      urls['videos'].add(stream.url.toString());
+    urls['poster'] = videoDetails['thumbnailUrl'];
+    urls['name'] = videoDetails['title'];
+    urls['author'] = videoDetails['uploader'];
+    // audio stream -> 1 = 126 kbps (m4a)
+    urls['audioTrack'] = videoDetails['audioStreams'][1];
+    for (var stream in videoDetails['videoStreams']) {
+      if ((stream['format'] == "MPEG_4") &&
+          (!urls['qualities'].contains(stream['quality'])) &&
+          (stream['videoOnly'] == false)) {
+        urls['videos'].add(stream['url']);
+        urls['qualities'].add(stream['quality']);
+        if (stream['quality'] == playerQuality) {
+          defaultUrl = stream['url'];
+        }
+      }
     }
-    urls['videos'].add(manifest.muxed[1].url.toString());
+
     urls['videos'] = urls['videos'].reversed.toList();
+    urls['qualities'] = urls['qualities'].reversed.toList();
+
+    urls['videos'].insert(0, defaultUrl);
     return urls;
   }
 
@@ -2150,19 +2173,16 @@ class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
   @override
   void initState() {
     super.initState();
+    Map<String, String>? qualities = {};
+    int c = 0;
+    for (c; c < widget.videoUrls['qualities'].length; c++) {
+      String quality = widget.videoUrls['qualities'][c];
+      qualities[quality] = widget.videoUrls['videos'][c + 1];
+    }
     BetterPlayerDataSource betterPlayerDataSource = BetterPlayerDataSource(
       BetterPlayerDataSourceType.network,
       widget.videoUrls['videos'][0],
-      resolutions: widget.videoUrls['videos'].length == 4
-          ? {
-              '720p': widget.videoUrls['videos'][1],
-              '360p': widget.videoUrls['videos'][2],
-              '180p': widget.videoUrls['videos'][3],
-            }
-          : {
-              '720p': widget.videoUrls['videos'][1],
-              '360p': widget.videoUrls['videos'][2],
-            },
+      resolutions: qualities,
       notificationConfiguration: BetterPlayerNotificationConfiguration(
         showNotification: true,
         title: widget.videoUrls['name'] ?? 'Video',

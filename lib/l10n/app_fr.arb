@@ -199,6 +199,8 @@
   "@openingWithInAppBrowser": {},
   "other": "Autre",
   "@other": {},
+  "pipedApiUrlSub": "Utilisé pour les vidéos YouTube.",
+  "@pipedApiUrlSub": {},
   "placeOfBirth": "Lieu de naissance",
   "@placeOfBirth": {},
   "player": "Lecteur",

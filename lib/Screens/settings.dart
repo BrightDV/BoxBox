@@ -401,6 +401,8 @@ class _PlayerCardState extends State<PlayerCard> {
   Widget build(BuildContext context) {
     int playerQuality =
         Hive.box('settings').get('playerQuality', defaultValue: 360) as int;
+    String pipedApiUrl = Hive.box('settings')
+        .get('pipedApiUrl', defaultValue: 'pipedapi.kavin.rocks') as String;
     return Column(
       children: [
         Padding(
@@ -457,6 +459,58 @@ class _PlayerCardState extends State<PlayerCard> {
                   value: value,
                   child: Text(
                     '${value}p',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: widget.useDarkMode ? Colors.white : Colors.black,
+                    ),
+                  ),
+                );
+              },
+            ).toList(),
+          ),
+        ),
+        ListTile(
+          title: Text(
+            'Piped Proxy URL',
+            style: TextStyle(
+              color: widget.useDarkMode ? Colors.white : Colors.black,
+            ),
+          ),
+          subtitle: Text(
+            AppLocalizations.of(context)!.pipedApiUrlSub,
+            style: TextStyle(
+              color: widget.useDarkMode ? Colors.white : Colors.black,
+              fontSize: 13,
+            ),
+          ),
+          onTap: () {},
+          trailing: DropdownButton(
+            value: pipedApiUrl,
+            dropdownColor: widget.useDarkMode
+                ? Theme.of(context).scaffoldBackgroundColor
+                : Colors.white,
+            onChanged: (String? newValue) {
+              if (newValue != null) {
+                setState(
+                  () {
+                    pipedApiUrl = newValue;
+                    Hive.box('settings').put('pipedApiUrl', newValue);
+                  },
+                );
+              }
+            },
+            items: <String>[
+              'pipedapi.kavin.rocks',
+              'pipedapi.syncpundit.io',
+              'pipedapi.adminforge.de',
+              'watchapi.whatever.social',
+              'api.piped.privacydev.net',
+            ].map<DropdownMenuItem<String>>(
+              (String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(
+                    value,
                     style: TextStyle(
                       fontSize: 12,
                       color: widget.useDarkMode ? Colors.white : Colors.black,
