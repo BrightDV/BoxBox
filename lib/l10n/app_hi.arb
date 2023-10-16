@@ -314,5 +314,7 @@
   "save": "सहेजें",
   "@save": {},
   "server": "सर्वर",
-  "@server": {}
+  "@server": {},
+  "pipedApiUrlSub": "YouTube वीडियो के लिए उपयोग किया जाता है।",
+  "@pipedApiUrlSub": {}
 }
