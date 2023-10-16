@@ -314,5 +314,7 @@
   "save": "ਸੰਭਾਲੋ",
   "@save": {},
   "server": "ਸਰਵਰ",
-  "@server": {}
+  "@server": {},
+  "pipedApiUrlSub": "ਯੂਟਿਊਬ ਵੀਡੀਓਜ਼ ਲਈ ਵਰਤਿਆ ਜਾਂਦਾ ਹੈ।",
+  "@pipedApiUrlSub": {}
 }
