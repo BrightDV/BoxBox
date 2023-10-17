@@ -387,7 +387,8 @@ class WidgetsList extends StatelessWidget {
                                 )
                               : element['contentType'] == 'atomImageGallery'
                                   ? ImageGallery(
-                                      element['fields']['imageGallery'])
+                                      element['fields']['imageGallery'],
+                                    )
                                   : element['contentType'] == 'atomSocialPost'
                                       ? element['fields']['postType'] ==
                                               'Twitter'
@@ -1313,23 +1314,116 @@ class WidgetsList extends StatelessWidget {
                                                                           ),
                                                               ),
                                                             )
-                                                          : SizedBox(
-                                                              height: 100,
-                                                              child: Center(
-                                                                child:
-                                                                    SelectableText(
-                                                                  'Unsupported widget ¯\\_(ツ)_/¯\nType: ${element['contentType']}\nArticle id: ${article.articleId}',
-                                                                  style:
-                                                                      TextStyle(
-                                                                    color: useDarkMode
-                                                                        ? Colors
-                                                                            .white
-                                                                        : Colors
-                                                                            .black,
+                                                          : element['contentType'] ==
+                                                                  'atomPullQuote'
+                                                              ? Column(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .center,
+                                                                  children: [
+                                                                    Row(
+                                                                      mainAxisSize:
+                                                                          MainAxisSize
+                                                                              .min,
+                                                                      children: [
+                                                                        Expanded(
+                                                                          flex:
+                                                                              1,
+                                                                          child:
+                                                                              Padding(
+                                                                            padding:
+                                                                                const EdgeInsets.only(left: 5),
+                                                                            child:
+                                                                                Text(
+                                                                              '“',
+                                                                              style: TextStyle(
+                                                                                color: useDarkMode ? Colors.grey[400] : Colors.grey[800],
+                                                                                fontSize: 50,
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                        Expanded(
+                                                                          flex:
+                                                                              20,
+                                                                          child:
+                                                                              Align(
+                                                                            alignment:
+                                                                                Alignment.center,
+                                                                            child:
+                                                                                Padding(
+                                                                              padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
+                                                                              child: Text(
+                                                                                element['fields']['quoteText'],
+                                                                                style: TextStyle(
+                                                                                  color: Theme.of(context).primaryColor,
+                                                                                  fontSize: 22,
+                                                                                  fontStyle: FontStyle.italic,
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                        Expanded(
+                                                                          flex:
+                                                                              1,
+                                                                          child:
+                                                                              Padding(
+                                                                            padding:
+                                                                                const EdgeInsets.only(right: 5),
+                                                                            child:
+                                                                                Text(
+                                                                              '”',
+                                                                              style: TextStyle(
+                                                                                color: useDarkMode ? Colors.grey[400] : Colors.grey[800],
+                                                                                fontSize: 50,
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                    Padding(
+                                                                      padding:
+                                                                          const EdgeInsets
+                                                                              .only(
+                                                                        left:
+                                                                            10,
+                                                                      ),
+                                                                      child:
+                                                                          Text(
+                                                                        element['fields']
+                                                                            [
+                                                                            'quoteCitation'],
+                                                                        style:
+                                                                            TextStyle(
+                                                                          color: useDarkMode
+                                                                              ? Colors.grey[400]
+                                                                              : Colors.grey[800],
+                                                                          fontSize:
+                                                                              17,
+                                                                          fontWeight:
+                                                                              FontWeight.w500,
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                )
+                                                              : SizedBox(
+                                                                  height: 100,
+                                                                  child: Center(
+                                                                    child:
+                                                                        SelectableText(
+                                                                      'Unsupported widget ¯\\_(ツ)_/¯\nType: ${element['contentType']}\nArticle id: ${article.articleId}',
+                                                                      style:
+                                                                          TextStyle(
+                                                                        color: useDarkMode
+                                                                            ? Colors.white
+                                                                            : Colors.black,
+                                                                      ),
+                                                                    ),
                                                                   ),
                                                                 ),
-                                                              ),
-                                                            ),
 
         // author
 

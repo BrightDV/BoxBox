@@ -2388,7 +2388,7 @@ class _ImageGalleryState extends State<ImageGallery> {
           ],
           options: CarouselOptions(
               viewportFraction: 1,
-              aspectRatio: 16 / 9,
+              //aspectRatio: 16 / 9,
               enableInfiniteScroll: false,
               enlargeCenterPage: true,
               autoPlay: true,
