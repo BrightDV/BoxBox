@@ -286,5 +286,9 @@
   "addToCalendar": "Legg til i kalender",
   "@addToCalendar": {},
   "sessionStartsOn": "Økten starter:",
-  "@sessionStartsOn": {}
+  "@sessionStartsOn": {},
+  "server": "Tjener",
+  "@server": {},
+  "yes": "Ja",
+  "@yes": {}
 }
