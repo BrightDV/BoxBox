@@ -113,6 +113,7 @@ class FormulaOneScraper {
     bool fromErgast, {
     String? originalCircuitName,
     String? qualifyingResultsUrl,
+    bool? hasSprint,
   }) async {
     late String circuitId;
     late String circuitName;
@@ -150,6 +151,14 @@ class FormulaOneScraper {
       },
     );
     dom.Document document = parser.parse(response.body);
+    if (hasSprint ?? false) {
+      if (!document
+          .getElementsByClassName('ResultsArchiveTitle')[0]
+          .innerHtml
+          .contains('SPRINT SHOOTOUT')) {
+        throw Exception();
+      }
+    }
     List<dom.Element> finishedSessions =
         document.getElementsByClassName('side-nav-item');
     finishedSessions.removeAt(0);

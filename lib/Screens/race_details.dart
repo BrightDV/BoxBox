@@ -746,6 +746,7 @@ class QualificationResultsProvider extends StatelessWidget {
               '',
               false,
               qualifyingResultsUrl: raceUrl!,
+              hasSprint: hasSprint,
             )
           : getQualificationStandings(
               race!.round,
