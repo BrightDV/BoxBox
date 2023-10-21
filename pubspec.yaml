@@ -23,7 +23,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  add_2_calendar: ^2.2.4
+  add_2_calendar: 2.2.4
   animations: ^2.0.8
   awesome_notifications: ^0.7.4+1
   better_player:
@@ -60,7 +60,10 @@ dependencies:
       ref: master
   marquee: ^2.2.0
   package_info_plus: ^3.0.3
-  receive_sharing_intent: ^1.4.5
+  receive_sharing_intent: # bumped Gradle to 7.4.2
+    git:
+      url: https://github.com/Nahrawene-ben-hmida/receive_sharing_intent.git
+      ref: '6ad8f582d7bc7e2fd5a258399e7dbe8c39245d32' 
   share_plus: ^6.3.1
   # signalr_flutter: ^0.2.0 # uses (non-foss?) .jar
   sliding_up_panel: ^2.0.0+1
