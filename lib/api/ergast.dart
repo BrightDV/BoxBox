@@ -460,6 +460,7 @@ class _ErgastApiCalls {
     var response = await http.get(url);
     Map<String, dynamic> responseAsJson =
         jsonDecode(response.body)['MRData']['RaceTable']['Races'][0];
+    bool hasSprint = responseAsJson['Sprint'].isNotEmpty;
     List<DateTime> raceDates = [];
     List<String> sessionKeys = [
       'FirstPractice',
@@ -467,6 +468,15 @@ class _ErgastApiCalls {
       'ThirdPractice',
       'Qualifying',
     ];
+    if (hasSprint) {
+      sessionKeys = [
+        'FirstPractice',
+        'Qualifying',
+        'SecondPractice',
+        'Sprint',
+      ];
+    }
+
     for (String sessionKey in sessionKeys) {
       DateTime raceDate = DateTime.parse(
         '${responseAsJson[sessionKey]['date']} ${responseAsJson[sessionKey]['time']}',
