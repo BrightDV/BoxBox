@@ -1,0 +1,12 @@
+- Fix YouTube videos by using Piped
+- Replace Twitter with Nitter
+- Add support for the atomPullQuote article part
+- Fix the Sprint Shootout displaying wrong results
+- Improves the GP Documents list
+- Fix Race Hub's race info button
+- Replace the webview with an account-free alternative
+- Snap to next article for the related articles view
+- Fix the bottom nav bar visibility algorithm
+- Remove the Hero for the articles
+- Some other small UI improvements
+- Update translations
