@@ -86,21 +86,6 @@ class _GrandPrixRunningScreenState extends State<GrandPrixRunningScreen> {
       body: SlidingUpPanel(
         backdropEnabled: true,
         color: useDarkMode ? const Color(0xff22222c) : Colors.white,
-        collapsed: Container(
-          color: useDarkMode ? const Color(0xff22222c) : Colors.white,
-          child: Padding(
-            padding: const EdgeInsets.all(40),
-            child: Center(
-              child: Text(
-                "Grand-Prix documents",
-                style: TextStyle(
-                  color: useDarkMode ? Colors.white : Colors.black,
-                  fontSize: 16,
-                ),
-              ),
-            ),
-          ),
-        ),
         panel: Center(
           child: FutureBuilder<List<SessionDocument>>(
             future: FIAScraper().scrapeSessionDocuments(),
@@ -109,49 +94,72 @@ class _GrandPrixRunningScreenState extends State<GrandPrixRunningScreen> {
                 : snapshot.hasData
                     ? ListView.builder(
                         shrinkWrap: true,
-                        itemCount: snapshot.data!.length,
-                        itemBuilder: (context, index) => GestureDetector(
-                          onTap: () =>
-                              !snapshot.data![index].src.endsWith('pdf')
-                                  ? {}
-                                  : Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => PdfViewer(
-                                          snapshot.data![index].src,
-                                          snapshot.data![index].name,
-                                        ),
+                        itemCount: snapshot.data!.length + 1,
+                        itemBuilder: (context, index) => index == 0
+                            ? Container(
+                                color: useDarkMode
+                                    ? const Color(0xff22222c)
+                                    : Colors.white,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(40),
+                                  child: Center(
+                                    child: Text(
+                                      "Grand-Prix documents",
+                                      style: TextStyle(
+                                        color: useDarkMode
+                                            ? Colors.white
+                                            : Colors.black,
+                                        fontSize: 16,
                                       ),
                                     ),
-                          child: Card(
-                            color: useDarkMode
-                                ? const Color.fromARGB(255, 45, 45, 58)
-                                : Colors.white,
-                            elevation: 5,
-                            child: ListTile(
-                              title: Text(
-                                snapshot.data?[index].name ?? '',
-                                style: TextStyle(
-                                  color:
-                                      useDarkMode ? Colors.white : Colors.black,
+                                  ),
+                                ),
+                              )
+                            : GestureDetector(
+                                onTap: () => !snapshot.data![index + 1].src
+                                        .endsWith('pdf')
+                                    ? {}
+                                    : Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => PdfViewer(
+                                            snapshot.data![index + 1].src,
+                                            snapshot.data![index + 1].name,
+                                          ),
+                                        ),
+                                      ),
+                                child: Card(
+                                  color: useDarkMode
+                                      ? const Color.fromARGB(255, 45, 45, 58)
+                                      : Colors.white,
+                                  elevation: 5,
+                                  child: ListTile(
+                                    title: Text(
+                                      snapshot.data?[index + 1].name ?? '',
+                                      style: TextStyle(
+                                        color: useDarkMode
+                                            ? Colors.white
+                                            : Colors.black,
+                                      ),
+                                    ),
+                                    subtitle: Text(
+                                      'Published on ${snapshot.data?[index + 1].postedDate}',
+                                      style: TextStyle(
+                                        color: useDarkMode
+                                            ? Colors.white
+                                            : Colors.black,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                    leading: Icon(
+                                      Icons.picture_as_pdf_outlined,
+                                      color: useDarkMode
+                                          ? Colors.white
+                                          : Colors.black,
+                                    ),
+                                  ),
                                 ),
                               ),
-                              subtitle: Text(
-                                'Published on ${snapshot.data?[index].postedDate}',
-                                style: TextStyle(
-                                  color:
-                                      useDarkMode ? Colors.white : Colors.black,
-                                  fontSize: 12,
-                                ),
-                              ),
-                              leading: Icon(
-                                Icons.picture_as_pdf_outlined,
-                                color:
-                                    useDarkMode ? Colors.white : Colors.black,
-                              ),
-                            ),
-                          ),
-                        ),
                       )
                     : Padding(
                         padding: const EdgeInsets.all(15),
