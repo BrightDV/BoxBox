@@ -65,6 +65,7 @@ class DriverResult {
   final String? points;
   final String? raceId;
   final String? raceName;
+  final String? status;
 
   DriverResult(
     this.driverId,
@@ -82,6 +83,7 @@ class DriverResult {
     this.points,
     this.raceId,
     this.raceName,
+    this.status,
   });
 }
 

@@ -22,6 +22,7 @@ import 'package:boxbox/api/driver_components.dart';
 import 'package:boxbox/helpers/team_background_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class DriverResultItem extends StatelessWidget {
   final DriverResult item;
@@ -38,6 +39,7 @@ class DriverResultItem extends StatelessWidget {
   Widget build(BuildContext context) {
     Color finalTeamColors = getTeamColors(item.team);
     return GestureDetector(
+      behavior: HitTestBehavior.translucent,
       onTap: () {
         Navigator.push(
           context,
@@ -95,25 +97,40 @@ class DriverResultItem extends StatelessWidget {
                 flex: 6,
                 child: Padding(
                   padding: const EdgeInsets.only(left: 5, right: 5),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: item.isFastest
-                          ? const Color(0xffab01ab)
-                          : const Color(0xff383840),
-                      borderRadius: BorderRadius.circular(7),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 7, bottom: 7),
-                      child: Text(
-                        item.time,
-                        style: TextStyle(
-                          color: item.isFastest
-                              ? Colors.white
-                              : item.time == 'DNF'
-                                  ? Colors.yellow
-                                  : const Color(0xff00ff00),
+                  child: GestureDetector(
+                    onTap: () => item.time == 'DNF'
+                        ? Fluttertoast.showToast(
+                            msg: item.status ?? 'DNF',
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.BOTTOM,
+                            timeInSecForIosWeb: 2,
+                            backgroundColor: Colors.grey.shade500,
+                            fontSize: 16.0,
+                          )
+                        : null,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: item.isFastest
+                            ? const Color(0xffab01ab)
+                            : const Color(0xff383840),
+                        borderRadius: BorderRadius.circular(7),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 7, bottom: 7),
+                        child: Text(
+                          item.time,
+                          style: TextStyle(
+                            color: item.isFastest
+                                ? Colors.white
+                                : item.time == 'DNF'
+                                    ? Colors.yellow
+                                    : const Color(0xff00ff00),
+                            decoration: item.time == 'DNF'
+                                ? TextDecoration.underline
+                                : null,
+                          ),
+                          textAlign: TextAlign.center,
                         ),
-                        textAlign: TextAlign.center,
                       ),
                     ),
                   ),

@@ -67,6 +67,7 @@ class _ErgastApiCalls {
           fastestLapRank != '0' ? element['FastestLap']['lap'] : fastestLapRank,
           lapsDone: element['laps'],
           points: element['points'],
+          status: element['status'],
         ),
       );
     }
@@ -153,6 +154,7 @@ class _ErgastApiCalls {
                 : fastestLapRank,
             lapsDone: element['laps'],
             points: element['points'],
+            status: element['status'],
           ),
         );
       }
