@@ -355,7 +355,11 @@ class _CircuitScreenState extends State<CircuitScreen> {
                                                     flex: 2,
                                                     child: Text(
                                                       driverResults[
-                                                          'positionNumber'],
+                                                                  'positionNumber'] ==
+                                                              '66666'
+                                                          ? 'DQ'
+                                                          : driverResults[
+                                                              'positionNumber'],
                                                       style: TextStyle(
                                                         color: useDarkMode
                                                             ? Colors.white
@@ -1024,7 +1028,11 @@ class _CircuitScreenState extends State<CircuitScreen> {
                                                                 flex: 2,
                                                                 child: Text(
                                                                   driverResults[
-                                                                      'positionNumber'],
+                                                                              'positionNumber'] ==
+                                                                          '66666'
+                                                                      ? 'DQ'
+                                                                      : driverResults[
+                                                                          'positionNumber'],
                                                                   style:
                                                                       TextStyle(
                                                                     color: useDarkMode

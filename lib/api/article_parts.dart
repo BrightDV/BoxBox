@@ -784,8 +784,9 @@ class WidgetsList extends StatelessWidget {
                                                                         flex: 2,
                                                                         child:
                                                                             Text(
-                                                                          driverResults[
-                                                                              'positionNumber'],
+                                                                          driverResults['positionNumber'] == '66666'
+                                                                              ? 'DQ'
+                                                                              : driverResults['positionNumber'],
                                                                           style:
                                                                               TextStyle(
                                                                             color: useDarkMode
@@ -884,7 +885,7 @@ class WidgetsList extends StatelessWidget {
                                                                                 2,
                                                                             child:
                                                                                 Text(
-                                                                              driverResults['positionNumber'],
+                                                                              driverResults['positionNumber'] == '66666' ? 'DQ' : driverResults['positionNumber'],
                                                                               style: TextStyle(
                                                                                 color: useDarkMode ? Colors.white : Colors.black,
                                                                                 fontWeight: FontWeight.w500,
@@ -950,7 +951,7 @@ class WidgetsList extends StatelessWidget {
                                                                                 2,
                                                                             child:
                                                                                 Text(
-                                                                              driverResults['positionNumber'],
+                                                                              driverResults['positionNumber'] == '66666' ? 'DQ' : driverResults['positionNumber'],
                                                                               style: TextStyle(
                                                                                 color: useDarkMode ? Colors.white : Colors.black,
                                                                                 fontWeight: FontWeight.w500,
