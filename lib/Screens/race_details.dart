@@ -728,11 +728,13 @@ class QualificationResultsProvider extends StatelessWidget {
   final Race? race;
   final String? raceUrl;
   final bool? hasSprint;
+  final bool? isSprintShootout;
   const QualificationResultsProvider({
     Key? key,
     this.race,
     this.raceUrl,
     this.hasSprint,
+    this.isSprintShootout,
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -797,7 +799,9 @@ class QualificationResultsProvider extends StatelessWidget {
                               final raceYear = race!.date.split('-')[0];
                               final List<Video> searchResults =
                                   await yt.search.search(
-                                raceUrl?.contains('sprint-shootout') ?? false
+                                (raceUrl?.contains('sprint-shootout') ??
+                                            false) ||
+                                        (isSprintShootout ?? false)
                                     ? "Formula 1 Sprint Shootout Highlights ${race!.raceName} $raceYear"
                                     : "Formula 1 Qualification Highlights ${race!.raceName} $raceYear",
                               );

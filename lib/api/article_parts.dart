@@ -613,27 +613,29 @@ class WidgetsList extends StatelessWidget {
                                                               ? AppLocalizations.of(
                                                                       context)!
                                                                   .race
-                                                              : element['fields']
-                                                                          [
+                                                              : element['fields'][
                                                                           'sessionType'] ==
                                                                       'Qualifying'
                                                                   ? AppLocalizations.of(
                                                                           context)!
                                                                       .qualifyings
-                                                                  : element['fields']['sessionType'] ==
+                                                                  : element['fields']
+                                                                              [
+                                                                              'sessionType'] ==
                                                                           'Sprint'
                                                                       ? AppLocalizations.of(
                                                                               context)!
                                                                           .sprint
-                                                                      : element['fields']['sessionType'].startsWith(
-                                                                              'Starting Grid')
-                                                                          ? element['fields']
-                                                                              ['sessionType']
-                                                                          : element['fields']['sessionType'].endsWith('1')
-                                                                              ? AppLocalizations.of(context)!.freePracticeOne
-                                                                              : element['fields']['sessionType'].endsWith('2')
-                                                                                  ? AppLocalizations.of(context)!.freePracticeTwo
-                                                                                  : AppLocalizations.of(context)!.freePracticeThree,
+                                                                      : element['fields']['sessionType'] ==
+                                                                              'Sprint Shootout'
+                                                                          ? 'Sprint Shootout'
+                                                                          : element['fields']['sessionType'].startsWith('Starting Grid')
+                                                                              ? element['fields']['sessionType']
+                                                                              : element['fields']['sessionType'].endsWith('1')
+                                                                                  ? AppLocalizations.of(context)!.freePracticeOne
+                                                                                  : element['fields']['sessionType'].endsWith('2')
+                                                                                      ? AppLocalizations.of(context)!.freePracticeTwo
+                                                                                      : AppLocalizations.of(context)!.freePracticeThree,
                                                           style: TextStyle(
                                                             color: useDarkMode
                                                                 ? Colors.white
@@ -757,7 +759,8 @@ class WidgetsList extends StatelessWidget {
                                                                   ],
                                                           ),
                                                         ),
-                                                        for (Map driverResults in element['fields']
+                                                        for (Map driverResults in element[
+                                                                        'fields']
                                                                     [
                                                                     'sessionType']
                                                                 .startsWith(
@@ -766,7 +769,7 @@ class WidgetsList extends StatelessWidget {
                                                                     ['startingGrid']
                                                                 ['results']
                                                             : element['fields']
-                                                                    ['raceResults${element['fields']['sessionType'] == 'Sprint' ? 'SprintQualifying' : element['fields']['sessionType']}']
+                                                                    ['raceResults${element['fields']['sessionType'] == 'Sprint' ? 'SprintQualifying' : element['fields']['sessionType'] == 'Sprint Shootout' ? 'SprintShootout' : element['fields']['sessionType']}']
                                                                 ['results'])
                                                           element['fields']['sessionType'] ==
                                                                       'Race' ||
@@ -1062,9 +1065,11 @@ class WidgetsList extends StatelessWidget {
                                                                                       ? AppLocalizations.of(context)!.race
                                                                                       : element['fields']['sessionType'] == 'Sprint'
                                                                                           ? AppLocalizations.of(context)!.sprint
-                                                                                          : element['fields']['cta'].endsWith('starting-grid.html')
-                                                                                              ? AppLocalizations.of(context)!.startingGrid
-                                                                                              : AppLocalizations.of(context)!.qualifyings,
+                                                                                          : element['fields']['sessionType'] == 'Sprint Shootout'
+                                                                                              ? 'Sprint Shootout'
+                                                                                              : element['fields']['cta'].endsWith('starting-grid.html')
+                                                                                                  ? AppLocalizations.of(context)!.startingGrid
+                                                                                                  : AppLocalizations.of(context)!.qualifyings,
                                                                                 ),
                                                                               ),
                                                                               backgroundColor: Theme.of(context).colorScheme.background,
@@ -1077,6 +1082,7 @@ class WidgetsList extends StatelessWidget {
                                                                                           ? StartingGridProvider(element['fields']['cta'])
                                                                                           : QualificationResultsProvider(
                                                                                               raceUrl: element['fields']['cta'],
+                                                                                              isSprintShootout: element['fields']['sessionType'] == 'Sprint Shootout' ? true : false,
                                                                                             ),
                                                                                     ),
                                                                             ),
