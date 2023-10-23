@@ -854,8 +854,8 @@ class WidgetsList extends StatelessWidget {
                                                                         child:
                                                                             Text(
                                                                           element['fields']['sessionType'] == 'Race'
-                                                                              ? driverResults['racePoints'].toString()
-                                                                              : driverResults['sprintQualifyingPoints'].toString(),
+                                                                              ? (driverResults['racePoints'] ?? '0').toString()
+                                                                              : (driverResults['sprintQualifyingPoints'] ?? '0').toString(),
                                                                           style:
                                                                               TextStyle(
                                                                             color: useDarkMode
@@ -1151,7 +1151,8 @@ class WidgetsList extends StatelessWidget {
                                                                 child: Padding(
                                                                   padding:
                                                                       const EdgeInsets
-                                                                          .all(10),
+                                                                          .all(
+                                                                          10),
                                                                   child: Text(
                                                                     element['fields']
                                                                         [
@@ -1179,8 +1180,7 @@ class WidgetsList extends StatelessWidget {
                                                                       [
                                                                       'tableContent'])
                                                                 Row(
-                                                                  children: <
-                                                                      Widget>[
+                                                                  children: <Widget>[
                                                                     for (Map driverDetails
                                                                         in driverItem)
                                                                       Container(
