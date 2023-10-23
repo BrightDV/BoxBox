@@ -86,6 +86,24 @@ class _GrandPrixRunningScreenState extends State<GrandPrixRunningScreen> {
       body: SlidingUpPanel(
         backdropEnabled: true,
         color: useDarkMode ? const Color(0xff22222c) : Colors.white,
+        collapsed: GestureDetector(
+          behavior: HitTestBehavior.deferToChild,
+          child: Container(
+            color: useDarkMode ? const Color(0xff22222c) : Colors.white,
+            child: Padding(
+              padding: const EdgeInsets.all(40),
+              child: Center(
+                child: Text(
+                  "Grand-Prix documents",
+                  style: TextStyle(
+                    color: useDarkMode ? Colors.white : Colors.black,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
         panel: Center(
           child: FutureBuilder<List<SessionDocument>>(
             future: FIAScraper().scrapeSessionDocuments(),
