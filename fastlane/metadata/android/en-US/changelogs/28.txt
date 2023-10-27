@@ -1,0 +1,7 @@
+- Fix article with Sprint Shootout results
+- Add 8 Nitter instances to reduce load
+- Fix disqualified drivers' position
+- Fix the documents slider
+- Show DNF reason when tapping on it in the results
+- The app is now available in Arabic!
+- Start the meeting earlier and finish them later
