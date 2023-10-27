@@ -130,12 +130,16 @@ class EventTracker {
         eventAsJson['seasonContext']['timetables'][0]['gmtOffset'];
     DateTime meetingStartDate = DateTime.parse(
       eventAsJson['race']['meetingStartDate'].substring(0, 23),
-    ).toLocal();
+    ).toLocal().subtract(
+          const Duration(
+            hours: 8,
+          ),
+        );
     DateTime meetingEndDate = DateTime.parse(
       eventAsJson['race']['meetingEndDate'].substring(0, 23),
     ).toLocal().add(
           const Duration(
-            hours: 4,
+            hours: 8,
           ),
         );
 
