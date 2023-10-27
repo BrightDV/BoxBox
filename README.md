@@ -82,15 +82,16 @@ Theses files are used by Flutter to provide you the translation.
 The app is currently available in:
 - 🇬🇧 English
 - 🇫🇷 French
+- Arabic, thanks to [@Music47ell](https://github.com/Music47ell)
 - 🇨🇳 Simplified Chinese, thanks to Ahoo Ng (五号电)
-- 🇩🇪 German, thanks to @RekZix
-- 🇭🇺 Hungarian, thanks to @thereeroyz
-- 🇮🇹 Italian, thanks to @atilluF
-- 🇳🇴 Norwegian, thanks to @comradekingu
-- 🇵🇹 Portuguese, thanks to @Alexthegib
-- 🇮🇳 Punjabi & Hindi, thanks to @ShareASmile
-- 🇪🇸 Spanish, thanks to @inigochoa
-- 🇹🇷 Turkish, thanks to @metezd
+- 🇩🇪 German, thanks to [@RekZix](https://github.com/RekZix)
+- 🇭🇺 Hungarian, thanks to [@d4f5409d](https://github.com/d4f5409d)
+- 🇮🇹 Italian, thanks to [@atilluF](https://github.com/atilluF)
+- 🇳🇴 Norwegian, thanks to [@comradekingu](https://github.com/comradekingu)
+- 🇵🇹 Portuguese, thanks to [@Alexthegib](https://github.com/Alexthegib)
+- 🇮🇳 Punjabi & Hindi, thanks to [@ShareASmile](https://github.com/ShareASmile)
+- 🇪🇸 Spanish, thanks to [@inigochoa](https://github.com/inigochoa)
+- 🇹🇷 Turkish, thanks to [@metezd](https://github.com/metezd)
 
 and thanks to the other translators!
 
