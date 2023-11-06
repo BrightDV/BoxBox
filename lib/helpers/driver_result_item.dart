@@ -98,9 +98,10 @@ class DriverResultItem extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.only(left: 5, right: 5),
                   child: GestureDetector(
-                    onTap: () => item.time == 'DNF'
+                    onTap: () => item.time == 'DNF' || item.time == 'DNS'
                         ? Fluttertoast.showToast(
-                            msg: item.status ?? 'DNF',
+                            msg: item.status ??
+                                (item.time == 'DNF' ? 'DNF' : 'DNS'),
                             toastLength: Toast.LENGTH_SHORT,
                             gravity: ToastGravity.BOTTOM,
                             timeInSecForIosWeb: 2,
@@ -122,10 +123,10 @@ class DriverResultItem extends StatelessWidget {
                           style: TextStyle(
                             color: item.isFastest
                                 ? Colors.white
-                                : item.time == 'DNF'
+                                : item.time == 'DNF' || item.time == 'DNS'
                                     ? Colors.yellow
                                     : const Color(0xff00ff00),
-                            decoration: item.time == 'DNF'
+                            decoration: item.time == 'DNF' || item.time == 'DNS'
                                 ? TextDecoration.underline
                                 : null,
                           ),
