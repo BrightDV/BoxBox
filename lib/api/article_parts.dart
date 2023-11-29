@@ -132,23 +132,6 @@ class WidgetsList extends StatelessWidget {
   final ScrollController articleScrollController;
   const WidgetsList(this.article, this.articleScrollController, {super.key});
 
-  String getRandomNitterInstance() {
-    List<String> instances = [
-      'https://nitter.net',
-      'https://nitter.unixfox.eu',
-      // 'https://nitter.cz', // has a captcha
-      'https://nitter.esmailelbob.xyz',
-      'https://nitter.poast.org',
-      'https://nitter.projectsegfau.lt',
-      'https://nitter.d420.de',
-      'https://nitter.catsarch.com',
-      'https://nitter.hostux.net',
-      'https://nitter.dafriser.be',
-    ];
-    instances.shuffle();
-    return instances.first;
-  }
-
   @override
   Widget build(BuildContext context) {
     // load static variables
@@ -414,7 +397,7 @@ class WidgetsList extends StatelessWidget {
                                               child: InAppWebView(
                                                 initialUrlRequest: URLRequest(
                                                   url: WebUri(
-                                                    "${getRandomNitterInstance()}/x/status/${element['fields']['postId']}/embed",
+                                                    "https://farside.link/nitter/x/status/${element['fields']['postId']}/embed",
                                                   ),
                                                 ),
                                                 gestureRecognizers: {
