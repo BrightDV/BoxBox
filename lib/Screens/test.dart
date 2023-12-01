@@ -17,18 +17,90 @@
  * Copyright (c) 2022-2023, BrightDV
  */
 
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:boxbox/Screens/article.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
-class TestScreen extends StatelessWidget {
-  const TestScreen({Key? key}) : super(key: key);
+class TestScreen extends StatefulWidget {
+  const TestScreen({super.key});
+
+  @override
+  State<TestScreen> createState() => _TestScreenState();
+}
+
+class _TestScreenState extends State<TestScreen> {
+  final List<ContentBlocker> contentBlockers = [];
+
+  @override
+  void initState() {
+    super.initState();
+    contentBlockers.add(
+      ContentBlocker(
+        trigger: ContentBlockerTrigger(
+          urlFilter: ".*",
+          unlessDomain: ["live.planetf1.com"],
+          resourceType: [
+            ContentBlockerTriggerResourceType.SCRIPT,
+            ContentBlockerTriggerResourceType.RAW,
+          ],
+        ),
+        action: ContentBlockerAction(
+          type: ContentBlockerActionType.BLOCK,
+        ),
+      ),
+    );
+
+    List<String> selectors = [
+      ".bs-sticky",
+      ".bs-block",
+      ".unic",
+    ];
+    contentBlockers.add(
+      ContentBlocker(
+        trigger: ContentBlockerTrigger(
+          urlFilter: ".*",
+        ),
+        action: ContentBlockerAction(
+          type: ContentBlockerActionType.CSS_DISPLAY_NONE,
+          selector: selectors.join(', '),
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    return const ArticleScreen(
-      'gNNm6u0VT260LtqZzgeY6',
-      'quote',
-      true,
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Test'),
+      ),
+      body: InAppWebView(
+        initialUrlRequest: URLRequest(
+          url: WebUri(
+            "https://live.planetf1.com/",
+          ),
+        ),
+        initialSettings: InAppWebViewSettings(
+          contentBlockers: contentBlockers,
+        ),
+        gestureRecognizers: {
+          Factory<VerticalDragGestureRecognizer>(
+            () => VerticalDragGestureRecognizer(),
+          ),
+          Factory<HorizontalDragGestureRecognizer>(
+            () => HorizontalDragGestureRecognizer(),
+          ),
+          Factory<ScaleGestureRecognizer>(
+            () => ScaleGestureRecognizer(),
+          ),
+        },
+        onPermissionRequest: (controller, permissionRequest) async {
+          PermissionResponse(
+            action: PermissionResponseAction.DENY,
+          );
+        },
+      ),
     );
   }
 }

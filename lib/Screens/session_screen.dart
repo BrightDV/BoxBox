@@ -46,47 +46,41 @@ class SessionScreen extends StatefulWidget {
 }
 
 class _SessionScreenState extends State<SessionScreen> {
-  final List adUrlFilters = [
-    ".*.pubtm.com/.*",
-    ".*.pubperf.com/.*",
-    ".*.uniconsent.com/.*",
-    ".*.advertserve.com/.*",
-    ".*.zqtk.net/.*",
-  ];
   final List<ContentBlocker> contentBlockers = [];
 
   @override
   void initState() {
     super.initState();
     if (!kIsWeb) {
-      for (final adUrlFilter in adUrlFilters) {
-        contentBlockers.add(
-          ContentBlocker(
-            trigger: ContentBlockerTrigger(
-              urlFilter: adUrlFilter,
-            ),
-            action: ContentBlockerAction(
-              type: ContentBlockerActionType.BLOCK,
-            ),
+      ContentBlocker(
+        trigger: ContentBlockerTrigger(
+          urlFilter: ".*",
+          unlessDomain: ["live.planetf1.com"],
+          resourceType: [
+            ContentBlockerTriggerResourceType.SCRIPT,
+            ContentBlockerTriggerResourceType.RAW,
+          ],
+        ),
+        action: ContentBlockerAction(
+          type: ContentBlockerActionType.BLOCK,
+        ),
+      );
+      List<String> selectors = [
+        ".bs-sticky",
+        ".bs-block",
+        ".unic",
+      ];
+      contentBlockers.add(
+        ContentBlocker(
+          trigger: ContentBlockerTrigger(
+            urlFilter: ".*",
           ),
-        );
-        List<String> selectors = [
-          ".bs-sticky",
-          ".bs-block",
-          ".unic",
-        ];
-        contentBlockers.add(
-          ContentBlocker(
-            trigger: ContentBlockerTrigger(
-              urlFilter: ".*",
-            ),
-            action: ContentBlockerAction(
-              type: ContentBlockerActionType.CSS_DISPLAY_NONE,
-              selector: selectors.join(', '),
-            ),
+          action: ContentBlockerAction(
+            type: ContentBlockerActionType.CSS_DISPLAY_NONE,
+            selector: selectors.join(', '),
           ),
-        );
-      }
+        ),
+      );
     }
   }
 

@@ -36,97 +36,69 @@ class RssFeedArticleScreen extends StatefulWidget {
 }
 
 class _RssFeedArticleScreenState extends State<RssFeedArticleScreen> {
-  final List adUrlFilters = [
-    ".*.doubleclick.net/.*",
-    ".*.crashlytics.com/.*",
-    ".*.scorecardresearch.com/.*",
-    ".*.pubmatic.com/.*",
-    ".*.supersonicads.com/.*",
-    ".*.outbrain.com/.*",
-    ".*.googlesyndication.com/.*",
-    ".*.googletagservices.com/.*",
-    ".*.google-analytics.com/.*",
-    ".*.amazon-adsystem.com/.*",
-    ".*.id5-sync.com/.*",
-    ".*.quantcast.com/.*",
-    ".*.adsafeprotected.com/.*",
-    ".*.crwdcntrl.net/.*",
-    ".*.chartbeat.net/.*",
-    ".*.omnitagjs.com/.*",
-    ".*.justpremium.com/.*",
-    ".*.stickyadstv.com/.*",
-    ".*.teads.tv/.*",
-    ".*.taboola.com/.*",
-    ".*.aaxads.com/.*",
-    ".*.googleapis.com/.*",
-    ".*.btloader.com/.*",
-    ".*.avantisvideo.com/.*",
-    ".*.cookiepro.com/.*",
-    ".*.wknd.ai/.*",
-    ".*.webspectator.com/.*",
-    ".*.googletagmanager.com/.*",
-    ".*.id5-sync.com/.*",
-    ".*.revcontent.com/.*",
-    ".*.omnitagjs.com/.*",
-  ];
   final List<ContentBlocker> contentBlockers = [];
 
   @override
   void initState() {
     super.initState();
     if (!kIsWeb) {
-      for (final adUrlFilter in adUrlFilters) {
-        contentBlockers.add(
-          ContentBlocker(
-            trigger: ContentBlockerTrigger(
-              urlFilter: adUrlFilter,
-            ),
-            action: ContentBlockerAction(
-              type: ContentBlockerActionType.BLOCK,
-            ),
+      contentBlockers.add(
+        ContentBlocker(
+          trigger: ContentBlockerTrigger(
+            urlFilter: ".*",
+            unlessDomain: [
+              widget.articleUrl.split('/')[2],
+            ],
+            resourceType: [
+              ContentBlockerTriggerResourceType.SCRIPT,
+              ContentBlockerTriggerResourceType.RAW,
+            ],
           ),
-        );
-        List<String> selectors = [
-          ".banner",
-          ".banners",
-          ".ads",
-          ".ad",
-          ".advert",
-          ".w7e-platform-101",
-          ".adgrid-ad-container",
-          ".ms-apb-inarticle-after-preview-without-sidebar",
-          ".ms-apb-super",
-          ".ms-content_sidebar",
-          ".ms-apb",
-          ".ms-footer_piano-footer",
-          ".advert-banner-container",
-          ".ad-top-margin",
-          ".mv-ad-box",
-          ".onetrust-pc-dark-filter",
-          ".ms-ap",
-          ".ms-hapb",
-          ".ci-ad",
-          ".ot-sdk-container",
-          ".GoogleActiveViewElement",
-          ".widget_text",
-          ".topbanmobile",
-          ".primisslate",
-          ".snackStickyParent",
-          ".region-banner",
-          ".inarticle-wrapper",
-        ];
-        contentBlockers.add(
-          ContentBlocker(
-            trigger: ContentBlockerTrigger(
-              urlFilter: ".*",
-            ),
-            action: ContentBlockerAction(
-              type: ContentBlockerActionType.CSS_DISPLAY_NONE,
-              selector: selectors.join(', '),
-            ),
+          action: ContentBlockerAction(
+            type: ContentBlockerActionType.BLOCK,
           ),
-        );
-      }
+        ),
+      );
+      List<String> selectors = [
+        ".banner",
+        ".banners",
+        ".ads",
+        ".ad",
+        ".advert",
+        ".w7e-platform-101",
+        ".adgrid-ad-container",
+        ".ms-apb-inarticle-after-preview-without-sidebar",
+        ".ms-apb-super",
+        ".ms-content_sidebar",
+        ".ms-apb",
+        ".ms-footer_piano-footer",
+        ".advert-banner-container",
+        ".ad-top-margin",
+        ".mv-ad-box",
+        ".onetrust-pc-dark-filter",
+        ".ms-ap",
+        ".ms-hapb",
+        ".ci-ad",
+        ".ot-sdk-container",
+        ".GoogleActiveViewElement",
+        ".widget_text",
+        ".topbanmobile",
+        ".primisslate",
+        ".snackStickyParent",
+        ".region-banner",
+        ".inarticle-wrapper",
+      ];
+      contentBlockers.add(
+        ContentBlocker(
+          trigger: ContentBlockerTrigger(
+            urlFilter: ".*",
+          ),
+          action: ContentBlockerAction(
+            type: ContentBlockerActionType.CSS_DISPLAY_NONE,
+            selector: selectors.join(', '),
+          ),
+        ),
+      );
     }
   }
 
