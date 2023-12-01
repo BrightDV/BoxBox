@@ -25,34 +25,85 @@ import 'package:http/http.dart' as http;
 
 class SearXSearch {
   final List<String> instances = [
-    'https://search.unlocked.link',
     'https://search.sapti.me',
-    'https://search.neet.works',
-    'https://dynabyte.ca',
     'https://searx.fmac.xyz',
     'https://priv.au',
     'https://searx.be',
     'https://searx.tiekoetter.com',
     'https://searx.work',
+    'https://darmarit.org/searx',
+    'https://search.bus-hit.me',
+    'https://search.demoniak.ch',
+    'https://northboot.xyz',
+    'https://search.in.projectsegfau.lt',
+  ];
+
+  final List<String> instancesWithJsonFormat = [
+    'https://search.neet.works',
+    'https://searx.prvcy.eu',
+    'https://etsi.me',
+    'https://search.projectsegfau.lt',
   ];
 
   Future<List> searchArticles(String query) async {
-    late Uri url;
+    List results = await searchArticlesWithoutScraping(query);
+    if (results.isEmpty) {
+      results = await searchArticlesWithScraping(query);
+    }
+    return results;
+  }
+
+  Future<List> searchArticlesWithoutScraping(String query) async {
     late http.Response response;
-    instances.shuffle();
-    for (String instance in instances) {
-      url = Uri.parse(
-        '$instance/search?q="formula1.com/en/latest/article" $query&language=en-US',
-      );
+    List results = [];
+    for (String instance in instancesWithJsonFormat) {
       response = await http.get(
-        url,
+        Uri.parse(
+          '$instance/search?q="https://formula1.com/en/latest/article" $query&language=all&format=json',
+        ),
         headers: {
           'user-agent':
               'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36',
         },
       );
       if (response.body != 'Too Many Requests' &&
-          response.body != 'Rate limit exceeded') {
+          response.body != 'Rate limit exceeded' &&
+          response.statusCode == 200) {
+        break;
+      }
+    }
+    Map responseAsJson = jsonDecode(utf8.decode(response.bodyBytes));
+    for (var result in responseAsJson['results']) {
+      results.add(
+        {
+          'url': result['url'],
+          'title': result['title'],
+          'content': result['content'],
+        },
+      );
+    }
+
+    return results;
+  }
+
+  Future<List> searchArticlesWithScraping(String query) async {
+    late Uri url;
+    late http.Response response;
+    instances.shuffle();
+    for (String instance in instances) {
+      url = Uri.parse(
+        '$instance/search?q="https://formula1.com/en/latest/article" $query&language=all',
+      );
+      response = await http.get(
+        url,
+        headers: {
+          'user-agent':
+              'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36',
+        },
+      );
+      if (response.body != 'Too Many Requests' &&
+          response.body != 'Rate limit exceeded' &&
+          response.statusCode == 200) {
         break;
       }
     }
