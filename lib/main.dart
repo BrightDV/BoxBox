@@ -340,6 +340,7 @@ class _MyAppState extends State<MyApp> {
         fontFamily: 'Formula1',
         primarySwatch: colorCustom,
         scaffoldBackgroundColor: const Color(0xff12121a),
+        useMaterial3: false, // TODO: implement md3
       ),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: supportedLocales,

@@ -36,10 +36,10 @@
 @import device_info_plus;
 #endif
 
-#if __has_include(<flutter_inappwebview/InAppWebViewFlutterPlugin.h>)
-#import <flutter_inappwebview/InAppWebViewFlutterPlugin.h>
+#if __has_include(<flutter_inappwebview_ios/InAppWebViewFlutterPlugin.h>)
+#import <flutter_inappwebview_ios/InAppWebViewFlutterPlugin.h>
 #else
-@import flutter_inappwebview;
+@import flutter_inappwebview_ios;
 #endif
 
 #if __has_include(<fluttertoast/FluttertoastPlugin.h>)
@@ -84,8 +84,8 @@
 @import syncfusion_flutter_pdfviewer;
 #endif
 
-#if __has_include(<url_launcher_ios/FLTURLLauncherPlugin.h>)
-#import <url_launcher_ios/FLTURLLauncherPlugin.h>
+#if __has_include(<url_launcher_ios/URLLauncherPlugin.h>)
+#import <url_launcher_ios/URLLauncherPlugin.h>
 #else
 @import url_launcher_ios;
 #endif
@@ -100,12 +100,6 @@
 #import <wakelock/WakelockPlugin.h>
 #else
 @import wakelock;
-#endif
-
-#if __has_include(<workmanager/WorkmanagerPlugin.h>)
-#import <workmanager/WorkmanagerPlugin.h>
-#else
-@import workmanager;
 #endif
 
 @implementation GeneratedPluginRegistrant
@@ -124,10 +118,9 @@
   [FLTSharePlusPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTSharePlusPlugin"]];
   [SqflitePlugin registerWithRegistrar:[registry registrarForPlugin:@"SqflitePlugin"]];
   [SyncfusionFlutterPdfViewerPlugin registerWithRegistrar:[registry registrarForPlugin:@"SyncfusionFlutterPdfViewerPlugin"]];
-  [FLTURLLauncherPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTURLLauncherPlugin"]];
+  [URLLauncherPlugin registerWithRegistrar:[registry registrarForPlugin:@"URLLauncherPlugin"]];
   [FVPVideoPlayerPlugin registerWithRegistrar:[registry registrarForPlugin:@"FVPVideoPlayerPlugin"]];
   [WakelockPlugin registerWithRegistrar:[registry registrarForPlugin:@"WakelockPlugin"]];
-  [WorkmanagerPlugin registerWithRegistrar:[registry registrarForPlugin:@"WorkmanagerPlugin"]];
 }
 
 @end

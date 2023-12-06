@@ -23,39 +23,38 @@ class ImageLoader {
   /// Load image from disk cache first, if not found then load from network.
   /// `onComplete` is called when [imageBytes] become available.
   void loadImage(VoidCallback onComplete) {
-    if (frames != null) {
-      state = LoadState.success;
+    if (this.frames != null) {
+      this.state = LoadState.success;
       onComplete();
     }
 
-    final fileStream = DefaultCacheManager()
-        .getFileStream(url, headers: requestHeaders as Map<String, String>?);
+    final fileStream = DefaultCacheManager().getFileStream(this.url,
+        headers: this.requestHeaders as Map<String, String>?);
 
     fileStream.listen(
       (fileResponse) {
-        if (fileResponse is! FileInfo) return;
+        if (!(fileResponse is FileInfo)) return;
         // the reason for this is that, when the cache manager fetches
         // the image again from network, the provided `onComplete` should
         // not be called again
-        if (frames != null) {
+        if (this.frames != null) {
           return;
         }
 
         final imageBytes = fileResponse.file.readAsBytesSync();
 
-        state = LoadState.success;
+        this.state = LoadState.success;
 
-        PaintingBinding.instance.instantiateImageCodec(imageBytes).then(
-            (codec) {
-          frames = codec;
+        ui.instantiateImageCodec(imageBytes).then((codec) {
+          this.frames = codec;
           onComplete();
         }, onError: (error) {
-          state = LoadState.failure;
+          this.state = LoadState.failure;
           onComplete();
         });
       },
       onError: (error) {
-        state = LoadState.failure;
+        this.state = LoadState.failure;
         onComplete();
       },
     );
@@ -113,7 +112,7 @@ class StoryImageState extends State<StoryImage> {
     super.initState();
 
     if (widget.controller != null) {
-      _streamSubscription =
+      this._streamSubscription =
           widget.controller!.playbackNotifier.listen((playbackState) {
         // for the case of gifs we need to pause/play
         if (widget.imageLoader.frames == null) {
@@ -121,7 +120,7 @@ class StoryImageState extends State<StoryImage> {
         }
 
         if (playbackState == PlaybackState.pause) {
-          _timer?.cancel();
+          this._timer?.cancel();
         } else {
           forward();
         }
@@ -159,7 +158,7 @@ class StoryImageState extends State<StoryImage> {
   }
 
   void forward() async {
-    _timer?.cancel();
+    this._timer?.cancel();
 
     if (widget.controller != null &&
         widget.controller!.playbackNotifier.stream.value ==
@@ -169,10 +168,10 @@ class StoryImageState extends State<StoryImage> {
 
     final nextFrame = await widget.imageLoader.frames!.getNextFrame();
 
-    currentFrame = nextFrame.image;
+    this.currentFrame = nextFrame.image;
 
-    if (nextFrame.duration > const Duration(milliseconds: 0)) {
-      _timer = Timer(nextFrame.duration, forward);
+    if (nextFrame.duration > Duration(milliseconds: 0)) {
+      this._timer = Timer(nextFrame.duration, forward);
     }
 
     setState(() {});
@@ -182,11 +181,11 @@ class StoryImageState extends State<StoryImage> {
     switch (widget.imageLoader.state) {
       case LoadState.success:
         return RawImage(
-          image: currentFrame,
+          image: this.currentFrame,
           fit: widget.fit,
         );
       case LoadState.failure:
-        return const Center(
+        return Center(
             child: Text(
           "Image failed to load.",
           style: TextStyle(
@@ -194,8 +193,8 @@ class StoryImageState extends State<StoryImage> {
           ),
         ));
       default:
-        return const Center(
-          child: SizedBox(
+        return Center(
+          child: Container(
             width: 70,
             height: 70,
             child: CircularProgressIndicator(
@@ -209,7 +208,7 @@ class StoryImageState extends State<StoryImage> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return Container(
       width: double.infinity,
       height: double.infinity,
       child: getContentView(),

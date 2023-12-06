@@ -30,12 +30,12 @@ dependencies:
     git:
       url: https://github.com/tintran-dev/betterplayer.git
       ref: master
-  cached_network_image: ^3.2.0
+  cached_network_image: ^3.3.0
   carousel_slider: ^4.1.1
   connectivity_plus: ^4.0.2
   dotted_line: ^3.2.2
   flutter_cache_manager: ^3.3.0
-  flutter_inappwebview: ^6.0.0-beta.23
+  flutter_inappwebview: ^6.0.0-beta.31
   flutter_localizations:
     sdk: flutter
   flutter_map: ^4.0.0
@@ -77,7 +77,7 @@ dependencies:
     git:
       url: https://github.com/marcjoha/webfeed.git
       ref: master
-  workmanager: ^0.5.1
+  #workmanager: ^0.5.1
   youtube_explode_dart: ^1.12.4
 
 dev_dependencies:

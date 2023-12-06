@@ -41,9 +41,9 @@ public final class GeneratedPluginRegistrant {
       Log.e(TAG, "Error registering plugin device_info_plus, dev.fluttercommunity.plus.device_info.DeviceInfoPlusPlugin", e);
     }
     try {
-      flutterEngine.getPlugins().add(new com.pichillilorenzo.flutter_inappwebview.InAppWebViewFlutterPlugin());
+      flutterEngine.getPlugins().add(new com.pichillilorenzo.flutter_inappwebview_android.InAppWebViewFlutterPlugin());
     } catch (Exception e) {
-      Log.e(TAG, "Error registering plugin flutter_inappwebview, com.pichillilorenzo.flutter_inappwebview.InAppWebViewFlutterPlugin", e);
+      Log.e(TAG, "Error registering plugin flutter_inappwebview_android, com.pichillilorenzo.flutter_inappwebview_android.InAppWebViewFlutterPlugin", e);
     }
     try {
       flutterEngine.getPlugins().add(new io.github.ponnamkarthik.toast.fluttertoast.FlutterToastPlugin());
@@ -94,11 +94,6 @@ public final class GeneratedPluginRegistrant {
       flutterEngine.getPlugins().add(new creativemaybeno.wakelock.WakelockPlugin());
     } catch (Exception e) {
       Log.e(TAG, "Error registering plugin wakelock, creativemaybeno.wakelock.WakelockPlugin", e);
-    }
-    try {
-      flutterEngine.getPlugins().add(new dev.fluttercommunity.workmanager.WorkmanagerPlugin());
-    } catch (Exception e) {
-      Log.e(TAG, "Error registering plugin workmanager, dev.fluttercommunity.workmanager.WorkmanagerPlugin", e);
     }
   }
 }

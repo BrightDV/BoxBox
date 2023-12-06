@@ -1,4 +1,3 @@
-// ignore: depend_on_referenced_packages
 import 'package:rxdart/rxdart.dart';
 
 enum PlaybackState { pause, play, next, previous }
