@@ -2369,20 +2369,17 @@ class _ImageGalleryState extends State<ImageGallery> {
           carouselController: _controller,
           items: [
             for (var image in widget.images)
-              SizedBox(
-                width: MediaQuery.of(context).size.width,
-                child: Column(
-                  children: [
-                    ImageRenderer(
-                      useDataSaverMode
-                          ? image['renditions'] != null
-                              ? image['renditions']['2col-retina']
-                              : image['url'] +
-                                  '.transform/2col-retina/image.jpg'
-                          : image['url'],
-                      caption: image['caption'] ?? '',
-                    ),
-                  ],
+              ConstrainedBox(
+                constraints: BoxConstraints(
+                  minHeight: MediaQuery.of(context).size.width / (16 / 9),
+                ),
+                child: ImageRenderer(
+                  useDataSaverMode
+                      ? image['renditions'] != null
+                          ? image['renditions']['2col-retina']
+                          : image['url'] + '.transform/2col-retina/image.jpg'
+                      : image['url'],
+                  caption: image['caption'] ?? '',
                 ),
               ),
           ],
