@@ -57,7 +57,7 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
       defaultValue: [
         'WTF1.com',
         'Racefans.net',
-        'Beyondtheflag.com',
+        //'Beyondtheflag.com', // disabled for the moment
         'Motorsport.com',
         'Autosport.com',
         'GPFans.com',
@@ -71,7 +71,7 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
     Map<String, dynamic> feedsUrl = {
       'WTF1.com': 'https://wtf1.com',
       'Racefans.net': 'https://racefans.net',
-      'Beyondtheflag.com': 'https://beyondtheflag.com',
+      //'Beyondtheflag.com': 'https://beyondtheflag.com',
       'Motorsport.com': 'https://www.motorsport.com/rss/f1/news/',
       'Autosport.com': 'https://www.autosport.com/rss/f1/news/',
       'GPFans.com': 'https://www.gpfans.com/en/rss.xml',

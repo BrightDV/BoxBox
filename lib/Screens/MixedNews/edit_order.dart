@@ -39,7 +39,7 @@ class _EditOrderScreenState extends State<EditOrderScreen> {
       defaultValue: [
         'WTF1.com',
         'Racefans.net',
-        'Beyondtheflag.com',
+        // 'Beyondtheflag.com',
         'Motorsport.com',
         'Autosport.com',
         'GPFans.com',

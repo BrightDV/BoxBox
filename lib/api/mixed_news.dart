@@ -68,7 +68,7 @@ class MergedFeeds {
   Map<String, dynamic> feedsUrl = {
     'WTF1.com': 'https://wtf1.com',
     'Racefans.net': 'https://racefans.net',
-    'Beyondtheflag.com': 'https://beyondtheflag.com',
+    // 'Beyondtheflag.com': 'https://beyondtheflag.com',
     'Motorsport.com': 'https://www.motorsport.com/rss/f1/news/',
     'Autosport.com': 'https://www.autosport.com/rss/f1/news/',
     'GPFans.com': 'https://www.gpfans.com/en/rss.xml',
