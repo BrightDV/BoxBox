@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with BoxBox.  If not, see <http://www.gnu.org/licenses/>.
  * 
- * Copyright (c) 2022-2023, BrightDV
+ * Copyright (c) 2022-2024, BrightDV
  */
 
 class RaceTracksUrls {
@@ -42,6 +42,7 @@ class RaceTracksUrls {
     "interlagos": "Brazil",
     "vegas": "Las Vegas",
     "yas_marina": "Abu Dhabi",
+    "shanghai": "China",
   };
 
   Map<String, String> trackLayoutConverter = {
@@ -68,6 +69,7 @@ class RaceTracksUrls {
     "interlagos": "Brazil",
     "vegas": "Las Vegas",
     "yas_marina": "Abu Dhabi",
+    "shanghai": "China",
   };
 
   Map<String, String> raceCoverImageConverter = {
@@ -94,6 +96,7 @@ class RaceTracksUrls {
     "interlagos": "Brazilian",
     "vegas": "Las_Vegas",
     "yas_marina": "Abu_Dhabi",
+    "shanghai": "China",
   };
   Future<String> getRaceTrackImageUrl(String gpId) async {
     String gpName = trackUrlConverter[gpId]!;

@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with BoxBox.  If not, see <http://www.gnu.org/licenses/>.
  * 
- * Copyright (c) 2022-2023, BrightDV
+ * Copyright (c) 2022-2024, BrightDV
  */
 
 import 'dart:async';
@@ -161,7 +161,7 @@ class RaceDetailsScreen extends StatelessWidget {
                                         child: SingleChildScrollView(
                                           child: QualificationResultsProvider(
                                             raceUrl:
-                                                'https://www.formula1.com/en/results.html/2023/races/${Convert().circuitIdFromErgastToFormulaOne(race.circuitId)}/${Convert().circuitNameFromErgastToFormulaOne(race.circuitId)}/sprint-shootout.html',
+                                                'https://www.formula1.com/en/results.html/${DateTime.now().year}/races/${Convert().circuitIdFromErgastToFormulaOne(race.circuitId)}/${Convert().circuitNameFromErgastToFormulaOne(race.circuitId)}/sprint-shootout.html',
                                             hasSprint: hasSprint,
                                           ),
                                         ),

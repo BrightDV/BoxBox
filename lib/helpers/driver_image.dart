@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with BoxBox.  If not, see <http://www.gnu.org/licenses/>.
  * 
- * Copyright (c) 2022-2023, BrightDV
+ * Copyright (c) 2022-2024, BrightDV
  */
 
 import 'package:boxbox/helpers/convert_ergast_and_formula_one.dart';
@@ -81,7 +81,7 @@ class DriverStatsImage {
   Future<String> getDriverImage(String driverId) async {
     String driverPath = Convert().driverIdFromErgastForImages(driverId);
     String driverImageUrl =
-        "https://media.formula1.com/content/dam/fom-website/drivers/2023Drivers/$driverPath.jpg.img.640.medium.jpg/1677069810695.jpg";
+        "https://media.formula1.com/content/dam/fom-website/drivers/2024Drivers/$driverPath.jpg.img.640.medium.jpg/1677069810695.jpg";
     return driverImageUrl;
   }
 }

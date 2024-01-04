@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with BoxBox.  If not, see <http://www.gnu.org/licenses/>.
  * 
- * Copyright (c) 2022-2023, BrightDV
+ * Copyright (c) 2022-2024, BrightDV
  */
 
 import 'package:hive_flutter/hive_flutter.dart';
@@ -42,7 +42,7 @@ class FIAScraper {
       );
     } else {
       latestDocumentsUrl = Uri.parse(
-        'https://www.fia.com/documents/championships/fia-formula-one-world-championship-14/season/season-2023-2042',
+        'https://www.fia.com/documents/championships/fia-formula-one-world-championship-14/season/season-2023-2042', // TODO: update link
       );
     }
     http.Response response = await http.get(latestDocumentsUrl);
@@ -57,7 +57,7 @@ class FIAScraper {
           SessionDocument(
             'This document cannot be parsed.',
             'none',
-            'https://www.fia.com/documents/championships/fia-formula-one-world-championship-14/season/season-2023-2042',
+            'https://www.fia.com/documents/championships/fia-formula-one-world-championship-14/season/season-2023-2042', // TODO: update link
           ),
         );
       } else {

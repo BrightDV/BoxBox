@@ -14,31 +14,31 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with BoxBox.  If not, see <http://www.gnu.org/licenses/>.
  * 
- * Copyright (c) 2022-2023, BrightDV
+ * Copyright (c) 2022-${DateTime.now().year}, BrightDV
  */
 
 class TeamCarImage {
   Map<String, String> teamCarDecoder = {
     "ferrari":
-        "https://media.formula1.com/content/dam/fom-website/teams/2023/ferrari-left.png",
+        "https://media.formula1.com/content/dam/fom-website/teams/${DateTime.now().year}/ferrari-left.png",
     "mercedes":
-        "https://media.formula1.com/content/dam/fom-website/teams/2023/mercedes-left.png",
+        "https://media.formula1.com/content/dam/fom-website/teams/${DateTime.now().year}/mercedes-left.png",
     "red_bull":
-        "https://media.formula1.com/content/dam/fom-website/teams/2023/red-bull-left.png",
+        "https://media.formula1.com/content/dam/fom-website/teams/${DateTime.now().year}/red-bull-left.png",
     "alpine":
-        "https://media.formula1.com/content/dam/fom-website/teams/2023/alpine-left.png",
+        "https://media.formula1.com/content/dam/fom-website/teams/${DateTime.now().year}/alpine-left.png",
     "haas":
-        "https://media.formula1.com/content/dam/fom-website/teams/2023/haas-f1-team-left.png",
+        "https://media.formula1.com/content/dam/fom-website/teams/${DateTime.now().year}/haas-f1-team-left.png",
     "alfa":
-        "https://media.formula1.com/content/dam/fom-website/teams/2023/alfa-romeo-racing-left.png",
+        "https://media.formula1.com/content/dam/fom-website/teams/${DateTime.now().year}/alfa-romeo-racing-left.png",
     "alphatauri":
-        "https://media.formula1.com/content/dam/fom-website/teams/2023/alphatauri-left.png",
+        "https://media.formula1.com/content/dam/fom-website/teams/${DateTime.now().year}/alphatauri-left.png",
     "mclaren":
-        "https://media.formula1.com/content/dam/fom-website/teams/2023/mclaren-left.png",
+        "https://media.formula1.com/content/dam/fom-website/teams/${DateTime.now().year}/mclaren-left.png",
     "aston_martin":
-        "https://media.formula1.com/content/dam/fom-website/teams/2023/aston-martin-left.png",
+        "https://media.formula1.com/content/dam/fom-website/teams/${DateTime.now().year}/aston-martin-left.png",
     "williams":
-        "https://media.formula1.com/content/dam/fom-website/teams/2023/williams-left.png",
+        "https://media.formula1.com/content/dam/fom-website/teams/${DateTime.now().year}/williams-left.png",
   };
   Future<String> getTeamCarImageURL(String teamId) async {
     String teamCarImageUrl = teamCarDecoder[teamId]!;
