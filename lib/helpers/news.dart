@@ -2017,6 +2017,7 @@ class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
                                 MediaQuery.of(context).size.width / (16 / 9),
                             child: const LoadingIndicatorUtil(
                               replaceImage: true,
+                              borderRadius: false,
                             ),
                           ),
                           errorWidget: (context, url, error) => Icon(

@@ -311,66 +311,81 @@ class _FreePracticesResultsProviderState
               snapshot.error.toString(),
             )
           : snapshot.hasData
-              ? ListView.builder(
-                  itemCount: hasSprint ? 1 : 3,
-                  itemBuilder: (context, index) => snapshot.data! > index
-                      ? ListTile(
-                          title: Text(
-                            sessionsTitle[index],
-                            style: TextStyle(
-                              color: useDarkMode ? Colors.white : Colors.black,
-                            ),
-                            textAlign: TextAlign.center,
+              ? race.sessionDates.isEmpty
+                  ? Padding(
+                      padding: const EdgeInsets.all(15),
+                      child: Center(
+                        child: Text(
+                          AppLocalizations.of(context)!.dataNotAvailable,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: useDarkMode ? Colors.white : Colors.black,
                           ),
-                          onTap: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => FreePracticeScreen(
-                                sessionsTitle[index],
-                                index + 1,
-                                race.circuitId,
-                                int.parse(
-                                  race.date.split('-')[2],
-                                ),
-                                race.raceName,
-                              ),
-                            ),
-                          ),
-                        )
-                      : Padding(
-                          padding: const EdgeInsets.only(top: 25),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
+                        ),
+                      ),
+                    )
+                  : ListView.builder(
+                      itemCount: hasSprint ? 1 : 3,
+                      itemBuilder: (context, index) => snapshot.data! > index
+                          ? ListTile(
+                              title: Text(
                                 sessionsTitle[index],
                                 style: TextStyle(
                                   color:
                                       useDarkMode ? Colors.white : Colors.black,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w500,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                              onTap: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => FreePracticeScreen(
+                                    sessionsTitle[index],
+                                    index + 1,
+                                    race.circuitId,
+                                    int.parse(
+                                      race.date.split('-')[2],
+                                    ),
+                                    race.raceName,
+                                  ),
                                 ),
                               ),
-                              SessionCountdownTimer(
-                                race,
-                                index,
-                                sessionsTitle[index],
-                                update: update,
+                            )
+                          : Padding(
+                              padding: const EdgeInsets.only(top: 25),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    sessionsTitle[index],
+                                    style: TextStyle(
+                                      color: useDarkMode
+                                          ? Colors.white
+                                          : Colors.black,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  SessionCountdownTimer(
+                                    race,
+                                    index,
+                                    sessionsTitle[index],
+                                    update: update,
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                      top: 25,
+                                    ),
+                                    child: Divider(
+                                      color: useDarkMode
+                                          ? const Color(0xff1d1d28)
+                                          : Colors.grey.shade400,
+                                    ),
+                                  ),
+                                ],
                               ),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                  top: 25,
-                                ),
-                                child: Divider(
-                                  color: useDarkMode
-                                      ? const Color(0xff1d1d28)
-                                      : Colors.grey.shade400,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                )
+                            ),
+                    )
               : const LoadingIndicatorUtil(),
     );
   }
@@ -398,6 +413,10 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
       false,
       raceUrl: raceUrl,
     );
+  }
+
+  void _setState() {
+    setState(() {});
   }
 
   @override
@@ -432,7 +451,7 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
         race,
         4,
         AppLocalizations.of(context)!.race,
-        update: setState,
+        update: _setState,
       );
     } else {
       return raceUrl != ''
@@ -636,86 +655,106 @@ class _SprintResultsProviderState extends State<SprintResultsProvider> {
     );
   }
 
+  void _setState() {
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
-    return SingleChildScrollView(
-      child: FutureBuilder<List<DriverResult>>(
-        future: widget.raceUrl != null
-            ? FormulaOneScraper().scrapeRaceResult(
-                '',
-                0,
-                '',
-                false,
-                raceUrl: widget.raceUrl!,
-              )
-            : getSprintStandings(
-                widget.race!.round,
-              ),
-        builder: (context, snapshot) => snapshot.hasError
-            ? Padding(
-                padding: const EdgeInsets.all(15),
-                child: Center(
-                  child: Text(
-                    AppLocalizations.of(context)!.dataNotAvailable,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: useDarkMode ? Colors.white : Colors.black,
-                      fontSize: 15,
-                    ),
-                  ),
+    return (widget.race?.sessionDates.isEmpty ?? true) &&
+            (widget.raceUrl == null)
+        ? Padding(
+            padding: const EdgeInsets.all(15),
+            child: Center(
+              child: Text(
+                AppLocalizations.of(context)!.dataNotAvailable,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: useDarkMode ? Colors.white : Colors.black,
                 ),
-              )
-            : snapshot.hasData
-                ? snapshot.data!.isEmpty
-                    ? SessionCountdownTimer(
-                        widget.race,
-                        2,
-                        AppLocalizations.of(context)!.sprint,
-                        update: setState,
-                      )
-                    : Column(
-                        children: [
-                          GestureDetector(
-                            child: ListTile(
-                              leading: const FaIcon(
-                                FontAwesomeIcons.youtube,
-                                color: Colors.white,
-                              ),
-                              title: Text(
-                                AppLocalizations.of(context)!.watchOnYoutube,
-                                textAlign: TextAlign.center,
-                                style: const TextStyle(
-                                  color: Colors.white,
+              ),
+            ),
+          )
+        : SingleChildScrollView(
+            child: FutureBuilder<List<DriverResult>>(
+              future: widget.raceUrl != null
+                  ? FormulaOneScraper().scrapeRaceResult(
+                      '',
+                      0,
+                      '',
+                      false,
+                      raceUrl: widget.raceUrl!,
+                    )
+                  : getSprintStandings(
+                      widget.race!.round,
+                    ),
+              builder: (context, snapshot) => snapshot.hasError
+                  ? Padding(
+                      padding: const EdgeInsets.all(15),
+                      child: Center(
+                        child: Text(
+                          AppLocalizations.of(context)!.dataNotAvailable,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: useDarkMode ? Colors.white : Colors.black,
+                            fontSize: 15,
+                          ),
+                        ),
+                      ),
+                    )
+                  : snapshot.hasData
+                      ? snapshot.data!.isEmpty
+                          ? SessionCountdownTimer(
+                              widget.race,
+                              2,
+                              AppLocalizations.of(context)!.sprint,
+                              update: _setState,
+                            )
+                          : Column(
+                              children: [
+                                GestureDetector(
+                                  child: ListTile(
+                                    leading: const FaIcon(
+                                      FontAwesomeIcons.youtube,
+                                      color: Colors.white,
+                                    ),
+                                    title: Text(
+                                      AppLocalizations.of(context)!
+                                          .watchOnYoutube,
+                                      textAlign: TextAlign.center,
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    onTap: () async {
+                                      var yt = YoutubeExplode();
+                                      final raceYear =
+                                          widget.race!.date.split('-')[0];
+                                      final List<Video> searchResults =
+                                          await yt.search.search(
+                                        "Formula 1 Sprint Highlights ${widget.race!.raceName} $raceYear",
+                                      );
+                                      final Video bestVideoMatch =
+                                          searchResults[0];
+                                      await launchUrl(
+                                        Uri.parse(
+                                            "https://youtube.com/watch?v=${bestVideoMatch.id.value}"),
+                                        mode: LaunchMode.externalApplication,
+                                      );
+                                    },
+                                    tileColor: const Color(0xff383840),
+                                  ),
                                 ),
-                              ),
-                              onTap: () async {
-                                var yt = YoutubeExplode();
-                                final raceYear =
-                                    widget.race!.date.split('-')[0];
-                                final List<Video> searchResults =
-                                    await yt.search.search(
-                                  "Formula 1 Sprint Highlights ${widget.race!.raceName} $raceYear",
-                                );
-                                final Video bestVideoMatch = searchResults[0];
-                                await launchUrl(
-                                  Uri.parse(
-                                      "https://youtube.com/watch?v=${bestVideoMatch.id.value}"),
-                                  mode: LaunchMode.externalApplication,
-                                );
-                              },
-                              tileColor: const Color(0xff383840),
-                            ),
-                          ),
-                          RaceDriversResultsList(
-                            snapshot.data!,
-                          ),
-                        ],
-                      )
-                : const LoadingIndicatorUtil(),
-      ),
-    );
+                                RaceDriversResultsList(
+                                  snapshot.data!,
+                                ),
+                              ],
+                            )
+                      : const LoadingIndicatorUtil(),
+            ),
+          );
   }
 }
 
@@ -747,114 +786,138 @@ class _QualificationResultsProviderState
     );
   }
 
+  void _setState() {
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
-    return FutureBuilder<List<DriverQualificationResult>>(
-      future: widget.raceUrl != null
-          ? FormulaOneScraper().scrapeQualifyingResults(
-              '',
-              0,
-              '',
-              false,
-              qualifyingResultsUrl: widget.raceUrl!,
-              hasSprint: widget.hasSprint,
-            )
-          : getQualificationStandings(
-              widget.race!.round,
+    return (widget.race?.sessionDates.isEmpty ?? true) &&
+            (widget.raceUrl == null)
+        ? Padding(
+            padding: const EdgeInsets.all(15),
+            child: Center(
+              child: Text(
+                AppLocalizations.of(context)!.dataNotAvailable,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: useDarkMode ? Colors.white : Colors.black,
+                ),
+              ),
             ),
-      builder: (context, snapshot) => snapshot.hasError
-          ? (widget.race?.sessionDates.isNotEmpty ?? false) &&
-                  (widget.race?.sessionDates.last.isBefore(
-                        DateTime.now(),
-                      ) ??
-                      false)
-              ? SessionCountdownTimer(
-                  widget.race,
-                  3,
-                  AppLocalizations.of(context)!.qualifyings,
-                  update: setState,
-                )
-              : Padding(
-                  padding: const EdgeInsets.all(15),
-                  child: Center(
-                    child: Text(
-                      AppLocalizations.of(context)!.dataNotAvailable,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: useDarkMode ? Colors.white : Colors.black,
-                        fontSize: 15,
-                      ),
-                    ),
+          )
+        : FutureBuilder<List<DriverQualificationResult>>(
+            future: widget.raceUrl != null
+                ? FormulaOneScraper().scrapeQualifyingResults(
+                    '',
+                    0,
+                    '',
+                    false,
+                    qualifyingResultsUrl: widget.raceUrl!,
+                    hasSprint: widget.hasSprint,
+                  )
+                : getQualificationStandings(
+                    widget.race!.round,
                   ),
-                )
-          : snapshot.hasData
-              ? snapshot.data!.isNotEmpty
-                  ? Column(
-                      children: [
-                        GestureDetector(
-                          child: ListTile(
-                            leading: const FaIcon(
-                              FontAwesomeIcons.youtube,
-                              color: Colors.white,
+            builder: (context, snapshot) => snapshot.hasError
+                ? (widget.race?.sessionDates.isNotEmpty ?? false) &&
+                        (widget.race?.sessionDates.last.isBefore(
+                              DateTime.now(),
+                            ) ??
+                            false)
+                    ? SessionCountdownTimer(
+                        widget.race,
+                        3,
+                        AppLocalizations.of(context)!.qualifyings,
+                        update: _setState,
+                      )
+                    : Padding(
+                        padding: const EdgeInsets.all(15),
+                        child: Center(
+                          child: Text(
+                            AppLocalizations.of(context)!.dataNotAvailable,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: useDarkMode ? Colors.white : Colors.black,
+                              fontSize: 15,
                             ),
-                            title: Text(
-                              AppLocalizations.of(context)!.watchOnYoutube,
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(
-                                color: Colors.white,
-                              ),
-                            ),
-                            onTap: () async {
-                              var yt = YoutubeExplode();
-                              final raceYear = widget.race!.date.split('-')[0];
-                              final List<Video> searchResults =
-                                  await yt.search.search(
-                                (widget.raceUrl?.contains('sprint-shootout') ??
-                                            false) ||
-                                        (widget.isSprintShootout ?? false)
-                                    ? "Formula 1 Sprint Shootout Highlights ${widget.race!.raceName} $raceYear"
-                                    : "Formula 1 Qualification Highlights ${widget.race!.raceName} $raceYear",
-                              );
-                              final Video bestVideoMatch = searchResults[0];
-                              await launchUrl(
-                                Uri.parse(
-                                  "https://youtube.com/watch?v=${bestVideoMatch.id.value}",
+                          ),
+                        ),
+                      )
+                : snapshot.hasData
+                    ? snapshot.data!.isNotEmpty
+                        ? Column(
+                            children: [
+                              GestureDetector(
+                                child: ListTile(
+                                  leading: const FaIcon(
+                                    FontAwesomeIcons.youtube,
+                                    color: Colors.white,
+                                  ),
+                                  title: Text(
+                                    AppLocalizations.of(context)!
+                                        .watchOnYoutube,
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  onTap: () async {
+                                    var yt = YoutubeExplode();
+                                    final raceYear =
+                                        widget.race!.date.split('-')[0];
+                                    final List<Video> searchResults =
+                                        await yt.search.search(
+                                      (widget.raceUrl?.contains(
+                                                      'sprint-shootout') ??
+                                                  false) ||
+                                              (widget.isSprintShootout ?? false)
+                                          ? "Formula 1 Sprint Shootout Highlights ${widget.race!.raceName} $raceYear"
+                                          : "Formula 1 Qualification Highlights ${widget.race!.raceName} $raceYear",
+                                    );
+                                    final Video bestVideoMatch =
+                                        searchResults[0];
+                                    await launchUrl(
+                                      Uri.parse(
+                                        "https://youtube.com/watch?v=${bestVideoMatch.id.value}",
+                                      ),
+                                      mode: LaunchMode.externalApplication,
+                                    );
+                                  },
+                                  tileColor: const Color(0xff383840),
                                 ),
-                                mode: LaunchMode.externalApplication,
-                              );
-                            },
-                            tileColor: const Color(0xff383840),
-                          ),
-                        ),
-                        QualificationDriversResultsList(
-                          snapshot.data!,
-                        ),
-                      ],
-                    )
-                  : widget.race!.sessionDates[3].isBefore(DateTime.now())
-                      ? Padding(
-                          padding: const EdgeInsets.all(10),
-                          child: Center(
-                            child: Text(
-                              AppLocalizations.of(context)!.dataNotAvailable,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color:
-                                    useDarkMode ? Colors.white : Colors.black,
                               ),
-                            ),
-                          ),
-                        )
-                      : SessionCountdownTimer(
-                          widget.race,
-                          3,
-                          AppLocalizations.of(context)!.qualifyings,
-                          update: setState,
-                        )
-              : const LoadingIndicatorUtil(),
-    );
+                              QualificationDriversResultsList(
+                                snapshot.data!,
+                              ),
+                            ],
+                          )
+                        : widget.race!.sessionDates[3].isBefore(DateTime.now())
+                            ? Padding(
+                                padding: const EdgeInsets.all(10),
+                                child: Center(
+                                  child: Text(
+                                    AppLocalizations.of(context)!
+                                        .dataNotAvailable,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: useDarkMode
+                                          ? Colors.white
+                                          : Colors.black,
+                                    ),
+                                  ),
+                                ),
+                              )
+                            : SessionCountdownTimer(
+                                widget.race,
+                                3,
+                                AppLocalizations.of(context)!.qualifyings,
+                                update: _setState,
+                              )
+                    : const LoadingIndicatorUtil(),
+          );
   }
 }
 
@@ -1228,50 +1291,53 @@ class _SessionCountdownTimerState extends State<SessionCountdownTimer> {
                 ),
               ),
         !kIsWeb
-            ? TextButton.icon(
-                label: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 7),
-                  child: Text(
-                    AppLocalizations.of(context)!.addToCalendar,
-                    style: TextStyle(
-                      color: useDarkMode ? Colors.white : Colors.black,
+            ? Padding(
+                padding: const EdgeInsets.only(top: 5, bottom: 5),
+                child: TextButton.icon(
+                  label: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 7),
+                    child: Text(
+                      AppLocalizations.of(context)!.addToCalendar,
+                      style: TextStyle(
+                        color: useDarkMode ? Colors.white : Colors.black,
+                      ),
                     ),
                   ),
-                ),
-                icon: Icon(
-                  Icons.add_alert_outlined,
-                  color: useDarkMode ? Colors.white : Colors.black,
-                ),
-                style: TextButton.styleFrom(
-                  side: BorderSide(
+                  icon: Icon(
+                    Icons.add_alert_outlined,
                     color: useDarkMode ? Colors.white : Colors.black,
-                    width: 1,
                   ),
+                  style: TextButton.styleFrom(
+                    side: BorderSide(
+                      color: useDarkMode ? Colors.white : Colors.black,
+                      width: 1,
+                    ),
+                  ),
+                  onPressed: () {
+                    Event event = Event(
+                      title: '${widget.sessionName} - ${race.raceName}',
+                      location: race.country,
+                      startDate: DateTime(
+                        raceFullDateParsed.toLocal().year,
+                        raceFullDateParsed.toLocal().month,
+                        raceFullDateParsed.toLocal().day,
+                        raceFullDateParsed.toLocal().hour,
+                        raceFullDateParsed.toLocal().minute,
+                        raceFullDateParsed.toLocal().second,
+                      ),
+                      endDate: DateTime(
+                        raceFullDateParsed.toLocal().year,
+                        raceFullDateParsed.toLocal().month,
+                        raceFullDateParsed.toLocal().day,
+                        raceFullDateParsed.toLocal().hour +
+                            (widget.sessionIndex == 4 ? 3 : 1),
+                        raceFullDateParsed.toLocal().minute,
+                        raceFullDateParsed.toLocal().second,
+                      ),
+                    );
+                    Add2Calendar.addEvent2Cal(event);
+                  },
                 ),
-                onPressed: () {
-                  Event event = Event(
-                    title: '${widget.sessionName} - ${race.raceName}',
-                    location: race.country,
-                    startDate: DateTime(
-                      raceFullDateParsed.toLocal().year,
-                      raceFullDateParsed.toLocal().month,
-                      raceFullDateParsed.toLocal().day,
-                      raceFullDateParsed.toLocal().hour,
-                      raceFullDateParsed.toLocal().minute,
-                      raceFullDateParsed.toLocal().second,
-                    ),
-                    endDate: DateTime(
-                      raceFullDateParsed.toLocal().year,
-                      raceFullDateParsed.toLocal().month,
-                      raceFullDateParsed.toLocal().day,
-                      raceFullDateParsed.toLocal().hour +
-                          (widget.sessionIndex == 4 ? 3 : 1),
-                      raceFullDateParsed.toLocal().minute,
-                      raceFullDateParsed.toLocal().second,
-                    ),
-                  );
-                  Add2Calendar.addEvent2Cal(event);
-                },
               )
             : Container(),
         SizedBox(
