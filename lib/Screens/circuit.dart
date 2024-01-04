@@ -23,10 +23,11 @@ import 'package:boxbox/Screens/article.dart';
 import 'package:boxbox/Screens/race_details.dart';
 import 'package:boxbox/api/ergast.dart';
 import 'package:boxbox/api/event_tracker.dart';
-import 'package:boxbox/api/news.dart';
+import 'package:boxbox/api/formula1.dart';
 import 'package:boxbox/api/race_components.dart';
 import 'package:boxbox/helpers/convert_ergast_and_formula_one.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
+import 'package:boxbox/helpers/news.dart';
 import 'package:boxbox/helpers/racetracks_url.dart';
 import 'package:boxbox/helpers/request_error.dart';
 import 'package:boxbox/Screens/circuit_map_screen.dart';
@@ -38,7 +39,7 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class CircuitScreen extends StatefulWidget {
+class CircuitScreen extends StatelessWidget {
   final Race race;
   final bool? isFetched;
 
@@ -49,13 +50,7 @@ class CircuitScreen extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<CircuitScreen> createState() => _CircuitScreenState();
-}
-
-class _CircuitScreenState extends State<CircuitScreen> {
-  @override
   Widget build(BuildContext context) {
-    final Race race = widget.race;
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     bool useDataSaverMode = Hive.box('settings')
@@ -64,7 +59,7 @@ class _CircuitScreenState extends State<CircuitScreen> {
       backgroundColor: useDarkMode
           ? Theme.of(context).scaffoldBackgroundColor
           : Colors.white,
-      body: widget.isFetched ?? true
+      body: isFetched ?? true
           ? NestedScrollView(
               headerSliverBuilder:
                   (BuildContext context, bool innerBoxIsScrolled) {

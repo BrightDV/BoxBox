@@ -20,8 +20,9 @@
 import 'package:boxbox/Screens/article.dart';
 import 'package:boxbox/Screens/free_practice_screen.dart';
 import 'package:boxbox/Screens/race_details.dart';
-import 'package:boxbox/api/news.dart';
+import 'package:boxbox/api/formula1.dart';
 import 'package:boxbox/helpers/custom_physics.dart';
+import 'package:boxbox/helpers/news.dart';
 import 'package:boxbox/helpers/news_feed_widget.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
@@ -245,7 +246,7 @@ class WidgetsList extends StatelessWidget {
                               backgroundColor: useDarkMode
                                   ? Theme.of(context).scaffoldBackgroundColor
                                   : Colors.white,
-                              body: NewsFeedWidget(tagId: tag['id']),
+                              body: NewsFeed(tagId: tag['id']),
                             ),
                           ),
                         );

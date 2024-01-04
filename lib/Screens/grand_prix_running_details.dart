@@ -38,25 +38,21 @@ import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class GrandPrixRunningScreen extends StatefulWidget {
+class GrandPrixRunningScreen extends StatelessWidget {
   final Event event;
   const GrandPrixRunningScreen(
     this.event, {
     Key? key,
   }) : super(key: key);
-  @override
-  State<GrandPrixRunningScreen> createState() => _GrandPrixRunningScreenState();
-}
 
-class _GrandPrixRunningScreenState extends State<GrandPrixRunningScreen> {
   @override
   Widget build(BuildContext context) {
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     late String meetingName;
-    widget.event.meetingName == 'United States'
+    event.meetingName == 'United States'
         ? meetingName = 'USA'
-        : meetingName = widget.event.meetingName;
+        : meetingName = event.meetingName;
     if (meetingName != 'Great Britain') {
       meetingName = meetingName.replaceAll(' ', '_');
     }
@@ -69,10 +65,10 @@ class _GrandPrixRunningScreenState extends State<GrandPrixRunningScreen> {
           child: MediaQuery.of(context).size.width > 1000
               ? Padding(
                   padding: const EdgeInsets.only(top: 15),
-                  child: Text(widget.event.meetingOfficialName),
+                  child: Text(event.meetingOfficialName),
                 )
               : Marquee(
-                  text: widget.event.meetingOfficialName,
+                  text: event.meetingOfficialName,
                   pauseAfterRound: const Duration(seconds: 1),
                   startAfter: const Duration(seconds: 1),
                   velocity: 85,
@@ -222,7 +218,7 @@ class _GrandPrixRunningScreenState extends State<GrandPrixRunningScreen> {
                             alignment: Alignment.bottomCenter,
                           ),
                           Text(
-                            widget.event.meetingName.toUpperCase(),
+                            event.meetingName.toUpperCase(),
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 70,
@@ -249,29 +245,29 @@ class _GrandPrixRunningScreenState extends State<GrandPrixRunningScreen> {
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   SessionItem(
-                                    widget.event.session5,
-                                    widget.event.raceId,
-                                    widget.event.meetingCountryName,
+                                    event.session5,
+                                    event.raceId,
+                                    event.meetingCountryName,
                                   ),
                                   SessionItem(
-                                    widget.event.session4,
-                                    widget.event.raceId,
-                                    widget.event.meetingCountryName,
+                                    event.session4,
+                                    event.raceId,
+                                    event.meetingCountryName,
                                   ),
                                   SessionItem(
-                                    widget.event.session3,
-                                    widget.event.raceId,
-                                    widget.event.meetingCountryName,
+                                    event.session3,
+                                    event.raceId,
+                                    event.meetingCountryName,
                                   ),
                                   SessionItem(
-                                    widget.event.session2,
-                                    widget.event.raceId,
-                                    widget.event.meetingCountryName,
+                                    event.session2,
+                                    event.raceId,
+                                    event.meetingCountryName,
                                   ),
                                   SessionItem(
-                                    widget.event.session1,
-                                    widget.event.raceId,
-                                    widget.event.meetingCountryName,
+                                    event.session1,
+                                    event.raceId,
+                                    event.meetingCountryName,
                                   ),
                                 ],
                               ),
@@ -333,7 +329,7 @@ class _GrandPrixRunningScreenState extends State<GrandPrixRunningScreen> {
                                                 '',
                                                 '',
                                                 '',
-                                                widget.event.circuitImage
+                                                event.circuitImage
                                                     .split('/')
                                                     .last
                                                     .split('.')[0],
@@ -430,29 +426,29 @@ class _GrandPrixRunningScreenState extends State<GrandPrixRunningScreen> {
                         fit: BoxFit.scaleDown,
                       ),
                       SessionItem(
-                        widget.event.session5,
-                        widget.event.raceId,
-                        widget.event.meetingCountryName,
+                        event.session5,
+                        event.raceId,
+                        event.meetingCountryName,
                       ),
                       SessionItem(
-                        widget.event.session4,
-                        widget.event.raceId,
-                        widget.event.meetingCountryName,
+                        event.session4,
+                        event.raceId,
+                        event.meetingCountryName,
                       ),
                       SessionItem(
-                        widget.event.session3,
-                        widget.event.raceId,
-                        widget.event.meetingCountryName,
+                        event.session3,
+                        event.raceId,
+                        event.meetingCountryName,
                       ),
                       SessionItem(
-                        widget.event.session2,
-                        widget.event.raceId,
-                        widget.event.meetingCountryName,
+                        event.session2,
+                        event.raceId,
+                        event.meetingCountryName,
                       ),
                       SessionItem(
-                        widget.event.session1,
-                        widget.event.raceId,
-                        widget.event.meetingCountryName,
+                        event.session1,
+                        event.raceId,
+                        event.meetingCountryName,
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(
@@ -510,7 +506,7 @@ class _GrandPrixRunningScreenState extends State<GrandPrixRunningScreen> {
                                   '',
                                   '',
                                   '',
-                                  widget.event.circuitImage
+                                  event.circuitImage
                                       .split('/')
                                       .last
                                       .split('.')[0],
@@ -581,22 +577,12 @@ class _GrandPrixRunningScreenState extends State<GrandPrixRunningScreen> {
   }
 }
 
-class PdfViewer extends StatefulWidget {
+class PdfViewer extends StatelessWidget {
   final String documentTitle;
   final String src;
-  const PdfViewer(this.src, this.documentTitle, {Key? key}) : super(key: key);
+  PdfViewer(this.src, this.documentTitle, {Key? key}) : super(key: key);
 
-  @override
-  State<PdfViewer> createState() => _PdfViewerState();
-}
-
-class _PdfViewerState extends State<PdfViewer> {
   final GlobalKey<SfPdfViewerState> _pdfViewerKey = GlobalKey();
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -606,14 +592,14 @@ class _PdfViewerState extends State<PdfViewer> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          widget.documentTitle,
+          documentTitle,
           overflow: TextOverflow.ellipsis,
         ),
       ),
       body: SfPdfViewer.network(
         server != defaultServer
-            ? "$server/documents/${widget.src.split('/').last}"
-            : widget.src,
+            ? "$server/documents/${src.split('/').last}"
+            : src,
         key: _pdfViewerKey,
         enableTextSelection: true,
         onDocumentLoadFailed: (PdfDocumentLoadFailedDetails details) {
@@ -646,7 +632,7 @@ class _PdfViewerState extends State<PdfViewer> {
   }
 }
 
-class SessionItem extends StatefulWidget {
+class SessionItem extends StatelessWidget {
   final Session session;
   final String raceId;
   final String meetingCountryName;
@@ -657,11 +643,7 @@ class SessionItem extends StatefulWidget {
     this.meetingCountryName, {
     Key? key,
   }) : super(key: key);
-  @override
-  State<SessionItem> createState() => _SessionItemState();
-}
 
-class _SessionItemState extends State<SessionItem> {
   @override
   Widget build(BuildContext context) {
     Map sessionsAbbreviations = {
@@ -689,21 +671,21 @@ class _SessionItemState extends State<SessionItem> {
     ];
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
-    String startTimeHour = widget.session.startTime.hour.toString();
-    String startTimeMinute = widget.session.startTime.minute.toString();
-    String endTimeHour = widget.session.endTime.hour.toString();
-    String endTimeMinute = widget.session.endTime.minute.toString();
-    if (widget.session.startTime.hour < 10) {
-      startTimeHour = '0${widget.session.startTime.hour}';
+    String startTimeHour = session.startTime.hour.toString();
+    String startTimeMinute = session.startTime.minute.toString();
+    String endTimeHour = session.endTime.hour.toString();
+    String endTimeMinute = session.endTime.minute.toString();
+    if (session.startTime.hour < 10) {
+      startTimeHour = '0${session.startTime.hour}';
     }
-    if (widget.session.startTime.minute < 10) {
-      startTimeMinute = '0${widget.session.startTime.minute}';
+    if (session.startTime.minute < 10) {
+      startTimeMinute = '0${session.startTime.minute}';
     }
-    if (widget.session.endTime.hour < 10) {
-      endTimeHour = '0${widget.session.endTime.hour}';
+    if (session.endTime.hour < 10) {
+      endTimeHour = '0${session.endTime.hour}';
     }
-    if (widget.session.endTime.minute < 10) {
-      endTimeMinute = '0${widget.session.endTime.minute}';
+    if (session.endTime.minute < 10) {
+      endTimeMinute = '0${session.endTime.minute}';
     }
     String startTime = '$startTimeHour:$startTimeMinute';
     String endTime = '$endTimeHour:$endTimeMinute';
@@ -741,7 +723,7 @@ class _SessionItemState extends State<SessionItem> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                widget.session.startTime.day.toString(),
+                                session.startTime.day.toString(),
                                 style: TextStyle(
                                   color: useDarkMode
                                       ? Colors.white
@@ -750,7 +732,7 @@ class _SessionItemState extends State<SessionItem> {
                                 ),
                               ),
                               Text(
-                                months[widget.session.startTime.month - 1],
+                                months[session.startTime.month - 1],
                                 style: TextStyle(
                                   color: useDarkMode
                                       ? Colors.white
@@ -782,7 +764,7 @@ class _SessionItemState extends State<SessionItem> {
                             children: [
                               Text(
                                 sessionsAbbreviations[
-                                    widget.session.sessionsAbbreviation],
+                                    session.sessionsAbbreviation],
                                 style: TextStyle(
                                   color: useDarkMode
                                       ? Colors.white
@@ -790,7 +772,7 @@ class _SessionItemState extends State<SessionItem> {
                                   fontSize: 20,
                                 ),
                               ),
-                              widget.session.endTime.isBefore(DateTime.now())
+                              session.endTime.isBefore(DateTime.now())
                                   ? Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
@@ -822,8 +804,7 @@ class _SessionItemState extends State<SessionItem> {
                                         ),
                                       ],
                                     )
-                                  : widget.session.startTime
-                                          .isBefore(DateTime.now())
+                                  : session.startTime.isBefore(DateTime.now())
                                       ? Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
@@ -881,8 +862,8 @@ class _SessionItemState extends State<SessionItem> {
                 context,
                 MaterialPageRoute(
                   builder: (context) => SessionScreen(
-                    sessionsAbbreviations[widget.session.sessionsAbbreviation],
-                    widget.session,
+                    sessionsAbbreviations[session.sessionsAbbreviation],
+                    session,
                   ),
                 ),
               ),
@@ -901,7 +882,7 @@ class _SessionItemState extends State<SessionItem> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          widget.session.startTime.day.toString(),
+                          session.startTime.day.toString(),
                           style: TextStyle(
                             color: useDarkMode
                                 ? Colors.white
@@ -910,7 +891,7 @@ class _SessionItemState extends State<SessionItem> {
                           ),
                         ),
                         Text(
-                          months[widget.session.startTime.month - 1],
+                          months[session.startTime.month - 1],
                           style: TextStyle(
                             color: useDarkMode
                                 ? Colors.white
@@ -940,8 +921,7 @@ class _SessionItemState extends State<SessionItem> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          sessionsAbbreviations[
-                              widget.session.sessionsAbbreviation],
+                          sessionsAbbreviations[session.sessionsAbbreviation],
                           style: TextStyle(
                             color: useDarkMode
                                 ? Colors.white
@@ -949,7 +929,7 @@ class _SessionItemState extends State<SessionItem> {
                             fontSize: 20,
                           ),
                         ),
-                        widget.session.endTime.isBefore(DateTime.now())
+                        session.endTime.isBefore(DateTime.now())
                             ? Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
@@ -980,7 +960,7 @@ class _SessionItemState extends State<SessionItem> {
                                   ),
                                 ],
                               )
-                            : widget.session.startTime.isBefore(DateTime.now())
+                            : session.startTime.isBefore(DateTime.now())
                                 ? Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
@@ -1033,8 +1013,8 @@ class _SessionItemState extends State<SessionItem> {
               context,
               MaterialPageRoute(
                 builder: (context) => SessionScreen(
-                  sessionsAbbreviations[widget.session.sessionsAbbreviation],
-                  widget.session,
+                  sessionsAbbreviations[session.sessionsAbbreviation],
+                  session,
                 ),
               ),
             ),

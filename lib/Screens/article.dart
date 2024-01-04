@@ -18,7 +18,7 @@
  */
 
 import 'package:boxbox/api/article_parts.dart';
-import 'package:boxbox/api/news.dart';
+import 'package:boxbox/api/formula1.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/request_error.dart';
 import 'package:flutter/material.dart';
@@ -117,7 +117,7 @@ class _ArticleScreenState extends State<ArticleScreen> {
 class ArticleProvider extends StatelessWidget {
   Future<Article> getArticleData(
       String articleId, Function updateArticleTitle) async {
-    Article article = await F1NewsFetcher().getArticleData(articleId);
+    Article article = await Formula1().getArticleData(articleId);
     updateArticleTitle(article.articleName);
     return article;
   }

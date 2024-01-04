@@ -21,18 +21,9 @@ import 'package:boxbox/helpers/live_session_status_indicator.dart';
 import 'package:boxbox/helpers/news_feed_widget.dart';
 import 'package:flutter/material.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends StatelessWidget {
   final ScrollController _scrollController;
   const HomeScreen(this._scrollController, {Key? key}) : super(key: key);
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         : width > 576
                             ? 576
                             : width,
-            child: NewsFeedWidget(scrollController: widget._scrollController),
+            child: NewsFeed(scrollController: _scrollController),
           ),
         ],
       ),

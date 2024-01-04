@@ -242,7 +242,7 @@ class _MainBottomNavigationBarState extends State<MainBottomNavigationBar> {
                               backgroundColor: useDarkMode
                                   ? Theme.of(context).scaffoldBackgroundColor
                                   : Colors.white,
-                              body: NewsFeedWidget(
+                              body: NewsFeed(
                                 articleType: filterItems[pressed],
                               ),
                             ),

@@ -21,76 +21,37 @@
 
 import 'package:boxbox/Screens/MixedNews/rss_feed.dart';
 import 'package:boxbox/Screens/MixedNews/wordpress.dart';
-import 'package:boxbox/api/news.dart';
 import 'package:boxbox/api/rss.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
+import 'package:boxbox/helpers/news.dart';
 import 'package:boxbox/helpers/request_error.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
-class NewsFeedWidget extends StatefulWidget {
+class NewsFeed extends StatefulWidget {
   final String? tagId;
   final String? articleType;
   final ScrollController? scrollController;
-
-  const NewsFeedWidget({
+  const NewsFeed({
     Key? key,
     this.tagId,
     this.articleType,
     this.scrollController,
-  }) : super(key: key);
+  });
+
   @override
-  State<NewsFeedWidget> createState() => _NewsFeedWidgetState();
+  State<NewsFeed> createState() => _NewsFeedState();
 }
 
-class _NewsFeedWidgetState extends State<NewsFeedWidget> {
+class _NewsFeedState extends State<NewsFeed> {
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       showOfflineSnackBar();
     });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    const String officialFeed = "https://api.formula1.com";
-    List savedFeedUrl = Hive.box('settings')
-        .get('homeFeed', defaultValue: [officialFeed, 'api']) as List;
-    String savedServer = Hive.box('settings')
-        .get('server', defaultValue: officialFeed) as String;
-    return savedFeedUrl[1] == "api"
-        ? NewsList(
-            scrollController: widget.scrollController,
-            tagId: widget.tagId,
-            articleType: widget.articleType,
-          )
-        : savedFeedUrl[1] == "rss"
-            ? FutureBuilder<Map<String, dynamic>>(
-                future: RssFeeds().getFeedArticles(
-                  savedFeedUrl[0].contains('motorsport.com')
-                      ? savedServer != officialFeed
-                          ? "$savedServer/rss/${savedFeedUrl[0].replaceAll('https://', '').split('.')[0]}"
-                          : '${savedFeedUrl[0]}/rss/f1/news/'
-                      : savedFeedUrl[0],
-                ),
-                builder: (context, snapshot) => snapshot.hasError
-                    ? RequestErrorWidget(
-                        snapshot.error.toString(),
-                      )
-                    : snapshot.hasData
-                        ? RssFeedItemsList(
-                            snapshot,
-                            homeFeed: true,
-                          )
-                        : const LoadingIndicatorUtil(),
-              )
-            : WordpressNewsList(
-                savedFeedUrl[0],
-                scrollController: widget.scrollController,
-              );
   }
 
   void showOfflineSnackBar() async {
@@ -125,5 +86,66 @@ class _NewsFeedWidgetState extends State<NewsFeedWidget> {
       );
       ScaffoldMessenger.of(context).showSnackBar(offlineSnackBar);
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return NewsFeedWidget(
+      tagId: widget.tagId,
+      articleType: widget.articleType,
+      scrollController: widget.scrollController,
+    );
+  }
+}
+
+class NewsFeedWidget extends StatelessWidget {
+  final String? tagId;
+  final String? articleType;
+  final ScrollController? scrollController;
+
+  const NewsFeedWidget({
+    Key? key,
+    this.tagId,
+    this.articleType,
+    this.scrollController,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    const String officialFeed = "https://api.formula1.com";
+    List savedFeedUrl = Hive.box('settings')
+        .get('homeFeed', defaultValue: [officialFeed, 'api']) as List;
+    String savedServer = Hive.box('settings')
+        .get('server', defaultValue: officialFeed) as String;
+    return savedFeedUrl[1] == "api"
+        ? NewsList(
+            scrollController: scrollController,
+            tagId: tagId,
+            articleType: articleType,
+          )
+        : savedFeedUrl[1] == "rss"
+            ? FutureBuilder<Map<String, dynamic>>(
+                future: RssFeeds().getFeedArticles(
+                  savedFeedUrl[0].contains('motorsport.com')
+                      ? savedServer != officialFeed
+                          ? "$savedServer/rss/${savedFeedUrl[0].replaceAll('https://', '').split('.')[0]}"
+                          : '${savedFeedUrl[0]}/rss/f1/news/'
+                      : savedFeedUrl[0],
+                ),
+                builder: (context, snapshot) => snapshot.hasError
+                    ? RequestErrorWidget(
+                        snapshot.error.toString(),
+                      )
+                    : snapshot.hasData
+                        ? RssFeedItemsList(
+                            snapshot,
+                            homeFeed: true,
+                          )
+                        : const LoadingIndicatorUtil(),
+              )
+            : WordpressNewsList(
+                savedFeedUrl[0],
+                scrollController: scrollController,
+              );
   }
 }

@@ -20,10 +20,11 @@
 import 'package:boxbox/Screens/race_details.dart';
 import 'package:boxbox/api/driver_components.dart';
 import 'package:boxbox/api/ergast.dart';
-import 'package:boxbox/api/news.dart';
+import 'package:boxbox/api/formula1.dart';
 import 'package:boxbox/helpers/convert_ergast_and_formula_one.dart';
 import 'package:boxbox/helpers/custom_physics.dart';
 import 'package:boxbox/helpers/driver_result_item.dart';
+import 'package:boxbox/helpers/news.dart';
 import 'package:boxbox/scraping/formula_one.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
@@ -227,7 +228,7 @@ class TeamDetailsFragment extends StatelessWidget {
                 ),
                 itemCount: teamDetails["articles"].length,
                 itemBuilder: (context, index) => FutureBuilder<Article>(
-                  future: F1NewsFetcher()
+                  future: Formula1()
                       .getArticleData(teamDetails["articles"][index][0]),
                   builder: (context, snapshot) {
                     return snapshot.hasError

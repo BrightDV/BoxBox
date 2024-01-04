@@ -24,6 +24,7 @@ import 'package:better_player/better_player.dart';
 import 'package:boxbox/Screens/circuit.dart';
 import 'package:boxbox/Screens/schedule.dart';
 import 'package:boxbox/api/brightcove.dart';
+import 'package:boxbox/api/formula1.dart';
 import 'package:boxbox/api/race_components.dart';
 import 'package:boxbox/helpers/hover.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
@@ -40,208 +41,13 @@ import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:url_launcher/url_launcher.dart';
 
-class F1NewsFetcher {
-  final String defaultEndpoint = "https://api.formula1.com";
-  final String apikey = "qPgPPRJyGCIPxFT3el4MF7thXHyJCzAP";
-
-  List<News> formatResponse(Map responseAsJson) {
-    List finalJson = responseAsJson['items'];
-    List<News> newsList = [];
-    bool useDataSaverMode = Hive.box('settings')
-        .get('useDataSaverMode', defaultValue: false) as bool;
-
-    for (var element in finalJson) {
-      element['title'] = element['title'].replaceAll("\n", "");
-      if (element['metaDescription'] != null) {
-        element['metaDescription'] =
-            element['metaDescription'].replaceAll("\n", "");
-      }
-      String imageUrl = "";
-      if (element['thumbnail'] != null) {
-        imageUrl = element['thumbnail']['image']['url'];
-        if (useDataSaverMode) {
-          if (element['thumbnail']['image']['renditions'] != null) {
-            imageUrl =
-                element['thumbnail']['image']['renditions']['2col-retina'];
-          } else {
-            imageUrl += '.transform/2col-retina/image.jpg';
-          }
-        }
-      }
-      newsList.add(
-        News(
-          element['id'],
-          element['articleType'],
-          element['slug'],
-          element['title'],
-          element['metaDescription'] ?? '',
-          DateTime.parse(element['updatedAt']),
-          imageUrl,
-        ),
-      );
-    }
-    return newsList;
-  }
-
-  FutureOr<List<News>> getMoreNews(
-    int offset, {
-    String? tagId,
-    String? articleType,
-  }) async {
-    Uri url;
-    String endpoint = Hive.box('settings')
-        .get('server', defaultValue: defaultEndpoint) as String;
-    if (tagId != null) {
-      url = Uri.parse(
-          '$endpoint/v1/editorial/articles?limit=16&offset=$offset&tags=$tagId');
-    } else if (articleType != null) {
-      url = Uri.parse(
-          '$endpoint/v1/editorial/articles?limit=16&offset=$offset&articleTypes=$articleType');
-    } else {
-      url =
-          Uri.parse('$endpoint/v1/editorial/articles?limit=16&offset=$offset');
-    }
-    var response = await http.get(
-      url,
-      headers: endpoint != defaultEndpoint
-          ? {
-              "Accept": "application/json",
-            }
-          : {
-              "Accept": "application/json",
-              "apikey": apikey,
-              "locale": "en",
-            },
-    );
-
-    Map<String, dynamic> responseAsJson =
-        json.decode(utf8.decode(response.bodyBytes));
-    if (offset == 0 && tagId == null && articleType == null) {
-      Hive.box('requests').put('news', responseAsJson);
-    }
-    return formatResponse(responseAsJson);
-  }
-
-  Future<Map<String, dynamic>> getRawPersonalizedFeed(
-    List tags, {
-    String? articleType,
-  }) async {
-    Uri url;
-    String endpoint = Hive.box('settings')
-        .get('server', defaultValue: defaultEndpoint) as String;
-    if (articleType != null) {
-      url = Uri.parse(
-        '$endpoint/v1/editorial/articles?limit=16&tags=${tags.join(',')}&articleTypes=$articleType',
-      );
-    } else {
-      url = Uri.parse(
-          '$endpoint/v1/editorial/articles?limit=16&tags=${tags.join(',')}');
-    }
-    var response = await http.get(
-      url,
-      headers: endpoint != defaultEndpoint
-          ? {
-              "Accept": "application/json",
-            }
-          : {
-              "Accept": "application/json",
-              "apikey": apikey,
-              "locale": "en",
-            },
-    );
-
-    Map<String, dynamic> responseAsJson =
-        json.decode(utf8.decode(response.bodyBytes));
-    return responseAsJson;
-  }
-
-  Future<Article> getArticleData(String articleId) async {
-    String endpoint = Hive.box('settings')
-        .get('server', defaultValue: defaultEndpoint) as String;
-    Uri url = Uri.parse('$endpoint/v1/editorial/articles/$articleId');
-    var response = await http.get(
-      url,
-      headers: endpoint != defaultEndpoint
-          ? {
-              "Accept": "application/json",
-            }
-          : {
-              "Accept": "application/json",
-              "apikey": apikey,
-              "locale": "en",
-            },
-    );
-    Map<String, dynamic> responseAsJson = json.decode(
-      utf8.decode(response.bodyBytes),
-    );
-
-    Article article = Article(
-      responseAsJson['id'],
-      responseAsJson['slug'],
-      responseAsJson['title'],
-      DateTime.parse(responseAsJson['createdAt']),
-      responseAsJson['articleTags'],
-      responseAsJson['hero'] ?? {},
-      responseAsJson['body'],
-      responseAsJson['relatedArticles'],
-      responseAsJson['author'] ?? {},
-    );
-    return article;
-  }
-}
-
-class News {
-  final String newsId;
-  final String newsType;
-  final String slug;
-  final String title;
-  final String subtitle;
-  final DateTime datePosted;
-  final String imageUrl;
-
-  News(
-    this.newsId,
-    this.newsType,
-    this.slug,
-    this.title,
-    this.subtitle,
-    this.datePosted,
-    this.imageUrl,
-  );
-}
-
-class Article {
-  final String articleId;
-  final String articleSlug;
-  final String articleName;
-  final DateTime publishedDate;
-  final List articleTags;
-  final Map articleHero;
-  final List articleContent;
-  final List relatedArticles;
-  final Map authorDetails;
-
-  Article(
-    this.articleId,
-    this.articleSlug,
-    this.articleName,
-    this.publishedDate,
-    this.articleTags,
-    this.articleHero,
-    this.articleContent,
-    this.relatedArticles,
-    this.authorDetails,
-  );
-}
-
-class NewsItem extends StatefulWidget {
+class NewsItem extends StatelessWidget {
   final News item;
   final bool inRelated;
   final bool? showSmallDescription;
@@ -256,18 +62,12 @@ class NewsItem extends StatefulWidget {
     this.width,
     this.itemPerRow = 1,
   }) : super(key: key);
-  @override
-  State<NewsItem> createState() => _NewsItemState();
-}
 
-class _NewsItemState extends State<NewsItem> with TickerProviderStateMixin {
   final String endpoint = 'https://formula1.com';
   final String articleLink = '/en/latest/article.';
 
   @override
   Widget build(BuildContext context) {
-    final News item = widget.item;
-    final bool inRelated = widget.inRelated;
     String imageUrl = item.imageUrl;
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
@@ -573,13 +373,10 @@ class _NewsItemState extends State<NewsItem> with TickerProviderStateMixin {
                                                       ? (MediaQuery.of(context)
                                                                       .size
                                                                       .width /
-                                                                  widget
-                                                                      .itemPerRow -
-                                                              8 *
-                                                                  widget
-                                                                      .itemPerRow) /
+                                                                  itemPerRow -
+                                                              8 * itemPerRow) /
                                                           (16 / 9)
-                                                      : (widget.showSmallDescription ??
+                                                      : (showSmallDescription ??
                                                               false)
                                                           ? height / (16 / 9) -
                                                               58
@@ -741,16 +538,14 @@ class _NewsItemState extends State<NewsItem> with TickerProviderStateMixin {
                                         fontWeight: FontWeight.w500,
                                       ),
                                       overflow: TextOverflow.ellipsis,
-                                      maxLines:
-                                          (widget.showSmallDescription ?? false)
-                                              ? 3
-                                              : 5,
+                                      maxLines: (showSmallDescription ?? false)
+                                          ? 3
+                                          : 5,
                                       textAlign: TextAlign.justify,
                                     ),
                                     subtitle: (newsLayout != 'big' &&
                                                 newsLayout != 'condensed') ||
-                                            ((widget.showSmallDescription ??
-                                                    false) &&
+                                            ((showSmallDescription ?? false) &&
                                                 width < 1361)
                                         ? null
                                         : Text(
@@ -878,13 +673,10 @@ class _NewsItemState extends State<NewsItem> with TickerProviderStateMixin {
                                                   ? (MediaQuery.of(context)
                                                                   .size
                                                                   .width /
-                                                              widget
-                                                                  .itemPerRow -
-                                                          8 *
-                                                              widget
-                                                                  .itemPerRow) /
+                                                              itemPerRow -
+                                                          8 * itemPerRow) /
                                                       (16 / 9)
-                                                  : (widget.showSmallDescription ??
+                                                  : (showSmallDescription ??
                                                           false)
                                                       ? height / (16 / 9) - 58
                                                       : width / (16 / 9) - 10,
@@ -1040,15 +832,12 @@ class _NewsItemState extends State<NewsItem> with TickerProviderStateMixin {
                                   ),
                                   overflow: TextOverflow.ellipsis,
                                   maxLines:
-                                      (widget.showSmallDescription ?? false)
-                                          ? 3
-                                          : 5,
+                                      (showSmallDescription ?? false) ? 3 : 5,
                                   textAlign: TextAlign.justify,
                                 ),
                                 subtitle: (newsLayout != 'big' &&
                                             newsLayout != 'condensed') ||
-                                        ((widget.showSmallDescription ??
-                                                false) &&
+                                        ((showSmallDescription ?? false) &&
                                             width < 1361)
                                     ? null
                                     : Text(
@@ -1188,7 +977,7 @@ class _NewsListState extends State<NewsList> {
 
   Future<void> _fetchPage(int offset) async {
     try {
-      List<News> newItems = await F1NewsFetcher().getMoreNews(
+      List<News> newItems = await Formula1().getMoreNews(
         offset,
         tagId: widget.tagId,
         articleType: widget.articleType,
@@ -1234,7 +1023,7 @@ class _NewsListState extends State<NewsList> {
             widget.tagId == null &&
             widget.articleType == null
         ? OfflineNewsList(
-            items: F1NewsFetcher().formatResponse(latestNews),
+            items: Formula1().formatResponse(latestNews),
             scrollController: widget.scrollController,
           )
         : width < 500
@@ -1309,7 +1098,7 @@ class _NewsListState extends State<NewsList> {
   }
 }
 
-class OfflineNewsList extends StatefulWidget {
+class OfflineNewsList extends StatelessWidget {
   final List items;
   final ScrollController? scrollController;
 
@@ -1318,25 +1107,16 @@ class OfflineNewsList extends StatefulWidget {
     this.scrollController,
     Key? key,
   }) : super(key: key);
-  @override
-  State<OfflineNewsList> createState() => _OfflineNewsListState();
-}
-
-class _OfflineNewsListState extends State<OfflineNewsList> {
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
     Map cachedNews = Hive.box('requests').get('news', defaultValue: {}) as Map;
     double width = MediaQuery.of(context).size.width;
-    List<News> formatedNews = F1NewsFetcher().formatResponse(cachedNews);
+    List<News> formatedNews = Formula1().formatResponse(cachedNews);
 
     return width < 500
         ? ListView.builder(
-            controller: widget.scrollController,
+            controller: scrollController,
             scrollDirection: Axis.vertical,
             shrinkWrap: true,
             itemCount: formatedNews.length,
@@ -1356,7 +1136,7 @@ class _OfflineNewsListState extends State<OfflineNewsList> {
               crossAxisSpacing: 5.0,
               mainAxisSpacing: 5.0,
             ),
-            controller: widget.scrollController,
+            controller: scrollController,
             scrollDirection: Axis.vertical,
             shrinkWrap: true,
             itemCount: formatedNews.length,
@@ -1372,11 +1152,6 @@ class _OfflineNewsListState extends State<OfflineNewsList> {
                     itemPerRow: width < 750 ? 2 : 3,
                   ),
           );
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
   }
 }
 
@@ -1560,7 +1335,7 @@ class TextParagraphRenderer extends StatelessWidget {
   }
 }
 
-class ImageRenderer extends StatefulWidget {
+class ImageRenderer extends StatelessWidget {
   final String imageUrl;
   final String? caption;
   final bool? inSchedule;
@@ -1575,21 +1350,16 @@ class ImageRenderer extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<ImageRenderer> createState() => _ImageRendererState();
-}
-
-class _ImageRendererState extends State<ImageRenderer> {
-  @override
   Widget build(BuildContext context) {
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     return Padding(
       padding: EdgeInsets.only(
-        bottom: widget.inSchedule != null ? 0 : 10,
+        bottom: inSchedule != null ? 0 : 10,
       ),
-      child: widget.inSchedule != null
+      child: inSchedule != null
           ? CachedNetworkImage(
-              imageUrl: widget.imageUrl,
+              imageUrl: imageUrl,
               placeholder: (context, url) => SizedBox(
                 height: MediaQuery.of(context).size.width > 1000
                     ? 800
@@ -1645,10 +1415,9 @@ class _ImageRendererState extends State<ImageRenderer> {
                                                 BorderRadius.circular(5),
                                           ),
                                           clipBehavior: Clip.antiAlias,
-                                          child: widget.isHero != null &&
-                                                  widget.isHero!
+                                          child: isHero != null && isHero!
                                               ? CachedNetworkImage(
-                                                  imageUrl: widget.imageUrl,
+                                                  imageUrl: imageUrl,
                                                   placeholder: (context, url) =>
                                                       SizedBox(
                                                     height:
@@ -1669,7 +1438,7 @@ class _ImageRendererState extends State<ImageRenderer> {
                                                       const Duration(
                                                           seconds: 1),
                                                   fadeInDuration:
-                                                      widget.isHero ?? false
+                                                      isHero ?? false
                                                           ? const Duration(
                                                               milliseconds: 300)
                                                           : const Duration(
@@ -1685,7 +1454,7 @@ class _ImageRendererState extends State<ImageRenderer> {
                                                 )
                                               : Image(
                                                   image: NetworkImage(
-                                                    widget.imageUrl,
+                                                    imageUrl,
                                                   ),
                                                   loadingBuilder: (context,
                                                           child,
@@ -1740,9 +1509,9 @@ class _ImageRendererState extends State<ImageRenderer> {
                   child: Stack(
                     alignment: Alignment.bottomCenter,
                     children: [
-                      widget.isHero != null && widget.isHero!
+                      isHero != null && isHero!
                           ? CachedNetworkImage(
-                              imageUrl: widget.imageUrl,
+                              imageUrl: imageUrl,
                               placeholder: (context, url) => SizedBox(
                                 height: MediaQuery.of(context).size.width /
                                     (16 / 9),
@@ -1763,7 +1532,7 @@ class _ImageRendererState extends State<ImageRenderer> {
                               ),
                             )
                           : Image.network(
-                              widget.imageUrl,
+                              imageUrl,
                               loadingBuilder:
                                   (context, child, loadingProgress) =>
                                       loadingProgress == null
@@ -1787,13 +1556,13 @@ class _ImageRendererState extends State<ImageRenderer> {
                             ),
                       Container(
                         alignment: Alignment.bottomCenter,
-                        child: widget.caption != null && widget.caption != ''
+                        child: caption != null && caption != ''
                             ? Container(
                                 width: double.infinity,
                                 padding: const EdgeInsets.all(4),
                                 color: Colors.black.withOpacity(0.7),
                                 child: Text(
-                                  widget.caption!,
+                                  caption!,
                                   style: const TextStyle(
                                     color: Colors.white,
                                   ),
@@ -1843,10 +1612,9 @@ class _ImageRendererState extends State<ImageRenderer> {
                                                   BorderRadius.circular(5),
                                             ),
                                             clipBehavior: Clip.antiAlias,
-                                            child: widget.isHero != null &&
-                                                    widget.isHero!
+                                            child: isHero != null && isHero!
                                                 ? CachedNetworkImage(
-                                                    imageUrl: widget.imageUrl,
+                                                    imageUrl: imageUrl,
                                                     placeholder:
                                                         (context, url) =>
                                                             SizedBox(
@@ -1868,13 +1636,12 @@ class _ImageRendererState extends State<ImageRenderer> {
                                                     fadeOutDuration:
                                                         const Duration(
                                                             seconds: 1),
-                                                    fadeInDuration:
-                                                        widget.isHero ?? false
-                                                            ? const Duration(
-                                                                milliseconds:
-                                                                    300)
-                                                            : const Duration(
-                                                                seconds: 1),
+                                                    fadeInDuration: isHero ??
+                                                            false
+                                                        ? const Duration(
+                                                            milliseconds: 300)
+                                                        : const Duration(
+                                                            seconds: 1),
                                                     cacheManager: CacheManager(
                                                       Config(
                                                         "newsImages",
@@ -1886,7 +1653,7 @@ class _ImageRendererState extends State<ImageRenderer> {
                                                   )
                                                 : Image(
                                                     image: NetworkImage(
-                                                      widget.imageUrl,
+                                                      imageUrl,
                                                     ),
                                                     loadingBuilder: (context,
                                                             child,
@@ -1943,9 +1710,9 @@ class _ImageRendererState extends State<ImageRenderer> {
                     child: Stack(
                       alignment: Alignment.bottomCenter,
                       children: [
-                        widget.isHero != null && widget.isHero!
+                        isHero != null && isHero!
                             ? CachedNetworkImage(
-                                imageUrl: widget.imageUrl,
+                                imageUrl: imageUrl,
                                 placeholder: (context, url) => SizedBox(
                                   height: MediaQuery.of(context).size.width /
                                       (16 / 9),
@@ -1966,7 +1733,7 @@ class _ImageRendererState extends State<ImageRenderer> {
                                 ),
                               )
                             : Image.network(
-                                widget.imageUrl,
+                                imageUrl,
                                 loadingBuilder: (context, child,
                                         loadingProgress) =>
                                     loadingProgress == null
@@ -1990,13 +1757,13 @@ class _ImageRendererState extends State<ImageRenderer> {
                               ),
                         Container(
                           alignment: Alignment.bottomCenter,
-                          child: widget.caption != null && widget.caption != ''
+                          child: caption != null && caption != ''
                               ? Container(
                                   width: double.infinity,
                                   padding: const EdgeInsets.all(4),
                                   color: Colors.black.withOpacity(0.7),
                                   child: Text(
-                                    widget.caption!,
+                                    caption!,
                                     style: const TextStyle(
                                       color: Colors.white,
                                     ),

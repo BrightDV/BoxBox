@@ -79,7 +79,7 @@ class _PersonalizedHomeScreenState extends State<PersonalizedHomeScreen> {
       backgroundColor: useDarkMode
           ? Theme.of(context).scaffoldBackgroundColor
           : Colors.white,
-      body: NewsFeedWidget(
+      body: NewsFeed(
         tagId: selectedTagsIds.join(','),
       ),
     );

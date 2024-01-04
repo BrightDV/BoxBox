@@ -298,7 +298,7 @@ class _ErgastApiCalls {
               element['round'],
               element['raceName'],
               element['date'],
-              element['time'],
+              element['time'] ?? '15:00:00Z', // temporary time
               element['Circuit']['circuitId'],
               element['Circuit']['circuitName'],
               element['Circuit']['url'],

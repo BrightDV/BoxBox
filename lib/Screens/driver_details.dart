@@ -20,10 +20,11 @@
 import 'package:boxbox/Screens/race_details.dart';
 import 'package:boxbox/api/driver_components.dart';
 import 'package:boxbox/api/ergast.dart';
-import 'package:boxbox/api/news.dart';
+import 'package:boxbox/api/formula1.dart';
 import 'package:boxbox/helpers/convert_ergast_and_formula_one.dart';
 import 'package:boxbox/helpers/custom_physics.dart';
 import 'package:boxbox/helpers/driver_result_item.dart';
+import 'package:boxbox/helpers/news.dart';
 import 'package:boxbox/scraping/formula_one.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/foundation.dart';
@@ -34,7 +35,7 @@ import 'package:boxbox/helpers/driver_image.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/request_error.dart';
 
-class DriverDetailsScreen extends StatefulWidget {
+class DriverDetailsScreen extends StatelessWidget {
   final String driverId;
   final String givenName;
   final String familyName;
@@ -46,11 +47,6 @@ class DriverDetailsScreen extends StatefulWidget {
   });
 
   @override
-  State<DriverDetailsScreen> createState() => _DriverDetailsScreenState();
-}
-
-class _DriverDetailsScreenState extends State<DriverDetailsScreen> {
-  @override
   Widget build(BuildContext context) {
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
@@ -59,7 +55,7 @@ class _DriverDetailsScreenState extends State<DriverDetailsScreen> {
       child: Scaffold(
         appBar: AppBar(
           title: Text(
-            '${widget.givenName} ${widget.familyName.toUpperCase()}',
+            '${givenName} ${familyName.toUpperCase()}',
             style: const TextStyle(
               fontWeight: FontWeight.w600,
             ),
@@ -91,8 +87,8 @@ class _DriverDetailsScreenState extends State<DriverDetailsScreen> {
             : Colors.white,
         body: TabBarView(
           children: [
-            DriverInfo(widget.driverId),
-            DriverResults(widget.driverId),
+            DriverInfo(driverId),
+            DriverResults(driverId),
           ],
         ),
       ),
@@ -404,7 +400,7 @@ class DriverDetailsFragment extends StatelessWidget {
                 ),
                 itemCount: driverDetails[1].length,
                 itemBuilder: (context, index) => FutureBuilder<Article>(
-                  future: F1NewsFetcher().getArticleData(
+                  future: Formula1().getArticleData(
                     driverDetails[1][index][0],
                   ),
                   builder: (context, snapshot) {

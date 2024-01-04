@@ -169,20 +169,15 @@ class _VideosScreenState extends State<VideosScreen> {
   }
 }
 
-class VideosHeader extends StatefulWidget {
+class VideosHeader extends StatelessWidget {
   final List<VideoItem> videos;
-  const VideosHeader(this.videos, {Key? key}) : super(key: key);
+  VideosHeader(this.videos, {Key? key}) : super(key: key);
 
-  @override
-  State<VideosHeader> createState() => _VideosHeaderState();
-}
-
-class _VideosHeaderState extends State<VideosHeader> {
   final StoryController controller = StoryController();
   @override
   Widget build(BuildContext context) {
     List<StoryItem> storyItems = [];
-    for (var video in widget.videos) {
+    for (var video in videos) {
       storyItems.add(
         StoryItem(
           video,
@@ -203,7 +198,7 @@ class _VideosHeaderState extends State<VideosHeader> {
   }
 }
 
-class VideosList extends StatefulWidget {
+class VideosList extends StatelessWidget {
   final List<Video> videos;
   final bool verticalScroll;
   const VideosList(
@@ -213,26 +208,21 @@ class VideosList extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<VideosList> createState() => _VideosListState();
-}
-
-class _VideosListState extends State<VideosList> {
-  @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      scrollDirection: widget.verticalScroll ? Axis.vertical : Axis.horizontal,
-      itemCount: widget.videos.length,
+      scrollDirection: verticalScroll ? Axis.vertical : Axis.horizontal,
+      itemCount: videos.length,
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) => VideoItem(
         index,
-        widget.videos,
+        videos,
       ),
     );
   }
 }
 
-class VideoItem extends StatefulWidget {
+class VideoItem extends StatelessWidget {
   final int index;
   final List<Video> videos;
   const VideoItem(
@@ -242,13 +232,7 @@ class VideoItem extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<VideoItem> createState() => _VideoItemState();
-}
-
-class _VideoItemState extends State<VideoItem> {
-  @override
   Widget build(BuildContext context) {
-    List<Video> videos = widget.videos;
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     return Padding(
@@ -278,7 +262,7 @@ class _VideoItemState extends State<VideoItem> {
                       control: SwiperControl(
                         disableColor: Theme.of(context).primaryColor,
                       ),
-                      index: widget.index,
+                      index: index,
                       loop: false,
                     ),
                     closedBuilder: (context, action) => Stack(
@@ -289,7 +273,7 @@ class _VideoItemState extends State<VideoItem> {
                             Radius.circular(10),
                           ),
                           child: CachedNetworkImage(
-                            imageUrl: videos[widget.index].thumbnailUrl,
+                            imageUrl: videos[index].thumbnailUrl,
                             placeholder: (context, url) => SizedBox(
                               height:
                                   MediaQuery.of(context).size.width / (16 / 9) -
@@ -331,7 +315,7 @@ class _VideoItemState extends State<VideoItem> {
                                   bottom: 2,
                                 ),
                                 child: Text(
-                                  videos[widget.index].videoDuration,
+                                  videos[index].videoDuration,
                                   style: const TextStyle(
                                     color: Colors.white,
                                   ),
@@ -342,7 +326,7 @@ class _VideoItemState extends State<VideoItem> {
                                   left: 5,
                                 ),
                                 child: Text(
-                                  videos[widget.index].caption,
+                                  videos[index].caption,
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
                                   style: const TextStyle(
@@ -381,7 +365,7 @@ class _VideoItemState extends State<VideoItem> {
                   control: SwiperControl(
                     disableColor: Theme.of(context).primaryColor,
                   ),
-                  index: widget.index,
+                  index: index,
                   loop: false,
                 ),
                 closedBuilder: (context, action) => Stack(
@@ -392,7 +376,7 @@ class _VideoItemState extends State<VideoItem> {
                         Radius.circular(10),
                       ),
                       child: CachedNetworkImage(
-                        imageUrl: videos[widget.index].thumbnailUrl,
+                        imageUrl: videos[index].thumbnailUrl,
                         placeholder: (context, url) => SizedBox(
                           height:
                               MediaQuery.of(context).size.width / (16 / 9) - 7,
@@ -433,7 +417,7 @@ class _VideoItemState extends State<VideoItem> {
                               bottom: 2,
                             ),
                             child: Text(
-                              videos[widget.index].videoDuration,
+                              videos[index].videoDuration,
                               style: const TextStyle(
                                 color: Colors.white,
                               ),
@@ -444,7 +428,7 @@ class _VideoItemState extends State<VideoItem> {
                               left: 5,
                             ),
                             child: Text(
-                              videos[widget.index].caption,
+                              videos[index].caption,
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                               style: const TextStyle(

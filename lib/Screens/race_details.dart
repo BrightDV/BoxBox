@@ -42,7 +42,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
-class RaceDetailsScreen extends StatefulWidget {
+class RaceDetailsScreen extends StatelessWidget {
   final Race race;
   final bool hasSprint;
   final int? tab;
@@ -51,13 +51,7 @@ class RaceDetailsScreen extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<RaceDetailsScreen> createState() => _RaceDetailsScreenState();
-}
-
-class _RaceDetailsScreenState extends State<RaceDetailsScreen> {
-  @override
   Widget build(BuildContext context) {
-    final Race race = widget.race;
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
 
@@ -67,10 +61,10 @@ class _RaceDetailsScreenState extends State<RaceDetailsScreen> {
             : Colors.white,
         body: DefaultTabController(
           length: 3,
-          initialIndex: widget.tab != null
-              ? widget.tab == 10
+          initialIndex: tab != null
+              ? tab == 10
                   ? 2
-                  : widget.tab!
+                  : tab!
               : 0,
           child: Builder(
             builder: (BuildContext context) {
@@ -93,7 +87,7 @@ class _RaceDetailsScreenState extends State<RaceDetailsScreen> {
                     SliverPersistentHeader(
                       delegate: _SliverAppBarDelegate(
                         TabBar(
-                          tabs: widget.hasSprint
+                          tabs: hasSprint
                               ? <Widget>[
                                   Tab(
                                     text: AppLocalizations.of(context)!
@@ -134,13 +128,13 @@ class _RaceDetailsScreenState extends State<RaceDetailsScreen> {
                     ),
                   ];
                 },
-                body: widget.hasSprint
+                body: hasSprint
                     ? TabBarView(
                         children: [
-                          FreePracticesResultsProvider(race, widget.hasSprint),
+                          FreePracticesResultsProvider(race, hasSprint),
                           DefaultTabController(
                             length: 2,
-                            initialIndex: widget.tab == 10 ? 1 : 0,
+                            initialIndex: tab == 10 ? 1 : 0,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
@@ -167,8 +161,8 @@ class _RaceDetailsScreenState extends State<RaceDetailsScreen> {
                                         child: SingleChildScrollView(
                                           child: QualificationResultsProvider(
                                             raceUrl:
-                                                'https://www.formula1.com/en/results.html/2023/races/${Convert().circuitIdFromErgastToFormulaOne(widget.race.circuitId)}/${Convert().circuitNameFromErgastToFormulaOne(widget.race.circuitId)}/sprint-shootout.html',
-                                            hasSprint: widget.hasSprint,
+                                                'https://www.formula1.com/en/results.html/2023/races/${Convert().circuitIdFromErgastToFormulaOne(race.circuitId)}/${Convert().circuitNameFromErgastToFormulaOne(race.circuitId)}/sprint-shootout.html',
+                                            hasSprint: hasSprint,
                                           ),
                                         ),
                                       ),
@@ -185,7 +179,7 @@ class _RaceDetailsScreenState extends State<RaceDetailsScreen> {
                           ),
                           DefaultTabController(
                             length: 2,
-                            initialIndex: widget.tab == 10 ? 1 : 0,
+                            initialIndex: tab == 10 ? 1 : 0,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
@@ -214,7 +208,7 @@ class _RaceDetailsScreenState extends State<RaceDetailsScreen> {
                                         child: SingleChildScrollView(
                                           child: QualificationResultsProvider(
                                             race: race,
-                                            hasSprint: widget.hasSprint,
+                                            hasSprint: hasSprint,
                                           ),
                                         ),
                                       ),
@@ -229,12 +223,12 @@ class _RaceDetailsScreenState extends State<RaceDetailsScreen> {
                       )
                     : TabBarView(
                         children: [
-                          FreePracticesResultsProvider(race, widget.hasSprint),
+                          FreePracticesResultsProvider(race, hasSprint),
                           SafeArea(
                             child: SingleChildScrollView(
                               child: QualificationResultsProvider(
                                 race: race,
-                                hasSprint: widget.hasSprint,
+                                hasSprint: hasSprint,
                               ),
                             ),
                           ),
@@ -438,6 +432,7 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
         race,
         4,
         AppLocalizations.of(context)!.race,
+        update: setState,
       );
     } else {
       return raceUrl != ''
@@ -619,7 +614,20 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
   }
 }
 
-class SprintResultsProvider extends StatelessWidget {
+class SprintResultsProvider extends StatefulWidget {
+  final Race? race;
+  final String? raceUrl;
+  const SprintResultsProvider({
+    Key? key,
+    this.race,
+    this.raceUrl,
+  }) : super(key: key);
+
+  @override
+  State<SprintResultsProvider> createState() => _SprintResultsProviderState();
+}
+
+class _SprintResultsProviderState extends State<SprintResultsProvider> {
   Future<List<DriverResult>> getSprintStandings(
     String round,
   ) async {
@@ -628,29 +636,22 @@ class SprintResultsProvider extends StatelessWidget {
     );
   }
 
-  final Race? race;
-  final String? raceUrl;
-  const SprintResultsProvider({
-    Key? key,
-    this.race,
-    this.raceUrl,
-  }) : super(key: key);
   @override
   Widget build(BuildContext context) {
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     return SingleChildScrollView(
       child: FutureBuilder<List<DriverResult>>(
-        future: raceUrl != null
+        future: widget.raceUrl != null
             ? FormulaOneScraper().scrapeRaceResult(
                 '',
                 0,
                 '',
                 false,
-                raceUrl: raceUrl!,
+                raceUrl: widget.raceUrl!,
               )
             : getSprintStandings(
-                race!.round,
+                widget.race!.round,
               ),
         builder: (context, snapshot) => snapshot.hasError
             ? Padding(
@@ -669,9 +670,10 @@ class SprintResultsProvider extends StatelessWidget {
             : snapshot.hasData
                 ? snapshot.data!.isEmpty
                     ? SessionCountdownTimer(
-                        race,
+                        widget.race,
                         2,
                         AppLocalizations.of(context)!.sprint,
+                        update: setState,
                       )
                     : Column(
                         children: [
@@ -690,10 +692,11 @@ class SprintResultsProvider extends StatelessWidget {
                               ),
                               onTap: () async {
                                 var yt = YoutubeExplode();
-                                final raceYear = race!.date.split('-')[0];
+                                final raceYear =
+                                    widget.race!.date.split('-')[0];
                                 final List<Video> searchResults =
                                     await yt.search.search(
-                                  "Formula 1 Sprint Highlights ${race!.raceName} $raceYear",
+                                  "Formula 1 Sprint Highlights ${widget.race!.raceName} $raceYear",
                                 );
                                 final Video bestVideoMatch = searchResults[0];
                                 await launchUrl(
@@ -716,15 +719,7 @@ class SprintResultsProvider extends StatelessWidget {
   }
 }
 
-class QualificationResultsProvider extends StatelessWidget {
-  Future<List<DriverQualificationResult>> getQualificationStandings(
-    String round,
-  ) async {
-    return await ErgastApi().getQualificationStandings(
-      round,
-    );
-  }
-
+class QualificationResultsProvider extends StatefulWidget {
   final Race? race;
   final String? raceUrl;
   final bool? hasSprint;
@@ -736,33 +731,50 @@ class QualificationResultsProvider extends StatelessWidget {
     this.hasSprint,
     this.isSprintShootout,
   }) : super(key: key);
+
+  @override
+  State<QualificationResultsProvider> createState() =>
+      _QualificationResultsProviderState();
+}
+
+class _QualificationResultsProviderState
+    extends State<QualificationResultsProvider> {
+  Future<List<DriverQualificationResult>> getQualificationStandings(
+    String round,
+  ) async {
+    return await ErgastApi().getQualificationStandings(
+      round,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     return FutureBuilder<List<DriverQualificationResult>>(
-      future: raceUrl != null
+      future: widget.raceUrl != null
           ? FormulaOneScraper().scrapeQualifyingResults(
               '',
               0,
               '',
               false,
-              qualifyingResultsUrl: raceUrl!,
-              hasSprint: hasSprint,
+              qualifyingResultsUrl: widget.raceUrl!,
+              hasSprint: widget.hasSprint,
             )
           : getQualificationStandings(
-              race!.round,
+              widget.race!.round,
             ),
       builder: (context, snapshot) => snapshot.hasError
-          ? (race?.sessionDates.isNotEmpty ?? false) &&
-                  (race?.sessionDates.last.isBefore(
+          ? (widget.race?.sessionDates.isNotEmpty ?? false) &&
+                  (widget.race?.sessionDates.last.isBefore(
                         DateTime.now(),
                       ) ??
                       false)
               ? SessionCountdownTimer(
-                  race,
+                  widget.race,
                   3,
                   AppLocalizations.of(context)!.qualifyings,
+                  update: setState,
                 )
               : Padding(
                   padding: const EdgeInsets.all(15),
@@ -796,14 +808,14 @@ class QualificationResultsProvider extends StatelessWidget {
                             ),
                             onTap: () async {
                               var yt = YoutubeExplode();
-                              final raceYear = race!.date.split('-')[0];
+                              final raceYear = widget.race!.date.split('-')[0];
                               final List<Video> searchResults =
                                   await yt.search.search(
-                                (raceUrl?.contains('sprint-shootout') ??
+                                (widget.raceUrl?.contains('sprint-shootout') ??
                                             false) ||
-                                        (isSprintShootout ?? false)
-                                    ? "Formula 1 Sprint Shootout Highlights ${race!.raceName} $raceYear"
-                                    : "Formula 1 Qualification Highlights ${race!.raceName} $raceYear",
+                                        (widget.isSprintShootout ?? false)
+                                    ? "Formula 1 Sprint Shootout Highlights ${widget.race!.raceName} $raceYear"
+                                    : "Formula 1 Qualification Highlights ${widget.race!.raceName} $raceYear",
                               );
                               final Video bestVideoMatch = searchResults[0];
                               await launchUrl(
@@ -821,7 +833,7 @@ class QualificationResultsProvider extends StatelessWidget {
                         ),
                       ],
                     )
-                  : race!.sessionDates[3].isBefore(DateTime.now())
+                  : widget.race!.sessionDates[3].isBefore(DateTime.now())
                       ? Padding(
                           padding: const EdgeInsets.all(10),
                           child: Center(
@@ -836,9 +848,10 @@ class QualificationResultsProvider extends StatelessWidget {
                           ),
                         )
                       : SessionCountdownTimer(
-                          race,
+                          widget.race,
                           3,
                           AppLocalizations.of(context)!.qualifyings,
+                          update: setState,
                         )
               : const LoadingIndicatorUtil(),
     );

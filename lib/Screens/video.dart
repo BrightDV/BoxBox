@@ -17,8 +17,8 @@
  * Copyright (c) 2022-2023, BrightDV
  */
 
-import 'package:boxbox/api/news.dart';
 import 'package:boxbox/api/videos.dart';
+import 'package:boxbox/helpers/news.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:marquee/marquee.dart';

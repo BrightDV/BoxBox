@@ -31,22 +31,17 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
-class MainDrawer extends StatefulWidget {
+class MainDrawer extends StatelessWidget {
   final Function homeSetState;
-  const MainDrawer(this.homeSetState, {Key? key}) : super(key: key);
-
-  @override
-  State<MainDrawer> createState() => _MainDrawerState();
-}
-
-class _MainDrawerState extends State<MainDrawer> {
-  bool useDarkMode =
-      Hive.box('settings').get('darkMode', defaultValue: true) as bool;
-  bool enableExperimentalFeatures = Hive.box('settings')
-      .get('enableExperimentalFeatures', defaultValue: false) as bool;
+  MainDrawer(this.homeSetState, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    bool useDarkMode =
+        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
+    bool enableExperimentalFeatures = Hive.box('settings')
+        .get('enableExperimentalFeatures', defaultValue: false) as bool;
+
     return Theme(
       data: Theme.of(context).copyWith(
         canvasColor: useDarkMode
@@ -172,7 +167,7 @@ class _MainDrawerState extends State<MainDrawer> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => SettingsScreen(
-                      widget.homeSetState,
+                      homeSetState,
                     ),
                   ),
                 );

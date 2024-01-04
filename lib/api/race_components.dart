@@ -18,8 +18,8 @@
  */
 
 // import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:boxbox/api/news.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
+import 'package:boxbox/helpers/news.dart';
 import 'package:boxbox/helpers/racetracks_url.dart';
 import 'package:boxbox/Screens/circuit.dart';
 import 'package:flutter/material.dart';

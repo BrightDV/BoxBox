@@ -28,7 +28,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
-class StandingsScreen extends StatefulWidget {
+class StandingsScreen extends StatelessWidget {
   final bool? switchToTeamStandings;
   final ScrollController? scrollController;
   const StandingsScreen({
@@ -38,25 +38,20 @@ class StandingsScreen extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<StandingsScreen> createState() => _StandingsScreenState();
-}
-
-class _StandingsScreenState extends State<StandingsScreen> {
-  @override
   Widget build(BuildContext context) {
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     return DefaultTabController(
       length: 2,
-      initialIndex: widget.switchToTeamStandings != null ? 1 : 0,
+      initialIndex: switchToTeamStandings != null ? 1 : 0,
       child: Scaffold(
         backgroundColor: useDarkMode
             ? Theme.of(context).scaffoldBackgroundColor
             : Colors.white,
         body: TabBarView(
           children: [
-            DriversStandingsWidget(scrollController: widget.scrollController),
-            TeamsStandingsWidget(scrollController: widget.scrollController),
+            DriversStandingsWidget(scrollController: scrollController),
+            TeamsStandingsWidget(scrollController: scrollController),
           ],
         ),
         appBar: PreferredSize(
