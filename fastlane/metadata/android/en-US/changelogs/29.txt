@@ -1,0 +1,10 @@
+Happy New Year, a bit late!
+- 2024 update: new pictures, new calendar...
+- Major refactors and performance improvements, mostly on article screen
+- Add support for DNS result
+- Use Farside.link with Nitter
+- Fix the article search and empty results
+- Refactor the content blockers of the webviews to be more restrictive
+- Fix image galleries when being heros
+- Remove Beyondtheflag from the mixed news, as it is not parsable for the moment
+- Update translations, the app is now available in Swahili!
