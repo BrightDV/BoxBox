@@ -312,5 +312,7 @@
   "startingGrid": "发车格",
   "@startingGrid": {},
   "viewHighlights": "观看集锦",
-  "@viewHighlights": {}
+  "@viewHighlights": {},
+  "pipedApiUrlSub": "视频由油管提供。",
+  "@pipedApiUrlSub": {}
 }
