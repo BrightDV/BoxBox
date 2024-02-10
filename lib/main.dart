@@ -19,6 +19,7 @@
 
 import 'dart:async';
 
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:boxbox/helpers/bottom_navigation_bar.dart';
 import 'package:boxbox/helpers/handle_native.dart';
@@ -321,10 +322,14 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     String teamTheme = Hive.box('settings')
         .get('teamTheme', defaultValue: 'default') as String;
-    Map<int, Color> color = TeamsThemes().getTeamTheme(teamTheme);
+    bool useDarkMode =
+        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
 
+    Map<int, Color> color = TeamsThemes().getTeamTheme(teamTheme);
     MaterialColor colorCustom =
         MaterialColor(TeamsThemes().getTeamColor(teamTheme), color);
+    Color finalColor = Color(TeamsThemes().getTeamColor(teamTheme));
+
     setTimeagoLocaleMessages();
 
     // move english as the first locale
@@ -334,22 +339,33 @@ class _MyAppState extends State<MyApp> {
     supportedLocales.removeAt(supportedLocales.indexOf(const Locale('en')));
     supportedLocales.insert(0, const Locale('en'));
 
-    return MaterialApp(
-      title: 'Box, Box!',
-      theme: ThemeData(
+    return AdaptiveTheme(
+      light: ThemeData(
+        useMaterial3: true,
+        brightness: Brightness.light,
+        colorSchemeSeed: finalColor,
         fontFamily: 'Formula1',
-        primarySwatch: colorCustom,
-        scaffoldBackgroundColor: const Color(0xff12121a),
-        useMaterial3: false, // TODO: implement md3
       ),
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: supportedLocales,
-      home: const MainBottomNavigationBar(),
-      debugShowCheckedModeBanner: false,
-      navigatorKey: navigatorKey,
-      onGenerateRoute: (RouteSettings settings) {
-        return HandleRoute.handleRoute(settings.name);
-      },
+      dark: ThemeData(
+        useMaterial3: true,
+        brightness: Brightness.dark,
+        colorSchemeSeed: finalColor,
+        fontFamily: 'Formula1',
+      ),
+      initial: AdaptiveThemeMode.dark,
+      builder: (theme, darkTheme) => MaterialApp(
+        title: 'Box, Box!',
+        theme: theme,
+        darkTheme: darkTheme,
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: supportedLocales,
+        home: const MainBottomNavigationBar(),
+        debugShowCheckedModeBanner: false,
+        navigatorKey: navigatorKey,
+        onGenerateRoute: (RouteSettings settings) {
+          return HandleRoute.handleRoute(settings.name);
+        },
+      ),
     );
   }
 }

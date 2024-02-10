@@ -23,6 +23,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  adaptive_theme: ^3.6.0
   add_2_calendar: 2.2.4
   animations: ^2.0.8
   awesome_notifications: ^0.7.4+1

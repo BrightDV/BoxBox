@@ -101,9 +101,6 @@ class _ArticleScreenState extends State<ArticleScreen> {
                     ),
         ),
       ),
-      backgroundColor: useDarkMode
-          ? Theme.of(context).scaffoldBackgroundColor
-          : Colors.white,
       body: ArticleProvider(widget.articleId, updateTitle),
     );
   }

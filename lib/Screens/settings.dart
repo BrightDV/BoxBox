@@ -17,9 +17,11 @@
  * Copyright (c) 2022-2024, BrightDV
  */
 
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:boxbox/Screens/FormulaYou/settings.dart';
 import 'package:boxbox/Screens/custom_home_feed_settings.dart';
 import 'package:boxbox/Screens/server_settings.dart';
+import 'package:boxbox/theme/teams_themes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -185,11 +187,14 @@ class _AppearanceCardState extends State<AppearanceCard> {
                         newValue = isDark;
                       } else if (newThemeMode == 1) {
                         newValue = false;
+                        AdaptiveTheme.of(context).setLight();
                       } else {
                         newValue = true;
+                        AdaptiveTheme.of(context).setDark();
                       }
                       Hive.box('settings').put('darkMode', newValue);
                       Hive.box('settings').put('themeMode', newThemeMode);
+
                       themeMode = newThemeMode;
                       useDarkMode = newValue;
                     });
@@ -251,8 +256,30 @@ class _AppearanceCardState extends State<AppearanceCard> {
                       'Red Bull': 'red_bull',
                       'Williams': 'williams',
                     };
-                    Hive.box('settings')
-                        .put('teamTheme', stringToValue[newTeamTheme]);
+                    Hive.box('settings').put(
+                      'teamTheme',
+                      stringToValue[newTeamTheme],
+                    );
+                    Color color = Color(
+                      TeamsThemes().getTeamColor(
+                        stringToValue[newTeamTheme],
+                      ),
+                    );
+
+                    AdaptiveTheme.of(context).setTheme(
+                      light: ThemeData(
+                        useMaterial3: true,
+                        brightness: Brightness.light,
+                        colorSchemeSeed: color,
+                        fontFamily: 'Formula1',
+                      ),
+                      dark: ThemeData(
+                        useMaterial3: true,
+                        brightness: Brightness.dark,
+                        colorSchemeSeed: color,
+                        fontFamily: 'Formula1',
+                      ),
+                    );
                     teamTheme = newTeamTheme;
                   },
                 );

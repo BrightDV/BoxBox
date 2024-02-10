@@ -78,12 +78,8 @@ class TeamItem extends StatelessWidget {
       child: Container(
         height: 120,
         color: index % 2 == 1
-            ? useDarkMode
-                ? const Color(0xff22222c)
-                : const Color(0xffffffff)
-            : useDarkMode
-                ? const Color(0xff15151f)
-                : const Color(0xfff4f4f4),
+            ? Theme.of(context).colorScheme.onSecondary
+            : Theme.of(context).colorScheme.background,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
@@ -95,7 +91,6 @@ class TeamItem extends StatelessWidget {
                   style: TextStyle(
                     fontWeight: FontWeight.w600,
                     fontSize: 18,
-                    color: useDarkMode ? Colors.white : const Color(0xff171717),
                   ),
                 ),
               ),

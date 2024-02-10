@@ -50,7 +50,9 @@ class _MainBottomNavigationBarState extends State<MainBottomNavigationBar> {
       if (_selectedIndex == 0) {
         actions = [
           IconButton(
-            icon: const Icon(Icons.close),
+            icon: const Icon(
+              Icons.close,
+            ),
             onPressed: () {},
           ),
         ];
@@ -105,7 +107,9 @@ class _MainBottomNavigationBarState extends State<MainBottomNavigationBar> {
       actions = [
         !kIsWeb
             ? IconButton(
-                icon: const Icon(Icons.search),
+                icon: Icon(
+                  Icons.search,
+                ),
                 tooltip: 'Search',
                 onPressed: () => Navigator.push(
                   context,
@@ -116,7 +120,9 @@ class _MainBottomNavigationBarState extends State<MainBottomNavigationBar> {
               )
             : Container(),
         IconButton(
-          icon: const Icon(Icons.sort_outlined),
+          icon: Icon(
+            Icons.sort_outlined,
+          ),
           tooltip: 'Filter',
           onPressed: () {
             List<String> filterItems = [
@@ -138,14 +144,10 @@ class _MainBottomNavigationBarState extends State<MainBottomNavigationBar> {
               context: context,
               builder: (context) => StatefulBuilder(
                 builder: (context, setState) => AlertDialog(
-                  backgroundColor: useDarkMode
-                      ? Theme.of(context).scaffoldBackgroundColor
-                      : Colors.white,
                   title: Text(
                     AppLocalizations.of(context)!.filter,
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      color: useDarkMode ? Colors.white : Colors.black,
                       fontSize: 22,
                       fontWeight: FontWeight.w500,
                     ),
@@ -159,7 +161,6 @@ class _MainBottomNavigationBarState extends State<MainBottomNavigationBar> {
                           AppLocalizations.of(context)!.topics,
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            color: useDarkMode ? Colors.white : Colors.black,
                             fontSize: 18,
                             fontWeight: FontWeight.w500,
                           ),
@@ -186,14 +187,17 @@ class _MainBottomNavigationBarState extends State<MainBottomNavigationBar> {
                                 child: Container(
                                   decoration: BoxDecoration(
                                     border: Border.all(
-                                      color: Theme.of(context).primaryColor,
+                                      color:
+                                          Theme.of(context).colorScheme.outline,
                                       width: 1.0,
                                     ),
                                     borderRadius: BorderRadius.circular(10),
                                     color: selected &&
                                             pressed ==
                                                 filterItems.indexOf(filterItem)
-                                        ? Theme.of(context).primaryColor
+                                        ? Theme.of(context)
+                                            .colorScheme
+                                            .onSecondary
                                         : Colors.transparent,
                                   ),
                                   child: Padding(
@@ -206,7 +210,9 @@ class _MainBottomNavigationBarState extends State<MainBottomNavigationBar> {
                                                     filterItems
                                                         .indexOf(filterItem)
                                             ? Colors.white
-                                            : Theme.of(context).primaryColor,
+                                            : Theme.of(context)
+                                                .colorScheme
+                                                .outline,
                                       ),
                                     ),
                                   ),
@@ -280,10 +286,6 @@ class _MainBottomNavigationBarState extends State<MainBottomNavigationBar> {
       bottomNavigationBar: kIsWeb
           ? BottomNavigationBar(
               type: BottomNavigationBarType.fixed,
-              backgroundColor: useDarkMode
-                  ? const Color.fromARGB(255, 16, 16, 24)
-                  : Colors.white,
-              selectedItemColor: Theme.of(context).primaryColor,
               unselectedItemColor:
                   useDarkMode ? Colors.white : Colors.grey[600],
               currentIndex: _selectedIndex,
@@ -337,10 +339,6 @@ class _MainBottomNavigationBarState extends State<MainBottomNavigationBar> {
               ),
               child: BottomNavigationBar(
                 type: BottomNavigationBarType.fixed,
-                backgroundColor: useDarkMode
-                    ? const Color.fromARGB(255, 16, 16, 24)
-                    : Colors.white,
-                selectedItemColor: Theme.of(context).primaryColor,
                 unselectedItemColor:
                     useDarkMode ? Colors.white : Colors.grey[600],
                 currentIndex: _selectedIndex,
@@ -387,9 +385,6 @@ class _MainBottomNavigationBarState extends State<MainBottomNavigationBar> {
               ),
             ),
       body: screens.elementAt(_selectedIndex),
-      backgroundColor: useDarkMode
-          ? Theme.of(context).scaffoldBackgroundColor
-          : Colors.white,
     );
   }
 }

@@ -33,6 +33,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 
 class MainDrawer extends StatelessWidget {
   final Function homeSetState;
+
   MainDrawer(this.homeSetState, {Key? key}) : super(key: key);
 
   @override
@@ -42,248 +43,242 @@ class MainDrawer extends StatelessWidget {
     bool enableExperimentalFeatures = Hive.box('settings')
         .get('enableExperimentalFeatures', defaultValue: false) as bool;
 
-    return Theme(
-      data: Theme.of(context).copyWith(
-        canvasColor: useDarkMode
-            ? Theme.of(context).scaffoldBackgroundColor
-            : Colors.white,
-      ),
-      child: Drawer(
-        child: Column(
-          children: [
-            DrawerHeader(
-              decoration: BoxDecoration(
-                color: Theme.of(context).primaryColor,
-              ),
-              child: const Center(
-                child: Text(
-                  'Box, Box!',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 28,
-                    fontWeight: FontWeight.w700,
-                  ),
+    return Drawer(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      child: Column(
+        children: [
+          DrawerHeader(
+            decoration: BoxDecoration(
+              color: Theme.of(context).primaryColor,
+            ),
+            child: const Center(
+              child: Text(
+                'Box, Box!',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 28,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
             ),
-            ListTile(
-              title: Text(
-                'Formula You',
-                style: TextStyle(
-                  color: useDarkMode ? Colors.white : Colors.black,
-                ),
-              ),
-              leading: Icon(
-                Icons.account_circle_outlined,
+          ),
+          ListTile(
+            title: Text(
+              'Formula You',
+              style: TextStyle(
                 color: useDarkMode ? Colors.white : Colors.black,
               ),
-              onTap: () {
-                Navigator.of(context).pop();
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const PersonalizedHomeScreen(),
-                  ),
-                );
-              },
             ),
-            ListTile(
-              title: Text(
-                AppLocalizations.of(context)!.newsMix,
-                style: TextStyle(
-                  color: useDarkMode ? Colors.white : Colors.black,
+            leading: Icon(
+              Icons.account_circle_outlined,
+              color: useDarkMode ? Colors.white : Colors.black,
+            ),
+            onTap: () {
+              Navigator.of(context).pop();
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const PersonalizedHomeScreen(),
                 ),
-              ),
-              leading: Icon(
-                Icons.dynamic_feed_outlined,
+              );
+            },
+          ),
+          ListTile(
+            title: Text(
+              AppLocalizations.of(context)!.newsMix,
+              style: TextStyle(
                 color: useDarkMode ? Colors.white : Colors.black,
               ),
-              onTap: () {
-                Navigator.of(context).pop();
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const MixedNewsScreen(),
-                  ),
-                );
-              },
             ),
-            ListTile(
-              title: Text(
-                AppLocalizations.of(context)!.hallOfFame,
-                style: TextStyle(
-                  color: useDarkMode ? Colors.white : Colors.black,
+            leading: Icon(
+              Icons.dynamic_feed_outlined,
+              color: useDarkMode ? Colors.white : Colors.black,
+            ),
+            onTap: () {
+              Navigator.of(context).pop();
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const MixedNewsScreen(),
                 ),
-              ),
-              leading: Icon(
-                Icons.emoji_events_outlined,
+              );
+            },
+          ),
+          ListTile(
+            title: Text(
+              AppLocalizations.of(context)!.hallOfFame,
+              style: TextStyle(
                 color: useDarkMode ? Colors.white : Colors.black,
               ),
-              onTap: () {
-                Navigator.of(context).pop();
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const HallOfFameScreen(),
-                  ),
-                );
-              },
             ),
-            ListTile(
-              title: Text(
-                AppLocalizations.of(context)!.history,
-                style: TextStyle(
-                  color: useDarkMode ? Colors.white : Colors.black,
+            leading: Icon(
+              Icons.emoji_events_outlined,
+              color: useDarkMode ? Colors.white : Colors.black,
+            ),
+            onTap: () {
+              Navigator.of(context).pop();
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const HallOfFameScreen(),
                 ),
-              ),
-              leading: Icon(
-                Icons.history_outlined,
+              );
+            },
+          ),
+          ListTile(
+            title: Text(
+              AppLocalizations.of(context)!.history,
+              style: TextStyle(
                 color: useDarkMode ? Colors.white : Colors.black,
               ),
-              onTap: () {
-                Navigator.of(context).pop();
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const HistoryScreen(),
-                  ),
-                );
-              },
             ),
-            ListTile(
-              title: Text(
-                AppLocalizations.of(context)!.settings,
-                style: TextStyle(
-                  color: useDarkMode ? Colors.white : Colors.black,
+            leading: Icon(
+              Icons.history_outlined,
+              color: useDarkMode ? Colors.white : Colors.black,
+            ),
+            onTap: () {
+              Navigator.of(context).pop();
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const HistoryScreen(),
                 ),
-              ),
-              leading: Icon(
-                Icons.settings_outlined,
+              );
+            },
+          ),
+          ListTile(
+            title: Text(
+              AppLocalizations.of(context)!.settings,
+              style: TextStyle(
                 color: useDarkMode ? Colors.white : Colors.black,
               ),
-              onTap: () {
-                Navigator.of(context).pop();
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => SettingsScreen(
-                      homeSetState,
-                    ),
-                  ),
-                );
-              },
             ),
-            ListTile(
-              title: Text(
-                AppLocalizations.of(context)!.about,
-                style: TextStyle(
-                  color: useDarkMode ? Colors.white : Colors.black,
+            leading: Icon(
+              Icons.settings_outlined,
+              color: useDarkMode ? Colors.white : Colors.black,
+            ),
+            onTap: () {
+              Navigator.of(context).pop();
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => SettingsScreen(
+                    homeSetState,
+                  ),
                 ),
-              ),
-              leading: Icon(
-                Icons.info_outlined,
+              );
+            },
+          ),
+          ListTile(
+            title: Text(
+              AppLocalizations.of(context)!.about,
+              style: TextStyle(
                 color: useDarkMode ? Colors.white : Colors.black,
               ),
-              onTap: () {
-                Navigator.of(context).pop();
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const AboutScreen(),
-                  ),
-                );
-              },
             ),
-            enableExperimentalFeatures
-                ? ListTile(
-                    title: Text(
-                      'Live Timing Feed',
-                      style: TextStyle(
-                        color: useDarkMode ? Colors.white : Colors.black,
-                      ),
-                    ),
-                    leading: Icon(
-                      Icons.settings_outlined,
+            leading: Icon(
+              Icons.info_outlined,
+              color: useDarkMode ? Colors.white : Colors.black,
+            ),
+            onTap: () {
+              Navigator.of(context).pop();
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const AboutScreen(),
+                ),
+              );
+            },
+          ),
+          enableExperimentalFeatures
+              ? ListTile(
+                  title: Text(
+                    'Live Timing Feed',
+                    style: TextStyle(
                       color: useDarkMode ? Colors.white : Colors.black,
                     ),
-                    onTap: () {
-                      Navigator.of(context).pop();
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const ArchiveRacesListScreen(),
-                        ),
-                      );
-                    },
-                  )
-                : Container(),
-            enableExperimentalFeatures
-                ? ListTile(
-                    title: Text(
-                      'Article Test Screen',
-                      style: TextStyle(
-                        color: useDarkMode ? Colors.white : Colors.black,
+                  ),
+                  leading: Icon(
+                    Icons.settings_outlined,
+                    color: useDarkMode ? Colors.white : Colors.black,
+                  ),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ArchiveRacesListScreen(),
                       ),
-                    ),
-                    leading: Icon(
-                      Icons.settings_outlined,
+                    );
+                  },
+                )
+              : Container(),
+          enableExperimentalFeatures
+              ? ListTile(
+                  title: Text(
+                    'Article Test Screen',
+                    style: TextStyle(
                       color: useDarkMode ? Colors.white : Colors.black,
                     ),
-                    onTap: () {
-                      Navigator.of(context).pop();
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const TestScreen(),
-                        ),
-                      );
-                    },
-                  )
-                : Container(),
-            enableExperimentalFeatures
-                ? ListTile(
-                    title: Text(
-                      'Compare',
-                      style: TextStyle(
-                        color: useDarkMode ? Colors.white : Colors.black,
+                  ),
+                  leading: Icon(
+                    Icons.settings_outlined,
+                    color: useDarkMode ? Colors.white : Colors.black,
+                  ),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const TestScreen(),
                       ),
-                    ),
-                    leading: Icon(
-                      Icons.compare_arrows_outlined,
+                    );
+                  },
+                )
+              : Container(),
+          enableExperimentalFeatures
+              ? ListTile(
+                  title: Text(
+                    'Compare',
+                    style: TextStyle(
                       color: useDarkMode ? Colors.white : Colors.black,
                     ),
-                    onTap: () {
-                      Navigator.of(context).pop();
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const CompareHomeScreen(),
-                        ),
-                      );
-                    },
-                  )
-                : Container(),
-            Expanded(
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: FutureBuilder<PackageInfo>(
-                  future: PackageInfo.fromPlatform(),
-                  builder: (context, snapshot) => snapshot.hasData
-                      ? Padding(
-                          padding: const EdgeInsets.only(bottom: 10),
-                          child: Text(
-                            snapshot.data!.version,
-                            style: TextStyle(
-                              color: useDarkMode ? Colors.white : Colors.black,
-                            ),
+                  ),
+                  leading: Icon(
+                    Icons.compare_arrows_outlined,
+                    color: useDarkMode ? Colors.white : Colors.black,
+                  ),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const CompareHomeScreen(),
+                      ),
+                    );
+                  },
+                )
+              : Container(),
+          Expanded(
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: FutureBuilder<PackageInfo>(
+                future: PackageInfo.fromPlatform(),
+                builder: (context, snapshot) => snapshot.hasData
+                    ? Padding(
+                        padding: const EdgeInsets.only(bottom: 10),
+                        child: Text(
+                          snapshot.data!.version,
+                          style: TextStyle(
+                            color: useDarkMode ? Colors.white : Colors.black,
                           ),
-                        )
-                      : const Text(''),
-                ),
+                        ),
+                      )
+                    : const Text(''),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

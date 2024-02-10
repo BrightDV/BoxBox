@@ -193,12 +193,8 @@ class DriverItem extends StatelessWidget {
       child: Container(
         height: 120,
         color: index % 2 == 1
-            ? useDarkMode
-                ? const Color(0xff22222c)
-                : const Color(0xffffffff)
-            : useDarkMode
-                ? const Color(0xff15151f)
-                : const Color(0xfff4f4f4),
+            ? Theme.of(context).colorScheme.onSecondary
+            : Theme.of(context).colorScheme.background,
         child: Row(
           children: <Widget>[
             Expanded(
@@ -208,7 +204,7 @@ class DriverItem extends StatelessWidget {
                 children: <Widget>[
                   Expanded(
                     child: Container(
-                      height: 84,
+                      height: 92,
                       decoration: const BoxDecoration(
                         borderRadius: BorderRadius.all(
                           Radius.circular(5.0),
@@ -224,9 +220,6 @@ class DriverItem extends StatelessWidget {
                               style: TextStyle(
                                 fontWeight: FontWeight.w600,
                                 fontSize: 20,
-                                color: useDarkMode
-                                    ? Colors.white
-                                    : const Color(0xff171717),
                               ),
                               textAlign: TextAlign.center,
                             ),
@@ -252,9 +245,6 @@ class DriverItem extends StatelessWidget {
                                   Text(
                                     item.givenName,
                                     style: TextStyle(
-                                      color: useDarkMode
-                                          ? Colors.white54
-                                          : const Color(0xff171717),
                                       fontSize: 18,
                                     ),
                                   ),
@@ -263,35 +253,23 @@ class DriverItem extends StatelessWidget {
                                     style: TextStyle(
                                       fontWeight: FontWeight.w600,
                                       fontSize: 19,
-                                      color: useDarkMode
-                                          ? Colors.white
-                                          : const Color(0xff171717),
                                     ),
                                   ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 5),
-                                    child: int.parse(item.points) == 1
-                                        ? Text(
-                                            "${item.points} ${AppLocalizations.of(context)?.point}",
-                                            style: TextStyle(
-                                              fontSize: 20,
-                                              color: useDarkMode
-                                                  ? Colors.white
-                                                  : const Color(0xff171717),
-                                            ),
-                                            textAlign: TextAlign.center,
-                                          )
-                                        : Text(
-                                            "${item.points} ${AppLocalizations.of(context)?.points}",
-                                            style: TextStyle(
-                                              fontSize: 20,
-                                              color: useDarkMode
-                                                  ? Colors.white
-                                                  : const Color(0xff171717),
-                                            ),
-                                            textAlign: TextAlign.center,
+                                  int.parse(item.points) == 1
+                                      ? Text(
+                                          "${item.points} ${AppLocalizations.of(context)?.point}",
+                                          style: TextStyle(
+                                            fontSize: 20,
                                           ),
-                                  ),
+                                          textAlign: TextAlign.center,
+                                        )
+                                      : Text(
+                                          "${item.points} ${AppLocalizations.of(context)?.points}",
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
                                 ],
                               ),
                             ),

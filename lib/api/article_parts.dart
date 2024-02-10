@@ -243,9 +243,6 @@ class WidgetsList extends StatelessWidget {
                                   tag['fields']['tagName'],
                                 ),
                               ),
-                              backgroundColor: useDarkMode
-                                  ? Theme.of(context).scaffoldBackgroundColor
-                                  : Colors.white,
                               body: NewsFeed(tagId: tag['id']),
                             ),
                           ),
@@ -254,7 +251,7 @@ class WidgetsList extends StatelessWidget {
                       child: Container(
                         decoration: BoxDecoration(
                           border: Border.all(
-                            color: Theme.of(context).primaryColor,
+                            color: Theme.of(context).colorScheme.outline,
                             width: 1.0,
                           ),
                           borderRadius: BorderRadius.circular(10),
@@ -263,9 +260,7 @@ class WidgetsList extends StatelessWidget {
                           padding: const EdgeInsets.all(7),
                           child: Text(
                             tag['fields']['tagName'],
-                            style: TextStyle(
-                              color: Theme.of(context).primaryColor,
-                            ),
+                            
                           ),
                         ),
                       ),

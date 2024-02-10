@@ -121,12 +121,8 @@ class RaceListItem extends StatelessWidget {
       padding: const EdgeInsets.all(2),
       height: 80,
       color: index % 2 == 1
-          ? useDarkMode
-              ? const Color(0xff22222c)
-              : const Color(0xffffffff)
-          : useDarkMode
-              ? const Color(0xff15151f)
-              : const Color(0xfff4f4f4),
+          ? Theme.of(context).colorScheme.onSecondary
+          : Theme.of(context).colorScheme.background,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
@@ -144,8 +140,11 @@ class RaceListItem extends StatelessWidget {
                       borderRadius: BorderRadius.circular(7),
                       color: useDarkMode
                           ? index % 2 == 0
-                              ? const Color.fromARGB(255, 36, 36, 48)
-                              : const Color.fromARGB(255, 23, 23, 34)
+                              ? HSLColor.fromColor(
+                                      Theme.of(context).colorScheme.background)
+                                  .withLightness(0.2)
+                                  .toColor()
+                              : Theme.of(context).colorScheme.secondaryContainer
                           : const Color.fromARGB(255, 136, 135, 135),
                     ),
                     child: Padding(

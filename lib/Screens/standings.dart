@@ -39,15 +39,10 @@ class StandingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool useDarkMode =
-        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     return DefaultTabController(
       length: 2,
       initialIndex: switchToTeamStandings != null ? 1 : 0,
       child: Scaffold(
-        backgroundColor: useDarkMode
-            ? Theme.of(context).scaffoldBackgroundColor
-            : Colors.white,
         body: TabBarView(
           children: [
             DriversStandingsWidget(scrollController: scrollController),
@@ -60,7 +55,6 @@ class StandingsScreen extends StatelessWidget {
             height: 50,
             child: Card(
               elevation: 3,
-              color: Theme.of(context).primaryColor,
               child: TabBar(
                 tabs: [
                   Text(

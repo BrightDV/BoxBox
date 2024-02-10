@@ -168,7 +168,7 @@ class NewsItem extends StatelessWidget {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15.0),
                 ),
-                color: useDarkMode ? const Color(0xff1d1d28) : Colors.white,
+                //color: useDarkMode ? const Color(0xff1d1d28) : Colors.white,
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 200),
                   child: InkWell(
@@ -320,7 +320,7 @@ class NewsItem extends StatelessWidget {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15.0),
                 ),
-                color: useDarkMode ? const Color(0xff1d1d28) : Colors.white,
+                color: Theme.of(context).colorScheme.surface,
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 200),
                   child: InkWell(
@@ -457,7 +457,7 @@ class NewsItem extends StatelessWidget {
                                                     ),
                                                   ],
                                                   color: Theme.of(context)
-                                                      .primaryColor,
+                                                      .primaryColorDark,
                                                 ),
                                                 child: Row(
                                                   mainAxisSize:
@@ -749,7 +749,8 @@ class NewsItem extends StatelessWidget {
                                                 ),
                                               ],
                                               color: Theme.of(context)
-                                                  .primaryColor,
+                                                  .colorScheme
+                                                  .onPrimary,
                                             ),
                                             child: Row(
                                               mainAxisSize: MainAxisSize.min,
@@ -958,6 +959,7 @@ class NewsList extends StatefulWidget {
     this.articleType,
     Key? key,
   }) : super(key: key);
+
   @override
   State<NewsList> createState() => _NewsListState();
 }
@@ -1157,6 +1159,7 @@ class OfflineNewsList extends StatelessWidget {
 
 class TextParagraphRenderer extends StatelessWidget {
   final String text;
+
   const TextParagraphRenderer(this.text, {Key? key}) : super(key: key);
 
   @override
@@ -1290,7 +1293,6 @@ class TextParagraphRenderer extends StatelessWidget {
         },
         styleSheet: MarkdownStyleSheet(
           strong: TextStyle(
-            color: Theme.of(context).primaryColor,
             fontSize: fontUsedInArticles == 'Formula1' ? 16 : 20,
             fontWeight: FontWeight.w500,
           ),
@@ -1304,8 +1306,9 @@ class TextParagraphRenderer extends StatelessWidget {
             bottom: fontUsedInArticles == 'Formula1' ? 10 : 7,
           ),
           a: TextStyle(
-            color: Theme.of(context).primaryColor,
+            color: Theme.of(context).colorScheme.outline,
             decoration: TextDecoration.underline,
+            decorationColor: Theme.of(context).colorScheme.outline,
             fontWeight: FontWeight.normal,
             fontFamily: fontUsedInArticles,
           ),
@@ -1924,6 +1927,7 @@ class BetterPlayerVideoPlayer extends StatefulWidget {
     this.heroTag, {
     Key? key,
   }) : super(key: key);
+
   @override
   State<BetterPlayerVideoPlayer> createState() =>
       _BetterPlayerVideoPlayerState();
@@ -2112,10 +2116,12 @@ class PinnedVideoPlayer extends SliverPersistentHeaderDelegate {
 
 class ImageGallery extends StatefulWidget {
   final List images;
+
   const ImageGallery(
     this.images, {
     Key? key,
   }) : super(key: key);
+
   @override
   State<StatefulWidget> createState() => _ImageGalleryState();
 }
