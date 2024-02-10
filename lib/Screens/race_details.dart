@@ -157,18 +157,26 @@ class RaceDetailsScreen extends StatelessWidget {
                                 Expanded(
                                   child: TabBarView(
                                     children: [
-                                      SafeArea(
-                                        child: SingleChildScrollView(
-                                          child: QualificationResultsProvider(
-                                            raceUrl:
-                                                'https://www.formula1.com/en/results.html/${DateTime.now().year}/races/${Convert().circuitIdFromErgastToFormulaOne(race.circuitId)}/${Convert().circuitNameFromErgastToFormulaOne(race.circuitId)}/sprint-shootout.html',
-                                            hasSprint: hasSprint,
+                                      MediaQuery.removePadding(
+                                        context: context,
+                                        removeTop: true,
+                                        child: SafeArea(
+                                          child: SingleChildScrollView(
+                                            child: QualificationResultsProvider(
+                                              raceUrl:
+                                                  'https://www.formula1.com/en/results.html/${DateTime.now().year}/races/${Convert().circuitIdFromErgastToFormulaOne(race.circuitId)}/${Convert().circuitNameFromErgastToFormulaOne(race.circuitId)}/sprint-shootout.html',
+                                              hasSprint: hasSprint,
+                                            ),
                                           ),
                                         ),
                                       ),
-                                      SafeArea(
-                                        child: SprintResultsProvider(
-                                          race: race,
+                                      MediaQuery.removePadding(
+                                        context: context,
+                                        removeTop: true,
+                                        child: SafeArea(
+                                          child: SprintResultsProvider(
+                                            race: race,
+                                          ),
                                         ),
                                       ),
                                     ],
@@ -204,15 +212,26 @@ class RaceDetailsScreen extends StatelessWidget {
                                 Expanded(
                                   child: TabBarView(
                                     children: [
-                                      SafeArea(
-                                        child: SingleChildScrollView(
-                                          child: QualificationResultsProvider(
-                                            race: race,
-                                            hasSprint: hasSprint,
+                                      MediaQuery.removePadding(
+                                        context: context,
+                                        removeTop: true,
+                                        child: SafeArea(
+                                          child: SingleChildScrollView(
+                                            child: QualificationResultsProvider(
+                                              race: race,
+                                              hasSprint: hasSprint,
+                                            ),
                                           ),
                                         ),
                                       ),
-                                      RaceResultsProvider(race: race),
+                                      MediaQuery.removePadding(
+                                        context: context,
+                                        removeTop: true,
+                                        child: SafeArea(
+                                          child:
+                                              RaceResultsProvider(race: race),
+                                        ),
+                                      ),
                                     ],
                                   ),
                                 ),
@@ -224,16 +243,24 @@ class RaceDetailsScreen extends StatelessWidget {
                     : TabBarView(
                         children: [
                           FreePracticesResultsProvider(race, hasSprint),
-                          SafeArea(
-                            child: SingleChildScrollView(
-                              child: QualificationResultsProvider(
-                                race: race,
-                                hasSprint: hasSprint,
+                          MediaQuery.removePadding(
+                            context: context,
+                            removeTop: true,
+                            child: SafeArea(
+                              child: SingleChildScrollView(
+                                child: QualificationResultsProvider(
+                                  race: race,
+                                  hasSprint: hasSprint,
+                                ),
                               ),
                             ),
                           ),
-                          SafeArea(
-                            child: RaceResultsProvider(race: race),
+                          MediaQuery.removePadding(
+                            context: context,
+                            removeTop: true,
+                            child: SafeArea(
+                              child: RaceResultsProvider(race: race),
+                            ),
                           ),
                         ],
                       ),
