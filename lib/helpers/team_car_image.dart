@@ -17,6 +17,8 @@
  * Copyright (c) 2022-${DateTime.now().year}, BrightDV
  */
 
+// TODO: update urls (kick & rb)
+
 class TeamCarImage {
   Map<String, String> teamCarDecoder = {
     "ferrari":

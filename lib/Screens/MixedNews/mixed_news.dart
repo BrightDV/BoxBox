@@ -84,13 +84,11 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
           'https://www.pitpass.com/fes_php/fes_usr_sit_newsfeed.php?fes_prepend_aty_sht_name=1',
     };
     return Scaffold(
-      backgroundColor: useDarkMode
-          ? Theme.of(context).scaffoldBackgroundColor
-          : Colors.white,
       appBar: AppBar(
         title: Text(
           AppLocalizations.of(context)!.newsMix,
         ),
+        backgroundColor: Theme.of(context).colorScheme.onPrimary,
         actions: [
           IconButton(
             onPressed: () {
@@ -103,7 +101,6 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
             },
             icon: Icon(
               useMergedFeeds ? Icons.splitscreen : Icons.merge,
-              color: Colors.white,
             ),
           ),
           useMergedFeeds
@@ -119,7 +116,6 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
                   ),
                   icon: const Icon(
                     Icons.edit,
-                    color: Colors.white,
                   ),
                 ),
         ],
@@ -142,9 +138,6 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(15.0),
                               ),
-                              color: useDarkMode
-                                  ? const Color(0xff1d1d28)
-                                  : Colors.white,
                               child: InkWell(
                                 onTap: () => Navigator.push(
                                   context,
@@ -230,14 +223,11 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
                                             .replaceAll('&#8220;', '"')
                                             .replaceAll('&#8221;', '"'),
                                         style: TextStyle(
-                                          color: useDarkMode
-                                              ? Colors.white
-                                              : Colors.black,
                                           fontSize: 18,
                                           fontWeight: FontWeight.w500,
                                         ),
                                         overflow: TextOverflow.ellipsis,
-                                        maxLines: 5,
+                                        maxLines: 4,
                                         textAlign: TextAlign.justify,
                                       ),
                                       subtitle: newsLayout != 'big' &&
@@ -276,11 +266,6 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
                                               styleSheet: MarkdownStyleSheet(
                                                 textAlign:
                                                     WrapAlignment.spaceBetween,
-                                                p: TextStyle(
-                                                  color: useDarkMode
-                                                      ? Colors.grey[400]
-                                                      : Colors.grey[800],
-                                                ),
                                               ),
                                             ),
                                     ),
@@ -311,9 +296,6 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
                                                 )
                                                 .split('.')[0],
                                             style: TextStyle(
-                                              color: useDarkMode
-                                                  ? Colors.white
-                                                  : Colors.grey[900],
                                               fontWeight: FontWeight.w500,
                                             ),
                                           ),
@@ -375,9 +357,6 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
                                     Text(
                                       feed,
                                       style: TextStyle(
-                                        color: useDarkMode
-                                            ? Colors.white
-                                            : Colors.black,
                                         fontSize: 16,
                                         fontWeight: FontWeight.w500,
                                       ),
@@ -397,9 +376,6 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
                                       child: Text(
                                         AppLocalizations.of(context)!.viewMore,
                                         style: TextStyle(
-                                          color: useDarkMode
-                                              ? Colors.white
-                                              : Colors.black,
                                           fontSize: 12,
                                           fontWeight: FontWeight.w500,
                                           decoration: TextDecoration.underline,
@@ -409,9 +385,6 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
                                     ),
                                     Icon(
                                       Icons.arrow_forward,
-                                      color: useDarkMode
-                                          ? Colors.white
-                                          : Colors.black,
                                     ),
                                   ],
                                 ),
@@ -472,10 +445,6 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
                                                         ),
                                                         child: Card(
                                                           elevation: 5.0,
-                                                          color: useDarkMode
-                                                              ? const Color(
-                                                                  0xff1d1d28)
-                                                              : Colors.white,
                                                           child: Column(
                                                             children: [
                                                               FutureBuilder<
@@ -525,11 +494,6 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
                                                                           '"'),
                                                                   style:
                                                                       TextStyle(
-                                                                    color: useDarkMode
-                                                                        ? Colors
-                                                                            .white
-                                                                        : Colors
-                                                                            .black,
                                                                     fontSize:
                                                                         14,
                                                                   ),
@@ -539,7 +503,7 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
                                                                   textAlign:
                                                                       TextAlign
                                                                           .justify,
-                                                                  maxLines: 5,
+                                                                  maxLines: 4,
                                                                 ),
                                                               ),
                                                             ],
@@ -567,9 +531,6 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
                                     Text(
                                       feed,
                                       style: TextStyle(
-                                        color: useDarkMode
-                                            ? Colors.white
-                                            : Colors.black,
                                         fontSize: 16,
                                         fontWeight: FontWeight.w500,
                                       ),
@@ -589,9 +550,6 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
                                       child: Text(
                                         AppLocalizations.of(context)!.viewMore,
                                         style: TextStyle(
-                                          color: useDarkMode
-                                              ? Colors.white
-                                              : Colors.black,
                                           fontSize: 12,
                                           fontWeight: FontWeight.w500,
                                           decoration: TextDecoration.underline,
@@ -601,9 +559,6 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
                                     ),
                                     Icon(
                                       Icons.arrow_forward,
-                                      color: useDarkMode
-                                          ? Colors.white
-                                          : Colors.black,
                                     ),
                                   ],
                                 ),
@@ -674,10 +629,6 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
                                                         ),
                                                         child: Card(
                                                           elevation: 5.0,
-                                                          color: useDarkMode
-                                                              ? const Color(
-                                                                  0xff1d1d28)
-                                                              : Colors.white,
                                                           child: Column(
                                                             children: [
                                                               feedItem.enclosure !=
@@ -714,11 +665,6 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
                                                                       .title!,
                                                                   style:
                                                                       TextStyle(
-                                                                    color: useDarkMode
-                                                                        ? Colors
-                                                                            .white
-                                                                        : Colors
-                                                                            .black,
                                                                     fontSize:
                                                                         14,
                                                                   ),
@@ -728,7 +674,7 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
                                                                   textAlign:
                                                                       TextAlign
                                                                           .justify,
-                                                                  maxLines: 5,
+                                                                  maxLines: 4,
                                                                 ),
                                                               ),
                                                             ],

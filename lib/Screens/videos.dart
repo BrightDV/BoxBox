@@ -363,7 +363,7 @@ class VideoItem extends StatelessWidget {
                   itemCount: videos.length,
                   scrollDirection: Axis.vertical,
                   control: SwiperControl(
-                    disableColor: Theme.of(context).primaryColor,
+                    color: Theme.of(context).colorScheme.onPrimary,
                   ),
                   index: index,
                   loop: false,

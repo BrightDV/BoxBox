@@ -35,10 +35,8 @@ class LinksScreen extends StatelessWidget {
         title: Text(
           AppLocalizations.of(context)!.links,
         ),
+        backgroundColor: Theme.of(context).colorScheme.onPrimary,
       ),
-      backgroundColor: useDarkMode
-          ? Theme.of(context).scaffoldBackgroundColor
-          : Colors.white,
       body: Padding(
         padding: const EdgeInsets.only(
           left: 15,
@@ -53,9 +51,6 @@ class LinksScreen extends StatelessWidget {
               child: ListTile(
                 title: Text(
                   'Formula 1',
-                  style: TextStyle(
-                    color: useDarkMode ? Colors.white : Colors.black,
-                  ),
                 ),
                 subtitle: Text(
                   'https://www.formula1.com/',
@@ -67,7 +62,6 @@ class LinksScreen extends StatelessWidget {
                 ),
                 trailing: Icon(
                   Icons.open_in_new_outlined,
-                  color: useDarkMode ? Colors.white : Colors.black,
                 ),
               ),
             ),
@@ -78,9 +72,6 @@ class LinksScreen extends StatelessWidget {
               child: ListTile(
                 title: Text(
                   AppLocalizations.of(context)!.fiaRegulations,
-                  style: TextStyle(
-                    color: useDarkMode ? Colors.white : Colors.black,
-                  ),
                 ),
                 subtitle: Text(
                   'https://www.fia.com/regulation/category/110',
@@ -92,7 +83,6 @@ class LinksScreen extends StatelessWidget {
                 ),
                 trailing: Icon(
                   Icons.open_in_new_outlined,
-                  color: useDarkMode ? Colors.white : Colors.black,
                 ),
               ),
             ),
@@ -103,9 +93,6 @@ class LinksScreen extends StatelessWidget {
               child: ListTile(
                 title: Text(
                   AppLocalizations.of(context)!.statistics,
-                  style: TextStyle(
-                    color: useDarkMode ? Colors.white : Colors.black,
-                  ),
                 ),
                 subtitle: Text(
                   'https://www.statsf1.com/',
@@ -117,7 +104,6 @@ class LinksScreen extends StatelessWidget {
                 ),
                 trailing: Icon(
                   Icons.open_in_new_outlined,
-                  color: useDarkMode ? Colors.white : Colors.black,
                 ),
               ),
             ),

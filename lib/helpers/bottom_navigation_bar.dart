@@ -197,7 +197,7 @@ class _MainBottomNavigationBarState extends State<MainBottomNavigationBar> {
                                                 filterItems.indexOf(filterItem)
                                         ? Theme.of(context)
                                             .colorScheme
-                                            .onSecondary
+                                            .onPrimary
                                         : Colors.transparent,
                                   ),
                                   child: Padding(
@@ -244,6 +244,8 @@ class _MainBottomNavigationBarState extends State<MainBottomNavigationBar> {
                                 title: Text(
                                   filterItems[pressed],
                                 ),
+                                backgroundColor:
+                                    Theme.of(context).colorScheme.onPrimary,
                               ),
                               backgroundColor: useDarkMode
                                   ? Theme.of(context).scaffoldBackgroundColor
@@ -280,6 +282,7 @@ class _MainBottomNavigationBarState extends State<MainBottomNavigationBar> {
           ),
         ),
         actions: actions,
+        backgroundColor: Theme.of(context).colorScheme.onPrimary,
       ),
       drawer: MainDrawer(_homeSetState),
       drawerEdgeDragWidth: MediaQuery.of(context).size.width / 4,
@@ -341,6 +344,11 @@ class _MainBottomNavigationBarState extends State<MainBottomNavigationBar> {
                 type: BottomNavigationBarType.fixed,
                 unselectedItemColor:
                     useDarkMode ? Colors.white : Colors.grey[600],
+                selectedItemColor: useDarkMode
+                    ? HSLColor.fromColor(
+                        Theme.of(context).colorScheme.onPrimary,
+                      ).withLightness(0.4).toColor()
+                    : Theme.of(context).colorScheme.onPrimary,
                 currentIndex: _selectedIndex,
                 elevation: 10.0,
                 items: <BottomNavigationBarItem>[

@@ -457,7 +457,8 @@ class NewsItem extends StatelessWidget {
                                                     ),
                                                   ],
                                                   color: Theme.of(context)
-                                                      .primaryColorDark,
+                                                      .colorScheme
+                                                      .onPrimary,
                                                 ),
                                                 child: Row(
                                                   mainAxisSize:
@@ -1177,6 +1178,7 @@ class TextParagraphRenderer extends StatelessWidget {
       child: MarkdownBody(
         data: text,
         selectable: true,
+        fitContent: false,
         onTapLink: (text, url, title) {
           if (url!.startsWith('https://www.formula1.com/en/latest/article.')) {
             String articleId = url.substring(43, url.length - 5).split('.')[1];
@@ -1295,6 +1297,11 @@ class TextParagraphRenderer extends StatelessWidget {
           strong: TextStyle(
             fontSize: fontUsedInArticles == 'Formula1' ? 16 : 20,
             fontWeight: FontWeight.w500,
+            color: useDarkMode
+                ? HSLColor.fromColor(
+                    Theme.of(context).colorScheme.onPrimary,
+                  ).withLightness(0.35).toColor()
+                : Theme.of(context).colorScheme.onPrimary,
           ),
           p: TextStyle(
             fontSize: fontUsedInArticles == 'Formula1' ? 14 : 18,
@@ -1306,9 +1313,17 @@ class TextParagraphRenderer extends StatelessWidget {
             bottom: fontUsedInArticles == 'Formula1' ? 10 : 7,
           ),
           a: TextStyle(
-            color: Theme.of(context).colorScheme.outline,
+            color: useDarkMode
+                ? HSLColor.fromColor(
+                    Theme.of(context).colorScheme.onPrimary,
+                  ).withLightness(0.35).toColor()
+                : Theme.of(context).colorScheme.onPrimary,
             decoration: TextDecoration.underline,
-            decorationColor: Theme.of(context).colorScheme.outline,
+            decorationColor: useDarkMode
+                ? HSLColor.fromColor(
+                    Theme.of(context).colorScheme.onPrimary,
+                  ).withLightness(0.35).toColor()
+                : Theme.of(context).colorScheme.onPrimary,
             fontWeight: FontWeight.normal,
             fontFamily: fontUsedInArticles,
           ),
@@ -1332,6 +1347,7 @@ class TextParagraphRenderer extends StatelessWidget {
             color: useDarkMode ? Colors.white : Colors.black,
             fontFamily: fontUsedInArticles,
           ),
+          textAlign: WrapAlignment.spaceEvenly,
         ),
       ),
     );
@@ -1885,6 +1901,7 @@ class VideoRenderer extends StatelessWidget {
                             snapshot.data!,
                             autoplay == null ? false : autoplay!,
                             heroTag ?? '',
+                            Theme.of(context).primaryColor,
                           ),
                     if (caption != null)
                       Padding(
@@ -1920,11 +1937,13 @@ class BetterPlayerVideoPlayer extends StatefulWidget {
   final Map<String, dynamic> videoUrls;
   final bool autoplay;
   final String heroTag;
+  final Color primaryColor;
 
   const BetterPlayerVideoPlayer(
     this.videoUrls,
     this.autoplay,
-    this.heroTag, {
+    this.heroTag,
+    this.primaryColor, {
     Key? key,
   }) : super(key: key);
 
@@ -1979,9 +1998,9 @@ class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
       controlsConfiguration: BetterPlayerControlsConfiguration(
         enableAudioTracks: false,
         enableSubtitles: false,
-        overflowModalColor:
-            useDarkMode ? const Color(0xff1d1d28) : Colors.white,
-        overflowMenuIconsColor: useDarkMode ? Colors.white : Colors.black,
+        overflowModalColor: widget.primaryColor,
+        overflowMenuIconsColor:
+            useDarkMode ? Colors.white : Colors.black, // TODO: check light mode
         overflowModalTextColor: useDarkMode ? Colors.white : Colors.black,
         showControlsOnInitialize: false,
       ),

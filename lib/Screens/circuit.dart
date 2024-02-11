@@ -56,9 +56,6 @@ class CircuitScreen extends StatelessWidget {
     bool useDataSaverMode = Hive.box('settings')
         .get('useDataSaverMode', defaultValue: false) as bool;
     return Scaffold(
-      backgroundColor: useDarkMode
-          ? Theme.of(context).scaffoldBackgroundColor
-          : Colors.white,
       body: isFetched ?? true
           ? NestedScrollView(
               headerSliverBuilder:
@@ -75,6 +72,7 @@ class CircuitScreen extends StatelessWidget {
                         race.raceName,
                       ),
                     ),
+                    backgroundColor: Theme.of(context).colorScheme.onPrimary,
                   ),
                 ];
               },
@@ -94,9 +92,6 @@ class CircuitScreen extends StatelessWidget {
                                     child: Text(
                                       snapshot.data!['headline'],
                                       style: TextStyle(
-                                        color: useDarkMode
-                                            ? Colors.white
-                                            : Colors.black,
                                         fontSize: 20,
                                         fontWeight: FontWeight.w500,
                                       ),
@@ -105,14 +100,17 @@ class CircuitScreen extends StatelessWidget {
                                   )
                                 : Container(),
                             Padding(
-                              padding: const EdgeInsets.all(5),
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 3,
+                                horizontal: 10,
+                              ),
                               child: GestureDetector(
                                 child: Container(
                                   width: double.infinity,
                                   decoration: BoxDecoration(
-                                    color: useDarkMode
-                                        ? const Color(0xff1d1d28)
-                                        : Colors.grey.shade400,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSecondary,
                                     borderRadius: BorderRadius.circular(5),
                                   ),
                                   child: Padding(
@@ -127,18 +125,10 @@ class CircuitScreen extends StatelessWidget {
                                         Text(
                                           AppLocalizations.of(context)!
                                               .viewResults,
-                                          style: TextStyle(
-                                            color: useDarkMode
-                                                ? Colors.white
-                                                : Colors.black,
-                                          ),
                                         ),
                                         const Spacer(),
                                         Icon(
                                           Icons.arrow_forward_rounded,
-                                          color: useDarkMode
-                                              ? Colors.white
-                                              : Colors.black,
                                         ),
                                       ],
                                     ),
@@ -159,14 +149,17 @@ class CircuitScreen extends StatelessWidget {
                             ),
                             snapshot.data!['links'].isNotEmpty
                                 ? Padding(
-                                    padding: const EdgeInsets.all(5),
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 3,
+                                      horizontal: 10,
+                                    ),
                                     child: GestureDetector(
                                       child: Container(
                                         width: double.infinity,
                                         decoration: BoxDecoration(
-                                          color: useDarkMode
-                                              ? const Color(0xff1d1d28)
-                                              : Colors.grey.shade400,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onSecondary,
                                           borderRadius:
                                               BorderRadius.circular(5),
                                         ),
@@ -178,18 +171,10 @@ class CircuitScreen extends StatelessWidget {
                                               Text(
                                                 AppLocalizations.of(context)!
                                                     .viewHighlights,
-                                                style: TextStyle(
-                                                  color: useDarkMode
-                                                      ? Colors.white
-                                                      : Colors.black,
-                                                ),
                                               ),
                                               const Spacer(),
                                               Icon(
                                                 Icons.arrow_forward_rounded,
-                                                color: useDarkMode
-                                                    ? Colors.white
-                                                    : Colors.black,
                                               ),
                                             ],
                                           ),
@@ -210,14 +195,17 @@ class CircuitScreen extends StatelessWidget {
                                   )
                                 : Container(),
                             Padding(
-                              padding: const EdgeInsets.all(5),
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 3,
+                                horizontal: 10,
+                              ),
                               child: GestureDetector(
                                 child: Container(
                                   width: double.infinity,
                                   decoration: BoxDecoration(
-                                    color: useDarkMode
-                                        ? const Color(0xff1d1d28)
-                                        : Colors.grey.shade400,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSecondary,
                                     borderRadius: BorderRadius.circular(5),
                                   ),
                                   child: Padding(
@@ -232,18 +220,10 @@ class CircuitScreen extends StatelessWidget {
                                         Text(
                                           AppLocalizations.of(context)!
                                               .grandPrixMap,
-                                          style: TextStyle(
-                                            color: useDarkMode
-                                                ? Colors.white
-                                                : Colors.black,
-                                          ),
                                         ),
                                         const Spacer(),
                                         Icon(
                                           Icons.map_outlined,
-                                          color: useDarkMode
-                                              ? Colors.white
-                                              : Colors.black,
                                         ),
                                       ],
                                     ),
@@ -264,12 +244,12 @@ class CircuitScreen extends StatelessWidget {
                                       10,
                                     ),
                                     child: Container(
-                                      height: 210,
+                                      height: 240,
                                       decoration: BoxDecoration(
                                         border: Border.all(
-                                          color: useDarkMode
-                                              ? const Color(0xff1d1d28)
-                                              : Colors.grey.shade50,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onSecondary,
                                         ),
                                         borderRadius:
                                             BorderRadius.circular(15.0),
@@ -284,9 +264,6 @@ class CircuitScreen extends StatelessWidget {
                                               snapshot.data!['race']
                                                   ['meetingCountryName'],
                                               style: TextStyle(
-                                                color: useDarkMode
-                                                    ? Colors.white
-                                                    : Colors.black,
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.w500,
                                               ),
@@ -295,9 +272,6 @@ class CircuitScreen extends StatelessWidget {
                                           Text(
                                             AppLocalizations.of(context)!.race,
                                             style: TextStyle(
-                                              color: useDarkMode
-                                                  ? Colors.white
-                                                  : Colors.black,
                                               fontSize: 14,
                                             ),
                                           ),
@@ -314,11 +288,6 @@ class CircuitScreen extends StatelessWidget {
                                                     AppLocalizations.of(
                                                             context)!
                                                         .positionAbbreviation,
-                                                    style: TextStyle(
-                                                      color: useDarkMode
-                                                          ? Colors.white
-                                                          : Colors.black,
-                                                    ),
                                                   ),
                                                 ),
                                                 const Spacer(),
@@ -328,11 +297,6 @@ class CircuitScreen extends StatelessWidget {
                                                     AppLocalizations.of(
                                                             context)!
                                                         .time,
-                                                    style: TextStyle(
-                                                      color: useDarkMode
-                                                          ? Colors.white
-                                                          : Colors.black,
-                                                    ),
                                                   ),
                                                 ),
                                               ],
@@ -356,9 +320,6 @@ class CircuitScreen extends StatelessWidget {
                                                           : driverResults[
                                                               'positionNumber'],
                                                       style: TextStyle(
-                                                        color: useDarkMode
-                                                            ? Colors.white
-                                                            : Colors.black,
                                                         fontWeight:
                                                             FontWeight.w500,
                                                       ),
@@ -387,11 +348,6 @@ class CircuitScreen extends StatelessWidget {
                                                     child: Text(
                                                       driverResults['driverTLA']
                                                           .toString(),
-                                                      style: TextStyle(
-                                                        color: useDarkMode
-                                                            ? Colors.white
-                                                            : Colors.black,
-                                                      ),
                                                     ),
                                                   ),
                                                   const Spacer(),
@@ -404,11 +360,6 @@ class CircuitScreen extends StatelessWidget {
                                                           ? '+${driverResults['gapToLeader']}'
                                                           : driverResults[
                                                               'raceTime'],
-                                                      style: TextStyle(
-                                                        color: useDarkMode
-                                                            ? Colors.white
-                                                            : Colors.black,
-                                                      ),
                                                     ),
                                                   ),
                                                 ],
@@ -461,9 +412,6 @@ class CircuitScreen extends StatelessWidget {
                                                       AppLocalizations.of(
                                                               context)!
                                                           .viewResults,
-                                                      style: const TextStyle(
-                                                        color: Colors.white,
-                                                      ),
                                                     ),
                                                   ),
                                                 ),
@@ -476,39 +424,46 @@ class CircuitScreen extends StatelessWidget {
                                   )
                                 : Container(),
                             snapshot.data!['curatedSection'] != null
-                                ? SingleChildScrollView(
-                                    scrollDirection: Axis.horizontal,
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        for (Map article in snapshot
-                                            .data!['curatedSection']['items'])
-                                          NewsItem(
-                                            News(
-                                              article['id'],
-                                              article['articleType'],
-                                              article['slug'],
-                                              article['title'],
-                                              article['metaDescription'] ?? ' ',
-                                              DateTime.parse(
-                                                  article['updatedAt']),
-                                              useDataSaverMode
-                                                  ? article['thumbnail']
-                                                                  ['image']
-                                                              ['renditions'] !=
-                                                          null
-                                                      ? article['thumbnail']
-                                                              ['image']
-                                                          ['renditions']['2col']
-                                                      : article['thumbnail']
-                                                              ['image']['url'] +
-                                                          '.transform/2col-retina/image.jpg'
-                                                  : article['thumbnail']
-                                                      ['image']['url'],
+                                ? Padding(
+                                    padding: EdgeInsets.only(left: 10),
+                                    child: SingleChildScrollView(
+                                      scrollDirection: Axis.horizontal,
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          for (Map article in snapshot
+                                              .data!['curatedSection']['items'])
+                                            NewsItem(
+                                              News(
+                                                article['id'],
+                                                article['articleType'],
+                                                article['slug'],
+                                                article['title'],
+                                                article['metaDescription'] ??
+                                                    ' ',
+                                                DateTime.parse(
+                                                    article['updatedAt']),
+                                                useDataSaverMode
+                                                    ? article['thumbnail']
+                                                                    ['image'][
+                                                                'renditions'] !=
+                                                            null
+                                                        ? article['thumbnail']
+                                                                    ['image']
+                                                                ['renditions']
+                                                            ['2col']
+                                                        : article['thumbnail']
+                                                                    ['image']
+                                                                ['url'] +
+                                                            '.transform/2col-retina/image.jpg'
+                                                    : article['thumbnail']
+                                                        ['image']['url'],
+                                              ),
+                                              true,
                                             ),
-                                            true,
-                                          ),
-                                      ],
+                                          SizedBox(width: 5),
+                                        ],
+                                      ),
                                     ),
                                   )
                                 : Container(),
@@ -537,20 +492,12 @@ class CircuitScreen extends StatelessWidget {
                                             Text(
                                               snapshot.data!.keys
                                                   .elementAt(index),
-                                              style: TextStyle(
-                                                color: useDarkMode
-                                                    ? Colors.white
-                                                    : Colors.black,
-                                              ),
                                               textAlign: TextAlign.center,
                                             ),
                                             Text(
                                               snapshot.data![snapshot.data!.keys
                                                   .elementAt(index)],
                                               style: TextStyle(
-                                                color: useDarkMode
-                                                    ? Colors.white
-                                                    : Colors.black,
                                                 fontSize: 25,
                                                 fontWeight: FontWeight.w500,
                                               ),
@@ -586,36 +533,52 @@ class CircuitScreen extends StatelessWidget {
                                         styleSheet: MarkdownStyleSheet(
                                           textAlign: WrapAlignment.spaceBetween,
                                           strong: TextStyle(
-                                            color:
-                                                Theme.of(context).primaryColor,
+                                            color: useDarkMode
+                                                ? HSLColor.fromColor(
+                                                    Theme.of(context)
+                                                        .colorScheme
+                                                        .onPrimary,
+                                                  )
+                                                    .withLightness(0.35)
+                                                    .toColor()
+                                                : Theme.of(context)
+                                                    .colorScheme
+                                                    .onPrimary,
                                             fontSize: 20,
                                             fontWeight: FontWeight.w500,
                                           ),
                                           p: TextStyle(
                                             fontSize: 14,
-                                            color: useDarkMode
-                                                ? Colors.white
-                                                : Colors.black,
                                           ),
                                           pPadding: const EdgeInsets.only(
                                             top: 10,
                                             bottom: 10,
                                           ),
-                                          h1: TextStyle(
-                                            color: useDarkMode
-                                                ? Colors.white
-                                                : Colors.black,
-                                          ),
-                                          h2: TextStyle(
-                                            color: useDarkMode
-                                                ? Colors.white
-                                                : Colors.black,
-                                          ),
                                           a: TextStyle(
-                                            color:
-                                                Theme.of(context).primaryColor,
+                                            color: useDarkMode
+                                                ? HSLColor.fromColor(
+                                                    Theme.of(context)
+                                                        .colorScheme
+                                                        .onPrimary,
+                                                  )
+                                                    .withLightness(0.35)
+                                                    .toColor()
+                                                : Theme.of(context)
+                                                    .colorScheme
+                                                    .onPrimary,
                                             decoration:
                                                 TextDecoration.underline,
+                                            decorationColor: useDarkMode
+                                                ? HSLColor.fromColor(
+                                                    Theme.of(context)
+                                                        .colorScheme
+                                                        .onPrimary,
+                                                  )
+                                                    .withLightness(0.35)
+                                                    .toColor()
+                                                : Theme.of(context)
+                                                    .colorScheme
+                                                    .onPrimary,
                                             fontWeight: FontWeight.normal,
                                           ),
                                         ),
@@ -634,9 +597,8 @@ class CircuitScreen extends StatelessWidget {
                             child: Container(
                               width: double.infinity,
                               decoration: BoxDecoration(
-                                color: useDarkMode
-                                    ? const Color(0xff1d1d28)
-                                    : Colors.grey.shade400,
+                                color:
+                                    Theme.of(context).colorScheme.onSecondary,
                                 borderRadius: BorderRadius.circular(5),
                               ),
                               child: Padding(
@@ -646,18 +608,10 @@ class CircuitScreen extends StatelessWidget {
                                   children: [
                                     Text(
                                       AppLocalizations.of(context)!.viewResults,
-                                      style: TextStyle(
-                                        color: useDarkMode
-                                            ? Colors.white
-                                            : Colors.black,
-                                      ),
                                     ),
                                     const Spacer(),
                                     Icon(
                                       Icons.arrow_forward_rounded,
-                                      color: useDarkMode
-                                          ? Colors.white
-                                          : Colors.black,
                                     ),
                                   ],
                                 ),
@@ -724,9 +678,6 @@ class CircuitScreen extends StatelessWidget {
                                                 child: Text(
                                                   snapshot.data!['headline'],
                                                   style: TextStyle(
-                                                    color: useDarkMode
-                                                        ? Colors.white
-                                                        : Colors.black,
                                                     fontSize: 20,
                                                     fontWeight: FontWeight.w500,
                                                   ),
@@ -740,9 +691,9 @@ class CircuitScreen extends StatelessWidget {
                                             child: Container(
                                               width: double.infinity,
                                               decoration: BoxDecoration(
-                                                color: useDarkMode
-                                                    ? const Color(0xff1d1d28)
-                                                    : Colors.grey.shade400,
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .onSecondary,
                                                 borderRadius:
                                                     BorderRadius.circular(5),
                                               ),
@@ -760,19 +711,11 @@ class CircuitScreen extends StatelessWidget {
                                                       AppLocalizations.of(
                                                               context)!
                                                           .viewResults,
-                                                      style: TextStyle(
-                                                        color: useDarkMode
-                                                            ? Colors.white
-                                                            : Colors.black,
-                                                      ),
                                                     ),
                                                     const Spacer(),
                                                     Icon(
                                                       Icons
                                                           .arrow_forward_rounded,
-                                                      color: useDarkMode
-                                                          ? Colors.white
-                                                          : Colors.black,
                                                     ),
                                                   ],
                                                 ),
@@ -801,11 +744,9 @@ class CircuitScreen extends StatelessWidget {
                                                   child: Container(
                                                     width: double.infinity,
                                                     decoration: BoxDecoration(
-                                                      color: useDarkMode
-                                                          ? const Color(
-                                                              0xff1d1d28)
-                                                          : Colors
-                                                              .grey.shade400,
+                                                      color: Theme.of(context)
+                                                          .colorScheme
+                                                          .onSecondary,
                                                       borderRadius:
                                                           BorderRadius.circular(
                                                         5,
@@ -825,20 +766,11 @@ class CircuitScreen extends StatelessWidget {
                                                             AppLocalizations.of(
                                                                     context)!
                                                                 .viewHighlights,
-                                                            style: TextStyle(
-                                                              color: useDarkMode
-                                                                  ? Colors.white
-                                                                  : Colors
-                                                                      .black,
-                                                            ),
                                                           ),
                                                           const Spacer(),
                                                           Icon(
                                                             Icons
                                                                 .arrow_forward_rounded,
-                                                            color: useDarkMode
-                                                                ? Colors.white
-                                                                : Colors.black,
                                                           ),
                                                         ],
                                                       ),
@@ -866,9 +798,9 @@ class CircuitScreen extends StatelessWidget {
                                             child: Container(
                                               width: double.infinity,
                                               decoration: BoxDecoration(
-                                                color: useDarkMode
-                                                    ? const Color(0xff1d1d28)
-                                                    : Colors.grey.shade400,
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .onSecondary,
                                                 borderRadius:
                                                     BorderRadius.circular(5),
                                               ),
@@ -886,18 +818,10 @@ class CircuitScreen extends StatelessWidget {
                                                       AppLocalizations.of(
                                                               context)!
                                                           .grandPrixMap,
-                                                      style: TextStyle(
-                                                        color: useDarkMode
-                                                            ? Colors.white
-                                                            : Colors.black,
-                                                      ),
                                                     ),
                                                     const Spacer(),
                                                     Icon(
                                                       Icons.map_outlined,
-                                                      color: useDarkMode
-                                                          ? Colors.white
-                                                          : Colors.black,
                                                     ),
                                                   ],
                                                 ),
@@ -918,13 +842,12 @@ class CircuitScreen extends StatelessWidget {
                                                   10,
                                                 ),
                                                 child: Container(
-                                                  height: 210,
+                                                  height: 240,
                                                   decoration: BoxDecoration(
                                                     border: Border.all(
-                                                      color: useDarkMode
-                                                          ? const Color(
-                                                              0xff1d1d28)
-                                                          : Colors.grey.shade50,
+                                                      color: Theme.of(context)
+                                                          .colorScheme
+                                                          .onSecondary,
                                                     ),
                                                     borderRadius:
                                                         BorderRadius.circular(
@@ -943,9 +866,6 @@ class CircuitScreen extends StatelessWidget {
                                                               [
                                                               'meetingCountryName'],
                                                           style: TextStyle(
-                                                            color: useDarkMode
-                                                                ? Colors.white
-                                                                : Colors.black,
                                                             fontSize: 16,
                                                             fontWeight:
                                                                 FontWeight.w500,
@@ -957,9 +877,6 @@ class CircuitScreen extends StatelessWidget {
                                                                 context)!
                                                             .race,
                                                         style: TextStyle(
-                                                          color: useDarkMode
-                                                              ? Colors.white
-                                                              : Colors.black,
                                                           fontSize: 14,
                                                         ),
                                                       ),
@@ -978,14 +895,6 @@ class CircuitScreen extends StatelessWidget {
                                                                 AppLocalizations.of(
                                                                         context)!
                                                                     .positionAbbreviation,
-                                                                style:
-                                                                    TextStyle(
-                                                                  color: useDarkMode
-                                                                      ? Colors
-                                                                          .white
-                                                                      : Colors
-                                                                          .black,
-                                                                ),
                                                               ),
                                                             ),
                                                             const Spacer(),
@@ -995,14 +904,6 @@ class CircuitScreen extends StatelessWidget {
                                                                 AppLocalizations.of(
                                                                         context)!
                                                                     .time,
-                                                                style:
-                                                                    TextStyle(
-                                                                  color: useDarkMode
-                                                                      ? Colors
-                                                                          .white
-                                                                      : Colors
-                                                                          .black,
-                                                                ),
                                                               ),
                                                             ),
                                                           ],
@@ -1030,11 +931,6 @@ class CircuitScreen extends StatelessWidget {
                                                                           'positionNumber'],
                                                                   style:
                                                                       TextStyle(
-                                                                    color: useDarkMode
-                                                                        ? Colors
-                                                                            .white
-                                                                        : Colors
-                                                                            .black,
                                                                     fontWeight:
                                                                         FontWeight
                                                                             .w500,
@@ -1069,14 +965,6 @@ class CircuitScreen extends StatelessWidget {
                                                                   driverResults[
                                                                           'driverTLA']
                                                                       .toString(),
-                                                                  style:
-                                                                      TextStyle(
-                                                                    color: useDarkMode
-                                                                        ? Colors
-                                                                            .white
-                                                                        : Colors
-                                                                            .black,
-                                                                  ),
                                                                 ),
                                                               ),
                                                               const Spacer(),
@@ -1089,14 +977,6 @@ class CircuitScreen extends StatelessWidget {
                                                                       ? '+${driverResults['gapToLeader']}'
                                                                       : driverResults[
                                                                           'raceTime'],
-                                                                  style:
-                                                                      TextStyle(
-                                                                    color: useDarkMode
-                                                                        ? Colors
-                                                                            .white
-                                                                        : Colors
-                                                                            .black,
-                                                                  ),
                                                                 ),
                                                               ),
                                                             ],
@@ -1161,11 +1041,6 @@ class CircuitScreen extends StatelessWidget {
                                                                   AppLocalizations.of(
                                                                           context)!
                                                                       .viewResults,
-                                                                  style:
-                                                                      const TextStyle(
-                                                                    color: Colors
-                                                                        .white,
-                                                                  ),
                                                                 ),
                                                               ),
                                                             ),
@@ -1178,54 +1053,58 @@ class CircuitScreen extends StatelessWidget {
                                               )
                                             : Container(),
                                         snapshot.data!['curatedSection'] != null
-                                            ? SingleChildScrollView(
-                                                scrollDirection:
-                                                    Axis.horizontal,
-                                                child: Row(
-                                                  mainAxisSize:
-                                                      MainAxisSize.min,
-                                                  children: [
-                                                    for (Map article in snapshot
-                                                                .data![
-                                                            'curatedSection']
-                                                        ['items'])
-                                                      NewsItem(
-                                                        News(
-                                                          article['id'],
-                                                          article[
-                                                              'articleType'],
-                                                          article['slug'],
-                                                          article['title'],
-                                                          article['metaDescription'] ??
-                                                              ' ',
-                                                          DateTime.parse(
-                                                              article[
-                                                                  'updatedAt']),
-                                                          useDataSaverMode
-                                                              ? article['thumbnail']
-                                                                              ['image']
-                                                                          [
-                                                                          'renditions'] !=
-                                                                      null
-                                                                  ? article['thumbnail']
-                                                                              [
-                                                                              'image']
-                                                                          [
-                                                                          'renditions']
-                                                                      ['2col']
-                                                                  : article['thumbnail']
-                                                                              [
-                                                                              'image']
-                                                                          [
-                                                                          'url'] +
-                                                                      '.transform/2col-retina/image.jpg'
-                                                              : article['thumbnail']
-                                                                      ['image']
-                                                                  ['url'],
+                                            ? Padding(
+                                                padding: const EdgeInsets.only(
+                                                  left: 10,
+                                                ),
+                                                child: SingleChildScrollView(
+                                                  scrollDirection:
+                                                      Axis.horizontal,
+                                                  child: Row(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: [
+                                                      for (Map article in snapshot
+                                                                  .data![
+                                                              'curatedSection']
+                                                          ['items'])
+                                                        NewsItem(
+                                                          News(
+                                                            article['id'],
+                                                            article[
+                                                                'articleType'],
+                                                            article['slug'],
+                                                            article['title'],
+                                                            article['metaDescription'] ??
+                                                                ' ',
+                                                            DateTime.parse(
+                                                                article[
+                                                                    'updatedAt']),
+                                                            useDataSaverMode
+                                                                ? article['thumbnail']['image']
+                                                                            [
+                                                                            'renditions'] !=
+                                                                        null
+                                                                    ? article['thumbnail']
+                                                                                ['image']
+                                                                            [
+                                                                            'renditions']
+                                                                        ['2col']
+                                                                    : article['thumbnail']
+                                                                                ['image']
+                                                                            [
+                                                                            'url'] +
+                                                                        '.transform/2col-retina/image.jpg'
+                                                                : article['thumbnail']
+                                                                        [
+                                                                        'image']
+                                                                    ['url'],
+                                                          ),
+                                                          true,
                                                         ),
-                                                        true,
-                                                      ),
-                                                  ],
+                                                      SizedBox(width: 5),
+                                                    ],
+                                                  ),
                                                 ),
                                               )
                                             : Container(),
@@ -1263,13 +1142,6 @@ class CircuitScreen extends StatelessWidget {
                                                                   .data!.keys
                                                                   .elementAt(
                                                                       index),
-                                                              style: TextStyle(
-                                                                color: useDarkMode
-                                                                    ? Colors
-                                                                        .white
-                                                                    : Colors
-                                                                        .black,
-                                                              ),
                                                               textAlign:
                                                                   TextAlign
                                                                       .center,
@@ -1281,11 +1153,6 @@ class CircuitScreen extends StatelessWidget {
                                                                       .elementAt(
                                                                           index)],
                                                               style: TextStyle(
-                                                                color: useDarkMode
-                                                                    ? Colors
-                                                                        .white
-                                                                    : Colors
-                                                                        .black,
                                                                 fontSize: 25,
                                                                 fontWeight:
                                                                     FontWeight
@@ -1340,9 +1207,6 @@ class CircuitScreen extends StatelessWidget {
                                                           ),
                                                           p: TextStyle(
                                                             fontSize: 14,
-                                                            color: useDarkMode
-                                                                ? Colors.white
-                                                                : Colors.black,
                                                           ),
                                                           pPadding:
                                                               const EdgeInsets
@@ -1350,23 +1214,40 @@ class CircuitScreen extends StatelessWidget {
                                                             top: 10,
                                                             bottom: 10,
                                                           ),
-                                                          h1: TextStyle(
-                                                            color: useDarkMode
-                                                                ? Colors.white
-                                                                : Colors.black,
-                                                          ),
-                                                          h2: TextStyle(
-                                                            color: useDarkMode
-                                                                ? Colors.white
-                                                                : Colors.black,
-                                                          ),
                                                           a: TextStyle(
-                                                            color: Theme.of(
-                                                                    context)
-                                                                .primaryColor,
+                                                            color: useDarkMode
+                                                                ? HSLColor
+                                                                        .fromColor(
+                                                                    Theme.of(
+                                                                            context)
+                                                                        .colorScheme
+                                                                        .onPrimary,
+                                                                  )
+                                                                    .withLightness(
+                                                                        0.35)
+                                                                    .toColor()
+                                                                : Theme.of(
+                                                                        context)
+                                                                    .colorScheme
+                                                                    .onPrimary,
                                                             decoration:
                                                                 TextDecoration
                                                                     .underline,
+                                                            decorationColor:
+                                                                useDarkMode
+                                                                    ? HSLColor
+                                                                            .fromColor(
+                                                                        Theme.of(context)
+                                                                            .colorScheme
+                                                                            .onPrimary,
+                                                                      )
+                                                                        .withLightness(
+                                                                            0.35)
+                                                                        .toColor()
+                                                                    : Theme.of(
+                                                                            context)
+                                                                        .colorScheme
+                                                                        .onPrimary,
                                                             fontWeight:
                                                                 FontWeight
                                                                     .normal,
@@ -1388,9 +1269,9 @@ class CircuitScreen extends StatelessWidget {
                                         child: Container(
                                           width: double.infinity,
                                           decoration: BoxDecoration(
-                                            color: useDarkMode
-                                                ? const Color(0xff1d1d28)
-                                                : Colors.grey.shade400,
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onSecondary,
                                             borderRadius:
                                                 BorderRadius.circular(5),
                                           ),
@@ -1406,18 +1287,10 @@ class CircuitScreen extends StatelessWidget {
                                                 Text(
                                                   AppLocalizations.of(context)!
                                                       .viewResults,
-                                                  style: TextStyle(
-                                                    color: useDarkMode
-                                                        ? Colors.white
-                                                        : Colors.black,
-                                                  ),
                                                 ),
                                                 const Spacer(),
                                                 Icon(
                                                   Icons.arrow_forward_rounded,
-                                                  color: useDarkMode
-                                                      ? Colors.white
-                                                      : Colors.black,
                                                 ),
                                               ],
                                             ),
@@ -1563,8 +1436,10 @@ class TrackLayoutImage extends StatelessWidget {
                                       alignment: Alignment.topRight,
                                       child: IconButton(
                                         onPressed: () => Navigator.pop(context),
-                                        icon: const Icon(Icons.close_rounded,
-                                            color: Colors.white),
+                                        icon: const Icon(
+                                          Icons.close_rounded,
+                                          color: Colors.white,
+                                        ),
                                       ),
                                     ),
                                   ],

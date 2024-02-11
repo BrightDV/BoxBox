@@ -47,7 +47,7 @@ class LoadingIndicatorUtil extends StatelessWidget {
                 child: LoadingIndicator(
                   indicatorType: Indicator.values[15],
                   colors: [
-                    Theme.of(context).primaryColor,
+                    Theme.of(context).colorScheme.onPrimary, // TODO: HSL
                   ],
                   strokeWidth: 2.0,
                 ),

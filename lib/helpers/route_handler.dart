@@ -27,6 +27,8 @@ import 'package:boxbox/helpers/request_error.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+// TODO: open *only* formula1.com links
+
 class HandleRoute {
   static Route? handleRoute(String? url) {
     if (url == null) return null;

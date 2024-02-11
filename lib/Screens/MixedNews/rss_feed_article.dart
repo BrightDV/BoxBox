@@ -21,7 +21,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -104,10 +103,9 @@ class _RssFeedArticleScreenState extends State<RssFeedArticleScreen> {
 
   @override
   Widget build(BuildContext context) {
-    bool useDarkMode =
-        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.onPrimary,
         actions: [
           IconButton(
             onPressed: () => launchUrl(
@@ -136,9 +134,6 @@ class _RssFeedArticleScreenState extends State<RssFeedArticleScreen> {
           ),
         ],
       ),
-      backgroundColor: useDarkMode
-          ? Theme.of(context).scaffoldBackgroundColor
-          : Colors.white,
       body: InAppWebView(
         initialUrlRequest: URLRequest(
           url: WebUri(

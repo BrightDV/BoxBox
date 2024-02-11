@@ -47,7 +47,7 @@ class _EditOrderScreenState extends State<EditOrderScreen> {
         'Thecheckeredflag.co.uk',
         'Motorsportweek.com',
         'Crash.net',
-        'Pitpass.com',
+        //'Pitpass.com', // TODO: fix Pitpass
       ],
     ) as List;
     return Scaffold(
@@ -55,10 +55,8 @@ class _EditOrderScreenState extends State<EditOrderScreen> {
         title: Text(
           AppLocalizations.of(context)!.edit,
         ),
+        backgroundColor: Theme.of(context).colorScheme.onPrimary,
       ),
-      backgroundColor: useDarkMode
-          ? Theme.of(context).scaffoldBackgroundColor
-          : Colors.white,
       body: Theme(
         data: ThemeData(
           canvasColor: Colors.transparent,

@@ -33,15 +33,11 @@ class ScheduleScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool useDarkMode =
-        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     return DefaultTabController(
       length: 2,
       initialIndex: 1,
       child: Scaffold(
-        backgroundColor: useDarkMode
-            ? Theme.of(context).scaffoldBackgroundColor
-            : Colors.white,
+        extendBodyBehindAppBar: true,
         body: TabBarView(
           children: [
             ScheduleWidget(
@@ -60,8 +56,8 @@ class ScheduleScreen extends StatelessWidget {
             height: 50,
             child: Card(
               elevation: 3,
-              color: Theme.of(context).primaryColor,
               child: TabBar(
+                dividerColor: Colors.transparent,
                 tabs: [
                   Text(
                     AppLocalizations.of(context)!.previous,
@@ -152,13 +148,10 @@ class EmptySchedule extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool useDarkMode =
-        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     return Center(
       child: Text(
         AppLocalizations.of(context)!.nothingHere,
         style: TextStyle(
-          color: useDarkMode ? Colors.white : Colors.black,
           fontWeight: FontWeight.w500,
           fontSize: 30,
         ),

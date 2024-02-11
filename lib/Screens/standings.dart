@@ -43,6 +43,7 @@ class StandingsScreen extends StatelessWidget {
       length: 2,
       initialIndex: switchToTeamStandings != null ? 1 : 0,
       child: Scaffold(
+        extendBodyBehindAppBar: true,
         body: TabBarView(
           children: [
             DriversStandingsWidget(scrollController: scrollController),
@@ -56,6 +57,7 @@ class StandingsScreen extends StatelessWidget {
             child: Card(
               elevation: 3,
               child: TabBar(
+                dividerColor: Colors.transparent,
                 tabs: [
                   Text(
                     AppLocalizations.of(context)!.drivers,

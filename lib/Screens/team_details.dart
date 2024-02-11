@@ -41,8 +41,6 @@ class TeamDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool useDarkMode =
-        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -54,7 +52,6 @@ class TeamDetailsScreen extends StatelessWidget {
             ),
           ),
           bottom: TabBar(
-            indicatorColor: Colors.white,
             tabs: [
               Tab(
                 child: Text(
@@ -74,10 +71,8 @@ class TeamDetailsScreen extends StatelessWidget {
               ),
             ],
           ),
+          backgroundColor: Theme.of(context).colorScheme.onPrimary,
         ),
-        backgroundColor: useDarkMode
-            ? Theme.of(context).scaffoldBackgroundColor
-            : Colors.white,
         body: TabBarView(
           children: [
             Padding(
@@ -138,7 +133,6 @@ class TeamDetailsFragment extends StatelessWidget {
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontWeight: FontWeight.w600,
-                      color: useDarkMode ? Colors.white : Colors.black,
                     ),
                   ),
                 ),
@@ -158,7 +152,6 @@ class TeamDetailsFragment extends StatelessWidget {
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontWeight: FontWeight.w600,
-                      color: useDarkMode ? Colors.white : Colors.black,
                     ),
                   ),
                 ),
@@ -188,7 +181,6 @@ class TeamDetailsFragment extends StatelessWidget {
                           teamDetails["teamStats"]["attributes"][i],
                           textAlign: TextAlign.start,
                           style: TextStyle(
-                            color: useDarkMode ? Colors.white : Colors.black,
                             fontSize: 14,
                           ),
                         ),
@@ -198,9 +190,7 @@ class TeamDetailsFragment extends StatelessWidget {
                         child: Text(
                           teamDetails["teamStats"]["values"][i],
                           textAlign: TextAlign.start,
-                          style: TextStyle(
-                            color: useDarkMode ? Colors.white : Colors.black,
-                          ),
+                          style: TextStyle(),
                         ),
                       ),
                     ],
@@ -214,7 +204,6 @@ class TeamDetailsFragment extends StatelessWidget {
             Text(
               AppLocalizations.of(context)!.news,
               style: TextStyle(
-                color: useDarkMode ? Colors.white : Colors.black,
                 fontSize: 18,
               ),
             ),
@@ -269,27 +258,30 @@ class TeamDetailsFragment extends StatelessWidget {
           ],
         ),
         Padding(
-          padding: const EdgeInsets.only(top: 15),
+          padding: const EdgeInsets.only(top: 15, left: 5, right: 5),
           child: MarkdownBody(
             data: teamDetails["information"].join("\n"),
+            fitContent: false,
             styleSheet: MarkdownStyleSheet(
-              p: TextStyle(
-                color: useDarkMode ? Colors.white : Colors.black,
-              ),
+              p: TextStyle(),
               pPadding: const EdgeInsets.only(
                 top: 10,
                 bottom: 10,
               ),
               a: const TextStyle(fontSize: 0),
               h1: TextStyle(
-                color: useDarkMode ? Colors.white : Colors.black,
                 fontWeight: FontWeight.w500,
               ),
               h3: TextStyle(
-                color: Theme.of(context).primaryColor,
+                color: useDarkMode
+                    ? HSLColor.fromColor(
+                        Theme.of(context).colorScheme.onPrimary,
+                      ).withLightness(0.35).toColor()
+                    : Theme.of(context).colorScheme.onPrimary,
                 fontWeight: FontWeight.w500,
                 fontSize: 16,
               ),
+              textAlign: WrapAlignment.spaceEvenly,
             ),
           ),
         ),
@@ -302,7 +294,6 @@ class TeamDetailsFragment extends StatelessWidget {
                 child: Text(
                   AppLocalizations.of(context)!.gallery,
                   style: TextStyle(
-                    color: useDarkMode ? Colors.white : Colors.black,
                     fontSize: 18,
                   ),
                 ),
@@ -322,7 +313,6 @@ class TeamDetailsFragment extends StatelessWidget {
                           child: Text(
                             teamDetails["medias"]["captions"][i].toString(),
                             style: TextStyle(
-                              color: useDarkMode ? Colors.white : Colors.black,
                               fontSize: 12,
                             ),
                             textAlign: TextAlign.justify,
@@ -332,7 +322,7 @@ class TeamDetailsFragment extends StatelessWidget {
                     ),
                 ],
                 options: CarouselOptions(
-                  height: 350,
+                  height: 351,
                   autoPlay: true,
                   viewportFraction: 0.85,
                   autoPlayInterval: const Duration(seconds: 7),

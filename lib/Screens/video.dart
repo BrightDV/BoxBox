@@ -78,10 +78,8 @@ class _VideoScreenState extends State<VideoScreen> {
             ),
           ),
         ],
+        backgroundColor: Theme.of(context).colorScheme.onPrimary,
       ),
-      backgroundColor: useDarkMode
-          ? Theme.of(context).scaffoldBackgroundColor
-          : Colors.white,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -128,7 +126,6 @@ class _VideoScreenState extends State<VideoScreen> {
             child: Text(
               video.caption,
               style: TextStyle(
-                color: useDarkMode ? Colors.white : Colors.black,
                 fontFamily: fontUsedInArticles,
                 fontSize: 22,
                 fontWeight: FontWeight.w500,
@@ -140,8 +137,6 @@ class _VideoScreenState extends State<VideoScreen> {
             child: Text(
               video.description,
               style: TextStyle(
-                color:
-                    useDarkMode ? Colors.grey.shade400 : Colors.grey.shade600,
                 fontFamily: fontUsedInArticles,
                 fontSize: 17,
               ),

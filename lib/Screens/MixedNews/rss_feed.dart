@@ -44,17 +44,12 @@ class RssFeedScreen extends StatefulWidget {
 class _RssFeedScreenState extends State<RssFeedScreen> {
   @override
   Widget build(BuildContext context) {
-    bool useDarkMode =
-        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
-
     return Scaffold(
-      backgroundColor: useDarkMode
-          ? Theme.of(context).scaffoldBackgroundColor
-          : Colors.white,
       appBar: AppBar(
         title: Text(
           widget.feedTitle,
         ),
+        backgroundColor: Theme.of(context).colorScheme.onPrimary,
       ),
       body: FutureBuilder<Map<String, dynamic>>(
         future: RssFeeds().getFeedArticles(
@@ -95,7 +90,7 @@ class RssFeedItemsList extends StatelessWidget {
 
       showMenu(
         context: context,
-        color: useDarkMode ? const Color(0xff1d1d28) : Colors.white,
+        //color: useDarkMode ? const Color(0xff1d1d28) : Colors.white,
         items: <PopupMenuEntry<int>>[
           PopupMenuItem(
             value: 0,
@@ -103,7 +98,6 @@ class RssFeedItemsList extends StatelessWidget {
               children: [
                 Icon(
                   Icons.language_outlined,
-                  color: useDarkMode ? Colors.white : Colors.black,
                 ),
                 const Padding(
                   padding: EdgeInsets.all(5),
@@ -111,7 +105,6 @@ class RssFeedItemsList extends StatelessWidget {
                 Text(
                   AppLocalizations.of(context)!.openInBrowser,
                   style: TextStyle(
-                    color: useDarkMode ? Colors.white : Colors.black,
                     fontSize: 14,
                   ),
                 ),
@@ -124,7 +117,6 @@ class RssFeedItemsList extends StatelessWidget {
               children: [
                 Icon(
                   Icons.share_outlined,
-                  color: useDarkMode ? Colors.white : Colors.black,
                 ),
                 const Padding(
                   padding: EdgeInsets.all(5),
@@ -132,7 +124,6 @@ class RssFeedItemsList extends StatelessWidget {
                 Text(
                   AppLocalizations.of(context)!.share,
                   style: TextStyle(
-                    color: useDarkMode ? Colors.white : Colors.black,
                     fontSize: 14,
                   ),
                 ),
@@ -140,8 +131,10 @@ class RssFeedItemsList extends StatelessWidget {
             ),
           ),
         ],
-        position: RelativeRect.fromRect(tapPosition & const Size(40, 40),
-            Offset.zero & overlay.semanticBounds.size),
+        position: RelativeRect.fromRect(
+          tapPosition & const Size(40, 40),
+          Offset.zero & overlay.semanticBounds.size,
+        ),
       ).then<void>(
         (int? delta) {
           if (delta == null) return;
@@ -167,7 +160,6 @@ class RssFeedItemsList extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15.0),
           ),
-          color: useDarkMode ? const Color(0xff1d1d28) : Colors.white,
           child: InkWell(
             onTap: () => Navigator.push(
               context,
@@ -260,7 +252,6 @@ class RssFeedItemsList extends StatelessWidget {
                   title: Text(
                     snapshot.data!['feedArticles'][index].title!,
                     style: TextStyle(
-                      color: useDarkMode ? Colors.white : Colors.black,
                       fontSize: 18,
                       fontWeight: FontWeight.w500,
                     ),

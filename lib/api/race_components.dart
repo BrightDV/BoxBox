@@ -141,9 +141,8 @@ class RaceListItem extends StatelessWidget {
                       color: useDarkMode
                           ? index % 2 == 0
                               ? HSLColor.fromColor(
-                                      Theme.of(context).colorScheme.background)
-                                  .withLightness(0.2)
-                                  .toColor()
+                                  Theme.of(context).colorScheme.background,
+                                ).withLightness(0.2).toColor()
                               : Theme.of(context).colorScheme.secondaryContainer
                           : const Color.fromARGB(255, 136, 135, 135),
                     ),

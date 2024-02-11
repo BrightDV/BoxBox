@@ -260,7 +260,6 @@ class WidgetsList extends StatelessWidget {
                           padding: const EdgeInsets.all(7),
                           child: Text(
                             tag['fields']['tagName'],
-                            
                           ),
                         ),
                       ),
@@ -1437,8 +1436,14 @@ class WidgetsList extends StatelessWidget {
               width: double.infinity,
               decoration: BoxDecoration(
                 color: useDarkMode
-                    ? const Color(0xff1d1d28)
-                    : Colors.grey.shade400,
+                    ? HSLColor.fromColor(
+                        Theme.of(context).colorScheme.background,
+                      ).withLightness(0.2).toColor()
+                    : HSLColor.fromColor(
+                        Theme.of(context)
+                            .colorScheme
+                            .background, // TODO: update light mode
+                      ).withLightness(0.2).toColor(),
                 borderRadius: BorderRadius.circular(5),
               ),
               child: Padding(
@@ -1467,7 +1472,11 @@ class WidgetsList extends StatelessWidget {
                           Text(
                             article.authorDetails["fullName"],
                             style: TextStyle(
-                              color: Theme.of(context).primaryColor,
+                              color: useDarkMode
+                                  ? HSLColor.fromColor(
+                                      Theme.of(context).colorScheme.onPrimary,
+                                    ).withLightness(0.35).toColor()
+                                  : Theme.of(context).colorScheme.onPrimary,
                               fontWeight: FontWeight.w500,
                               fontSize: 14,
                             ),

@@ -45,9 +45,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     return Scaffold(
-      backgroundColor: useDarkMode
-          ? Theme.of(context).scaffoldBackgroundColor
-          : Colors.white,
       appBar: AppBar(
         title: Text(
           AppLocalizations.of(context)!.settings,
@@ -55,6 +52,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             fontWeight: FontWeight.w600,
           ),
         ),
+        backgroundColor: Theme.of(context).colorScheme.onPrimary,
       ),
       body: SingleChildScrollView(
         child: Stack(
@@ -62,7 +60,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                AppearanceCard(_settingsSetState),
+                AppearanceCard(),
                 PlayerCard(useDarkMode),
                 OtherCard(_settingsSetState),
               ],
@@ -75,8 +73,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 }
 
 class AppearanceCard extends StatefulWidget {
-  final Function update;
-  const AppearanceCard(this.update, {Key? key}) : super(key: key);
+  const AppearanceCard({Key? key}) : super(key: key);
 
   @override
   State<AppearanceCard> createState() => _AppearanceCardState();
@@ -155,7 +152,6 @@ class _AppearanceCardState extends State<AppearanceCard> {
           child: Text(
             AppLocalizations.of(context)!.appearance,
             style: TextStyle(
-              color: useDarkMode ? Colors.white : Colors.black,
               fontWeight: FontWeight.w500,
               fontSize: 20,
             ),
@@ -164,16 +160,10 @@ class _AppearanceCardState extends State<AppearanceCard> {
         ListTile(
           title: Text(
             AppLocalizations.of(context)!.theme,
-            style: TextStyle(
-              color: useDarkMode ? Colors.white : Colors.black,
-            ),
           ),
           onTap: () {},
           trailing: DropdownButton(
             value: themeMode,
-            dropdownColor: useDarkMode
-                ? Theme.of(context).scaffoldBackgroundColor
-                : Colors.white,
             onChanged: (int? newThemeMode) {
               if (newThemeMode != null) {
                 setState(
@@ -198,7 +188,6 @@ class _AppearanceCardState extends State<AppearanceCard> {
                       themeMode = newThemeMode;
                       useDarkMode = newValue;
                     });
-                    widget.update();
                   },
                 );
               }
@@ -211,7 +200,6 @@ class _AppearanceCardState extends State<AppearanceCard> {
                     themeOptions[value],
                     style: TextStyle(
                       fontSize: 12,
-                      color: useDarkMode ? Colors.white : Colors.black,
                     ),
                   ),
                 );
@@ -222,23 +210,16 @@ class _AppearanceCardState extends State<AppearanceCard> {
         ListTile(
           title: Text(
             AppLocalizations.of(context)!.teamColors,
-            style: TextStyle(
-              color: useDarkMode ? Colors.white : Colors.black,
-            ),
           ),
           subtitle: Text(
             AppLocalizations.of(context)!.needsRestart,
             style: TextStyle(
-              color: useDarkMode ? Colors.white : Colors.black,
               fontSize: 13,
             ),
           ),
           onTap: () {},
           trailing: DropdownButton(
             value: teamTheme,
-            dropdownColor: useDarkMode
-                ? Theme.of(context).scaffoldBackgroundColor
-                : Colors.white,
             onChanged: (String? newTeamTheme) {
               if (newTeamTheme != null) {
                 setState(
@@ -270,13 +251,23 @@ class _AppearanceCardState extends State<AppearanceCard> {
                       light: ThemeData(
                         useMaterial3: true,
                         brightness: Brightness.light,
-                        colorSchemeSeed: color,
+                        colorScheme: ColorScheme.fromSeed(
+                          seedColor: color,
+                          onPrimary: color,
+                          brightness: Brightness.light,
+                        ),
                         fontFamily: 'Formula1',
                       ),
                       dark: ThemeData(
                         useMaterial3: true,
                         brightness: Brightness.dark,
-                        colorSchemeSeed: color,
+                        colorScheme: ColorScheme.fromSeed(
+                          seedColor: color,
+                          onPrimary: HSLColor.fromColor(color)
+                              .withLightness(0.4)
+                              .toColor(),
+                          brightness: Brightness.dark,
+                        ),
                         fontFamily: 'Formula1',
                       ),
                     );
@@ -293,7 +284,6 @@ class _AppearanceCardState extends State<AppearanceCard> {
                     value!,
                     style: TextStyle(
                       fontSize: 12,
-                      color: useDarkMode ? Colors.white : Colors.black,
                     ),
                   ),
                 );
@@ -304,16 +294,10 @@ class _AppearanceCardState extends State<AppearanceCard> {
         ListTile(
           title: Text(
             AppLocalizations.of(context)!.newsLayout,
-            style: TextStyle(
-              color: useDarkMode ? Colors.white : Colors.black,
-            ),
           ),
           onTap: () {},
           trailing: DropdownButton(
             value: newsLayoutFormated,
-            dropdownColor: useDarkMode
-                ? Theme.of(context).scaffoldBackgroundColor
-                : Colors.white,
             onChanged: (newValue) {
               if (newValue != null) {
                 setState(
@@ -330,7 +314,6 @@ class _AppearanceCardState extends State<AppearanceCard> {
                     Hive.box('settings').put('newsLayout', newsLayout);
                   },
                 );
-                widget.update();
               }
             },
             items: <String>[
@@ -357,22 +340,15 @@ class _AppearanceCardState extends State<AppearanceCard> {
         ListTile(
           title: Text(
             AppLocalizations.of(context)!.font,
-            style: TextStyle(
-              color: useDarkMode ? Colors.white : Colors.black,
-            ),
           ),
           subtitle: Text(
             AppLocalizations.of(context)!.fontDescription,
             style: TextStyle(
-              color: useDarkMode ? Colors.white : Colors.black,
               fontSize: 13,
             ),
           ),
           trailing: DropdownButton(
             value: fontUsedInArticles,
-            dropdownColor: useDarkMode
-                ? Theme.of(context).scaffoldBackgroundColor
-                : Colors.white,
             onChanged: (newValue) {
               if (newValue != null) {
                 setState(
@@ -387,7 +363,6 @@ class _AppearanceCardState extends State<AppearanceCard> {
                         .put('fontUsedInArticles', fontUsedInArticles);
                   },
                 );
-                widget.update();
               }
             },
             items: <String>[
@@ -402,7 +377,6 @@ class _AppearanceCardState extends State<AppearanceCard> {
                     value,
                     style: TextStyle(
                       fontSize: 12,
-                      color: useDarkMode ? Colors.white : Colors.black,
                     ),
                   ),
                 );
@@ -440,7 +414,6 @@ class _PlayerCardState extends State<PlayerCard> {
           child: Text(
             AppLocalizations.of(context)!.player,
             style: TextStyle(
-              color: widget.useDarkMode ? Colors.white : Colors.black,
               fontWeight: FontWeight.w500,
               fontSize: 20,
             ),
@@ -449,23 +422,17 @@ class _PlayerCardState extends State<PlayerCard> {
         ListTile(
           title: Text(
             AppLocalizations.of(context)!.playerQuality,
-            style: TextStyle(
-              color: widget.useDarkMode ? Colors.white : Colors.black,
-            ),
+            style: TextStyle(),
           ),
           subtitle: Text(
             AppLocalizations.of(context)!.playerQualitySub,
             style: TextStyle(
-              color: widget.useDarkMode ? Colors.white : Colors.black,
               fontSize: 13,
             ),
           ),
           onTap: () {},
           trailing: DropdownButton(
             value: playerQuality,
-            dropdownColor: widget.useDarkMode
-                ? Theme.of(context).scaffoldBackgroundColor
-                : Colors.white,
             onChanged: (int? newValue) {
               if (newValue != null) {
                 setState(
@@ -488,7 +455,6 @@ class _PlayerCardState extends State<PlayerCard> {
                     '${value}p',
                     style: TextStyle(
                       fontSize: 12,
-                      color: widget.useDarkMode ? Colors.white : Colors.black,
                     ),
                   ),
                 );
@@ -499,23 +465,16 @@ class _PlayerCardState extends State<PlayerCard> {
         ListTile(
           title: Text(
             'Piped Proxy URL',
-            style: TextStyle(
-              color: widget.useDarkMode ? Colors.white : Colors.black,
-            ),
           ),
           subtitle: Text(
             AppLocalizations.of(context)!.pipedApiUrlSub,
             style: TextStyle(
-              color: widget.useDarkMode ? Colors.white : Colors.black,
               fontSize: 13,
             ),
           ),
           onTap: () {},
           trailing: DropdownButton(
             value: pipedApiUrl,
-            dropdownColor: widget.useDarkMode
-                ? Theme.of(context).scaffoldBackgroundColor
-                : Colors.white,
             onChanged: (String? newValue) {
               if (newValue != null) {
                 setState(
@@ -540,7 +499,6 @@ class _PlayerCardState extends State<PlayerCard> {
                     value,
                     style: TextStyle(
                       fontSize: 12,
-                      color: widget.useDarkMode ? Colors.white : Colors.black,
                     ),
                   ),
                 );
@@ -563,8 +521,6 @@ class OtherCard extends StatefulWidget {
 class _OtherCardstate extends State<OtherCard> {
   @override
   Widget build(BuildContext context) {
-    bool useDarkMode =
-        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     bool useDataSaverMode = Hive.box('settings')
         .get('useDataSaverMode', defaultValue: false) as bool;
     bool enableExperimentalFeatures = Hive.box('settings')
@@ -580,7 +536,6 @@ class _OtherCardstate extends State<OtherCard> {
           child: Text(
             AppLocalizations.of(context)!.other,
             style: TextStyle(
-              color: useDarkMode ? Colors.white : Colors.black,
               fontWeight: FontWeight.w500,
               fontSize: 20,
             ),
@@ -589,13 +544,9 @@ class _OtherCardstate extends State<OtherCard> {
         ListTile(
           title: Text(
             AppLocalizations.of(context)!.formulaYouSettings,
-            style: TextStyle(
-              color: useDarkMode ? Colors.white : Colors.black,
-            ),
           ),
           trailing: Icon(
             Icons.arrow_forward_rounded,
-            color: useDarkMode ? Colors.white : Colors.black,
           ),
           onTap: () => Navigator.push(
             context,
@@ -607,9 +558,6 @@ class _OtherCardstate extends State<OtherCard> {
         ListTile(
           title: Text(
             AppLocalizations.of(context)!.news,
-            style: TextStyle(
-              color: useDarkMode ? Colors.white : Colors.black,
-            ),
           ),
           onTap: () => Navigator.push(
             context,
@@ -621,15 +569,11 @@ class _OtherCardstate extends State<OtherCard> {
           ),
           trailing: Icon(
             Icons.arrow_forward_rounded,
-            color: useDarkMode ? Colors.white : Colors.black,
           ),
         ),
         ListTile(
           title: Text(
             AppLocalizations.of(context)!.server,
-            style: TextStyle(
-              color: useDarkMode ? Colors.white : Colors.black,
-            ),
           ),
           onTap: () => Navigator.push(
             context,
@@ -641,20 +585,15 @@ class _OtherCardstate extends State<OtherCard> {
           ),
           trailing: Icon(
             Icons.arrow_forward_rounded,
-            color: useDarkMode ? Colors.white : Colors.black,
           ),
         ),
         SwitchListTile(
           title: Text(
             AppLocalizations.of(context)!.dataSaverMode,
-            style: TextStyle(
-              color: useDarkMode ? Colors.white : Colors.black,
-            ),
           ),
           subtitle: Text(
             AppLocalizations.of(context)!.dataSaverModeSub,
             style: TextStyle(
-              color: useDarkMode ? Colors.white : Colors.black,
               fontSize: 13,
             ),
           ),
@@ -674,16 +613,15 @@ class _OtherCardstate extends State<OtherCard> {
         SwitchListTile(
           title: Text(
             AppLocalizations.of(context)!.experimentalFeatures,
-            style: TextStyle(
-              color: useDarkMode ? Colors.white : Colors.black,
-            ),
           ),
           value: enableExperimentalFeatures,
           onChanged: (bool value) {
-            setState(() {
-              enableExperimentalFeatures = value;
-              Hive.box('settings').put('enableExperimentalFeatures', value);
-            });
+            setState(
+              () {
+                enableExperimentalFeatures = value;
+                Hive.box('settings').put('enableExperimentalFeatures', value);
+              },
+            );
           },
         ),
       ],

@@ -44,12 +44,11 @@ class MainDrawer extends StatelessWidget {
         .get('enableExperimentalFeatures', defaultValue: false) as bool;
 
     return Drawer(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       child: Column(
         children: [
           DrawerHeader(
             decoration: BoxDecoration(
-              color: Theme.of(context).primaryColor,
+              color: Theme.of(context).colorScheme.onPrimary,
             ),
             child: const Center(
               child: Text(

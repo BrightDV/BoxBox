@@ -33,8 +33,6 @@ class _ServerSettingsScreenState extends State<ServerSettingsScreen> {
   @override
   Widget build(BuildContext context) {
     const String officialServer = "https://api.formula1.com";
-    bool useDarkMode =
-        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     List customServers =
         Hive.box('settings').get('customServers', defaultValue: []) as List;
     String savedServer = Hive.box('settings')
@@ -46,11 +44,14 @@ class _ServerSettingsScreenState extends State<ServerSettingsScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.server),
+        title: Text(
+          AppLocalizations.of(context)!.server,
+          style: const TextStyle(
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        backgroundColor: Theme.of(context).colorScheme.onPrimary,
       ),
-      backgroundColor: useDarkMode
-          ? Theme.of(context).scaffoldBackgroundColor
-          : Colors.white,
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -58,12 +59,8 @@ class _ServerSettingsScreenState extends State<ServerSettingsScreen> {
               value: officialServer,
               title: Text(
                 AppLocalizations.of(context)!.official,
-                style: TextStyle(
-                  color: useDarkMode ? Colors.white : Colors.black,
-                ),
               ),
               groupValue: savedServer,
-              activeColor: Theme.of(context).primaryColor,
               onChanged: (value) => setState(
                 () {
                   savedServer = value!;
@@ -78,9 +75,6 @@ class _ServerSettingsScreenState extends State<ServerSettingsScreen> {
                     context: context,
                     builder: (context) {
                       return AlertDialog(
-                        backgroundColor: useDarkMode
-                            ? Theme.of(context).scaffoldBackgroundColor
-                            : Colors.white,
                         shape: const RoundedRectangleBorder(
                           borderRadius: BorderRadius.all(
                             Radius.circular(
@@ -95,7 +89,6 @@ class _ServerSettingsScreenState extends State<ServerSettingsScreen> {
                           AppLocalizations.of(context)!.deleteCustomFeed,
                           style: TextStyle(
                             fontSize: 24.0,
-                            color: useDarkMode ? Colors.white : Colors.black,
                           ), // here
                           textAlign: TextAlign.center,
                         ),
@@ -106,10 +99,6 @@ class _ServerSettingsScreenState extends State<ServerSettingsScreen> {
                           children: <Widget>[
                             Text(
                               AppLocalizations.of(context)!.deleteUrl,
-                              style: TextStyle(
-                                color:
-                                    useDarkMode ? Colors.white : Colors.black,
-                              ),
                             ),
                           ],
                         ),
@@ -151,12 +140,8 @@ class _ServerSettingsScreenState extends State<ServerSettingsScreen> {
                     value: server,
                     title: Text(
                       server,
-                      style: TextStyle(
-                        color: useDarkMode ? Colors.white : Colors.black,
-                      ),
                     ),
                     groupValue: savedServer,
-                    activeColor: Theme.of(context).primaryColor,
                     onChanged: (value) => setState(
                       () {
                         Hive.box('settings').put('server', server);
@@ -169,13 +154,9 @@ class _ServerSettingsScreenState extends State<ServerSettingsScreen> {
             ListTile(
               title: Text(
                 AppLocalizations.of(context)!.addCustomServer,
-                style: TextStyle(
-                  color: useDarkMode ? Colors.white : Colors.black,
-                ),
               ),
               trailing: Icon(
                 Icons.add_outlined,
-                color: useDarkMode ? Colors.white : Colors.black,
               ),
               onTap: () => showDialog(
                 context: context,
@@ -184,9 +165,6 @@ class _ServerSettingsScreenState extends State<ServerSettingsScreen> {
                       TextEditingController();
                   return StatefulBuilder(
                     builder: (context, setState) => AlertDialog(
-                      backgroundColor: useDarkMode
-                          ? Theme.of(context).scaffoldBackgroundColor
-                          : Colors.white,
                       shape: const RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(
                           Radius.circular(
@@ -201,7 +179,6 @@ class _ServerSettingsScreenState extends State<ServerSettingsScreen> {
                         AppLocalizations.of(context)!.customServer,
                         style: TextStyle(
                           fontSize: 24.0,
-                          color: useDarkMode ? Colors.white : Colors.black,
                         ), // here
                         textAlign: TextAlign.center,
                       ),
@@ -215,15 +192,8 @@ class _ServerSettingsScreenState extends State<ServerSettingsScreen> {
                             decoration: InputDecoration(
                               hintText: 'https://example.com',
                               hintStyle: TextStyle(
-                                color: useDarkMode
-                                    ? Colors.grey.shade400
-                                    : Colors.grey.shade600,
+                                fontWeight: FontWeight.w100,
                               ),
-                            ),
-                            cursorColor:
-                                useDarkMode ? Colors.white : Colors.black,
-                            style: TextStyle(
-                              color: useDarkMode ? Colors.white : Colors.black,
                             ),
                           ),
                         ],

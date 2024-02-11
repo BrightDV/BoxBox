@@ -89,7 +89,7 @@ class _ErgastApiCalls {
       return formatRaceStandings(results);
     } else {
       var url = Uri.parse(
-        'https://ergast.com/api/f1/${DateTime.now().year}/$round/results.json',
+        'https://ergast.com/api/f1/2023/$round/results.json', // TODO: revert
       );
       var response = await http.get(url);
       Map<String, dynamic> responseAsJson = jsonDecode(response.body);

@@ -48,8 +48,6 @@ class DriverDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool useDarkMode =
-        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -61,7 +59,6 @@ class DriverDetailsScreen extends StatelessWidget {
             ),
           ),
           bottom: TabBar(
-            indicatorColor: Colors.white,
             tabs: [
               Tab(
                 child: Text(
@@ -81,10 +78,8 @@ class DriverDetailsScreen extends StatelessWidget {
               ),
             ],
           ),
+          backgroundColor: Theme.of(context).colorScheme.onPrimary,
         ),
-        backgroundColor: useDarkMode
-            ? Theme.of(context).scaffoldBackgroundColor
-            : Colors.white,
         body: TabBarView(
           children: [
             DriverInfo(driverId),

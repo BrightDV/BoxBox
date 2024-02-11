@@ -40,10 +40,8 @@ class AboutScreen extends StatelessWidget {
             fontWeight: FontWeight.w600,
           ),
         ),
+        backgroundColor: Theme.of(context).colorScheme.onPrimary,
       ),
-      backgroundColor: useDarkMode
-          ? Theme.of(context).scaffoldBackgroundColor
-          : Colors.white,
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -64,7 +62,7 @@ class AboutScreen extends StatelessWidget {
               child: Text(
                 'Box, Box!',
                 style: TextStyle(
-                  color: Theme.of(context).primaryColor,
+                  color: Theme.of(context).colorScheme.onPrimary,
                   fontSize: 40,
                   fontWeight: FontWeight.w700,
                 ),
@@ -91,9 +89,7 @@ class AboutScreen extends StatelessWidget {
               child: Container(
                 width: 150,
                 decoration: BoxDecoration(
-                  color: useDarkMode
-                      ? const Color(0xff1d1d28)
-                      : Colors.grey.shade400,
+                  color: Theme.of(context).colorScheme.onSecondary,
                   borderRadius: BorderRadius.circular(5),
                 ),
                 child: Padding(

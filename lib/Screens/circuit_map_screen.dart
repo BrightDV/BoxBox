@@ -24,7 +24,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:map_controller_plus/map_controller_plus.dart';
 import 'package:boxbox/helpers/circuit_points.dart';
@@ -36,18 +35,10 @@ class CircuitMapScreen extends StatelessWidget {
   const CircuitMapScreen(this.circuitId, {Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    bool useDarkMode =
-        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     return AlertDialog(
       title: Text(
         AppLocalizations.of(context)!.grandPrixMap,
-        style: TextStyle(
-          color: Theme.of(context).primaryColor,
-        ),
       ),
-      backgroundColor: useDarkMode
-          ? Theme.of(context).scaffoldBackgroundColor
-          : Colors.white,
       content: Builder(
         builder: (context) {
           var height = MediaQuery.of(context).size.height;
@@ -70,11 +61,6 @@ class CircuitMapScreen extends StatelessWidget {
           onPressed: () {
             Navigator.of(context).pop();
           },
-          style: ButtonStyle(
-            foregroundColor: MaterialStateProperty.all<Color>(
-              Theme.of(context).primaryColor,
-            ),
-          ),
           child: Text(
             AppLocalizations.of(context)!.close,
           ),
@@ -130,7 +116,7 @@ class _MarkersPageState extends State<MarkersPage> {
               secondPoint[0],
             ),
           ],
-          color: Theme.of(context).primaryColor,
+          color: Theme.of(context).colorScheme.onPrimary,
         );
       }
     }

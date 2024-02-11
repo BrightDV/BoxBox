@@ -22,22 +22,17 @@ import 'package:boxbox/helpers/request_error.dart';
 import 'package:boxbox/scraping/formula_one.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 
 class HallOfFameScreen extends StatelessWidget {
   const HallOfFameScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    bool useDarkMode =
-        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.hallOfFame),
+        backgroundColor: Theme.of(context).colorScheme.onPrimary,
       ),
-      backgroundColor: useDarkMode
-          ? Theme.of(context).scaffoldBackgroundColor
-          : Colors.white,
       body: FutureBuilder<List<HallOfFameDriver>>(
         future: FormulaOneScraper().scrapeHallOfFame(),
         builder: (context, snapshot) => snapshot.hasError
@@ -62,9 +57,6 @@ class HallOfFameScreen extends StatelessWidget {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15.0),
                         ),
-                        color: useDarkMode
-                            ? const Color(0xff1d1d28)
-                            : Colors.white,
                         child: Column(
                           children: [
                             ClipRRect(
@@ -81,17 +73,9 @@ class HallOfFameScreen extends StatelessWidget {
                             ListTile(
                               title: Text(
                                 snapshot.data![index].driverName,
-                                style: TextStyle(
-                                  color:
-                                      useDarkMode ? Colors.white : Colors.black,
-                                ),
                               ),
                               subtitle: Text(
                                 snapshot.data![index].years,
-                                style: TextStyle(
-                                  color:
-                                      useDarkMode ? Colors.white : Colors.black,
-                                ),
                               ),
                             ),
                           ],
@@ -113,15 +97,11 @@ class HallOfFameDriverDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool useDarkMode =
-        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     return Scaffold(
       appBar: AppBar(
         title: Text(driverName),
+        backgroundColor: Theme.of(context).colorScheme.onPrimary,
       ),
-      backgroundColor: useDarkMode
-          ? Theme.of(context).scaffoldBackgroundColor
-          : Colors.white,
       body: FutureBuilder<Map>(
         future: FormulaOneScraper().scrapeHallOfFameDriverDetails(pageUrl),
         builder: (context, snapshot) => snapshot.hasError
@@ -138,7 +118,6 @@ class HallOfFameDriverDetailsScreen extends StatelessWidget {
                             driverName,
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              color: useDarkMode ? Colors.white : Colors.black,
                               fontSize: 22,
                               fontWeight: FontWeight.w500,
                             ),
@@ -149,8 +128,6 @@ class HallOfFameDriverDetailsScreen extends StatelessWidget {
                               snapshot.data!['metaDescription'],
                               textAlign: TextAlign.justify,
                               style: TextStyle(
-                                color:
-                                    useDarkMode ? Colors.white : Colors.black,
                                 fontSize: 16,
                                 fontWeight: FontWeight.w500,
                               ),
@@ -163,8 +140,6 @@ class HallOfFameDriverDetailsScreen extends StatelessWidget {
                                 textParagraph,
                                 textAlign: TextAlign.justify,
                                 style: TextStyle(
-                                  color:
-                                      useDarkMode ? Colors.white : Colors.black,
                                   fontSize: 14,
                                 ),
                               ),

@@ -43,8 +43,6 @@ class _PersonalizedHomeScreenState extends State<PersonalizedHomeScreen> {
   Widget build(BuildContext context) {
     List selectedTags =
         Hive.box('settings').get('selectedTags', defaultValue: []) as List;
-    bool useDarkMode =
-        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     Map availableTags = FormulaYouTags().unifiedTags();
     List selectedTagsIds = [];
     for (String tagName in selectedTags) {
@@ -75,10 +73,8 @@ class _PersonalizedHomeScreenState extends State<PersonalizedHomeScreen> {
             ),
           ),
         ],
+        backgroundColor: Theme.of(context).colorScheme.onPrimary,
       ),
-      backgroundColor: useDarkMode
-          ? Theme.of(context).scaffoldBackgroundColor
-          : Colors.white,
       body: NewsFeed(
         tagId: selectedTagsIds.join(','),
       ),

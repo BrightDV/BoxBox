@@ -44,6 +44,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
         title: Text(
           AppLocalizations.of(context)!.history,
         ),
+        backgroundColor: Theme.of(context).colorScheme.onPrimary,
         actions: [
           IconButton(
             onPressed: () => setState(() {
@@ -55,15 +56,11 @@ class _HistoryScreenState extends State<HistoryScreen> {
           ),
         ],
       ),
-      backgroundColor: useDarkMode
-          ? Theme.of(context).scaffoldBackgroundColor
-          : Colors.white,
       body: articlesHistory.isEmpty
           ? Center(
               child: Text(
                 '¯\\_(ツ)_/¯',
                 style: TextStyle(
-                  color: useDarkMode ? Colors.white : Colors.black,
                   fontSize: 40,
                 ),
               ),
@@ -86,7 +83,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 },
                 child: Card(
                   elevation: 5.0,
-                  color: useDarkMode ? const Color(0xff1d1d28) : Colors.white,
                   child: Row(
                     children: [
                       Expanded(
@@ -106,10 +102,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
                             children: [
                               Text(
                                 articlesHistory[index]['articleTitle'],
-                                style: TextStyle(
-                                  color:
-                                      useDarkMode ? Colors.white : Colors.black,
-                                ),
                                 maxLines: 3,
                                 textAlign: TextAlign.justify,
                               ),

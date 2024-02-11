@@ -34,17 +34,12 @@ class FormulaYouSettingsScreen extends StatefulWidget {
 class _FormulaYouSettingsScreenState extends State<FormulaYouSettingsScreen> {
   @override
   Widget build(BuildContext context) {
-    bool useDarkMode =
-        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     List selectedTags =
         Hive.box('settings').get('selectedTags', defaultValue: []) as List;
     List availableTags = FormulaYouTags().tags();
     int i = 0;
 
     return Scaffold(
-      backgroundColor: useDarkMode
-          ? Theme.of(context).scaffoldBackgroundColor
-          : Colors.white,
       appBar: AppBar(
         title: Text(
           AppLocalizations.of(context)!.formulaYouSettings,
@@ -53,6 +48,7 @@ class _FormulaYouSettingsScreenState extends State<FormulaYouSettingsScreen> {
             fontSize: 18,
           ),
         ),
+        backgroundColor: Theme.of(context).colorScheme.onPrimary,
       ),
       body: ListView(
         shrinkWrap: true,
@@ -68,33 +64,22 @@ class _FormulaYouSettingsScreenState extends State<FormulaYouSettingsScreen> {
                             ? AppLocalizations.of(context)!.topics.capitalize()
                             : AppLocalizations.of(context)!.other.capitalize(),
               ),
-              collapsedIconColor: useDarkMode ? Colors.white : Colors.black,
-              collapsedTextColor: useDarkMode ? Colors.white : Colors.black,
               children: [
                 for (String key in availableTags[i].keys.toList()..sort())
-                  Theme(
-                    data: Theme.of(context).copyWith(
-                      unselectedWidgetColor:
-                          useDarkMode ? Colors.white : Colors.black,
-                    ),
-                    child: CheckboxListTile(
-                      value: selectedTags.contains(key) ? true : false,
-                      onChanged: (value) {
-                        selectedTags.contains(key)
-                            ? selectedTags.remove(key)
-                            : selectedTags.add(key);
-                        Hive.box('settings').put('selectedTags', selectedTags);
-                        if (widget.update != null) {
-                          widget.update!();
-                        }
-                        setState(() {});
-                      },
-                      title: Text(
-                        key,
-                        style: TextStyle(
-                          color: useDarkMode ? Colors.white : Colors.black,
-                        ),
-                      ),
+                  CheckboxListTile(
+                    value: selectedTags.contains(key) ? true : false,
+                    onChanged: (value) {
+                      selectedTags.contains(key)
+                          ? selectedTags.remove(key)
+                          : selectedTags.add(key);
+                      Hive.box('settings').put('selectedTags', selectedTags);
+                      if (widget.update != null) {
+                        widget.update!();
+                      }
+                      setState(() {});
+                    },
+                    title: Text(
+                      key,
                     ),
                   ),
               ],

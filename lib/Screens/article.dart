@@ -22,7 +22,6 @@ import 'package:boxbox/api/formula1.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/request_error.dart';
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:marquee/marquee.dart';
 
 class ArticleScreen extends StatefulWidget {
@@ -50,11 +49,10 @@ class _ArticleScreenState extends State<ArticleScreen> {
 
   @override
   Widget build(BuildContext context) {
-    bool useDarkMode =
-        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.onPrimary,
         title: SizedBox(
           height: AppBar().preferredSize.height,
           width: AppBar().preferredSize.width,
@@ -75,7 +73,7 @@ class _ArticleScreenState extends State<ArticleScreen> {
                             : Marquee(
                                 text: value.toString(),
                                 style: const TextStyle(
-                                  fontWeight: FontWeight.w600,
+                                  fontWeight: FontWeight.w500,
                                 ),
                                 pauseAfterRound: const Duration(seconds: 1),
                                 startAfter: const Duration(seconds: 1),
@@ -92,7 +90,7 @@ class _ArticleScreenState extends State<ArticleScreen> {
                   : Marquee(
                       text: widget.articleName,
                       style: const TextStyle(
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.w500,
                       ),
                       pauseAfterRound: const Duration(seconds: 1),
                       startAfter: const Duration(seconds: 1),

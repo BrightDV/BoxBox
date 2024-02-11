@@ -19,6 +19,8 @@
 
 import 'package:flutter/material.dart';
 
+// TODO: update colors
+
 class TeamBackgroundColor {
   final Map<String, List<Color>> teamsGradientColors = {
     "mercedes": [
