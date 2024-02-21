@@ -52,7 +52,7 @@ class Convert {
 
   String circuitIdFromErgastToFormulaOne(String circuitId) {
     Map ergastToFormulaOne = {
-      'bahrain': '1141', // TODO: revert
+      'bahrain': '1229',
       'jeddah': '1230',
       'albert_park': '1231',
       'suzuka': '1232',

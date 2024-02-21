@@ -42,7 +42,7 @@ class FIAScraper {
       );
     } else {
       latestDocumentsUrl = Uri.parse(
-        'https://www.fia.com/documents/championships/fia-formula-one-world-championship-14/season/season-2023-2042', // TODO: update link
+        'https://www.fia.com/documents/championships/fia-formula-one-world-championship-14/season/season-2024-2043',
       );
     }
     http.Response response = await http.get(latestDocumentsUrl);
@@ -57,7 +57,7 @@ class FIAScraper {
           SessionDocument(
             'This document cannot be parsed.',
             'none',
-            'https://www.fia.com/documents/championships/fia-formula-one-world-championship-14/season/season-2023-2042', // TODO: update link
+            'https://www.fia.com/documents/championships/fia-formula-one-world-championship-14/season/season-2024-2043',
           ),
         );
       } else {

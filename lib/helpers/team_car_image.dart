@@ -17,7 +17,7 @@
  * Copyright (c) 2022-${DateTime.now().year}, BrightDV
  */
 
-// TODO: update urls (kick & rb)
+// TODO: update team names
 
 class TeamCarImage {
   Map<String, String> teamCarDecoder = {
@@ -32,9 +32,9 @@ class TeamCarImage {
     "haas":
         "https://media.formula1.com/content/dam/fom-website/teams/${DateTime.now().year}/haas-f1-team-left.png",
     "alfa":
-        "https://media.formula1.com/content/dam/fom-website/teams/${DateTime.now().year}/alfa-romeo-racing-left.png",
+        "https://media.formula1.com/content/dam/fom-website/teams/${DateTime.now().year}/kick-sauber-left.png",
     "alphatauri":
-        "https://media.formula1.com/content/dam/fom-website/teams/${DateTime.now().year}/alphatauri-left.png",
+        "https://media.formula1.com/content/dam/fom-website/teams/${DateTime.now().year}/rb-left.png",
     "mclaren":
         "https://media.formula1.com/content/dam/fom-website/teams/${DateTime.now().year}/mclaren-left.png",
     "aston_martin":
