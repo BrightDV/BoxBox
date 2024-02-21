@@ -113,7 +113,7 @@ class EventTracker {
 
   Future<Event> parseEvent() async {
     Map eventAsJson = await fetchEvent();
-    if (eventAsJson['event'].isNotEmpty) {
+    if (eventAsJson['event'] != null) {
       return plainEventParser(eventAsJson, 'event', 'event');
     } else {
       return plainEventParser(eventAsJson, 'seasonContext', 'race');
