@@ -82,6 +82,7 @@ class RaceDetailsScreen extends StatelessWidget {
                 SliverPersistentHeader(
                   delegate: _SliverAppBarDelegate(
                     TabBar(
+                      dividerColor: Colors.transparent,
                       tabs: hasSprint
                           ? <Widget>[
                               Tab(
@@ -149,12 +150,10 @@ class RaceDetailsScreen extends StatelessWidget {
                                     context: context,
                                     removeTop: true,
                                     child: SafeArea(
-                                      child: SingleChildScrollView(
-                                        child: QualificationResultsProvider(
-                                          raceUrl:
-                                              'https://www.formula1.com/en/results.html/${DateTime.now().year}/races/${Convert().circuitIdFromErgastToFormulaOne(race.circuitId)}/${Convert().circuitNameFromErgastToFormulaOne(race.circuitId)}/sprint-shootout.html',
-                                          hasSprint: hasSprint,
-                                        ),
+                                      child: QualificationResultsProvider(
+                                        raceUrl:
+                                            'https://www.formula1.com/en/results.html/${DateTime.now().year}/races/${Convert().circuitIdFromErgastToFormulaOne(race.circuitId)}/${Convert().circuitNameFromErgastToFormulaOne(race.circuitId)}/sprint-shootout.html',
+                                        hasSprint: hasSprint,
                                       ),
                                     ),
                                   ),
@@ -200,11 +199,9 @@ class RaceDetailsScreen extends StatelessWidget {
                                     context: context,
                                     removeTop: true,
                                     child: SafeArea(
-                                      child: SingleChildScrollView(
-                                        child: QualificationResultsProvider(
-                                          race: race,
-                                          hasSprint: hasSprint,
-                                        ),
+                                      child: QualificationResultsProvider(
+                                        race: race,
+                                        hasSprint: hasSprint,
                                       ),
                                     ),
                                   ),
@@ -230,20 +227,16 @@ class RaceDetailsScreen extends StatelessWidget {
                         context: context,
                         removeTop: true,
                         child: SafeArea(
-                          child: SingleChildScrollView(
-                            child: QualificationResultsProvider(
-                              race: race,
-                              hasSprint: hasSprint,
-                            ),
+                          child: QualificationResultsProvider(
+                            race: race,
+                            hasSprint: hasSprint,
                           ),
                         ),
                       ),
                       MediaQuery.removePadding(
                         context: context,
                         removeTop: true,
-                        child: SafeArea(
-                          child: RaceResultsProvider(race: race),
-                        ),
+                        child: RaceResultsProvider(race: race),
                       ),
                     ],
                   ),
@@ -267,7 +260,10 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   @override
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
-    return _tabBar;
+    return ColoredBox(
+      color: Theme.of(context).colorScheme.background,
+      child: _tabBar,
+    );
   }
 
   @override
@@ -409,8 +405,6 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
 
   @override
   Widget build(BuildContext context) {
-    bool useDarkMode =
-        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     late Map savedData;
     late Race race;
     late int timeToRace;
@@ -434,7 +428,7 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
         raceFullDateParsed,
       );
     }
-    if (timeToRace < 0) {
+    if (timeToRace > 0) {
       return SessionCountdownTimer(
         race,
         4,
@@ -464,14 +458,10 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
                             ListTile(
                               leading: const FaIcon(
                                 FontAwesomeIcons.youtube,
-                                color: Colors.white,
                               ),
                               title: Text(
                                 AppLocalizations.of(context)!.watchOnYoutube,
                                 textAlign: TextAlign.center,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                ),
                               ),
                               onTap: () async {
                                 var yt = YoutubeExplode();
@@ -489,7 +479,8 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
                                   mode: LaunchMode.externalApplication,
                                 );
                               },
-                              tileColor: const Color(0xff383840),
+                              tileColor:
+                                  Theme.of(context).colorScheme.onPrimary,
                             ),
                             RaceDriversResultsList(snapshot.data!),
                           ],
@@ -499,27 +490,19 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
               })
           : FutureBuilder<List<DriverResult>>(
               future: getRaceStandingsFromErgast(race.round),
-              builder: (context, snapshot) {
-                if (snapshot.hasError) {
-                  return savedData['MRData'] != null
+              builder: (context, snapshot) => snapshot.hasError
+                  ? savedData['MRData'] != null
                       ? SingleChildScrollView(
                           child: Column(
                             children: [
                               ListTile(
                                 leading: FaIcon(
                                   FontAwesomeIcons.youtube,
-                                  color:
-                                      useDarkMode ? Colors.white : Colors.black,
                                 ),
                                 title: Text(
                                   AppLocalizations.of(context)!
                                       .unavailableOffline,
                                   textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: useDarkMode
-                                        ? Colors.white
-                                        : Colors.black,
-                                  ),
                                 ),
                                 onTap: () async {},
                               ),
@@ -535,84 +518,67 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
                             child: Text(
                               AppLocalizations.of(context)!.dataNotAvailable,
                               textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color:
-                                    useDarkMode ? Colors.white : Colors.black,
-                              ),
                             ),
                           ),
-                        );
-                }
-
-                return snapshot.hasData
-                    ? SingleChildScrollView(
-                        child: Column(
-                          children: [
-                            ListTile(
-                              leading: const FaIcon(
-                                FontAwesomeIcons.youtube,
-                                color: Colors.white,
-                              ),
-                              title: Text(
-                                AppLocalizations.of(context)!.watchOnYoutube,
-                                textAlign: TextAlign.center,
-                                style: const TextStyle(
-                                  color: Colors.white,
+                        )
+                  : snapshot.hasData
+                      ? SingleChildScrollView(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              ListTile(
+                                leading: const FaIcon(
+                                  FontAwesomeIcons.youtube,
                                 ),
+                                title: Text(
+                                  AppLocalizations.of(context)!.watchOnYoutube,
+                                  textAlign: TextAlign.center,
+                                ),
+                                onTap: () async {
+                                  var yt = YoutubeExplode();
+                                  final raceYear = widget.raceUrl != null
+                                      ? DateTime.now()
+                                      : race.date.split('-')[0];
+                                  final List<Video> searchResults =
+                                      await yt.search.search(
+                                    "Formula 1 Race Highlights ${race.raceName} $raceYear",
+                                  );
+                                  final Video bestVideoMatch = searchResults[0];
+                                  await launchUrl(
+                                    Uri.parse(
+                                        "https://youtube.com/watch?v=${bestVideoMatch.id.value}"),
+                                    mode: LaunchMode.externalApplication,
+                                  );
+                                },
+                                tileColor:
+                                    Theme.of(context).colorScheme.onPrimary,
                               ),
-                              onTap: () async {
-                                var yt = YoutubeExplode();
-                                final raceYear = widget.raceUrl != null
-                                    ? DateTime.now()
-                                    : race.date.split('-')[0];
-                                final List<Video> searchResults =
-                                    await yt.search.search(
-                                  "Formula 1 Race Highlights ${race.raceName} $raceYear",
-                                );
-                                final Video bestVideoMatch = searchResults[0];
-                                await launchUrl(
-                                  Uri.parse(
-                                      "https://youtube.com/watch?v=${bestVideoMatch.id.value}"),
-                                  mode: LaunchMode.externalApplication,
-                                );
-                              },
-                              tileColor: const Color(0xff383840),
-                            ),
-                            RaceDriversResultsList(snapshot.data!),
-                          ],
-                        ),
-                      )
-                    : savedData['MRData'] != null
-                        ? SingleChildScrollView(
-                            child: Column(
-                              children: [
-                                ListTile(
-                                  leading: FaIcon(
-                                    FontAwesomeIcons.youtube,
-                                    color: useDarkMode
-                                        ? Colors.white
-                                        : Colors.black,
-                                  ),
-                                  title: Text(
-                                    AppLocalizations.of(context)!
-                                        .unavailableOffline,
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      color: useDarkMode
-                                          ? Colors.white
-                                          : Colors.black,
+                              RaceDriversResultsList(snapshot.data!),
+                            ],
+                          ),
+                        )
+                      : savedData['MRData'] != null
+                          ? SingleChildScrollView(
+                              child: Column(
+                                children: [
+                                  ListTile(
+                                    leading: FaIcon(
+                                      FontAwesomeIcons.youtube,
                                     ),
+                                    title: Text(
+                                      AppLocalizations.of(context)!
+                                          .unavailableOffline,
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    onTap: () async {},
                                   ),
-                                  onTap: () async {},
-                                ),
-                                RaceDriversResultsList(
-                                  ErgastApi().formatRaceStandings(savedData),
-                                ),
-                              ],
-                            ),
-                          )
-                        : const LoadingIndicatorUtil();
-              },
+                                  RaceDriversResultsList(
+                                    ErgastApi().formatRaceStandings(savedData),
+                                  ),
+                                ],
+                              ),
+                            )
+                          : const LoadingIndicatorUtil(),
             );
     }
   }
@@ -787,9 +753,6 @@ class _QualificationResultsProviderState
               child: Text(
                 AppLocalizations.of(context)!.dataNotAvailable,
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: useDarkMode ? Colors.white : Colors.black,
-                ),
               ),
             ),
           )
@@ -825,7 +788,6 @@ class _QualificationResultsProviderState
                             AppLocalizations.of(context)!.dataNotAvailable,
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              color: useDarkMode ? Colors.white : Colors.black,
                               fontSize: 15,
                             ),
                           ),
@@ -833,51 +795,11 @@ class _QualificationResultsProviderState
                       )
                 : snapshot.hasData
                     ? snapshot.data!.isNotEmpty
-                        ? Column(
-                            children: [
-                              GestureDetector(
-                                child: ListTile(
-                                  leading: const FaIcon(
-                                    FontAwesomeIcons.youtube,
-                                    color: Colors.white,
-                                  ),
-                                  title: Text(
-                                    AppLocalizations.of(context)!
-                                        .watchOnYoutube,
-                                    textAlign: TextAlign.center,
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  onTap: () async {
-                                    var yt = YoutubeExplode();
-                                    final raceYear =
-                                        widget.race!.date.split('-')[0];
-                                    final List<Video> searchResults =
-                                        await yt.search.search(
-                                      (widget.raceUrl?.contains(
-                                                      'sprint-shootout') ??
-                                                  false) ||
-                                              (widget.isSprintShootout ?? false)
-                                          ? "Formula 1 Sprint Shootout Highlights ${widget.race!.raceName} $raceYear"
-                                          : "Formula 1 Qualification Highlights ${widget.race!.raceName} $raceYear",
-                                    );
-                                    final Video bestVideoMatch =
-                                        searchResults[0];
-                                    await launchUrl(
-                                      Uri.parse(
-                                        "https://youtube.com/watch?v=${bestVideoMatch.id.value}",
-                                      ),
-                                      mode: LaunchMode.externalApplication,
-                                    );
-                                  },
-                                  tileColor: const Color(0xff383840),
-                                ),
-                              ),
-                              QualificationDriversResultsList(
-                                snapshot.data!,
-                              ),
-                            ],
+                        ? QualificationDriversResultsList(
+                            snapshot.data!,
+                            widget.race,
+                            widget.raceUrl,
+                            widget.isSprintShootout,
                           )
                         : widget.race!.sessionDates[3].isBefore(DateTime.now())
                             ? Padding(
@@ -1162,8 +1084,6 @@ class SessionCountdownTimer extends StatefulWidget {
 class _SessionCountdownTimerState extends State<SessionCountdownTimer> {
   @override
   Widget build(BuildContext context) {
-    bool useDarkMode =
-        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     bool shouldUseCountdown = Hive.box('settings')
         .get('shouldUseCountdown', defaultValue: true) as bool;
     List months = [
@@ -1226,7 +1146,6 @@ class _SessionCountdownTimerState extends State<SessionCountdownTimer> {
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 20,
-              color: useDarkMode ? Colors.white : Colors.black,
             ),
           ),
         ),
@@ -1243,14 +1162,12 @@ class _SessionCountdownTimerState extends State<SessionCountdownTimer> {
                 ),
                 timeTextStyle: TextStyle(
                   fontSize: 25,
-                  color: useDarkMode ? Colors.white : Colors.black,
                 ),
                 colonsTextStyle: TextStyle(
                   fontSize: 23,
-                  color: useDarkMode ? Colors.white : Colors.black,
                 ),
                 descriptionTextStyle: TextStyle(
-                  color: Theme.of(context).primaryColor,
+                  color: Theme.of(context).colorScheme.onPrimary,
                   fontSize: 20,
                 ),
                 spacerWidth: 15,
@@ -1271,7 +1188,6 @@ class _SessionCountdownTimerState extends State<SessionCountdownTimer> {
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 23,
-                    color: useDarkMode ? Colors.white : Colors.black,
                   ),
                 ),
               ),
@@ -1283,18 +1199,14 @@ class _SessionCountdownTimerState extends State<SessionCountdownTimer> {
                     padding: const EdgeInsets.symmetric(vertical: 7),
                     child: Text(
                       AppLocalizations.of(context)!.addToCalendar,
-                      style: TextStyle(
-                        color: useDarkMode ? Colors.white : Colors.black,
-                      ),
                     ),
                   ),
                   icon: Icon(
                     Icons.add_alert_outlined,
-                    color: useDarkMode ? Colors.white : Colors.black,
                   ),
                   style: TextButton.styleFrom(
                     side: BorderSide(
-                      color: useDarkMode ? Colors.white : Colors.black,
+                      //color: useDarkMode ? Colors.white : Colors.black,
                       width: 1,
                     ),
                   ),
@@ -1335,9 +1247,6 @@ class _SessionCountdownTimerState extends State<SessionCountdownTimer> {
                 flex: 6,
                 child: Text(
                   AppLocalizations.of(context)!.time.capitalize(),
-                  style: TextStyle(
-                    color: useDarkMode ? Colors.white : Colors.black,
-                  ),
                   textAlign: TextAlign.end,
                 ),
               ),
@@ -1345,7 +1254,7 @@ class _SessionCountdownTimerState extends State<SessionCountdownTimer> {
                 flex: 2,
                 child: Switch(
                   value: shouldUseCountdown,
-                  activeColor: Theme.of(context).primaryColor,
+                  activeColor: Theme.of(context).colorScheme.onPrimary,
                   onChanged: (value) => setState(
                     () {
                       shouldUseCountdown = value;
@@ -1364,9 +1273,6 @@ class _SessionCountdownTimerState extends State<SessionCountdownTimer> {
                 flex: 6,
                 child: Text(
                   AppLocalizations.of(context)!.countdown,
-                  style: TextStyle(
-                    color: useDarkMode ? Colors.white : Colors.black,
-                  ),
                 ),
               ),
             ],

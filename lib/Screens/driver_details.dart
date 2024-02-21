@@ -59,6 +59,7 @@ class DriverDetailsScreen extends StatelessWidget {
             ),
           ),
           bottom: TabBar(
+            dividerColor: Colors.transparent,
             tabs: [
               Tab(
                 child: Text(
@@ -132,8 +133,6 @@ class DriverResults extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool useDarkMode =
-        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     return FutureBuilder<List<DriverResult>>(
       future: ErgastApi().getDriverResults(driverId),
       builder: (context, snapshot) => snapshot.hasError
@@ -145,7 +144,7 @@ class DriverResults extends StatelessWidget {
                   itemCount: snapshot.data!.length + 1,
                   itemBuilder: (context, index) => index == 0
                       ? Container(
-                          color: const Color(0xff383840),
+                          color: Theme.of(context).colorScheme.onPrimary,
                           height: 45,
                           child: Padding(
                             padding: const EdgeInsets.all(5),
@@ -157,9 +156,6 @@ class DriverResults extends StatelessWidget {
                                     AppLocalizations.of(context)
                                             ?.positionAbbreviation ??
                                         ' POS',
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                    ),
                                     textAlign: TextAlign.center,
                                   ),
                                 ),
@@ -173,9 +169,6 @@ class DriverResults extends StatelessWidget {
                                     AppLocalizations.of(context)
                                             ?.driverAbbreviation ??
                                         'DRI',
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                    ),
                                   ),
                                 ),
                                 Expanded(
@@ -183,9 +176,6 @@ class DriverResults extends StatelessWidget {
                                   child: Text(
                                     AppLocalizations.of(context)?.time ??
                                         'TIME',
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                    ),
                                     textAlign: TextAlign.center,
                                   ),
                                 ),
@@ -194,9 +184,6 @@ class DriverResults extends StatelessWidget {
                                   child: Text(
                                     AppLocalizations.of(context)?.laps ??
                                         'Laps',
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                    ),
                                     textAlign: TextAlign.center,
                                   ),
                                 ),
@@ -206,9 +193,6 @@ class DriverResults extends StatelessWidget {
                                     AppLocalizations.of(context)
                                             ?.pointsAbbreviation ??
                                         'PTS',
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                    ),
                                     textAlign: TextAlign.center,
                                   ),
                                 ),
@@ -254,9 +238,6 @@ class DriverResults extends StatelessWidget {
                                 child: Text(
                                   '${snapshot.data![index - 1].raceName!} >',
                                   style: TextStyle(
-                                    color: useDarkMode
-                                        ? Colors.white
-                                        : Colors.black,
                                     decoration: TextDecoration.underline,
                                     fontSize: 18,
                                     fontWeight: FontWeight.w600,

@@ -325,9 +325,9 @@ class _MyAppState extends State<MyApp> {
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
 
-    Map<int, Color> color = TeamsThemes().getTeamTheme(teamTheme);
-    MaterialColor colorCustom =
-        MaterialColor(TeamsThemes().getTeamColor(teamTheme), color);
+    /*Map<int, Color> color = TeamsThemes().getTeamTheme(teamTheme);
+     MaterialColor colorCustom =
+        MaterialColor(TeamsThemes().getTeamColor(teamTheme), color); */
     Color finalColor = Color(TeamsThemes().getTeamColor(teamTheme));
 
     setTimeagoLocaleMessages();
@@ -352,7 +352,7 @@ class _MyAppState extends State<MyApp> {
         colorSchemeSeed: finalColor,
         fontFamily: 'Formula1',
       ),
-      initial: AdaptiveThemeMode.dark,
+      initial: useDarkMode ? AdaptiveThemeMode.dark : AdaptiveThemeMode.light,
       builder: (theme, darkTheme) => MaterialApp(
         title: 'Box, Box!',
         theme: theme,

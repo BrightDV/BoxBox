@@ -565,8 +565,10 @@ class FormulaOneScraper {
       int maxSession = 0;
       for (dom.Element element in tempResults) {
         if (element.text.contains('Practice')) {
-          if (int.parse(element.text.substring(38, 40)) > maxSession) {
-            maxSession = int.parse(element.text.substring(38, 40));
+          if (int.parse(element.text.trim().replaceAll('Practice', '')) >
+              maxSession) {
+            maxSession =
+                int.parse(element.text.trim().replaceAll('Practice', ''));
           }
         }
       }

@@ -17,8 +17,6 @@
  * Copyright (c) 2022-2024, BrightDV
  */
 
-// TODO: md3
-
 import 'package:boxbox/api/driver_components.dart';
 import 'package:boxbox/helpers/request_error.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
@@ -27,7 +25,6 @@ import 'package:boxbox/scraping/formula_one.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
@@ -51,15 +48,11 @@ class FreePracticeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool useDarkMode =
-        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     return Scaffold(
       appBar: AppBar(
         title: Text(sessionTitle),
+        backgroundColor: Theme.of(context).colorScheme.onPrimary,
       ),
-      backgroundColor: useDarkMode
-          ? Theme.of(context).scaffoldBackgroundColor
-          : Colors.white,
       body: FutureBuilder<List<DriverResult>>(
         future: raceUrl != null
             ? FormulaOneScraper().scrapeFreePracticeResult(
@@ -82,15 +75,14 @@ class FreePracticeScreen extends StatelessWidget {
                       padding: const EdgeInsets.all(30),
                       child: Text(
                         AppLocalizations.of(context)!.dataNotAvailable,
-                        style: TextStyle(
-                          color: useDarkMode ? Colors.white : Colors.black,
-                        ),
                         textAlign: TextAlign.center,
                       ),
                     ),
                   )
                 : RequestErrorWidget(
-                    snapshot.error.toString(),
+                    snapshot.error.toString() +
+                        '\n' +
+                        snapshot.stackTrace.toString(),
                   )
             : snapshot.hasError
                 ? RequestErrorWidget(snapshot.error.toString())
@@ -129,14 +121,10 @@ class FreePracticeResultsList extends StatelessWidget {
           ? ListTile(
               leading: const FaIcon(
                 FontAwesomeIcons.youtube,
-                color: Colors.white,
               ),
               title: Text(
                 AppLocalizations.of(context)!.watchOnYoutube,
                 textAlign: TextAlign.center,
-                style: const TextStyle(
-                  color: Colors.white,
-                ),
               ),
               onTap: () async {
                 var yt = YoutubeExplode();
@@ -146,15 +134,16 @@ class FreePracticeResultsList extends StatelessWidget {
                 final Video bestVideoMatch = searchResults[0];
                 await launchUrl(
                   Uri.parse(
-                      "https://youtube.com/watch?v=${bestVideoMatch.id.value}"),
+                    "https://youtube.com/watch?v=${bestVideoMatch.id.value}",
+                  ),
                   mode: LaunchMode.externalApplication,
                 );
               },
-              tileColor: const Color(0xff383840),
+              tileColor: Theme.of(context).colorScheme.onPrimary,
             )
           : index == 1
               ? Container(
-                  color: const Color(0xff383840),
+                  color: Theme.of(context).colorScheme.onPrimary,
                   height: 45,
                   child: Padding(
                     padding: const EdgeInsets.all(5),
@@ -164,9 +153,6 @@ class FreePracticeResultsList extends StatelessWidget {
                           flex: 2,
                           child: Text(
                             AppLocalizations.of(context)!.positionAbbreviation,
-                            style: const TextStyle(
-                              color: Colors.white,
-                            ),
                             textAlign: TextAlign.center,
                           ),
                         ),
@@ -178,18 +164,12 @@ class FreePracticeResultsList extends StatelessWidget {
                           flex: 3,
                           child: Text(
                             AppLocalizations.of(context)!.driverAbbreviation,
-                            style: const TextStyle(
-                              color: Colors.white,
-                            ),
                           ),
                         ),
                         Expanded(
                           flex: 5,
                           child: Text(
                             AppLocalizations.of(context)!.time,
-                            style: const TextStyle(
-                              color: Colors.white,
-                            ),
                             textAlign: TextAlign.center,
                           ),
                         ),
@@ -197,9 +177,6 @@ class FreePracticeResultsList extends StatelessWidget {
                           flex: 5,
                           child: Text(
                             AppLocalizations.of(context)!.gap,
-                            style: const TextStyle(
-                              color: Colors.white,
-                            ),
                             textAlign: TextAlign.center,
                           ),
                         ),
@@ -207,9 +184,6 @@ class FreePracticeResultsList extends StatelessWidget {
                           flex: 4,
                           child: Text(
                             AppLocalizations.of(context)!.laps,
-                            style: const TextStyle(
-                              color: Colors.white,
-                            ),
                             textAlign: TextAlign.center,
                           ),
                         ),
@@ -238,7 +212,13 @@ class FreePracticeResultItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: index % 2 == 1 ? const Color(0xff22222c) : const Color(0xff15151f),
+      color: index % 2 == 1
+          ? HSLColor.fromColor(
+              Theme.of(context).colorScheme.onSecondary,
+            ).withLightness(0.26).toColor()
+          : HSLColor.fromColor(
+              Theme.of(context).colorScheme.onSecondary,
+            ).withLightness(0.18).toColor(),
       height: 45,
       child: Padding(
         padding: const EdgeInsets.all(5),
@@ -271,9 +251,6 @@ class FreePracticeResultItem extends StatelessWidget {
               flex: 3,
               child: Text(
                 result.code,
-                style: const TextStyle(
-                  color: Colors.white,
-                ),
               ),
             ),
             Expanded(
@@ -284,7 +261,13 @@ class FreePracticeResultItem extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: index == 0
                         ? const Color(0xffff00ff)
-                        : const Color(0xff383840),
+                        : index % 2 == 1
+                            ? HSLColor.fromColor(
+                                Theme.of(context).colorScheme.onSecondary,
+                              ).withLightness(0.31).toColor()
+                            : HSLColor.fromColor(
+                                Theme.of(context).colorScheme.onSecondary,
+                              ).withLightness(0.23).toColor(),
                     borderRadius: BorderRadius.circular(7),
                   ),
                   child: Padding(
@@ -308,16 +291,19 @@ class FreePracticeResultItem extends StatelessWidget {
                 padding: const EdgeInsets.only(left: 5, right: 5),
                 child: Container(
                   decoration: BoxDecoration(
-                    color: const Color(0xff383840),
+                    color: index % 2 == 1
+                        ? HSLColor.fromColor(
+                            Theme.of(context).colorScheme.onSecondary,
+                          ).withLightness(0.31).toColor()
+                        : HSLColor.fromColor(
+                            Theme.of(context).colorScheme.onSecondary,
+                          ).withLightness(0.23).toColor(),
                     borderRadius: BorderRadius.circular(7),
                   ),
                   child: Padding(
                     padding: const EdgeInsets.only(top: 5, bottom: 5),
                     child: Text(
                       result.fastestLap == '' ? '--' : result.fastestLap,
-                      style: const TextStyle(
-                        color: Colors.white,
-                      ),
                       textAlign: TextAlign.center,
                     ),
                   ),
@@ -330,16 +316,19 @@ class FreePracticeResultItem extends StatelessWidget {
                 padding: const EdgeInsets.only(left: 5, right: 5),
                 child: Container(
                   decoration: BoxDecoration(
-                    color: const Color(0xff383840),
+                    color: index % 2 == 1
+                        ? HSLColor.fromColor(
+                            Theme.of(context).colorScheme.onSecondary,
+                          ).withLightness(0.31).toColor()
+                        : HSLColor.fromColor(
+                            Theme.of(context).colorScheme.onSecondary,
+                          ).withLightness(0.23).toColor(),
                     borderRadius: BorderRadius.circular(7),
                   ),
                   child: Padding(
                     padding: const EdgeInsets.only(top: 5, bottom: 5),
                     child: Text(
                       result.lapsDone!,
-                      style: const TextStyle(
-                        color: Colors.white,
-                      ),
                       textAlign: TextAlign.center,
                     ),
                   ),

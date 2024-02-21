@@ -19,12 +19,14 @@
 
 import 'package:boxbox/Screens/driver_details.dart';
 import 'package:boxbox/api/driver_components.dart';
+import 'package:boxbox/api/race_components.dart';
 import 'package:boxbox/helpers/team_background_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-
-// TODO: md3
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 class DriverResultItem extends StatelessWidget {
   final DriverResult item;
@@ -58,8 +60,12 @@ class DriverResultItem extends StatelessWidget {
         color: item.isFastest
             ? const Color(0xffff00ff)
             : index % 2 == 1
-                ? const Color(0xff22222c)
-                : const Color(0xff15151f),
+                ? HSLColor.fromColor(
+                    Theme.of(context).colorScheme.onSecondary,
+                  ).withLightness(0.26).toColor()
+                : HSLColor.fromColor(
+                    Theme.of(context).colorScheme.onSecondary,
+                  ).withLightness(0.18).toColor(),
         height: 45,
         child: Padding(
           padding: const EdgeInsets.all(5),
@@ -70,7 +76,6 @@ class DriverResultItem extends StatelessWidget {
                 child: Text(
                   item.position,
                   style: const TextStyle(
-                    color: Colors.white,
                     fontWeight: FontWeight.w600,
                   ),
                   textAlign: TextAlign.center,
@@ -90,9 +95,6 @@ class DriverResultItem extends StatelessWidget {
                 flex: 3,
                 child: Text(
                   item.code,
-                  style: const TextStyle(
-                    color: Colors.white,
-                  ),
                 ),
               ),
               Expanded(
@@ -115,7 +117,13 @@ class DriverResultItem extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: item.isFastest
                             ? const Color(0xffab01ab)
-                            : const Color(0xff383840),
+                            : index % 2 == 1
+                                ? HSLColor.fromColor(
+                                    Theme.of(context).colorScheme.onSecondary,
+                                  ).withLightness(0.31).toColor()
+                                : HSLColor.fromColor(
+                                    Theme.of(context).colorScheme.onSecondary,
+                                  ).withLightness(0.23).toColor(),
                         borderRadius: BorderRadius.circular(7),
                       ),
                       child: Padding(
@@ -147,16 +155,19 @@ class DriverResultItem extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: item.isFastest
                           ? const Color(0xffab01ab)
-                          : const Color(0xff383840),
+                          : index % 2 == 1
+                              ? HSLColor.fromColor(
+                                  Theme.of(context).colorScheme.onSecondary,
+                                ).withLightness(0.31).toColor()
+                              : HSLColor.fromColor(
+                                  Theme.of(context).colorScheme.onSecondary,
+                                ).withLightness(0.23).toColor(),
                       borderRadius: BorderRadius.circular(7),
                     ),
                     child: Padding(
                       padding: const EdgeInsets.only(top: 5, bottom: 5),
                       child: Text(
                         item.lapsDone!,
-                        style: const TextStyle(
-                          color: Colors.white,
-                        ),
                         textAlign: TextAlign.center,
                       ),
                     ),
@@ -171,16 +182,19 @@ class DriverResultItem extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: item.isFastest
                           ? const Color(0xffab01ab)
-                          : const Color(0xff383840),
+                          : index % 2 == 1
+                              ? HSLColor.fromColor(
+                                  Theme.of(context).colorScheme.onSecondary,
+                                ).withLightness(0.31).toColor()
+                              : HSLColor.fromColor(
+                                  Theme.of(context).colorScheme.onSecondary,
+                                ).withLightness(0.23).toColor(),
                       borderRadius: BorderRadius.circular(7),
                     ),
                     child: Padding(
                       padding: const EdgeInsets.only(top: 5, bottom: 5),
                       child: Text(
                         item.points!,
-                        style: const TextStyle(
-                          color: Colors.white,
-                        ),
                         textAlign: TextAlign.center,
                       ),
                     ),
@@ -208,7 +222,7 @@ class RaceDriversResultsList extends StatelessWidget {
       physics: const ClampingScrollPhysics(),
       itemBuilder: (context, index) => index == 0
           ? Container(
-              color: const Color(0xff383840),
+              color: Theme.of(context).colorScheme.onPrimary,
               height: 45,
               child: Padding(
                 padding: const EdgeInsets.all(5),
@@ -219,9 +233,6 @@ class RaceDriversResultsList extends StatelessWidget {
                       child: Text(
                         AppLocalizations.of(context)?.positionAbbreviation ??
                             ' POS',
-                        style: const TextStyle(
-                          color: Colors.white,
-                        ),
                         textAlign: TextAlign.center,
                       ),
                     ),
@@ -234,18 +245,12 @@ class RaceDriversResultsList extends StatelessWidget {
                       child: Text(
                         AppLocalizations.of(context)?.driverAbbreviation ??
                             'DRI',
-                        style: const TextStyle(
-                          color: Colors.white,
-                        ),
                       ),
                     ),
                     Expanded(
                       flex: 6,
                       child: Text(
                         AppLocalizations.of(context)?.time ?? 'TIME',
-                        style: const TextStyle(
-                          color: Colors.white,
-                        ),
                         textAlign: TextAlign.center,
                       ),
                     ),
@@ -253,9 +258,6 @@ class RaceDriversResultsList extends StatelessWidget {
                       flex: 3,
                       child: Text(
                         AppLocalizations.of(context)?.laps ?? 'Laps',
-                        style: const TextStyle(
-                          color: Colors.white,
-                        ),
                         textAlign: TextAlign.center,
                       ),
                     ),
@@ -264,9 +266,6 @@ class RaceDriversResultsList extends StatelessWidget {
                       child: Text(
                         AppLocalizations.of(context)?.pointsAbbreviation ??
                             'PTS',
-                        style: const TextStyle(
-                          color: Colors.white,
-                        ),
                         textAlign: TextAlign.center,
                       ),
                     ),
@@ -314,8 +313,13 @@ class QualificationResultsItem extends StatelessWidget {
         );
       },
       child: Container(
-        color:
-            index % 2 == 1 ? const Color(0xff22222c) : const Color(0xff15151f),
+        color: index % 2 == 1
+            ? HSLColor.fromColor(
+                Theme.of(context).colorScheme.onSecondary,
+              ).withLightness(0.26).toColor()
+            : HSLColor.fromColor(
+                Theme.of(context).colorScheme.onSecondary,
+              ).withLightness(0.18).toColor(),
         height: 45,
         child: Padding(
           padding: const EdgeInsets.all(5),
@@ -330,7 +334,6 @@ class QualificationResultsItem extends StatelessWidget {
                   child: Text(
                     item.position,
                     style: const TextStyle(
-                      color: Colors.white,
                       fontWeight: FontWeight.w600,
                     ),
                     textAlign: TextAlign.center,
@@ -355,9 +358,6 @@ class QualificationResultsItem extends StatelessWidget {
                   ),
                   child: Text(
                     item.code,
-                    style: const TextStyle(
-                      color: Colors.white,
-                    ),
                   ),
                 ),
               ),
@@ -370,7 +370,13 @@ class QualificationResultsItem extends StatelessWidget {
                       color: (winningTimeQOne == item.timeq1) &&
                               (item.timeq1 != '--')
                           ? const Color(0xffff00ff)
-                          : const Color(0xff383840),
+                          : index % 2 == 1
+                              ? HSLColor.fromColor(
+                                  Theme.of(context).colorScheme.onSecondary,
+                                ).withLightness(0.31).toColor()
+                              : HSLColor.fromColor(
+                                  Theme.of(context).colorScheme.onSecondary,
+                                ).withLightness(0.23).toColor(),
                       borderRadius: BorderRadius.circular(7),
                     ),
                     child: Padding(
@@ -401,7 +407,13 @@ class QualificationResultsItem extends StatelessWidget {
                       color: (winningTimeQTwo == item.timeq2) &&
                               (item.timeq2 != '--')
                           ? const Color(0xffff00ff)
-                          : const Color(0xff383840),
+                          : index % 2 == 1
+                              ? HSLColor.fromColor(
+                                  Theme.of(context).colorScheme.onSecondary,
+                                ).withLightness(0.31).toColor()
+                              : HSLColor.fromColor(
+                                  Theme.of(context).colorScheme.onSecondary,
+                                ).withLightness(0.23).toColor(),
                       borderRadius: BorderRadius.circular(7),
                     ),
                     child: Padding(
@@ -429,7 +441,13 @@ class QualificationResultsItem extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: (index == 0) && (item.timeq3 != '--')
                           ? const Color(0xffff00ff)
-                          : const Color(0xff383840),
+                          : index % 2 == 1
+                              ? HSLColor.fromColor(
+                                  Theme.of(context).colorScheme.onSecondary,
+                                ).withLightness(0.31).toColor()
+                              : HSLColor.fromColor(
+                                  Theme.of(context).colorScheme.onSecondary,
+                                ).withLightness(0.23).toColor(),
                       borderRadius: BorderRadius.circular(7),
                     ),
                     child: Padding(
@@ -459,9 +477,17 @@ class QualificationResultsItem extends StatelessWidget {
 
 class QualificationDriversResultsList extends StatelessWidget {
   final List<DriverQualificationResult> items;
+  final Race? race;
+  final String? raceUrl;
+  final bool? isSprintShootout;
 
-  const QualificationDriversResultsList(this.items, {Key? key})
-      : super(key: key);
+  const QualificationDriversResultsList(
+    this.items,
+    this.race,
+    this.raceUrl,
+    this.isSprintShootout, {
+    Key? key,
+  }) : super(key: key);
   @override
   Widget build(BuildContext context) {
     List resultsQOne = [];
@@ -479,93 +505,109 @@ class QualificationDriversResultsList extends StatelessWidget {
     return ListView.builder(
       scrollDirection: Axis.vertical,
       shrinkWrap: true,
-      itemCount: items.length + 1,
+      itemCount: items.length + 2,
       physics: const ClampingScrollPhysics(),
       itemBuilder: (context, index) => index == 0
-          ? Container(
-              color: const Color(0xff383840),
-              height: 45,
-              child: Padding(
-                padding: const EdgeInsets.all(5),
-                child: Row(
-                  children: [
-                    Expanded(
-                      flex: 2,
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                          right: 7,
-                        ),
-                        child: Text(
-                          AppLocalizations.of(context)
-                                  ?.positionAbbreviation
-                                  .substring(0, 1) ??
-                              'P',
-                          style: const TextStyle(
-                            color: Colors.white,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ),
-                    const Expanded(
-                      flex: 1,
-                      child: Text(''),
-                    ),
-                    Expanded(
-                      flex: 3,
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                          left: 7,
-                        ),
-                        child: Text(
-                          AppLocalizations.of(context)?.driverAbbreviation ??
-                              'DRI',
-                          style: const TextStyle(
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      flex: 6,
-                      child: Text(
-                        "${AppLocalizations.of(context)?.qualifyings.substring(0, 1)}1",
-                        style: const TextStyle(
-                          color: Colors.white,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    Expanded(
-                      flex: 6,
-                      child: Text(
-                        "${AppLocalizations.of(context)?.qualifyings.substring(0, 1)}2",
-                        style: const TextStyle(
-                          color: Colors.white,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    Expanded(
-                      flex: 6,
-                      child: Text(
-                        "${AppLocalizations.of(context)?.qualifyings.substring(0, 1)}3",
-                        style: const TextStyle(
-                          color: Colors.white,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ],
+          ? GestureDetector(
+              child: ListTile(
+                leading: const FaIcon(
+                  FontAwesomeIcons.youtube,
                 ),
+                title: Text(
+                  AppLocalizations.of(context)!.watchOnYoutube,
+                  textAlign: TextAlign.center,
+                ),
+                onTap: () async {
+                  var yt = YoutubeExplode();
+                  final raceYear = race?.date.split('-')[0];
+                  final List<Video> searchResults = await yt.search.search(
+                    (raceUrl?.contains('sprint-shootout') ?? false) ||
+                            (isSprintShootout ?? false)
+                        ? "Formula 1 Sprint Shootout Highlights ${race!.raceName} $raceYear"
+                        : "Formula 1 Qualification Highlights ${race!.raceName} $raceYear",
+                  );
+                  final Video bestVideoMatch = searchResults[0];
+                  await launchUrl(
+                    Uri.parse(
+                      "https://youtube.com/watch?v=${bestVideoMatch.id.value}", // here
+                    ),
+                    mode: LaunchMode.externalApplication,
+                  );
+                },
+                tileColor: Theme.of(context).colorScheme.onPrimary,
               ),
             )
-          : QualificationResultsItem(
-              items[index - 1],
-              index - 1,
-              resultsQOne.isNotEmpty ? resultsQOne[0] : '--',
-              resultsQTwo.isNotEmpty ? resultsQTwo[0] : '--',
-            ),
+          : index == 1
+              ? Container(
+                  color: Theme.of(context).colorScheme.onPrimary,
+                  height: 45,
+                  child: Padding(
+                    padding: const EdgeInsets.all(5),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          flex: 2,
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                              right: 7,
+                            ),
+                            child: Text(
+                              AppLocalizations.of(context)
+                                      ?.positionAbbreviation
+                                      .substring(0, 1) ??
+                                  'P',
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                        const Expanded(
+                          flex: 1,
+                          child: Text(''),
+                        ),
+                        Expanded(
+                          flex: 3,
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                              left: 7,
+                            ),
+                            child: Text(
+                              AppLocalizations.of(context)
+                                      ?.driverAbbreviation ??
+                                  'DRI',
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          flex: 6,
+                          child: Text(
+                            "${AppLocalizations.of(context)?.qualifyings.substring(0, 1)}1",
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        Expanded(
+                          flex: 6,
+                          child: Text(
+                            "${AppLocalizations.of(context)?.qualifyings.substring(0, 1)}2",
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        Expanded(
+                          flex: 6,
+                          child: Text(
+                            "${AppLocalizations.of(context)?.qualifyings.substring(0, 1)}3",
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+              : QualificationResultsItem(
+                  items[index - 2],
+                  index - 2,
+                  resultsQOne.isNotEmpty ? resultsQOne[0] : '--',
+                  resultsQTwo.isNotEmpty ? resultsQTwo[0] : '--',
+                ),
     );
   }
 }

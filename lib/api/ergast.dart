@@ -89,7 +89,7 @@ class _ErgastApiCalls {
       return formatRaceStandings(results);
     } else {
       var url = Uri.parse(
-        'https://ergast.com/api/f1/2023/$round/results.json', // TODO: revert
+        'https://ergast.com/api/f1/${DateTime.now().year}/$round/results.json',
       );
       var response = await http.get(url);
       Map<String, dynamic> responseAsJson = jsonDecode(response.body);
@@ -322,6 +322,23 @@ class _ErgastApiCalls {
           ),
         );
         DateTime now = DateTime.now();
+        // TODO: possible bug in the future
+        List<DateTime> raceDates = [];
+        List<String> sessionKeys = [
+          'FirstPractice',
+          'SecondPractice',
+          'ThirdPractice',
+          'Sprint',
+          'Qualifying',
+        ];
+        for (String sessionKey in sessionKeys) {
+          if (element[sessionKey] != null) {
+            DateTime raceDate = DateTime.parse(
+              '${element[sessionKey]['date']} ${element[sessionKey]['time']}',
+            );
+            raceDates.add(raceDate);
+          }
+        }
         if (now.compareTo(raceDate) > 0) {
           races.add(
             Race(
@@ -333,7 +350,7 @@ class _ErgastApiCalls {
               element['Circuit']['circuitName'],
               element['Circuit']['url'],
               element['Circuit']['Location']['country'],
-              [],
+              raceDates,
             ),
           );
         }
