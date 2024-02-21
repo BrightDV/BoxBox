@@ -24,18 +24,25 @@ class LoadingIndicatorUtil extends StatelessWidget {
   final double? width;
   final bool replaceImage;
   final bool borderRadius;
+  final bool fullBorderRadius;
   const LoadingIndicatorUtil({
     Key? key,
     this.width,
     this.replaceImage = false,
     this.borderRadius = true,
+    this.fullBorderRadius = true,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return replaceImage
         ? ClipRRect(
-            borderRadius: BorderRadius.circular(borderRadius ? 16.0 : 0),
+            borderRadius: fullBorderRadius
+                ? BorderRadius.circular(16)
+                : BorderRadius.only(
+                    topLeft: Radius.circular(borderRadius ? 16.0 : 0),
+                    topRight: Radius.circular(borderRadius ? 16.0 : 0),
+                  ),
             child: Image.asset('assets/images/image_loading_bg.png'),
           )
         : Padding(

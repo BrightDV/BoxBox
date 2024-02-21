@@ -39,10 +39,8 @@ class CompareResultsScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text(
           'Compare',
-          style: TextStyle(
-            fontWeight: FontWeight.w600,
-          ),
         ),
+        backgroundColor: Theme.of(context).colorScheme.onPrimary,
       ),
       body: SingleChildScrollView(
         child: Column(

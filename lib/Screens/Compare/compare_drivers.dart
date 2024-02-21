@@ -35,10 +35,8 @@ class CompareDriversScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text(
           'Compare drivers',
-          style: TextStyle(
-            fontWeight: FontWeight.w600,
-          ),
         ),
+        backgroundColor: Theme.of(context).colorScheme.onPrimary,
       ),
       backgroundColor: useDarkMode
           ? Theme.of(context).scaffoldBackgroundColor

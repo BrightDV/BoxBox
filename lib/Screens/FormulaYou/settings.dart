@@ -44,7 +44,6 @@ class _FormulaYouSettingsScreenState extends State<FormulaYouSettingsScreen> {
         title: Text(
           AppLocalizations.of(context)!.formulaYouSettings,
           style: const TextStyle(
-            fontWeight: FontWeight.w600,
             fontSize: 18,
           ),
         ),

@@ -53,9 +53,6 @@ class _VideoScreenState extends State<VideoScreen> {
                 )
               : Marquee(
                   text: video.caption,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w600,
-                  ),
                   pauseAfterRound: const Duration(seconds: 1),
                   startAfter: const Duration(seconds: 1),
                   velocity: 85,

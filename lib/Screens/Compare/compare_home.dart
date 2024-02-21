@@ -37,10 +37,8 @@ class _CompareHomeScreenState extends State<CompareHomeScreen> {
       appBar: AppBar(
         title: const Text(
           'Compare',
-          style: TextStyle(
-            fontWeight: FontWeight.w600,
-          ),
         ),
+        backgroundColor: Theme.of(context).colorScheme.onPrimary,
       ),
       backgroundColor: useDarkMode
           ? Theme.of(context).scaffoldBackgroundColor

@@ -168,7 +168,6 @@ class NewsItem extends StatelessWidget {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15.0),
                 ),
-                //color: useDarkMode ? const Color(0xff1d1d28) : Colors.white,
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 200),
                   child: InkWell(
@@ -211,6 +210,7 @@ class NewsItem extends StatelessWidget {
                                         width: 300,
                                         child: LoadingIndicatorUtil(
                                           replaceImage: true,
+                                          fullBorderRadius: false,
                                         ),
                                       ),
                                       errorWidget: (context, url, error) =>
@@ -269,6 +269,7 @@ class NewsItem extends StatelessWidget {
                                     width: 300,
                                     child: LoadingIndicatorUtil(
                                       replaceImage: true,
+                                      fullBorderRadius: false,
                                     ),
                                   ),
                                   errorWidget: (context, url, error) =>
@@ -385,6 +386,7 @@ class NewsItem extends StatelessWidget {
                                                   child:
                                                       const LoadingIndicatorUtil(
                                                     replaceImage: true,
+                                                    fullBorderRadius: false,
                                                   ),
                                                 ),
                                                 errorWidget:
@@ -683,6 +685,7 @@ class NewsItem extends StatelessWidget {
                                                       : width / (16 / 9) - 10,
                                               child: const LoadingIndicatorUtil(
                                                 replaceImage: true,
+                                                fullBorderRadius: false,
                                               ),
                                             ),
                                             errorWidget:
@@ -1209,6 +1212,7 @@ class TextParagraphRenderer extends StatelessWidget {
                           fontWeight: FontWeight.w600,
                         ),
                       ),
+                      backgroundColor: Theme.of(context).colorScheme.onPrimary,
                     ),
                     body: const StandingsScreen(),
                   ),
@@ -1228,6 +1232,7 @@ class TextParagraphRenderer extends StatelessWidget {
                           fontWeight: FontWeight.w600,
                         ),
                       ),
+                      backgroundColor: Theme.of(context).colorScheme.onPrimary,
                     ),
                     body: const StandingsScreen(
                       switchToTeamStandings: true,
@@ -1248,6 +1253,7 @@ class TextParagraphRenderer extends StatelessWidget {
                     title: Text(
                       AppLocalizations.of(context)!.schedule,
                     ),
+                    backgroundColor: Theme.of(context).colorScheme.onPrimary,
                   ),
                   body: const ScheduleScreen(),
                 ),
@@ -1297,11 +1303,7 @@ class TextParagraphRenderer extends StatelessWidget {
           strong: TextStyle(
             fontSize: fontUsedInArticles == 'Formula1' ? 16 : 20,
             fontWeight: FontWeight.w500,
-            color: useDarkMode
-                ? HSLColor.fromColor(
-                    Theme.of(context).colorScheme.onPrimary,
-                  ).withLightness(0.35).toColor()
-                : Theme.of(context).colorScheme.onPrimary,
+            color: Theme.of(context).colorScheme.onPrimary,
           ),
           p: TextStyle(
             fontSize: fontUsedInArticles == 'Formula1' ? 14 : 18,

@@ -244,6 +244,8 @@ class WidgetsList extends StatelessWidget {
                                 title: Text(
                                   tag['fields']['tagName'],
                                 ),
+                                backgroundColor:
+                                    Theme.of(context).colorScheme.onPrimary,
                               ),
                               body: NewsFeed(tagId: tag['id']),
                             ),
@@ -352,6 +354,9 @@ class WidgetsList extends StatelessWidget {
                                               AppLocalizations.of(context)!
                                                   .quiz,
                                             ),
+                                            backgroundColor: Theme.of(context)
+                                                .colorScheme
+                                                .onPrimary,
                                           ),
                                           body: InAppWebView(
                                             initialUrlRequest: URLRequest(
@@ -530,6 +535,10 @@ class WidgetsList extends StatelessWidget {
                                                                   context)!
                                                               .liveBlog,
                                                         ),
+                                                        backgroundColor:
+                                                            Theme.of(context)
+                                                                .colorScheme
+                                                                .onPrimary,
                                                       ),
                                                       body: InAppWebView(
                                                         initialUrlRequest:
@@ -1068,6 +1077,7 @@ class WidgetsList extends StatelessWidget {
                                                                                                   ? AppLocalizations.of(context)!.startingGrid
                                                                                                   : AppLocalizations.of(context)!.qualifyings,
                                                                                 ),
+                                                                                backgroundColor: Theme.of(context).colorScheme.onPrimary,
                                                                               ),
                                                                               backgroundColor: Theme.of(context).colorScheme.background,
                                                                               body: element['fields']['sessionType'] == 'Race' || element['fields']['sessionType'] == 'Sprint'
@@ -1502,67 +1512,54 @@ class WidgetsList extends StatelessWidget {
           ),
 
         // bottom action bar
-        Padding(
-          padding: const EdgeInsets.all(5),
-          child: Container(
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey[700]!),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.only(bottom: 10),
-                    child: Column(
-                      children: [
-                        IconButton(
-                          icon: Icon(
-                            Icons.share_outlined,
-                            color: useDarkMode ? Colors.white : Colors.black,
-                          ),
-                          onPressed: () => Share.share(
-                            "https://www.formula1.com/en/latest/article.${article.articleSlug}.${article.articleId}.html",
-                          ),
+
+        Card(
+          elevation: 5,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: Column(
+                    children: [
+                      IconButton(
+                        icon: Icon(
+                          Icons.share_outlined,
                         ),
-                        Text(
-                          AppLocalizations.of(context)?.share ?? 'Share',
-                          style: TextStyle(
-                            color: useDarkMode ? Colors.white : Colors.black,
-                          ),
+                        onPressed: () => Share.share(
+                          "https://www.formula1.com/en/latest/article.${article.articleSlug}.${article.articleId}.html",
                         ),
-                      ],
-                    ),
+                      ),
+                      Text(
+                        AppLocalizations.of(context)?.share ?? 'Share',
+                      ),
+                    ],
                   ),
                 ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.only(bottom: 10),
-                    child: Column(
-                      children: [
-                        IconButton(
-                          icon: Icon(
-                            Icons.schedule,
-                            color: useDarkMode ? Colors.white : Colors.black,
-                          ),
-                          onPressed: () {},
+              ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: Column(
+                    children: [
+                      IconButton(
+                        icon: Icon(
+                          Icons.schedule,
                         ),
-                        Text(
-                          DateFormat('kk:mm\nyyyy-MM-dd')
-                              .format(article.publishedDate),
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: useDarkMode ? Colors.white : Colors.black,
-                          ),
-                        ),
-                      ],
-                    ),
+                        onPressed: () {},
+                      ),
+                      Text(
+                        DateFormat('kk:mm\nyyyy-MM-dd')
+                            .format(article.publishedDate),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
 

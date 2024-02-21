@@ -252,6 +252,8 @@ class NotificationController {
                     builder: (context) => Scaffold(
                       appBar: AppBar(
                         title: const Text('wrong payload'),
+                        backgroundColor:
+                            Theme.of(context).colorScheme.onPrimary,
                       ),
                       body: Center(
                         child: Text(

@@ -119,6 +119,7 @@ class _SearchScreenState extends State<SearchScreen> {
             ),
           ),
         ),
+        backgroundColor: Theme.of(context).colorScheme.onPrimary,
       ),
       body: results.isNotEmpty
           ? ListView.builder(

@@ -46,9 +46,6 @@ class _ServerSettingsScreenState extends State<ServerSettingsScreen> {
       appBar: AppBar(
         title: Text(
           AppLocalizations.of(context)!.server,
-          style: const TextStyle(
-            fontWeight: FontWeight.w600,
-          ),
         ),
         backgroundColor: Theme.of(context).colorScheme.onPrimary,
       ),

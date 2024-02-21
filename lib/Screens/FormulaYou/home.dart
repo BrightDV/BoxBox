@@ -54,9 +54,6 @@ class _PersonalizedHomeScreenState extends State<PersonalizedHomeScreen> {
       appBar: AppBar(
         title: const Text(
           'Formula You',
-          style: TextStyle(
-            fontWeight: FontWeight.w600,
-          ),
         ),
         actions: [
           IconButton(

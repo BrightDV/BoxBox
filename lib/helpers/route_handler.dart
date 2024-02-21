@@ -84,6 +84,7 @@ class ArticleUrlHandler extends StatelessWidget {
           title: Text(
             AppLocalizations.of(context)!.schedule,
           ),
+          backgroundColor: Theme.of(context).colorScheme.onPrimary,
         ),
         body: const ScheduleScreen(),
       );
@@ -93,6 +94,7 @@ class ArticleUrlHandler extends StatelessWidget {
           title: Text(
             AppLocalizations.of(context)!.schedule,
           ),
+          backgroundColor: Theme.of(context).colorScheme.onPrimary,
         ),
         body: const StandingsScreen(),
       );
@@ -102,6 +104,7 @@ class ArticleUrlHandler extends StatelessWidget {
           title: Text(
             AppLocalizations.of(context)!.schedule,
           ),
+          backgroundColor: Theme.of(context).colorScheme.onPrimary,
         ),
         body: const StandingsScreen(
           switchToTeamStandings: true,
@@ -111,6 +114,7 @@ class ArticleUrlHandler extends StatelessWidget {
       return Scaffold(
         appBar: AppBar(
           title: const Text('Intent'),
+          backgroundColor: Theme.of(context).colorScheme.onPrimary,
         ),
         body: Center(
           child: Padding(

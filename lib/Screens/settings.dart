@@ -48,9 +48,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
       appBar: AppBar(
         title: Text(
           AppLocalizations.of(context)!.settings,
-          style: const TextStyle(
-            fontWeight: FontWeight.w600,
-          ),
         ),
         backgroundColor: Theme.of(context).colorScheme.onPrimary,
       ),
