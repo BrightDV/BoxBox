@@ -59,7 +59,7 @@ If you want, you can know where he is born and other personal info (not very use
 | :---------------: |:---------------:| :---------------:|
 | Home News  | Formula 1 API |  https://api.formula1.com |
 | Home Videos  | Formula 1 API |  https://api.formula1.com |
-| Articles search  | SearXNG |  [9 instances](lib/api/searx.dart#L26) |
+| Articles search  | SearXNG |  [14 instances](lib/api/searx.dart#L26) |
 | Standings (Q, S and R)  | Ergast API |  https://ergast.com/mrd |
 | Standings (FP, Q, S and R)  | Formula 1 Archives |  https://formula1.com |
 | Schedule  |  Ergast API |  https://ergast.com/mrd |
