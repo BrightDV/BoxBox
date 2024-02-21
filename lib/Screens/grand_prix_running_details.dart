@@ -49,8 +49,6 @@ class GrandPrixRunningScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool useDarkMode =
-        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     late String meetingName;
     event.meetingName == 'United States'
         ? meetingName = 'USA'
@@ -61,6 +59,7 @@ class GrandPrixRunningScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.onPrimary,
         title: SizedBox(
           height: AppBar().preferredSize.height,
           width: AppBar().preferredSize.width,
@@ -78,23 +77,19 @@ class GrandPrixRunningScreen extends StatelessWidget {
                 ),
         ),
       ),
-      backgroundColor: useDarkMode
-          ? Theme.of(context).scaffoldBackgroundColor
-          : Colors.white,
       body: SlidingUpPanel(
         backdropEnabled: true,
-        color: useDarkMode ? const Color(0xff22222c) : Colors.white,
+        color: Theme.of(context).colorScheme.surface,
         collapsed: GestureDetector(
           behavior: HitTestBehavior.deferToChild,
           child: Container(
-            color: useDarkMode ? const Color(0xff22222c) : Colors.white,
+            color: Theme.of(context).colorScheme.surface,
             child: Padding(
               padding: const EdgeInsets.all(40),
               child: Center(
                 child: Text(
                   "Grand-Prix documents",
                   style: TextStyle(
-                    color: useDarkMode ? Colors.white : Colors.black,
                     fontSize: 16,
                   ),
                 ),
@@ -113,18 +108,12 @@ class GrandPrixRunningScreen extends StatelessWidget {
                         itemCount: snapshot.data!.length + 1,
                         itemBuilder: (context, index) => index == 0
                             ? Container(
-                                color: useDarkMode
-                                    ? const Color(0xff22222c)
-                                    : Colors.white,
                                 child: Padding(
                                   padding: const EdgeInsets.all(40),
                                   child: Center(
                                     child: Text(
                                       "Grand-Prix documents",
                                       style: TextStyle(
-                                        color: useDarkMode
-                                            ? Colors.white
-                                            : Colors.black,
                                         fontSize: 16,
                                       ),
                                     ),
@@ -145,33 +134,19 @@ class GrandPrixRunningScreen extends StatelessWidget {
                                         ),
                                       ),
                                 child: Card(
-                                  color: useDarkMode
-                                      ? const Color.fromARGB(255, 45, 45, 58)
-                                      : Colors.white,
                                   elevation: 5,
                                   child: ListTile(
                                     title: Text(
                                       snapshot.data?[index + 1].name ?? '',
-                                      style: TextStyle(
-                                        color: useDarkMode
-                                            ? Colors.white
-                                            : Colors.black,
-                                      ),
                                     ),
                                     subtitle: Text(
                                       'Published on ${snapshot.data?[index + 1].postedDate}',
                                       style: TextStyle(
-                                        color: useDarkMode
-                                            ? Colors.white
-                                            : Colors.black,
                                         fontSize: 12,
                                       ),
                                     ),
                                     leading: Icon(
                                       Icons.picture_as_pdf_outlined,
-                                      color: useDarkMode
-                                          ? Colors.white
-                                          : Colors.black,
                                     ),
                                   ),
                                 ),
@@ -183,7 +158,6 @@ class GrandPrixRunningScreen extends StatelessWidget {
                           child: Text(
                             "Grand-Prix documents",
                             style: TextStyle(
-                              color: useDarkMode ? Colors.white : Colors.black,
                               fontSize: 16,
                             ),
                           ),
@@ -222,7 +196,6 @@ class GrandPrixRunningScreen extends StatelessWidget {
                           Text(
                             event.meetingName.toUpperCase(),
                             style: const TextStyle(
-                              color: Colors.white,
                               fontSize: 70,
                               fontWeight: FontWeight.w500,
                             ),
@@ -246,31 +219,12 @@ class GrandPrixRunningScreen extends StatelessWidget {
                               child: Column(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  SessionItem(
-                                    event.session5,
-                                    event.raceId,
-                                    event.meetingCountryName,
-                                  ),
-                                  SessionItem(
-                                    event.session4,
-                                    event.raceId,
-                                    event.meetingCountryName,
-                                  ),
-                                  SessionItem(
-                                    event.session3,
-                                    event.raceId,
-                                    event.meetingCountryName,
-                                  ),
-                                  SessionItem(
-                                    event.session2,
-                                    event.raceId,
-                                    event.meetingCountryName,
-                                  ),
-                                  SessionItem(
-                                    event.session1,
-                                    event.raceId,
-                                    event.meetingCountryName,
-                                  ),
+                                  for (var session in event.sessions)
+                                    SessionItem(
+                                      session,
+                                      event.raceId,
+                                      event.meetingCountryName,
+                                    ),
                                 ],
                               ),
                             ),
@@ -287,9 +241,6 @@ class GrandPrixRunningScreen extends StatelessWidget {
                                         child: Container(
                                           width: double.infinity,
                                           decoration: BoxDecoration(
-                                            color: useDarkMode
-                                                ? const Color(0xff1d1d28)
-                                                : Colors.grey.shade400,
                                             borderRadius:
                                                 BorderRadius.circular(5),
                                           ),
@@ -305,18 +256,10 @@ class GrandPrixRunningScreen extends StatelessWidget {
                                                 Text(
                                                   AppLocalizations.of(context)!
                                                       .information,
-                                                  style: TextStyle(
-                                                    color: useDarkMode
-                                                        ? Colors.white
-                                                        : Colors.black,
-                                                  ),
                                                 ),
                                                 const Spacer(),
                                                 Icon(
                                                   Icons.arrow_forward_rounded,
-                                                  color: useDarkMode
-                                                      ? Colors.white
-                                                      : Colors.black,
                                                 ),
                                               ],
                                             ),
@@ -352,9 +295,6 @@ class GrandPrixRunningScreen extends StatelessWidget {
                                         child: Container(
                                           width: double.infinity,
                                           decoration: BoxDecoration(
-                                            color: useDarkMode
-                                                ? const Color(0xff1d1d28)
-                                                : Colors.grey.shade400,
                                             borderRadius:
                                                 BorderRadius.circular(5),
                                           ),
@@ -369,18 +309,10 @@ class GrandPrixRunningScreen extends StatelessWidget {
                                               children: [
                                                 Text(
                                                   'Race Programme',
-                                                  style: TextStyle(
-                                                    color: useDarkMode
-                                                        ? Colors.white
-                                                        : Colors.black,
-                                                  ),
                                                 ),
                                                 const Spacer(),
                                                 Icon(
                                                   Icons.open_in_new_outlined,
-                                                  color: useDarkMode
-                                                      ? Colors.white
-                                                      : Colors.black,
                                                 ),
                                               ],
                                             ),
@@ -427,38 +359,18 @@ class GrandPrixRunningScreen extends StatelessWidget {
                         fadeInDuration: const Duration(seconds: 1),
                         fit: BoxFit.scaleDown,
                       ),
-                      SessionItem(
-                        event.session5,
-                        event.raceId,
-                        event.meetingCountryName,
-                      ),
-                      SessionItem(
-                        event.session4,
-                        event.raceId,
-                        event.meetingCountryName,
-                      ),
-                      SessionItem(
-                        event.session3,
-                        event.raceId,
-                        event.meetingCountryName,
-                      ),
-                      SessionItem(
-                        event.session2,
-                        event.raceId,
-                        event.meetingCountryName,
-                      ),
-                      SessionItem(
-                        event.session1,
-                        event.raceId,
-                        event.meetingCountryName,
-                      ),
+                      for (var session in event.sessions)
+                        SessionItem(
+                          session,
+                          event.raceId,
+                          event.meetingCountryName,
+                        ),
                       Padding(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 30, vertical: 10),
-                        child: Divider(
-                            color: useDarkMode
-                                ? const Color(0xff1d1d28)
-                                : Colors.grey.shade400),
+                          horizontal: 30,
+                          vertical: 10,
+                        ),
+                        child: Divider(),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(5),
@@ -466,10 +378,8 @@ class GrandPrixRunningScreen extends StatelessWidget {
                           child: Container(
                             width: double.infinity,
                             decoration: BoxDecoration(
-                              color: useDarkMode
-                                  ? const Color(0xff1d1d28)
-                                  : Colors.grey.shade400,
                               borderRadius: BorderRadius.circular(5),
+                              color: Theme.of(context).colorScheme.onSecondary,
                             ),
                             child: Padding(
                               padding: const EdgeInsets.fromLTRB(
@@ -482,18 +392,10 @@ class GrandPrixRunningScreen extends StatelessWidget {
                                 children: [
                                   Text(
                                     AppLocalizations.of(context)!.information,
-                                    style: TextStyle(
-                                      color: useDarkMode
-                                          ? Colors.white
-                                          : Colors.black,
-                                    ),
                                   ),
                                   const Spacer(),
                                   Icon(
                                     Icons.arrow_forward_rounded,
-                                    color: useDarkMode
-                                        ? Colors.white
-                                        : Colors.black,
                                   ),
                                 ],
                               ),
@@ -529,10 +431,8 @@ class GrandPrixRunningScreen extends StatelessWidget {
                           child: Container(
                             width: double.infinity,
                             decoration: BoxDecoration(
-                              color: useDarkMode
-                                  ? const Color(0xff1d1d28)
-                                  : Colors.grey.shade400,
                               borderRadius: BorderRadius.circular(5),
+                              color: Theme.of(context).colorScheme.onSecondary,
                             ),
                             child: Padding(
                               padding: const EdgeInsets.fromLTRB(
@@ -545,18 +445,10 @@ class GrandPrixRunningScreen extends StatelessWidget {
                                 children: [
                                   Text(
                                     'Race Programme',
-                                    style: TextStyle(
-                                      color: useDarkMode
-                                          ? Colors.white
-                                          : Colors.black,
-                                    ),
                                   ),
                                   const Spacer(),
                                   Icon(
                                     Icons.open_in_new_outlined,
-                                    color: useDarkMode
-                                        ? Colors.white
-                                        : Colors.black,
                                   ),
                                 ],
                               ),
@@ -597,6 +489,7 @@ class PdfViewer extends StatelessWidget {
           documentTitle,
           overflow: TextOverflow.ellipsis,
         ),
+        backgroundColor: Theme.of(context).colorScheme.onPrimary,
       ),
       body: SfPdfViewer.network(
         server != defaultServer
@@ -711,9 +604,6 @@ class SessionItem extends StatelessWidget {
                       borderRadius: BorderRadius.circular(10),
                       border: Border.all(
                         width: 3.0,
-                        color: useDarkMode
-                            ? const Color(0xff1d1d28)
-                            : Colors.grey.shade400,
                       ),
                     ),
                     child: Row(
@@ -727,18 +617,12 @@ class SessionItem extends StatelessWidget {
                               Text(
                                 session.startTime.day.toString(),
                                 style: TextStyle(
-                                  color: useDarkMode
-                                      ? Colors.white
-                                      : const Color(0xff171717),
                                   fontSize: 18,
                                 ),
                               ),
                               Text(
                                 months[session.startTime.month - 1],
                                 style: TextStyle(
-                                  color: useDarkMode
-                                      ? Colors.white
-                                      : const Color(0xff171717),
                                   fontSize: 16,
                                   fontWeight: FontWeight.w500,
                                 ),
@@ -754,9 +638,7 @@ class SessionItem extends StatelessWidget {
                             dashGapLength: 3,
                             lineThickness: 3,
                             dashRadius: 8,
-                            dashColor: useDarkMode
-                                ? const Color(0xff1d1d28)
-                                : Colors.grey.shade400,
+                            dashColor: Theme.of(context).dividerColor,
                           ),
                         ),
                         Expanded(
@@ -768,9 +650,6 @@ class SessionItem extends StatelessWidget {
                                 sessionsAbbreviations[
                                     session.sessionsAbbreviation],
                                 style: TextStyle(
-                                  color: useDarkMode
-                                      ? Colors.white
-                                      : const Color(0xff171717),
                                   fontSize: 20,
                                 ),
                               ),
@@ -789,20 +668,13 @@ class SessionItem extends StatelessWidget {
                                             width: 25,
                                             child: FaIcon(
                                               FontAwesomeIcons.flagCheckered,
-                                              color: useDarkMode
-                                                  ? Colors.white
-                                                  : const Color(0xff171717),
                                             ),
                                           ),
                                         ),
                                         Text(
                                           AppLocalizations.of(context)!
                                               .sessionCompletedShort,
-                                          style: TextStyle(
-                                            color: useDarkMode
-                                                ? Colors.white
-                                                : const Color(0xff171717),
-                                          ),
+                                          style: TextStyle(),
                                         ),
                                       ],
                                     )
@@ -810,11 +682,12 @@ class SessionItem extends StatelessWidget {
                                       ? Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
                                           children: [
                                             Padding(
                                               padding: const EdgeInsets.only(
                                                 right: 5,
-                                                top: 5,
                                               ),
                                               child: SizedBox(
                                                 height: 20,
@@ -834,20 +707,12 @@ class SessionItem extends StatelessWidget {
                                             Text(
                                               AppLocalizations.of(context)!
                                                   .sessionRunning,
-                                              style: TextStyle(
-                                                color: useDarkMode
-                                                    ? Colors.white
-                                                    : const Color(0xff171717),
-                                              ),
                                             ),
                                           ],
                                         )
                                       : Text(
                                           '$startTime - $endTime',
                                           style: TextStyle(
-                                            color: useDarkMode
-                                                ? Colors.white
-                                                : const Color(0xff171717),
                                             fontSize: 17,
                                           ),
                                         ),
@@ -886,18 +751,12 @@ class SessionItem extends StatelessWidget {
                         Text(
                           session.startTime.day.toString(),
                           style: TextStyle(
-                            color: useDarkMode
-                                ? Colors.white
-                                : const Color(0xff171717),
                             fontSize: 18,
                           ),
                         ),
                         Text(
                           months[session.startTime.month - 1],
                           style: TextStyle(
-                            color: useDarkMode
-                                ? Colors.white
-                                : const Color(0xff171717),
                             fontSize: 16,
                             fontWeight: FontWeight.w500,
                           ),
@@ -913,8 +772,7 @@ class SessionItem extends StatelessWidget {
                       dashGapLength: 3,
                       lineThickness: 3,
                       dashRadius: 8,
-                      dashColor:
-                          useDarkMode ? Colors.grey[700]! : Colors.grey[400]!,
+                      dashColor: Theme.of(context).dividerColor,
                     ),
                   ),
                   Expanded(
@@ -925,9 +783,6 @@ class SessionItem extends StatelessWidget {
                         Text(
                           sessionsAbbreviations[session.sessionsAbbreviation],
                           style: TextStyle(
-                            color: useDarkMode
-                                ? Colors.white
-                                : const Color(0xff171717),
                             fontSize: 20,
                           ),
                         ),
@@ -945,63 +800,49 @@ class SessionItem extends StatelessWidget {
                                       width: 25,
                                       child: FaIcon(
                                         FontAwesomeIcons.flagCheckered,
-                                        color: useDarkMode
-                                            ? Colors.white
-                                            : const Color(0xff171717),
                                       ),
                                     ),
                                   ),
                                   Text(
                                     AppLocalizations.of(context)!
                                         .sessionCompletedShort,
-                                    style: TextStyle(
-                                      color: useDarkMode
-                                          ? Colors.white
-                                          : const Color(0xff171717),
-                                    ),
+                                    style: TextStyle(),
                                   ),
                                 ],
                               )
                             : session.startTime.isBefore(DateTime.now())
                                 ? Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
                                     children: [
                                       Padding(
                                         padding: const EdgeInsets.only(
                                           right: 5,
-                                          top: 5,
                                         ),
                                         child: SizedBox(
                                           height: 20,
                                           width: 20,
                                           child: LoadingIndicator(
                                             indicatorType: Indicator.values[17],
+                                            strokeWidth: 2.0,
                                             colors: [
                                               useDarkMode
                                                   ? Colors.white
                                                   : Colors.grey,
                                             ],
-                                            strokeWidth: 2.0,
                                           ),
                                         ),
                                       ),
                                       Text(
                                         AppLocalizations.of(context)!
                                             .sessionRunning,
-                                        style: TextStyle(
-                                          color: useDarkMode
-                                              ? Colors.white
-                                              : const Color(0xff171717),
-                                        ),
                                       ),
                                     ],
                                   )
                                 : Text(
                                     '$startTime - $endTime',
                                     style: TextStyle(
-                                      color: useDarkMode
-                                          ? Colors.white
-                                          : const Color(0xff171717),
                                       fontSize: 17,
                                     ),
                                   ),

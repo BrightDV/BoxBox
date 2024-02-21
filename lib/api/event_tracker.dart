@@ -33,12 +33,7 @@ class Event {
   final String circuitImage;
   final List raceResults;
   final bool isRunning;
-  final Session
-      session5; // use session instead of race, fp1, etc because with a sprint the order
-  final Session session4; // is race, sprint, fp2, qualifications, fp1
-  final Session session3;
-  final Session session2;
-  final Session session1;
+  final List<Session> sessions;
 
   Event(
     this.raceId,
@@ -50,11 +45,7 @@ class Event {
     this.circuitImage,
     this.raceResults,
     this.isRunning,
-    this.session5,
-    this.session4,
-    this.session3,
-    this.session2,
-    this.session1,
+    this.sessions,
   );
 }
 
@@ -122,12 +113,15 @@ class EventTracker {
 
   Future<Event> parseEvent() async {
     Map eventAsJson = await fetchEvent();
-    return plainEventParser(eventAsJson);
+    if (eventAsJson['event'].isNotEmpty) {
+      return plainEventParser(eventAsJson, 'event', 'event');
+    } else {
+      return plainEventParser(eventAsJson, 'seasonContext', 'race');
+    }
   }
 
-  Event plainEventParser(Map eventAsJson) {
-    String gmtOffset =
-        eventAsJson['seasonContext']['timetables'][0]['gmtOffset'];
+  Event plainEventParser(Map eventAsJson, String path, String secondPath) {
+    String gmtOffset = eventAsJson[path]['timetables'][0]['gmtOffset'];
     DateTime meetingStartDate = DateTime.parse(
       eventAsJson['race']['meetingStartDate'].substring(0, 23),
     ).toLocal().subtract(
@@ -142,75 +136,46 @@ class EventTracker {
             hours: 8,
           ),
         );
-
+    if (path == 'event') {
+      meetingStartDate = DateTime.parse(
+        eventAsJson['event']['meetingStartDate'].substring(0, 19),
+      ).toLocal().subtract(
+            const Duration(
+              hours: 8,
+            ),
+          );
+      meetingEndDate = DateTime.parse(
+        eventAsJson['event']['meetingEndDate'].substring(0, 19),
+      ).toLocal().add(
+            const Duration(
+              hours: 8,
+            ),
+          );
+    }
     bool isRunning = isEventRunning(
       meetingStartDate,
       meetingEndDate,
     );
+
     String baseUrl =
         'https://www.formula1.com/en/results.html/${DateTime.now().year}/races/${eventAsJson['fomRaceId']}/${eventAsJson['circuitSmallImage']['title'].toLowerCase().replaceAll('.png', '')}/session-type.html';
-    List<Session> sessions = [
-      Session(
-        eventAsJson['seasonContext']['timetables'][0]['state'],
-        eventAsJson['seasonContext']['timetables'][0]['session'],
-        DateTime.parse(
-          eventAsJson['seasonContext']['timetables'][0]['endTime'] + gmtOffset,
-        ).toLocal(),
-        DateTime.parse(
-          eventAsJson['seasonContext']['timetables'][0]['startTime'] +
-              gmtOffset,
-        ).toLocal(),
-        baseUrl,
-      ),
-      Session(
-        eventAsJson['seasonContext']['timetables'][1]['state'],
-        eventAsJson['seasonContext']['timetables'][1]['session'],
-        DateTime.parse(
-          eventAsJson['seasonContext']['timetables'][1]['endTime'] + gmtOffset,
-        ).toLocal(),
-        DateTime.parse(
-          eventAsJson['seasonContext']['timetables'][1]['startTime'] +
-              gmtOffset,
-        ).toLocal(),
-        baseUrl,
-      ),
-      Session(
-        eventAsJson['seasonContext']['timetables'][2]['state'],
-        eventAsJson['seasonContext']['timetables'][2]['session'],
-        DateTime.parse(
-          eventAsJson['seasonContext']['timetables'][2]['endTime'] + gmtOffset,
-        ).toLocal(),
-        DateTime.parse(
-          eventAsJson['seasonContext']['timetables'][2]['startTime'] +
-              gmtOffset,
-        ).toLocal(),
-        baseUrl,
-      ),
-      Session(
-        eventAsJson['seasonContext']['timetables'][3]['state'],
-        eventAsJson['seasonContext']['timetables'][3]['session'],
-        DateTime.parse(
-          eventAsJson['seasonContext']['timetables'][3]['endTime'] + gmtOffset,
-        ).toLocal(),
-        DateTime.parse(
-          eventAsJson['seasonContext']['timetables'][3]['startTime'] +
-              gmtOffset,
-        ).toLocal(),
-        baseUrl,
-      ),
-      Session(
-        eventAsJson['seasonContext']['timetables'][4]['state'],
-        eventAsJson['seasonContext']['timetables'][4]['session'],
-        DateTime.parse(
-          eventAsJson['seasonContext']['timetables'][4]['endTime'] + gmtOffset,
-        ).toLocal(),
-        DateTime.parse(
-          eventAsJson['seasonContext']['timetables'][4]['startTime'] +
-              gmtOffset,
-        ).toLocal(),
-        baseUrl,
-      ),
-    ];
+    List<Session> sessions = [];
+    for (var session in eventAsJson[path]['timetables']) {
+      sessions.add(
+        Session(
+          session['state'],
+          session['session'],
+          DateTime.parse(
+            session['endTime'] + gmtOffset,
+          ).toLocal(),
+          DateTime.parse(
+            session['startTime'] + gmtOffset,
+          ).toLocal(),
+          baseUrl,
+        ),
+      );
+    }
+
     sessions.sort(
       (a, b) {
         var adate = a.startTime;
@@ -221,19 +186,15 @@ class EventTracker {
 
     Event event = Event(
       eventAsJson['fomRaceId'],
-      eventAsJson['race']['meetingCountryName'],
-      eventAsJson['race']['meetingOfficialName'],
-      eventAsJson['race']['meetingCountryName'],
+      eventAsJson[secondPath]['meetingCountryName'],
+      eventAsJson[secondPath]['meetingOfficialName'],
+      eventAsJson[secondPath]['meetingCountryName'],
       meetingStartDate,
       meetingEndDate,
       eventAsJson['circuitSmallImage']['url'],
       eventAsJson['raceResults'],
       isRunning,
-      sessions[0],
-      sessions[1],
-      sessions[2],
-      sessions[3],
-      sessions[4],
+      sessions,
     );
     return event;
   }

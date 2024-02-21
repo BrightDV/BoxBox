@@ -38,6 +38,10 @@ class LiveSessionStatusIndicator extends StatelessWidget {
     if (eventTrackerSavedRequestAsMap['timetables'] != null) {
       eventTrackerSavedRequest = EventTracker().plainEventParser(
         eventTrackerSavedRequestAsMap,
+        eventTrackerSavedRequestAsMap['event'].isNotEmpty
+            ? 'event'
+            : 'seasonContext',
+        eventTrackerSavedRequestAsMap['event'].isNotEmpty ? 'event' : 'race',
       );
     }
     return FutureBuilder<Event>(
@@ -72,32 +76,24 @@ class EventTrackerItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool useDarkMode =
-        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     bool haveRunningSession = false;
     DateTime date = DateTime.now();
-    if ((event.session1.startTime.isBefore(date) &&
-        event.session1.endTime.isAfter(date))) {
-      haveRunningSession = true;
-    } else if ((event.session2.startTime.isBefore(date) &&
-        event.session2.endTime.isAfter(date))) {
-      haveRunningSession = true;
-    } else if ((event.session3.startTime.isBefore(date) &&
-        event.session3.endTime.isAfter(date))) {
-      haveRunningSession = true;
-    } else if ((event.session4.startTime.isBefore(date) &&
-        event.session4.endTime.isAfter(date))) {
-      haveRunningSession = true;
-    } else if ((event.session5.startTime.isBefore(date) &&
-        event.session5.endTime.isAfter(date))) {
-      haveRunningSession = true;
+    int c = 0;
+    while (c < event.sessions.length) {
+      if (event.sessions[c].startTime.isBefore(date) &&
+          event.sessions[c].endTime.isAfter(date)) {
+        haveRunningSession = true;
+        break;
+      }
+      c++;
     }
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 1),
       child: Material(
         elevation: 10.0,
         color: Colors.transparent,
-        child: GestureDetector(
+        child: Card(
           child: Container(
             height: 143,
             decoration: BoxDecoration(
@@ -105,7 +101,7 @@ class EventTrackerItem extends StatelessWidget {
                 bottomLeft: Radius.circular(5),
                 bottomRight: Radius.circular(5),
               ),
-              color: useDarkMode ? const Color(0xff1d1d28) : Colors.black,
+              color: Colors.transparent,
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -137,16 +133,12 @@ class EventTrackerItem extends StatelessWidget {
                             event.meetingCountryName,
                             style: const TextStyle(
                               fontSize: 18,
-                              color: Colors.white,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
                           haveRunningSession
                               ? Text(
                                   AppLocalizations.of(context)!.sessionRunning,
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                  ),
                                 )
                               : Container(),
                           SizedBox(
@@ -157,14 +149,12 @@ class EventTrackerItem extends StatelessWidget {
                                     event.meetingOfficialName,
                                     style: const TextStyle(
                                       fontSize: 12,
-                                      color: Colors.white,
                                     ),
                                   )
                                 : Marquee(
                                     text: event.meetingOfficialName,
                                     style: const TextStyle(
                                       fontSize: 12,
-                                      color: Colors.white,
                                     ),
                                     pauseAfterRound: const Duration(seconds: 1),
                                     startAfter: const Duration(seconds: 1),
@@ -195,6 +185,8 @@ class EventTrackerItem extends StatelessWidget {
                         shape: const ContinuousRectangleBorder(
                           borderRadius: BorderRadius.zero,
                         ),
+                        backgroundColor:
+                            Theme.of(context).colorScheme.onPrimary,
                       ),
                       child: Row(
                         children: const [
@@ -202,15 +194,11 @@ class EventTrackerItem extends StatelessWidget {
                             padding: EdgeInsets.all(10),
                             child: Text(
                               'RACE HUB',
-                              style: TextStyle(
-                                color: Colors.white,
-                              ),
                             ),
                           ),
                           Spacer(),
                           Icon(
                             Icons.arrow_forward_rounded,
-                            color: Colors.white,
                           ),
                         ],
                       ),

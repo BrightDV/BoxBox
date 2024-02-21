@@ -17,25 +17,15 @@
  * Copyright (c) 2022-2024, BrightDV
  */
 
-// TODO: md3
-
-import 'dart:async';
-
 import 'package:boxbox/Screens/free_practice_screen.dart';
 import 'package:boxbox/Screens/race_details.dart';
-import 'package:boxbox/api/driver_components.dart';
 import 'package:boxbox/api/event_tracker.dart';
-import 'package:boxbox/api/livetiming.dart';
-import 'package:boxbox/helpers/driver_result_item.dart';
-import 'package:boxbox/helpers/loading_indicator_util.dart';
-import 'package:boxbox/helpers/request_error.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_timer_countdown/flutter_timer_countdown.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 
 class SessionScreen extends StatefulWidget {
   final String sessionFullName;
@@ -49,15 +39,31 @@ class SessionScreen extends StatefulWidget {
 
 class _SessionScreenState extends State<SessionScreen> {
   final List<ContentBlocker> contentBlockers = [];
+  final CookieManager cookieManager = CookieManager.instance();
 
   @override
   void initState() {
     super.initState();
     if (!kIsWeb) {
+      final expiresDate =
+          DateTime.now().add(Duration(days: 3)).millisecondsSinceEpoch;
+
+      cookieManager.setCookie(
+        url: WebUri('https://www.formula1.com/en/live-experience-webview.html'),
+        name: "login-session",
+        value:
+            '{"data":{"subscriptionToken":"eyJraWQiOiIxIiwidHlwIjoiSldUIiwiYWxnIjoiUlMyNTYifQ.eyJFeHRlcm5hbEF1dGhvcml6YXRpb25zQ29udGV4dERhdGEiOiIiLCJTdWJzY3JpcHRpb25TdGF0dXMiOiJpbmFjdGl2ZSIsIlN1YnNjcmliZXJJZCI6IjIwMjE0MjczMiIsIkZpcnN0TmFtZSI6IiIsIkxhc3ROYW1lIjoiIiwiZXhwIjoxNzA4ODYzMTU3LCJTZXNzaW9uSWQiOiJleUowZVhBaU9pSktWMVFpTENKaGJHY2lPaUpJVXpJMU5pSjkuZXlKemFTSTZJall3WVRsaFpEZzBMV1U1TTJRdE5EZ3daaTA0TUdRMkxXRm1NemMwT1RSbU1tVXlNaUlzSW1KMUlqb2lNVEF3TVRFaUxDSnBaQ0k2SWpNek56Y3haRGxrTFdJNVlqRXROREV3TnkwNE5UUXlMVFUxTWpjellqQXlaams1TlNJc0ltd2lPaUpsYmkxSFFpSXNJbVJqSWpvaU16WTBOQ0lzSW5RaU9pSXhJaXdpWVdWa0lqb2lNakF5TkMwd015MHdNbFF4TWpveE1qb3dPUzQ0TlRkYUlpd2laV1FpT2lJeU1ESTBMVEF6TFRBeVZERXlPakV5T2pBNUxqZzFOMW9pTENKalpXUWlPaUl5TURJMExUQXlMVEl5VkRFeU9qRXlPakE1TGprd05Wb2lMQ0p1WVcxbGFXUWlPaUl5TURJeE5ESTNNeklpTENKa2RDSTZJalFpTENKcGNDSTZJakU0TlM0eE1EY3VOVFl1TnpZaUxDSmpieUk2SWs1TVJDSXNJbU1pT2lKU1QwOVRSVTVFUVVGTUlpd2ljM1FpT2lKT1FpSXNJbkJqSWpvaU5EY3dNU0lzSW1semN5STZJbUZ6WTJWdVpHOXVMblIySWl3aVlYVmtJam9pWVhOalpXNWtiMjR1ZEhZaUxDSmxlSEFpT2pFM01Ea3pPREUxTWprc0ltNWlaaUk2TVRjd09EVXhOelV5T1gwLkd0OURFM2RoZlViMTEzeFZLZDF0WjlueXhLZ1NRV2xDNmpaN0RMaHNrUjAiLCJpYXQiOjE3MDg1MTc1NTcsIlN1YnNjcmliZWRQcm9kdWN0IjoiIiwianRpIjoiOGRkZmExYjUtNGNiYi00NmFlLTk3NzEtZGNiZDY1Mzc0YWIzIn0.Zo_FVoER16uHTHmfiAwhGmHRzK5Mri9frFrYzUz3Hzsgv99HI_SQfBMpB4q-j1s7s6egnxTZiGMuwenIRmFqHzxuVyexuH7UIt6nlsyn15MfkO2eU3vJynMSjBMj0qOTfNPxr9k4GWw8RJWZrVm8qCc5XIwluaT-RAyP0iLZSVUbafwBGYIHg5lkkmdsFrIvoBg0NU5RTxI7ItXgCte57vjueLL3NA3VOy6u9eZpJueASzQBBxd3dmFHYkgqF6ssLOfVKAKcEoOcotu1_A7pmCLYHBL9i9_AaHzasmXl6ekUK8U1XqxBXKwf8jqHBkBH50GMMs5D162B0dtjBlcmEw"}}',
+        expiresDate: expiresDate,
+        isSecure: false,
+        path: '/',
+        isHttpOnly: false,
+        domain: '.formula1.com',
+        sameSite: HTTPCookieSameSitePolicy.LAX,
+      );
       ContentBlocker(
         trigger: ContentBlockerTrigger(
           urlFilter: ".*",
-          unlessDomain: ["live.planetf1.com"],
+          unlessDomain: ["formula1.com"],
           resourceType: [
             ContentBlockerTriggerResourceType.SCRIPT,
             ContentBlockerTriggerResourceType.RAW,
@@ -88,14 +94,14 @@ class _SessionScreenState extends State<SessionScreen> {
 
   @override
   Widget build(BuildContext context) {
-    bool useDarkMode =
-        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     int timeBetween(DateTime from, DateTime to) {
       return to.difference(from).inSeconds;
     }
 
+    DateTime now = DateTime.now();
+
     int timeToRace = timeBetween(
-      DateTime.now(),
+      now,
       widget.session.startTime,
     );
     int days = (timeToRace / 60 / 60 / 24).round();
@@ -103,21 +109,17 @@ class _SessionScreenState extends State<SessionScreen> {
     int minutes = (timeToRace / 60 - days * 24 * 60 - hours * 60 + 60).round();
     int seconds =
         (timeToRace - days * 24 * 60 * 60 - hours * 60 * 60 - minutes * 60);
+
     return widget.session.sessionsAbbreviation.startsWith('p')
         ? widget.session.state == 'upcoming' ||
                 widget.session.startTime.isAfter(DateTime.now())
             ? Scaffold(
                 appBar: AppBar(
+                  backgroundColor: Theme.of(context).colorScheme.onPrimary,
                   title: Text(
                     widget.sessionFullName,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w600,
-                    ),
                   ),
                 ),
-                backgroundColor: useDarkMode
-                    ? Theme.of(context).scaffoldBackgroundColor
-                    : Colors.white,
                 body: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -129,7 +131,6 @@ class _SessionScreenState extends State<SessionScreen> {
                           AppLocalizations.of(context)!.sessionStartsIn,
                           style: TextStyle(
                             fontSize: 20,
-                            color: useDarkMode ? Colors.white : Colors.black,
                           ),
                         ),
                       ),
@@ -146,14 +147,12 @@ class _SessionScreenState extends State<SessionScreen> {
                       ),
                       timeTextStyle: TextStyle(
                         fontSize: 25,
-                        color: useDarkMode ? Colors.white : Colors.black,
                       ),
                       colonsTextStyle: TextStyle(
                         fontSize: 23,
-                        color: useDarkMode ? Colors.white : Colors.black,
                       ),
                       descriptionTextStyle: TextStyle(
-                        color: Theme.of(context).primaryColor,
+                        color: Theme.of(context).colorScheme.onPrimary,
                         fontSize: 20,
                       ),
                       spacerWidth: 15,
@@ -176,6 +175,7 @@ class _SessionScreenState extends State<SessionScreen> {
                     widget.session.endTime.isAfter(DateTime.now())
                 ? Scaffold(
                     appBar: AppBar(
+                      backgroundColor: Theme.of(context).colorScheme.onPrimary,
                       title: Text(
                         widget.sessionFullName,
                       ),
@@ -183,11 +183,12 @@ class _SessionScreenState extends State<SessionScreen> {
                     body: InAppWebView(
                       initialUrlRequest: URLRequest(
                         url: WebUri(
-                          "https://live.planetf1.com/",
+                          "https://www.formula1.com/en/live-experience-webview.html",
                         ),
-                      ),
-                      initialSettings: InAppWebViewSettings(
-                        contentBlockers: contentBlockers,
+                        headers: {
+                          'User-Agent':
+                              'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:123.0) Gecko/20100101 Firefox/123.0',
+                        },
                       ),
                       gestureRecognizers: {
                         Factory<VerticalDragGestureRecognizer>(
@@ -217,16 +218,11 @@ class _SessionScreenState extends State<SessionScreen> {
                   )
         : Scaffold(
             appBar: AppBar(
+              backgroundColor: Theme.of(context).colorScheme.onPrimary,
               title: Text(
                 widget.sessionFullName,
-                style: const TextStyle(
-                  fontWeight: FontWeight.w600,
-                ),
               ),
             ),
-            backgroundColor: useDarkMode
-                ? Theme.of(context).scaffoldBackgroundColor
-                : Colors.white,
             body: widget.session.state == 'upcoming' ||
                     widget.session.startTime.isAfter(DateTime.now())
                 ? Column(
@@ -240,7 +236,6 @@ class _SessionScreenState extends State<SessionScreen> {
                             AppLocalizations.of(context)!.sessionStartsIn,
                             style: TextStyle(
                               fontSize: 20,
-                              color: useDarkMode ? Colors.white : Colors.black,
                             ),
                           ),
                         ),
@@ -257,14 +252,12 @@ class _SessionScreenState extends State<SessionScreen> {
                         ),
                         timeTextStyle: TextStyle(
                           fontSize: 25,
-                          color: useDarkMode ? Colors.white : Colors.black,
                         ),
                         colonsTextStyle: TextStyle(
                           fontSize: 23,
-                          color: useDarkMode ? Colors.white : Colors.black,
                         ),
                         descriptionTextStyle: TextStyle(
-                          color: Theme.of(context).primaryColor,
+                          color: Theme.of(context).colorScheme.onPrimary,
                           fontSize: 20,
                         ),
                         spacerWidth: 15,
@@ -308,11 +301,12 @@ class _SessionScreenState extends State<SessionScreen> {
                     : InAppWebView(
                         initialUrlRequest: URLRequest(
                           url: WebUri(
-                            "https://live.planetf1.com/",
+                            "https://www.formula1.com/en/live-experience-webview.html",
                           ),
-                        ),
-                        initialSettings: InAppWebViewSettings(
-                          contentBlockers: contentBlockers,
+                          headers: {
+                            'User-Agent':
+                                'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:123.0) Gecko/20100101 Firefox/123.0',
+                          },
                         ),
                         gestureRecognizers: {
                           Factory<VerticalDragGestureRecognizer>(
@@ -327,360 +321,5 @@ class _SessionScreenState extends State<SessionScreen> {
                         },
                       ),
           );
-  }
-}
-
-class SessionFeed extends StatefulWidget {
-  const SessionFeed({Key? key}) : super(key: key);
-  @override
-  State<SessionFeed> createState() => _SessionFeedState();
-}
-
-class _SessionFeedState extends State<SessionFeed> {
-  Future<Map> getSessionInfo() async {
-    return await LiveTiming().sessionInfo();
-  }
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder<Map>(
-      future: getSessionInfo(),
-      builder: (context, snapshot) {
-        return snapshot.hasError
-            ? Text(snapshot.error.toString())
-            : snapshot.hasData
-                ? SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        TrackStatus(snapshot.data!),
-                        Leaderboard(snapshot.data!),
-                      ],
-                    ),
-                  )
-                : const LoadingIndicatorUtil();
-      },
-    );
-  }
-}
-
-class TrackStatus extends StatefulWidget {
-  final Map sessionInfo;
-  const TrackStatus(this.sessionInfo, {Key? key}) : super(key: key);
-
-  @override
-  State<TrackStatus> createState() => _TrackStatusState();
-}
-
-class _TrackStatusState extends State<TrackStatus> {
-  Map trackStates = {
-    '1': 'Drapeau Vert',
-    '2': 'Drapeau Jaune',
-    '3': 'Unknown',
-    '4': 'Voiture de Sécurité',
-    '5': 'Drapeau Rouge',
-    '6': 'Voiture de Sécurité Virtuelle',
-    '7': 'Fin de la Voiture de Sécurité Virtuelle',
-  };
-
-  Map backgroundColors = {
-    "1": Colors.green,
-    "2": Colors.yellow,
-    "3": Colors.black,
-    "4": Colors.yellow,
-    "5": Colors.red,
-    "6": Colors.yellow,
-    "7": Colors.yellow,
-  };
-
-  late Timer _timer;
-
-  @override
-  void initState() {
-    super.initState();
-    _timer = Timer.periodic(
-      const Duration(seconds: 5),
-      (_) => setState(() {}),
-    );
-  }
-
-  @override
-  void dispose() {
-    _timer.cancel();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 50,
-      child: FutureBuilder<Map>(
-        future: LiveTiming().trackStatus(widget.sessionInfo),
-        builder: (context, snapshot) => snapshot.hasError
-            ? RequestErrorWidget(snapshot.error.toString())
-            : snapshot.hasData
-                ? Container(
-                    height: 50,
-                    color: backgroundColors[snapshot.data?['Status']],
-                    child: Center(
-                      child: Text(
-                        trackStates[snapshot.data?['Status']],
-                        style: const TextStyle(color: Colors.white),
-                      ),
-                    ),
-                  )
-                : const LoadingIndicatorUtil(),
-      ),
-    );
-  }
-}
-
-class Leaderboard extends StatefulWidget {
-  final Map sessionInfo;
-  const Leaderboard(this.sessionInfo, {Key? key}) : super(key: key);
-
-  @override
-  State<Leaderboard> createState() => _LeaderboardState();
-}
-
-class _LeaderboardState extends State<Leaderboard> {
-  Map numberToPilot = {
-    "1": ["max_verstappen", "Max", "Verstappen", "VER", "red_bull"],
-    "16": ["leclerc", "Charles", "Leclerc", "LEC", "ferrari"],
-    "11": ["perez", "Sergio", "Pérez", "PER", "red_bull"],
-    "55": ["sainz", "Carlos", "Sainz", "SAI", "ferrari"],
-    "63": ["russell", "Georges", "Russell", "RUS", "mercedes"],
-    "44": ["hamilton", "Lewis", "Hamilton", "HAM", "mercedes"],
-    "4": ["norris", "Lando", "Norris", "NOR", "mclaren"],
-    "31": ["ocon", "Esteban", "Ocon", "OCO", "alpine"],
-    "77": ["bottas", "Valtteri", "Bottas", "BOT", "alfa"],
-    "14": ["alonso", "Alonso", "Fernando", "ALO", "alpine"],
-    "20": ["kevin_magnussen", "Kevin", "Magnussen", "MAG", "haas"],
-    "3": ["ricciardo", "Daniel", "Ricciardo", "RIC", "mclaren"],
-    "10": ["gasly", "Pierre", "Gasly", "GAS", "alphatauri"],
-    "5": ["vettel", "Sebastian", "Vettel", "VET", "aston_martin"],
-    "47": ["mick_schumacher", "Mick", "Schumacher", "MSC", "haas"],
-    "22": ["tsunoda", "Yuki", "Tsunoda", "TSU", "alphatauri"],
-    "24": ["zhou", "Guanyu", "Zhou", "ZHO", "alfa"],
-    "23": ["albon", "Alexander", "Albon", "ALB", "williams"],
-    "18": ["stroll", "Lance", "Stroll", "STR", "aston_martin"],
-    "6": ["latifi", "Nicholas", "Latifi", "LAT", "williams"],
-    "27": ["hulkenberg", "Nico", "Hülkenberg", "HUL", "aston_martin"],
-    "17": ["de_vries", "Nyck", "De Vries", "VRI", "mercedes"],
-  };
-
-  late Timer _timer;
-
-  @override
-  void initState() {
-    super.initState();
-    _timer = Timer.periodic(
-      const Duration(seconds: 2),
-      (_) => setState(() {}),
-    );
-  }
-
-  @override
-  void dispose() {
-    _timer.cancel();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder<Map>(
-      future: LiveTiming().timingData(widget.sessionInfo),
-      builder: (context, snapshot) {
-        if (snapshot.hasError == true) {
-          return RequestErrorWidget(
-            snapshot.error.toString(),
-          );
-        } else {
-          if (snapshot.hasData == true) {
-            List drivers = snapshot.data!.keys.toList();
-            List driversResults = [];
-            if (widget.sessionInfo['Path'].endsWith('Race/')) {
-              for (var element in drivers) {
-                snapshot.data![element.toString()]['Line'] == 1
-                    ? driversResults.add(
-                        DriverResult(
-                          numberToPilot[element.toString()][0],
-                          snapshot.data![element]['Line'].toString(),
-                          element.toString(),
-                          numberToPilot[element.toString()][1],
-                          numberToPilot[element.toString()][2],
-                          numberToPilot[element.toString()][3],
-                          numberToPilot[element.toString()][4],
-                          snapshot.data![element]['Retired']
-                              ? 'DNF'
-                              : snapshot.data![element]['InPit']
-                                  ? 'PIT'
-                                  : snapshot.data![element]['PitOut']
-                                      ? 'PIT OUT'
-                                      : snapshot.data![element]['GapToLeader']
-                                          .toString(),
-                          false,
-                          snapshot.data![element]['BestLapTime']['Value'],
-                          snapshot.data![element]['BestLapTime']['Lap'],
-                          lapsDone: snapshot.data![element]['NumberOfLaps'],
-                        ),
-                      )
-                    : driversResults.add(
-                        DriverResult(
-                          numberToPilot[element.toString()][0],
-                          snapshot.data![element]['Line'].toString(),
-                          element.toString(),
-                          numberToPilot[element.toString()][1],
-                          numberToPilot[element.toString()][2],
-                          numberToPilot[element.toString()][3],
-                          numberToPilot[element.toString()][4],
-                          snapshot.data![element]['TimeDiffToPositionAhead']
-                              .toString(),
-                          snapshot.data![element]['PersonalBestLapTime']
-                                      ['Position'] ==
-                                  1
-                              ? true
-                              : false,
-                          snapshot.data![element]['PersonalBestLapTime']
-                              ['Value'],
-                          snapshot.data![element]['PersonalBestLapTime']['Lap'],
-                        ),
-                      );
-              }
-            } else {
-              for (var element in drivers) {
-                snapshot.data![element.toString()]['Line'] == 1
-                    ? driversResults.add(
-                        DriverResult(
-                          numberToPilot[element.toString()][0],
-                          snapshot.data![element]['Line'].toString(),
-                          element.toString(),
-                          numberToPilot[element.toString()][1],
-                          numberToPilot[element.toString()][2],
-                          numberToPilot[element.toString()][3],
-                          numberToPilot[element.toString()][4],
-                          snapshot.data![element]['BestLapTime']['Value']
-                              .toString(),
-                          snapshot.data![element]['PersonalBestLapTime']
-                                      ['Position'] ==
-                                  1
-                              ? true
-                              : false,
-                          snapshot.data![element]['PersonalBestLapTime']
-                              ['Value'],
-                          snapshot.data![element]['PersonalBestLapTime']['Lap'],
-                        ),
-                      )
-                    : driversResults.add(
-                        DriverResult(
-                          numberToPilot[element.toString()][0],
-                          snapshot.data![element]['Line'].toString(),
-                          element.toString(),
-                          numberToPilot[element.toString()][1],
-                          numberToPilot[element.toString()][2],
-                          numberToPilot[element.toString()][3],
-                          numberToPilot[element.toString()][4],
-                          snapshot.data![element]['TimeDiffToFastest']
-                              .toString(),
-                          snapshot.data![element]['PersonalBestLapTime']
-                                      ['Position'] ==
-                                  1
-                              ? true
-                              : false,
-                          snapshot.data![element]['PersonalBestLapTime']
-                              ['Value'],
-                          snapshot.data![element]['PersonalBestLapTime']['Lap'],
-                        ),
-                      );
-              }
-            }
-
-            driversResults.sort((a, b) {
-              return int.parse(a.position).compareTo(int.parse(b.position));
-            });
-
-            return ListView.builder(
-              shrinkWrap: true,
-              itemCount: drivers.length,
-              physics: const BouncingScrollPhysics(),
-              itemBuilder: (context, index) {
-                return DriverResultItem(
-                  driversResults[index],
-                  index,
-                );
-              },
-            );
-          } else {
-            return const LoadingIndicatorUtil();
-          }
-        }
-      },
-    );
-  }
-}
-
-class WeatherPopup extends StatelessWidget {
-  const WeatherPopup({Key? key}) : super(key: key);
-
-  Future<Map> getWeather() async {
-    Map sessionInfo = await LiveTiming().sessionInfo();
-    return await LiveTiming().weather(sessionInfo);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      title: const Center(
-        child: Text('MÉTÉO'),
-      ),
-      content: FutureBuilder<Map>(
-        future: getWeather(),
-        builder: (context, snapshot) => snapshot.hasError
-            ? RequestErrorWidget(snapshot.error.toString())
-            : snapshot.hasData
-                ? Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                          'Température de l\'air: ${snapshot.data!["AirTemp"]}°C'),
-                      Text(
-                          'Température du circuit: ${snapshot.data!["TrackTemp"]}°C'),
-                      Text('Humidité: ${snapshot.data!["Humidity"]}%'),
-                      Text('Pression: ${snapshot.data!["Pressure"]}hPa'),
-                      Text('Pluie: ${snapshot.data!["Rainfall"]}mm'),
-                      Text('Vent: ${snapshot.data!["WindSpeed"]}km/h'),
-                      Text(
-                          'Direction du vent: ${snapshot.data!["WindDirection"]}°'),
-                    ],
-                  )
-                : const LoadingIndicatorUtil(),
-      ),
-      actions: <Widget>[
-        TextButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          child: const Text('Fermer'),
-        ),
-      ],
-    );
-  }
-}
-
-class EventsFeed extends StatefulWidget {
-  const EventsFeed({Key? key}) : super(key: key);
-
-  @override
-  State<EventsFeed> createState() => _EventsFeedState();
-}
-
-class _EventsFeedState extends State<EventsFeed> {
-  @override
-  Widget build(BuildContext context) {
-    return const Text('Radios');
   }
 }
