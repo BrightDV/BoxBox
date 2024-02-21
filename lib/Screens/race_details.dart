@@ -1167,7 +1167,7 @@ class _SessionCountdownTimerState extends State<SessionCountdownTimer> {
                   fontSize: 23,
                 ),
                 descriptionTextStyle: TextStyle(
-                  color: Theme.of(context).colorScheme.onPrimary,
+                  color: Theme.of(context).colorScheme.error,
                   fontSize: 20,
                 ),
                 spacerWidth: 15,
@@ -1206,7 +1206,7 @@ class _SessionCountdownTimerState extends State<SessionCountdownTimer> {
                   ),
                   style: TextButton.styleFrom(
                     side: BorderSide(
-                      //color: useDarkMode ? Colors.white : Colors.black,
+                      color: Theme.of(context).colorScheme.error,
                       width: 1,
                     ),
                   ),
@@ -1254,7 +1254,6 @@ class _SessionCountdownTimerState extends State<SessionCountdownTimer> {
                 flex: 2,
                 child: Switch(
                   value: shouldUseCountdown,
-                  activeColor: Theme.of(context).colorScheme.onPrimary,
                   onChanged: (value) => setState(
                     () {
                       shouldUseCountdown = value;

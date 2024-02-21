@@ -188,16 +188,14 @@ class _MainBottomNavigationBarState extends State<MainBottomNavigationBar> {
                                   decoration: BoxDecoration(
                                     border: Border.all(
                                       color:
-                                          Theme.of(context).colorScheme.outline,
+                                          Theme.of(context).colorScheme.primary,
                                       width: 1.0,
                                     ),
                                     borderRadius: BorderRadius.circular(10),
                                     color: selected &&
                                             pressed ==
                                                 filterItems.indexOf(filterItem)
-                                        ? Theme.of(context)
-                                            .colorScheme
-                                            .onPrimary
+                                        ? Theme.of(context).colorScheme.primary
                                         : Colors.transparent,
                                   ),
                                   child: Padding(
@@ -212,7 +210,7 @@ class _MainBottomNavigationBarState extends State<MainBottomNavigationBar> {
                                             ? Colors.white
                                             : Theme.of(context)
                                                 .colorScheme
-                                                .outline,
+                                                .primary,
                                       ),
                                     ),
                                   ),
@@ -340,14 +338,13 @@ class _MainBottomNavigationBarState extends State<MainBottomNavigationBar> {
                 position,
                 currentVisibility,
               ),
+              preferredWidgetSize: Size(double.infinity, 58),
               child: BottomNavigationBar(
                 type: BottomNavigationBarType.fixed,
                 unselectedItemColor:
                     useDarkMode ? Colors.white : Colors.grey[600],
                 selectedItemColor: useDarkMode
-                    ? HSLColor.fromColor(
-                        Theme.of(context).colorScheme.onPrimary,
-                      ).withLightness(0.4).toColor()
+                    ? Theme.of(context).colorScheme.inversePrimary
                     : Theme.of(context).colorScheme.onPrimary,
                 currentIndex: _selectedIndex,
                 elevation: 10.0,
