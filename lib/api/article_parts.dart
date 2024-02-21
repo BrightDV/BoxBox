@@ -516,7 +516,8 @@ class WidgetsList extends StatelessWidget {
                                                                 .ballScaleMultiple,
                                                             colors: [
                                                               Theme.of(context)
-                                                                  .primaryColor,
+                                                                  .colorScheme
+                                                                  .onPrimary,
                                                             ],
                                                           ),
                                                         ),
@@ -565,321 +566,318 @@ class WidgetsList extends StatelessWidget {
                                               ),
                                             )
                                           : element['contentType'] ==
-                                                  'atomSessionResults'
+                                                  'atomInteractiveExperience'
                                               ? Padding(
-                                                  padding: const EdgeInsets.all(
-                                                    10,
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                    horizontal: 5.0,
+                                                    vertical: 30.0,
                                                   ),
-                                                  child: Container(
-                                                    height: element['fields']
-                                                                ['sessionType']
-                                                            .startsWith(
-                                                                'Starting Grid')
-                                                        ? 378
-                                                        : 255,
-                                                    decoration: BoxDecoration(
-                                                      border: Border.all(
+                                                  child: GestureDetector(
+                                                    child: Container(
+                                                      width: double.infinity,
+                                                      decoration: BoxDecoration(
                                                         color: useDarkMode
                                                             ? const Color(
                                                                 0xff1d1d28)
                                                             : Colors
-                                                                .grey.shade50,
+                                                                .grey.shade400,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(5),
                                                       ),
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              15.0),
-                                                    ),
-                                                    child: Column(
-                                                      children: [
-                                                        Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .only(
-                                                            top: 15,
-                                                          ),
-                                                          child: Text(
-                                                            element['fields'][
-                                                                'meetingCountryName'],
-                                                            style: TextStyle(
-                                                              color: useDarkMode
-                                                                  ? Colors.white
-                                                                  : Colors
-                                                                      .black,
-                                                              fontSize: 16,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w500,
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .fromLTRB(
+                                                          20,
+                                                          10,
+                                                          20,
+                                                          10,
+                                                        ),
+                                                        child: Row(
+                                                          children: [
+                                                            Text(
+                                                              AppLocalizations.of(
+                                                                      context)!
+                                                                  .openLiveBlog,
+                                                              style: TextStyle(
+                                                                color: useDarkMode
+                                                                    ? Colors
+                                                                        .white
+                                                                    : Colors
+                                                                        .black,
+                                                              ),
                                                             ),
+                                                            const Spacer(),
+                                                            SizedBox(
+                                                              width: 30.0,
+                                                              height: 30.0,
+                                                              child:
+                                                                  LoadingIndicator(
+                                                                indicatorType:
+                                                                    Indicator
+                                                                        .ballScaleMultiple,
+                                                                colors: [
+                                                                  Theme.of(
+                                                                          context)
+                                                                      .colorScheme
+                                                                      .onPrimary,
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    onTap: () => Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            Scaffold(
+                                                          appBar: AppBar(
+                                                            title: Text(
+                                                              element['fields']
+                                                                  ['title'],
+                                                            ),
+                                                            backgroundColor:
+                                                                Theme.of(
+                                                                        context)
+                                                                    .colorScheme
+                                                                    .onPrimary,
+                                                          ),
+                                                          body: InAppWebView(
+                                                            initialUrlRequest:
+                                                                URLRequest(
+                                                              url: WebUri(
+                                                                element['fields']
+                                                                    [
+                                                                    'eventUrl'],
+                                                              ),
+                                                            ),
+                                                            gestureRecognizers: {
+                                                              Factory<VerticalDragGestureRecognizer>(
+                                                                  () =>
+                                                                      VerticalDragGestureRecognizer()),
+                                                              Factory<HorizontalDragGestureRecognizer>(
+                                                                  () =>
+                                                                      HorizontalDragGestureRecognizer()),
+                                                              Factory<ScaleGestureRecognizer>(
+                                                                  () =>
+                                                                      ScaleGestureRecognizer()),
+                                                            },
                                                           ),
                                                         ),
-                                                        Text(
-                                                          element['fields'][
-                                                                      'sessionType'] ==
-                                                                  'Race'
-                                                              ? AppLocalizations.of(
-                                                                      context)!
-                                                                  .race
-                                                              : element['fields'][
+                                                      ),
+                                                    ),
+                                                  ),
+                                                )
+                                              : element['contentType'] ==
+                                                      'atomSessionResults'
+                                                  ? Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                        10,
+                                                      ),
+                                                      child: Container(
+                                                        height: element['fields']
+                                                                    [
+                                                                    'sessionType']
+                                                                .startsWith(
+                                                                    'Starting Grid')
+                                                            ? 378
+                                                            : 255,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          border: Border.all(
+                                                            color: useDarkMode
+                                                                ? const Color(
+                                                                    0xff1d1d28)
+                                                                : Colors.grey
+                                                                    .shade50,
+                                                          ),
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      15.0),
+                                                        ),
+                                                        child: Column(
+                                                          children: [
+                                                            Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .only(
+                                                                top: 15,
+                                                              ),
+                                                              child: Text(
+                                                                element['fields']
+                                                                    [
+                                                                    'meetingCountryName'],
+                                                                style:
+                                                                    TextStyle(
+                                                                  color: useDarkMode
+                                                                      ? Colors
+                                                                          .white
+                                                                      : Colors
+                                                                          .black,
+                                                                  fontSize: 16,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            Text(
+                                                              element['fields'][
                                                                           'sessionType'] ==
-                                                                      'Qualifying'
+                                                                      'Race'
                                                                   ? AppLocalizations.of(
                                                                           context)!
-                                                                      .qualifyings
+                                                                      .race
                                                                   : element['fields']
                                                                               [
                                                                               'sessionType'] ==
-                                                                          'Sprint'
+                                                                          'Qualifying'
                                                                       ? AppLocalizations.of(
                                                                               context)!
-                                                                          .sprint
+                                                                          .qualifyings
                                                                       : element['fields']['sessionType'] ==
-                                                                              'Sprint Shootout'
-                                                                          ? 'Sprint Shootout'
-                                                                          : element['fields']['sessionType'].startsWith('Starting Grid')
-                                                                              ? element['fields']['sessionType']
-                                                                              : element['fields']['sessionType'].endsWith('1')
-                                                                                  ? AppLocalizations.of(context)!.freePracticeOne
-                                                                                  : element['fields']['sessionType'].endsWith('2')
-                                                                                      ? AppLocalizations.of(context)!.freePracticeTwo
-                                                                                      : AppLocalizations.of(context)!.freePracticeThree,
-                                                          style: TextStyle(
-                                                            color: useDarkMode
-                                                                ? Colors.white
-                                                                : Colors.black,
-                                                            fontSize: 14,
-                                                          ),
-                                                        ),
-                                                        Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .only(
-                                                            top: 15,
-                                                            left: 15,
-                                                          ),
-                                                          child: Row(
-                                                            children: element[
+                                                                              'Sprint'
+                                                                          ? AppLocalizations.of(context)!
+                                                                              .sprint
+                                                                          : element['fields']['sessionType'] == 'Sprint Shootout'
+                                                                              ? 'Sprint Shootout'
+                                                                              : element['fields']['sessionType'].startsWith('Starting Grid')
+                                                                                  ? element['fields']['sessionType']
+                                                                                  : element['fields']['sessionType'].endsWith('1')
+                                                                                      ? AppLocalizations.of(context)!.freePracticeOne
+                                                                                      : element['fields']['sessionType'].endsWith('2')
+                                                                                          ? AppLocalizations.of(context)!.freePracticeTwo
+                                                                                          : AppLocalizations.of(context)!.freePracticeThree,
+                                                              style: TextStyle(
+                                                                color: useDarkMode
+                                                                    ? Colors
+                                                                        .white
+                                                                    : Colors
+                                                                        .black,
+                                                                fontSize: 14,
+                                                              ),
+                                                            ),
+                                                            Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .only(
+                                                                top: 15,
+                                                                left: 15,
+                                                              ),
+                                                              child: Row(
+                                                                children: element['fields']
+                                                                            [
+                                                                            'sessionType']
+                                                                        .startsWith(
+                                                                            'Starting Grid')
+                                                                    ? [
+                                                                        Expanded(
+                                                                          flex:
+                                                                              2,
+                                                                          child:
+                                                                              Text(
+                                                                            AppLocalizations.of(context)!.positionAbbreviation,
+                                                                            style:
+                                                                                TextStyle(
+                                                                              color: useDarkMode ? Colors.white : Colors.black,
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                        Expanded(
+                                                                          flex:
+                                                                              1,
+                                                                          child:
+                                                                              Container(),
+                                                                        ),
+                                                                        Expanded(
+                                                                          flex:
+                                                                              4,
+                                                                          child:
+                                                                              Text(
+                                                                            AppLocalizations.of(context)!.driverAbbreviation,
+                                                                            style:
+                                                                                TextStyle(
+                                                                              color: useDarkMode ? Colors.white : Colors.black,
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                        Expanded(
+                                                                          flex:
+                                                                              6,
+                                                                          child:
+                                                                              Text(
+                                                                            AppLocalizations.of(context)!.team.toUpperCase(),
+                                                                            style:
+                                                                                TextStyle(
+                                                                              color: useDarkMode ? Colors.white : Colors.black,
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                      ]
+                                                                    : [
+                                                                        Expanded(
+                                                                          flex: element['fields']['sessionType'] == 'Race' || element['fields']['sessionType'] == 'Sprint'
+                                                                              ? 5
+                                                                              : 4,
+                                                                          child:
+                                                                              Text(
+                                                                            AppLocalizations.of(context)!.positionAbbreviation,
+                                                                            style:
+                                                                                TextStyle(
+                                                                              color: useDarkMode ? Colors.white : Colors.black,
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                        const Spacer(),
+                                                                        Expanded(
+                                                                          flex:
+                                                                              5,
+                                                                          child:
+                                                                              Text(
+                                                                            AppLocalizations.of(context)!.time,
+                                                                            style:
+                                                                                TextStyle(
+                                                                              color: useDarkMode ? Colors.white : Colors.black,
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                        element['fields']['sessionType'] == 'Race' ||
+                                                                                element['fields']['sessionType'] == 'Sprint'
+                                                                            ? Expanded(
+                                                                                flex: 3,
+                                                                                child: Text(
+                                                                                  AppLocalizations.of(context)!.pointsAbbreviation,
+                                                                                  style: TextStyle(
+                                                                                    color: useDarkMode ? Colors.white : Colors.black,
+                                                                                  ),
+                                                                                ),
+                                                                              )
+                                                                            : Container(),
+                                                                      ],
+                                                              ),
+                                                            ),
+                                                            for (Map driverResults in element[
                                                                             'fields']
                                                                         [
                                                                         'sessionType']
                                                                     .startsWith(
                                                                         'Starting Grid')
-                                                                ? [
-                                                                    Expanded(
-                                                                      flex: 2,
-                                                                      child:
-                                                                          Text(
-                                                                        AppLocalizations.of(context)!
-                                                                            .positionAbbreviation,
-                                                                        style:
-                                                                            TextStyle(
-                                                                          color: useDarkMode
-                                                                              ? Colors.white
-                                                                              : Colors.black,
-                                                                        ),
-                                                                      ),
-                                                                    ),
-                                                                    Expanded(
-                                                                      flex: 1,
-                                                                      child:
-                                                                          Container(),
-                                                                    ),
-                                                                    Expanded(
-                                                                      flex: 4,
-                                                                      child:
-                                                                          Text(
-                                                                        AppLocalizations.of(context)!
-                                                                            .driverAbbreviation,
-                                                                        style:
-                                                                            TextStyle(
-                                                                          color: useDarkMode
-                                                                              ? Colors.white
-                                                                              : Colors.black,
-                                                                        ),
-                                                                      ),
-                                                                    ),
-                                                                    Expanded(
-                                                                      flex: 6,
-                                                                      child:
-                                                                          Text(
-                                                                        AppLocalizations.of(context)!
-                                                                            .team
-                                                                            .toUpperCase(),
-                                                                        style:
-                                                                            TextStyle(
-                                                                          color: useDarkMode
-                                                                              ? Colors.white
-                                                                              : Colors.black,
-                                                                        ),
-                                                                      ),
-                                                                    ),
-                                                                  ]
-                                                                : [
-                                                                    Expanded(
-                                                                      flex: element['fields']['sessionType'] == 'Race' ||
-                                                                              element['fields']['sessionType'] == 'Sprint'
-                                                                          ? 5
-                                                                          : 4,
-                                                                      child:
-                                                                          Text(
-                                                                        AppLocalizations.of(context)!
-                                                                            .positionAbbreviation,
-                                                                        style:
-                                                                            TextStyle(
-                                                                          color: useDarkMode
-                                                                              ? Colors.white
-                                                                              : Colors.black,
-                                                                        ),
-                                                                      ),
-                                                                    ),
-                                                                    const Spacer(),
-                                                                    Expanded(
-                                                                      flex: 5,
-                                                                      child:
-                                                                          Text(
-                                                                        AppLocalizations.of(context)!
-                                                                            .time,
-                                                                        style:
-                                                                            TextStyle(
-                                                                          color: useDarkMode
-                                                                              ? Colors.white
-                                                                              : Colors.black,
-                                                                        ),
-                                                                      ),
-                                                                    ),
-                                                                    element['fields']['sessionType'] ==
-                                                                                'Race' ||
-                                                                            element['fields']['sessionType'] ==
-                                                                                'Sprint'
-                                                                        ? Expanded(
-                                                                            flex:
-                                                                                3,
-                                                                            child:
-                                                                                Text(
-                                                                              AppLocalizations.of(context)!.pointsAbbreviation,
-                                                                              style: TextStyle(
-                                                                                color: useDarkMode ? Colors.white : Colors.black,
-                                                                              ),
-                                                                            ),
-                                                                          )
-                                                                        : Container(),
-                                                                  ],
-                                                          ),
-                                                        ),
-                                                        for (Map driverResults in element[
-                                                                        'fields']
-                                                                    [
-                                                                    'sessionType']
-                                                                .startsWith(
-                                                                    'Starting Grid')
-                                                            ? element['fields']
-                                                                    ['startingGrid']
-                                                                ['results']
-                                                            : element['fields']
-                                                                    ['raceResults${element['fields']['sessionType'] == 'Sprint' ? 'SprintQualifying' : element['fields']['sessionType'] == 'Sprint Shootout' ? 'SprintShootout' : element['fields']['sessionType']}']
-                                                                ['results'])
-                                                          element['fields']['sessionType'] ==
-                                                                      'Race' ||
-                                                                  element['fields']['sessionType'] ==
-                                                                      'Sprint'
-                                                              ? Padding(
-                                                                  padding:
-                                                                      const EdgeInsets
-                                                                          .only(
-                                                                    top: 7,
-                                                                  ),
-                                                                  child: Row(
-                                                                    children: [
-                                                                      Expanded(
-                                                                        flex: 2,
-                                                                        child:
-                                                                            Text(
-                                                                          driverResults['positionNumber'] == '66666'
-                                                                              ? 'DQ'
-                                                                              : driverResults['positionNumber'],
-                                                                          style:
-                                                                              TextStyle(
-                                                                            color: useDarkMode
-                                                                                ? Colors.white
-                                                                                : Colors.black,
-                                                                            fontWeight:
-                                                                                FontWeight.w500,
-                                                                          ),
-                                                                          textAlign:
-                                                                              TextAlign.center,
-                                                                        ),
-                                                                      ),
-                                                                      Expanded(
-                                                                        flex: 1,
-                                                                        child:
-                                                                            SizedBox(
-                                                                          height:
-                                                                              15,
-                                                                          child:
-                                                                              VerticalDivider(
-                                                                            color:
-                                                                                Color(
-                                                                              int.parse('FF${driverResults['teamColourCode']}', radix: 16),
-                                                                            ),
-                                                                            thickness:
-                                                                                5,
-                                                                            width:
-                                                                                5,
-                                                                          ),
-                                                                        ),
-                                                                      ),
-                                                                      Expanded(
-                                                                        flex: 3,
-                                                                        child:
-                                                                            Text(
-                                                                          driverResults['driverTLA']
-                                                                              .toString(),
-                                                                          style:
-                                                                              TextStyle(
-                                                                            color: useDarkMode
-                                                                                ? Colors.white
-                                                                                : Colors.black,
-                                                                          ),
-                                                                        ),
-                                                                      ),
-                                                                      const Spacer(),
-                                                                      Expanded(
-                                                                        flex: 6,
-                                                                        child:
-                                                                            Text(
-                                                                          driverResults['gapToLeader'] != "0.0"
-                                                                              ? '+${driverResults['gapToLeader']}'
-                                                                              : element['fields']['sessionType'] == 'Race'
-                                                                                  ? driverResults['raceTime']
-                                                                                  : driverResults['sprintQualifyingTime'],
-                                                                          style:
-                                                                              TextStyle(
-                                                                            color: useDarkMode
-                                                                                ? Colors.white
-                                                                                : Colors.black,
-                                                                          ),
-                                                                        ),
-                                                                      ),
-                                                                      Expanded(
-                                                                        flex: 3,
-                                                                        child:
-                                                                            Text(
-                                                                          element['fields']['sessionType'] == 'Race'
-                                                                              ? (driverResults['racePoints'] ?? '0').toString()
-                                                                              : (driverResults['sprintQualifyingPoints'] ?? '0').toString(),
-                                                                          style:
-                                                                              TextStyle(
-                                                                            color: useDarkMode
-                                                                                ? Colors.white
-                                                                                : Colors.black,
-                                                                          ),
-                                                                        ),
-                                                                      ),
-                                                                    ],
-                                                                  ),
-                                                                )
-                                                              : element['fields']
-                                                                          ['sessionType']
-                                                                      .startsWith('Starting Grid')
+                                                                ? element['fields']
+                                                                        ['startingGrid']
+                                                                    ['results']
+                                                                : element['fields']
+                                                                        ['raceResults${element['fields']['sessionType'] == 'Sprint' ? 'SprintQualifying' : element['fields']['sessionType'] == 'Sprint Shootout' ? 'SprintShootout' : element['fields']['sessionType']}']
+                                                                    ['results'])
+                                                              element['fields']['sessionType'] ==
+                                                                          'Race' ||
+                                                                      element['fields']['sessionType'] ==
+                                                                          'Sprint'
                                                                   ? Padding(
                                                                       padding:
                                                                           const EdgeInsets
@@ -910,76 +908,7 @@ class WidgetsList extends StatelessWidget {
                                                                               height: 15,
                                                                               child: VerticalDivider(
                                                                                 color: Color(
-                                                                                  int.parse(
-                                                                                    'FF${driverResults['teamColourCode']}',
-                                                                                    radix: 16,
-                                                                                  ),
-                                                                                ),
-                                                                                thickness: 5,
-                                                                                width: 5,
-                                                                              ),
-                                                                            ),
-                                                                          ),
-                                                                          Expanded(
-                                                                            flex:
-                                                                                4,
-                                                                            child:
-                                                                                Text(
-                                                                              driverResults['driverLastName'],
-                                                                              style: TextStyle(
-                                                                                color: useDarkMode ? Colors.white : Colors.black,
-                                                                              ),
-                                                                            ),
-                                                                          ),
-                                                                          const Spacer(),
-                                                                          Expanded(
-                                                                            flex:
-                                                                                6,
-                                                                            child:
-                                                                                Text(
-                                                                              driverResults['teamName'],
-                                                                              style: TextStyle(
-                                                                                color: useDarkMode ? Colors.white : Colors.black,
-                                                                              ),
-                                                                            ),
-                                                                          ),
-                                                                        ],
-                                                                      ),
-                                                                    )
-                                                                  : Padding(
-                                                                      padding:
-                                                                          const EdgeInsets
-                                                                              .only(
-                                                                        top: 7,
-                                                                      ),
-                                                                      child:
-                                                                          Row(
-                                                                        children: [
-                                                                          Expanded(
-                                                                            flex:
-                                                                                2,
-                                                                            child:
-                                                                                Text(
-                                                                              driverResults['positionNumber'] == '66666' ? 'DQ' : driverResults['positionNumber'],
-                                                                              style: TextStyle(
-                                                                                color: useDarkMode ? Colors.white : Colors.black,
-                                                                                fontWeight: FontWeight.w500,
-                                                                              ),
-                                                                              textAlign: TextAlign.center,
-                                                                            ),
-                                                                          ),
-                                                                          Expanded(
-                                                                            flex:
-                                                                                1,
-                                                                            child:
-                                                                                SizedBox(
-                                                                              height: 15,
-                                                                              child: VerticalDivider(
-                                                                                color: Color(
-                                                                                  int.parse(
-                                                                                    'FF${driverResults['teamColourCode']}',
-                                                                                    radix: 16,
-                                                                                  ),
+                                                                                  int.parse('FF${driverResults['teamColourCode']}', radix: 16),
                                                                                 ),
                                                                                 thickness: 5,
                                                                                 width: 5,
@@ -1003,7 +932,22 @@ class WidgetsList extends StatelessWidget {
                                                                                 6,
                                                                             child:
                                                                                 Text(
-                                                                              element['fields']['sessionType'].startsWith('Practice') ? driverResults['classifiedTime'] ?? '--' : driverResults['q3']?['classifiedTime'] ?? '--',
+                                                                              driverResults['gapToLeader'] != "0.0"
+                                                                                  ? '+${driverResults['gapToLeader']}'
+                                                                                  : element['fields']['sessionType'] == 'Race'
+                                                                                      ? driverResults['raceTime']
+                                                                                      : driverResults['sprintQualifyingTime'],
+                                                                              style: TextStyle(
+                                                                                color: useDarkMode ? Colors.white : Colors.black,
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                          Expanded(
+                                                                            flex:
+                                                                                3,
+                                                                            child:
+                                                                                Text(
+                                                                              element['fields']['sessionType'] == 'Race' ? (driverResults['racePoints'] ?? '0').toString() : (driverResults['sprintQualifyingPoints'] ?? '0').toString(),
                                                                               style: TextStyle(
                                                                                 color: useDarkMode ? Colors.white : Colors.black,
                                                                               ),
@@ -1011,433 +955,523 @@ class WidgetsList extends StatelessWidget {
                                                                           ),
                                                                         ],
                                                                       ),
-                                                                    ),
-                                                        Expanded(
-                                                          child: Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                    .only(
-                                                              top: 15,
-                                                            ),
-                                                            child: SizedBox(
-                                                              width: double
-                                                                  .infinity,
-                                                              child: ClipRRect(
-                                                                borderRadius:
-                                                                    const BorderRadius
-                                                                        .only(
-                                                                  topLeft:
-                                                                      Radius
-                                                                          .zero,
-                                                                  topRight:
-                                                                      Radius
-                                                                          .zero,
-                                                                  bottomLeft: Radius
-                                                                      .circular(
-                                                                          15),
-                                                                  bottomRight: Radius
-                                                                      .circular(
-                                                                          15),
-                                                                ),
-                                                                child:
-                                                                    ElevatedButton(
-                                                                  onPressed: () =>
-                                                                      Navigator
-                                                                          .push(
-                                                                    context,
-                                                                    MaterialPageRoute(
-                                                                      builder: (context) => element['fields']['sessionType']
-                                                                              .startsWith('Practice')
-                                                                          ? FreePracticeScreen(
-                                                                              element['fields']['raceResults${element['fields']['sessionType']}']['description'].endsWith('1')
-                                                                                  ? AppLocalizations.of(context)!.freePracticeOne
-                                                                                  : element['fields']['raceResults${element['fields']['sessionType']}']['description'].endsWith('2')
-                                                                                      ? AppLocalizations.of(context)!.freePracticeTwo
-                                                                                      : AppLocalizations.of(context)!.freePracticeThree,
-                                                                              int.parse(
-                                                                                element['fields']['raceResults${element['fields']['sessionType']}']['session'].substring(1),
-                                                                              ),
-                                                                              '',
-                                                                              int.parse(
-                                                                                element['fields']['season'],
-                                                                              ),
-                                                                              element['fields']['meetingOfficialName'],
-                                                                              raceUrl: element['fields']['cta'],
-                                                                            )
-                                                                          : Scaffold(
-                                                                              appBar: AppBar(
-                                                                                title: Text(
-                                                                                  element['fields']['sessionType'] == 'Race'
-                                                                                      ? AppLocalizations.of(context)!.race
-                                                                                      : element['fields']['sessionType'] == 'Sprint'
-                                                                                          ? AppLocalizations.of(context)!.sprint
-                                                                                          : element['fields']['sessionType'] == 'Sprint Shootout'
-                                                                                              ? 'Sprint Shootout'
-                                                                                              : element['fields']['cta'].endsWith('starting-grid.html')
-                                                                                                  ? AppLocalizations.of(context)!.startingGrid
-                                                                                                  : AppLocalizations.of(context)!.qualifyings,
+                                                                    )
+                                                                  : element['fields']
+                                                                              ['sessionType']
+                                                                          .startsWith('Starting Grid')
+                                                                      ? Padding(
+                                                                          padding:
+                                                                              const EdgeInsets.only(
+                                                                            top:
+                                                                                7,
+                                                                          ),
+                                                                          child:
+                                                                              Row(
+                                                                            children: [
+                                                                              Expanded(
+                                                                                flex: 2,
+                                                                                child: Text(
+                                                                                  driverResults['positionNumber'] == '66666' ? 'DQ' : driverResults['positionNumber'],
+                                                                                  style: TextStyle(
+                                                                                    color: useDarkMode ? Colors.white : Colors.black,
+                                                                                    fontWeight: FontWeight.w500,
+                                                                                  ),
+                                                                                  textAlign: TextAlign.center,
                                                                                 ),
-                                                                                backgroundColor: Theme.of(context).colorScheme.onPrimary,
                                                                               ),
-                                                                              backgroundColor: Theme.of(context).colorScheme.background,
-                                                                              body: element['fields']['sessionType'] == 'Race' || element['fields']['sessionType'] == 'Sprint'
-                                                                                  ? RaceResultsProvider(
-                                                                                      raceUrl: element['fields']['cta'],
-                                                                                    )
-                                                                                  : SingleChildScrollView(
-                                                                                      child: element['fields']['cta'].endsWith('starting-grid.html')
-                                                                                          ? StartingGridProvider(element['fields']['cta'])
-                                                                                          : QualificationResultsProvider(
-                                                                                              raceUrl: element['fields']['cta'],
-                                                                                              isSprintShootout: element['fields']['sessionType'] == 'Sprint Shootout' ? true : false,
-                                                                                            ),
+                                                                              Expanded(
+                                                                                flex: 1,
+                                                                                child: SizedBox(
+                                                                                  height: 15,
+                                                                                  child: VerticalDivider(
+                                                                                    color: Color(
+                                                                                      int.parse(
+                                                                                        'FF${driverResults['teamColourCode']}',
+                                                                                        radix: 16,
+                                                                                      ),
                                                                                     ),
-                                                                            ),
-                                                                    ),
-                                                                  ),
-                                                                  style: ElevatedButton
-                                                                      .styleFrom(
-                                                                    shape:
-                                                                        const ContinuousRectangleBorder(
-                                                                      borderRadius:
-                                                                          BorderRadius
-                                                                              .zero,
-                                                                    ),
-                                                                  ),
-                                                                  child: Text(
-                                                                    AppLocalizations.of(
-                                                                            context)!
-                                                                        .viewResults,
-                                                                    style:
-                                                                        const TextStyle(
-                                                                      color: Colors
-                                                                          .white,
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                )
-                                              : element['contentType'] ==
-                                                      'atomTableContent'
-                                                  ? Padding(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              5),
-                                                      child: Container(
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          border: Border.all(
-                                                            color: Colors
-                                                                .grey.shade700,
-                                                          ),
-                                                          borderRadius:
-                                                              const BorderRadius
-                                                                  .only(
-                                                            topLeft:
-                                                                Radius.circular(
-                                                                    15),
-                                                            topRight:
-                                                                Radius.circular(
-                                                                    15),
-                                                          ),
-                                                        ),
-                                                        height: (element['fields']['tableData']
-                                                                            [
-                                                                            'tableContent']
-                                                                        .length +
-                                                                    1) *
-                                                                50.0 +
-                                                            2,
-                                                        child:
-                                                            SingleChildScrollView(
-                                                          scrollDirection:
-                                                              Axis.horizontal,
-                                                          child: Column(
-                                                            children: [
-                                                              SizedBox(
-                                                                height: 50,
-                                                                child: Padding(
-                                                                  padding:
-                                                                      const EdgeInsets
-                                                                          .all(
-                                                                          10),
-                                                                  child: Text(
-                                                                    element['fields']
-                                                                        [
-                                                                        'title'],
-                                                                    style:
-                                                                        TextStyle(
-                                                                      color: useDarkMode
-                                                                          ? Colors
-                                                                              .white
-                                                                          : Colors
-                                                                              .black,
-                                                                      fontSize:
-                                                                          16,
-                                                                    ),
-                                                                    textAlign:
-                                                                        TextAlign
-                                                                            .center,
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                              for (List driverItem
-                                                                  in element['fields']
-                                                                          [
-                                                                          'tableData']
-                                                                      [
-                                                                      'tableContent'])
-                                                                Row(
-                                                                  children: <Widget>[
-                                                                    for (Map driverDetails
-                                                                        in driverItem)
-                                                                      Container(
-                                                                        decoration:
-                                                                            BoxDecoration(
-                                                                          border:
-                                                                              Border.all(
-                                                                            color:
-                                                                                Colors.grey.shade600,
+                                                                                    thickness: 5,
+                                                                                    width: 5,
+                                                                                  ),
+                                                                                ),
+                                                                              ),
+                                                                              Expanded(
+                                                                                flex: 4,
+                                                                                child: Text(
+                                                                                  driverResults['driverLastName'],
+                                                                                  style: TextStyle(
+                                                                                    color: useDarkMode ? Colors.white : Colors.black,
+                                                                                  ),
+                                                                                ),
+                                                                              ),
+                                                                              const Spacer(),
+                                                                              Expanded(
+                                                                                flex: 6,
+                                                                                child: Text(
+                                                                                  driverResults['teamName'],
+                                                                                  style: TextStyle(
+                                                                                    color: useDarkMode ? Colors.white : Colors.black,
+                                                                                  ),
+                                                                                ),
+                                                                              ),
+                                                                            ],
+                                                                          ),
+                                                                        )
+                                                                      : Padding(
+                                                                          padding:
+                                                                              const EdgeInsets.only(
+                                                                            top:
+                                                                                7,
+                                                                          ),
+                                                                          child:
+                                                                              Row(
+                                                                            children: [
+                                                                              Expanded(
+                                                                                flex: 2,
+                                                                                child: Text(
+                                                                                  driverResults['positionNumber'] == '66666' ? 'DQ' : driverResults['positionNumber'],
+                                                                                  style: TextStyle(
+                                                                                    color: useDarkMode ? Colors.white : Colors.black,
+                                                                                    fontWeight: FontWeight.w500,
+                                                                                  ),
+                                                                                  textAlign: TextAlign.center,
+                                                                                ),
+                                                                              ),
+                                                                              Expanded(
+                                                                                flex: 1,
+                                                                                child: SizedBox(
+                                                                                  height: 15,
+                                                                                  child: VerticalDivider(
+                                                                                    color: Color(
+                                                                                      int.parse(
+                                                                                        'FF${driverResults['teamColourCode']}',
+                                                                                        radix: 16,
+                                                                                      ),
+                                                                                    ),
+                                                                                    thickness: 5,
+                                                                                    width: 5,
+                                                                                  ),
+                                                                                ),
+                                                                              ),
+                                                                              Expanded(
+                                                                                flex: 3,
+                                                                                child: Text(
+                                                                                  driverResults['driverTLA'].toString(),
+                                                                                  style: TextStyle(
+                                                                                    color: useDarkMode ? Colors.white : Colors.black,
+                                                                                  ),
+                                                                                ),
+                                                                              ),
+                                                                              const Spacer(),
+                                                                              Expanded(
+                                                                                flex: 6,
+                                                                                child: Text(
+                                                                                  element['fields']['sessionType'].startsWith('Practice') ? driverResults['classifiedTime'] ?? '--' : driverResults['q3']?['classifiedTime'] ?? '--',
+                                                                                  style: TextStyle(
+                                                                                    color: useDarkMode ? Colors.white : Colors.black,
+                                                                                  ),
+                                                                                ),
+                                                                              ),
+                                                                            ],
                                                                           ),
                                                                         ),
-                                                                        width:
-                                                                            150,
-                                                                        height:
-                                                                            50,
-                                                                        child:
-                                                                            Center(
-                                                                          child:
-                                                                              Padding(
-                                                                            padding:
-                                                                                const EdgeInsets.all(4),
-                                                                            child:
-                                                                                Text(
-                                                                              driverDetails['value'].toString(),
-                                                                              style: TextStyle(
-                                                                                color: useDarkMode ? Colors.white : Colors.black,
-                                                                              ),
-                                                                              textAlign: TextAlign.center,
-                                                                            ),
-                                                                          ),
+                                                            Expanded(
+                                                              child: Padding(
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                        .only(
+                                                                  top: 15,
+                                                                ),
+                                                                child: SizedBox(
+                                                                  width: double
+                                                                      .infinity,
+                                                                  child:
+                                                                      ClipRRect(
+                                                                    borderRadius:
+                                                                        const BorderRadius
+                                                                            .only(
+                                                                      topLeft:
+                                                                          Radius
+                                                                              .zero,
+                                                                      topRight:
+                                                                          Radius
+                                                                              .zero,
+                                                                      bottomLeft:
+                                                                          Radius.circular(
+                                                                              15),
+                                                                      bottomRight:
+                                                                          Radius.circular(
+                                                                              15),
+                                                                    ),
+                                                                    child:
+                                                                        ElevatedButton(
+                                                                      onPressed:
+                                                                          () =>
+                                                                              Navigator.push(
+                                                                        context,
+                                                                        MaterialPageRoute(
+                                                                          builder: (context) => element['fields']['sessionType'].startsWith('Practice')
+                                                                              ? FreePracticeScreen(
+                                                                                  element['fields']['raceResults${element['fields']['sessionType']}']['description'].endsWith('1')
+                                                                                      ? AppLocalizations.of(context)!.freePracticeOne
+                                                                                      : element['fields']['raceResults${element['fields']['sessionType']}']['description'].endsWith('2')
+                                                                                          ? AppLocalizations.of(context)!.freePracticeTwo
+                                                                                          : AppLocalizations.of(context)!.freePracticeThree,
+                                                                                  int.parse(
+                                                                                    element['fields']['raceResults${element['fields']['sessionType']}']['session'].substring(1),
+                                                                                  ),
+                                                                                  '',
+                                                                                  int.parse(
+                                                                                    element['fields']['season'],
+                                                                                  ),
+                                                                                  element['fields']['meetingOfficialName'],
+                                                                                  raceUrl: element['fields']['cta'],
+                                                                                )
+                                                                              : Scaffold(
+                                                                                  appBar: AppBar(
+                                                                                    title: Text(
+                                                                                      element['fields']['sessionType'] == 'Race'
+                                                                                          ? AppLocalizations.of(context)!.race
+                                                                                          : element['fields']['sessionType'] == 'Sprint'
+                                                                                              ? AppLocalizations.of(context)!.sprint
+                                                                                              : element['fields']['sessionType'] == 'Sprint Shootout'
+                                                                                                  ? 'Sprint Shootout'
+                                                                                                  : element['fields']['cta'].endsWith('starting-grid.html')
+                                                                                                      ? AppLocalizations.of(context)!.startingGrid
+                                                                                                      : AppLocalizations.of(context)!.qualifyings,
+                                                                                    ),
+                                                                                    backgroundColor: Theme.of(context).colorScheme.onPrimary,
+                                                                                  ),
+                                                                                  backgroundColor: Theme.of(context).colorScheme.background,
+                                                                                  body: element['fields']['sessionType'] == 'Race' || element['fields']['sessionType'] == 'Sprint'
+                                                                                      ? RaceResultsProvider(
+                                                                                          raceUrl: element['fields']['cta'],
+                                                                                        )
+                                                                                      : SingleChildScrollView(
+                                                                                          child: element['fields']['cta'].endsWith('starting-grid.html')
+                                                                                              ? StartingGridProvider(element['fields']['cta'])
+                                                                                              : QualificationResultsProvider(
+                                                                                                  raceUrl: element['fields']['cta'],
+                                                                                                  isSprintShootout: element['fields']['sessionType'] == 'Sprint Shootout' ? true : false,
+                                                                                                ),
+                                                                                        ),
+                                                                                ),
                                                                         ),
                                                                       ),
-                                                                  ],
+                                                                      style: ElevatedButton
+                                                                          .styleFrom(
+                                                                        shape:
+                                                                            const ContinuousRectangleBorder(
+                                                                          borderRadius:
+                                                                              BorderRadius.zero,
+                                                                        ),
+                                                                      ),
+                                                                      child:
+                                                                          Text(
+                                                                        AppLocalizations.of(context)!
+                                                                            .viewResults,
+                                                                        style:
+                                                                            const TextStyle(
+                                                                          color:
+                                                                              Colors.white,
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ),
                                                                 ),
-                                                            ],
-                                                          ),
+                                                              ),
+                                                            ),
+                                                          ],
                                                         ),
                                                       ),
                                                     )
                                                   : element['contentType'] ==
-                                                          'atomAudioBoom'
-                                                      ? SizedBox(
-                                                          height: 400,
-                                                          child: InAppWebView(
-                                                            initialUrlRequest:
-                                                                URLRequest(
-                                                              url: WebUri(
-                                                                'https:${element['fields']['audioPodcast']['iFrameSrc']}',
+                                                          'atomTableContent'
+                                                      ? Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(5),
+                                                          child: Container(
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              border:
+                                                                  Border.all(
+                                                                color: Colors
+                                                                    .grey
+                                                                    .shade700,
+                                                              ),
+                                                              borderRadius:
+                                                                  const BorderRadius
+                                                                      .only(
+                                                                topLeft: Radius
+                                                                    .circular(
+                                                                        15),
+                                                                topRight: Radius
+                                                                    .circular(
+                                                                        15),
                                                               ),
                                                             ),
-                                                            gestureRecognizers: {
-                                                              Factory<VerticalDragGestureRecognizer>(
-                                                                  () =>
-                                                                      VerticalDragGestureRecognizer()),
-                                                              Factory<HorizontalDragGestureRecognizer>(
-                                                                  () =>
-                                                                      HorizontalDragGestureRecognizer()),
-                                                              Factory<ScaleGestureRecognizer>(
-                                                                  () =>
-                                                                      ScaleGestureRecognizer()),
-                                                            },
-                                                            initialSettings:
-                                                                InAppWebViewSettings(
-                                                                    transparentBackground:
-                                                                        true),
-                                                          ),
-                                                        )
-                                                      : element['contentType'] ==
-                                                              'atomLinkList'
-                                                          ? Padding(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                      .all(10),
-                                                              child: ListView
-                                                                  .builder(
-                                                                itemCount: element['fields']
-                                                                            [
-                                                                            'items']
-                                                                        .length +
-                                                                    1,
-                                                                shrinkWrap:
-                                                                    true,
-                                                                physics:
-                                                                    const NeverScrollableScrollPhysics(),
-                                                                itemBuilder: (context,
-                                                                        index) =>
-                                                                    index == 0
-                                                                        ? Padding(
-                                                                            padding:
-                                                                                const EdgeInsets.only(
-                                                                              bottom: 10,
-                                                                            ),
-                                                                            child:
-                                                                                Text(
-                                                                              element['fields']['title'],
-                                                                              style: TextStyle(
-                                                                                color: useDarkMode ? Colors.white : Colors.black,
-                                                                                fontSize: 19,
-                                                                                fontWeight: FontWeight.w500,
-                                                                              ),
-                                                                            ),
-                                                                          )
-                                                                        : GestureDetector(
-                                                                            onTap:
-                                                                                () {
-                                                                              String articleUrl = element['fields']['items'][index - 1]['webUrl'];
-                                                                              String articleId = articleUrl.substring(43, articleUrl.length - 5).split('.')[1];
-                                                                              Navigator.push(
-                                                                                context,
-                                                                                MaterialPageRoute(
-                                                                                  builder: (context) => ArticleScreen(
-                                                                                    articleId,
-                                                                                    element['fields']['items'][index - 1]['title'],
-                                                                                    true,
-                                                                                  ),
-                                                                                ),
-                                                                              );
-                                                                            },
-                                                                            child:
-                                                                                Padding(
-                                                                              padding: const EdgeInsets.all(2),
-                                                                              child: Text(
-                                                                                '• ${element['fields']['items'][index - 1]['title']}',
-                                                                                style: TextStyle(
-                                                                                  color: Theme.of(context).primaryColor,
-                                                                                  decoration: TextDecoration.underline,
-                                                                                  fontSize: 16,
-                                                                                ),
-                                                                              ),
-                                                                            ),
-                                                                          ),
-                                                              ),
-                                                            )
-                                                          : element['contentType'] ==
-                                                                  'atomPullQuote'
-                                                              ? Column(
-                                                                  mainAxisAlignment:
-                                                                      MainAxisAlignment
-                                                                          .center,
-                                                                  children: [
-                                                                    Row(
-                                                                      mainAxisSize:
-                                                                          MainAxisSize
-                                                                              .min,
-                                                                      children: [
-                                                                        Expanded(
-                                                                          flex:
-                                                                              1,
-                                                                          child:
-                                                                              Padding(
-                                                                            padding:
-                                                                                const EdgeInsets.only(left: 5),
-                                                                            child:
-                                                                                Text(
-                                                                              '“',
-                                                                              style: TextStyle(
-                                                                                color: useDarkMode ? Colors.grey[400] : Colors.grey[800],
-                                                                                fontSize: 50,
-                                                                              ),
-                                                                            ),
-                                                                          ),
-                                                                        ),
-                                                                        Expanded(
-                                                                          flex:
-                                                                              20,
-                                                                          child:
-                                                                              Align(
-                                                                            alignment:
-                                                                                Alignment.center,
-                                                                            child:
-                                                                                Padding(
-                                                                              padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
-                                                                              child: Text(
-                                                                                element['fields']['quoteText'],
-                                                                                style: TextStyle(
-                                                                                  color: Theme.of(context).primaryColor,
-                                                                                  fontSize: 22,
-                                                                                  fontStyle: FontStyle.italic,
-                                                                                ),
-                                                                              ),
-                                                                            ),
-                                                                          ),
-                                                                        ),
-                                                                        Expanded(
-                                                                          flex:
-                                                                              1,
-                                                                          child:
-                                                                              Padding(
-                                                                            padding:
-                                                                                const EdgeInsets.only(right: 5),
-                                                                            child:
-                                                                                Text(
-                                                                              '”',
-                                                                              style: TextStyle(
-                                                                                color: useDarkMode ? Colors.grey[400] : Colors.grey[800],
-                                                                                fontSize: 50,
-                                                                              ),
-                                                                            ),
-                                                                          ),
-                                                                        ),
-                                                                      ],
-                                                                    ),
-                                                                    Padding(
-                                                                      padding:
-                                                                          const EdgeInsets
-                                                                              .only(
-                                                                        left:
-                                                                            10,
-                                                                      ),
+                                                            height:
+                                                                (element['fields']['tableData']['tableContent'].length +
+                                                                            1) *
+                                                                        50.0 +
+                                                                    2,
+                                                            child:
+                                                                SingleChildScrollView(
+                                                              scrollDirection:
+                                                                  Axis.horizontal,
+                                                              child: Column(
+                                                                children: [
+                                                                  SizedBox(
+                                                                    height: 50,
+                                                                    child:
+                                                                        Padding(
+                                                                      padding: const EdgeInsets
+                                                                          .all(
+                                                                          10),
                                                                       child:
                                                                           Text(
                                                                         element['fields']
                                                                             [
-                                                                            'quoteCitation'],
+                                                                            'title'],
                                                                         style:
                                                                             TextStyle(
                                                                           color: useDarkMode
-                                                                              ? Colors.grey[400]
-                                                                              : Colors.grey[800],
+                                                                              ? Colors.white
+                                                                              : Colors.black,
                                                                           fontSize:
-                                                                              17,
-                                                                          fontWeight:
-                                                                              FontWeight.w500,
+                                                                              16,
                                                                         ),
-                                                                      ),
-                                                                    ),
-                                                                  ],
-                                                                )
-                                                              : SizedBox(
-                                                                  height: 100,
-                                                                  child: Center(
-                                                                    child:
-                                                                        SelectableText(
-                                                                      'Unsupported widget ¯\\_(ツ)_/¯\nType: ${element['contentType']}\nArticle id: ${article.articleId}',
-                                                                      style:
-                                                                          TextStyle(
-                                                                        color: useDarkMode
-                                                                            ? Colors.white
-                                                                            : Colors.black,
+                                                                        textAlign:
+                                                                            TextAlign.center,
                                                                       ),
                                                                     ),
                                                                   ),
+                                                                  for (List driverItem
+                                                                      in element['fields']
+                                                                              [
+                                                                              'tableData']
+                                                                          [
+                                                                          'tableContent'])
+                                                                    Row(
+                                                                      children: <Widget>[
+                                                                        for (Map driverDetails
+                                                                            in driverItem)
+                                                                          Container(
+                                                                            decoration:
+                                                                                BoxDecoration(
+                                                                              border: Border.all(
+                                                                                color: Colors.grey.shade600,
+                                                                              ),
+                                                                            ),
+                                                                            width:
+                                                                                150,
+                                                                            height:
+                                                                                50,
+                                                                            child:
+                                                                                Center(
+                                                                              child: Padding(
+                                                                                padding: const EdgeInsets.all(4),
+                                                                                child: Text(
+                                                                                  driverDetails['value'].toString(),
+                                                                                  style: TextStyle(
+                                                                                    color: useDarkMode ? Colors.white : Colors.black,
+                                                                                  ),
+                                                                                  textAlign: TextAlign.center,
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                      ],
+                                                                    ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        )
+                                                      : element['contentType'] ==
+                                                              'atomAudioBoom'
+                                                          ? SizedBox(
+                                                              height: 400,
+                                                              child:
+                                                                  InAppWebView(
+                                                                initialUrlRequest:
+                                                                    URLRequest(
+                                                                  url: WebUri(
+                                                                    'https:${element['fields']['audioPodcast']['iFrameSrc']}',
+                                                                  ),
                                                                 ),
+                                                                gestureRecognizers: {
+                                                                  Factory<VerticalDragGestureRecognizer>(
+                                                                      () =>
+                                                                          VerticalDragGestureRecognizer()),
+                                                                  Factory<HorizontalDragGestureRecognizer>(
+                                                                      () =>
+                                                                          HorizontalDragGestureRecognizer()),
+                                                                  Factory<ScaleGestureRecognizer>(
+                                                                      () =>
+                                                                          ScaleGestureRecognizer()),
+                                                                },
+                                                                initialSettings:
+                                                                    InAppWebViewSettings(
+                                                                        transparentBackground:
+                                                                            true),
+                                                              ),
+                                                            )
+                                                          : element['contentType'] ==
+                                                                  'atomLinkList'
+                                                              ? Padding(
+                                                                  padding:
+                                                                      const EdgeInsets
+                                                                          .all(
+                                                                          10),
+                                                                  child: ListView
+                                                                      .builder(
+                                                                    itemCount:
+                                                                        element['fields']['items'].length +
+                                                                            1,
+                                                                    shrinkWrap:
+                                                                        true,
+                                                                    physics:
+                                                                        const NeverScrollableScrollPhysics(),
+                                                                    itemBuilder: (context,
+                                                                            index) =>
+                                                                        index ==
+                                                                                0
+                                                                            ? Padding(
+                                                                                padding: const EdgeInsets.only(
+                                                                                  bottom: 10,
+                                                                                ),
+                                                                                child: Text(
+                                                                                  element['fields']['title'],
+                                                                                  style: TextStyle(
+                                                                                    color: useDarkMode ? Colors.white : Colors.black,
+                                                                                    fontSize: 19,
+                                                                                    fontWeight: FontWeight.w500,
+                                                                                  ),
+                                                                                ),
+                                                                              )
+                                                                            : GestureDetector(
+                                                                                onTap: () {
+                                                                                  String articleUrl = element['fields']['items'][index - 1]['webUrl'];
+                                                                                  String articleId = articleUrl.substring(43, articleUrl.length - 5).split('.')[1];
+                                                                                  Navigator.push(
+                                                                                    context,
+                                                                                    MaterialPageRoute(
+                                                                                      builder: (context) => ArticleScreen(
+                                                                                        articleId,
+                                                                                        element['fields']['items'][index - 1]['title'],
+                                                                                        true,
+                                                                                      ),
+                                                                                    ),
+                                                                                  );
+                                                                                },
+                                                                                child: Padding(
+                                                                                  padding: const EdgeInsets.all(2),
+                                                                                  child: Text(
+                                                                                    '• ${element['fields']['items'][index - 1]['title']}',
+                                                                                    style: TextStyle(
+                                                                                      color: Theme.of(context).primaryColor,
+                                                                                      decoration: TextDecoration.underline,
+                                                                                      fontSize: 16,
+                                                                                    ),
+                                                                                  ),
+                                                                                ),
+                                                                              ),
+                                                                  ),
+                                                                )
+                                                              : element['contentType'] ==
+                                                                      'atomPullQuote'
+                                                                  ? Column(
+                                                                      mainAxisAlignment:
+                                                                          MainAxisAlignment
+                                                                              .center,
+                                                                      children: [
+                                                                        Row(
+                                                                          mainAxisSize:
+                                                                              MainAxisSize.min,
+                                                                          children: [
+                                                                            Expanded(
+                                                                              flex: 1,
+                                                                              child: Padding(
+                                                                                padding: const EdgeInsets.only(left: 5),
+                                                                                child: Text(
+                                                                                  '“',
+                                                                                  style: TextStyle(
+                                                                                    color: useDarkMode ? Colors.grey[400] : Colors.grey[800],
+                                                                                    fontSize: 50,
+                                                                                  ),
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                            Expanded(
+                                                                              flex: 20,
+                                                                              child: Align(
+                                                                                alignment: Alignment.center,
+                                                                                child: Padding(
+                                                                                  padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
+                                                                                  child: Text(
+                                                                                    element['fields']['quoteText'],
+                                                                                    style: TextStyle(
+                                                                                      color: Theme.of(context).primaryColor,
+                                                                                      fontSize: 22,
+                                                                                      fontStyle: FontStyle.italic,
+                                                                                    ),
+                                                                                  ),
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                            Expanded(
+                                                                              flex: 1,
+                                                                              child: Padding(
+                                                                                padding: const EdgeInsets.only(right: 5),
+                                                                                child: Text(
+                                                                                  '”',
+                                                                                  style: TextStyle(
+                                                                                    color: useDarkMode ? Colors.grey[400] : Colors.grey[800],
+                                                                                    fontSize: 50,
+                                                                                  ),
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                        Padding(
+                                                                          padding:
+                                                                              const EdgeInsets.only(
+                                                                            left:
+                                                                                10,
+                                                                          ),
+                                                                          child:
+                                                                              Text(
+                                                                            element['fields']['quoteCitation'],
+                                                                            style:
+                                                                                TextStyle(
+                                                                              color: useDarkMode ? Colors.grey[400] : Colors.grey[800],
+                                                                              fontSize: 17,
+                                                                              fontWeight: FontWeight.w500,
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                      ],
+                                                                    )
+                                                                  : SizedBox(
+                                                                      height:
+                                                                          100,
+                                                                      child:
+                                                                          Center(
+                                                                        child:
+                                                                            SelectableText(
+                                                                          'Unsupported widget ¯\\_(ツ)_/¯\nType: ${element['contentType']}\nArticle id: ${article.articleId}',
+                                                                          style:
+                                                                              TextStyle(
+                                                                            color: useDarkMode
+                                                                                ? Colors.white
+                                                                                : Colors.black,
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    ),
 
         // author
 
