@@ -44,20 +44,8 @@ void main() async {
   final historyBox = await Hive.openBox('history');
   final feedsBox = await Hive.openBox('feeds');
   final compareBox = await Hive.openBox('compare');
-  /* settingsBox.deleteFromDisk();
-  requestsBox.deleteFromDisk();
-  historyBox.deleteFromDisk();
-  feedsBox.deleteFromDisk();
-  compareBox.deleteFromDisk();
-  final settingsBox = await Hive.openBox('settings');
-  final requestsBox = await Hive.openBox('requests');
-  final historyBox = await Hive.openBox('history');
-  final feedsBox = await Hive.openBox('feeds');
-  final compareBox = await Hive.openBox('compare');
-   */
 
-  print("ok?");
-  if (!kIsWeb) {
+  /* if (!kIsWeb) {
     AwesomeNotifications().initialize(
       'resource://drawable/notification_icon',
       [
@@ -80,7 +68,7 @@ void main() async {
         ),
       ],
     );
-  }
+  } */
 
   /* Workmanager().initialize(
     callbackDispatcher,
@@ -333,7 +321,6 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    print("starting...");
     String teamTheme = Hive.box('settings')
         .get('teamTheme', defaultValue: 'default') as String;
     bool useDarkMode =
