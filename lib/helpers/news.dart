@@ -182,9 +182,9 @@ class NewsItem extends StatelessWidget {
                         ),
                       ),
                     ),
-                    hoverColor: useDarkMode
-                        ? Colors.grey.shade700
-                        : Colors.grey.shade400,
+                    hoverColor: HSLColor.fromColor(
+                      Theme.of(context).colorScheme.surface,
+                    ).withLightness(0.4).toColor(),
                     onTapDown: (position) => storePosition(position),
                     onLongPress: () {
                       Feedback.forLongPress(context);
@@ -336,9 +336,9 @@ class NewsItem extends StatelessWidget {
                         ),
                       ),
                     ),
-                    hoverColor: useDarkMode
-                        ? Colors.grey.shade700
-                        : Colors.grey.shade400,
+                    hoverColor: HSLColor.fromColor(
+                      Theme.of(context).colorScheme.surface,
+                    ).withLightness(0.4).toColor(),
                     onTapDown: (position) => storePosition(position),
                     onLongPress: () {
                       Feedback.forLongPress(context);
@@ -2105,16 +2105,10 @@ class PinnedVideoPlayer extends SliverPersistentHeaderDelegate {
   @override
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
-    bool useDarkMode =
-        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     return SizedBox(
       width: double.infinity,
       height: height,
-      child: Card(
-        margin: const EdgeInsets.all(0),
-        color: useDarkMode
-            ? Theme.of(context).scaffoldBackgroundColor
-            : Colors.white,
+      child: Material(
         elevation: 10.0,
         child: Center(
           child: widget,
