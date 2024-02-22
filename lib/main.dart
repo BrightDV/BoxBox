@@ -1,3 +1,5 @@
+// ignore_for_file: unused_local_variable
+
 /*
  *  This file is part of BoxBox (https://github.com/BrightDV/BoxBox).
  * 
@@ -36,16 +38,25 @@ import 'package:timeago/timeago.dart' as timeago;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
-  // ignore: unused_local_variable
+
   final settingsBox = await Hive.openBox('settings');
-  // ignore: unused_local_variable
   final requestsBox = await Hive.openBox('requests');
-  // ignore: unused_local_variable
   final historyBox = await Hive.openBox('history');
-  // ignore: unused_local_variable
   final feedsBox = await Hive.openBox('feeds');
-  // ignore: unused_local_variable
   final compareBox = await Hive.openBox('compare');
+  /* settingsBox.deleteFromDisk();
+  requestsBox.deleteFromDisk();
+  historyBox.deleteFromDisk();
+  feedsBox.deleteFromDisk();
+  compareBox.deleteFromDisk();
+  final settingsBox = await Hive.openBox('settings');
+  final requestsBox = await Hive.openBox('requests');
+  final historyBox = await Hive.openBox('history');
+  final feedsBox = await Hive.openBox('feeds');
+  final compareBox = await Hive.openBox('compare');
+   */
+
+  print("ok?");
   if (!kIsWeb) {
     AwesomeNotifications().initialize(
       'resource://drawable/notification_icon',
@@ -322,6 +333,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    print("starting...");
     String teamTheme = Hive.box('settings')
         .get('teamTheme', defaultValue: 'default') as String;
     bool useDarkMode =
@@ -340,6 +352,32 @@ class _MyAppState extends State<MyApp> {
     );
     supportedLocales.removeAt(supportedLocales.indexOf(const Locale('en')));
     supportedLocales.insert(0, const Locale('en'));
+    Hive.box('settings').delete('customServers');
+    Hive.box('settings').delete('server');
+
+    const String boxboxServerDefaultInstance =
+        "https://boxbox-server.netlify.app/api";
+    const String officialFeed = "https://api.formula1.com";
+
+    if (Hive.box('settings').get(
+          'server',
+        ) ==
+        null) {
+      Hive.box('settings').put(
+        'server',
+        kIsWeb ? boxboxServerDefaultInstance : officialFeed,
+      );
+    }
+
+    if (Hive.box('settings').get(
+          'customServers',
+        ) ==
+        null) {
+      Hive.box('settings').put(
+        'customServers',
+        [boxboxServerDefaultInstance],
+      );
+    }
 
     return AdaptiveTheme(
       light: ThemeData(
