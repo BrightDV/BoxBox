@@ -255,7 +255,7 @@ class WidgetsList extends StatelessWidget {
                       child: Container(
                         decoration: BoxDecoration(
                           border: Border.all(
-                            color: Theme.of(context).colorScheme.outline,
+                            color: Theme.of(context).colorScheme.primary,
                             width: 1.0,
                           ),
                           borderRadius: BorderRadius.circular(10),
@@ -264,6 +264,9 @@ class WidgetsList extends StatelessWidget {
                           padding: const EdgeInsets.all(7),
                           child: Text(
                             tag['fields']['tagName'],
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
                           ),
                         ),
                       ),
@@ -1476,71 +1479,50 @@ class WidgetsList extends StatelessWidget {
         // author
 
         if (article.authorDetails.isNotEmpty)
-          Padding(
-            padding: const EdgeInsets.all(5),
-            child: Container(
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: useDarkMode
-                    ? HSLColor.fromColor(
-                        Theme.of(context).colorScheme.background,
-                      ).withLightness(0.2).toColor()
-                    : HSLColor.fromColor(
-                        Theme.of(context)
-                            .colorScheme
-                            .background, // TODO: update light mode
-                      ).withLightness(0.2).toColor(),
-                borderRadius: BorderRadius.circular(5),
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(
+                20,
+                10,
+                20,
+                10,
               ),
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(
-                  20,
-                  10,
-                  20,
-                  10,
-                ),
-                child: Row(
-                  children: [
-                    article.authorDetails['image'] != null
-                        ? SizedBox(
-                            height: 70,
-                            child: Image.network(
-                              article.authorDetails['image']['url'],
-                            ),
-                          )
-                        : Container(),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 10),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            article.authorDetails["fullName"],
-                            style: TextStyle(
-                              color: useDarkMode
-                                  ? HSLColor.fromColor(
-                                      Theme.of(context).colorScheme.onPrimary,
-                                    ).withLightness(0.35).toColor()
-                                  : Theme.of(context).colorScheme.onPrimary,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 14,
-                            ),
-                            textAlign: TextAlign.start,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  article.authorDetails['image'] != null
+                      ? Image.network(
+                          article.authorDetails['image']['url'],
+                          height: 80,
+                        )
+                      : Container(),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 10),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          article.authorDetails["fullName"],
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.primary,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 14,
                           ),
-                          Text(
-                            article.authorDetails["shortDescription"] ?? '',
-                            style: TextStyle(
-                              color: Colors.grey.shade50,
-                              fontSize: 12,
-                            ),
-                            textAlign: TextAlign.start,
+                          textAlign: TextAlign.start,
+                        ),
+                        Text(
+                          article.authorDetails["shortDescription"] ?? '',
+                          style: TextStyle(
+                            color: Colors.grey.shade50,
+                            fontSize: 12,
                           ),
-                        ],
-                      ),
+                          textAlign: TextAlign.start,
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ),

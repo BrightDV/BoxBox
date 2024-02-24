@@ -1168,8 +1168,6 @@ class TextParagraphRenderer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool useDarkMode =
-        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     String fontUsedInArticles = Hive.box('settings')
         .get('fontUsedInArticles', defaultValue: 'Formula1') as String;
     return Padding(
@@ -1303,11 +1301,10 @@ class TextParagraphRenderer extends StatelessWidget {
           strong: TextStyle(
             fontSize: fontUsedInArticles == 'Formula1' ? 16 : 20,
             fontWeight: FontWeight.w500,
-            color: Theme.of(context).colorScheme.onPrimary,
+            color: Theme.of(context).colorScheme.primary,
           ),
           p: TextStyle(
             fontSize: fontUsedInArticles == 'Formula1' ? 14 : 18,
-            color: useDarkMode ? Colors.white : Colors.black,
             fontFamily: fontUsedInArticles,
           ),
           pPadding: EdgeInsets.only(
@@ -1315,38 +1312,25 @@ class TextParagraphRenderer extends StatelessWidget {
             bottom: fontUsedInArticles == 'Formula1' ? 10 : 7,
           ),
           a: TextStyle(
-            color: useDarkMode
-                ? HSLColor.fromColor(
-                    Theme.of(context).colorScheme.onPrimary,
-                  ).withLightness(0.35).toColor()
-                : Theme.of(context).colorScheme.onPrimary,
+            color: Theme.of(context).colorScheme.primary,
             decoration: TextDecoration.underline,
-            decorationColor: useDarkMode
-                ? HSLColor.fromColor(
-                    Theme.of(context).colorScheme.onPrimary,
-                  ).withLightness(0.35).toColor()
-                : Theme.of(context).colorScheme.onPrimary,
+            decorationColor: Theme.of(context).colorScheme.primary,
             fontWeight: FontWeight.normal,
             fontFamily: fontUsedInArticles,
           ),
           h1: TextStyle(
-            color: useDarkMode ? Colors.white : Colors.black,
             fontFamily: fontUsedInArticles,
           ),
           h2: TextStyle(
-            color: useDarkMode ? Colors.white : Colors.black,
             fontFamily: fontUsedInArticles,
           ),
           h3: TextStyle(
-            color: useDarkMode ? Colors.white : Colors.black,
             fontFamily: fontUsedInArticles,
           ),
           h4: TextStyle(
-            color: useDarkMode ? Colors.white : Colors.black,
             fontFamily: fontUsedInArticles,
           ),
           listBullet: TextStyle(
-            color: useDarkMode ? Colors.white : Colors.black,
             fontFamily: fontUsedInArticles,
           ),
           textAlign: WrapAlignment.spaceEvenly,
