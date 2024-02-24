@@ -316,5 +316,7 @@
   "deleteUrl": "¿Deseas eliminar esta URL?",
   "@deleteUrl": {},
   "pipedApiUrlSub": "Se usa para vídeos de YouTube.",
-  "@pipedApiUrlSub": {}
+  "@pipedApiUrlSub": {},
+  "search": "Buscar",
+  "@search": {}
 }
