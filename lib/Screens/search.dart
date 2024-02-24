@@ -17,14 +17,11 @@
  * Copyright (c) 2022-2024, BrightDV
  */
 
-// TODO: md3
-
 import 'package:boxbox/Screens/article.dart';
 import 'package:boxbox/api/searx.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({Key? key}) : super(key: key);
@@ -60,12 +57,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   Widget build(BuildContext context) {
-    bool useDarkMode =
-        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     return Scaffold(
-      backgroundColor: useDarkMode
-          ? Theme.of(context).scaffoldBackgroundColor
-          : Colors.white,
       appBar: AppBar(
         title: SizedBox(
           width: double.infinity,
@@ -96,11 +88,11 @@ class _SearchScreenState extends State<SearchScreen> {
                       },
                     ),
                   ),
-                  hintText: 'Search',
+                  hintText: AppLocalizations.of(context)!.search,
                   border: InputBorder.none,
                   hintStyle: TextStyle(
-                    color: Colors.grey.shade300,
-                    fontSize: 13,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w100,
                   ),
                 ),
                 onChanged: (text) {
@@ -126,30 +118,23 @@ class _SearchScreenState extends State<SearchScreen> {
               itemCount: results.length,
               shrinkWrap: true,
               itemBuilder: (context, index) {
-                return Padding(
-                  padding: const EdgeInsets.all(5),
+                return Card(
+                  elevation: 10.0,
                   child: ListTile(
-                      tileColor: useDarkMode
-                          ? const Color(0xff1d1d28)
-                          : Colors.grey.shade400,
                       title: Text(
                         results[index]['title'],
-                        style: TextStyle(
-                          color: useDarkMode ? Colors.white : Colors.black,
-                        ),
                       ),
                       subtitle: MarkdownBody(
                         data: results[index]['content'],
                         styleSheet: MarkdownStyleSheet(
-                          strong: const TextStyle(
-                            color: Colors.white,
+                          strong: TextStyle(
+                            color: Theme.of(context).colorScheme.primary,
                             fontSize: 16,
                             fontWeight: FontWeight.w500,
                           ),
                           p: TextStyle(
-                            color: useDarkMode
-                                ? Colors.grey.shade400
-                                : Colors.grey.shade600,
+                            color:
+                                Theme.of(context).textTheme.bodyMedium!.color,
                           ),
                           textAlign: WrapAlignment.spaceBetween,
                         ),
@@ -175,7 +160,6 @@ class _SearchScreenState extends State<SearchScreen> {
                 child: Text(
                   AppLocalizations.of(context)!.noResults,
                   style: TextStyle(
-                    color: useDarkMode ? Colors.white : Colors.black,
                     fontSize: 25,
                     fontWeight: FontWeight.w500,
                   ),

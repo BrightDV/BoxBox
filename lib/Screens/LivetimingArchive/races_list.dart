@@ -17,8 +17,6 @@
  * Copyright (c) 2022-2024, BrightDV
  */
 
-// TODO: md3
-
 import 'package:boxbox/Screens/LivetimingArchive/live_timing.dart';
 import 'package:boxbox/Screens/schedule.dart';
 import 'package:boxbox/api/ergast.dart';
@@ -42,6 +40,7 @@ class ArchiveRacesListScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Live Timing Archive'),
         centerTitle: true,
+        backgroundColor: Theme.of(context).colorScheme.onPrimary,
       ),
       body: FutureBuilder<List<Race>>(
         future: getRacesList(false),
@@ -125,12 +124,8 @@ class ArchiveRaceItem extends StatelessWidget {
         padding: const EdgeInsets.all(2),
         height: 80,
         color: index % 2 == 1
-            ? useDarkMode
-                ? const Color(0xff22222c)
-                : const Color(0xffffffff)
-            : useDarkMode
-                ? const Color(0xff15151f)
-                : const Color(0xfff4f4f4),
+            ? Theme.of(context).colorScheme.onSecondary
+            : Theme.of(context).colorScheme.background,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
@@ -148,8 +143,12 @@ class ArchiveRaceItem extends StatelessWidget {
                         borderRadius: BorderRadius.circular(7),
                         color: useDarkMode
                             ? index % 2 == 0
-                                ? const Color.fromARGB(255, 36, 36, 48)
-                                : const Color.fromARGB(255, 23, 23, 34)
+                                ? HSLColor.fromColor(
+                                    Theme.of(context).colorScheme.background,
+                                  ).withLightness(0.2).toColor()
+                                : Theme.of(context)
+                                    .colorScheme
+                                    .secondaryContainer
                             : const Color.fromARGB(255, 136, 135, 135),
                       ),
                       child: Padding(
@@ -158,15 +157,9 @@ class ArchiveRaceItem extends StatelessWidget {
                           children: [
                             Text(
                               day,
-                              style: const TextStyle(
-                                color: Colors.white,
-                              ),
                             ),
                             Text(
                               months[month - 1].toLowerCase(),
-                              style: const TextStyle(
-                                color: Colors.white,
-                              ),
                             ),
                           ],
                         ),
@@ -184,18 +177,12 @@ class ArchiveRaceItem extends StatelessWidget {
                         children: [
                           Text(
                             item.country,
-                            style: TextStyle(
-                              color: useDarkMode
-                                  ? Colors.white
-                                  : const Color(0xff171717),
-                            ),
                           ),
                           Padding(
                             padding: const EdgeInsets.only(top: 5),
                             child: Text(
                               item.circuitName,
                               style: const TextStyle(
-                                color: Color.fromARGB(255, 136, 135, 135),
                                 fontSize: 12,
                               ),
                             ),

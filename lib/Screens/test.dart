@@ -17,8 +17,6 @@
  * Copyright (c) 2022-2024, BrightDV
  */
 
-// TODO: md3
-
 import 'package:flutter/material.dart';
 import 'package:boxbox/Screens/article.dart';
 

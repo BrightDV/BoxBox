@@ -1514,7 +1514,6 @@ class WidgetsList extends StatelessWidget {
                         Text(
                           article.authorDetails["shortDescription"] ?? '',
                           style: TextStyle(
-                            color: Colors.grey.shade50,
                             fontSize: 12,
                           ),
                           textAlign: TextAlign.start,

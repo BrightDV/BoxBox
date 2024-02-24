@@ -245,9 +245,6 @@ class _MainBottomNavigationBarState extends State<MainBottomNavigationBar> {
                                 backgroundColor:
                                     Theme.of(context).colorScheme.onPrimary,
                               ),
-                              backgroundColor: useDarkMode
-                                  ? Theme.of(context).scaffoldBackgroundColor
-                                  : Colors.white,
                               body: NewsFeed(
                                 articleType: filterItems[pressed],
                               ),
@@ -287,8 +284,6 @@ class _MainBottomNavigationBarState extends State<MainBottomNavigationBar> {
       bottomNavigationBar: kIsWeb
           ? BottomNavigationBar(
               type: BottomNavigationBarType.fixed,
-              unselectedItemColor:
-                  useDarkMode ? Colors.white : Colors.grey[600],
               currentIndex: _selectedIndex,
               elevation: 10.0,
               items: <BottomNavigationBarItem>[
@@ -341,11 +336,6 @@ class _MainBottomNavigationBarState extends State<MainBottomNavigationBar> {
               preferredWidgetSize: Size(double.infinity, 58),
               child: BottomNavigationBar(
                 type: BottomNavigationBarType.fixed,
-                unselectedItemColor:
-                    useDarkMode ? Colors.white : Colors.grey[600],
-                selectedItemColor: useDarkMode
-                    ? Theme.of(context).colorScheme.inversePrimary
-                    : Theme.of(context).colorScheme.onPrimary,
                 currentIndex: _selectedIndex,
                 elevation: 10.0,
                 items: <BottomNavigationBarItem>[

@@ -247,6 +247,8 @@
   "@save": {},
   "schedule": "Calendrier",
   "@schedule": {},
+  "search": "Rechercher",
+  "@search": {},
   "secondAbbreviation": "SEC",
   "@secondAbbreviation": {},
   "server": "Serveur",

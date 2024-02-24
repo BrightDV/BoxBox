@@ -36,8 +36,6 @@ class VideoScreen extends StatefulWidget {
 class _VideoScreenState extends State<VideoScreen> {
   @override
   Widget build(BuildContext context) {
-    bool useDarkMode =
-        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     String fontUsedInArticles = Hive.box('settings')
         .get('fontUsedInArticles', defaultValue: 'Formula1') as String;
     final Video video = widget.video;
@@ -99,8 +97,6 @@ class _VideoScreenState extends State<VideoScreen> {
                   ),
                   child: Icon(
                     Icons.schedule,
-                    color:
-                        useDarkMode ? Colors.grey.shade300 : Colors.grey[800],
                     size: 20.0,
                   ),
                 ),
@@ -110,8 +106,6 @@ class _VideoScreenState extends State<VideoScreen> {
                     locale: Localizations.localeOf(context).toString(),
                   ),
                   style: TextStyle(
-                    color:
-                        useDarkMode ? Colors.grey.shade300 : Colors.grey[700],
                     fontFamily: fontUsedInArticles,
                   ),
                 ),

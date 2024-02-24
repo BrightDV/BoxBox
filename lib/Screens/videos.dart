@@ -29,7 +29,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import "package:story_view/story_view.dart";
 import 'package:flutter_swiper_view/flutter_swiper_view.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 class VideosScreen extends StatefulWidget {
@@ -233,8 +232,6 @@ class VideoItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool useDarkMode =
-        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     return Padding(
       padding: const EdgeInsets.fromLTRB(2, 2, 2, 2),
       child: kIsWeb
@@ -246,12 +243,8 @@ class VideoItem extends StatelessWidget {
                   elevation: 5.0,
                   color: Colors.transparent,
                   child: OpenContainer(
-                    closedColor: useDarkMode
-                        ? Theme.of(context).scaffoldBackgroundColor
-                        : Colors.white,
-                    openColor: useDarkMode
-                        ? Theme.of(context).scaffoldBackgroundColor
-                        : Colors.white,
+                    closedColor: Colors.transparent,
+                    openColor: Colors.transparent,
                     transitionDuration: const Duration(milliseconds: 500),
                     openBuilder: (context, action) => Swiper(
                       itemBuilder: (context, index) {
@@ -284,7 +277,6 @@ class VideoItem extends StatelessWidget {
                             ),
                             errorWidget: (context, url, error) => Icon(
                               Icons.error_outlined,
-                              color: useDarkMode ? Colors.white : Colors.black,
                             ),
                             fadeOutDuration: const Duration(seconds: 1),
                             fadeInDuration: const Duration(seconds: 1),
@@ -349,12 +341,8 @@ class VideoItem extends StatelessWidget {
               elevation: 5.0,
               color: Colors.transparent,
               child: OpenContainer(
-                closedColor: useDarkMode
-                    ? Theme.of(context).scaffoldBackgroundColor
-                    : Colors.white,
-                openColor: useDarkMode
-                    ? Theme.of(context).scaffoldBackgroundColor
-                    : Colors.white,
+                closedColor: Colors.transparent,
+                openColor: Colors.transparent,
                 transitionDuration: const Duration(milliseconds: 500),
                 openBuilder: (context, action) => Swiper(
                   itemBuilder: (context, index) {
@@ -364,6 +352,7 @@ class VideoItem extends StatelessWidget {
                   scrollDirection: Axis.vertical,
                   control: SwiperControl(
                     color: Theme.of(context).colorScheme.onPrimary,
+                    disableColor: Theme.of(context).colorScheme.onPrimary,
                   ),
                   index: index,
                   loop: false,
@@ -386,7 +375,6 @@ class VideoItem extends StatelessWidget {
                         ),
                         errorWidget: (context, url, error) => Icon(
                           Icons.error_outlined,
-                          color: useDarkMode ? Colors.white : Colors.black,
                         ),
                         fadeOutDuration: const Duration(seconds: 1),
                         fadeInDuration: const Duration(seconds: 1),

@@ -69,8 +69,6 @@ class NewsItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String imageUrl = item.imageUrl;
-    bool useDarkMode =
-        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     String newsLayout =
         Hive.box('settings').get('newsLayout', defaultValue: 'big') as String;
     double width = MediaQuery.of(context).size.width;
@@ -87,7 +85,6 @@ class NewsItem extends StatelessWidget {
 
       showMenu(
         context: context,
-        color: useDarkMode ? const Color(0xff1d1d28) : Colors.white,
         items: <PopupMenuEntry<int>>[
           PopupMenuItem(
             value: 0,
@@ -95,7 +92,6 @@ class NewsItem extends StatelessWidget {
               children: [
                 Icon(
                   Icons.language_outlined,
-                  color: useDarkMode ? Colors.white : Colors.black,
                 ),
                 const Padding(
                   padding: EdgeInsets.all(5),
@@ -103,7 +99,6 @@ class NewsItem extends StatelessWidget {
                 Text(
                   AppLocalizations.of(context)!.openInBrowser,
                   style: TextStyle(
-                    color: useDarkMode ? Colors.white : Colors.black,
                     fontSize: 14,
                   ),
                 ),
@@ -116,7 +111,6 @@ class NewsItem extends StatelessWidget {
               children: [
                 Icon(
                   Icons.share_outlined,
-                  color: useDarkMode ? Colors.white : Colors.black,
                 ),
                 const Padding(
                   padding: EdgeInsets.all(5),
@@ -124,7 +118,6 @@ class NewsItem extends StatelessWidget {
                 Text(
                   AppLocalizations.of(context)!.share,
                   style: TextStyle(
-                    color: useDarkMode ? Colors.white : Colors.black,
                     fontSize: 14,
                   ),
                 ),
@@ -132,15 +125,18 @@ class NewsItem extends StatelessWidget {
             ),
           ),
         ],
-        position: RelativeRect.fromRect(tapPosition & const Size(40, 40),
-            Offset.zero & overlay.semanticBounds.size),
+        position: RelativeRect.fromRect(
+          tapPosition & const Size(40, 40),
+          Offset.zero & overlay.semanticBounds.size,
+        ),
       ).then<void>(
         (int? delta) {
           if (delta == null) return;
           delta == 0
               ? launchUrl(
                   Uri.parse(
-                      "https://www.formula1.com/en/latest/article.${item.slug}.${item.newsId}.html"),
+                    "https://www.formula1.com/en/latest/article.${item.slug}.${item.newsId}.html",
+                  ),
                   mode: LaunchMode.externalApplication,
                 )
               : Share.share(
@@ -218,9 +214,6 @@ class NewsItem extends StatelessWidget {
                                         height: 50,
                                         child: Icon(
                                           Icons.error_outlined,
-                                          color: useDarkMode
-                                              ? const Color(0xff1d1d28)
-                                              : Colors.white,
                                         ),
                                       ),
                                       fadeOutDuration:
@@ -239,9 +232,6 @@ class NewsItem extends StatelessWidget {
                                     title: Text(
                                       item.title,
                                       style: TextStyle(
-                                        color: useDarkMode
-                                            ? Colors.white
-                                            : Colors.black,
                                         fontSize: 18,
                                         fontWeight: FontWeight.w500,
                                       ),
@@ -277,9 +267,6 @@ class NewsItem extends StatelessWidget {
                                     height: 50,
                                     child: Icon(
                                       Icons.error_outlined,
-                                      color: useDarkMode
-                                          ? const Color(0xff1d1d28)
-                                          : Colors.white,
                                     ),
                                   ),
                                   fadeOutDuration: const Duration(seconds: 1),
@@ -296,9 +283,6 @@ class NewsItem extends StatelessWidget {
                                 title: Text(
                                   item.title,
                                   style: TextStyle(
-                                    color: useDarkMode
-                                        ? Colors.white
-                                        : Colors.black,
                                     fontSize: 18,
                                     fontWeight: FontWeight.w500,
                                   ),
@@ -395,10 +379,6 @@ class NewsItem extends StatelessWidget {
                                                   height: 50,
                                                   child: Icon(
                                                     Icons.error_outlined,
-                                                    color: useDarkMode
-                                                        ? const Color(
-                                                            0xff1d1d28)
-                                                        : Colors.white,
                                                   ),
                                                 ),
                                                 fadeOutDuration: const Duration(
@@ -503,7 +483,6 @@ class NewsItem extends StatelessWidget {
                                                                                                 : item.newsType == 'Live Blog'
                                                                                                     ? Icons.live_tv_outlined
                                                                                                     : Icons.info_outlined,
-                                                        color: Colors.white,
                                                         size: 24,
                                                       ),
                                                     ),
@@ -515,7 +494,6 @@ class NewsItem extends StatelessWidget {
                                                       child: Text(
                                                         item.newsType,
                                                         style: const TextStyle(
-                                                          color: Colors.white,
                                                           fontSize: 14,
                                                         ),
                                                       ),
@@ -534,9 +512,6 @@ class NewsItem extends StatelessWidget {
                                     title: Text(
                                       item.title,
                                       style: TextStyle(
-                                        color: useDarkMode
-                                            ? Colors.white
-                                            : Colors.black,
                                         fontSize: 18,
                                         fontWeight: FontWeight.w500,
                                       ),
@@ -553,11 +528,6 @@ class NewsItem extends StatelessWidget {
                                         ? null
                                         : Text(
                                             item.subtitle,
-                                            style: TextStyle(
-                                              color: useDarkMode
-                                                  ? Colors.grey[400]
-                                                  : Colors.grey[800],
-                                            ),
                                             textAlign: TextAlign.justify,
                                             maxLines: width > 1360 ? 4 : 5,
                                             overflow: TextOverflow.ellipsis,
@@ -584,9 +554,6 @@ class NewsItem extends StatelessWidget {
                                                     ),
                                                     child: Icon(
                                                       Icons.schedule,
-                                                      color: useDarkMode
-                                                          ? Colors.grey.shade300
-                                                          : Colors.grey[800],
                                                       size: 20.0,
                                                     ),
                                                   ),
@@ -596,11 +563,6 @@ class NewsItem extends StatelessWidget {
                                                       locale: Localizations
                                                               .localeOf(context)
                                                           .toString(),
-                                                    ),
-                                                    style: TextStyle(
-                                                      color: useDarkMode
-                                                          ? Colors.grey.shade300
-                                                          : Colors.grey[700],
                                                     ),
                                                   ),
                                                 ],
@@ -626,9 +588,6 @@ class NewsItem extends StatelessWidget {
                                                   ),
                                                   child: Icon(
                                                     Icons.schedule,
-                                                    color: useDarkMode
-                                                        ? Colors.grey.shade300
-                                                        : Colors.grey[800],
                                                     size: 20.0,
                                                   ),
                                                 ),
@@ -639,11 +598,6 @@ class NewsItem extends StatelessWidget {
                                                         Localizations.localeOf(
                                                                 context)
                                                             .toString(),
-                                                  ),
-                                                  style: TextStyle(
-                                                    color: useDarkMode
-                                                        ? Colors.grey.shade300
-                                                        : Colors.grey[700],
                                                   ),
                                                 ),
                                               ],
@@ -694,9 +648,6 @@ class NewsItem extends StatelessWidget {
                                               height: 50,
                                               child: Icon(
                                                 Icons.error_outlined,
-                                                color: useDarkMode
-                                                    ? const Color(0xff1d1d28)
-                                                    : Colors.white,
                                               ),
                                             ),
                                             fadeOutDuration: const Duration(
@@ -798,7 +749,6 @@ class NewsItem extends StatelessWidget {
                                                                                             : item.newsType == 'Live Blog'
                                                                                                 ? Icons.live_tv_outlined
                                                                                                 : Icons.info_outlined,
-                                                    color: Colors.white,
                                                     size: 24,
                                                   ),
                                                 ),
@@ -810,7 +760,6 @@ class NewsItem extends StatelessWidget {
                                                   child: Text(
                                                     item.newsType,
                                                     style: const TextStyle(
-                                                      color: Colors.white,
                                                       fontSize: 14,
                                                     ),
                                                   ),
@@ -829,9 +778,6 @@ class NewsItem extends StatelessWidget {
                                 title: Text(
                                   item.title,
                                   style: TextStyle(
-                                    color: useDarkMode
-                                        ? Colors.white
-                                        : Colors.black,
                                     fontSize: 18,
                                     fontWeight: FontWeight.w500,
                                   ),
@@ -847,11 +793,6 @@ class NewsItem extends StatelessWidget {
                                     ? null
                                     : Text(
                                         item.subtitle,
-                                        style: TextStyle(
-                                          color: useDarkMode
-                                              ? Colors.grey[400]
-                                              : Colors.grey[800],
-                                        ),
                                         textAlign: TextAlign.justify,
                                         maxLines: width > 1360 ? 4 : 5,
                                         overflow: TextOverflow.ellipsis,
@@ -877,9 +818,6 @@ class NewsItem extends StatelessWidget {
                                                 ),
                                                 child: Icon(
                                                   Icons.schedule,
-                                                  color: useDarkMode
-                                                      ? Colors.grey.shade300
-                                                      : Colors.grey[800],
                                                   size: 20.0,
                                                 ),
                                               ),
@@ -890,11 +828,6 @@ class NewsItem extends StatelessWidget {
                                                       Localizations.localeOf(
                                                               context)
                                                           .toString(),
-                                                ),
-                                                style: TextStyle(
-                                                  color: useDarkMode
-                                                      ? Colors.grey.shade300
-                                                      : Colors.grey[700],
                                                 ),
                                               ),
                                             ],
@@ -919,9 +852,6 @@ class NewsItem extends StatelessWidget {
                                               ),
                                               child: Icon(
                                                 Icons.schedule,
-                                                color: useDarkMode
-                                                    ? Colors.grey.shade300
-                                                    : Colors.grey[800],
                                                 size: 20.0,
                                               ),
                                             ),
@@ -931,11 +861,6 @@ class NewsItem extends StatelessWidget {
                                                 locale: Localizations.localeOf(
                                                         context)
                                                     .toString(),
-                                              ),
-                                              style: TextStyle(
-                                                color: useDarkMode
-                                                    ? Colors.grey.shade300
-                                                    : Colors.grey[700],
                                               ),
                                             ),
                                           ],
@@ -1356,8 +1281,6 @@ class ImageRenderer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool useDarkMode =
-        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     return Padding(
       padding: EdgeInsets.only(
         bottom: inSchedule != null ? 0 : 10,
@@ -1414,80 +1337,76 @@ class ImageRenderer extends StatelessWidget {
                                         onTap: () => Navigator.pop(context),
                                       ),
                                       Card(
-                                          elevation: 5.0,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(5),
-                                          ),
-                                          clipBehavior: Clip.antiAlias,
-                                          child: isHero != null && isHero!
-                                              ? CachedNetworkImage(
-                                                  imageUrl: imageUrl,
-                                                  placeholder: (context, url) =>
-                                                      SizedBox(
-                                                    height:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .width /
-                                                            (16 / 9),
-                                                    child:
-                                                        const LoadingIndicatorUtil(
-                                                      replaceImage: true,
-                                                    ),
+                                        elevation: 5.0,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                        ),
+                                        clipBehavior: Clip.antiAlias,
+                                        child: isHero != null && isHero!
+                                            ? CachedNetworkImage(
+                                                imageUrl: imageUrl,
+                                                placeholder: (context, url) =>
+                                                    SizedBox(
+                                                  height: MediaQuery.of(context)
+                                                          .size
+                                                          .width /
+                                                      (16 / 9),
+                                                  child:
+                                                      const LoadingIndicatorUtil(
+                                                    replaceImage: true,
                                                   ),
-                                                  errorWidget: (context, url,
-                                                          error) =>
-                                                      const Icon(
-                                                          Icons.error_outlined),
-                                                  fadeOutDuration:
-                                                      const Duration(
-                                                          seconds: 1),
-                                                  fadeInDuration:
-                                                      isHero ?? false
-                                                          ? const Duration(
-                                                              milliseconds: 300)
-                                                          : const Duration(
-                                                              seconds: 1),
-                                                  cacheManager: CacheManager(
-                                                    Config(
-                                                      "newsImages",
-                                                      stalePeriod:
-                                                          const Duration(
-                                                              days: 7),
-                                                    ),
+                                                ),
+                                                errorWidget:
+                                                    (context, url, error) =>
+                                                        const Icon(
+                                                  Icons.error_outlined,
+                                                ),
+                                                fadeOutDuration:
+                                                    const Duration(seconds: 1),
+                                                fadeInDuration: isHero ?? false
+                                                    ? const Duration(
+                                                        milliseconds: 300,
+                                                      )
+                                                    : const Duration(
+                                                        seconds: 1,
+                                                      ),
+                                                cacheManager: CacheManager(
+                                                  Config(
+                                                    "newsImages",
+                                                    stalePeriod:
+                                                        const Duration(days: 7),
                                                   ),
-                                                )
-                                              : Image(
-                                                  image: NetworkImage(
-                                                    imageUrl,
-                                                  ),
-                                                  loadingBuilder: (context,
-                                                          child,
-                                                          loadingProgress) =>
-                                                      loadingProgress == null
-                                                          ? child
-                                                          : SizedBox(
-                                                              height: MediaQuery.of(
-                                                                          context)
-                                                                      .size
-                                                                      .width /
-                                                                  (16 / 9),
-                                                              child:
-                                                                  const LoadingIndicatorUtil(
-                                                                replaceImage:
-                                                                    true,
-                                                              ),
+                                                ),
+                                              )
+                                            : Image(
+                                                image: NetworkImage(
+                                                  imageUrl,
+                                                ),
+                                                loadingBuilder: (context, child,
+                                                        loadingProgress) =>
+                                                    loadingProgress == null
+                                                        ? child
+                                                        : SizedBox(
+                                                            height: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width /
+                                                                (16 / 9),
+                                                            child:
+                                                                const LoadingIndicatorUtil(
+                                                              replaceImage:
+                                                                  true,
                                                             ),
-                                                  errorBuilder:
-                                                      (context, url, error) =>
-                                                          Icon(
-                                                    Icons.error_outlined,
-                                                    color: useDarkMode
-                                                        ? Colors.white
-                                                        : Colors.black,
-                                                    size: 30,
-                                                  ),
-                                                )),
+                                                          ),
+                                                errorBuilder:
+                                                    (context, url, error) =>
+                                                        Icon(
+                                                  Icons.error_outlined,
+                                                  size: 30,
+                                                ),
+                                              ),
+                                      ),
                                       Align(
                                         alignment: Alignment.topRight,
                                         child: IconButton(
@@ -1495,9 +1414,6 @@ class ImageRenderer extends StatelessWidget {
                                               Navigator.pop(context),
                                           icon: Icon(
                                             Icons.close_rounded,
-                                            color: useDarkMode
-                                                ? Colors.white
-                                                : Colors.black,
                                           ),
                                         ),
                                       ),
@@ -1554,8 +1470,6 @@ class ImageRenderer extends StatelessWidget {
                                             ),
                               errorBuilder: (context, url, error) => Icon(
                                 Icons.error_outlined,
-                                color:
-                                    useDarkMode ? Colors.white : Colors.black,
                                 size: 30,
                               ),
                             ),
@@ -1611,84 +1525,85 @@ class ImageRenderer extends StatelessWidget {
                                           onTap: () => Navigator.pop(context),
                                         ),
                                         Card(
-                                            elevation: 5.0,
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(5),
-                                            ),
-                                            clipBehavior: Clip.antiAlias,
-                                            child: isHero != null && isHero!
-                                                ? CachedNetworkImage(
-                                                    imageUrl: imageUrl,
-                                                    placeholder:
-                                                        (context, url) =>
-                                                            SizedBox(
-                                                      height:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .width /
-                                                              (16 / 9),
-                                                      child:
-                                                          const LoadingIndicatorUtil(
-                                                        replaceImage: true,
-                                                        borderRadius: false,
+                                          elevation: 5.0,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                          ),
+                                          clipBehavior: Clip.antiAlias,
+                                          child: isHero != null && isHero!
+                                              ? CachedNetworkImage(
+                                                  imageUrl: imageUrl,
+                                                  placeholder: (context, url) =>
+                                                      SizedBox(
+                                                    height:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width /
+                                                            (16 / 9),
+                                                    child:
+                                                        const LoadingIndicatorUtil(
+                                                      replaceImage: true,
+                                                      borderRadius: false,
+                                                    ),
+                                                  ),
+                                                  errorWidget:
+                                                      (context, url, error) =>
+                                                          const Icon(
+                                                    Icons.error_outlined,
+                                                  ),
+                                                  fadeOutDuration:
+                                                      const Duration(
+                                                    seconds: 1,
+                                                  ),
+                                                  fadeInDuration:
+                                                      isHero ?? false
+                                                          ? const Duration(
+                                                              milliseconds: 300)
+                                                          : const Duration(
+                                                              seconds: 1,
+                                                            ),
+                                                  cacheManager: CacheManager(
+                                                    Config(
+                                                      "newsImages",
+                                                      stalePeriod:
+                                                          const Duration(
+                                                        days: 7,
                                                       ),
                                                     ),
-                                                    errorWidget: (context, url,
-                                                            error) =>
-                                                        const Icon(Icons
-                                                            .error_outlined),
-                                                    fadeOutDuration:
-                                                        const Duration(
-                                                            seconds: 1),
-                                                    fadeInDuration: isHero ??
-                                                            false
-                                                        ? const Duration(
-                                                            milliseconds: 300)
-                                                        : const Duration(
-                                                            seconds: 1),
-                                                    cacheManager: CacheManager(
-                                                      Config(
-                                                        "newsImages",
-                                                        stalePeriod:
-                                                            const Duration(
-                                                                days: 7),
-                                                      ),
-                                                    ),
-                                                  )
-                                                : Image(
-                                                    image: NetworkImage(
-                                                      imageUrl,
-                                                    ),
-                                                    loadingBuilder: (context,
-                                                            child,
-                                                            loadingProgress) =>
-                                                        loadingProgress == null
-                                                            ? child
-                                                            : SizedBox(
-                                                                height: MediaQuery.of(
-                                                                            context)
-                                                                        .size
-                                                                        .width /
-                                                                    (16 / 9),
-                                                                child:
-                                                                    const LoadingIndicatorUtil(
-                                                                  replaceImage:
-                                                                      true,
-                                                                  borderRadius:
-                                                                      false,
-                                                                ),
+                                                  ),
+                                                )
+                                              : Image(
+                                                  image: NetworkImage(
+                                                    imageUrl,
+                                                  ),
+                                                  loadingBuilder: (context,
+                                                          child,
+                                                          loadingProgress) =>
+                                                      loadingProgress == null
+                                                          ? child
+                                                          : SizedBox(
+                                                              height: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width /
+                                                                  (16 / 9),
+                                                              child:
+                                                                  const LoadingIndicatorUtil(
+                                                                replaceImage:
+                                                                    true,
+                                                                borderRadius:
+                                                                    false,
                                                               ),
-                                                    errorBuilder:
-                                                        (context, url, error) =>
-                                                            Icon(
-                                                      Icons.error_outlined,
-                                                      color: useDarkMode
-                                                          ? Colors.white
-                                                          : Colors.black,
-                                                      size: 30,
-                                                    ),
-                                                  )),
+                                                            ),
+                                                  errorBuilder:
+                                                      (context, url, error) =>
+                                                          Icon(
+                                                    Icons.error_outlined,
+                                                    size: 30,
+                                                  ),
+                                                ),
+                                        ),
                                         Align(
                                           alignment: Alignment.topRight,
                                           child: IconButton(
@@ -1696,9 +1611,6 @@ class ImageRenderer extends StatelessWidget {
                                                 Navigator.pop(context),
                                             icon: Icon(
                                               Icons.close_rounded,
-                                              color: useDarkMode
-                                                  ? Colors.white
-                                                  : Colors.black,
                                             ),
                                           ),
                                         ),
@@ -1755,8 +1667,6 @@ class ImageRenderer extends StatelessWidget {
                                           ),
                                 errorBuilder: (context, url, error) => Icon(
                                   Icons.error_outlined,
-                                  color:
-                                      useDarkMode ? Colors.white : Colors.black,
                                   size: 30,
                                 ),
                               ),
@@ -1845,8 +1755,6 @@ class VideoRenderer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool useDarkMode =
-        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     double width = MediaQuery.of(context).size.width;
     width = width > 1400
         ? 800
@@ -1887,7 +1795,7 @@ class VideoRenderer extends StatelessWidget {
                             snapshot.data!,
                             autoplay == null ? false : autoplay!,
                             heroTag ?? '',
-                            Theme.of(context).primaryColor,
+                            Theme.of(context).colorScheme.background,
                           ),
                     if (caption != null)
                       Padding(
@@ -1898,12 +1806,11 @@ class VideoRenderer extends StatelessWidget {
                         ),
                         child: Text(
                           caption!,
-                          style: TextStyle(
-                            color: useDarkMode
-                                ? Colors.grey[500]
-                                : Colors.grey[800],
-                          ),
                           textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color:
+                                Theme.of(context).textTheme.labelSmall!.color,
+                          ),
                         ),
                       ),
                   ],
@@ -1912,6 +1819,7 @@ class VideoRenderer extends StatelessWidget {
                   height: MediaQuery.of(context).size.width / (16 / 9),
                   child: const LoadingIndicatorUtil(
                     replaceImage: true,
+                    fullBorderRadius: false,
                     borderRadius: false,
                   ),
                 ),
@@ -1985,8 +1893,7 @@ class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
         enableAudioTracks: false,
         enableSubtitles: false,
         overflowModalColor: widget.primaryColor,
-        overflowMenuIconsColor:
-            useDarkMode ? Colors.white : Colors.black, // TODO: check light mode
+        overflowMenuIconsColor: useDarkMode ? Colors.white : Colors.black,
         overflowModalTextColor: useDarkMode ? Colors.white : Colors.black,
         showControlsOnInitialize: false,
       ),
@@ -2026,12 +1933,12 @@ class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
                                 MediaQuery.of(context).size.width / (16 / 9),
                             child: const LoadingIndicatorUtil(
                               replaceImage: true,
+                              fullBorderRadius: false,
                               borderRadius: false,
                             ),
                           ),
                           errorWidget: (context, url, error) => Icon(
                             Icons.error_outlined,
-                            color: useDarkMode ? Colors.white : Colors.black,
                           ),
                           fadeOutDuration: const Duration(milliseconds: 100),
                           fadeInDuration: const Duration(seconds: 1),
@@ -2133,8 +2040,6 @@ class _ImageGalleryState extends State<ImageGallery> {
   Widget build(BuildContext context) {
     bool useDataSaverMode = Hive.box('settings')
         .get('useDataSaverMode', defaultValue: false) as bool;
-    bool useDarkMode =
-        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
 
     return Column(
       children: [
@@ -2158,7 +2063,6 @@ class _ImageGalleryState extends State<ImageGallery> {
           ],
           options: CarouselOptions(
               viewportFraction: 1,
-              //aspectRatio: 16 / 9,
               enableInfiniteScroll: false,
               enlargeCenterPage: true,
               autoPlay: true,
@@ -2180,10 +2084,9 @@ class _ImageGalleryState extends State<ImageGallery> {
                     const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color:
-                      (useDarkMode ? Colors.white : Colors.black).withOpacity(
-                    _current == widget.images.indexOf(image) ? 0.9 : 0.4,
-                  ),
+                  color: Theme.of(context).colorScheme.primary.withOpacity(
+                        _current == widget.images.indexOf(image) ? 0.9 : 0.4,
+                      ),
                 ),
               ),
           ],

@@ -20,7 +20,6 @@
 import 'package:boxbox/Screens/links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -30,15 +29,10 @@ class AboutScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool useDarkMode =
-        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     return Scaffold(
       appBar: AppBar(
         title: Text(
           AppLocalizations.of(context)!.about,
-          style: const TextStyle(
-            fontWeight: FontWeight.w600,
-          ),
         ),
         backgroundColor: Theme.of(context).colorScheme.onPrimary,
       ),
@@ -78,9 +72,6 @@ class AboutScreen extends StatelessWidget {
                       ),
                       child: Text(
                         'v${snapshot.data?.version}',
-                        style: TextStyle(
-                          color: useDarkMode ? Colors.white : Colors.black,
-                        ),
                       ),
                     )
                   : const Text(''),
@@ -103,14 +94,10 @@ class AboutScreen extends StatelessWidget {
                     children: [
                       Text(
                         AppLocalizations.of(context)!.links,
-                        style: TextStyle(
-                          color: useDarkMode ? Colors.white : Colors.black,
-                        ),
                       ),
                       const Spacer(),
                       Icon(
                         Icons.open_in_new_outlined,
-                        color: useDarkMode ? Colors.white : Colors.black,
                       ),
                     ],
                   ),
@@ -130,7 +117,6 @@ class AboutScreen extends StatelessWidget {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 20,
-                  color: useDarkMode ? Colors.white : Colors.black,
                 ),
               ),
             ),
@@ -169,7 +155,6 @@ class AboutScreen extends StatelessWidget {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 11,
-                  color: useDarkMode ? Colors.white : Colors.black,
                 ),
               ),
             ),
