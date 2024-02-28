@@ -316,5 +316,7 @@
   "server": "सर्वर",
   "@server": {},
   "pipedApiUrlSub": "YouTube वीडियो के लिए उपयोग किया जाता है।",
-  "@pipedApiUrlSub": {}
+  "@pipedApiUrlSub": {},
+  "search": "खोजें",
+  "@search": {}
 }
