@@ -316,5 +316,7 @@
   "server": "ਸਰਵਰ",
   "@server": {},
   "pipedApiUrlSub": "ਯੂਟਿਊਬ ਵੀਡੀਓਜ਼ ਲਈ ਵਰਤਿਆ ਜਾਂਦਾ ਹੈ।",
-  "@pipedApiUrlSub": {}
+  "@pipedApiUrlSub": {},
+  "search": "ਖੋਜ ਕਰੋ",
+  "@search": {}
 }
