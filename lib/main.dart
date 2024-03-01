@@ -27,7 +27,7 @@ import 'package:boxbox/helpers/bottom_navigation_bar.dart';
 import 'package:boxbox/helpers/handle_native.dart';
 import 'package:boxbox/helpers/route_handler.dart';
 import 'package:boxbox/Screens/article.dart';
-import 'package:boxbox/theme/teams_themes.dart';
+import 'package:boxbox/helpers/team_background_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -334,7 +334,7 @@ class _MyAppState extends State<MyApp> {
     /*Map<int, Color> color = TeamsThemes().getTeamTheme(teamTheme);
      MaterialColor colorCustom =
         MaterialColor(TeamsThemes().getTeamColor(teamTheme), color); */
-    Color finalColor = Color(TeamsThemes().getTeamColor(teamTheme));
+    Color finalColor = TeamBackgroundColor().getTeamColor(teamTheme);
 
     setTimeagoLocaleMessages();
 

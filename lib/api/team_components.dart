@@ -58,7 +58,7 @@ class TeamItem extends StatelessWidget {
   const TeamItem(this.item, this.index, {Key? key}) : super(key: key);
 
   Color getTeamColors(String teamId) {
-    Color tC = TeamBackgroundColor().getTeamColors(teamId);
+    Color tC = TeamBackgroundColor().getTeamColor(teamId);
     return tC;
   }
 

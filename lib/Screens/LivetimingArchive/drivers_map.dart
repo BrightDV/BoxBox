@@ -123,7 +123,7 @@ class CurvePainter extends CustomPainter {
     var paint = Paint();
     for (var element in positions) {
       var paint = Paint()
-        ..color = TeamBackgroundColor().getTeamColors(
+        ..color = TeamBackgroundColor().getTeamColor(
           Convert().driverCodeToTeam(
             points.keys.toList()[positions.indexOf(element)],
           ),

@@ -23,6 +23,7 @@ import 'package:flutter/material.dart';
 
 class TeamBackgroundColor {
   final Map<String, Color> teamColorsList = {
+    "default": const Color(0xffe10600),
     "mercedes": const Color(0xFF27F4D2),
     "red_bull": const Color(0xFF3671C6),
     "ferrari": const Color(0xFFE8002D),
@@ -33,9 +34,12 @@ class TeamBackgroundColor {
     "williams": const Color(0xFF64C4FF),
     "kick": const Color(0xFF52E252),
     "haas": const Color(0xffB6BABD),
+    // 2023
+    "alphatauri": const Color(0xff4E7C9B),
+    "alfa": const Color(0xffB12039),
   };
 
-  Color getTeamColors(String teamName) {
+  Color getTeamColor(String teamName) {
     Color teamColors = teamColorsList[teamName] ?? Colors.transparent;
     return teamColors;
   }

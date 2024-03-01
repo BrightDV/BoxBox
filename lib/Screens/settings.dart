@@ -21,7 +21,7 @@ import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:boxbox/Screens/FormulaYou/settings.dart';
 import 'package:boxbox/Screens/custom_home_feed_settings.dart';
 import 'package:boxbox/Screens/server_settings.dart';
-import 'package:boxbox/theme/teams_themes.dart';
+import 'package:boxbox/helpers/team_background_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -139,249 +139,249 @@ class _AppearanceCardState extends State<AppearanceCard> {
     };
     fontUsedInArticles = fontNameToLabel[fontUsedInArticles];
 
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(
-            top: 10,
-            bottom: 10,
-          ),
-          child: Text(
-            AppLocalizations.of(context)!.appearance,
-            style: TextStyle(
-              fontWeight: FontWeight.w500,
-              fontSize: 20,
+    return Card(
+      elevation: 5,
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(
+              top: 10,
+              bottom: 10,
+            ),
+            child: Text(
+              AppLocalizations.of(context)!.appearance,
+              style: TextStyle(
+                fontWeight: FontWeight.w500,
+                fontSize: 20,
+              ),
             ),
           ),
-        ),
-        ListTile(
-          title: Text(
-            AppLocalizations.of(context)!.theme,
-          ),
-          onTap: () {},
-          trailing: DropdownButton(
-            value: themeMode,
-            onChanged: (int? newThemeMode) {
-              if (newThemeMode != null) {
-                setState(
-                  () {
-                    bool newValue;
-                    setState(() {
-                      if (newThemeMode == 0) {
-                        final Brightness brightnessValue =
-                            MediaQuery.of(context).platformBrightness;
-                        bool isDark = brightnessValue == Brightness.dark;
-                        newValue = isDark;
-                      } else if (newThemeMode == 1) {
-                        newValue = false;
-                        AdaptiveTheme.of(context).setLight();
-                      } else {
-                        newValue = true;
-                        AdaptiveTheme.of(context).setDark();
-                      }
-                      Hive.box('settings').put('darkMode', newValue);
-                      Hive.box('settings').put('themeMode', newThemeMode);
+          ListTile(
+            title: Text(
+              AppLocalizations.of(context)!.theme,
+            ),
+            onTap: () {},
+            trailing: DropdownButton(
+              value: themeMode,
+              onChanged: (int? newThemeMode) {
+                if (newThemeMode != null) {
+                  setState(
+                    () {
+                      bool newValue;
+                      setState(() {
+                        if (newThemeMode == 0) {
+                          final Brightness brightnessValue =
+                              MediaQuery.of(context).platformBrightness;
+                          bool isDark = brightnessValue == Brightness.dark;
+                          newValue = isDark;
+                        } else if (newThemeMode == 1) {
+                          newValue = false;
+                          AdaptiveTheme.of(context).setLight();
+                        } else {
+                          newValue = true;
+                          AdaptiveTheme.of(context).setDark();
+                        }
+                        Hive.box('settings').put('darkMode', newValue);
+                        Hive.box('settings').put('themeMode', newThemeMode);
 
-                      themeMode = newThemeMode;
-                      useDarkMode = newValue;
-                    });
-                  },
-                );
-              }
-            },
-            items: <int>[0, 1, 2].map<DropdownMenuItem<int>>(
-              (int value) {
-                return DropdownMenuItem<int>(
-                  value: value,
-                  child: Text(
-                    themeOptions[value],
-                    style: TextStyle(
-                      fontSize: 12,
-                    ),
-                  ),
-                );
+                        themeMode = newThemeMode;
+                        useDarkMode = newValue;
+                      });
+                    },
+                  );
+                }
               },
-            ).toList(),
-          ),
-        ),
-        ListTile(
-          title: Text(
-            AppLocalizations.of(context)!.teamColors,
-          ),
-          subtitle: Text(
-            AppLocalizations.of(context)!.needsRestart,
-            style: TextStyle(
-              fontSize: 13,
+              items: <int>[0, 1, 2].map<DropdownMenuItem<int>>(
+                (int value) {
+                  return DropdownMenuItem<int>(
+                    value: value,
+                    child: Text(
+                      themeOptions[value],
+                      style: TextStyle(
+                        fontSize: 12,
+                      ),
+                    ),
+                  );
+                },
+              ).toList(),
             ),
           ),
-          onTap: () {},
-          trailing: DropdownButton(
-            value: teamTheme,
-            onChanged: (String? newTeamTheme) {
-              if (newTeamTheme != null) {
-                setState(
-                  () {
-                    Map stringToValue = {
-                      AppLocalizations.of(context)?.defaultValue: 'default',
-                      'Kick Sauber': 'kick',
-                      'RB': 'rb',
-                      'Alpine': 'alpine',
-                      'Aston Martin': 'aston_martin',
-                      'Ferrari': 'ferrari',
-                      'Haas': 'haas',
-                      'McLaren': 'mclaren',
-                      'Mercedes': 'mercedes',
-                      'Red Bull': 'red_bull',
-                      'Williams': 'williams',
-                    };
-                    Hive.box('settings').put(
-                      'teamTheme',
-                      stringToValue[newTeamTheme],
-                    );
-                    Color color = Color(
-                      TeamsThemes().getTeamColor(
+          ListTile(
+            title: Text(
+              AppLocalizations.of(context)!.teamColors,
+            ),
+            subtitle: Text(
+              AppLocalizations.of(context)!.needsRestart,
+              style: TextStyle(
+                fontSize: 13,
+              ),
+            ),
+            onTap: () {},
+            trailing: DropdownButton(
+              value: teamTheme,
+              onChanged: (String? newTeamTheme) {
+                if (newTeamTheme != null) {
+                  setState(
+                    () {
+                      Map stringToValue = {
+                        AppLocalizations.of(context)?.defaultValue: 'default',
+                        'Kick Sauber': 'kick',
+                        'RB': 'rb',
+                        'Alpine': 'alpine',
+                        'Aston Martin': 'aston_martin',
+                        'Ferrari': 'ferrari',
+                        'Haas': 'haas',
+                        'McLaren': 'mclaren',
+                        'Mercedes': 'mercedes',
+                        'Red Bull': 'red_bull',
+                        'Williams': 'williams',
+                      };
+                      Hive.box('settings').put(
+                        'teamTheme',
                         stringToValue[newTeamTheme],
-                      ),
-                    );
+                      );
+                      Color color = TeamBackgroundColor()
+                          .getTeamColor(stringToValue[newTeamTheme]);
 
-                    AdaptiveTheme.of(context).setTheme(
-                      light: ThemeData(
-                        useMaterial3: true,
-                        brightness: Brightness.light,
-                        colorScheme: ColorScheme.fromSeed(
-                          seedColor: color,
-                          onPrimary: color,
+                      AdaptiveTheme.of(context).setTheme(
+                        light: ThemeData(
+                          useMaterial3: true,
                           brightness: Brightness.light,
+                          colorScheme: ColorScheme.fromSeed(
+                            seedColor: color,
+                            onPrimary: color,
+                            brightness: Brightness.light,
+                          ),
+                          fontFamily: 'Formula1',
                         ),
-                        fontFamily: 'Formula1',
-                      ),
-                      dark: ThemeData(
-                        useMaterial3: true,
-                        brightness: Brightness.dark,
-                        colorScheme: ColorScheme.fromSeed(
-                          seedColor: color,
-                          onPrimary: HSLColor.fromColor(color)
-                              .withLightness(0.4)
-                              .toColor(),
+                        dark: ThemeData(
+                          useMaterial3: true,
                           brightness: Brightness.dark,
+                          colorScheme: ColorScheme.fromSeed(
+                            seedColor: color,
+                            onPrimary: HSLColor.fromColor(color)
+                                .withLightness(0.4)
+                                .toColor(),
+                            brightness: Brightness.dark,
+                          ),
+                          fontFamily: 'Formula1',
                         ),
-                        fontFamily: 'Formula1',
+                      );
+                      teamTheme = newTeamTheme;
+                    },
+                  );
+                }
+              },
+              items: teamThemeOptions.map<DropdownMenuItem<String>>(
+                (String? value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(
+                      value!,
+                      style: TextStyle(
+                        fontSize: 12,
                       ),
-                    );
-                    teamTheme = newTeamTheme;
-                  },
-                );
-              }
-            },
-            items: teamThemeOptions.map<DropdownMenuItem<String>>(
-              (String? value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(
-                    value!,
-                    style: TextStyle(
-                      fontSize: 12,
                     ),
-                  ),
-                );
-              },
-            ).toList(),
-          ),
-        ),
-        ListTile(
-          title: Text(
-            AppLocalizations.of(context)!.newsLayout,
-          ),
-          onTap: () {},
-          trailing: DropdownButton(
-            value: newsLayoutFormated,
-            onChanged: (newValue) {
-              if (newValue != null) {
-                setState(
-                  () {
-                    Map stringToValue = {
-                      AppLocalizations.of(context)?.articleFull: 'big',
-                      AppLocalizations.of(context)?.articleTitleAndImage:
-                          'medium',
-                      AppLocalizations.of(context)?.articleTitleAndDescription:
-                          'condensed',
-                      AppLocalizations.of(context)?.articleTitle: 'small',
-                    };
-                    newsLayout = stringToValue[newValue];
-                    Hive.box('settings').put('newsLayout', newsLayout);
-                  },
-                );
-              }
-            },
-            items: <String>[
-              AppLocalizations.of(context)!.articleFull,
-              AppLocalizations.of(context)!.articleTitleAndImage,
-              AppLocalizations.of(context)!.articleTitleAndDescription,
-              AppLocalizations.of(context)!.articleTitle,
-            ].map<DropdownMenuItem<String>>(
-              (String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(
-                    value,
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: useDarkMode ? Colors.white : Colors.black,
-                    ),
-                  ),
-                );
-              },
-            ).toList(),
-          ),
-        ),
-        ListTile(
-          title: Text(
-            AppLocalizations.of(context)!.font,
-          ),
-          subtitle: Text(
-            AppLocalizations.of(context)!.fontDescription,
-            style: TextStyle(
-              fontSize: 13,
+                  );
+                },
+              ).toList(),
             ),
           ),
-          trailing: DropdownButton(
-            value: fontUsedInArticles,
-            onChanged: (newValue) {
-              if (newValue != null) {
-                setState(
-                  () {
-                    Map stringToValue = {
-                      'Formula 1': 'Formula1',
-                      'Titilium': 'Titilium',
-                      AppLocalizations.of(context)!.defaultValue: 'Roboto',
-                    };
-                    fontUsedInArticles = stringToValue[newValue];
-                    Hive.box('settings')
-                        .put('fontUsedInArticles', fontUsedInArticles);
-                  },
-                );
-              }
-            },
-            items: <String>[
-              'Formula 1',
-              'Titilium',
-              AppLocalizations.of(context)!.defaultValue,
-            ].map<DropdownMenuItem<String>>(
-              (String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(
-                    value,
-                    style: TextStyle(
-                      fontSize: 12,
-                    ),
-                  ),
-                );
+          ListTile(
+            title: Text(
+              AppLocalizations.of(context)!.newsLayout,
+            ),
+            onTap: () {},
+            trailing: DropdownButton(
+              value: newsLayoutFormated,
+              onChanged: (newValue) {
+                if (newValue != null) {
+                  setState(
+                    () {
+                      Map stringToValue = {
+                        AppLocalizations.of(context)?.articleFull: 'big',
+                        AppLocalizations.of(context)?.articleTitleAndImage:
+                            'medium',
+                        AppLocalizations.of(context)
+                            ?.articleTitleAndDescription: 'condensed',
+                        AppLocalizations.of(context)?.articleTitle: 'small',
+                      };
+                      newsLayout = stringToValue[newValue];
+                      Hive.box('settings').put('newsLayout', newsLayout);
+                    },
+                  );
+                }
               },
-            ).toList(),
+              items: <String>[
+                AppLocalizations.of(context)!.articleFull,
+                AppLocalizations.of(context)!.articleTitleAndImage,
+                AppLocalizations.of(context)!.articleTitleAndDescription,
+                AppLocalizations.of(context)!.articleTitle,
+              ].map<DropdownMenuItem<String>>(
+                (String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(
+                      value,
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: useDarkMode ? Colors.white : Colors.black,
+                      ),
+                    ),
+                  );
+                },
+              ).toList(),
+            ),
           ),
-        ),
-      ],
+          ListTile(
+            title: Text(
+              AppLocalizations.of(context)!.font,
+            ),
+            subtitle: Text(
+              AppLocalizations.of(context)!.fontDescription,
+              style: TextStyle(
+                fontSize: 13,
+              ),
+            ),
+            trailing: DropdownButton(
+              value: fontUsedInArticles,
+              onChanged: (newValue) {
+                if (newValue != null) {
+                  setState(
+                    () {
+                      Map stringToValue = {
+                        'Formula 1': 'Formula1',
+                        'Titilium': 'Titilium',
+                        AppLocalizations.of(context)!.defaultValue: 'Roboto',
+                      };
+                      fontUsedInArticles = stringToValue[newValue];
+                      Hive.box('settings')
+                          .put('fontUsedInArticles', fontUsedInArticles);
+                    },
+                  );
+                }
+              },
+              items: <String>[
+                'Formula 1',
+                'Titilium',
+                AppLocalizations.of(context)!.defaultValue,
+              ].map<DropdownMenuItem<String>>(
+                (String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(
+                      value,
+                      style: TextStyle(
+                        fontSize: 12,
+                      ),
+                    ),
+                  );
+                },
+              ).toList(),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -401,109 +401,112 @@ class _PlayerCardState extends State<PlayerCard> {
         Hive.box('settings').get('playerQuality', defaultValue: 360) as int;
     String pipedApiUrl = Hive.box('settings')
         .get('pipedApiUrl', defaultValue: 'pipedapi.kavin.rocks') as String;
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(
-            top: 20,
-            bottom: 20,
-          ),
-          child: Text(
-            AppLocalizations.of(context)!.player,
-            style: TextStyle(
-              fontWeight: FontWeight.w500,
-              fontSize: 20,
+    return Card(
+      elevation: 5,
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(
+              top: 10,
+              bottom: 10,
+            ),
+            child: Text(
+              AppLocalizations.of(context)!.player,
+              style: TextStyle(
+                fontWeight: FontWeight.w500,
+                fontSize: 20,
+              ),
             ),
           ),
-        ),
-        ListTile(
-          title: Text(
-            AppLocalizations.of(context)!.playerQuality,
-            style: TextStyle(),
-          ),
-          subtitle: Text(
-            AppLocalizations.of(context)!.playerQualitySub,
-            style: TextStyle(
-              fontSize: 13,
+          ListTile(
+            title: Text(
+              AppLocalizations.of(context)!.playerQuality,
+              style: TextStyle(),
             ),
-          ),
-          onTap: () {},
-          trailing: DropdownButton(
-            value: playerQuality,
-            onChanged: (int? newValue) {
-              if (newValue != null) {
-                setState(
-                  () {
-                    playerQuality = newValue;
-                    Hive.box('settings').put('playerQuality', newValue);
-                  },
-                );
-              }
-            },
-            items: <int>[
-              180,
-              360,
-              720,
-            ].map<DropdownMenuItem<int>>(
-              (int value) {
-                return DropdownMenuItem<int>(
-                  value: value,
-                  child: Text(
-                    '${value}p',
-                    style: TextStyle(
-                      fontSize: 12,
-                    ),
-                  ),
-                );
+            subtitle: Text(
+              AppLocalizations.of(context)!.playerQualitySub,
+              style: TextStyle(
+                fontSize: 13,
+              ),
+            ),
+            onTap: () {},
+            trailing: DropdownButton(
+              value: playerQuality,
+              onChanged: (int? newValue) {
+                if (newValue != null) {
+                  setState(
+                    () {
+                      playerQuality = newValue;
+                      Hive.box('settings').put('playerQuality', newValue);
+                    },
+                  );
+                }
               },
-            ).toList(),
-          ),
-        ),
-        ListTile(
-          title: Text(
-            'Piped Proxy URL',
-          ),
-          subtitle: Text(
-            AppLocalizations.of(context)!.pipedApiUrlSub,
-            style: TextStyle(
-              fontSize: 13,
+              items: <int>[
+                180,
+                360,
+                720,
+              ].map<DropdownMenuItem<int>>(
+                (int value) {
+                  return DropdownMenuItem<int>(
+                    value: value,
+                    child: Text(
+                      '${value}p',
+                      style: TextStyle(
+                        fontSize: 12,
+                      ),
+                    ),
+                  );
+                },
+              ).toList(),
             ),
           ),
-          onTap: () {},
-          trailing: DropdownButton(
-            value: pipedApiUrl,
-            onChanged: (String? newValue) {
-              if (newValue != null) {
-                setState(
-                  () {
-                    pipedApiUrl = newValue;
-                    Hive.box('settings').put('pipedApiUrl', newValue);
-                  },
-                );
-              }
-            },
-            items: <String>[
-              'pipedapi.kavin.rocks',
-              'pipedapi.syncpundit.io',
-              'pipedapi.adminforge.de',
-              'watchapi.whatever.social',
-              'api.piped.privacydev.net',
-            ].map<DropdownMenuItem<String>>(
-              (String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(
-                    value,
-                    style: TextStyle(
-                      fontSize: 12,
-                    ),
-                  ),
-                );
+          ListTile(
+            title: Text(
+              'Piped Proxy URL',
+            ),
+            subtitle: Text(
+              AppLocalizations.of(context)!.pipedApiUrlSub,
+              style: TextStyle(
+                fontSize: 13,
+              ),
+            ),
+            onTap: () {},
+            trailing: DropdownButton(
+              value: pipedApiUrl,
+              onChanged: (String? newValue) {
+                if (newValue != null) {
+                  setState(
+                    () {
+                      pipedApiUrl = newValue;
+                      Hive.box('settings').put('pipedApiUrl', newValue);
+                    },
+                  );
+                }
               },
-            ).toList(),
+              items: <String>[
+                'pipedapi.kavin.rocks',
+                'pipedapi.syncpundit.io',
+                'pipedapi.adminforge.de',
+                'watchapi.whatever.social',
+                'api.piped.privacydev.net',
+              ].map<DropdownMenuItem<String>>(
+                (String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(
+                      value,
+                      style: TextStyle(
+                        fontSize: 12,
+                      ),
+                    ),
+                  );
+                },
+              ).toList(),
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
@@ -523,105 +526,108 @@ class _OtherCardstate extends State<OtherCard> {
     bool enableExperimentalFeatures = Hive.box('settings')
         .get('enableExperimentalFeatures', defaultValue: false) as bool;
 
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(
-            top: 20,
-            bottom: 20,
-          ),
-          child: Text(
-            AppLocalizations.of(context)!.other,
-            style: TextStyle(
-              fontWeight: FontWeight.w500,
-              fontSize: 20,
+    return Card(
+      elevation: 5,
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(
+              top: 10,
+              bottom: 10,
             ),
-          ),
-        ),
-        ListTile(
-          title: Text(
-            AppLocalizations.of(context)!.formulaYouSettings,
-          ),
-          trailing: Icon(
-            Icons.arrow_forward_rounded,
-          ),
-          onTap: () => Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const FormulaYouSettingsScreen(),
-            ),
-          ),
-        ),
-        ListTile(
-          title: Text(
-            AppLocalizations.of(context)!.news,
-          ),
-          onTap: () => Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => CustomeHomeFeedSettingsScreen(
-                widget.update,
+            child: Text(
+              AppLocalizations.of(context)!.other,
+              style: TextStyle(
+                fontWeight: FontWeight.w500,
+                fontSize: 20,
               ),
             ),
           ),
-          trailing: Icon(
-            Icons.arrow_forward_rounded,
-          ),
-        ),
-        ListTile(
-          title: Text(
-            AppLocalizations.of(context)!.server,
-          ),
-          onTap: () => Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ServerSettingsScreen(
-                widget.update,
+          ListTile(
+            title: Text(
+              AppLocalizations.of(context)!.formulaYouSettings,
+            ),
+            trailing: Icon(
+              Icons.arrow_forward_rounded,
+            ),
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const FormulaYouSettingsScreen(),
               ),
             ),
           ),
-          trailing: Icon(
-            Icons.arrow_forward_rounded,
-          ),
-        ),
-        SwitchListTile(
-          title: Text(
-            AppLocalizations.of(context)!.dataSaverMode,
-          ),
-          subtitle: Text(
-            AppLocalizations.of(context)!.dataSaverModeSub,
-            style: TextStyle(
-              fontSize: 13,
+          ListTile(
+            title: Text(
+              AppLocalizations.of(context)!.news,
+            ),
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => CustomeHomeFeedSettingsScreen(
+                  widget.update,
+                ),
+              ),
+            ),
+            trailing: Icon(
+              Icons.arrow_forward_rounded,
             ),
           ),
-          value: useDataSaverMode,
-          onChanged: (bool value) {
-            setState(() {
-              useDataSaverMode = value;
-              Hive.box('settings').put('useDataSaverMode', value);
-              if (value) {
-                Hive.box('settings').put('playerQuality', 180);
-              } else {
-                Hive.box('settings').put('playerQuality', 720);
-              }
-            });
-          },
-        ),
-        SwitchListTile(
-          title: Text(
-            AppLocalizations.of(context)!.experimentalFeatures,
+          ListTile(
+            title: Text(
+              AppLocalizations.of(context)!.server,
+            ),
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ServerSettingsScreen(
+                  widget.update,
+                ),
+              ),
+            ),
+            trailing: Icon(
+              Icons.arrow_forward_rounded,
+            ),
           ),
-          value: enableExperimentalFeatures,
-          onChanged: (bool value) {
-            setState(
-              () {
-                enableExperimentalFeatures = value;
-                Hive.box('settings').put('enableExperimentalFeatures', value);
-              },
-            );
-          },
-        ),
-      ],
+          SwitchListTile(
+            title: Text(
+              AppLocalizations.of(context)!.dataSaverMode,
+            ),
+            subtitle: Text(
+              AppLocalizations.of(context)!.dataSaverModeSub,
+              style: TextStyle(
+                fontSize: 13,
+              ),
+            ),
+            value: useDataSaverMode,
+            onChanged: (bool value) {
+              setState(() {
+                useDataSaverMode = value;
+                Hive.box('settings').put('useDataSaverMode', value);
+                if (value) {
+                  Hive.box('settings').put('playerQuality', 180);
+                } else {
+                  Hive.box('settings').put('playerQuality', 720);
+                }
+              });
+            },
+          ),
+          SwitchListTile(
+            title: Text(
+              AppLocalizations.of(context)!.experimentalFeatures,
+            ),
+            value: enableExperimentalFeatures,
+            onChanged: (bool value) {
+              setState(
+                () {
+                  enableExperimentalFeatures = value;
+                  Hive.box('settings').put('enableExperimentalFeatures', value);
+                },
+              );
+            },
+          ),
+        ],
+      ),
     );
   }
 }

@@ -30,6 +30,17 @@ class Convert {
       'Williams Mercedes': 'williams',
       'Kick Sauber Ferrari': 'kick',
       'Haas Ferrari': 'haas',
+      // 2023
+      'Alfa Romeo Ferrari': 'alfa',
+      'AlphaTauri Honda RBPT': 'alphatauri',
+      // 2022
+      'AlphaTauri RBPT': 'alphatauri',
+      'Red Bull Racing RBPT': 'red_bull',
+      // 2021
+      'Red Bull Racing Honda': 'red_bull',
+      'AlphaTauri Honda': 'alphatauri',
+      'Aston Martin Mercedes': 'aston_martin',
+      'Alfa Romeo Racing Ferrari': 'alfa',
     };
     return formulaOneToErgast[teamName] ?? 'none';
   }

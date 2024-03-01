@@ -309,7 +309,7 @@ class _FreePracticesResultsProviderState
               snapshot.error.toString(),
             )
           : snapshot.hasData
-              ? race.sessionDates.isEmpty
+              ? race.sessionDates.isEmpty // TODO: update when Ergast not down
                   ? Padding(
                       padding: const EdgeInsets.all(15),
                       child: Center(
@@ -937,7 +937,7 @@ class StartingGridPositionItem extends StatelessWidget {
       {super.key});
 
   Color getTeamColors(String teamId) {
-    Color tC = TeamBackgroundColor().getTeamColors(teamId);
+    Color tC = TeamBackgroundColor().getTeamColor(teamId);
     return tC;
   }
 
@@ -1251,21 +1251,24 @@ class _SessionCountdownTimerState extends State<SessionCountdownTimer> {
                   textAlign: TextAlign.end,
                 ),
               ),
-              Expanded(
-                flex: 2,
-                child: Switch(
-                  value: shouldUseCountdown,
-                  onChanged: (value) => setState(
-                    () {
-                      shouldUseCountdown = value;
-                      Hive.box('settings')
-                          .put('shouldUseCountdown', shouldUseCountdown);
-                      if (widget.update != null) {
-                        widget.update!();
-                      } else {
-                        setState(() {});
-                      }
-                    },
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 5),
+                child: Expanded(
+                  flex: 2,
+                  child: Switch(
+                    value: shouldUseCountdown,
+                    onChanged: (value) => setState(
+                      () {
+                        shouldUseCountdown = value;
+                        Hive.box('settings')
+                            .put('shouldUseCountdown', shouldUseCountdown);
+                        if (widget.update != null) {
+                          widget.update!();
+                        } else {
+                          setState(() {});
+                        }
+                      },
+                    ),
                   ),
                 ),
               ),

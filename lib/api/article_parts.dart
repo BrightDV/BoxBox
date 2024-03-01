@@ -853,7 +853,10 @@ class WidgetsList extends StatelessWidget {
                                                                               height: 15,
                                                                               child: VerticalDivider(
                                                                                 color: Color(
-                                                                                  int.parse('FF${driverResults['teamColourCode']}', radix: 16),
+                                                                                  int.parse(
+                                                                                    driverResults['teamColourCode'] == null ? '00FFFFFF' : 'FF${driverResults['teamColourCode']}',
+                                                                                    radix: 16,
+                                                                                  ),
                                                                                 ),
                                                                                 thickness: 5,
                                                                                 width: 5,
@@ -921,7 +924,7 @@ class WidgetsList extends StatelessWidget {
                                                                                   child: VerticalDivider(
                                                                                     color: Color(
                                                                                       int.parse(
-                                                                                        'FF${driverResults['teamColourCode']}',
+                                                                                        driverResults['teamColourCode'] == null ? '00FFFFFF' : 'FF${driverResults['teamColourCode']}',
                                                                                         radix: 16,
                                                                                       ),
                                                                                     ),
@@ -972,7 +975,7 @@ class WidgetsList extends StatelessWidget {
                                                                                   child: VerticalDivider(
                                                                                     color: Color(
                                                                                       int.parse(
-                                                                                        'FF${driverResults['teamColourCode']}',
+                                                                                        driverResults['teamColourCode'] == null ? '00FFFFFF' : 'FF${driverResults['teamColourCode']}',
                                                                                         radix: 16,
                                                                                       ),
                                                                                     ),

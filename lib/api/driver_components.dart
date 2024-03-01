@@ -167,7 +167,7 @@ class DriverItem extends StatelessWidget {
   }) : super(key: key);
 
   Color getTeamColors(String teamId) {
-    Color tC = TeamBackgroundColor().getTeamColors(teamId);
+    Color tC = TeamBackgroundColor().getTeamColor(teamId);
     return tC;
   }
 
