@@ -147,7 +147,7 @@ class CircuitScreen extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            snapshot.data!['links'].isNotEmpty
+                            snapshot.data!['links'] != null
                                 ? Padding(
                                     padding: const EdgeInsets.symmetric(
                                       vertical: 3,
@@ -238,7 +238,7 @@ class CircuitScreen extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            snapshot.data!['raceResults'].isNotEmpty
+                            snapshot.data!['raceResults'] != null
                                 ? Padding(
                                     padding: const EdgeInsets.all(
                                       10,

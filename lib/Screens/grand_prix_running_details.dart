@@ -454,7 +454,7 @@ class GrandPrixRunningScreen extends StatelessWidget {
                           ),
                           onTap: () => launchUrl(
                             Uri.parse(
-                              "https://raceprogramme.formula1.com/#/catalogue",
+                              "https://web.formula1rp.com/",
                             ),
                           ),
                         ),
