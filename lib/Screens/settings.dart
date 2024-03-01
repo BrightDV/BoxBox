@@ -104,22 +104,22 @@ class _AppearanceCardState extends State<AppearanceCard> {
     String newsLayoutFormated = layoutValueToString[newsLayout];
     List<String?> teamThemeOptions = [
       AppLocalizations.of(context)?.defaultValue,
-      'Alfa Romeo',
-      'Alpha Tauri',
       'Alpine',
       'Aston Martin',
       'Ferrari',
       'Haas',
+      'Kick Sauber',
       'McLaren',
       'Mercedes',
+      'RB',
       'Red Bull',
       'Williams',
     ];
 
     Map teamNameToString = {
       "default": AppLocalizations.of(context)?.defaultValue,
-      "alfa": 'Alfa Romeo',
-      "alphatauri": 'Alpha Tauri',
+      "kick": 'Kick Sauber',
+      "rb": 'RB',
       "alpine": 'Alpine',
       "aston_martin": 'Aston Martin',
       "ferrari": 'Ferrari',
@@ -223,8 +223,8 @@ class _AppearanceCardState extends State<AppearanceCard> {
                   () {
                     Map stringToValue = {
                       AppLocalizations.of(context)?.defaultValue: 'default',
-                      'Alfa Romeo': 'alfa',
-                      'Alpha Tauri': 'alphatauri',
+                      'Kick Sauber': 'kick',
+                      'RB': 'rb',
                       'Alpine': 'alpine',
                       'Aston Martin': 'aston_martin',
                       'Ferrari': 'ferrari',

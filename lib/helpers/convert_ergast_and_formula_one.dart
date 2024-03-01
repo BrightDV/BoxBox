@@ -25,13 +25,13 @@ class Convert {
       'Mercedes': 'mercedes',
       'Alpine Renault': 'alpine',
       'McLaren Mercedes': 'mclaren',
-      'AlphaTauri Honda RBPT': 'alphatauri',
+      'RB Honda RBPT': 'rb',
       'Aston Martin Aramco Mercedes': 'aston_martin',
       'Williams Mercedes': 'williams',
-      'Alfa Romeo Ferrari': 'alfa',
+      'Kick Sauber Ferrari': 'kick',
       'Haas Ferrari': 'haas',
     };
-    return formulaOneToErgast[teamName];
+    return formulaOneToErgast[teamName] ?? 'none';
   }
 
   String teamsFromErgastToFormulaOne(String teamName) {
@@ -44,10 +44,10 @@ class Convert {
       'alphatauri': 'AlphaTauri',
       'aston_martin': 'Aston-Martin',
       'williams': 'Williams',
-      'alfa': 'Alfa-Romeo',
+      'kick': 'Kick-Sauber',
       'haas': 'Haas-F1-Team',
     };
-    return formulaOneToErgast[teamName];
+    return formulaOneToErgast[teamName] ?? 'none';
   }
 
   String circuitIdFromErgastToFormulaOne(String circuitId) {

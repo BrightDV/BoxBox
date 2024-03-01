@@ -288,14 +288,12 @@ class _SessionScreenState extends State<SessionScreen> {
                                     'sprint-results',
                                   ),
                           )
-                        : SingleChildScrollView(
-                            child: QualificationResultsProvider(
-                              raceUrl: widget.session.baseUrl.replaceAll(
-                                'session-type',
-                                widget.session.sessionsAbbreviation == 'ss'
-                                    ? 'sprint-shootout'
-                                    : 'qualifying',
-                              ),
+                        : QualificationResultsProvider(
+                            raceUrl: widget.session.baseUrl.replaceAll(
+                              'session-type',
+                              widget.session.sessionsAbbreviation == 'ss'
+                                  ? 'sprint-shootout'
+                                  : 'qualifying',
                             ),
                           )
                     : InAppWebView(

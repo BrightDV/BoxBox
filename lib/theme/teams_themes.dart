@@ -34,31 +34,6 @@ class TeamsThemes {
     800: const Color.fromRGBO(255, 6, 0, .9),
     900: const Color.fromRGBO(255, 6, 0, 1),
   };
-
-  final Map<int, Color> alfaRomeoThemeColorScheme = {
-    50: const Color.fromRGBO(82, 226, 82, .1),
-    100: const Color.fromRGBO(82, 226, 82, .2),
-    200: const Color.fromRGBO(82, 226, 82, .3),
-    300: const Color.fromRGBO(82, 226, 82, .4),
-    400: const Color.fromRGBO(82, 226, 82, .5),
-    500: const Color.fromRGBO(82, 226, 82, .6),
-    600: const Color.fromRGBO(82, 226, 82, .7),
-    700: const Color.fromRGBO(82, 226, 82, .8),
-    800: const Color.fromRGBO(82, 226, 82, .9),
-    900: const Color.fromRGBO(82, 226, 82, 1),
-  };
-  final Map<int, Color> alphaTauriThemeColorScheme = {
-    50: const Color.fromRGBO(102, 146, 255, .1),
-    100: const Color.fromRGBO(102, 146, 255, .2),
-    200: const Color.fromRGBO(102, 146, 255, .3),
-    300: const Color.fromRGBO(102, 146, 255, .4),
-    400: const Color.fromRGBO(102, 146, 255, .5),
-    500: const Color.fromRGBO(102, 146, 255, .6),
-    600: const Color.fromRGBO(102, 146, 255, .7),
-    700: const Color.fromRGBO(102, 146, 255, .8),
-    800: const Color.fromRGBO(102, 146, 255, .9),
-    900: const Color.fromRGBO(102, 146, 255, 1),
-  };
   final Map<int, Color> alpineThemeColorScheme = {
     50: const Color.fromRGBO(255, 135, 188, .1),
     100: const Color.fromRGBO(255, 135, 188, .2),
@@ -107,6 +82,18 @@ class TeamsThemes {
     800: const Color.fromRGBO(182, 186, 189, .9),
     900: const Color.fromRGBO(182, 186, 189, 1),
   };
+  final Map<int, Color> kickSauberThemeColorScheme = {
+    50: const Color.fromRGBO(82, 226, 82, .1),
+    100: const Color.fromRGBO(82, 226, 82, .2),
+    200: const Color.fromRGBO(82, 226, 82, .3),
+    300: const Color.fromRGBO(82, 226, 82, .4),
+    400: const Color.fromRGBO(82, 226, 82, .5),
+    500: const Color.fromRGBO(82, 226, 82, .6),
+    600: const Color.fromRGBO(82, 226, 82, .7),
+    700: const Color.fromRGBO(82, 226, 82, .8),
+    800: const Color.fromRGBO(82, 226, 82, .9),
+    900: const Color.fromRGBO(82, 226, 82, 1),
+  };
   final Map<int, Color> mcLarenThemeColorScheme = {
     50: const Color.fromRGBO(255, 128, 0, .1),
     100: const Color.fromRGBO(255, 128, 0, .2),
@@ -130,6 +117,18 @@ class TeamsThemes {
     700: const Color.fromRGBO(39, 244, 210, .8),
     800: const Color.fromRGBO(39, 244, 210, .9),
     900: const Color.fromRGBO(39, 244, 210, 1),
+  };
+  final Map<int, Color> rbThemeColorScheme = {
+    50: const Color.fromRGBO(102, 146, 255, .1),
+    100: const Color.fromRGBO(102, 146, 255, .2),
+    200: const Color.fromRGBO(102, 146, 255, .3),
+    300: const Color.fromRGBO(102, 146, 255, .4),
+    400: const Color.fromRGBO(102, 146, 255, .5),
+    500: const Color.fromRGBO(102, 146, 255, .6),
+    600: const Color.fromRGBO(102, 146, 255, .7),
+    700: const Color.fromRGBO(102, 146, 255, .8),
+    800: const Color.fromRGBO(102, 146, 255, .9),
+    900: const Color.fromRGBO(102, 146, 255, 1),
   };
   final Map<int, Color> redBullThemeColorScheme = {
     50: const Color.fromRGBO(54, 113, 198, .1),
@@ -159,36 +158,36 @@ class TeamsThemes {
   Map<int, Color> getTeamTheme(String teamTheme) {
     final Map themes = {
       "default": defaultThemeColorScheme,
-      "alfa": alfaRomeoThemeColorScheme,
-      "alphatauri": alphaTauriThemeColorScheme,
-      "alpine": alphaTauriThemeColorScheme,
+      "alpine": alpineThemeColorScheme,
       "aston_martin": astonMartinThemeColorScheme,
       "ferrari": ferrariThemeColorScheme,
       "haas": haasThemeColorScheme,
+      "kick": kickSauberThemeColorScheme,
       "mclaren": mcLarenThemeColorScheme,
       "mercedes": mercedesThemeColorScheme,
+      "rb": rbThemeColorScheme,
       "red_bull": redBullThemeColorScheme,
       "williams": williamsThemeColorScheme,
     };
 
-    return themes[teamTheme];
+    return themes[teamTheme] ?? themes['default'];
   }
 
   int getTeamColor(String teamTheme) {
     final Map<String, int> teamColorsList = {
       "default": 0xffe10600,
-      "alfa": 0xFF52E252,
-      "alphatauri": 0xFF6692FF,
       "alpine": 0xFFFF87BC,
       "aston_martin": 0xFF229971,
       "ferrari": 0xFFE8002D,
       "haas": 0xffB6BABD,
+      "kick": 0xFF52E252,
       "mclaren": 0xFFFF8000,
       "mercedes": 0xFF27F4D2,
+      "rb": 0xFF6692FF,
       "red_bull": 0xFF3671C6,
       "williams": 0xFF64C4FF,
     };
 
-    return teamColorsList[teamTheme]!;
+    return teamColorsList[teamTheme] ?? teamColorsList['default']!;
   }
 }

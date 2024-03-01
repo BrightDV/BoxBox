@@ -17,8 +17,6 @@
  * Copyright (c) 2022-2024, BrightDV
  */
 
-// TODO: md3
-
 import 'package:boxbox/Screens/article.dart';
 import 'package:boxbox/Screens/free_practice_screen.dart';
 import 'package:boxbox/Screens/race_details.dart';
@@ -314,9 +312,9 @@ class WidgetsList extends StatelessWidget {
                                     child: Container(
                                       width: double.infinity,
                                       decoration: BoxDecoration(
-                                        color: useDarkMode
-                                            ? const Color(0xff1d1d28)
-                                            : Colors.grey.shade400,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onSecondary,
                                         borderRadius: BorderRadius.circular(5),
                                       ),
                                       child: Padding(
@@ -331,18 +329,10 @@ class WidgetsList extends StatelessWidget {
                                             Text(
                                               AppLocalizations.of(context)!
                                                   .openQuiz,
-                                              style: TextStyle(
-                                                color: useDarkMode
-                                                    ? Colors.white
-                                                    : Colors.black,
-                                              ),
                                             ),
                                             const Spacer(),
                                             Icon(
                                               Icons.bar_chart,
-                                              color: useDarkMode
-                                                  ? Colors.white
-                                                  : Colors.black,
                                             ),
                                           ],
                                         ),
@@ -481,13 +471,13 @@ class WidgetsList extends StatelessWidget {
                                                 child: Container(
                                                   width: double.infinity,
                                                   decoration: BoxDecoration(
-                                                    color: useDarkMode
-                                                        ? const Color(
-                                                            0xff1d1d28)
-                                                        : Colors.grey.shade400,
+                                                    color: Theme.of(context)
+                                                        .colorScheme
+                                                        .onSecondary,
                                                     borderRadius:
                                                         BorderRadius.circular(
-                                                            5),
+                                                      5,
+                                                    ),
                                                   ),
                                                   child: Padding(
                                                     padding: const EdgeInsets
@@ -503,11 +493,6 @@ class WidgetsList extends StatelessWidget {
                                                           AppLocalizations.of(
                                                                   context)!
                                                               .openLiveBlog,
-                                                          style: TextStyle(
-                                                            color: useDarkMode
-                                                                ? Colors.white
-                                                                : Colors.black,
-                                                          ),
                                                         ),
                                                         const Spacer(),
                                                         SizedBox(
@@ -580,11 +565,9 @@ class WidgetsList extends StatelessWidget {
                                                     child: Container(
                                                       width: double.infinity,
                                                       decoration: BoxDecoration(
-                                                        color: useDarkMode
-                                                            ? const Color(
-                                                                0xff1d1d28)
-                                                            : Colors
-                                                                .grey.shade400,
+                                                        color: Theme.of(context)
+                                                            .colorScheme
+                                                            .onSecondary,
                                                         borderRadius:
                                                             BorderRadius
                                                                 .circular(5),
@@ -604,13 +587,6 @@ class WidgetsList extends StatelessWidget {
                                                               AppLocalizations.of(
                                                                       context)!
                                                                   .openLiveBlog,
-                                                              style: TextStyle(
-                                                                color: useDarkMode
-                                                                    ? Colors
-                                                                        .white
-                                                                    : Colors
-                                                                        .black,
-                                                              ),
                                                             ),
                                                             const Spacer(),
                                                             SizedBox(
@@ -689,20 +665,20 @@ class WidgetsList extends StatelessWidget {
                                                                 .startsWith(
                                                                     'Starting Grid')
                                                             ? 378
-                                                            : 255,
+                                                            : 290,
                                                         decoration:
                                                             BoxDecoration(
                                                           border: Border.all(
-                                                            color: useDarkMode
-                                                                ? const Color(
-                                                                    0xff1d1d28)
-                                                                : Colors.grey
-                                                                    .shade50,
+                                                            color: Theme.of(
+                                                                    context)
+                                                                .colorScheme
+                                                                .onSecondary,
                                                           ),
                                                           borderRadius:
                                                               BorderRadius
                                                                   .circular(
-                                                                      15.0),
+                                                            15.0,
+                                                          ),
                                                         ),
                                                         child: Column(
                                                           children: [
@@ -718,11 +694,6 @@ class WidgetsList extends StatelessWidget {
                                                                     'meetingCountryName'],
                                                                 style:
                                                                     TextStyle(
-                                                                  color: useDarkMode
-                                                                      ? Colors
-                                                                          .white
-                                                                      : Colors
-                                                                          .black,
                                                                   fontSize: 16,
                                                                   fontWeight:
                                                                       FontWeight
@@ -758,11 +729,6 @@ class WidgetsList extends StatelessWidget {
                                                                                           ? AppLocalizations.of(context)!.freePracticeTwo
                                                                                           : AppLocalizations.of(context)!.freePracticeThree,
                                                               style: TextStyle(
-                                                                color: useDarkMode
-                                                                    ? Colors
-                                                                        .white
-                                                                    : Colors
-                                                                        .black,
                                                                 fontSize: 14,
                                                               ),
                                                             ),
@@ -786,10 +752,6 @@ class WidgetsList extends StatelessWidget {
                                                                           child:
                                                                               Text(
                                                                             AppLocalizations.of(context)!.positionAbbreviation,
-                                                                            style:
-                                                                                TextStyle(
-                                                                              color: useDarkMode ? Colors.white : Colors.black,
-                                                                            ),
                                                                           ),
                                                                         ),
                                                                         Expanded(
@@ -804,10 +766,6 @@ class WidgetsList extends StatelessWidget {
                                                                           child:
                                                                               Text(
                                                                             AppLocalizations.of(context)!.driverAbbreviation,
-                                                                            style:
-                                                                                TextStyle(
-                                                                              color: useDarkMode ? Colors.white : Colors.black,
-                                                                            ),
                                                                           ),
                                                                         ),
                                                                         Expanded(
@@ -816,10 +774,6 @@ class WidgetsList extends StatelessWidget {
                                                                           child:
                                                                               Text(
                                                                             AppLocalizations.of(context)!.team.toUpperCase(),
-                                                                            style:
-                                                                                TextStyle(
-                                                                              color: useDarkMode ? Colors.white : Colors.black,
-                                                                            ),
                                                                           ),
                                                                         ),
                                                                       ]
@@ -831,10 +785,6 @@ class WidgetsList extends StatelessWidget {
                                                                           child:
                                                                               Text(
                                                                             AppLocalizations.of(context)!.positionAbbreviation,
-                                                                            style:
-                                                                                TextStyle(
-                                                                              color: useDarkMode ? Colors.white : Colors.black,
-                                                                            ),
                                                                           ),
                                                                         ),
                                                                         const Spacer(),
@@ -844,10 +794,6 @@ class WidgetsList extends StatelessWidget {
                                                                           child:
                                                                               Text(
                                                                             AppLocalizations.of(context)!.time,
-                                                                            style:
-                                                                                TextStyle(
-                                                                              color: useDarkMode ? Colors.white : Colors.black,
-                                                                            ),
                                                                           ),
                                                                         ),
                                                                         element['fields']['sessionType'] == 'Race' ||
@@ -856,9 +802,6 @@ class WidgetsList extends StatelessWidget {
                                                                                 flex: 3,
                                                                                 child: Text(
                                                                                   AppLocalizations.of(context)!.pointsAbbreviation,
-                                                                                  style: TextStyle(
-                                                                                    color: useDarkMode ? Colors.white : Colors.black,
-                                                                                  ),
                                                                                 ),
                                                                               )
                                                                             : Container(),
@@ -897,7 +840,6 @@ class WidgetsList extends StatelessWidget {
                                                                                 Text(
                                                                               driverResults['positionNumber'] == '66666' ? 'DQ' : driverResults['positionNumber'],
                                                                               style: TextStyle(
-                                                                                color: useDarkMode ? Colors.white : Colors.black,
                                                                                 fontWeight: FontWeight.w500,
                                                                               ),
                                                                               textAlign: TextAlign.center,
@@ -924,9 +866,6 @@ class WidgetsList extends StatelessWidget {
                                                                             child:
                                                                                 Text(
                                                                               driverResults['driverTLA'].toString(),
-                                                                              style: TextStyle(
-                                                                                color: useDarkMode ? Colors.white : Colors.black,
-                                                                              ),
                                                                             ),
                                                                           ),
                                                                           const Spacer(),
@@ -940,9 +879,6 @@ class WidgetsList extends StatelessWidget {
                                                                                   : element['fields']['sessionType'] == 'Race'
                                                                                       ? driverResults['raceTime']
                                                                                       : driverResults['sprintQualifyingTime'],
-                                                                              style: TextStyle(
-                                                                                color: useDarkMode ? Colors.white : Colors.black,
-                                                                              ),
                                                                             ),
                                                                           ),
                                                                           Expanded(
@@ -951,9 +887,6 @@ class WidgetsList extends StatelessWidget {
                                                                             child:
                                                                                 Text(
                                                                               element['fields']['sessionType'] == 'Race' ? (driverResults['racePoints'] ?? '0').toString() : (driverResults['sprintQualifyingPoints'] ?? '0').toString(),
-                                                                              style: TextStyle(
-                                                                                color: useDarkMode ? Colors.white : Colors.black,
-                                                                              ),
                                                                             ),
                                                                           ),
                                                                         ],
@@ -976,7 +909,6 @@ class WidgetsList extends StatelessWidget {
                                                                                 child: Text(
                                                                                   driverResults['positionNumber'] == '66666' ? 'DQ' : driverResults['positionNumber'],
                                                                                   style: TextStyle(
-                                                                                    color: useDarkMode ? Colors.white : Colors.black,
                                                                                     fontWeight: FontWeight.w500,
                                                                                   ),
                                                                                   textAlign: TextAlign.center,
@@ -1002,9 +934,6 @@ class WidgetsList extends StatelessWidget {
                                                                                 flex: 4,
                                                                                 child: Text(
                                                                                   driverResults['driverLastName'],
-                                                                                  style: TextStyle(
-                                                                                    color: useDarkMode ? Colors.white : Colors.black,
-                                                                                  ),
                                                                                 ),
                                                                               ),
                                                                               const Spacer(),
@@ -1012,9 +941,6 @@ class WidgetsList extends StatelessWidget {
                                                                                 flex: 6,
                                                                                 child: Text(
                                                                                   driverResults['teamName'],
-                                                                                  style: TextStyle(
-                                                                                    color: useDarkMode ? Colors.white : Colors.black,
-                                                                                  ),
                                                                                 ),
                                                                               ),
                                                                             ],
@@ -1034,7 +960,6 @@ class WidgetsList extends StatelessWidget {
                                                                                 child: Text(
                                                                                   driverResults['positionNumber'] == '66666' ? 'DQ' : driverResults['positionNumber'],
                                                                                   style: TextStyle(
-                                                                                    color: useDarkMode ? Colors.white : Colors.black,
                                                                                     fontWeight: FontWeight.w500,
                                                                                   ),
                                                                                   textAlign: TextAlign.center,
@@ -1060,9 +985,6 @@ class WidgetsList extends StatelessWidget {
                                                                                 flex: 3,
                                                                                 child: Text(
                                                                                   driverResults['driverTLA'].toString(),
-                                                                                  style: TextStyle(
-                                                                                    color: useDarkMode ? Colors.white : Colors.black,
-                                                                                  ),
                                                                                 ),
                                                                               ),
                                                                               const Spacer(),
@@ -1070,9 +992,6 @@ class WidgetsList extends StatelessWidget {
                                                                                 flex: 6,
                                                                                 child: Text(
                                                                                   element['fields']['sessionType'].startsWith('Practice') ? driverResults['classifiedTime'] ?? '--' : driverResults['q3']?['classifiedTime'] ?? '--',
-                                                                                  style: TextStyle(
-                                                                                    color: useDarkMode ? Colors.white : Colors.black,
-                                                                                  ),
                                                                                 ),
                                                                               ),
                                                                             ],
@@ -1100,11 +1019,15 @@ class WidgetsList extends StatelessWidget {
                                                                           Radius
                                                                               .zero,
                                                                       bottomLeft:
-                                                                          Radius.circular(
-                                                                              15),
+                                                                          Radius
+                                                                              .circular(
+                                                                        15,
+                                                                      ),
                                                                       bottomRight:
-                                                                          Radius.circular(
-                                                                              15),
+                                                                          Radius
+                                                                              .circular(
+                                                                        15,
+                                                                      ),
                                                                     ),
                                                                     child:
                                                                         ElevatedButton(
@@ -1173,11 +1096,6 @@ class WidgetsList extends StatelessWidget {
                                                                           Text(
                                                                         AppLocalizations.of(context)!
                                                                             .viewResults,
-                                                                        style:
-                                                                            const TextStyle(
-                                                                          color:
-                                                                              Colors.white,
-                                                                        ),
                                                                       ),
                                                                     ),
                                                                   ),
@@ -1199,19 +1117,22 @@ class WidgetsList extends StatelessWidget {
                                                                 BoxDecoration(
                                                               border:
                                                                   Border.all(
-                                                                color: Colors
-                                                                    .grey
-                                                                    .shade700,
+                                                                color: Theme.of(
+                                                                        context)
+                                                                    .colorScheme
+                                                                    .onSecondary,
                                                               ),
                                                               borderRadius:
                                                                   const BorderRadius
                                                                       .only(
                                                                 topLeft: Radius
                                                                     .circular(
-                                                                        15),
+                                                                  15,
+                                                                ),
                                                                 topRight: Radius
                                                                     .circular(
-                                                                        15),
+                                                                  15,
+                                                                ),
                                                               ),
                                                             ),
                                                             height:
@@ -1239,9 +1160,6 @@ class WidgetsList extends StatelessWidget {
                                                                             'title'],
                                                                         style:
                                                                             TextStyle(
-                                                                          color: useDarkMode
-                                                                              ? Colors.white
-                                                                              : Colors.black,
                                                                           fontSize:
                                                                               16,
                                                                         ),
@@ -1264,7 +1182,7 @@ class WidgetsList extends StatelessWidget {
                                                                             decoration:
                                                                                 BoxDecoration(
                                                                               border: Border.all(
-                                                                                color: Colors.grey.shade600,
+                                                                                color: Theme.of(context).colorScheme.onSecondary,
                                                                               ),
                                                                             ),
                                                                             width:
@@ -1277,9 +1195,6 @@ class WidgetsList extends StatelessWidget {
                                                                                 padding: const EdgeInsets.all(4),
                                                                                 child: Text(
                                                                                   driverDetails['value'].toString(),
-                                                                                  style: TextStyle(
-                                                                                    color: useDarkMode ? Colors.white : Colors.black,
-                                                                                  ),
                                                                                   textAlign: TextAlign.center,
                                                                                 ),
                                                                               ),
@@ -1348,7 +1263,6 @@ class WidgetsList extends StatelessWidget {
                                                                                 child: Text(
                                                                                   element['fields']['title'],
                                                                                   style: TextStyle(
-                                                                                    color: useDarkMode ? Colors.white : Colors.black,
                                                                                     fontSize: 19,
                                                                                     fontWeight: FontWeight.w500,
                                                                                   ),
@@ -1401,7 +1315,6 @@ class WidgetsList extends StatelessWidget {
                                                                                 child: Text(
                                                                                   '“',
                                                                                   style: TextStyle(
-                                                                                    color: useDarkMode ? Colors.grey[400] : Colors.grey[800],
                                                                                     fontSize: 50,
                                                                                   ),
                                                                                 ),
@@ -1416,7 +1329,7 @@ class WidgetsList extends StatelessWidget {
                                                                                   child: Text(
                                                                                     element['fields']['quoteText'],
                                                                                     style: TextStyle(
-                                                                                      color: Theme.of(context).primaryColor,
+                                                                                      color: Theme.of(context).colorScheme.primary,
                                                                                       fontSize: 22,
                                                                                       fontStyle: FontStyle.italic,
                                                                                     ),
@@ -1431,7 +1344,6 @@ class WidgetsList extends StatelessWidget {
                                                                                 child: Text(
                                                                                   '”',
                                                                                   style: TextStyle(
-                                                                                    color: useDarkMode ? Colors.grey[400] : Colors.grey[800],
                                                                                     fontSize: 50,
                                                                                   ),
                                                                                 ),
@@ -1466,12 +1378,6 @@ class WidgetsList extends StatelessWidget {
                                                                         child:
                                                                             SelectableText(
                                                                           'Unsupported widget ¯\\_(ツ)_/¯\nType: ${element['contentType']}\nArticle id: ${article.articleId}',
-                                                                          style:
-                                                                              TextStyle(
-                                                                            color: useDarkMode
-                                                                                ? Colors.white
-                                                                                : Colors.black,
-                                                                          ),
                                                                         ),
                                                                       ),
                                                                     ),
@@ -1548,7 +1454,7 @@ class WidgetsList extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        AppLocalizations.of(context)?.share ?? 'Share',
+                        AppLocalizations.of(context)!.share,
                       ),
                     ],
                   ),

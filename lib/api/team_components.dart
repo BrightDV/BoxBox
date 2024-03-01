@@ -196,29 +196,33 @@ class TeamCarImageProvider extends StatelessWidget {
         if (snapshot.hasError) {
           return RequestErrorWidget(snapshot.error.toString());
         }
-        return CachedNetworkImage(
-          imageBuilder: (context, imageProvider) => Transform.scale(
-            scale: 1.5,
-            child: Container(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: imageProvider,
-                  fit: BoxFit.fitHeight,
-                  alignment: FractionalOffset.centerLeft,
+        return snapshot.data! == 'none'
+            ? Icon(
+                Icons.no_photography_outlined,
+              )
+            : CachedNetworkImage(
+                imageBuilder: (context, imageProvider) => Transform.scale(
+                  scale: 1.5,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: imageProvider,
+                        fit: BoxFit.fitHeight,
+                        alignment: FractionalOffset.centerLeft,
+                      ),
+                    ),
+                  ),
                 ),
-              ),
-            ),
-          ),
-          imageUrl: snapshot.data!,
-          placeholder: (context, url) => const SizedBox(
-            width: 100,
-            child: LoadingIndicatorUtil(),
-          ),
-          errorWidget: (context, url, error) =>
-              const Icon(Icons.error_outlined),
-          fadeOutDuration: const Duration(milliseconds: 500),
-          fadeInDuration: const Duration(milliseconds: 500),
-        );
+                imageUrl: snapshot.data!,
+                placeholder: (context, url) => const SizedBox(
+                  width: 100,
+                  child: LoadingIndicatorUtil(),
+                ),
+                errorWidget: (context, url, error) =>
+                    const Icon(Icons.error_outlined),
+                fadeOutDuration: const Duration(milliseconds: 500),
+                fadeInDuration: const Duration(milliseconds: 500),
+              );
       },
     );
   }

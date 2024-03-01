@@ -164,7 +164,7 @@ class FormulaOneScraper {
     finishedSessions.removeAt(0);
     bool isQualifyingsFinished = false;
     for (dom.Element element in finishedSessions) {
-      if (element.text.substring(29).startsWith('Qualifying')) {
+      if (element.text.trim().contains('Qualifying')) {
         isQualifyingsFinished = true;
       }
     }
@@ -195,9 +195,7 @@ class FormulaOneScraper {
 
       return results;
     } else {
-      return [
-        DriverQualificationResult('', '', '', '', '', '', '', '', '', ''),
-      ];
+      return [];
     }
   }
 

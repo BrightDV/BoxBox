@@ -770,7 +770,7 @@ class _QualificationResultsProviderState
                     widget.race!.round,
                   ),
             builder: (context, snapshot) => snapshot.hasError
-                ? (widget.race?.sessionDates.isNotEmpty ?? false) &&
+                ? (widget.race?.sessionDates.isEmpty ?? true) &&
                         (widget.race?.sessionDates.last.isBefore(
                               DateTime.now(),
                             ) ??
@@ -1050,8 +1050,9 @@ class RaceImageProvider extends StatelessWidget {
         }
         return snapshot.hasData
             ? CachedNetworkImage(
-                errorWidget: (context, url, error) =>
-                    const Icon(Icons.error_outlined),
+                errorWidget: (context, url, error) => const Icon(
+                  Icons.error_outlined,
+                ),
                 fadeOutDuration: const Duration(seconds: 1),
                 fadeInDuration: const Duration(seconds: 1),
                 fit: BoxFit.cover,
@@ -1167,7 +1168,7 @@ class _SessionCountdownTimerState extends State<SessionCountdownTimer> {
                   fontSize: 23,
                 ),
                 descriptionTextStyle: TextStyle(
-                  color: Theme.of(context).colorScheme.error,
+                  color: Theme.of(context).colorScheme.primary,
                   fontSize: 20,
                 ),
                 spacerWidth: 15,
@@ -1206,7 +1207,7 @@ class _SessionCountdownTimerState extends State<SessionCountdownTimer> {
                   ),
                   style: TextButton.styleFrom(
                     side: BorderSide(
-                      color: Theme.of(context).colorScheme.error,
+                      color: Theme.of(context).colorScheme.primary,
                       width: 1,
                     ),
                   ),

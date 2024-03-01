@@ -28,15 +28,15 @@ class TeamBackgroundColor {
     "ferrari": const Color(0xFFE8002D),
     "mclaren": const Color(0xFFFF8000),
     "alpine": const Color(0xFFFF87BC),
-    "alphatauri": const Color(0xFF6692FF),
+    "rb": const Color(0xFF6692FF),
     "aston_martin": const Color(0xFF229971),
     "williams": const Color(0xFF64C4FF),
-    "alfa": const Color(0xFF52E252),
+    "kick": const Color(0xFF52E252),
     "haas": const Color(0xffB6BABD),
   };
 
   Color getTeamColors(String teamName) {
-    Color teamColors = teamColorsList[teamName]!;
+    Color teamColors = teamColorsList[teamName] ?? Colors.transparent;
     return teamColors;
   }
 }

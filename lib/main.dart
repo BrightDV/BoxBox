@@ -326,6 +326,11 @@ class _MyAppState extends State<MyApp> {
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
 
+    // 2024 team rebrandings
+    if (teamTheme == 'alfa' || teamTheme == 'alphatauri') {
+      Hive.box('settings').put('teamTheme', 'default');
+    }
+
     /*Map<int, Color> color = TeamsThemes().getTeamTheme(teamTheme);
      MaterialColor colorCustom =
         MaterialColor(TeamsThemes().getTeamColor(teamTheme), color); */

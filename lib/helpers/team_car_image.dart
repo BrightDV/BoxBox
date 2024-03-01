@@ -31,9 +31,9 @@ class TeamCarImage {
         "https://media.formula1.com/content/dam/fom-website/teams/${DateTime.now().year}/alpine-left.png",
     "haas":
         "https://media.formula1.com/content/dam/fom-website/teams/${DateTime.now().year}/haas-f1-team-left.png",
-    "alfa":
+    "kick":
         "https://media.formula1.com/content/dam/fom-website/teams/${DateTime.now().year}/kick-sauber-left.png",
-    "alphatauri":
+    "rb":
         "https://media.formula1.com/content/dam/fom-website/teams/${DateTime.now().year}/rb-left.png",
     "mclaren":
         "https://media.formula1.com/content/dam/fom-website/teams/${DateTime.now().year}/mclaren-left.png",
@@ -43,7 +43,7 @@ class TeamCarImage {
         "https://media.formula1.com/content/dam/fom-website/teams/${DateTime.now().year}/williams-left.png",
   };
   Future<String> getTeamCarImageURL(String teamId) async {
-    String teamCarImageUrl = teamCarDecoder[teamId]!;
+    String teamCarImageUrl = teamCarDecoder[teamId] ?? 'none';
     return teamCarImageUrl;
   }
 }
