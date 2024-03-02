@@ -104,6 +104,9 @@ class _AppearanceCardState extends State<AppearanceCard> {
     String newsLayoutFormated = layoutValueToString[newsLayout];
     List<String?> teamThemeOptions = [
       AppLocalizations.of(context)?.defaultValue,
+      // TODO: localize
+      'Navy Blue',
+      'Blue Grey',
       'Alpine',
       'Aston Martin',
       'Ferrari',
@@ -118,6 +121,9 @@ class _AppearanceCardState extends State<AppearanceCard> {
 
     Map teamNameToString = {
       "default": AppLocalizations.of(context)?.defaultValue,
+      // TODO: localize
+      "navyBlue": 'Navy Blue',
+      "blueGrey": 'Blue Grey',
       "sauber": 'Kick Sauber',
       "rb": 'RB',
       "alpine": 'Alpine',
@@ -174,6 +180,11 @@ class _AppearanceCardState extends State<AppearanceCard> {
                               MediaQuery.of(context).platformBrightness;
                           bool isDark = brightnessValue == Brightness.dark;
                           newValue = isDark;
+                          if (newValue) {
+                            AdaptiveTheme.of(context).setDark();
+                          } else {
+                            AdaptiveTheme.of(context).setLight();
+                          }
                         } else if (newThemeMode == 1) {
                           newValue = false;
                           AdaptiveTheme.of(context).setLight();
@@ -224,7 +235,10 @@ class _AppearanceCardState extends State<AppearanceCard> {
                   setState(
                     () {
                       Map stringToValue = {
+                        // TODO: localize
                         AppLocalizations.of(context)?.defaultValue: 'default',
+                        'Navy Blue': 'navyBlue',
+                        'Blue Grey': 'blueGrey',
                         'Kick Sauber': 'sauber',
                         'RB': 'rb',
                         'Alpine': 'alpine',
@@ -247,23 +261,35 @@ class _AppearanceCardState extends State<AppearanceCard> {
                         light: ThemeData(
                           useMaterial3: true,
                           brightness: Brightness.light,
-                          colorScheme: ColorScheme.fromSeed(
-                            seedColor: color,
-                            onPrimary: color,
-                            brightness: Brightness.light,
-                          ),
+                          colorScheme: color == Color(0xFF000408) ||
+                                  color == Color(0x00000001)
+                              ? ColorScheme.fromSeed(
+                                  seedColor: color,
+                                  brightness: Brightness.light,
+                                )
+                              : ColorScheme.fromSeed(
+                                  seedColor: color,
+                                  onPrimary: color,
+                                  brightness: Brightness.light,
+                                ),
                           fontFamily: 'Formula1',
                         ),
                         dark: ThemeData(
                           useMaterial3: true,
                           brightness: Brightness.dark,
-                          colorScheme: ColorScheme.fromSeed(
-                            seedColor: color,
-                            onPrimary: HSLColor.fromColor(color)
-                                .withLightness(0.4)
-                                .toColor(),
-                            brightness: Brightness.dark,
-                          ),
+                          colorScheme: color == Color(0xFF000408) ||
+                                  color == Color(0x00000001)
+                              ? ColorScheme.fromSeed(
+                                  seedColor: color,
+                                  brightness: Brightness.dark,
+                                )
+                              : ColorScheme.fromSeed(
+                                  seedColor: color,
+                                  onPrimary: HSLColor.fromColor(color)
+                                      .withLightness(0.4)
+                                      .toColor(),
+                                  brightness: Brightness.dark,
+                                ),
                           fontFamily: 'Formula1',
                         ),
                       );

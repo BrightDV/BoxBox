@@ -25,6 +25,7 @@ import 'package:boxbox/scraping/formula_one.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
@@ -211,14 +212,24 @@ class FreePracticeResultItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool useDarkMode =
+        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     return Container(
       color: index % 2 == 1
-          ? HSLColor.fromColor(
-              Theme.of(context).colorScheme.onSecondary,
-            ).withLightness(0.26).toColor()
-          : HSLColor.fromColor(
-              Theme.of(context).colorScheme.onSecondary,
-            ).withLightness(0.18).toColor(),
+          ? useDarkMode
+              ? HSLColor.fromColor(
+                  Theme.of(context).colorScheme.onSecondary,
+                ).withLightness(0.26).toColor()
+              : HSLColor.fromColor(
+                  Theme.of(context).colorScheme.onPrimary,
+                ).withLightness(0.88).toColor()
+          : useDarkMode
+              ? HSLColor.fromColor(
+                  Theme.of(context).colorScheme.onSecondary,
+                ).withLightness(0.18).toColor()
+              : HSLColor.fromColor(
+                  Theme.of(context).colorScheme.onPrimary,
+                ).withLightness(0.82).toColor(),
       height: 45,
       child: Padding(
         padding: const EdgeInsets.all(5),
@@ -228,10 +239,14 @@ class FreePracticeResultItem extends StatelessWidget {
               flex: 2,
               child: Text(
                 result.time == '' ? 'DNF' : result.position,
-                style: TextStyle(
-                  color: result.time == '' ? Colors.yellow : Colors.white,
-                  fontWeight: FontWeight.w600,
-                ),
+                style: result.time == ''
+                    ? TextStyle(
+                        color: Colors.yellow,
+                        fontWeight: FontWeight.w600,
+                      )
+                    : TextStyle(
+                        fontWeight: FontWeight.w600,
+                      ),
                 textAlign: TextAlign.center,
               ),
             ),
@@ -262,12 +277,20 @@ class FreePracticeResultItem extends StatelessWidget {
                     color: index == 0
                         ? const Color(0xffff00ff)
                         : index % 2 == 1
-                            ? HSLColor.fromColor(
-                                Theme.of(context).colorScheme.onSecondary,
-                              ).withLightness(0.31).toColor()
-                            : HSLColor.fromColor(
-                                Theme.of(context).colorScheme.onSecondary,
-                              ).withLightness(0.23).toColor(),
+                            ? useDarkMode
+                                ? HSLColor.fromColor(
+                                    Theme.of(context).colorScheme.onSecondary,
+                                  ).withLightness(0.31).toColor()
+                                : HSLColor.fromColor(
+                                    Theme.of(context).colorScheme.onPrimary,
+                                  ).withLightness(0.84).toColor()
+                            : useDarkMode
+                                ? HSLColor.fromColor(
+                                    Theme.of(context).colorScheme.onSecondary,
+                                  ).withLightness(0.23).toColor()
+                                : HSLColor.fromColor(
+                                    Theme.of(context).colorScheme.onPrimary,
+                                  ).withLightness(0.78).toColor(),
                     borderRadius: BorderRadius.circular(7),
                   ),
                   child: Padding(
@@ -292,12 +315,20 @@ class FreePracticeResultItem extends StatelessWidget {
                 child: Container(
                   decoration: BoxDecoration(
                     color: index % 2 == 1
-                        ? HSLColor.fromColor(
-                            Theme.of(context).colorScheme.onSecondary,
-                          ).withLightness(0.31).toColor()
-                        : HSLColor.fromColor(
-                            Theme.of(context).colorScheme.onSecondary,
-                          ).withLightness(0.23).toColor(),
+                        ? useDarkMode
+                            ? HSLColor.fromColor(
+                                Theme.of(context).colorScheme.onSecondary,
+                              ).withLightness(0.31).toColor()
+                            : HSLColor.fromColor(
+                                Theme.of(context).colorScheme.onPrimary,
+                              ).withLightness(0.84).toColor()
+                        : useDarkMode
+                            ? HSLColor.fromColor(
+                                Theme.of(context).colorScheme.onSecondary,
+                              ).withLightness(0.23).toColor()
+                            : HSLColor.fromColor(
+                                Theme.of(context).colorScheme.onPrimary,
+                              ).withLightness(0.78).toColor(),
                     borderRadius: BorderRadius.circular(7),
                   ),
                   child: Padding(
@@ -317,12 +348,20 @@ class FreePracticeResultItem extends StatelessWidget {
                 child: Container(
                   decoration: BoxDecoration(
                     color: index % 2 == 1
-                        ? HSLColor.fromColor(
-                            Theme.of(context).colorScheme.onSecondary,
-                          ).withLightness(0.31).toColor()
-                        : HSLColor.fromColor(
-                            Theme.of(context).colorScheme.onSecondary,
-                          ).withLightness(0.23).toColor(),
+                        ? useDarkMode
+                            ? HSLColor.fromColor(
+                                Theme.of(context).colorScheme.onSecondary,
+                              ).withLightness(0.31).toColor()
+                            : HSLColor.fromColor(
+                                Theme.of(context).colorScheme.onPrimary,
+                              ).withLightness(0.84).toColor()
+                        : useDarkMode
+                            ? HSLColor.fromColor(
+                                Theme.of(context).colorScheme.onSecondary,
+                              ).withLightness(0.23).toColor()
+                            : HSLColor.fromColor(
+                                Theme.of(context).colorScheme.onPrimary,
+                              ).withLightness(0.78).toColor(),
                     borderRadius: BorderRadius.circular(7),
                   ),
                   child: Padding(

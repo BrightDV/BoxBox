@@ -19,11 +19,11 @@
 
 import 'package:flutter/material.dart';
 
-// TODO: update team names
-
 class TeamBackgroundColor {
   final Map<String, Color> teamColorsList = {
-    "default": const Color(0xffe10600),
+    "default": const Color(0xFFE10600),
+    "navyBlue": const Color(0x00000001),
+    "blueGrey": const Color(0xFF000408),
     "mercedes": const Color(0xFF27F4D2),
     "red_bull": const Color(0xFF3671C6),
     "ferrari": const Color(0xFFE8002D),
@@ -35,8 +35,8 @@ class TeamBackgroundColor {
     "sauber": const Color(0xFF52E252),
     "haas": const Color(0xffB6BABD),
     // 2023
-    "alphatauri": const Color(0xff4E7C9B),
-    "alfa": const Color(0xffB12039),
+    "alphatauri": const Color(0xFF4E7C9B),
+    "alfa": const Color(0xFFB12039),
   };
 
   Color getTeamColor(String teamName) {

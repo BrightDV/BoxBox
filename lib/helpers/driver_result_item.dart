@@ -25,6 +25,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
@@ -41,6 +42,8 @@ class DriverResultItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool useDarkMode =
+        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     Color finalTeamColors = getTeamColors(item.team);
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
@@ -60,12 +63,20 @@ class DriverResultItem extends StatelessWidget {
         color: item.isFastest
             ? const Color(0xffff00ff)
             : index % 2 == 1
-                ? HSLColor.fromColor(
-                    Theme.of(context).colorScheme.onSecondary,
-                  ).withLightness(0.26).toColor()
-                : HSLColor.fromColor(
-                    Theme.of(context).colorScheme.onSecondary,
-                  ).withLightness(0.18).toColor(),
+                ? useDarkMode
+                    ? HSLColor.fromColor(
+                        Theme.of(context).colorScheme.onSecondary,
+                      ).withLightness(0.26).toColor()
+                    : HSLColor.fromColor(
+                        Theme.of(context).colorScheme.onPrimary,
+                      ).withLightness(0.88).toColor()
+                : useDarkMode
+                    ? HSLColor.fromColor(
+                        Theme.of(context).colorScheme.onSecondary,
+                      ).withLightness(0.18).toColor()
+                    : HSLColor.fromColor(
+                        Theme.of(context).colorScheme.onPrimary,
+                      ).withLightness(0.82).toColor(),
         height: 45,
         child: Padding(
           padding: const EdgeInsets.all(5),
@@ -118,12 +129,24 @@ class DriverResultItem extends StatelessWidget {
                         color: item.isFastest
                             ? const Color(0xffab01ab)
                             : index % 2 == 1
-                                ? HSLColor.fromColor(
-                                    Theme.of(context).colorScheme.onSecondary,
-                                  ).withLightness(0.31).toColor()
-                                : HSLColor.fromColor(
-                                    Theme.of(context).colorScheme.onSecondary,
-                                  ).withLightness(0.23).toColor(),
+                                ? useDarkMode
+                                    ? HSLColor.fromColor(
+                                        Theme.of(context)
+                                            .colorScheme
+                                            .onSecondary,
+                                      ).withLightness(0.31).toColor()
+                                    : HSLColor.fromColor(
+                                        Theme.of(context).colorScheme.onPrimary,
+                                      ).withLightness(0.84).toColor()
+                                : useDarkMode
+                                    ? HSLColor.fromColor(
+                                        Theme.of(context)
+                                            .colorScheme
+                                            .onSecondary,
+                                      ).withLightness(0.23).toColor()
+                                    : HSLColor.fromColor(
+                                        Theme.of(context).colorScheme.onPrimary,
+                                      ).withLightness(0.78).toColor(),
                         borderRadius: BorderRadius.circular(7),
                       ),
                       child: Padding(
@@ -156,12 +179,20 @@ class DriverResultItem extends StatelessWidget {
                       color: item.isFastest
                           ? const Color(0xffab01ab)
                           : index % 2 == 1
-                              ? HSLColor.fromColor(
-                                  Theme.of(context).colorScheme.onSecondary,
-                                ).withLightness(0.31).toColor()
-                              : HSLColor.fromColor(
-                                  Theme.of(context).colorScheme.onSecondary,
-                                ).withLightness(0.23).toColor(),
+                              ? useDarkMode
+                                  ? HSLColor.fromColor(
+                                      Theme.of(context).colorScheme.onSecondary,
+                                    ).withLightness(0.31).toColor()
+                                  : HSLColor.fromColor(
+                                      Theme.of(context).colorScheme.onPrimary,
+                                    ).withLightness(0.84).toColor()
+                              : useDarkMode
+                                  ? HSLColor.fromColor(
+                                      Theme.of(context).colorScheme.onSecondary,
+                                    ).withLightness(0.23).toColor()
+                                  : HSLColor.fromColor(
+                                      Theme.of(context).colorScheme.onPrimary,
+                                    ).withLightness(0.78).toColor(),
                       borderRadius: BorderRadius.circular(7),
                     ),
                     child: Padding(
@@ -183,12 +214,20 @@ class DriverResultItem extends StatelessWidget {
                       color: item.isFastest
                           ? const Color(0xffab01ab)
                           : index % 2 == 1
-                              ? HSLColor.fromColor(
-                                  Theme.of(context).colorScheme.onSecondary,
-                                ).withLightness(0.31).toColor()
-                              : HSLColor.fromColor(
-                                  Theme.of(context).colorScheme.onSecondary,
-                                ).withLightness(0.23).toColor(),
+                              ? useDarkMode
+                                  ? HSLColor.fromColor(
+                                      Theme.of(context).colorScheme.onSecondary,
+                                    ).withLightness(0.31).toColor()
+                                  : HSLColor.fromColor(
+                                      Theme.of(context).colorScheme.onPrimary,
+                                    ).withLightness(0.84).toColor()
+                              : useDarkMode
+                                  ? HSLColor.fromColor(
+                                      Theme.of(context).colorScheme.onSecondary,
+                                    ).withLightness(0.23).toColor()
+                                  : HSLColor.fromColor(
+                                      Theme.of(context).colorScheme.onPrimary,
+                                    ).withLightness(0.78).toColor(),
                       borderRadius: BorderRadius.circular(7),
                     ),
                     child: Padding(
@@ -298,6 +337,8 @@ class QualificationResultsItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool useDarkMode =
+        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     Color finalTeamColors = getTeamColors(item.team);
     return GestureDetector(
       onTap: () {
@@ -314,12 +355,20 @@ class QualificationResultsItem extends StatelessWidget {
       },
       child: Container(
         color: index % 2 == 1
-            ? HSLColor.fromColor(
-                Theme.of(context).colorScheme.onSecondary,
-              ).withLightness(0.26).toColor()
-            : HSLColor.fromColor(
-                Theme.of(context).colorScheme.onSecondary,
-              ).withLightness(0.18).toColor(),
+            ? useDarkMode
+                ? HSLColor.fromColor(
+                    Theme.of(context).colorScheme.onSecondary,
+                  ).withLightness(0.26).toColor()
+                : HSLColor.fromColor(
+                    Theme.of(context).colorScheme.onPrimary,
+                  ).withLightness(0.88).toColor()
+            : useDarkMode
+                ? HSLColor.fromColor(
+                    Theme.of(context).colorScheme.onSecondary,
+                  ).withLightness(0.18).toColor()
+                : HSLColor.fromColor(
+                    Theme.of(context).colorScheme.onPrimary,
+                  ).withLightness(0.82).toColor(),
         height: 45,
         child: Padding(
           padding: const EdgeInsets.all(5),
@@ -371,12 +420,20 @@ class QualificationResultsItem extends StatelessWidget {
                               (item.timeq1 != '--')
                           ? const Color(0xffff00ff)
                           : index % 2 == 1
-                              ? HSLColor.fromColor(
-                                  Theme.of(context).colorScheme.onSecondary,
-                                ).withLightness(0.31).toColor()
-                              : HSLColor.fromColor(
-                                  Theme.of(context).colorScheme.onSecondary,
-                                ).withLightness(0.23).toColor(),
+                              ? useDarkMode
+                                  ? HSLColor.fromColor(
+                                      Theme.of(context).colorScheme.onSecondary,
+                                    ).withLightness(0.31).toColor()
+                                  : HSLColor.fromColor(
+                                      Theme.of(context).colorScheme.onPrimary,
+                                    ).withLightness(0.84).toColor()
+                              : useDarkMode
+                                  ? HSLColor.fromColor(
+                                      Theme.of(context).colorScheme.onSecondary,
+                                    ).withLightness(0.23).toColor()
+                                  : HSLColor.fromColor(
+                                      Theme.of(context).colorScheme.onPrimary,
+                                    ).withLightness(0.78).toColor(),
                       borderRadius: BorderRadius.circular(7),
                     ),
                     child: Padding(
@@ -408,12 +465,20 @@ class QualificationResultsItem extends StatelessWidget {
                               (item.timeq2 != '--')
                           ? const Color(0xffff00ff)
                           : index % 2 == 1
-                              ? HSLColor.fromColor(
-                                  Theme.of(context).colorScheme.onSecondary,
-                                ).withLightness(0.31).toColor()
-                              : HSLColor.fromColor(
-                                  Theme.of(context).colorScheme.onSecondary,
-                                ).withLightness(0.23).toColor(),
+                              ? useDarkMode
+                                  ? HSLColor.fromColor(
+                                      Theme.of(context).colorScheme.onSecondary,
+                                    ).withLightness(0.31).toColor()
+                                  : HSLColor.fromColor(
+                                      Theme.of(context).colorScheme.onPrimary,
+                                    ).withLightness(0.84).toColor()
+                              : useDarkMode
+                                  ? HSLColor.fromColor(
+                                      Theme.of(context).colorScheme.onSecondary,
+                                    ).withLightness(0.23).toColor()
+                                  : HSLColor.fromColor(
+                                      Theme.of(context).colorScheme.onPrimary,
+                                    ).withLightness(0.78).toColor(),
                       borderRadius: BorderRadius.circular(7),
                     ),
                     child: Padding(
@@ -442,12 +507,20 @@ class QualificationResultsItem extends StatelessWidget {
                       color: (index == 0) && (item.timeq3 != '--')
                           ? const Color(0xffff00ff)
                           : index % 2 == 1
-                              ? HSLColor.fromColor(
-                                  Theme.of(context).colorScheme.onSecondary,
-                                ).withLightness(0.31).toColor()
-                              : HSLColor.fromColor(
-                                  Theme.of(context).colorScheme.onSecondary,
-                                ).withLightness(0.23).toColor(),
+                              ? useDarkMode
+                                  ? HSLColor.fromColor(
+                                      Theme.of(context).colorScheme.onSecondary,
+                                    ).withLightness(0.31).toColor()
+                                  : HSLColor.fromColor(
+                                      Theme.of(context).colorScheme.onPrimary,
+                                    ).withLightness(0.84).toColor()
+                              : useDarkMode
+                                  ? HSLColor.fromColor(
+                                      Theme.of(context).colorScheme.onSecondary,
+                                    ).withLightness(0.23).toColor()
+                                  : HSLColor.fromColor(
+                                      Theme.of(context).colorScheme.onPrimary,
+                                    ).withLightness(0.78).toColor(),
                       borderRadius: BorderRadius.circular(7),
                     ),
                     child: Padding(

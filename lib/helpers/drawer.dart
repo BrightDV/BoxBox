@@ -38,8 +38,6 @@ class MainDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool useDarkMode =
-        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     bool enableExperimentalFeatures = Hive.box('settings')
         .get('enableExperimentalFeatures', defaultValue: false) as bool;
 
@@ -54,7 +52,6 @@ class MainDrawer extends StatelessWidget {
               child: Text(
                 'Box, Box!',
                 style: TextStyle(
-                  color: Colors.white,
                   fontSize: 28,
                   fontWeight: FontWeight.w700,
                 ),
@@ -64,13 +61,9 @@ class MainDrawer extends StatelessWidget {
           ListTile(
             title: Text(
               'Formula You',
-              style: TextStyle(
-                color: useDarkMode ? Colors.white : Colors.black,
-              ),
             ),
             leading: Icon(
               Icons.account_circle_outlined,
-              color: useDarkMode ? Colors.white : Colors.black,
             ),
             onTap: () {
               Navigator.of(context).pop();
@@ -85,13 +78,9 @@ class MainDrawer extends StatelessWidget {
           ListTile(
             title: Text(
               AppLocalizations.of(context)!.newsMix,
-              style: TextStyle(
-                color: useDarkMode ? Colors.white : Colors.black,
-              ),
             ),
             leading: Icon(
               Icons.dynamic_feed_outlined,
-              color: useDarkMode ? Colors.white : Colors.black,
             ),
             onTap: () {
               Navigator.of(context).pop();
@@ -106,13 +95,9 @@ class MainDrawer extends StatelessWidget {
           ListTile(
             title: Text(
               AppLocalizations.of(context)!.hallOfFame,
-              style: TextStyle(
-                color: useDarkMode ? Colors.white : Colors.black,
-              ),
             ),
             leading: Icon(
               Icons.emoji_events_outlined,
-              color: useDarkMode ? Colors.white : Colors.black,
             ),
             onTap: () {
               Navigator.of(context).pop();
@@ -127,13 +112,9 @@ class MainDrawer extends StatelessWidget {
           ListTile(
             title: Text(
               AppLocalizations.of(context)!.history,
-              style: TextStyle(
-                color: useDarkMode ? Colors.white : Colors.black,
-              ),
             ),
             leading: Icon(
               Icons.history_outlined,
-              color: useDarkMode ? Colors.white : Colors.black,
             ),
             onTap: () {
               Navigator.of(context).pop();
@@ -148,13 +129,9 @@ class MainDrawer extends StatelessWidget {
           ListTile(
             title: Text(
               AppLocalizations.of(context)!.settings,
-              style: TextStyle(
-                color: useDarkMode ? Colors.white : Colors.black,
-              ),
             ),
             leading: Icon(
               Icons.settings_outlined,
-              color: useDarkMode ? Colors.white : Colors.black,
             ),
             onTap: () {
               Navigator.of(context).pop();
@@ -171,13 +148,9 @@ class MainDrawer extends StatelessWidget {
           ListTile(
             title: Text(
               AppLocalizations.of(context)!.about,
-              style: TextStyle(
-                color: useDarkMode ? Colors.white : Colors.black,
-              ),
             ),
             leading: Icon(
               Icons.info_outlined,
-              color: useDarkMode ? Colors.white : Colors.black,
             ),
             onTap: () {
               Navigator.of(context).pop();
@@ -193,13 +166,9 @@ class MainDrawer extends StatelessWidget {
               ? ListTile(
                   title: Text(
                     'Live Timing Feed',
-                    style: TextStyle(
-                      color: useDarkMode ? Colors.white : Colors.black,
-                    ),
                   ),
                   leading: Icon(
                     Icons.settings_outlined,
-                    color: useDarkMode ? Colors.white : Colors.black,
                   ),
                   onTap: () {
                     Navigator.of(context).pop();
@@ -216,13 +185,9 @@ class MainDrawer extends StatelessWidget {
               ? ListTile(
                   title: Text(
                     'Article Test Screen',
-                    style: TextStyle(
-                      color: useDarkMode ? Colors.white : Colors.black,
-                    ),
                   ),
                   leading: Icon(
                     Icons.settings_outlined,
-                    color: useDarkMode ? Colors.white : Colors.black,
                   ),
                   onTap: () {
                     Navigator.of(context).pop();
@@ -239,13 +204,9 @@ class MainDrawer extends StatelessWidget {
               ? ListTile(
                   title: Text(
                     'Compare',
-                    style: TextStyle(
-                      color: useDarkMode ? Colors.white : Colors.black,
-                    ),
                   ),
                   leading: Icon(
                     Icons.compare_arrows_outlined,
-                    color: useDarkMode ? Colors.white : Colors.black,
                   ),
                   onTap: () {
                     Navigator.of(context).pop();
@@ -268,9 +229,6 @@ class MainDrawer extends StatelessWidget {
                         padding: const EdgeInsets.only(bottom: 10),
                         child: Text(
                           snapshot.data!.version,
-                          style: TextStyle(
-                            color: useDarkMode ? Colors.white : Colors.black,
-                          ),
                         ),
                       )
                     : const Text(''),

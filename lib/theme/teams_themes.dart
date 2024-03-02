@@ -17,11 +17,10 @@
  * Copyright (c) 2022-2024, BrightDV
  */
 
-// TODO: update team names
-
 import 'package:flutter/material.dart';
 
 class TeamsThemes {
+  // no team themes
   final Map<int, Color> defaultThemeColorScheme = {
     50: const Color.fromRGBO(255, 6, 0, 0.098),
     100: const Color.fromRGBO(255, 6, 0, .2),
@@ -155,14 +154,14 @@ class TeamsThemes {
     900: const Color.fromRGBO(100, 196, 255, 1),
   };
 
-  Map<int, Color> getTeamTheme(String teamTheme) {
+  /*  Map<int, Color> getTeamTheme(String teamTheme) {
     final Map themes = {
       "default": defaultThemeColorScheme,
       "alpine": alpineThemeColorScheme,
       "aston_martin": astonMartinThemeColorScheme,
       "ferrari": ferrariThemeColorScheme,
       "haas": haasThemeColorScheme,
-      "kick": kickSauberThemeColorScheme,
+      "sauber": kickSauberThemeColorScheme,
       "mclaren": mcLarenThemeColorScheme,
       "mercedes": mercedesThemeColorScheme,
       "rb": rbThemeColorScheme,
@@ -171,7 +170,7 @@ class TeamsThemes {
     };
 
     return themes[teamTheme] ?? themes['default'];
-  }
+  } */
 
   int getTeamColor(String teamTheme) {
     final Map<String, int> teamColorsList = {
@@ -180,7 +179,7 @@ class TeamsThemes {
       "aston_martin": 0xFF229971,
       "ferrari": 0xFFE8002D,
       "haas": 0xffB6BABD,
-      "kick": 0xFF52E252,
+      "sauber": 0xFF52E252,
       "mclaren": 0xFFFF8000,
       "mercedes": 0xFF27F4D2,
       "rb": 0xFF6692FF,
