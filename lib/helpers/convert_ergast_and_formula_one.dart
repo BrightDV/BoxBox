@@ -28,7 +28,7 @@ class Convert {
       'RB Honda RBPT': 'rb',
       'Aston Martin Aramco Mercedes': 'aston_martin',
       'Williams Mercedes': 'williams',
-      'Kick Sauber Ferrari': 'kick',
+      'Kick Sauber Ferrari': 'sauber',
       'Haas Ferrari': 'haas',
       // 2023
       'Alfa Romeo Ferrari': 'alfa',
@@ -55,7 +55,7 @@ class Convert {
       'alphatauri': 'AlphaTauri',
       'aston_martin': 'Aston-Martin',
       'williams': 'Williams',
-      'kick': 'Kick-Sauber',
+      'sauber': 'Kick-Sauber',
       'haas': 'Haas-F1-Team',
     };
     return formulaOneToErgast[teamName] ?? 'none';

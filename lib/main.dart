@@ -22,11 +22,11 @@
 import 'dart:async';
 
 import 'package:adaptive_theme/adaptive_theme.dart';
-import 'package:awesome_notifications/awesome_notifications.dart';
+// import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:boxbox/helpers/bottom_navigation_bar.dart';
 import 'package:boxbox/helpers/handle_native.dart';
 import 'package:boxbox/helpers/route_handler.dart';
-import 'package:boxbox/Screens/article.dart';
+// import 'package:boxbox/Screens/article.dart';
 import 'package:boxbox/helpers/team_background_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
@@ -239,7 +239,7 @@ void setTimeagoLocaleMessages() {
   timeago.setLocaleMessages('zh', timeago.ZhMessages());
 }
 
-class NotificationController {
+/* class NotificationController {
   static Future<void> startListeningNotificationEvents(
       BuildContext context) async {
     AwesomeNotifications().setListeners(
@@ -275,7 +275,7 @@ class NotificationController {
     );
   }
 }
-
+ */
 class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
 
@@ -291,7 +291,8 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     if (!kIsWeb) {
-      NotificationController.startListeningNotificationEvents(context);
+      // notifications service
+      // NotificationController.startListeningNotificationEvents(context);
 
       // For sharing or opening urls/text coming from outside the app while the app is in the memory
       _intentDataStreamSubscription =

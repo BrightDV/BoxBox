@@ -32,7 +32,7 @@ class TeamBackgroundColor {
     "rb": const Color(0xFF6692FF),
     "aston_martin": const Color(0xFF229971),
     "williams": const Color(0xFF64C4FF),
-    "kick": const Color(0xFF52E252),
+    "sauber": const Color(0xFF52E252),
     "haas": const Color(0xffB6BABD),
     // 2023
     "alphatauri": const Color(0xff4E7C9B),

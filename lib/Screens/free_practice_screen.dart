@@ -139,11 +139,11 @@ class FreePracticeResultsList extends StatelessWidget {
                   mode: LaunchMode.externalApplication,
                 );
               },
-              tileColor: Theme.of(context).colorScheme.onPrimary,
+              tileColor: Theme.of(context).colorScheme.onSecondary,
             )
           : index == 1
               ? Container(
-                  color: Theme.of(context).colorScheme.onPrimary,
+                  color: Theme.of(context).colorScheme.onSecondary,
                   height: 45,
                   child: Padding(
                     padding: const EdgeInsets.all(5),

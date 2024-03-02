@@ -17,8 +17,6 @@
  * Copyright (c) 2022-${DateTime.now().year}, BrightDV
  */
 
-// TODO: update team names
-
 class TeamCarImage {
   Map<String, String> teamCarDecoder = {
     "ferrari":
@@ -31,7 +29,7 @@ class TeamCarImage {
         "https://media.formula1.com/content/dam/fom-website/teams/${DateTime.now().year}/alpine-left.png",
     "haas":
         "https://media.formula1.com/content/dam/fom-website/teams/${DateTime.now().year}/haas-f1-team-left.png",
-    "kick":
+    "sauber":
         "https://media.formula1.com/content/dam/fom-website/teams/${DateTime.now().year}/kick-sauber-left.png",
     "rb":
         "https://media.formula1.com/content/dam/fom-website/teams/${DateTime.now().year}/rb-left.png",
@@ -41,6 +39,11 @@ class TeamCarImage {
         "https://media.formula1.com/content/dam/fom-website/teams/${DateTime.now().year}/aston-martin-left.png",
     "williams":
         "https://media.formula1.com/content/dam/fom-website/teams/${DateTime.now().year}/williams-left.png",
+    // 2023
+    "alphatauri":
+        "https://media.formula1.com/content/dam/fom-website/teams/2023/alphatauri-left.png",
+    "alfa":
+        "https://media.formula1.com/content/dam/fom-website/teams/2023/alfa-romeo-racing-left.png",
   };
   Future<String> getTeamCarImageURL(String teamId) async {
     String teamCarImageUrl = teamCarDecoder[teamId] ?? 'none';

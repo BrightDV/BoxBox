@@ -479,7 +479,7 @@ class _ErgastApiCalls {
     var response = await http.get(url);
     Map<String, dynamic> responseAsJson =
         jsonDecode(response.body)['MRData']['RaceTable']['Races'][0];
-    bool hasSprint = responseAsJson['Sprint'].isNotEmpty;
+    bool hasSprint = responseAsJson['Sprint']?.isNotEmpty ?? false;
     List<DateTime> raceDates = [];
     List<String> sessionKeys = [
       'FirstPractice',
@@ -502,6 +502,7 @@ class _ErgastApiCalls {
       );
       raceDates.add(raceDate);
     }
+    print(raceDates);
     Race race = Race(
       responseAsJson['round'],
       responseAsJson['raceName'],

@@ -430,7 +430,13 @@ class FormulaOneScraper {
         "https://www.formula1.com/en/teams/$teamId.html",
       );
     }
-    http.Response response = await http.get(teamDetailsUrl);
+    http.Response response = await http.get(
+      teamDetailsUrl,
+      headers: {
+        'User-Agent':
+            'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:123.0) Gecko/20100101 Firefox/123.0',
+      },
+    );
     dom.Document document = parser.parse(
       utf8.decode(response.bodyBytes),
     );
@@ -467,13 +473,15 @@ class FormulaOneScraper {
       );
     }
     tempDetails = document.getElementsByTagName('tr');
-    for (int i = 0; i < 11; i++) {
-      results["teamStats"]["attributes"].add(
-        tempDetails[i].children[0].text.trim(),
-      );
-      results["teamStats"]["values"].add(
-        tempDetails[i].children[1].text.trim(),
-      );
+    if (tempDetails.length > 0) {
+      for (int i = 0; i < 11; i++) {
+        results["teamStats"]["attributes"].add(
+          tempDetails[i].children[0].text.trim(),
+        );
+        results["teamStats"]["values"].add(
+          tempDetails[i].children[1].text.trim(),
+        );
+      }
     }
     tempDetails = document.getElementsByClassName('information');
     for (int i = 0; i < tempDetails.length; i++) {

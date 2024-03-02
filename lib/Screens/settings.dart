@@ -118,7 +118,7 @@ class _AppearanceCardState extends State<AppearanceCard> {
 
     Map teamNameToString = {
       "default": AppLocalizations.of(context)?.defaultValue,
-      "kick": 'Kick Sauber',
+      "sauber": 'Kick Sauber',
       "rb": 'RB',
       "alpine": 'Alpine',
       "aston_martin": 'Aston Martin',
@@ -225,7 +225,7 @@ class _AppearanceCardState extends State<AppearanceCard> {
                     () {
                       Map stringToValue = {
                         AppLocalizations.of(context)?.defaultValue: 'default',
-                        'Kick Sauber': 'kick',
+                        'Kick Sauber': 'sauber',
                         'RB': 'rb',
                         'Alpine': 'alpine',
                         'Aston Martin': 'aston_martin',

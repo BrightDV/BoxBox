@@ -480,7 +480,7 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
                                 );
                               },
                               tileColor:
-                                  Theme.of(context).colorScheme.onPrimary,
+                                  Theme.of(context).colorScheme.onSecondary,
                             ),
                             RaceDriversResultsList(snapshot.data!),
                           ],
@@ -551,7 +551,7 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
                                   );
                                 },
                                 tileColor:
-                                    Theme.of(context).colorScheme.onPrimary,
+                                    Theme.of(context).colorScheme.onSecondary,
                               ),
                               RaceDriversResultsList(snapshot.data!),
                             ],
