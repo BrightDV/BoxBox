@@ -1,0 +1,12 @@
+Full 2024 season support and md3 migration!
+- Full MD3 migration
+- 2024 schedule and standings
+- Add support for pre-season tests
+- Update some links to 2024
+- Fix the article search
+- Add support for new article parts
+- Add the official bbs server instance to the list of servers
+- Disable notification service
+- Add new team colors
+- A lot of bug fixes and improvements
+- Update translations
