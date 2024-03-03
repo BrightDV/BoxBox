@@ -45,25 +45,10 @@ class _SessionScreenState extends State<SessionScreen> {
   void initState() {
     super.initState();
     if (!kIsWeb) {
-      final expiresDate =
-          DateTime.now().add(Duration(days: 3)).millisecondsSinceEpoch;
-
-      cookieManager.setCookie(
-        url: WebUri('https://www.formula1.com/en/live-experience-webview.html'),
-        name: "login-session",
-        value:
-            '{"data":{"subscriptionToken":"eyJraWQiOiIxIiwidHlwIjoiSldUIiwiYWxnIjoiUlMyNTYifQ.eyJFeHRlcm5hbEF1dGhvcml6YXRpb25zQ29udGV4dERhdGEiOiIiLCJTdWJzY3JpcHRpb25TdGF0dXMiOiJpbmFjdGl2ZSIsIlN1YnNjcmliZXJJZCI6IjIwMjE0MjczMiIsIkZpcnN0TmFtZSI6IiIsIkxhc3ROYW1lIjoiIiwiZXhwIjoxNzA4ODYzMTU3LCJTZXNzaW9uSWQiOiJleUowZVhBaU9pSktWMVFpTENKaGJHY2lPaUpJVXpJMU5pSjkuZXlKemFTSTZJall3WVRsaFpEZzBMV1U1TTJRdE5EZ3daaTA0TUdRMkxXRm1NemMwT1RSbU1tVXlNaUlzSW1KMUlqb2lNVEF3TVRFaUxDSnBaQ0k2SWpNek56Y3haRGxrTFdJNVlqRXROREV3TnkwNE5UUXlMVFUxTWpjellqQXlaams1TlNJc0ltd2lPaUpsYmkxSFFpSXNJbVJqSWpvaU16WTBOQ0lzSW5RaU9pSXhJaXdpWVdWa0lqb2lNakF5TkMwd015MHdNbFF4TWpveE1qb3dPUzQ0TlRkYUlpd2laV1FpT2lJeU1ESTBMVEF6TFRBeVZERXlPakV5T2pBNUxqZzFOMW9pTENKalpXUWlPaUl5TURJMExUQXlMVEl5VkRFeU9qRXlPakE1TGprd05Wb2lMQ0p1WVcxbGFXUWlPaUl5TURJeE5ESTNNeklpTENKa2RDSTZJalFpTENKcGNDSTZJakU0TlM0eE1EY3VOVFl1TnpZaUxDSmpieUk2SWs1TVJDSXNJbU1pT2lKU1QwOVRSVTVFUVVGTUlpd2ljM1FpT2lKT1FpSXNJbkJqSWpvaU5EY3dNU0lzSW1semN5STZJbUZ6WTJWdVpHOXVMblIySWl3aVlYVmtJam9pWVhOalpXNWtiMjR1ZEhZaUxDSmxlSEFpT2pFM01Ea3pPREUxTWprc0ltNWlaaUk2TVRjd09EVXhOelV5T1gwLkd0OURFM2RoZlViMTEzeFZLZDF0WjlueXhLZ1NRV2xDNmpaN0RMaHNrUjAiLCJpYXQiOjE3MDg1MTc1NTcsIlN1YnNjcmliZWRQcm9kdWN0IjoiIiwianRpIjoiOGRkZmExYjUtNGNiYi00NmFlLTk3NzEtZGNiZDY1Mzc0YWIzIn0.Zo_FVoER16uHTHmfiAwhGmHRzK5Mri9frFrYzUz3Hzsgv99HI_SQfBMpB4q-j1s7s6egnxTZiGMuwenIRmFqHzxuVyexuH7UIt6nlsyn15MfkO2eU3vJynMSjBMj0qOTfNPxr9k4GWw8RJWZrVm8qCc5XIwluaT-RAyP0iLZSVUbafwBGYIHg5lkkmdsFrIvoBg0NU5RTxI7ItXgCte57vjueLL3NA3VOy6u9eZpJueASzQBBxd3dmFHYkgqF6ssLOfVKAKcEoOcotu1_A7pmCLYHBL9i9_AaHzasmXl6ekUK8U1XqxBXKwf8jqHBkBH50GMMs5D162B0dtjBlcmEw"}}',
-        expiresDate: expiresDate,
-        isSecure: false,
-        path: '/',
-        isHttpOnly: false,
-        domain: '.formula1.com',
-        sameSite: HTTPCookieSameSitePolicy.LAX,
-      );
       ContentBlocker(
         trigger: ContentBlockerTrigger(
           urlFilter: ".*",
-          unlessDomain: ["formula1.com"],
+          unlessDomain: ["live.planetf1.com"],
           resourceType: [
             ContentBlockerTriggerResourceType.SCRIPT,
             ContentBlockerTriggerResourceType.RAW,
@@ -183,7 +168,7 @@ class _SessionScreenState extends State<SessionScreen> {
                     body: InAppWebView(
                       initialUrlRequest: URLRequest(
                         url: WebUri(
-                          "https://www.formula1.com/en/live-experience-webview.html",
+                          "https://live.planetf1.com/",
                         ),
                         headers: {
                           'User-Agent':
@@ -299,7 +284,7 @@ class _SessionScreenState extends State<SessionScreen> {
                     : InAppWebView(
                         initialUrlRequest: URLRequest(
                           url: WebUri(
-                            "https://www.formula1.com/en/live-experience-webview.html",
+                            "https://live.planetf1.com/",
                           ),
                           headers: {
                             'User-Agent':
