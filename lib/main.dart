@@ -45,6 +45,12 @@ void main() async {
   final feedsBox = await Hive.openBox('feeds');
   final compareBox = await Hive.openBox('compare');
 
+  /* settingsBox.deleteFromDisk();
+  requestsBox.deleteFromDisk();
+  historyBox.deleteFromDisk();
+  feedsBox.deleteFromDisk();
+  compareBox.deleteFromDisk(); */
+
   /* if (!kIsWeb) {
     AwesomeNotifications().initialize(
       'resource://drawable/notification_icon',
@@ -345,8 +351,6 @@ class _MyAppState extends State<MyApp> {
     );
     supportedLocales.removeAt(supportedLocales.indexOf(const Locale('en')));
     supportedLocales.insert(0, const Locale('en'));
-    Hive.box('settings').delete('customServers');
-    Hive.box('settings').delete('server');
 
     const String boxboxServerDefaultInstance =
         "https://boxbox-server.netlify.app/api";
