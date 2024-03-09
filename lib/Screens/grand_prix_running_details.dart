@@ -119,15 +119,15 @@ class GrandPrixRunningScreen extends StatelessWidget {
                                 ),
                               )
                             : GestureDetector(
-                                onTap: () => !snapshot.data![index + 1].src
+                                onTap: () => !snapshot.data![index - 1].src
                                         .endsWith('pdf')
                                     ? {}
                                     : Navigator.push(
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) => PdfViewer(
-                                            snapshot.data![index + 1].src,
-                                            snapshot.data![index + 1].name,
+                                            snapshot.data![index - 1].src,
+                                            snapshot.data![index - 1].name,
                                           ),
                                         ),
                                       ),
@@ -135,10 +135,10 @@ class GrandPrixRunningScreen extends StatelessWidget {
                                   elevation: 5,
                                   child: ListTile(
                                     title: Text(
-                                      snapshot.data?[index + 1].name ?? '',
+                                      snapshot.data?[index - 1].name ?? '',
                                     ),
                                     subtitle: Text(
-                                      'Published on ${snapshot.data?[index + 1].postedDate}',
+                                      'Published on ${snapshot.data?[index - 1].postedDate}',
                                       style: TextStyle(
                                         fontSize: 12,
                                       ),
