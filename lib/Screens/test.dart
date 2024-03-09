@@ -17,18 +17,14 @@
  * Copyright (c) 2022-2024, BrightDV
  */
 
+import 'package:boxbox/Screens/SessionWebView/webview_manager.dart';
 import 'package:flutter/material.dart';
-import 'package:boxbox/Screens/article.dart';
 
 class TestScreen extends StatelessWidget {
   const TestScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return const ArticleScreen(
-      '2qfmED2dg3rlpmZYqL0oGR',
-      'big image in gallery hero',
-      true,
-    );
+    return WebViewManagerScreen('Test');
   }
 }
