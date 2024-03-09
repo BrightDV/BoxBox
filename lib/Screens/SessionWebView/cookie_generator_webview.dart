@@ -68,7 +68,6 @@ class _CookieGeneratorWebViewState extends State<CookieGeneratorWebView> {
                 Navigator.of(context).pop();
                 Navigator.of(context).pop();
                 Navigator.of(context).pop();
-                //Navigator.of(context).pop();
               },
             ),
           ],

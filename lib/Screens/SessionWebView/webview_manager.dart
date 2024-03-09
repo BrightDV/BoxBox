@@ -48,7 +48,7 @@ class _WebViewManagerScreenState extends State<WebViewManagerScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold();
+    return Container();
   }
 }
 
@@ -61,6 +61,14 @@ class WebViewTransitionScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(sessionName),
+        backgroundColor: Theme.of(context).colorScheme.onPrimary,
+        /* leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              /*  Navigator.pop(context);
+              Navigator.pop(context); */
+            },
+          ), */
       ),
       body: WebViewManagerUpdater(sessionName),
     );

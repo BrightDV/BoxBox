@@ -303,6 +303,8 @@
   "@unavailableOffline": {},
   "updates": "Mises à jour",
   "@updates": {},
+  "useOfficialWebview": "Utiliser la Webview officielle pour les sessions en direct",
+  "@useOfficialWebview": {},
   "victory": "Victoire",
   "@victory": {},
   "victories": "Victoires",
