@@ -454,7 +454,9 @@ class _ErgastApiCalls {
     Map schedule = Hive.box('requests').get('schedule', defaultValue: {});
     DateTime latestQuery = Hive.box('requests').get(
       'scheduleLatestQuery',
-      defaultValue: DateTime.now(),
+      defaultValue: DateTime.now().subtract(
+        const Duration(hours: 2),
+      ),
     ) as DateTime;
     if (latestQuery
             .add(
@@ -469,6 +471,7 @@ class _ErgastApiCalls {
       var response = await http.get(url);
       Map<String, dynamic> responseAsJson = jsonDecode(response.body);
       Hive.box('requests').put('schedule', responseAsJson);
+      Hive.box('requests').put('scheduleLatestQuery', DateTime.now());
       return formatLastSchedule(responseAsJson, toCome);
     }
   }
