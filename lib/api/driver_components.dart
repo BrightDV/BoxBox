@@ -304,17 +304,27 @@ class DriverImageProvider extends StatelessWidget {
           RequestErrorWidget(snapshot.error.toString());
         }
         return snapshot.hasData
-            ? CachedNetworkImage(
-                imageUrl: snapshot.data.toString(),
-                placeholder: (context, url) => const SizedBox(
-                  width: 100,
-                  child: LoadingIndicatorUtil(),
-                ),
-                errorWidget: (context, url, error) =>
-                    const Icon(Icons.error_outlined),
-                fadeOutDuration: const Duration(milliseconds: 500),
-                fadeInDuration: const Duration(milliseconds: 500),
-              )
+            ? snapshot.data! == 'none'
+                ? SizedBox(
+                    width: 120,
+                    child: Center(
+                      child: Icon(
+                        Icons.no_photography_outlined,
+                        size: 32,
+                      ),
+                    ),
+                  )
+                : CachedNetworkImage(
+                    imageUrl: snapshot.data.toString(),
+                    placeholder: (context, url) => const SizedBox(
+                      width: 120,
+                      child: LoadingIndicatorUtil(),
+                    ),
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error_outlined),
+                    fadeOutDuration: const Duration(milliseconds: 500),
+                    fadeInDuration: const Duration(milliseconds: 500),
+                  )
             : const LoadingIndicatorUtil();
       },
     );

@@ -71,9 +71,11 @@ class DriverResultsImage {
         "https://www.formula1.com/content/dam/fom-website/drivers/L/LOGSAR01_Logan_Sargeant/logsar01.png",
     "lawson":
         "https://www.formula1.com/content/dam/fom-website/drivers/L/LIALAW01_Liam_Lawson/lialaw01.png",
+    "bearman":
+        "https://www.formula1.com/content/dam/fom-website/drivers/O/OLIBEA01_Oliver_Bearman/olibea01.png",
   };
   Future<String> getDriverImageURL(String driverId) async {
-    return driverDecoder[driverId]!;
+    return driverDecoder[driverId] ?? 'none';
   }
 }
 
