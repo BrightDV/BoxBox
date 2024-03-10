@@ -24,6 +24,7 @@ import 'package:boxbox/helpers/team_background_color.dart';
 import 'package:boxbox/helpers/team_car_image.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
@@ -192,38 +193,41 @@ class TeamCarImageProvider extends StatelessWidget {
   Widget build(BuildContext context) {
     return FutureBuilder<String>(
       future: getTeamCarImageURL(teamId),
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return RequestErrorWidget(snapshot.error.toString());
-        }
-        return snapshot.data! == 'none'
-            ? Icon(
-                Icons.no_photography_outlined,
-              )
-            : CachedNetworkImage(
-                imageBuilder: (context, imageProvider) => Transform.scale(
-                  scale: 1.5,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: imageProvider,
-                        fit: BoxFit.fitHeight,
-                        alignment: FractionalOffset.centerLeft,
+      builder: (context, snapshot) => snapshot.hasError
+          ? RequestErrorWidget(snapshot.error.toString())
+          : snapshot.data! == 'none'
+              ? Icon(
+                  Icons.no_photography_outlined,
+                )
+              : CachedNetworkImage(
+                  imageBuilder: (context, imageProvider) => Transform.scale(
+                    scale: 1.5,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: imageProvider,
+                          fit: BoxFit.fitHeight,
+                          alignment: FractionalOffset.centerLeft,
+                        ),
                       ),
                     ),
                   ),
+                  imageUrl: snapshot.data!,
+                  placeholder: (context, url) => const SizedBox(
+                    width: 100,
+                    child: LoadingIndicatorUtil(),
+                  ),
+                  errorWidget: (context, url, error) =>
+                      const Icon(Icons.error_outlined),
+                  fadeOutDuration: const Duration(milliseconds: 500),
+                  fadeInDuration: const Duration(milliseconds: 500),
+                  cacheManager: CacheManager(
+                    Config(
+                      "teamCarImages",
+                      stalePeriod: const Duration(days: 7),
+                    ),
+                  ),
                 ),
-                imageUrl: snapshot.data!,
-                placeholder: (context, url) => const SizedBox(
-                  width: 100,
-                  child: LoadingIndicatorUtil(),
-                ),
-                errorWidget: (context, url, error) =>
-                    const Icon(Icons.error_outlined),
-                fadeOutDuration: const Duration(milliseconds: 500),
-                fadeInDuration: const Duration(milliseconds: 500),
-              );
-      },
     );
   }
 }
