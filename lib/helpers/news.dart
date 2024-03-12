@@ -432,12 +432,6 @@ class NewsItem extends StatelessWidget {
                                                     bottomRight:
                                                         Radius.circular(3),
                                                   ),
-                                                  boxShadow: const [
-                                                    BoxShadow(
-                                                      blurRadius: 2,
-                                                      offset: Offset(0, 0),
-                                                    ),
-                                                  ],
                                                   color: Theme.of(context)
                                                       .colorScheme
                                                       .onPrimary,
@@ -697,12 +691,6 @@ class NewsItem extends StatelessWidget {
                                                 topRight: Radius.circular(8),
                                                 bottomRight: Radius.circular(3),
                                               ),
-                                              boxShadow: const [
-                                                BoxShadow(
-                                                  blurRadius: 2,
-                                                  offset: Offset(0, 0),
-                                                ),
-                                              ],
                                               color: Theme.of(context)
                                                   .colorScheme
                                                   .onPrimary,
