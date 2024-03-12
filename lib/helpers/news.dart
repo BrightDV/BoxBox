@@ -1493,10 +1493,8 @@ class ImageRenderer extends StatelessWidget {
                     ],
                   ),
                 )
-              : ConstrainedBox(
-                  constraints: BoxConstraints(
-                    minHeight: MediaQuery.of(context).size.width / (16 / 9),
-                  ),
+              : SizedBox(
+                  height: MediaQuery.of(context).size.width / (16 / 9),
                   child: GestureDetector(
                     onTap: () {
                       showDialog(
@@ -1525,85 +1523,51 @@ class ImageRenderer extends StatelessWidget {
                                           onTap: () => Navigator.pop(context),
                                         ),
                                         Card(
-                                          elevation: 5.0,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(5),
-                                          ),
-                                          clipBehavior: Clip.antiAlias,
-                                          child: isHero != null && isHero!
-                                              ? CachedNetworkImage(
-                                                  imageUrl: imageUrl,
-                                                  placeholder: (context, url) =>
-                                                      SizedBox(
-                                                    height:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .width /
-                                                            (16 / 9),
-                                                    child:
-                                                        const LoadingIndicatorUtil(
-                                                      replaceImage: true,
-                                                      borderRadius: false,
+                                            elevation: 5.0,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                            ),
+                                            clipBehavior: Clip.antiAlias,
+                                            child: CachedNetworkImage(
+                                              imageUrl: imageUrl,
+                                              placeholder: (context, url) =>
+                                                  SizedBox(
+                                                height: MediaQuery.of(context)
+                                                        .size
+                                                        .width /
+                                                    (16 / 9),
+                                                child:
+                                                    const LoadingIndicatorUtil(
+                                                  replaceImage: true,
+                                                  borderRadius: false,
+                                                ),
+                                              ),
+                                              errorWidget:
+                                                  (context, url, error) =>
+                                                      const Icon(
+                                                Icons.error_outlined,
+                                              ),
+                                              fadeOutDuration: const Duration(
+                                                seconds: 1,
+                                              ),
+                                              fadeInDuration: isHero ?? false
+                                                  ? const Duration(
+                                                      milliseconds: 300,
+                                                    )
+                                                  : const Duration(
+                                                      milliseconds: 400,
                                                     ),
-                                                  ),
-                                                  errorWidget:
-                                                      (context, url, error) =>
-                                                          const Icon(
-                                                    Icons.error_outlined,
-                                                  ),
-                                                  fadeOutDuration:
-                                                      const Duration(
-                                                    seconds: 1,
-                                                  ),
-                                                  fadeInDuration:
-                                                      isHero ?? false
-                                                          ? const Duration(
-                                                              milliseconds: 300)
-                                                          : const Duration(
-                                                              seconds: 1,
-                                                            ),
-                                                  cacheManager: CacheManager(
-                                                    Config(
-                                                      "newsImages",
-                                                      stalePeriod:
-                                                          const Duration(
-                                                        days: 7,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                )
-                                              : Image(
-                                                  image: NetworkImage(
-                                                    imageUrl,
-                                                  ),
-                                                  loadingBuilder: (context,
-                                                          child,
-                                                          loadingProgress) =>
-                                                      loadingProgress == null
-                                                          ? child
-                                                          : SizedBox(
-                                                              height: MediaQuery.of(
-                                                                          context)
-                                                                      .size
-                                                                      .width /
-                                                                  (16 / 9),
-                                                              child:
-                                                                  const LoadingIndicatorUtil(
-                                                                replaceImage:
-                                                                    true,
-                                                                borderRadius:
-                                                                    false,
-                                                              ),
-                                                            ),
-                                                  errorBuilder:
-                                                      (context, url, error) =>
-                                                          Icon(
-                                                    Icons.error_outlined,
-                                                    size: 30,
+                                              cacheManager: CacheManager(
+                                                Config(
+                                                  "newsImages",
+                                                  stalePeriod: Duration(
+                                                    days:
+                                                        isHero ?? false ? 7 : 1,
                                                   ),
                                                 ),
-                                        ),
+                                              ),
+                                            )),
                                         Align(
                                           alignment: Alignment.topRight,
                                           child: IconButton(
@@ -1627,49 +1591,27 @@ class ImageRenderer extends StatelessWidget {
                     child: Stack(
                       alignment: Alignment.bottomCenter,
                       children: [
-                        isHero != null && isHero!
-                            ? CachedNetworkImage(
-                                imageUrl: imageUrl,
-                                placeholder: (context, url) => SizedBox(
-                                  height: MediaQuery.of(context).size.width /
-                                      (16 / 9),
-                                  child: const LoadingIndicatorUtil(
-                                    replaceImage: true,
-                                    borderRadius: false,
-                                  ),
-                                ),
-                                errorWidget: (context, url, error) =>
-                                    const Icon(Icons.error_outlined),
-                                fadeOutDuration: const Duration(seconds: 1),
-                                fadeInDuration: const Duration(seconds: 1),
-                                cacheManager: CacheManager(
-                                  Config(
-                                    "newsImages",
-                                    stalePeriod: const Duration(days: 7),
-                                  ),
-                                ),
-                              )
-                            : Image.network(
-                                imageUrl,
-                                loadingBuilder: (context, child,
-                                        loadingProgress) =>
-                                    loadingProgress == null
-                                        ? child
-                                        : SizedBox(
-                                            height: MediaQuery.of(context)
-                                                    .size
-                                                    .width /
-                                                (16 / 9),
-                                            child: const LoadingIndicatorUtil(
-                                              replaceImage: true,
-                                              borderRadius: false,
-                                            ),
-                                          ),
-                                errorBuilder: (context, url, error) => Icon(
-                                  Icons.error_outlined,
-                                  size: 30,
-                                ),
-                              ),
+                        CachedNetworkImage(
+                          imageUrl: imageUrl,
+                          placeholder: (context, url) => SizedBox(
+                            height:
+                                MediaQuery.of(context).size.width / (16 / 9),
+                            child: const LoadingIndicatorUtil(
+                              replaceImage: true,
+                              borderRadius: false,
+                            ),
+                          ),
+                          errorWidget: (context, url, error) =>
+                              const Icon(Icons.error_outlined),
+                          fadeOutDuration: const Duration(milliseconds: 400),
+                          fadeInDuration: const Duration(milliseconds: 400),
+                          cacheManager: CacheManager(
+                            Config(
+                              "newsImages",
+                              stalePeriod: const Duration(days: 1),
+                            ),
+                          ),
+                        ),
                         Container(
                           alignment: Alignment.bottomCenter,
                           child: caption != null && caption != ''

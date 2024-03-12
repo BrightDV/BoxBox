@@ -77,7 +77,7 @@ class _ErgastApiCalls {
   FutureOr<List<DriverResult>> getRaceStandings(String round) async {
     Map results = Hive.box('requests').get('race-$round', defaultValue: {});
     DateTime latestQuery = Hive.box('requests').get(
-      'race-$round-LatestQuery',
+      'race-$round-latestQuery',
       defaultValue: DateTime.now(),
     ) as DateTime;
     if (latestQuery
@@ -95,7 +95,7 @@ class _ErgastApiCalls {
       Map<String, dynamic> responseAsJson = jsonDecode(response.body);
       Hive.box('requests').put('race-$round', responseAsJson);
       Hive.box('requests').put(
-        'race-$round-LatestQuery',
+        'race-$round-latestQuery',
         DateTime.now(),
       );
       List<DriverResult> driversResults = formatRaceStandings(responseAsJson);
