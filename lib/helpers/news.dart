@@ -1820,11 +1820,16 @@ class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
         maxBufferMs: 1000 * 30,
         bufferForPlaybackMs: 3000,
       ),
+      cacheConfiguration: const BetterPlayerCacheConfiguration(
+        useCache: false,
+        preCacheSize: 0,
+      ),
       headers: {
         'user-agent':
             'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36',
       },
     );
+
     BetterPlayerConfiguration betterPlayerConfiguration =
         BetterPlayerConfiguration(
       autoPlay: widget.autoplay,
@@ -1842,10 +1847,14 @@ class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
       placeholder: _buildVideoPlaceholder(),
       showPlaceholderUntilPlay: true,
     );
+
+    // setup the controller
     _betterPlayerController = BetterPlayerController(
       betterPlayerConfiguration,
       betterPlayerDataSource: betterPlayerDataSource,
     );
+
+    // add event listener for the placeholder
     _betterPlayerController.addEventsListener(
       (event) {
         if (event.betterPlayerEventType == BetterPlayerEventType.play) {
