@@ -195,38 +195,43 @@ class TeamCarImageProvider extends StatelessWidget {
       future: getTeamCarImageURL(teamId),
       builder: (context, snapshot) => snapshot.hasError
           ? RequestErrorWidget(snapshot.error.toString())
-          : snapshot.data! == 'none'
-              ? Icon(
-                  Icons.no_photography_outlined,
-                )
-              : CachedNetworkImage(
-                  imageBuilder: (context, imageProvider) => Transform.scale(
-                    scale: 1.5,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: imageProvider,
-                          fit: BoxFit.fitHeight,
-                          alignment: FractionalOffset.centerLeft,
+          : snapshot.hasData
+              ? snapshot.data! == 'none'
+                  ? Icon(
+                      Icons.no_photography_outlined,
+                    )
+                  : CachedNetworkImage(
+                      imageBuilder: (context, imageProvider) => Transform.scale(
+                        scale: 1.5,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: imageProvider,
+                              fit: BoxFit.fitHeight,
+                              alignment: FractionalOffset.centerLeft,
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                  ),
-                  imageUrl: snapshot.data!,
-                  placeholder: (context, url) => const SizedBox(
-                    width: 100,
-                    child: LoadingIndicatorUtil(),
-                  ),
-                  errorWidget: (context, url, error) =>
-                      const Icon(Icons.error_outlined),
-                  fadeOutDuration: const Duration(milliseconds: 500),
-                  fadeInDuration: const Duration(milliseconds: 500),
-                  cacheManager: CacheManager(
-                    Config(
-                      "teamCarImages",
-                      stalePeriod: const Duration(days: 7),
-                    ),
-                  ),
+                      imageUrl: snapshot.data!,
+                      placeholder: (context, url) => const SizedBox(
+                        width: 100,
+                        child: LoadingIndicatorUtil(),
+                      ),
+                      errorWidget: (context, url, error) =>
+                          const Icon(Icons.error_outlined),
+                      fadeOutDuration: const Duration(milliseconds: 500),
+                      fadeInDuration: const Duration(milliseconds: 500),
+                      cacheManager: CacheManager(
+                        Config(
+                          "teamCarImages",
+                          stalePeriod: const Duration(days: 7),
+                        ),
+                      ),
+                    )
+              : const SizedBox(
+                  width: 100,
+                  child: LoadingIndicatorUtil(),
                 ),
     );
   }
