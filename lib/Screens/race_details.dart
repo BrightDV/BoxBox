@@ -1251,10 +1251,10 @@ class _SessionCountdownTimerState extends State<SessionCountdownTimer> {
                   textAlign: TextAlign.end,
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 5),
-                child: Expanded(
-                  flex: 2,
+              Expanded(
+                flex: 3,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 5),
                   child: Switch(
                     value: shouldUseCountdown,
                     onChanged: (value) => setState(
