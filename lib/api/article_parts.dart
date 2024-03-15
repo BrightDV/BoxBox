@@ -1161,22 +1161,64 @@ class AtomAudioBoom extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 400,
-      child: InAppWebView(
-        initialUrlRequest: URLRequest(
-          url: WebUri(
-            'https:${element['fields']['audioPodcast']['iFrameSrc']}',
-          ),
+    String url = 'https:' + element['fields']['audioPodcast']['iFrameSrc'];
+    url = url.replaceAll(
+      element['fields']['audioPodcast']['slug'],
+      element['fields']['eid'],
+    );
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 5),
+      child: Card(
+        elevation: 5,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ImageRenderer(
+              element['fields']['audioPodcast']['logoImage'],
+            ),
+            ListTile(
+              title: Text(
+                element['fields']['audioPodcast']['postTitle'],
+                textAlign: TextAlign.justify,
+              ),
+              subtitle: Text(element['fields']['audioPodcast']['channelTitle']),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                TextButton.icon(
+                  onPressed: () async => await launchUrl(
+                    Uri.parse(url),
+                    mode: LaunchMode.externalApplication,
+                  ),
+                  label: Text(
+                    AppLocalizations.of(context)!.listen,
+                    style: TextStyle(fontSize: 15),
+                  ),
+                  icon: Icon(
+                    Icons.headphones_outlined,
+                    size: 25,
+                  ),
+                ),
+                TextButton.icon(
+                  onPressed: () async => await launchUrl(
+                    Uri.parse(element['fields']['audioPodcast']['mp3Link']),
+                    mode: LaunchMode.externalApplication,
+                  ),
+                  label: Text(
+                    'MP3',
+                    style: TextStyle(fontSize: 15),
+                  ),
+                  icon: Icon(
+                    Icons.music_note_outlined,
+                    size: 25,
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
-        gestureRecognizers: {
-          Factory<VerticalDragGestureRecognizer>(
-              () => VerticalDragGestureRecognizer()),
-          Factory<HorizontalDragGestureRecognizer>(
-              () => HorizontalDragGestureRecognizer()),
-          Factory<ScaleGestureRecognizer>(() => ScaleGestureRecognizer()),
-        },
-        initialSettings: InAppWebViewSettings(transparentBackground: true),
       ),
     );
   }

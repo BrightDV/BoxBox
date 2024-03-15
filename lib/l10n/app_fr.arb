@@ -133,6 +133,8 @@
   "@lightMode": {},
   "links": "Liens",
   "@links": {},
+  "listen": "Écouter",
+  "@listen": {},
   "liveBlog": "Blog en direct",
   "@liveBlog": {},
   "loadMore": "Charger plus",
