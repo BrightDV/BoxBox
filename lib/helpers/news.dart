@@ -630,7 +630,7 @@ class NewsItem extends StatelessWidget {
                                                   : (showSmallDescription ??
                                                           false)
                                                       ? height / (16 / 9) - 58
-                                                      : width / (16 / 9) - 10,
+                                                      : width / (16 / 9) - 5,
                                               child: const LoadingIndicatorUtil(
                                                 replaceImage: true,
                                                 fullBorderRadius: false,
