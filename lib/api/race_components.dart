@@ -128,10 +128,11 @@ class RaceListItem extends StatelessWidget {
         children: [
           Container(
             padding: index == 0
-                ? const EdgeInsets.fromLTRB(10, 0, 10, 10)
-                : const EdgeInsets.all(10),
+                ? const EdgeInsets.fromLTRB(10, 0, 10, 0)
+                : const EdgeInsets.only(left: 5),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 Expanded(
                   flex: 1,
@@ -169,32 +170,12 @@ class RaceListItem extends StatelessWidget {
                 ),
                 Expanded(
                   flex: 5,
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                      left: 10,
+                  child: ListTile(
+                    title: Text(
+                      item.country,
                     ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          item.country,
-                          style: TextStyle(
-                            color: useDarkMode
-                                ? Colors.white
-                                : const Color(0xff171717),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 5),
-                          child: Text(
-                            item.circuitName,
-                            style: const TextStyle(
-                              color: Color.fromARGB(255, 136, 135, 135),
-                              fontSize: 12,
-                            ),
-                          ),
-                        ),
-                      ],
+                    subtitle: Text(
+                      item.circuitName,
                     ),
                   ),
                 ),
