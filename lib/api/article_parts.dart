@@ -447,10 +447,13 @@ class AtomSocialButton extends StatelessWidget {
         child: TextButton.icon(
           onPressed: () async => await launchUrl(
             Uri.parse(element['fields']['postUrl']),
-            mode: LaunchMode.externalApplication,
           ),
-          icon: const FaIcon(
-            FontAwesomeIcons.instagram,
+          icon: FaIcon(
+            element['fields']['postType'] == 'Instagram'
+                ? FontAwesomeIcons.instagram
+                : element['fields']['postType'] == 'Twitter'
+                    ? FontAwesomeIcons.twitter
+                    : FontAwesomeIcons.newspaper,
           ),
           label: Text(
             element['fields']['postType'] == 'Instagram'
