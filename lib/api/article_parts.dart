@@ -308,47 +308,50 @@ class TagsList extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       height: 45,
-      child: ListView.builder(
-        shrinkWrap: true,
-        scrollDirection: Axis.horizontal,
-        itemCount: article.articleTags.length,
-        itemBuilder: (context, index) => Padding(
-          padding: const EdgeInsets.only(
-            top: 10,
-            left: 5,
-            right: 5,
-          ),
-          child: GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => Scaffold(
-                    appBar: AppBar(
-                      title: Text(
-                        article.articleTags[index]['fields']['tagName'],
+      child: Center(
+        child: ListView.builder(
+          shrinkWrap: true,
+          scrollDirection: Axis.horizontal,
+          itemCount: article.articleTags.length,
+          itemBuilder: (context, index) => Padding(
+            padding: const EdgeInsets.only(
+              top: 10,
+              left: 5,
+              right: 5,
+            ),
+            child: GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => Scaffold(
+                      appBar: AppBar(
+                        title: Text(
+                          article.articleTags[index]['fields']['tagName'],
+                        ),
+                        backgroundColor:
+                            Theme.of(context).colorScheme.onPrimary,
                       ),
-                      backgroundColor: Theme.of(context).colorScheme.onPrimary,
+                      body: NewsFeed(tagId: article.articleTags[index]['id']),
                     ),
-                    body: NewsFeed(tagId: article.articleTags[index]['id']),
                   ),
-                ),
-              );
-            },
-            child: Container(
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Theme.of(context).colorScheme.primary,
-                  width: 1.0,
-                ),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(7),
-                child: Text(
-                  article.articleTags[index]['fields']['tagName'],
-                  style: TextStyle(
+                );
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border.all(
                     color: Theme.of(context).colorScheme.primary,
+                    width: 1.0,
+                  ),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(7),
+                  child: Text(
+                    article.articleTags[index]['fields']['tagName'],
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
                   ),
                 ),
               ),
