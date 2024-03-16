@@ -318,5 +318,7 @@
   "pipedApiUrlSub": "Se usa para vídeos de YouTube.",
   "@pipedApiUrlSub": {},
   "search": "Buscar",
-  "@search": {}
+  "@search": {},
+  "listen": "Escuchar",
+  "@listen": {}
 }
