@@ -316,5 +316,7 @@
   "countdown": "Geri Sayım",
   "@countdown": {},
   "search": "Ara",
-  "@search": {}
+  "@search": {},
+  "listen": "Dinle",
+  "@listen": {}
 }
