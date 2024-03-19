@@ -1,0 +1,11 @@
+- Huge performance improvements to the news
+- Improve theming across the app
+- Fix the session countdown
+- Fix the schedule not refreshing
+- Improve some article parts
+- Improve images' loading
+- Add Bearman's image
+- Fix the logic of the GP Documents parser
+- Fix the servers always being deleted on start
+- Other UI and performance improvements
+- Updated translations, the app is now available in Bengali!
