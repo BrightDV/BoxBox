@@ -40,7 +40,15 @@ class _WebViewManagerScreenState extends State<WebViewManagerScreen> {
       (_) => Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => WebViewTransitionScreen(widget.sessionName),
+          builder: (context) => PopScope(
+            canPop: false,
+            onPopInvoked: (didPop) {
+              if (didPop) return;
+              Navigator.of(context).pop();
+              Navigator.of(context).pop();
+            },
+            child: WebViewTransitionScreen(widget.sessionName),
+          ),
         ),
       ),
     );
@@ -62,13 +70,6 @@ class WebViewTransitionScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(sessionName),
         backgroundColor: Theme.of(context).colorScheme.onPrimary,
-        /* leading: IconButton(
-            icon: Icon(Icons.arrow_back),
-            onPressed: () {
-              /*  Navigator.pop(context);
-              Navigator.pop(context); */
-            },
-          ), */
       ),
       body: WebViewManagerUpdater(sessionName),
     );
@@ -79,18 +80,13 @@ class WebViewManagerUpdater extends StatelessWidget {
   final String sessionName;
   const WebViewManagerUpdater(this.sessionName, {super.key});
 
-  Widget goBack(BuildContext context) {
-    Navigator.pop(context);
-    return Container();
-  }
-
   Widget saveCookie(String cookieValue, BuildContext context) {
     return FutureBuilder(
       future: Formula1().saveLoginCookie(cookieValue),
       builder: (context, snapshot) => snapshot.hasError
           ? RequestErrorWidget(snapshot.error.toString())
           : snapshot.hasData
-              ? goBack(context)
+              ? Container()
               : Text(
                   AppLocalizations.of(context)!.loading,
                 ),
@@ -101,7 +97,7 @@ class WebViewManagerUpdater extends StatelessWidget {
   Widget build(BuildContext context) {
     DateTime now = DateTime.now();
     DateTime cookieLatestQuery = Hive.box('requests').get(
-      'cookieLatestQuery',
+      'webViewCookieLatestQuery',
       defaultValue: now,
     ) as DateTime;
     String webViewCookie = Hive.box('requests').get(
@@ -116,17 +112,22 @@ class WebViewManagerUpdater extends StatelessWidget {
       'loginCookieLatestQuery',
       defaultValue: now,
     ) as DateTime;
-
-    return (cookieLatestQuery.compareTo(now.subtract(Duration(days: 23))) < 0 ||
-            webViewCookie == '')
+    if (cookieLatestQuery.compareTo(now.subtract(Duration(days: 15))) >= 0 ||
+        webViewCookie != '' ||
+        webViewCookie.isNotEmpty) {
+      if ((loginCookieLatestQuery.compareTo(now.subtract(Duration(
+                days: 3,
+                hours: 12,
+              ))) <
+              0 ||
+          loginCookie == '')) {
+        saveCookie(webViewCookie, context);
+      }
+    }
+    return (cookieLatestQuery.compareTo(now.subtract(Duration(days: 15))) < 0 ||
+            webViewCookie == '' ||
+            webViewCookie.isEmpty)
         ? CookieGeneratorWebView(sessionName)
-        : (loginCookieLatestQuery.compareTo(now.subtract(Duration(
-                      days: 3,
-                      hours: 12,
-                    ))) <
-                    0 ||
-                loginCookie == '')
-            ? saveCookie(webViewCookie, context)
-            : SessionWebView();
+        : SessionWebView();
   }
 }

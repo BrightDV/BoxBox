@@ -43,6 +43,7 @@ class _SessionWebViewState extends State<SessionWebView> {
       'loginCookie',
       defaultValue: '',
     ) as String;
+    print("HELLO world");
 
     cookieManager.setCookie(
       url: WebUri('https://www.formula1.com/en/live-experience-webview.html'),
@@ -66,11 +67,14 @@ class _SessionWebViewState extends State<SessionWebView> {
       domain: '.formula1.com',
       sameSite: HTTPCookieSameSitePolicy.LAX,
     );
+    print("DNOe cookie");
     super.initState();
+    print("init state");
   }
 
   @override
   Widget build(BuildContext context) {
+    print("builiding...");
     return InAppWebView(
       initialUrlRequest: URLRequest(
         url: WebUri(
@@ -78,14 +82,16 @@ class _SessionWebViewState extends State<SessionWebView> {
         ),
         headers: {
           'User-Agent':
-              'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:123.0) Gecko/20100101 Firefox/123.0',
-          'Sec-Fetch-Dest': 'document',
-          'Sec-Fetch-Mode': 'navigate',
-          'Sec-Fetch-Site': 'same-origin',
-          'Sec-Fetch-User': '?1',
+              'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:124.0) Gecko/20100101 Firefox/124.0',
+          'Accept-Encoding': 'gzip, deflate, br',
+          'DNT': '1',
           'Sec-GPC': '1',
           'Connection': 'keep-alive',
-          'Accept-Encoding': 'gzip, deflate, br',
+          'Upgrade-Insecure-Requests': '1',
+          'Sec-Fetch-Dest': 'document',
+          'Sec-Fetch-Mode': 'navigate',
+          'Sec-Fetch-Site': 'none',
+          'Sec-Fetch-User': '?1',
         },
       ),
       gestureRecognizers: {

@@ -86,7 +86,18 @@ class _CookieGeneratorWebViewState extends State<CookieGeneratorWebView> {
         ),
         headers: {
           'User-Agent':
-              'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:123.0) Gecko/20100101 Firefox/123.0',
+              'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:124.0) Gecko/20100101 Firefox/124.0',
+          'Accept':
+              'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+          'Accept-Encoding': 'gzip, deflate, br',
+          'DNT': '1',
+          'Sec-GPC': '1',
+          'Connection': 'keep-alive',
+          'Upgrade-Insecure-Requests': '1',
+          'Sec-Fetch-Dest': 'document',
+          'Sec-Fetch-Mode': 'navigate',
+          'Sec-Fetch-Site': 'none',
+          'Sec-Fetch-User': '?1',
         },
       ),
       onLoadStop: (controller, url) async {
@@ -101,8 +112,9 @@ class _CookieGeneratorWebViewState extends State<CookieGeneratorWebView> {
             break;
           }
         }
+        print("NEW COOKIe $cookieValue");
         Hive.box('requests').put('webViewCookie', cookieValue);
-        Hive.box('requests').put('cookieLatestQuery', DateTime.now());
+        Hive.box('requests').put('webViewCookieLatestQuery', DateTime.now());
         await Formula1().saveLoginCookie(cookieValue);
 
         Navigator.pop(context);
