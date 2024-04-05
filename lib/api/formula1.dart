@@ -173,8 +173,7 @@ class Formula1 {
   }
 
   Future<bool> saveLoginCookie(String cookieValue) async {
-    String cookies =
-        'reese84=$cookieValue;'; // login={"event":"login","componentId":"component_login_page","actionType":"success"}';
+    String cookies = 'reese84=$cookieValue;';
     String body =
         '{"Login": "${utf8.decode(base64.decode('eWlrbmFib2RyYUBndWZ1bS5jb20='))}","Password": "${utf8.decode(base64.decode('UGxlYXNlRG9uJ3RTdGVhbCExMjM='))}","DistributionChannel": "d861e38f-05ea-4063-8776-a7e2b6d885a4"}';
 
@@ -210,10 +209,6 @@ class Formula1 {
       Hive.box('requests').put('loginCookie', '');
       return false;
     }
-
-    print(response.body);
-    print(response.statusCode);
-    print(Hive.box('requests').get('loginCookieLatestQuery'));
 
     Map<String, dynamic> responseAsJson = json.decode(
       utf8.decode(response.bodyBytes),

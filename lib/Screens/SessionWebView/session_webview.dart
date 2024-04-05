@@ -43,7 +43,6 @@ class _SessionWebViewState extends State<SessionWebView> {
       'loginCookie',
       defaultValue: '',
     ) as String;
-    print("HELLO world");
 
     cookieManager.setCookie(
       url: WebUri('https://www.formula1.com/en/live-experience-webview.html'),
@@ -67,14 +66,11 @@ class _SessionWebViewState extends State<SessionWebView> {
       domain: '.formula1.com',
       sameSite: HTTPCookieSameSitePolicy.LAX,
     );
-    print("DNOe cookie");
     super.initState();
-    print("init state");
   }
 
   @override
   Widget build(BuildContext context) {
-    print("builiding...");
     return InAppWebView(
       initialUrlRequest: URLRequest(
         url: WebUri(

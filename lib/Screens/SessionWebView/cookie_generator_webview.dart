@@ -112,7 +112,6 @@ class _CookieGeneratorWebViewState extends State<CookieGeneratorWebView> {
             break;
           }
         }
-        print("NEW COOKIe $cookieValue");
         Hive.box('requests').put('webViewCookie', cookieValue);
         Hive.box('requests').put('webViewCookieLatestQuery', DateTime.now());
         await Formula1().saveLoginCookie(cookieValue);
