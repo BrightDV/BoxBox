@@ -171,6 +171,56 @@ class Formula1 {
     );
     return article;
   }
+
+  Future<bool> saveLoginCookie(String cookieValue) async {
+    String cookies = 'reese84=$cookieValue;';
+    String body =
+        '{"Login": "${utf8.decode(base64.decode('eWlrbmFib2RyYUBndWZ1bS5jb20='))}","Password": "${utf8.decode(base64.decode('UGxlYXNlRG9uJ3RTdGVhbCExMjM='))}","DistributionChannel": "d861e38f-05ea-4063-8776-a7e2b6d885a4"}';
+
+    Uri url = Uri.parse(
+        '$defaultEndpoint/v2/account/subscriber/authenticate/by-password');
+
+    var response = await http.post(
+      url,
+      body: body,
+      headers: {
+        'User-Agent':
+            'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:124.0) Gecko/20100101 Firefox/124.0',
+        'Origin': 'https://account.formula1.com',
+        'Referer': 'https://account.formula1.com/',
+        'Host': 'api.formula1.com',
+        'Sec-Fetch-Dest': 'empty',
+        'Sec-Fetch-Mode': 'cors',
+        'Sec-Fetch-Site': 'same-site',
+        'Sec-GPC': '1',
+        'Connection': 'keep-alive',
+        'Content-Length': '130',
+        'DNT': '1',
+        'apiKey': 'fCUCjWrKPu9ylJwRAv8BpGLEgiAuThx7',
+        'Accept': 'application/json, text/javascript, */*; q=0.01',
+        'Accept-Encoding': 'gzip, deflate, br',
+        'Content-Type': 'application/json',
+        'Cookie': cookies,
+      },
+    );
+
+    if (response.statusCode == '403') {
+      Hive.box('requests').put('webViewCookie', '');
+      Hive.box('requests').put('loginCookie', '');
+      return false;
+    }
+
+    Map<String, dynamic> responseAsJson = json.decode(
+      utf8.decode(response.bodyBytes),
+    );
+
+    String token = responseAsJson['data']['subscriptionToken'];
+    String loginCookie = '{"data": {"subscriptionToken":"$token"}}';
+    Hive.box('requests').put('loginCookie', loginCookie);
+    Hive.box('requests').put('loginCookieLatestQuery', DateTime.now());
+
+    return true;
+  }
 }
 
 class News {

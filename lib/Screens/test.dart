@@ -17,8 +17,8 @@
  * Copyright (c) 2022-2024, BrightDV
  */
 
-import 'package:flutter/material.dart';
 import 'package:boxbox/Screens/article.dart';
+import 'package:flutter/material.dart';
 
 class TestScreen extends StatelessWidget {
   const TestScreen({Key? key}) : super(key: key);

@@ -549,6 +549,8 @@ class _OtherCardstate extends State<OtherCard> {
   Widget build(BuildContext context) {
     bool useDataSaverMode = Hive.box('settings')
         .get('useDataSaverMode', defaultValue: false) as bool;
+    bool useOfficialWebview = Hive.box('settings')
+        .get('useOfficialWebview', defaultValue: true) as bool;
     bool enableExperimentalFeatures = Hive.box('settings')
         .get('enableExperimentalFeatures', defaultValue: false) as bool;
 
@@ -636,6 +638,20 @@ class _OtherCardstate extends State<OtherCard> {
                   Hive.box('settings').put('playerQuality', 720);
                 }
               });
+            },
+          ),
+          SwitchListTile(
+            title: Text(
+              AppLocalizations.of(context)!.useOfficialWebview,
+            ),
+            value: useOfficialWebview,
+            onChanged: (bool value) {
+              setState(
+                () {
+                  useOfficialWebview = value;
+                  Hive.box('settings').put('useOfficialWebview', value);
+                },
+              );
             },
           ),
           SwitchListTile(

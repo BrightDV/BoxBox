@@ -45,12 +45,6 @@ void main() async {
   final feedsBox = await Hive.openBox('feeds');
   final compareBox = await Hive.openBox('compare');
 
-  /* settingsBox.deleteFromDisk();
-  requestsBox.deleteFromDisk();
-  historyBox.deleteFromDisk();
-  feedsBox.deleteFromDisk();
-  compareBox.deleteFromDisk(); */
-
   /* if (!kIsWeb) {
     AwesomeNotifications().initialize(
       'resource://drawable/notification_icon',
