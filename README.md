@@ -83,6 +83,7 @@ The app is currently available in:
 - 🇬🇧 English
 - 🇫🇷 French
 - 🌐 Arabic, thanks to [@Music47ell](https://github.com/Music47ell)
+- 🇧🇩 Bengali, thanks to [@Rafee-M](https://github.com/Rafee-M)
 - 🇨🇳 Simplified Chinese, thanks to Ahoo Ng (五号电)
 - 🇩🇪 German, thanks to [@RekZix](https://github.com/RekZix)
 - 🇭🇺 Hungarian, thanks to [@d4f5409d](https://github.com/d4f5409d)
