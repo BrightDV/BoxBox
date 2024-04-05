@@ -238,8 +238,8 @@ class FreePracticeResultItem extends StatelessWidget {
             Expanded(
               flex: 2,
               child: Text(
-                result.time == '' ? 'DNF' : result.position,
-                style: result.time == ''
+                result.position == 'NC' ? 'DNF' : result.position,
+                style: result.position == 'NC'
                     ? TextStyle(
                         color: Colors.yellow,
                         fontWeight: FontWeight.w600,
