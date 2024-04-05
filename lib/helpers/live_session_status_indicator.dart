@@ -86,126 +86,120 @@ class EventTrackerItem extends StatelessWidget {
       c++;
     }
 
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 1),
-      child: Material(
-        elevation: 10.0,
-        color: Colors.transparent,
-        child: Card(
-          child: Container(
-            height: 143,
-            decoration: BoxDecoration(
-              borderRadius: const BorderRadius.only(
-                bottomLeft: Radius.circular(5),
-                bottomRight: Radius.circular(5),
-              ),
-              color: Colors.transparent,
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
+    return Card(
+      elevation: 10.0,
+      margin: EdgeInsets.fromLTRB(4, 3, 4, 0.9),
+      child: Container(
+        height: 143,
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.only(
+            bottomLeft: Radius.circular(5),
+            bottomRight: Radius.circular(5),
+          ),
+          color: Colors.transparent,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
               children: [
-                Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        top: 3,
-                        left: 10,
-                        right: 10,
-                        bottom: 5,
-                      ),
-                      child: SizedBox(
-                        width: 120,
-                        child: Image.network(
-                          event.circuitImage,
-                        ),
-                      ),
+                Padding(
+                  padding: const EdgeInsets.only(
+                    top: 3,
+                    left: 10,
+                    right: 10,
+                    bottom: 5,
+                  ),
+                  child: SizedBox(
+                    width: 120,
+                    child: Image.network(
+                      event.circuitImage,
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(5),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            event.meetingCountryName,
-                            style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          haveRunningSession
-                              ? Text(
-                                  AppLocalizations.of(context)!.sessionRunning,
-                                )
-                              : Container(),
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width - 160,
-                            height: 20,
-                            child: MediaQuery.of(context).size.width >= 768
-                                ? Text(
-                                    event.meetingOfficialName,
-                                    style: const TextStyle(
-                                      fontSize: 12,
-                                    ),
-                                  )
-                                : Marquee(
-                                    text: event.meetingOfficialName,
-                                    style: const TextStyle(
-                                      fontSize: 12,
-                                    ),
-                                    pauseAfterRound: const Duration(seconds: 1),
-                                    startAfter: const Duration(seconds: 1),
-                                    velocity: 85,
-                                    blankSpace: 100,
-                                  ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
-                SizedBox(
-                  width: double.infinity,
-                  height: 45,
-                  child: ClipRRect(
-                    borderRadius: const BorderRadius.all(
-                      Radius.circular(5),
-                    ),
-                    child: ElevatedButton(
-                      onPressed: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => GrandPrixRunningScreen(event),
+                Padding(
+                  padding: const EdgeInsets.all(5),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        event.meetingCountryName,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
-                      style: ElevatedButton.styleFrom(
-                        shape: const ContinuousRectangleBorder(
-                          borderRadius: BorderRadius.zero,
-                        ),
-                        backgroundColor:
-                            Theme.of(context).colorScheme.onPrimary,
+                      haveRunningSession
+                          ? Text(
+                              AppLocalizations.of(context)!.sessionRunning,
+                            )
+                          : Container(),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width - 160,
+                        height: 20,
+                        child: MediaQuery.of(context).size.width >= 768
+                            ? Text(
+                                event.meetingOfficialName,
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                ),
+                              )
+                            : Marquee(
+                                text: event.meetingOfficialName,
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                ),
+                                pauseAfterRound: const Duration(seconds: 1),
+                                startAfter: const Duration(seconds: 1),
+                                velocity: 85,
+                                blankSpace: 100,
+                              ),
                       ),
-                      child: Row(
-                        children: const [
-                          Padding(
-                            padding: EdgeInsets.all(10),
-                            child: Text(
-                              'RACE HUB',
-                            ),
-                          ),
-                          Spacer(),
-                          Icon(
-                            Icons.arrow_forward_rounded,
-                          ),
-                        ],
-                      ),
-                    ),
+                    ],
                   ),
                 ),
               ],
             ),
-          ),
+            SizedBox(
+              width: double.infinity,
+              height: 45,
+              child: ClipRRect(
+                borderRadius: const BorderRadius.only(
+                  bottomLeft: Radius.circular(5),
+                  bottomRight: Radius.circular(5),
+                ),
+                child: ElevatedButton(
+                  onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => GrandPrixRunningScreen(event),
+                    ),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    shape: const ContinuousRectangleBorder(
+                      borderRadius: BorderRadius.zero,
+                    ),
+                    backgroundColor: Theme.of(context).colorScheme.onPrimary,
+                  ),
+                  child: Row(
+                    children: const [
+                      Padding(
+                        padding: EdgeInsets.all(10),
+                        child: Text(
+                          'RACE HUB',
+                        ),
+                      ),
+                      Spacer(),
+                      Icon(
+                        Icons.arrow_forward_rounded,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
