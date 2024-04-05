@@ -1,1 +1,16 @@
-{}
+{
+  "addToCalendar": "കലണ്ടറിലേക്ക് ചേർക്കുക",
+  "@addToCalendar": {},
+  "appearance": "രൂപം",
+  "@appearance": {},
+  "apply": "പ്രയോഗിക്കുക",
+  "@apply": {},
+  "articleTitleAndImage": "ശീർഷകവും ചിത്രവും",
+  "@articleTitleAndImage": {},
+  "articleTitleAndDescription": "തലക്കെട്ടും വിവരണവും",
+  "@articleTitleAndDescription": {},
+  "articleTitle": "തലക്കെട്ട്",
+  "@articleTitle": {},
+  "biography": "ജീവചരിത്രം",
+  "@biography": {}
+}
