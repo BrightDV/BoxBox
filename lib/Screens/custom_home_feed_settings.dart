@@ -68,9 +68,6 @@ class _CustomeHomeFeedSettingsScreenState
       appBar: AppBar(
         title: Text(
           AppLocalizations.of(context)!.news,
-          style: const TextStyle(
-            fontWeight: FontWeight.w600,
-          ),
         ),
         backgroundColor: Theme.of(context).colorScheme.onPrimary,
       ),
@@ -98,7 +95,6 @@ class _CustomeHomeFeedSettingsScreenState
                 AppLocalizations.of(context)!.official,
               ),
               groupValue: savedFeedUrl[0],
-              activeColor: Theme.of(context).colorScheme.onPrimary,
               onChanged: (value) => setState(
                 () {
                   savedFeedUrl = [value, "api"];
@@ -119,7 +115,6 @@ class _CustomeHomeFeedSettingsScreenState
                       feed.key,
                     ),
                     groupValue: savedFeedUrl[0],
-                    activeColor: Theme.of(context).colorScheme.onPrimary,
                     onChanged: (value) => setState(
                       () {
                         savedFeedUrl = [feed.value, "rss"];
@@ -204,7 +199,6 @@ class _CustomeHomeFeedSettingsScreenState
                       feed[0],
                     ),
                     groupValue: savedFeedUrl[0],
-                    activeColor: Theme.of(context).colorScheme.onPrimary,
                     onChanged: (value) => setState(
                       () {
                         Hive.box('settings').put('homeFeed', feed);
@@ -268,8 +262,6 @@ class _CustomeHomeFeedSettingsScreenState
                                 Radio(
                                   value: "rss",
                                   groupValue: type,
-                                  activeColor:
-                                      Theme.of(context).colorScheme.onPrimary,
                                   onChanged: (String? value) => setState(() {
                                     type = value!;
                                   }),
@@ -280,8 +272,6 @@ class _CustomeHomeFeedSettingsScreenState
                                 Radio(
                                   value: "wp",
                                   groupValue: type,
-                                  activeColor:
-                                      Theme.of(context).colorScheme.onPrimary,
                                   onChanged: (String? value) => setState(() {
                                     type = value!;
                                   }),
