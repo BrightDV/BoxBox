@@ -594,7 +594,10 @@ class CircuitScreen extends StatelessWidget {
                           ],
                         )
                       : Padding(
-                          padding: const EdgeInsets.all(5),
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 3,
+                            horizontal: 10,
+                          ),
                           child: GestureDetector(
                             child: Container(
                               width: double.infinity,
@@ -688,7 +691,10 @@ class CircuitScreen extends StatelessWidget {
                                               )
                                             : Container(),
                                         Padding(
-                                          padding: const EdgeInsets.all(5),
+                                          padding: const EdgeInsets.symmetric(
+                                            vertical: 3,
+                                            horizontal: 10,
+                                          ),
                                           child: GestureDetector(
                                             child: Container(
                                               width: double.infinity,
@@ -1266,7 +1272,10 @@ class CircuitScreen extends StatelessWidget {
                                       ],
                                     )
                                   : Padding(
-                                      padding: const EdgeInsets.all(5),
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 3,
+                                        horizontal: 10,
+                                      ),
                                       child: GestureDetector(
                                         child: Container(
                                           width: double.infinity,
