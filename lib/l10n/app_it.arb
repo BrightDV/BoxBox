@@ -1,5 +1,5 @@
 {
-  "aboutDescription": "Box, Box! è un software libero con copyleft e licenza GPLv3+. Il suo scopo è quello di permettere di seguire la Formula 1 senza pubblicità o tracker.",
+  "aboutDescription": "Box, Box! è un software libero copyleft, con licenza GPLv3+. Il suo scopo è quello di consentire agli utenti di seguire la Formula 1 senza pubblicità o tracker.",
   "@aboutDescription": {},
   "apply": "Applica",
   "@apply": {},
@@ -312,5 +312,15 @@
   "server": "Server",
   "@server": {},
   "yes": "Sì",
-  "@yes": {}
+  "@yes": {},
+  "pleaseWait": "Attendere prego...",
+  "@pleaseWait": {},
+  "search": "Cerca",
+  "@search": {},
+  "loading": "Caricamento",
+  "@loading": {},
+  "pipedApiUrlSub": "Utilizzato per i video di YouTube.",
+  "@pipedApiUrlSub": {},
+  "listen": "Ascolta",
+  "@listen": {}
 }
