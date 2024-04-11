@@ -318,5 +318,11 @@
   "search": "Zoeken",
   "@search": {},
   "listen": "Luister",
-  "@listen": {}
+  "@listen": {},
+  "loading": "Laden",
+  "@loading": {},
+  "useOfficialWebview": "Gebruik onaangepaste WebView voor live-sessies",
+  "@useOfficialWebview": {},
+  "pleaseWait": "Even geduld...",
+  "@pleaseWait": {}
 }
