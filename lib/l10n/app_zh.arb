@@ -314,5 +314,13 @@
   "viewHighlights": "观看集锦",
   "@viewHighlights": {},
   "pipedApiUrlSub": "视频由油管提供。",
-  "@pipedApiUrlSub": {}
+  "@pipedApiUrlSub": {},
+  "loading": "正在加载",
+  "@loading": {},
+  "pleaseWait": "请稍候……",
+  "@pleaseWait": {},
+  "search": "搜索",
+  "@search": {},
+  "listen": "听着",
+  "@listen": {}
 }
