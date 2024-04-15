@@ -377,7 +377,10 @@ class _ErgastApiCalls {
           race['Results'][0]['Driver']['familyName'],
           race['Results'][0]['Driver']['code'],
           race['Results'][0]['Constructor']['constructorId'],
-          race['Results'][0]['Time']?['time'] ?? 'DNF',
+          race['Results'][0]['positionText'] == 'R'
+              ? 'DNF'
+              : race['Results'][0]['Time']?['time'] ??
+                  race['Results'][0]['status'],
           int.parse(race['Results'][0]['FastestLap']?['rank'] ?? '20') == 1
               ? true
               : false,
