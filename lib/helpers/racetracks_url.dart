@@ -96,7 +96,7 @@ class RaceTracksUrls {
     "interlagos": "Brazilian",
     "vegas": "Las_Vegas",
     "yas_marina": "Abu_Dhabi",
-    "shanghai": "China",
+    "shanghai": "Chinese",
   };
   Future<String> getRaceTrackImageUrl(String gpId) async {
     String gpName = trackUrlConverter[gpId]!;
