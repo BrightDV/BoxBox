@@ -390,6 +390,7 @@ class _ErgastApiCalls {
           points: race['Results'][0]['points'],
           raceId: race['Circuit']['circuitId'],
           raceName: race['raceName'],
+          status: race['Results'][0]['status'],
         ),
       );
     }

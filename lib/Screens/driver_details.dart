@@ -98,30 +98,27 @@ class DriverInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(5),
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Center(
-              child: DriverImageProvider(driverId, 'driver'),
-            ),
-            FutureBuilder<List<List>>(
-              future: FormulaOneScraper().scrapeDriversDetails(driverId),
-              builder: (context, snapshot) => snapshot.hasError
-                  ? RequestErrorWidget(
-                      snapshot.error.toString(),
-                    )
-                  : snapshot.hasData
-                      ? DriverDetailsFragment(
-                          snapshot.data!,
-                        )
-                      : const LoadingIndicatorUtil(),
-            ),
-          ],
-        ),
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Center(
+            child: DriverImageProvider(driverId, 'driver'),
+          ),
+          FutureBuilder<List<List>>(
+            future: FormulaOneScraper().scrapeDriversDetails(driverId),
+            builder: (context, snapshot) => snapshot.hasError
+                ? RequestErrorWidget(
+                    snapshot.error.toString(),
+                  )
+                : snapshot.hasData
+                    ? DriverDetailsFragment(
+                        snapshot.data!,
+                      )
+                    : const LoadingIndicatorUtil(),
+          ),
+        ],
       ),
     );
   }
@@ -220,6 +217,9 @@ class DriverResults extends StatelessWidget {
                                     MaterialPageRoute(
                                       builder: (context) => Scaffold(
                                         appBar: AppBar(
+                                          backgroundColor: Theme.of(context)
+                                              .colorScheme
+                                              .onPrimary,
                                           title: Text(
                                             AppLocalizations.of(context)!.race,
                                             style: const TextStyle(
@@ -288,11 +288,11 @@ class DriverImageProvider extends StatelessWidget {
         return snapshot.hasData
             ? Image.network(
                 snapshot.data!,
-                height: kIsWeb ? 400 : MediaQuery.of(context).size.width - 10,
+                height: kIsWeb ? 400 : MediaQuery.of(context).size.width,
                 //width: idOfImage == 'driver' ? 400 : 200,
               )
             : SizedBox(
-                height: MediaQuery.of(context).size.width - 10,
+                height: MediaQuery.of(context).size.width,
                 child: const LoadingIndicatorUtil(),
               );
       },
@@ -324,7 +324,7 @@ class DriverDetailsFragment extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Padding(
-          padding: const EdgeInsets.all(5),
+          padding: const EdgeInsets.all(10),
           child: Column(
             children: [
               for (int i = 0; i < driverDetails[0].length; i++)
@@ -369,8 +369,8 @@ class DriverDetailsFragment extends StatelessWidget {
             SizedBox(
               height: 275,
               child: ListView.builder(
+                padding: EdgeInsets.only(left: 4),
                 scrollDirection: Axis.horizontal,
-                //controller: scrollController,
                 physics: const PagingScrollPhysics(
                   itemDimension: 300,
                 ),
@@ -409,6 +409,7 @@ class DriverDetailsFragment extends StatelessWidget {
                               )
                             : const SizedBox(
                                 height: 200,
+                                width: 300,
                                 child: LoadingIndicatorUtil(),
                               );
                   },
