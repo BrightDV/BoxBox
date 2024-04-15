@@ -917,27 +917,11 @@ class _NewsListState extends State<NewsList> {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    const String officialFeed = "https://api.formula1.com";
     Map latestNews = Hive.box('requests').get('news', defaultValue: {}) as Map;
-    String savedServer = Hive.box('settings')
-        .get('server', defaultValue: officialFeed) as String;
     return (_pagingController.error.toString() == 'XMLHttpRequest error.' ||
-                _pagingController.error.toString() ==
-                    "Failed host lookup: ${savedServer.replaceAll(
-                          'http://',
-                          '',
-                        ).replaceAll(
-                          'https://',
-                          '',
-                        )}" ||
-                _pagingController.error.toString() ==
-                    "Failed host lookup: '${savedServer.replaceAll(
-                          'http://',
-                          '',
-                        ).replaceAll(
-                          'https://',
-                          '',
-                        )}'") &&
+                _pagingController.error
+                    .toString()
+                    .startsWith('Failed host lookup')) &&
             latestNews['items'] != null &&
             widget.tagId == null &&
             widget.articleType == null
