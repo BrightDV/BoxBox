@@ -25,6 +25,7 @@ import 'package:boxbox/Screens/circuit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:intl/intl.dart';
 
 class Race {
   final String round;
@@ -117,9 +118,13 @@ class RaceListItem extends StatelessWidget {
       AppLocalizations.of(context)?.monthAbbreviationNovember,
       AppLocalizations.of(context)?.monthAbbreviationDecember,
     ];
+    DateTime raceDate =
+        DateTime.parse('${item.date} ${item.raceHour}').toLocal();
+    String formatedRaceDate = DateFormat('HH:mm').format(raceDate);
+
     return Container(
       padding: const EdgeInsets.all(2),
-      height: 80,
+      height: 84,
       color: index % 2 == 1
           ? Theme.of(context).colorScheme.onSecondary
           : Theme.of(context).colorScheme.background,
@@ -175,7 +180,7 @@ class RaceListItem extends StatelessWidget {
                       item.country,
                     ),
                     subtitle: Text(
-                      item.circuitName,
+                      '${item.circuitName}\n${formatedRaceDate}',
                     ),
                   ),
                 ),
