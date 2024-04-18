@@ -38,9 +38,9 @@ import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class GrandPrixRunningScreen extends StatelessWidget {
+class RaceHubScreen extends StatelessWidget {
   final Event event;
-  const GrandPrixRunningScreen(
+  const RaceHubScreen(
     this.event, {
     Key? key,
   }) : super(key: key);
@@ -358,10 +358,15 @@ class GrandPrixRunningScreen extends StatelessWidget {
                         fit: BoxFit.scaleDown,
                       ),
                       for (var session in event.sessions)
-                        SessionItem(
-                          session,
-                          event.raceId,
-                          event.meetingCountryName,
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 5,
+                          ),
+                          child: SessionItem(
+                            session,
+                            event.raceId,
+                            event.meetingCountryName,
+                          ),
                         ),
                       Padding(
                         padding: const EdgeInsets.symmetric(
@@ -734,12 +739,12 @@ class SessionItem extends StatelessWidget {
               ),
             ),
           )
-        : GestureDetector(
-            child: Container(
-              padding: const EdgeInsets.only(top: 10),
-              height: 70,
-              child: Row(
+        : Card(
+            child: ListTile(
+              title: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   Expanded(
                     flex: 3,
@@ -764,29 +769,33 @@ class SessionItem extends StatelessWidget {
                   ),
                   Expanded(
                     flex: 1,
-                    child: DottedLine(
-                      direction: Axis.vertical,
-                      dashLength: 3,
-                      dashGapLength: 3,
-                      lineThickness: 3,
-                      dashRadius: 8,
-                      dashColor: Theme.of(context).dividerColor,
+                    child: SizedBox(
+                      height: 60,
+                      child: DottedLine(
+                        direction: Axis.vertical,
+                        dashLength: 3,
+                        dashGapLength: 3,
+                        lineThickness: 3,
+                        dashRadius: 8,
+                        dashColor: Theme.of(context).dividerColor,
+                      ),
                     ),
                   ),
                   Expanded(
                     flex: 8,
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
                           sessionsAbbreviations[session.sessionsAbbreviation],
                           style: TextStyle(
                             fontSize: 20,
                           ),
+                          textAlign: TextAlign.center,
                         ),
                         session.endTime.isBefore(DateTime.now())
                             ? Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Padding(
                                     padding: const EdgeInsets.only(
@@ -843,19 +852,20 @@ class SessionItem extends StatelessWidget {
                                     style: TextStyle(
                                       fontSize: 17,
                                     ),
+                                    textAlign: TextAlign.center,
                                   ),
                       ],
                     ),
                   ),
                 ],
               ),
-            ),
-            onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => SessionScreen(
-                  sessionsAbbreviations[session.sessionsAbbreviation],
-                  session,
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => SessionScreen(
+                    sessionsAbbreviations[session.sessionsAbbreviation],
+                    session,
+                  ),
                 ),
               ),
             ),
