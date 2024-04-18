@@ -222,6 +222,7 @@ class RaceHubScreen extends StatelessWidget {
                                       session,
                                       event.raceId,
                                       event.meetingCountryName,
+                                      event.meetingOfficialName,
                                     ),
                                 ],
                               ),
@@ -366,6 +367,7 @@ class RaceHubScreen extends StatelessWidget {
                             session,
                             event.raceId,
                             event.meetingCountryName,
+                            event.meetingOfficialName,
                           ),
                         ),
                       Padding(
@@ -534,11 +536,13 @@ class SessionItem extends StatelessWidget {
   final Session session;
   final String raceId;
   final String meetingCountryName;
+  final String meetingOfficialName;
 
   const SessionItem(
     this.session,
     this.raceId,
-    this.meetingCountryName, {
+    this.meetingCountryName,
+    this.meetingOfficialName, {
     Key? key,
   }) : super(key: key);
 
@@ -734,6 +738,8 @@ class SessionItem extends StatelessWidget {
                   builder: (context) => SessionScreen(
                     sessionsAbbreviations[session.sessionsAbbreviation],
                     session,
+                    meetingCountryName,
+                    meetingOfficialName,
                   ),
                 ),
               ),
@@ -865,6 +871,8 @@ class SessionItem extends StatelessWidget {
                   builder: (context) => SessionScreen(
                     sessionsAbbreviations[session.sessionsAbbreviation],
                     session,
+                    meetingCountryName,
+                    meetingOfficialName,
                   ),
                 ),
               ),

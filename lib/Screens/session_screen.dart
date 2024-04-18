@@ -17,11 +17,13 @@
  * Copyright (c) 2022-2024, BrightDV
  */
 
+import 'package:add_2_calendar/add_2_calendar.dart' as calendar;
 import 'package:boxbox/Screens/SessionWebView/unofficial_webview.dart';
 import 'package:boxbox/Screens/SessionWebView/webview_manager.dart';
 import 'package:boxbox/Screens/free_practice_screen.dart';
 import 'package:boxbox/Screens/race_details.dart';
 import 'package:boxbox/api/event_tracker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_timer_countdown/flutter_timer_countdown.dart';
@@ -30,8 +32,12 @@ import 'package:hive_flutter/hive_flutter.dart';
 class SessionScreen extends StatefulWidget {
   final String sessionFullName;
   final Session session;
+  final String meetingCountryName;
+  final String meetingOfficialName;
 
-  const SessionScreen(this.sessionFullName, this.session, {Key? key})
+  const SessionScreen(this.sessionFullName, this.session,
+      this.meetingCountryName, this.meetingOfficialName,
+      {Key? key})
       : super(key: key);
   @override
   State<SessionScreen> createState() => _SessionScreenState();
@@ -117,6 +123,57 @@ class _SessionScreenState extends State<SessionScreen> {
                         setState(() {});
                       },
                     ),
+                    !kIsWeb
+                        ? Padding(
+                            padding: const EdgeInsets.only(top: 5, bottom: 5),
+                            child: TextButton.icon(
+                              label: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 7),
+                                child: Text(
+                                  AppLocalizations.of(context)!.addToCalendar,
+                                ),
+                              ),
+                              icon: Icon(
+                                Icons.add_alert_outlined,
+                              ),
+                              style: TextButton.styleFrom(
+                                side: BorderSide(
+                                  color: Theme.of(context).colorScheme.primary,
+                                  width: 1,
+                                ),
+                              ),
+                              onPressed: () {
+                                calendar.Event event = calendar.Event(
+                                  title:
+                                      '${widget.sessionFullName} - ${widget.meetingOfficialName}',
+                                  location: widget.meetingCountryName,
+                                  startDate: DateTime(
+                                    widget.session.startTime.toLocal().year,
+                                    widget.session.startTime.toLocal().month,
+                                    widget.session.startTime.toLocal().day,
+                                    widget.session.startTime.toLocal().hour,
+                                    widget.session.startTime.toLocal().minute,
+                                    widget.session.startTime.toLocal().second,
+                                  ),
+                                  endDate: DateTime(
+                                    widget.session.startTime.toLocal().year,
+                                    widget.session.startTime.toLocal().month,
+                                    widget.session.startTime.toLocal().day,
+                                    widget.session.startTime.toLocal().hour +
+                                        (widget.session.sessionsAbbreviation ==
+                                                'r'
+                                            ? 3
+                                            : 1),
+                                    widget.session.startTime.toLocal().minute,
+                                    widget.session.startTime.toLocal().second,
+                                  ),
+                                );
+                                calendar.Add2Calendar.addEvent2Cal(event);
+                              },
+                            ),
+                          )
+                        : Container(),
                   ],
                 ),
               )
@@ -195,6 +252,59 @@ class _SessionScreenState extends State<SessionScreen> {
                           setState(() {});
                         },
                       ),
+                      !kIsWeb
+                          ? Padding(
+                              padding: const EdgeInsets.only(top: 5, bottom: 5),
+                              child: TextButton.icon(
+                                label: Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 7),
+                                  child: Text(
+                                    AppLocalizations.of(context)!.addToCalendar,
+                                  ),
+                                ),
+                                icon: Icon(
+                                  Icons.add_alert_outlined,
+                                ),
+                                style: TextButton.styleFrom(
+                                  side: BorderSide(
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
+                                    width: 1,
+                                  ),
+                                ),
+                                onPressed: () {
+                                  calendar.Event event = calendar.Event(
+                                    title:
+                                        '${widget.sessionFullName} - ${widget.meetingOfficialName}',
+                                    location: widget.meetingCountryName,
+                                    startDate: DateTime(
+                                      widget.session.startTime.toLocal().year,
+                                      widget.session.startTime.toLocal().month,
+                                      widget.session.startTime.toLocal().day,
+                                      widget.session.startTime.toLocal().hour,
+                                      widget.session.startTime.toLocal().minute,
+                                      widget.session.startTime.toLocal().second,
+                                    ),
+                                    endDate: DateTime(
+                                      widget.session.startTime.toLocal().year,
+                                      widget.session.startTime.toLocal().month,
+                                      widget.session.startTime.toLocal().day,
+                                      widget.session.startTime.toLocal().hour +
+                                          (widget.session
+                                                      .sessionsAbbreviation ==
+                                                  'r'
+                                              ? 3
+                                              : 1),
+                                      widget.session.startTime.toLocal().minute,
+                                      widget.session.startTime.toLocal().second,
+                                    ),
+                                  );
+                                  calendar.Add2Calendar.addEvent2Cal(event);
+                                },
+                              ),
+                            )
+                          : Container(),
                     ],
                   )
                 : widget.session.state == 'completed' ||
