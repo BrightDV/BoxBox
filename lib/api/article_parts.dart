@@ -694,7 +694,11 @@ class AtomSessionResults extends StatelessWidget {
                           ? AppLocalizations.of(context)!.sprint
                           : element['fields']['sessionType'] ==
                                   'Sprint Shootout'
-                              ? 'Sprint Shootout'
+                              ? element['fields']['raceResultsSprintShootout']
+                                          ['description'] ==
+                                      'Sprint Qualifying'
+                                  ? 'Sprint Qualifying'
+                                  : 'Sprint Shootout'
                               : element['fields']['sessionType']
                                       .startsWith('Starting Grid')
                                   ? element['fields']['sessionType']
@@ -1023,7 +1027,12 @@ class AtomSessionResults extends StatelessWidget {
                                               : element['fields']
                                                           ['sessionType'] ==
                                                       'Sprint Shootout'
-                                                  ? 'Sprint Shootout'
+                                                  ? element['fields'][
+                                                                  'raceResultsSprintShootout']
+                                                              ['description'] ==
+                                                          'Sprint Qualifying'
+                                                      ? 'Sprint Qualifying'
+                                                      : 'Sprint Shootout'
                                                   : element['fields']['cta']
                                                           .endsWith(
                                                               'starting-grid.html')
@@ -1055,7 +1064,7 @@ class AtomSessionResults extends StatelessWidget {
                                               : QualificationResultsProvider(
                                                   raceUrl: element['fields']
                                                       ['cta'],
-                                                  isSprintShootout: element[
+                                                  isSprintQualifying: element[
                                                                   'fields']
                                                               ['sessionType'] ==
                                                           'Sprint Shootout'

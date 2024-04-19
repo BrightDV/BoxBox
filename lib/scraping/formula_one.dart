@@ -155,7 +155,7 @@ class FormulaOneScraper {
       if (!document
           .getElementsByClassName('ResultsArchiveTitle')[0]
           .innerHtml
-          .contains('SPRINT SHOOTOUT')) {
+          .contains('SPRINT QUALIFYING')) {
         throw Exception();
       }
     }

@@ -324,7 +324,7 @@ class _SessionScreenState extends State<SessionScreen> {
                             raceUrl: widget.session.baseUrl.replaceAll(
                               'session-type',
                               widget.session.sessionsAbbreviation == 'ss'
-                                  ? 'sprint-shootout'
+                                  ? 'sprint-qualifying'
                                   : 'qualifying',
                             ),
                           )

@@ -133,8 +133,10 @@ class RaceDetailsScreen extends StatelessWidget {
                           children: [
                             TabBar(
                               tabs: <Widget>[
-                                const Tab(
-                                  text: 'SHOOTOUT',
+                                Tab(
+                                  text: AppLocalizations.of(context)!
+                                      .qualifyings
+                                      .toUpperCase(),
                                 ),
                                 Tab(
                                   text: AppLocalizations.of(context)!
@@ -152,8 +154,10 @@ class RaceDetailsScreen extends StatelessWidget {
                                     child: SafeArea(
                                       child: QualificationResultsProvider(
                                         raceUrl:
-                                            'https://www.formula1.com/en/results.html/${DateTime.now().year}/races/${Convert().circuitIdFromErgastToFormulaOne(race.circuitId)}/${Convert().circuitNameFromErgastToFormulaOne(race.circuitId)}/sprint-shootout.html',
+                                            'https://www.formula1.com/en/results.html/${DateTime.now().year}/races/${Convert().circuitIdFromErgastToFormulaOne(race.circuitId)}/${Convert().circuitNameFromErgastToFormulaOne(race.circuitId)}/sprint-qualifying.html',
                                         hasSprint: hasSprint,
+                                        race: race,
+                                        isSprintQualifying: true,
                                       ),
                                     ),
                                   ),
@@ -612,8 +616,6 @@ class _SprintResultsProviderState extends State<SprintResultsProvider> {
 
   @override
   Widget build(BuildContext context) {
-    bool useDarkMode =
-        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     return (widget.race?.sessionDates.isEmpty ?? true) &&
             (widget.raceUrl == null)
         ? Padding(
@@ -622,62 +624,54 @@ class _SprintResultsProviderState extends State<SprintResultsProvider> {
               child: Text(
                 AppLocalizations.of(context)!.dataNotAvailable,
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: useDarkMode ? Colors.white : Colors.black,
-                ),
               ),
             ),
           )
-        : SingleChildScrollView(
-            child: FutureBuilder<List<DriverResult>>(
-              future: widget.raceUrl != null
-                  ? FormulaOneScraper().scrapeRaceResult(
-                      '',
-                      0,
-                      '',
-                      false,
-                      raceUrl: widget.raceUrl!,
-                    )
-                  : getSprintStandings(
-                      widget.race!.round,
-                    ),
-              builder: (context, snapshot) => snapshot.hasError
-                  ? Padding(
-                      padding: const EdgeInsets.all(15),
-                      child: Center(
-                        child: Text(
-                          AppLocalizations.of(context)!.dataNotAvailable,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: useDarkMode ? Colors.white : Colors.black,
-                            fontSize: 15,
-                          ),
+        : FutureBuilder<List<DriverResult>>(
+            future: widget.raceUrl != null
+                ? FormulaOneScraper().scrapeRaceResult(
+                    '',
+                    0,
+                    '',
+                    false,
+                    raceUrl: widget.raceUrl!,
+                  )
+                : getSprintStandings(
+                    widget.race!.round,
+                  ),
+            builder: (context, snapshot) => snapshot.hasError
+                ? Padding(
+                    padding: const EdgeInsets.all(15),
+                    child: Center(
+                      child: Text(
+                        AppLocalizations.of(context)!.dataNotAvailable,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 15,
                         ),
                       ),
-                    )
-                  : snapshot.hasData
-                      ? snapshot.data!.isEmpty
-                          ? SessionCountdownTimer(
-                              widget.race,
-                              2,
-                              AppLocalizations.of(context)!.sprint,
-                              update: _setState,
-                            )
-                          : Column(
+                    ),
+                  )
+                : snapshot.hasData
+                    ? snapshot.data!.isEmpty
+                        ? SessionCountdownTimer(
+                            widget.race,
+                            2,
+                            AppLocalizations.of(context)!.sprint,
+                            update: _setState,
+                          )
+                        : SingleChildScrollView(
+                            child: Column(
                               children: [
                                 GestureDetector(
                                   child: ListTile(
                                     leading: const FaIcon(
                                       FontAwesomeIcons.youtube,
-                                      color: Colors.white,
                                     ),
                                     title: Text(
                                       AppLocalizations.of(context)!
                                           .watchOnYoutube,
                                       textAlign: TextAlign.center,
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                      ),
                                     ),
                                     onTap: () async {
                                       var yt = YoutubeExplode();
@@ -695,16 +689,18 @@ class _SprintResultsProviderState extends State<SprintResultsProvider> {
                                         mode: LaunchMode.externalApplication,
                                       );
                                     },
-                                    tileColor: const Color(0xff383840),
+                                    tileColor: Theme.of(context)
+                                        .colorScheme
+                                        .onSecondary,
                                   ),
                                 ),
                                 RaceDriversResultsList(
                                   snapshot.data!,
                                 ),
                               ],
-                            )
-                      : const LoadingIndicatorUtil(),
-            ),
+                            ),
+                          )
+                    : const LoadingIndicatorUtil(),
           );
   }
 }
@@ -713,13 +709,13 @@ class QualificationResultsProvider extends StatefulWidget {
   final Race? race;
   final String? raceUrl;
   final bool? hasSprint;
-  final bool? isSprintShootout;
+  final bool? isSprintQualifying;
   const QualificationResultsProvider({
     Key? key,
     this.race,
     this.raceUrl,
     this.hasSprint,
-    this.isSprintShootout,
+    this.isSprintQualifying,
   }) : super(key: key);
 
   @override
@@ -770,15 +766,20 @@ class _QualificationResultsProviderState
                     widget.race!.round,
                   ),
             builder: (context, snapshot) => snapshot.hasError
-                ? (widget.race?.sessionDates.isEmpty ?? true) &&
-                        (widget.race?.sessionDates.last.isBefore(
-                              DateTime.now(),
-                            ) ??
+                ? (widget.race?.sessionDates.isNotEmpty ?? false) &&
+                        ((widget.isSprintQualifying ?? false
+                                ? widget.race?.sessionDates[1]
+                                    .isAfter(DateTime.now())
+                                : widget.race?.sessionDates.last.isAfter(
+                                    DateTime.now(),
+                                  )) ??
                             false)
                     ? SessionCountdownTimer(
                         widget.race,
-                        3,
-                        AppLocalizations.of(context)!.qualifyings,
+                        widget.isSprintQualifying ?? false ? 1 : 3,
+                        widget.isSprintQualifying ?? false
+                            ? 'Sprint Qualifying'
+                            : AppLocalizations.of(context)!.qualifyings,
                         update: _setState,
                       )
                     : Padding(
@@ -799,30 +800,55 @@ class _QualificationResultsProviderState
                             snapshot.data!,
                             widget.race,
                             widget.raceUrl,
-                            widget.isSprintShootout,
+                            widget.isSprintQualifying,
                           )
-                        : widget.race!.sessionDates[3].isBefore(DateTime.now())
-                            ? Padding(
-                                padding: const EdgeInsets.all(10),
-                                child: Center(
-                                  child: Text(
-                                    AppLocalizations.of(context)!
-                                        .dataNotAvailable,
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      color: useDarkMode
-                                          ? Colors.white
-                                          : Colors.black,
+                        : widget.isSprintQualifying ?? false
+                            ? widget.race!.sessionDates[1]
+                                    .isBefore(DateTime.now())
+                                ? Padding(
+                                    padding: const EdgeInsets.all(10),
+                                    child: Center(
+                                      child: Text(
+                                        AppLocalizations.of(context)!
+                                            .dataNotAvailable,
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          color: useDarkMode
+                                              ? Colors.white
+                                              : Colors.black,
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                ),
-                              )
-                            : SessionCountdownTimer(
-                                widget.race,
-                                3,
-                                AppLocalizations.of(context)!.qualifyings,
-                                update: _setState,
-                              )
+                                  )
+                                : SessionCountdownTimer(
+                                    widget.race,
+                                    1,
+                                    'Sprint Qualifying',
+                                    update: _setState,
+                                  )
+                            : widget.race!.sessionDates[3]
+                                    .isBefore(DateTime.now())
+                                ? Padding(
+                                    padding: const EdgeInsets.all(10),
+                                    child: Center(
+                                      child: Text(
+                                        AppLocalizations.of(context)!
+                                            .dataNotAvailable,
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          color: useDarkMode
+                                              ? Colors.white
+                                              : Colors.black,
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                : SessionCountdownTimer(
+                                    widget.race,
+                                    3,
+                                    AppLocalizations.of(context)!.qualifyings,
+                                    update: _setState,
+                                  )
                     : const LoadingIndicatorUtil(),
           );
   }

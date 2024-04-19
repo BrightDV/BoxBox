@@ -552,13 +552,13 @@ class QualificationDriversResultsList extends StatelessWidget {
   final List<DriverQualificationResult> items;
   final Race? race;
   final String? raceUrl;
-  final bool? isSprintShootout;
+  final bool? isSprintQualifying;
 
   const QualificationDriversResultsList(
     this.items,
     this.race,
     this.raceUrl,
-    this.isSprintShootout, {
+    this.isSprintQualifying, {
     Key? key,
   }) : super(key: key);
   @override
@@ -594,9 +594,9 @@ class QualificationDriversResultsList extends StatelessWidget {
                   var yt = YoutubeExplode();
                   final raceYear = race?.date.split('-')[0];
                   final List<Video> searchResults = await yt.search.search(
-                    (raceUrl?.contains('sprint-shootout') ?? false) ||
-                            (isSprintShootout ?? false)
-                        ? "Formula 1 Sprint Shootout Highlights ${race!.raceName} $raceYear"
+                    (raceUrl?.contains('sprint-qualifying') ?? false) ||
+                            (isSprintQualifying ?? false)
+                        ? "Formula 1 Sprint Qualifying Highlights ${race!.raceName} $raceYear"
                         : "Formula 1 Qualification Highlights ${race!.raceName} $raceYear",
                   );
                   final Video bestVideoMatch = searchResults[0];

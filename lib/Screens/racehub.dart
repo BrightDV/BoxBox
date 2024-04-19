@@ -552,7 +552,7 @@ class SessionItem extends StatelessWidget {
       'r': AppLocalizations.of(context)!.race,
       'q': AppLocalizations.of(context)!.qualifyings,
       's': AppLocalizations.of(context)!.sprint,
-      'ss': 'Sprint Shootout',
+      'ss': 'Sprint Qualifying',
       'p1': AppLocalizations.of(context)!.freePracticeOne,
       'p2': AppLocalizations.of(context)!.freePracticeTwo,
       'p3': AppLocalizations.of(context)!.freePracticeThree,
