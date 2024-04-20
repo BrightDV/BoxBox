@@ -320,5 +320,11 @@
   "search": "Buscar",
   "@search": {},
   "listen": "Escuchar",
-  "@listen": {}
+  "@listen": {},
+  "pleaseWait": "Por favor, espere…",
+  "@pleaseWait": {},
+  "useOfficialWebview": "Utilice Webview oficial para las sesiones en directo",
+  "@useOfficialWebview": {},
+  "loading": "Cargando",
+  "@loading": {}
 }
