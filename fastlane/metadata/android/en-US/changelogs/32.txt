@@ -1,0 +1,9 @@
+- Add support for the official webview (can be disabled from the settings)
+- Fix Sprint Qualifying results and strings
+- Fix Chinese GP missing data
+- Fix offline news
+- Fix missing times and wrong DNFs in results
+- Improve the Race Hub and the Driver Details UI
+- Add an 'Add to calendaar' button to the Race Hub sessions
+- Add a countdown to the Sprint Qualifying
+- Update translations from Weblate
