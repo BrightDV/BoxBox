@@ -660,45 +660,42 @@ class _SprintResultsProviderState extends State<SprintResultsProvider> {
                             AppLocalizations.of(context)!.sprint,
                             update: _setState,
                           )
-                        : SingleChildScrollView(
-                            child: Column(
-                              children: [
-                                GestureDetector(
-                                  child: ListTile(
-                                    leading: const FaIcon(
-                                      FontAwesomeIcons.youtube,
-                                    ),
-                                    title: Text(
-                                      AppLocalizations.of(context)!
-                                          .watchOnYoutube,
-                                      textAlign: TextAlign.center,
-                                    ),
-                                    onTap: () async {
-                                      var yt = YoutubeExplode();
-                                      final raceYear =
-                                          widget.race!.date.split('-')[0];
-                                      final List<Video> searchResults =
-                                          await yt.search.search(
-                                        "Formula 1 Sprint Highlights ${widget.race!.raceName} $raceYear",
-                                      );
-                                      final Video bestVideoMatch =
-                                          searchResults[0];
-                                      await launchUrl(
-                                        Uri.parse(
-                                            "https://youtube.com/watch?v=${bestVideoMatch.id.value}"),
-                                        mode: LaunchMode.externalApplication,
-                                      );
-                                    },
-                                    tileColor: Theme.of(context)
-                                        .colorScheme
-                                        .onSecondary,
+                        : Column(
+                            children: [
+                              GestureDetector(
+                                child: ListTile(
+                                  leading: const FaIcon(
+                                    FontAwesomeIcons.youtube,
                                   ),
+                                  title: Text(
+                                    AppLocalizations.of(context)!
+                                        .watchOnYoutube,
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  onTap: () async {
+                                    var yt = YoutubeExplode();
+                                    final raceYear =
+                                        widget.race!.date.split('-')[0];
+                                    final List<Video> searchResults =
+                                        await yt.search.search(
+                                      "Formula 1 Sprint Highlights ${widget.race!.raceName} $raceYear",
+                                    );
+                                    final Video bestVideoMatch =
+                                        searchResults[0];
+                                    await launchUrl(
+                                      Uri.parse(
+                                          "https://youtube.com/watch?v=${bestVideoMatch.id.value}"),
+                                      mode: LaunchMode.externalApplication,
+                                    );
+                                  },
+                                  tileColor:
+                                      Theme.of(context).colorScheme.onSecondary,
                                 ),
-                                RaceDriversResultsList(
-                                  snapshot.data!,
-                                ),
-                              ],
-                            ),
+                              ),
+                              RaceDriversResultsList(
+                                snapshot.data!,
+                              ),
+                            ],
                           )
                     : const LoadingIndicatorUtil(),
           );

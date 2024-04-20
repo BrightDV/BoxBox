@@ -112,7 +112,7 @@ class _ErgastApiCalls {
     if ((responseAsJson['MRData']['RaceTable']['Races'].isEmpty) ||
         (responseAsJson['MRData']['RaceTable']['Races'][0]['SprintResults'] ==
             null)) {
-      return [];
+      throw Exception;
     } else {
       List jsonResponse =
           responseAsJson['MRData']['RaceTable']['Races'][0]['SprintResults'];
