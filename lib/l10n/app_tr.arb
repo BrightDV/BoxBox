@@ -318,5 +318,11 @@
   "search": "Ara",
   "@search": {},
   "listen": "Dinle",
-  "@listen": {}
+  "@listen": {},
+  "loading": "Yükleniyor",
+  "@loading": {},
+  "pleaseWait": "Lütfen bekleyin...",
+  "@pleaseWait": {},
+  "useOfficialWebview": "Canlı oturumlar için resmi web görünümünü kullan",
+  "@useOfficialWebview": {}
 }

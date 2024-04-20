@@ -320,5 +320,11 @@
   "search": "ਖੋਜ ਕਰੋ",
   "@search": {},
   "listen": "ਸੁਣੋ",
-  "@listen": {}
+  "@listen": {},
+  "pleaseWait": "ਕ੍ਰਿਪਾ ਕਰਕੇ ਉਡੀਕ ਕਰੋ...",
+  "@pleaseWait": {},
+  "useOfficialWebview": "ਲਾਈਵ ਸੈਸ਼ਨਾਂ ਲਈ ਅਧਿਕਾਰਤ ਵੈਬਵਿਊ ਦੀ ਵਰਤੋਂ ਕਰੋ",
+  "@useOfficialWebview": {},
+  "loading": "ਲੋਡ ਹੋ ਰਿਹਾ ਹੈ",
+  "@loading": {}
 }
