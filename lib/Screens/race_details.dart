@@ -389,6 +389,7 @@ class RaceResultsProvider extends StatefulWidget {
 }
 
 class _RaceResultsProviderState extends State<RaceResultsProvider> {
+  // TODO: add lastSavedRequestFormat check
   Future<List<DriverResult>> getRaceStandingsFromErgast(String round) async {
     return await ErgastApi().getRaceStandings(round);
   }

@@ -20,6 +20,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:boxbox/api/driver_components.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
 
@@ -220,6 +221,291 @@ class Formula1 {
     Hive.box('requests').put('loginCookieLatestQuery', DateTime.now());
 
     return true;
+  }
+
+  List<DriverResult> formatRaceStandings(Map raceStandings) {
+    List<DriverResult> formatedRaceStandings = [];
+    List jsonResponse = raceStandings['raceResultsRace']['results'];
+    String time;
+    String fastestLapDriverName = "";
+    String fastestLapTime = "";
+    for (var award in raceStandings["raceResultsRace"]["awards"]) {
+      // find fastest_lap award, as its index may not be static
+      if (award['type'].toLowerCase() == 'fastest_lap') {
+        fastestLapDriverName = award['winnerName'];
+        fastestLapTime = award['winnerTime'];
+        break;
+      }
+    }
+    for (var element in jsonResponse) {
+      if (element['completionStatusCode'] != 'OK') {
+        // DNF (maybe DSQ?)
+        time = element['completionStatusCode'];
+      } else if (element['lapsBehindLeader'] != null) {
+        // finished & lapped cars
+        if (element['lapsBehindLeader'] == "1") {
+          // one
+          time = "+1 Lap";
+        } else {
+          // more laps
+          time = "+${element['lapsBehindLeader']} Laps";
+        }
+      } else {
+        // finished & non-lapped cars
+        if (element['positionNumber'] == "1") {
+          //first
+          time = element["raceTime"];
+        } else {
+          time = element["gapToLeader"];
+        }
+      }
+
+      String fastestLapRank = "0";
+      if (element['driverLastName'].toLowerCase() == fastestLapDriverName) {
+        fastestLapRank = "1";
+      }
+      formatedRaceStandings.add(
+        DriverResult(
+          // TODO: find another driverId?
+          '', //element['Driver']['driverId'],
+          element['positionNumber'],
+          element['racingNumber'],
+          element['driverFirstName'],
+          element['driverLastName'],
+          element['driverTLA'],
+          // TODO: another teamNameId?
+          element['teamName'],
+          time,
+          fastestLapRank != '0' ? true : false,
+          fastestLapRank != '0' ? fastestLapTime : "",
+          "", // data not available
+          // TODO: new UI when lapsDone missing for race results
+          //lapsDone: element['laps'],
+          points: element['racePoints'].toString(),
+          status: element['completionStatusCode'],
+        ),
+      );
+    }
+    return formatedRaceStandings;
+  }
+
+  FutureOr<List<DriverResult>> getRaceStandings(
+      String meetingId, String round) async {
+    Map results = Hive.box('requests').get('race-$round', defaultValue: {});
+    DateTime latestQuery = Hive.box('requests').get(
+      'race-$round-latestQuery',
+      defaultValue: DateTime.now(),
+    ) as DateTime;
+    if (latestQuery
+            .add(
+              const Duration(minutes: 10),
+            )
+            .isAfter(DateTime.now()) &&
+        results.isNotEmpty) {
+      return formatRaceStandings(results);
+    } else {
+      var url = Uri.parse(
+        'https://api.formula1.com/v1/fom-results/race?meeting=$meetingId',
+      );
+      var response = await http.get(url);
+      Map<String, dynamic> responseAsJson = jsonDecode(response.body);
+      Hive.box('requests').put('lastSavedRequestFormat', 'f1');
+      Hive.box('requests').put('race-$round', responseAsJson);
+      Hive.box('requests').put(
+        'race-$round-latestQuery',
+        DateTime.now(),
+      );
+      List<DriverResult> driversResults = formatRaceStandings(responseAsJson);
+      return driversResults;
+    }
+  }
+
+  FutureOr<List<DriverQualificationResult>> getQualificationStandings(
+      String meetingId) async {
+    List<DriverQualificationResult> driversResults = [];
+    var url = Uri.parse(
+      'https://api.formula1.com/v1/fom-results/qualifying?meeting=$meetingId',
+    );
+    var response = await http.get(url);
+    Map<String, dynamic> responseAsJson = jsonDecode(response.body);
+    if (responseAsJson['raceResultsQualifying']['state'] != 'completed') {
+      return [];
+    } else {
+      List finalJson = responseAsJson['raceResultsQualifying']['results'];
+      for (var element in finalJson) {
+        driversResults.add(
+          DriverQualificationResult(
+            '',
+            element['positionNumber'],
+            element['racingNumber'],
+            element['driverFirstName'],
+            element['driverLastName'],
+            element['driverTLA'],
+            // TODO: another teamNameId? / converter?
+            element['teamName'],
+            element['q1']['completionStatusCode'] != 'OK'
+                ? element['q1']['completionStatusCode']
+                : element['q1']['classifiedTime'],
+            element['q2'] == null
+                ? '--'
+                : element['q2']['completionStatusCode'] != 'OK'
+                    ? element['q2']['completionStatusCode']
+                    : element['q2']['classifiedTime'],
+            element['q3'] == null
+                ? '--'
+                : element['q3']['completionStatusCode'] != 'OK'
+                    ? element['q3']['completionStatusCode']
+                    : element['q3']['classifiedTime'],
+          ),
+        );
+      }
+
+      return driversResults;
+    }
+  }
+
+  FutureOr<List<DriverResult>> getFreePracticeStandings(
+      String meetingId, String session) async {
+    List<DriverResult> driversResults = [];
+    var url = Uri.parse(
+      'https://api.formula1.com/v1/fom-results/practice?meeting=$meetingId&session=$session',
+    );
+    var response = await http.get(url);
+    Map<String, dynamic> responseAsJson = jsonDecode(response.body);
+    if (responseAsJson['raceResultsPractice$session']['state'] != 'completed') {
+      return [];
+    } else {
+      List finalJson = responseAsJson['raceResultsPractice$session']['results'];
+      for (var element in finalJson) {
+        driversResults.add(
+          DriverResult(
+            // TODO: find another driverId?
+            '',
+            element['positionNumber'],
+            element['racingNumber'],
+            element['driverFirstName'],
+            element['driverLastName'],
+            element['driverTLA'],
+            // TODO: another teamNameId?
+            element['teamName'],
+            element['classifiedTime'],
+            false,
+            element['gapToLeader'],
+            element['gapToLeader'],
+            lapsDone: element['lapsCompleted'],
+            points: element['racePoints'].toString(),
+            status: element['completionStatusCode'],
+          ),
+        );
+      }
+
+      return driversResults;
+    }
+  }
+
+  FutureOr<List<DriverQualificationResult>> getSprintQualifyingStandings(
+      String meetingId) async {
+    List<DriverQualificationResult> driversResults = [];
+    var url = Uri.parse(
+      'https://api.formula1.com/v1/fom-results/sprint-shootout?meeting=$meetingId',
+    );
+    var response = await http.get(url);
+    Map<String, dynamic> responseAsJson = jsonDecode(response.body);
+    if (responseAsJson['raceResultsSprintShootout']['state'] != 'completed') {
+      return [];
+    } else {
+      List finalJson = responseAsJson['raceResultsSprintShootout']['results'];
+      for (var element in finalJson) {
+        driversResults.add(
+          DriverQualificationResult(
+            '',
+            element['positionNumber'],
+            element['racingNumber'],
+            element['driverFirstName'],
+            element['driverLastName'],
+            element['driverTLA'],
+            // TODO: another teamNameId? / converter?
+            element['teamName'],
+            element['q1']['completionStatusCode'] != 'OK'
+                ? element['q1']['completionStatusCode']
+                : element['q1']['classifiedTime'],
+            element['q2'] == null
+                ? '--'
+                : element['q2']['completionStatusCode'] != 'OK'
+                    ? element['q2']['completionStatusCode']
+                    : element['q2']['classifiedTime'],
+            element['q3'] == null
+                ? '--'
+                : element['q3']['completionStatusCode'] != 'OK'
+                    ? element['q3']['completionStatusCode']
+                    : element['q3']['classifiedTime'],
+          ),
+        );
+      }
+
+      return driversResults;
+    }
+  }
+
+  FutureOr<List<DriverResult>> getSprintStandings(
+      String meetingId, String session) async {
+    List<DriverResult> driversResults = [];
+    String time;
+    var url = Uri.parse(
+      'https://api.formula1.com/v1/fom-results/sprint?meeting=$meetingId',
+    );
+    var response = await http.get(url);
+    Map<String, dynamic> responseAsJson = jsonDecode(response.body);
+    if (responseAsJson['raceResultsSprint']['state'] != 'completed') {
+      return [];
+    } else {
+      List finalJson = responseAsJson['raceResultsSprint']['results'];
+      for (var element in finalJson) {
+        if (element['completionStatusCode'] != 'OK') {
+          // DNF (maybe DSQ?)
+          time = element['completionStatusCode'];
+        } else if (element['lapsBehindLeader'] != null) {
+          // finished & lapped cars
+          if (element['lapsBehindLeader'] == "1") {
+            // one
+            time = "+1 Lap";
+          } else {
+            // more laps
+            time = "+${element['lapsBehindLeader']} Laps";
+          }
+        } else {
+          // finished & non-lapped cars
+          if (element['positionNumber'] == "1") {
+            //first
+            time = element["raceTime"];
+          } else {
+            time = element["gapToLeader"];
+          }
+        }
+        driversResults.add(
+          DriverResult(
+            // TODO: find another driverId?
+            '',
+            element['positionNumber'],
+            element['racingNumber'],
+            element['driverFirstName'],
+            element['driverLastName'],
+            element['driverTLA'],
+            // TODO: another teamNameId?
+            element['teamName'],
+            element['sprintQualifyingTime'],
+            false,
+            time,
+            time,
+            lapsDone: element['lapsCompleted'],
+            points: element['racePoints'].toString(),
+            status: element['completionStatusCode'],
+          ),
+        );
+      }
+
+      return driversResults;
+    }
   }
 }
 
