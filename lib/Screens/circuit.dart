@@ -356,9 +356,11 @@ class CircuitScreen extends StatelessWidget {
                                                   Expanded(
                                                     flex: 6,
                                                     child: Text(
-                                                      driverResults[
-                                                                  'gapToLeader'] !=
-                                                              "0.0"
+                                                      driverResults['gapToLeader'] !=
+                                                                  "0.0" &&
+                                                              driverResults[
+                                                                      'gapToLeader'] !=
+                                                                  "0"
                                                           ? '+${driverResults['gapToLeader']}'
                                                           : driverResults[
                                                               'raceTime'],
@@ -979,9 +981,10 @@ class CircuitScreen extends StatelessWidget {
                                                               Expanded(
                                                                 flex: 6,
                                                                 child: Text(
-                                                                  driverResults[
-                                                                              'gapToLeader'] !=
-                                                                          "0.0"
+                                                                  driverResults['gapToLeader'] !=
+                                                                              "0.0" &&
+                                                                          driverResults['gapToLeader'] !=
+                                                                              "0"
                                                                       ? '+${driverResults['gapToLeader']}'
                                                                       : driverResults[
                                                                           'raceTime'],
