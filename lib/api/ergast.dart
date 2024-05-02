@@ -428,25 +428,26 @@ class _ErgastApiCalls {
             raceId: race['Circuit']['circuitId'],
             raceName: race['raceName'],
           ),
-          DriverResult(
-            race['Results'][1]['Driver']['driverId'],
-            race['Results'][1]['position'],
-            race['Results'][1]['number'],
-            race['Results'][1]['Driver']['givenName'],
-            race['Results'][1]['Driver']['familyName'],
-            race['Results'][1]['Driver']['code'],
-            race['Results'][1]['Constructor']['constructorId'],
-            race['Results'][1]['Time']?['time'] ?? 'DNF',
-            int.parse(race['Results'][1]['FastestLap']?['rank'] ?? '20') == 1
-                ? true
-                : false,
-            race['Results'][1]['FastestLap']?['Time']['time'] ?? '00:00:00',
-            race['Results'][1]['FastestLap']?['rank'] ?? '20',
-            lapsDone: race['Results'][1]['laps'],
-            points: race['Results'][1]['points'],
-            raceId: race['Circuit']['circuitId'],
-            raceName: race['raceName'],
-          ),
+          if (race['Results'].length > 1)
+            DriverResult(
+              race['Results'][1]['Driver']['driverId'],
+              race['Results'][1]['position'],
+              race['Results'][1]['number'],
+              race['Results'][1]['Driver']['givenName'],
+              race['Results'][1]['Driver']['familyName'],
+              race['Results'][1]['Driver']['code'],
+              race['Results'][1]['Constructor']['constructorId'],
+              race['Results'][1]['Time']?['time'] ?? 'DNF',
+              int.parse(race['Results'][1]['FastestLap']?['rank'] ?? '20') == 1
+                  ? true
+                  : false,
+              race['Results'][1]['FastestLap']?['Time']['time'] ?? '00:00:00',
+              race['Results'][1]['FastestLap']?['rank'] ?? '20',
+              lapsDone: race['Results'][1]['laps'],
+              points: race['Results'][1]['points'],
+              raceId: race['Circuit']['circuitId'],
+              raceName: race['raceName'],
+            ),
         ],
       );
     }
