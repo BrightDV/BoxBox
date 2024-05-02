@@ -964,7 +964,7 @@ class _NewsListState extends State<NewsList> {
                   scrollDirection: Axis.vertical,
                   shrinkWrap: true,
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: width < 750 ? 2 : 3,
+                    crossAxisCount: width < 850 ? 2 : 3,
                     crossAxisSpacing: 5.0,
                     mainAxisSpacing: 5.0,
                   ),
