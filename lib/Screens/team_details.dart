@@ -462,10 +462,10 @@ class TeamResults extends StatelessWidget {
                               5,
                             ),
                             if (snapshot.data![index - 1].length > 1)
-                            DriverResultItem(
-                              snapshot.data![index - 1][1],
-                              5,
-                            ),
+                              DriverResultItem(
+                                snapshot.data![index - 1][1],
+                                5,
+                              ),
                           ],
                         ),
                 )

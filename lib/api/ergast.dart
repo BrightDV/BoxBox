@@ -417,7 +417,10 @@ class _ErgastApiCalls {
             race['Results'][0]['Driver']['familyName'],
             race['Results'][0]['Driver']['code'],
             race['Results'][0]['Constructor']['constructorId'],
-            race['Results'][0]['Time']?['time'] ?? 'DNF',
+            race['Results'][0]['positionText'] == 'R'
+                ? 'DNF'
+                : race['Results'][0]['Time']?['time'] ??
+                    race['Results'][0]['status'],
             int.parse(race['Results'][0]['FastestLap']?['rank'] ?? '20') == 1
                 ? true
                 : false,
@@ -427,6 +430,7 @@ class _ErgastApiCalls {
             points: race['Results'][0]['points'],
             raceId: race['Circuit']['circuitId'],
             raceName: race['raceName'],
+            status: race['Results'][0]['status'],
           ),
           if (race['Results'].length > 1)
             DriverResult(
@@ -437,7 +441,10 @@ class _ErgastApiCalls {
               race['Results'][1]['Driver']['familyName'],
               race['Results'][1]['Driver']['code'],
               race['Results'][1]['Constructor']['constructorId'],
-              race['Results'][1]['Time']?['time'] ?? 'DNF',
+              race['Results'][1]['positionText'] == 'R'
+                  ? 'DNF'
+                  : race['Results'][1]['Time']?['time'] ??
+                      race['Results'][1]['status'],
               int.parse(race['Results'][1]['FastestLap']?['rank'] ?? '20') == 1
                   ? true
                   : false,
@@ -447,6 +454,7 @@ class _ErgastApiCalls {
               points: race['Results'][1]['points'],
               raceId: race['Circuit']['circuitId'],
               raceName: race['raceName'],
+              status: race['Results'][1]['status'],
             ),
         ],
       );
