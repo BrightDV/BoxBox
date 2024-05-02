@@ -449,6 +449,8 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
         update: _setState,
       );
     } else {
+      String lastSavedRequestFormat = Hive.box('requests')
+          .get('lastSavedRequestFormat', defaultValue: 'ergast');
       return raceUrl != ''
           ? FutureBuilder<List<DriverResult>>(
               future: getRaceStandingsFromF1(raceUrl),
@@ -504,8 +506,10 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
           : FutureBuilder<List<DriverResult>>(
               future: getRaceStandingsFromApi(race),
               builder: (context, snapshot) => snapshot.hasError
-                  // TODO: check last request format
-                  ? savedData['MRData'] != null
+                  ? savedData[lastSavedRequestFormat == 'ergast'
+                              ? 'MRData'
+                              : 'raceResultsRace'] !=
+                          null
                       ? SingleChildScrollView(
                           child: Column(
                             children: [
@@ -571,8 +575,10 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
                             ],
                           ),
                         )
-                      : //TODO: check last request format
-                      savedData['MRData'] != null
+                      : savedData[lastSavedRequestFormat == 'ergast'
+                                  ? 'MRData'
+                                  : 'raceResultsRace'] !=
+                              null
                           ? SingleChildScrollView(
                               child: Column(
                                 children: [
@@ -588,7 +594,11 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
                                     onTap: () async {},
                                   ),
                                   RaceDriversResultsList(
-                                    ErgastApi().formatRaceStandings(savedData),
+                                    lastSavedRequestFormat == 'ergast'
+                                        ? ErgastApi()
+                                            .formatRaceStandings(savedData)
+                                        : Formula1()
+                                            .formatRaceStandings(savedData),
                                   ),
                                 ],
                               ),

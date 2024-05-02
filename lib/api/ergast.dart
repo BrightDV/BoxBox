@@ -94,13 +94,14 @@ class _ErgastApiCalls {
       );
       var response = await http.get(url);
       Map<String, dynamic> responseAsJson = jsonDecode(response.body);
+
+      List<DriverResult> driversResults = formatRaceStandings(responseAsJson);
       Hive.box('requests').put('lastSavedRequestFormat', 'ergast');
       Hive.box('requests').put('race-$round', responseAsJson);
       Hive.box('requests').put(
         'race-$round-latestQuery',
         DateTime.now(),
       );
-      List<DriverResult> driversResults = formatRaceStandings(responseAsJson);
       return driversResults;
     }
   }
