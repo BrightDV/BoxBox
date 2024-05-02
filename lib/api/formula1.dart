@@ -21,6 +21,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:boxbox/api/driver_components.dart';
+import 'package:boxbox/helpers/convert_ergast_and_formula_one.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
 
@@ -241,9 +242,13 @@ class Formula1 {
       if (element['completionStatusCode'] != 'OK') {
         // DNF (maybe DSQ?)
         time = element['completionStatusCode'];
+      } else if (element['positionNumber'] == '1') {
+        time = element['raceTime'];
       } else if (element['lapsBehindLeader'] != null) {
         // finished & lapped cars
-        if (element['lapsBehindLeader'] == "1") {
+        if (element['lapsBehindLeader'] == "0") {
+          time = "+" + element['gapToLeader'];
+        } else if (element['lapsBehindLeader'] == "1") {
           // one
           time = "+1 Lap";
         } else {
@@ -273,13 +278,12 @@ class Formula1 {
           element['driverFirstName'],
           element['driverLastName'],
           element['driverTLA'],
-          // TODO: another teamNameId?
-          element['teamName'],
+          Convert().teamsFromFormulaOneApiToErgast(element['teamName']),
           time,
           fastestLapRank != '0' ? true : false,
           fastestLapRank != '0' ? fastestLapTime : "",
           "", // data not available
-          // TODO: new UI when lapsDone missing for race results
+          // TODO: new UI when lapsDone missing for race results, gap to previous instead?
           //lapsDone: element['laps'],
           points: element['racePoints'].toString(),
           status: element['completionStatusCode'],
@@ -298,7 +302,7 @@ class Formula1 {
     ) as DateTime;
     if (latestQuery
             .add(
-              const Duration(minutes: 10),
+              const Duration(minutes: 5),
             )
             .isAfter(DateTime.now()) &&
         results.isNotEmpty) {
@@ -307,15 +311,23 @@ class Formula1 {
       var url = Uri.parse(
         'https://api.formula1.com/v1/fom-results/race?meeting=$meetingId',
       );
-      var response = await http.get(url);
+      var response = await http.get(
+        url,
+        headers: {
+          "Accept": "application/json",
+          "apikey": apikey,
+          "locale": "en",
+        },
+      );
       Map<String, dynamic> responseAsJson = jsonDecode(response.body);
+      List<DriverResult> driversResults = formatRaceStandings(responseAsJson);
       Hive.box('requests').put('lastSavedRequestFormat', 'f1');
       Hive.box('requests').put('race-$round', responseAsJson);
       Hive.box('requests').put(
         'race-$round-latestQuery',
         DateTime.now(),
       );
-      List<DriverResult> driversResults = formatRaceStandings(responseAsJson);
+
       return driversResults;
     }
   }
@@ -326,7 +338,14 @@ class Formula1 {
     var url = Uri.parse(
       'https://api.formula1.com/v1/fom-results/qualifying?meeting=$meetingId',
     );
-    var response = await http.get(url);
+    var response = await http.get(
+      url,
+      headers: {
+        "Accept": "application/json",
+        "apikey": apikey,
+        "locale": "en",
+      },
+    );
     Map<String, dynamic> responseAsJson = jsonDecode(response.body);
     if (responseAsJson['raceResultsQualifying']['state'] != 'completed') {
       return [];
@@ -370,7 +389,14 @@ class Formula1 {
     var url = Uri.parse(
       'https://api.formula1.com/v1/fom-results/practice?meeting=$meetingId&session=$session',
     );
-    var response = await http.get(url);
+    var response = await http.get(
+      url,
+      headers: {
+        "Accept": "application/json",
+        "apikey": apikey,
+        "locale": "en",
+      },
+    );
     Map<String, dynamic> responseAsJson = jsonDecode(response.body);
     if (responseAsJson['raceResultsPractice$session']['state'] != 'completed') {
       return [];
@@ -409,7 +435,14 @@ class Formula1 {
     var url = Uri.parse(
       'https://api.formula1.com/v1/fom-results/sprint-shootout?meeting=$meetingId',
     );
-    var response = await http.get(url);
+    var response = await http.get(
+      url,
+      headers: {
+        "Accept": "application/json",
+        "apikey": apikey,
+        "locale": "en",
+      },
+    );
     Map<String, dynamic> responseAsJson = jsonDecode(response.body);
     if (responseAsJson['raceResultsSprintShootout']['state'] != 'completed') {
       return [];
@@ -454,7 +487,14 @@ class Formula1 {
     var url = Uri.parse(
       'https://api.formula1.com/v1/fom-results/sprint?meeting=$meetingId',
     );
-    var response = await http.get(url);
+    var response = await http.get(
+      url,
+      headers: {
+        "Accept": "application/json",
+        "apikey": apikey,
+        "locale": "en",
+      },
+    );
     Map<String, dynamic> responseAsJson = jsonDecode(response.body);
     if (responseAsJson['raceResultsSprint']['state'] != 'completed') {
       return [];

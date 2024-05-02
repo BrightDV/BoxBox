@@ -45,6 +45,23 @@ class Convert {
     return formulaOneToErgast[teamName] ?? 'none';
   }
 
+  String teamsFromFormulaOneApiToErgast(String teamName) {
+    // TODO: merge both functions into one by checking if name in string instead of exact match
+    Map formulaOneToErgast = {
+      'Red Bull Racing': 'red_bull',
+      'Ferrari': 'ferrari',
+      'Mercedes': 'mercedes',
+      'Alpine': 'alpine',
+      'McLaren': 'mclaren',
+      'RB': 'rb',
+      'Aston Martin': 'aston_martin',
+      'Williams': 'williams',
+      'Kick Sauber': 'sauber',
+      'Haas F1 Team': 'haas',
+    };
+    return formulaOneToErgast[teamName] ?? 'none';
+  }
+
   String teamsFromErgastToFormulaOne(String teamName) {
     Map formulaOneToErgast = {
       'red_bull': 'Red-Bull-Racing',

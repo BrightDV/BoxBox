@@ -23,6 +23,7 @@ import 'dart:convert';
 import 'package:boxbox/api/driver_components.dart';
 import 'package:boxbox/api/race_components.dart';
 import 'package:boxbox/api/team_components.dart';
+import 'package:boxbox/helpers/convert_ergast_and_formula_one.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
 
@@ -297,6 +298,9 @@ class _ErgastApiCalls {
           races.add(
             Race(
               element['round'],
+              Convert().circuitIdFromErgastToFormulaOne(
+                element['Circuit']['circuitId'],
+              ),
               element['raceName'],
               element['date'],
               element['time'] ?? '15:00:00Z', // temporary time
@@ -344,6 +348,9 @@ class _ErgastApiCalls {
           races.add(
             Race(
               element['round'],
+              Convert().circuitIdFromErgastToFormulaOne(
+                element['Circuit']['circuitId'],
+              ),
               element['raceName'],
               element['date'],
               element['time'],
@@ -483,7 +490,8 @@ class _ErgastApiCalls {
 
   Future<Race> getRaceDetails(String round) async {
     var url = Uri.parse(
-        'https://ergast.com/api/f1/${DateTime.now().year}/$round.json');
+      'https://ergast.com/api/f1/${DateTime.now().year}/$round.json',
+    );
     var response = await http.get(url);
     Map<String, dynamic> responseAsJson =
         jsonDecode(response.body)['MRData']['RaceTable']['Races'][0];
@@ -510,9 +518,11 @@ class _ErgastApiCalls {
       );
       raceDates.add(raceDate);
     }
-    print(raceDates);
     Race race = Race(
       responseAsJson['round'],
+      Convert().circuitIdFromErgastToFormulaOne(
+        responseAsJson['Circuit']['circuitId'],
+      ),
       responseAsJson['raceName'],
       responseAsJson['date'],
       responseAsJson['time'],

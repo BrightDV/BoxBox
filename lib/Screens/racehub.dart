@@ -273,6 +273,7 @@ class RaceHubScreen extends StatelessWidget {
                                                 '',
                                                 '',
                                                 '',
+                                                '',
                                                 event.circuitImage
                                                     .split('/')
                                                     .last
@@ -412,6 +413,7 @@ class RaceHubScreen extends StatelessWidget {
                               builder: (context) => CircuitScreen(
                                 Race(
                                   '0',
+                                  '',
                                   '',
                                   '',
                                   '',

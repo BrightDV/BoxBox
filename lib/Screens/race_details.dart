@@ -23,6 +23,7 @@ import 'package:add_2_calendar/add_2_calendar.dart';
 import 'package:boxbox/Screens/FormulaYou/settings.dart';
 import 'package:boxbox/api/driver_components.dart';
 import 'package:boxbox/api/ergast.dart';
+import 'package:boxbox/api/formula1.dart';
 import 'package:boxbox/api/race_components.dart';
 import 'package:boxbox/helpers/convert_ergast_and_formula_one.dart';
 import 'package:boxbox/helpers/driver_result_item.dart';
@@ -390,11 +391,18 @@ class RaceResultsProvider extends StatefulWidget {
 
 class _RaceResultsProviderState extends State<RaceResultsProvider> {
   // TODO: add lastSavedRequestFormat check
-  Future<List<DriverResult>> getRaceStandingsFromErgast(String round) async {
-    return await ErgastApi().getRaceStandings(round);
+  Future<List<DriverResult>> getRaceStandingsFromApi(Race race) async {
+    bool useOfficialDataSoure = Hive.box('settings')
+        .get('useOfficialDataSoure', defaultValue: false) as bool;
+    if (useOfficialDataSoure) {
+      return await Formula1().getRaceStandings(race.meetingId, race.round);
+    } else {
+      return await ErgastApi().getRaceStandings(race.round);
+    }
   }
 
   Future<List<DriverResult>> getRaceStandingsFromF1(String raceUrl) async {
+    // TODO: prefer api instead of scraping?
     return await FormulaOneScraper().scrapeRaceResult(
       '',
       0,
@@ -494,8 +502,9 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
                     : const LoadingIndicatorUtil();
               })
           : FutureBuilder<List<DriverResult>>(
-              future: getRaceStandingsFromErgast(race.round),
+              future: getRaceStandingsFromApi(race),
               builder: (context, snapshot) => snapshot.hasError
+                  // TODO: check last request format
                   ? savedData['MRData'] != null
                       ? SingleChildScrollView(
                           child: Column(
@@ -562,7 +571,8 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
                             ],
                           ),
                         )
-                      : savedData['MRData'] != null
+                      : //TODO: check last request format
+                      savedData['MRData'] != null
                           ? SingleChildScrollView(
                               child: Column(
                                 children: [

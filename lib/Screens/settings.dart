@@ -551,6 +551,8 @@ class _OtherCardstate extends State<OtherCard> {
         .get('useDataSaverMode', defaultValue: false) as bool;
     bool useOfficialWebview = Hive.box('settings')
         .get('useOfficialWebview', defaultValue: true) as bool;
+    bool useOfficialDataSoure = Hive.box('settings')
+        .get('useOfficialDataSoure', defaultValue: false) as bool;
     bool enableExperimentalFeatures = Hive.box('settings')
         .get('enableExperimentalFeatures', defaultValue: false) as bool;
 
@@ -638,6 +640,21 @@ class _OtherCardstate extends State<OtherCard> {
                   Hive.box('settings').put('playerQuality', 720);
                 }
               });
+            },
+          ),
+          SwitchListTile(
+            title: Text(
+              // TODO: proper explanation / screen for fine-tuning?
+              'Use official data source',
+            ),
+            value: useOfficialDataSoure,
+            onChanged: (bool value) {
+              setState(
+                () {
+                  useOfficialDataSoure = value;
+                  Hive.box('settings').put('useOfficialDataSoure', value);
+                },
+              );
             },
           ),
           SwitchListTile(

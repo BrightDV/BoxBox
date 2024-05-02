@@ -85,7 +85,7 @@ class DriverResultItem extends StatelessWidget {
               Expanded(
                 flex: 2,
                 child: Text(
-                  item.position,
+                  item.position == '666' ? 'DNF' : item.position,
                   style: const TextStyle(
                     fontWeight: FontWeight.w600,
                   ),
@@ -198,7 +198,7 @@ class DriverResultItem extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.only(top: 5, bottom: 5),
                       child: Text(
-                        item.lapsDone!,
+                        item.lapsDone ?? 'NA',
                         textAlign: TextAlign.center,
                       ),
                     ),

@@ -29,6 +29,7 @@ import 'package:intl/intl.dart';
 
 class Race {
   final String round;
+  final String meetingId;
   final String raceName;
   final String date;
   final String raceHour;
@@ -41,6 +42,7 @@ class Race {
 
   Race(
     this.round,
+    this.meetingId,
     this.raceName,
     this.date,
     this.raceHour,
