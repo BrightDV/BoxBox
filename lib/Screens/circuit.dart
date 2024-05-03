@@ -140,7 +140,7 @@ class CircuitScreen extends StatelessWidget {
                                     builder: (context) => RaceDetailsScreen(
                                       race,
                                       snapshot.data!['meetingContext']
-                                              ['timetables'][1]['session'] ==
+                                              ['timetables'][2]['session'] ==
                                           's',
                                     ),
                                   ),
@@ -405,7 +405,7 @@ class CircuitScreen extends StatelessWidget {
                                                                       [
                                                                       'timetables']
                                                                   [
-                                                                  1]['session'] ==
+                                                                  2]['session'] ==
                                                               's',
                                                           tab: 10,
                                                         ),
@@ -745,7 +745,7 @@ class CircuitScreen extends StatelessWidget {
                                                     RaceDetailsScreen(
                                                   circuitSnapshot.data!,
                                                   snapshot.data!['meetingContext']
-                                                              ['timetables'][1]
+                                                              ['timetables'][2]
                                                           ['session'] ==
                                                       's',
                                                 ),
@@ -1038,7 +1038,7 @@ class CircuitScreen extends StatelessWidget {
                                                                             RaceDetailsScreen(
                                                                       circuitSnapshot
                                                                           .data!,
-                                                                      snapshot.data!['meetingContext']['timetables'][1]
+                                                                      snapshot.data!['meetingContext']['timetables'][2]
                                                                               [
                                                                               'session'] ==
                                                                           's',
