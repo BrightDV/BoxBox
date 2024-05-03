@@ -337,7 +337,6 @@ class DriverDetailsFragment extends StatelessWidget {
                         driverInfosLabels[i],
                         textAlign: TextAlign.start,
                         style: TextStyle(
-                          color: useDarkMode ? Colors.white : Colors.black,
                           fontSize: 14,
                         ),
                       ),
@@ -347,9 +346,6 @@ class DriverDetailsFragment extends StatelessWidget {
                       child: Text(
                         driverDetails[0][i],
                         textAlign: TextAlign.start,
-                        style: TextStyle(
-                          color: useDarkMode ? Colors.white : Colors.black,
-                        ),
                       ),
                     ),
                   ],
@@ -362,7 +358,6 @@ class DriverDetailsFragment extends StatelessWidget {
             Text(
               AppLocalizations.of(context)!.news,
               style: TextStyle(
-                color: useDarkMode ? Colors.white : Colors.black,
                 fontSize: 18,
               ),
             ),
@@ -425,23 +420,19 @@ class DriverDetailsFragment extends StatelessWidget {
               Text(
                 AppLocalizations.of(context)!.biography,
                 style: TextStyle(
-                  color: useDarkMode ? Colors.white : Colors.black,
                   fontSize: 18,
                 ),
               ),
               for (String biographyParagraph in driverDetails[2])
                 Text(
                   '\n$biographyParagraph',
-                  style: TextStyle(
-                    color: useDarkMode ? Colors.white : Colors.black,
-                  ),
                   textAlign: TextAlign.justify,
                 )
             ],
           ),
         ),
         Padding(
-          padding: const EdgeInsets.only(left: 5, right: 5),
+          padding: const EdgeInsets.only(left: 5, right: 5, bottom: 10),
           child: Column(
             children: [
               Padding(
@@ -449,7 +440,6 @@ class DriverDetailsFragment extends StatelessWidget {
                 child: Text(
                   AppLocalizations.of(context)!.gallery,
                   style: TextStyle(
-                    color: useDarkMode ? Colors.white : Colors.black,
                     fontSize: 18,
                   ),
                 ),
