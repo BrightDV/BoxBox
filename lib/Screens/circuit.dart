@@ -186,7 +186,14 @@ class CircuitScreen extends StatelessWidget {
                                         MaterialPageRoute(
                                           builder: (context) => ArticleScreen(
                                             snapshot.data!['links'][1]['url']
-                                                .split('.')[4],
+                                                    .endsWith('.html')
+                                                ? snapshot.data!['links'][1]
+                                                        ['url']
+                                                    .split('.')[4]
+                                                : snapshot.data!['links'][1]
+                                                        ['url']
+                                                    .split('.')
+                                                    .last,
                                             '',
                                             true,
                                           ),
