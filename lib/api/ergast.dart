@@ -106,13 +106,14 @@ class _ErgastApiCalls {
   FutureOr<List<DriverResult>> getSprintStandings(String round) async {
     var url = Uri.parse(
         'https://ergast.com/api/f1/${DateTime.now().year}/$round/sprint.json');
+    print(url.toString());
     var response = await http.get(url);
     Map<String, dynamic> responseAsJson = jsonDecode(response.body);
     List<DriverResult> formatedRaceStandings = [];
     if ((responseAsJson['MRData']['RaceTable']['Races'].isEmpty) ||
         (responseAsJson['MRData']['RaceTable']['Races'][0]['SprintResults'] ==
             null)) {
-      throw Exception;
+      return [];
     } else {
       List jsonResponse =
           responseAsJson['MRData']['RaceTable']['Races'][0]['SprintResults'];

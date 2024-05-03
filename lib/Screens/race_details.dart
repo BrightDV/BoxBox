@@ -622,7 +622,7 @@ class _SprintResultsProviderState extends State<SprintResultsProvider> {
             padding: const EdgeInsets.all(15),
             child: Center(
               child: Text(
-                AppLocalizations.of(context)!.dataNotAvailable,
+                'AppLocalizations.of(context)!.dataNotAvailable',
                 textAlign: TextAlign.center,
               ),
             ),
@@ -644,7 +644,9 @@ class _SprintResultsProviderState extends State<SprintResultsProvider> {
                     padding: const EdgeInsets.all(15),
                     child: Center(
                       child: Text(
-                        AppLocalizations.of(context)!.dataNotAvailable,
+                        snapshot.error.toString() +
+                            snapshot.stackTrace
+                                .toString(), //AppLocalizations.of(context)!.dataNotAvailable,
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 15,
