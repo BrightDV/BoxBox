@@ -1243,7 +1243,7 @@ class TextParagraphRenderer extends StatelessWidget {
           listBullet: TextStyle(
             fontFamily: fontUsedInArticles,
           ),
-          textAlign: WrapAlignment.spaceEvenly,
+          textAlign: WrapAlignment.spaceBetween,
         ),
       ),
     );
