@@ -56,7 +56,7 @@ class ArticleUrlHandler extends StatelessWidget {
         .replaceAll('.html', '');
     if (url.endsWith('/en') || url == '/en/latest/all') {
       return Container();
-    } else if (url.startsWith('/en/latest/article.')) {
+    } else if (url.startsWith('/en/latest/article/')) {
       return ArticleScreen(
         url.split('.').last,
         '',

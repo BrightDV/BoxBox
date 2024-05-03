@@ -1090,6 +1090,19 @@ class TextParagraphRenderer extends StatelessWidget {
                 ),
               ),
             );
+          } else if (url
+              .startsWith('https://www.formula1.com/en/latest/article/')) {
+            String articleId = url.split('.').last;
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ArticleScreen(
+                  articleId,
+                  text,
+                  true,
+                ),
+              ),
+            );
           } else if (url.startsWith('https://www.formula1.com/en/results')) {
             String standingsType =
                 url.substring(0, url.length - 5).split('/')[6];

@@ -799,8 +799,18 @@ class CircuitScreen extends StatelessWidget {
                                                       builder: (context) =>
                                                           ArticleScreen(
                                                         snapshot.data!['links']
-                                                                [1]['url']
-                                                            .split('.')[4],
+                                                                    [1]['url']
+                                                                .endsWith(
+                                                                    '.html')
+                                                            ? snapshot
+                                                                .data!['links']
+                                                                    [1]['url']
+                                                                .split('.')[4]
+                                                            : snapshot
+                                                                .data!['links']
+                                                                    [1]['url']
+                                                                .split('.')
+                                                                .last,
                                                         '',
                                                         true,
                                                       ),

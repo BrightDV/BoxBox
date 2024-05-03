@@ -144,7 +144,7 @@ class _SearchScreenState extends State<SearchScreen> {
                           context,
                           MaterialPageRoute(
                             builder: (context) => ArticleScreen(
-                              results[index]['url'].split('.')[4],
+                              results[index]['url'].split('.').last,
                               ' ',
                               true,
                             ),
