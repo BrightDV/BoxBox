@@ -64,7 +64,7 @@ class NewsItem extends StatelessWidget {
   }) : super(key: key);
 
   final String endpoint = 'https://formula1.com';
-  final String articleLink = '/en/latest/article.';
+  final String articleLink = '/en/latest/article/';
 
   @override
   Widget build(BuildContext context) {
@@ -135,12 +135,12 @@ class NewsItem extends StatelessWidget {
           delta == 0
               ? launchUrl(
                   Uri.parse(
-                    "https://www.formula1.com/en/latest/article.${item.slug}.${item.newsId}.html",
+                    "https://www.formula1.com/en/latest/article/${item.slug}.${item.newsId}",
                   ),
                   mode: LaunchMode.externalApplication,
                 )
               : Share.share(
-                  "https://www.formula1.com/en/latest/article.${item.slug}.${item.newsId}.html",
+                  "https://www.formula1.com/en/latest/article/${item.slug}.${item.newsId}",
                 );
         },
       );

@@ -1473,7 +1473,7 @@ class BottomActionBar extends StatelessWidget {
                       Icons.share_outlined,
                     ),
                     onPressed: () => Share.share(
-                      "https://www.formula1.com/en/latest/article/${article.articleSlug}.${article.articleId}.html",
+                      "https://www.formula1.com/en/latest/article/${article.articleSlug}.${article.articleId}",
                     ),
                   ),
                   Text(
