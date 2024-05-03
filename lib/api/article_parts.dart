@@ -282,10 +282,13 @@ class WidgetsList extends StatelessWidget {
                                                                       'atomPullQuote'
                                                                   ? AtomPullQuote(
                                                                       element)
-                                                                  : UnsupportedWidget(
-                                                                      element,
-                                                                      article,
-                                                                    ),
+                                                                  : element['contentType'] ==
+                                                                          'atomPromotion'
+                                                                      ? Container()
+                                                                      : UnsupportedWidget(
+                                                                          element,
+                                                                          article,
+                                                                        ),
 
         // author
         if (article.authorDetails.isNotEmpty) AuthorDetails(article),
