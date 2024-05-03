@@ -1191,7 +1191,7 @@ class TextParagraphRenderer extends StatelessWidget {
                 ),
               ),
             );
-          } else if (url == 'https://e-m.media/f1/') {
+          } else if (url == 'https://linktr.ee/F1raceprogramme') {
             Fluttertoast.showToast(
               msg: AppLocalizations.of(context)!.openingWithInAppBrowser,
               toastLength: Toast.LENGTH_SHORT,
@@ -1201,7 +1201,7 @@ class TextParagraphRenderer extends StatelessWidget {
               fontSize: 16.0,
             );
             launchUrl(
-              Uri.parse("https://raceprogramme.formula1.com/#/catalogue"),
+              Uri.parse("https://web.formula1rp.com/"),
             );
           } else {
             launchUrl(Uri.parse(url));
