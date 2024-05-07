@@ -98,17 +98,17 @@ class RaceTracksUrls {
     "yas_marina": "Abu_Dhabi",
     "shanghai": "Chinese",
   };
-  Future<String> getRaceTrackImageUrl(String gpId) async {
+  String getRaceTrackImageUrl(String gpId) {
     String gpName = trackUrlConverter[gpId]!;
     return "https://media.formula1.com/image/upload/f_auto/q_auto/v1677238736/content/dam/fom-website/2018-redesign-assets/Racehub%20header%20images%2016x9/$gpName.jpg.transform/fullbleed/image.jpg";
   }
 
-  Future<String> getTrackLayoutImageUrl(String gpId) async {
+  String getTrackLayoutImageUrl(String gpId) {
     String gpName = trackLayoutConverter[gpId]!.replaceAll(' ', '_');
     return "https://media.formula1.com/image/upload/f_auto/q_auto/v1677244987/content/dam/fom-website/2018-redesign-assets/Circuit%20maps%2016x9/${gpName}_Circuit.png";
   }
 
-  Future<String> getRaceCoverImageUrl(String gpId) async {
+  String getRaceCoverImageUrl(String gpId) {
     String gpName = raceCoverImageConverter[gpId]!;
     return "https://media.formula1.com/content/dam/fom-website/races/${DateTime.now().year}/${gpName}_Grand_Prix.png";
   }
