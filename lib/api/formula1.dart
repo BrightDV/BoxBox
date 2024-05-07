@@ -382,8 +382,8 @@ class Formula1 {
     }
   }
 
-  FutureOr<List<DriverResult>> getFreePracticeStandings(
-      String meetingId, String session) async {
+  Future<List<DriverResult>> getFreePracticeStandings(
+      String meetingId, int session) async {
     List<DriverResult> driversResults = [];
     var url = Uri.parse(
       'https://api.formula1.com/v1/fom-results/practice?meeting=$meetingId&session=$session',
@@ -414,8 +414,8 @@ class Formula1 {
             Convert().teamsFromFormulaOneApiToErgast(element['teamName']),
             element['classifiedTime'],
             false,
-            element['gapToLeader'],
-            element['gapToLeader'],
+            "",
+            "+" + element['gapToLeader'] + "s",
             lapsDone: element['lapsCompleted'],
             points: element['racePoints'].toString(),
             status: element['completionStatusCode'],

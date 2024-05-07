@@ -1012,6 +1012,7 @@ class AtomSessionResults extends StatelessWidget {
                                         .substring(1),
                                   ),
                                   '',
+                                  '',
                                   int.parse(
                                     element['fields']['season'],
                                   ),
@@ -1063,7 +1064,8 @@ class AtomSessionResults extends StatelessWidget {
                                                   .endsWith(
                                                       'starting-grid.html')
                                               ? StartingGridProvider(
-                                                  element['fields']['cta'])
+                                                  element['fields']['cta'],
+                                                )
                                               : QualificationResultsProvider(
                                                   raceUrl: element['fields']
                                                       ['cta'],
