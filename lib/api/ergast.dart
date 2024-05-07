@@ -591,14 +591,6 @@ class _ErgastApiCalls {
       return formatLastTeamsStandings(responseAsJson);
     }
   }
-
-  FutureOr<bool> hasSprintQualifyings(round) async {
-    var url = Uri.parse(
-        'https://ergast.com/api/f1/${DateTime.now().year}/$round/sprint.json');
-    var response = await http.get(url);
-    Map<String, dynamic> responseAsJson = jsonDecode(response.body);
-    return !responseAsJson['MRData']['RaceTable']['Races'].isEmpty;
-  }
 }
 
 class ErgastApi {
@@ -670,10 +662,6 @@ class ErgastApi {
   FutureOr<List<Team>> getLastTeamsStandings() async {
     var data = await _ErgastApiCalls().getLastTeamsStandings();
     return data;
-  }
-
-  Future<bool> hasSprintQualifyings(String round) async {
-    return await _ErgastApiCalls().hasSprintQualifyings(round);
   }
 
   Future<Race> getRaceDetails(String round) async {

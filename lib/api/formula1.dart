@@ -360,8 +360,7 @@ class Formula1 {
             element['driverFirstName'],
             element['driverLastName'],
             element['driverTLA'],
-            // TODO: another teamNameId? / converter?
-            element['teamName'],
+            Convert().teamsFromFormulaOneApiToErgast(element['teamName']),
             element['q1']['completionStatusCode'] != 'OK'
                 ? element['q1']['completionStatusCode']
                 : element['q1']['classifiedTime'],
@@ -412,8 +411,7 @@ class Formula1 {
             element['driverFirstName'],
             element['driverLastName'],
             element['driverTLA'],
-            // TODO: another teamNameId?
-            element['teamName'],
+            Convert().teamsFromFormulaOneApiToErgast(element['teamName']),
             element['classifiedTime'],
             false,
             element['gapToLeader'],
@@ -457,8 +455,7 @@ class Formula1 {
             element['driverFirstName'],
             element['driverLastName'],
             element['driverTLA'],
-            // TODO: another teamNameId? / converter?
-            element['teamName'],
+            Convert().teamsFromFormulaOneApiToErgast(element['teamName']),
             element['q1']['completionStatusCode'] != 'OK'
                 ? element['q1']['completionStatusCode']
                 : element['q1']['classifiedTime'],
@@ -531,8 +528,7 @@ class Formula1 {
             element['driverFirstName'],
             element['driverLastName'],
             element['driverTLA'],
-            // TODO: another teamNameId?
-            element['teamName'],
+            Convert().teamsFromFormulaOneApiToErgast(element['teamName']),
             element['sprintQualifyingTime'],
             false,
             time,

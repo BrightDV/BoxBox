@@ -525,7 +525,9 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
                                 onTap: () async {},
                               ),
                               RaceDriversResultsList(
-                                ErgastApi().formatRaceStandings(savedData),
+                                lastSavedRequestFormat == 'ergast'
+                                    ? ErgastApi().formatRaceStandings(savedData)
+                                    : Formula1().formatRaceStandings(savedData),
                               ),
                             ],
                           ),
@@ -746,11 +748,17 @@ class QualificationResultsProvider extends StatefulWidget {
 class _QualificationResultsProviderState
     extends State<QualificationResultsProvider> {
   Future<List<DriverQualificationResult>> getQualificationStandings(
-    String round,
+    Race race,
   ) async {
-    return await ErgastApi().getQualificationStandings(
-      round,
-    );
+    bool useOfficialDataSoure = Hive.box('settings')
+        .get('useOfficialDataSoure', defaultValue: false) as bool;
+    if (useOfficialDataSoure) {
+      return await Formula1().getQualificationStandings(race.meetingId);
+    } else {
+      return await ErgastApi().getQualificationStandings(
+        race.round,
+      );
+    }
   }
 
   void _setState() {
@@ -783,7 +791,7 @@ class _QualificationResultsProviderState
                     hasSprint: widget.hasSprint,
                   )
                 : getQualificationStandings(
-                    widget.race!.round,
+                    widget.race!,
                   ),
             builder: (context, snapshot) => snapshot.hasError
                 ? (widget.race?.sessionDates.isNotEmpty ?? false) &&
