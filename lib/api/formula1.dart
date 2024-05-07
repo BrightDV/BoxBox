@@ -21,6 +21,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:boxbox/api/driver_components.dart';
+import 'package:boxbox/api/team_components.dart';
 import 'package:boxbox/helpers/convert_ergast_and_formula_one.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
@@ -309,7 +310,7 @@ class Formula1 {
       return formatRaceStandings(results);
     } else {
       var url = Uri.parse(
-        'https://api.formula1.com/v1/fom-results/race?meeting=$meetingId',
+        '$defaultEndpoint/v1/fom-results/race?meeting=$meetingId',
       );
       var response = await http.get(
         url,
@@ -321,7 +322,7 @@ class Formula1 {
       );
       Map<String, dynamic> responseAsJson = jsonDecode(response.body);
       List<DriverResult> driversResults = formatRaceStandings(responseAsJson);
-      Hive.box('requests').put('lastSavedRequestFormat', 'f1');
+      Hive.box('requests').put('raceResultsLastSavedFormat', 'f1');
       Hive.box('requests').put('race-$round', responseAsJson);
       Hive.box('requests').put(
         'race-$round-latestQuery',
@@ -336,7 +337,7 @@ class Formula1 {
       String meetingId) async {
     List<DriverQualificationResult> driversResults = [];
     var url = Uri.parse(
-      'https://api.formula1.com/v1/fom-results/qualifying?meeting=$meetingId',
+      '$defaultEndpoint/v1/fom-results/qualifying?meeting=$meetingId',
     );
     var response = await http.get(
       url,
@@ -386,7 +387,7 @@ class Formula1 {
       String meetingId, int session) async {
     List<DriverResult> driversResults = [];
     var url = Uri.parse(
-      'https://api.formula1.com/v1/fom-results/practice?meeting=$meetingId&session=$session',
+      '$defaultEndpoint/v1/fom-results/practice?meeting=$meetingId&session=$session',
     );
     var response = await http.get(
       url,
@@ -431,7 +432,7 @@ class Formula1 {
       String meetingId) async {
     List<DriverQualificationResult> driversResults = [];
     var url = Uri.parse(
-      'https://api.formula1.com/v1/fom-results/sprint-shootout?meeting=$meetingId',
+      '$defaultEndpoint/v1/fom-results/sprint-shootout?meeting=$meetingId',
     );
     var response = await http.get(
       url,
@@ -482,7 +483,7 @@ class Formula1 {
     List<DriverResult> driversResults = [];
     String time;
     var url = Uri.parse(
-      'https://api.formula1.com/v1/fom-results/sprint?meeting=$meetingId',
+      '$defaultEndpoint/v1/fom-results/sprint?meeting=$meetingId',
     );
     var response = await http.get(
       url,
@@ -545,6 +546,100 @@ class Formula1 {
       }
 
       return driversResults;
+    }
+  }
+
+  List<Driver> formatLastStandings(Map responseAsJson) {
+    List<Driver> drivers = [];
+    List finalJson = responseAsJson['drivers'];
+    for (var element in finalJson) {
+      drivers.add(
+        Driver(
+          '',
+          element['positionNumber'],
+          element['racingNumber'],
+          element['driverFirstName'],
+          element['driverLastName'],
+          element['driverTLA'],
+          Convert().teamsFromFormulaOneApiToErgast(element['teamName']),
+          element['championshipPoints'].toString(),
+        ),
+      );
+    }
+    return drivers;
+  }
+
+  FutureOr<List<Driver>> getLastStandings() async {
+    Map driverStandings =
+        Hive.box('requests').get('driversStandings', defaultValue: {});
+    DateTime latestQuery = Hive.box('requests').get(
+      'driversStandingsLatestQuery',
+      defaultValue: DateTime.now(),
+    ) as DateTime;
+    if (latestQuery
+            .add(
+              const Duration(minutes: 5),
+            )
+            .isAfter(DateTime.now()) &&
+        driverStandings.isNotEmpty) {
+      return formatLastStandings(driverStandings);
+    } else {
+      var url = Uri.parse(
+        '$defaultEndpoint/v1/editorial-driverlisting/listing',
+      );
+      var response = await http.get(url);
+      Map<String, dynamic> responseAsJson = jsonDecode(response.body);
+      List<Driver> drivers = formatLastStandings(responseAsJson);
+      Hive.box('requests').put('driversStandings', responseAsJson);
+      Hive.box('requests').put('driversStandingsLatestQuery', DateTime.now());
+      Hive.box('requests').put('driverStandingsLastSavedFormat', 'f1');
+      return drivers;
+    }
+  }
+
+  List<Team> formatLastTeamsStandings(Map responseAsJson) {
+    List<Team> drivers = [];
+    List finalJson = responseAsJson['MRData']['StandingsTable']
+        ['StandingsLists'][0]['ConstructorStandings'];
+    for (var element in finalJson) {
+      drivers.add(
+        Team(
+          Convert().teamsFromFormulaOneApiToErgast(element['teamName']),
+          element['positionNumber'],
+          element['teamName'],
+          element['seasonPoints'].toString(),
+          'NA',
+        ),
+      );
+    }
+    return drivers;
+  }
+
+  FutureOr<List<Team>> getLastTeamsStandings() async {
+    Map teamsStandings =
+        Hive.box('requests').get('teamsStandings', defaultValue: {});
+    DateTime latestQuery = Hive.box('requests').get(
+      'teamsStandingsLatestQuery',
+      defaultValue: DateTime.now(),
+    ) as DateTime;
+    if (latestQuery
+            .add(
+              const Duration(minutes: 10),
+            )
+            .isAfter(DateTime.now()) &&
+        teamsStandings.isNotEmpty) {
+      return formatLastTeamsStandings(teamsStandings);
+    } else {
+      var url = Uri.parse(
+        '$defaultEndpoint/v1/editorial-constructorlisting/listing',
+      );
+      var response = await http.get(url);
+      Map<String, dynamic> responseAsJson = jsonDecode(response.body);
+      List<Team> teams = formatLastTeamsStandings(responseAsJson);
+      Hive.box('requests').put('teamsStandings', responseAsJson);
+      Hive.box('requests').put('teamsStandingsLatestQuery', DateTime.now());
+      Hive.box('requests').put('teamStandingsLastSavedFormat', 'f1');
+      return teams;
     }
   }
 }

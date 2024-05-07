@@ -96,7 +96,7 @@ class _ErgastApiCalls {
       Map<String, dynamic> responseAsJson = jsonDecode(response.body);
 
       List<DriverResult> driversResults = formatRaceStandings(responseAsJson);
-      Hive.box('requests').put('lastSavedRequestFormat', 'ergast');
+      Hive.box('requests').put('raceResultsLastSavedFormat', 'ergast');
       Hive.box('requests').put('race-$round', responseAsJson);
       Hive.box('requests').put(
         'race-$round-latestQuery',
@@ -244,12 +244,11 @@ class _ErgastApiCalls {
       );
       var response = await http.get(url);
       Map<String, dynamic> responseAsJson = jsonDecode(response.body);
+      List<Driver> drivers = formatLastStandings(responseAsJson);
       Hive.box('requests').put('driversStandings', responseAsJson);
-      Hive.box('requests').put(
-        'driversStandingsLatestQuery',
-        DateTime.now(),
-      );
-      return formatLastStandings(responseAsJson);
+      Hive.box('requests').put('driversStandingsLatestQuery', DateTime.now());
+      Hive.box('requests').put('driverStandingsLastSavedFormat', 'ergast');
+      return drivers;
     }
   }
 
@@ -583,12 +582,11 @@ class _ErgastApiCalls {
           'https://ergast.com/api/f1/current/constructorStandings.json');
       var response = await http.get(url);
       Map<String, dynamic> responseAsJson = jsonDecode(response.body);
+      List<Team> teams = formatLastTeamsStandings(responseAsJson);
       Hive.box('requests').put('teamsStandings', responseAsJson);
-      Hive.box('requests').put(
-        'teamsStandingsLatestQuery',
-        DateTime.now(),
-      );
-      return formatLastTeamsStandings(responseAsJson);
+      Hive.box('requests').put('teamsStandingsLatestQuery', DateTime.now());
+      Hive.box('requests').put('teamStandingsLastSavedFormat', 'ergast');
+      return teams;
     }
   }
 }

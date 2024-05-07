@@ -447,8 +447,8 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
         update: _setState,
       );
     } else {
-      String lastSavedRequestFormat = Hive.box('requests')
-          .get('lastSavedRequestFormat', defaultValue: 'ergast');
+      String raceResultsLastSavedFormat = Hive.box('requests')
+          .get('raceResultsLastSavedFormat', defaultValue: 'ergast');
       return raceUrl != ''
           ? FutureBuilder<List<DriverResult>>(
               future: getRaceStandingsFromF1(raceUrl),
@@ -504,7 +504,7 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
           : FutureBuilder<List<DriverResult>>(
               future: getRaceStandingsFromApi(race),
               builder: (context, snapshot) => snapshot.hasError
-                  ? savedData[lastSavedRequestFormat == 'ergast'
+                  ? savedData[raceResultsLastSavedFormat == 'ergast'
                               ? 'MRData'
                               : 'raceResultsRace'] !=
                           null
@@ -523,7 +523,7 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
                                 onTap: () async {},
                               ),
                               RaceDriversResultsList(
-                                lastSavedRequestFormat == 'ergast'
+                                raceResultsLastSavedFormat == 'ergast'
                                     ? ErgastApi().formatRaceStandings(savedData)
                                     : Formula1().formatRaceStandings(savedData),
                               ),
@@ -575,7 +575,7 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
                             ],
                           ),
                         )
-                      : savedData[lastSavedRequestFormat == 'ergast'
+                      : savedData[raceResultsLastSavedFormat == 'ergast'
                                   ? 'MRData'
                                   : 'raceResultsRace'] !=
                               null
@@ -594,7 +594,7 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
                                     onTap: () async {},
                                   ),
                                   RaceDriversResultsList(
-                                    lastSavedRequestFormat == 'ergast'
+                                    raceResultsLastSavedFormat == 'ergast'
                                         ? ErgastApi()
                                             .formatRaceStandings(savedData)
                                         : Formula1()
