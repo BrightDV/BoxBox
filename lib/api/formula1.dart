@@ -501,9 +501,13 @@ class Formula1 {
         if (element['completionStatusCode'] != 'OK') {
           // DNF (maybe DSQ?)
           time = element['completionStatusCode'];
+        } else if (element['positionNumber'] == '1') {
+          time = element['sprintQualifyingTime'];
         } else if (element['lapsBehindLeader'] != null) {
           // finished & lapped cars
-          if (element['lapsBehindLeader'] == "1") {
+          if (element['lapsBehindLeader'] == "0") {
+            time = "+" + element['gapToLeader'];
+          } else if (element['lapsBehindLeader'] == "1") {
             // one
             time = "+1 Lap";
           } else {
@@ -529,12 +533,12 @@ class Formula1 {
             element['driverLastName'],
             element['driverTLA'],
             Convert().teamsFromFormulaOneApiToErgast(element['teamName']),
-            element['sprintQualifyingTime'],
+            element['sprintQualifyingTime'] ?? '--',
             false,
             time,
             time,
-            lapsDone: element['lapsCompleted'],
-            points: element['racePoints'].toString(),
+            lapsDone: "NA",
+            points: element['sprintQualifyingPoints'].toString(),
             status: element['completionStatusCode'],
           ),
         );

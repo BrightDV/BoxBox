@@ -154,10 +154,8 @@ class RaceDetailsScreen extends StatelessWidget {
                                     removeTop: true,
                                     child: SafeArea(
                                       child: QualificationResultsProvider(
-                                        raceUrl:
-                                            'https://www.formula1.com/en/results.html/${DateTime.now().year}/races/${Convert().circuitIdFromErgastToFormulaOne(race.circuitId)}/${Convert().circuitNameFromErgastToFormulaOne(race.circuitId)}/sprint-qualifying.html',
-                                        hasSprint: hasSprint,
                                         race: race,
+                                        hasSprint: hasSprint,
                                         isSprintQualifying: true,
                                       ),
                                     ),
@@ -626,11 +624,15 @@ class SprintResultsProvider extends StatefulWidget {
 
 class _SprintResultsProviderState extends State<SprintResultsProvider> {
   Future<List<DriverResult>> getSprintStandings(
-    String round,
+    Race race,
   ) async {
-    return await ErgastApi().getSprintStandings(
-      round,
-    );
+    bool useOfficialDataSoure = Hive.box('settings')
+        .get('useOfficialDataSoure', defaultValue: false) as bool;
+    if (useOfficialDataSoure) {
+      return await Formula1().getSprintStandings(race.meetingId, race.round);
+    } else {
+      return await ErgastApi().getSprintStandings(race.round);
+    }
   }
 
   void _setState() {
@@ -660,7 +662,7 @@ class _SprintResultsProviderState extends State<SprintResultsProvider> {
                     raceUrl: widget.raceUrl!,
                   )
                 : getSprintStandings(
-                    widget.race!.round,
+                    widget.race!,
                   ),
             builder: (context, snapshot) => snapshot.hasError
                 ? Padding(
@@ -752,12 +754,16 @@ class _QualificationResultsProviderState
   ) async {
     bool useOfficialDataSoure = Hive.box('settings')
         .get('useOfficialDataSoure', defaultValue: false) as bool;
-    if (useOfficialDataSoure) {
-      return await Formula1().getQualificationStandings(race.meetingId);
+    if (widget.isSprintQualifying ?? false) {
+      return await Formula1().getSprintQualifyingStandings(race.meetingId);
     } else {
-      return await ErgastApi().getQualificationStandings(
-        race.round,
-      );
+      if (useOfficialDataSoure) {
+        return await Formula1().getQualificationStandings(race.meetingId);
+      } else {
+        return await ErgastApi().getQualificationStandings(
+          race.round,
+        );
+      }
     }
   }
 
@@ -767,8 +773,6 @@ class _QualificationResultsProviderState
 
   @override
   Widget build(BuildContext context) {
-    bool useDarkMode =
-        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     return (widget.race?.sessionDates.isEmpty ?? true) &&
             (widget.raceUrl == null)
         ? Padding(
@@ -840,11 +844,6 @@ class _QualificationResultsProviderState
                                         AppLocalizations.of(context)!
                                             .dataNotAvailable,
                                         textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          color: useDarkMode
-                                              ? Colors.white
-                                              : Colors.black,
-                                        ),
                                       ),
                                     ),
                                   )
@@ -863,11 +862,6 @@ class _QualificationResultsProviderState
                                         AppLocalizations.of(context)!
                                             .dataNotAvailable,
                                         textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          color: useDarkMode
-                                              ? Colors.white
-                                              : Colors.black,
-                                        ),
                                       ),
                                     ),
                                   )
