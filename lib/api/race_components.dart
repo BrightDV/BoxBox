@@ -18,7 +18,6 @@
  */
 
 // import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/news.dart';
 import 'package:boxbox/helpers/racetracks_url.dart';
 import 'package:boxbox/Screens/circuit.dart';
@@ -77,14 +76,9 @@ class RaceItem extends StatelessWidget {
       child: index == 0 && isUpNext
           ? Column(
               children: [
-                FutureBuilder<String>(
-                  future: RaceTracksUrls().getRaceCoverImageUrl(item.circuitId),
-                  builder: (context, snapshot) => snapshot.hasData
-                      ? ImageRenderer(
-                          snapshot.data!,
-                          inSchedule: true,
-                        )
-                      : const LoadingIndicatorUtil(),
+                ImageRenderer(
+                  RaceTracksUrls().getRaceCoverImageUrl(item.circuitId),
+                  inSchedule: true,
                 ),
                 RaceListItem(item, index),
               ],

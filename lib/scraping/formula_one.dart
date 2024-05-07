@@ -346,7 +346,7 @@ class FormulaOneScraper {
       driverDetailsUrl = Uri.parse("$endpoint/en/drivers/$driverId.html");
     } else {
       driverDetailsUrl = Uri.parse(
-        "https://www.formula1.com/en/drivers/$driverId.html",
+        "https://www.formula1.com/en/drivers/$driverId",
       );
     }
     http.Response response = await http.get(driverDetailsUrl);
@@ -363,50 +363,42 @@ class FormulaOneScraper {
       utf8.decode(response.bodyBytes),
     );
 
-    List<dom.Element> tempDetails = document.getElementsByTagName('tr');
+    List<dom.Element> tempDetails = document.getElementsByTagName('dd');
     for (int i = 0; i < 10; i++) {
-      results[0].add(tempDetails[i].children[1].text);
+      results[0].add(tempDetails[i].text);
     }
 
-    List<dom.Element> tempDriverArticles = document
-        .getElementsByClassName('articles')[0]
-        .getElementsByClassName('article-teaser-link');
-    for (var element in tempDriverArticles) {
-      results[1].add(
-        [
-          element.attributes['href']!.split('.')[2],
-          element.children[0].children[0].attributes['style']!
-              .split('(')[1]
-              .split(')')[0],
-          element.children[0].children[1].children[1].text,
-          element.children[0].children[1].children[0].text,
-        ],
-      );
+    List<dom.Element> tempDriverArticles =
+        document.getElementsByClassName('f1-driver-article-card');
+    for (dom.Element element in tempDriverArticles) {
+      if (element.attributes['href'] != null) {
+        results[1].add(
+          [
+            element.attributes['href']!.split('.').last,
+            element.getElementsByTagName("img").first.attributes['src']!,
+            element.children[0].children[1].children[1].text,
+            element.children[0].children[1].children[0].text,
+          ],
+        );
+      }
     }
 
     List<dom.Element> tempBiography = document
-        .getElementsByClassName('biography')[0]
-        .children[
-            document.getElementsByClassName('biography')[0].children.length - 1]
+        .getElementsByClassName('f1-driver-bio')[0]
+        .children[document
+                .getElementsByClassName('f1-driver-bio')[0]
+                .children
+                .length -
+            1]
         .children;
     for (var element in tempBiography) {
       results[2].add(element.text);
     }
 
     List<dom.Element> tempDriverMedias =
-        document.getElementsByClassName('swiper-slide');
+        document.getElementsByClassName('f1-carousel__slide');
     for (var element in tempDriverMedias) {
-      String imageUrl;
-      if (!element.children[0].children[0].attributes['data-path']!.startsWith(
-        ('https://'),
-      )) {
-        imageUrl =
-            'https://formula1.com${element.children[0].children[0].attributes['data-path']!}';
-      } else {
-        imageUrl = element.children[0].children[0].attributes['data-path']!;
-      }
-      imageUrl +=
-          '.img.640.medium.${element.children[0].children[0].attributes['data-extension']!}${element.children[0].children[0].attributes['data-suffix']!}';
+      String imageUrl = element.firstChild!.firstChild!.attributes['src'] ?? '';
       results[3][0].add(imageUrl);
     }
 

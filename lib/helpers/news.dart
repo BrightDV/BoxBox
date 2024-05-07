@@ -64,7 +64,7 @@ class NewsItem extends StatelessWidget {
   }) : super(key: key);
 
   final String endpoint = 'https://formula1.com';
-  final String articleLink = '/en/latest/article.';
+  final String articleLink = '/en/latest/article/';
 
   @override
   Widget build(BuildContext context) {
@@ -135,12 +135,12 @@ class NewsItem extends StatelessWidget {
           delta == 0
               ? launchUrl(
                   Uri.parse(
-                    "https://www.formula1.com/en/latest/article.${item.slug}.${item.newsId}.html",
+                    "https://www.formula1.com/en/latest/article/${item.slug}.${item.newsId}",
                   ),
                   mode: LaunchMode.externalApplication,
                 )
               : Share.share(
-                  "https://www.formula1.com/en/latest/article.${item.slug}.${item.newsId}.html",
+                  "https://www.formula1.com/en/latest/article/${item.slug}.${item.newsId}",
                 );
         },
       );
@@ -964,7 +964,7 @@ class _NewsListState extends State<NewsList> {
                   scrollDirection: Axis.vertical,
                   shrinkWrap: true,
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: width < 750 ? 2 : 3,
+                    crossAxisCount: width < 850 ? 2 : 3,
                     crossAxisSpacing: 5.0,
                     mainAxisSpacing: 5.0,
                   ),
@@ -1090,6 +1090,19 @@ class TextParagraphRenderer extends StatelessWidget {
                 ),
               ),
             );
+          } else if (url
+              .startsWith('https://www.formula1.com/en/latest/article/')) {
+            String articleId = url.split('.').last;
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ArticleScreen(
+                  articleId,
+                  text,
+                  true,
+                ),
+              ),
+            );
           } else if (url.startsWith('https://www.formula1.com/en/results')) {
             String standingsType =
                 url.substring(0, url.length - 5).split('/')[6];
@@ -1179,7 +1192,7 @@ class TextParagraphRenderer extends StatelessWidget {
                 ),
               ),
             );
-          } else if (url == 'https://e-m.media/f1/') {
+          } else if (url == 'https://linktr.ee/F1raceprogramme') {
             Fluttertoast.showToast(
               msg: AppLocalizations.of(context)!.openingWithInAppBrowser,
               toastLength: Toast.LENGTH_SHORT,
@@ -1189,7 +1202,7 @@ class TextParagraphRenderer extends StatelessWidget {
               fontSize: 16.0,
             );
             launchUrl(
-              Uri.parse("https://raceprogramme.formula1.com/#/catalogue"),
+              Uri.parse("https://web.formula1rp.com/"),
             );
           } else {
             launchUrl(Uri.parse(url));
@@ -1231,7 +1244,7 @@ class TextParagraphRenderer extends StatelessWidget {
           listBullet: TextStyle(
             fontFamily: fontUsedInArticles,
           ),
-          textAlign: WrapAlignment.spaceEvenly,
+          textAlign: WrapAlignment.spaceBetween,
         ),
       ),
     );

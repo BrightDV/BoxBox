@@ -140,7 +140,7 @@ class CircuitScreen extends StatelessWidget {
                                     builder: (context) => RaceDetailsScreen(
                                       race,
                                       snapshot.data!['meetingContext']
-                                              ['timetables'][1]['session'] ==
+                                              ['timetables'][2]['session'] ==
                                           's',
                                     ),
                                   ),
@@ -186,7 +186,14 @@ class CircuitScreen extends StatelessWidget {
                                         MaterialPageRoute(
                                           builder: (context) => ArticleScreen(
                                             snapshot.data!['links'][1]['url']
-                                                .split('.')[4],
+                                                    .endsWith('.html')
+                                                ? snapshot.data!['links'][1]
+                                                        ['url']
+                                                    .split('.')[4]
+                                                : snapshot.data!['links'][1]
+                                                        ['url']
+                                                    .split('.')
+                                                    .last,
                                             '',
                                             true,
                                           ),
@@ -356,9 +363,11 @@ class CircuitScreen extends StatelessWidget {
                                                   Expanded(
                                                     flex: 6,
                                                     child: Text(
-                                                      driverResults[
-                                                                  'gapToLeader'] !=
-                                                              "0.0"
+                                                      driverResults['gapToLeader'] !=
+                                                                  "0.0" &&
+                                                              driverResults[
+                                                                      'gapToLeader'] !=
+                                                                  "0"
                                                           ? '+${driverResults['gapToLeader']}'
                                                           : driverResults[
                                                               'raceTime'],
@@ -396,7 +405,7 @@ class CircuitScreen extends StatelessWidget {
                                                                       [
                                                                       'timetables']
                                                                   [
-                                                                  1]['session'] ==
+                                                                  2]['session'] ==
                                                               's',
                                                           tab: 10,
                                                         ),
@@ -736,7 +745,7 @@ class CircuitScreen extends StatelessWidget {
                                                     RaceDetailsScreen(
                                                   circuitSnapshot.data!,
                                                   snapshot.data!['meetingContext']
-                                                              ['timetables'][1]
+                                                              ['timetables'][2]
                                                           ['session'] ==
                                                       's',
                                                 ),
@@ -790,8 +799,18 @@ class CircuitScreen extends StatelessWidget {
                                                       builder: (context) =>
                                                           ArticleScreen(
                                                         snapshot.data!['links']
-                                                                [1]['url']
-                                                            .split('.')[4],
+                                                                    [1]['url']
+                                                                .endsWith(
+                                                                    '.html')
+                                                            ? snapshot
+                                                                .data!['links']
+                                                                    [1]['url']
+                                                                .split('.')[4]
+                                                            : snapshot
+                                                                .data!['links']
+                                                                    [1]['url']
+                                                                .split('.')
+                                                                .last,
                                                         '',
                                                         true,
                                                       ),
@@ -979,9 +998,10 @@ class CircuitScreen extends StatelessWidget {
                                                               Expanded(
                                                                 flex: 6,
                                                                 child: Text(
-                                                                  driverResults[
-                                                                              'gapToLeader'] !=
-                                                                          "0.0"
+                                                                  driverResults['gapToLeader'] !=
+                                                                              "0.0" &&
+                                                                          driverResults['gapToLeader'] !=
+                                                                              "0"
                                                                       ? '+${driverResults['gapToLeader']}'
                                                                       : driverResults[
                                                                           'raceTime'],
@@ -1028,7 +1048,7 @@ class CircuitScreen extends StatelessWidget {
                                                                             RaceDetailsScreen(
                                                                       circuitSnapshot
                                                                           .data!,
-                                                                      snapshot.data!['meetingContext']['timetables'][1]
+                                                                      snapshot.data!['meetingContext']['timetables'][2]
                                                                               [
                                                                               'session'] ==
                                                                           's',
@@ -1362,131 +1382,110 @@ class RaceImageProvider extends StatelessWidget {
 }
 
 class TrackLayoutImage extends StatelessWidget {
-  Future<String> getTrackLayoutImageUrl(Race race) async {
-    return await RaceTracksUrls().getTrackLayoutImageUrl(race.circuitId);
+  String getTrackLayoutImageUrl(Race race) {
+    return RaceTracksUrls().getTrackLayoutImageUrl(race.circuitId);
   }
 
   final Race race;
   const TrackLayoutImage(this.race, {Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    bool useDarkMode =
-        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
-    return FutureBuilder<String>(
-      future: getTrackLayoutImageUrl(race),
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return RequestErrorWidget(
-            snapshot.error.toString(),
-          );
-        }
-        return snapshot.hasData
-            ? GestureDetector(
-                onTap: () {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        contentPadding: const EdgeInsets.only(
-                          top: 52,
-                          bottom: 50,
-                        ),
-                        insetPadding: EdgeInsets.zero,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        backgroundColor: Colors.transparent,
-                        content: Builder(
-                          builder: (context) {
-                            return SizedBox(
-                              width: double.infinity - 10,
-                              child: InteractiveViewer(
-                                minScale: 0.1,
-                                maxScale: 8,
-                                child: Stack(
-                                  children: [
-                                    GestureDetector(
-                                      onTap: () => Navigator.pop(context),
-                                    ),
-                                    Card(
-                                      color:
-                                          Colors.transparent.withOpacity(0.5),
-                                      elevation: 5.0,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(5),
-                                      ),
-                                      clipBehavior: Clip.antiAlias,
-                                      child: Image(
-                                        image: NetworkImage(
-                                          snapshot.data!,
-                                        ),
-                                        loadingBuilder: (context, child,
-                                                loadingProgress) =>
-                                            loadingProgress == null
-                                                ? child
-                                                : SizedBox(
-                                                    height:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .width /
-                                                            (16 / 9),
-                                                    child:
-                                                        const LoadingIndicatorUtil(),
-                                                  ),
-                                        errorBuilder: (context, url, error) =>
-                                            Icon(
-                                          Icons.error_outlined,
-                                          color: useDarkMode
-                                              ? Colors.white
-                                              : Colors.black,
-                                          size: 30,
-                                        ),
-                                      ),
-                                    ),
-                                    Align(
-                                      alignment: Alignment.topRight,
-                                      child: IconButton(
-                                        onPressed: () => Navigator.pop(context),
-                                        icon: const Icon(
-                                          Icons.close_rounded,
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
+    return GestureDetector(
+      onTap: () {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              contentPadding: const EdgeInsets.only(
+                top: 52,
+                bottom: 50,
+              ),
+              insetPadding: EdgeInsets.zero,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              backgroundColor: Colors.transparent,
+              shadowColor: Colors.black,
+              surfaceTintColor: Colors.transparent,
+              content: Builder(
+                builder: (context) {
+                  return SizedBox(
+                    width: double.infinity - 10,
+                    child: InteractiveViewer(
+                      minScale: 0.1,
+                      maxScale: 8,
+                      child: Stack(
+                        children: [
+                          GestureDetector(
+                            onTap: () => Navigator.pop(context),
+                          ),
+                          Card(
+                            color: Colors.black,
+                            elevation: 5.0,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            clipBehavior: Clip.antiAlias,
+                            child: Image(
+                              image: NetworkImage(
+                                getTrackLayoutImageUrl(race),
                               ),
-                            );
-                          },
-                        ),
-                      );
-                    },
-                  );
-                },
-                child: Stack(
-                  alignment: Alignment.bottomCenter,
-                  children: [
-                    Image.network(
-                      snapshot.data!,
-                      loadingBuilder: (context, child, loadingProgress) =>
-                          loadingProgress == null
-                              ? child
-                              : SizedBox(
-                                  height: MediaQuery.of(context).size.width /
-                                      (16 / 9),
-                                  child: const LoadingIndicatorUtil(),
-                                ),
-                      errorBuilder: (context, url, error) => Icon(
-                        Icons.error_outlined,
-                        color: useDarkMode ? Colors.white : Colors.black,
-                        size: 30,
+                              loadingBuilder: (context, child,
+                                      loadingProgress) =>
+                                  loadingProgress == null
+                                      ? child
+                                      : SizedBox(
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              (16 / 9),
+                                          child: const LoadingIndicatorUtil(),
+                                        ),
+                              errorBuilder: (context, url, error) => Icon(
+                                Icons.error_outlined,
+                                size: 30,
+                              ),
+                            ),
+                          ),
+                          Align(
+                            alignment: Alignment.topRight,
+                            child: IconButton(
+                              onPressed: () => Navigator.pop(context),
+                              icon: const Icon(
+                                Icons.close_rounded,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ],
-                ),
-              )
-            : const LoadingIndicatorUtil();
+                  );
+                },
+              ),
+            );
+          },
+        );
       },
+      child: Stack(
+        alignment: Alignment.bottomCenter,
+        children: [
+          Image.network(
+            getTrackLayoutImageUrl(race),
+            loadingBuilder: (context, child, loadingProgress) =>
+                loadingProgress == null
+                    ? child
+                    : SizedBox(
+                        height: MediaQuery.of(context).size.width / (16 / 9),
+                        child: const LoadingIndicatorUtil(),
+                      ),
+            errorBuilder: (context, url, error) => Icon(
+              Icons.error_outlined,
+              size: 30,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

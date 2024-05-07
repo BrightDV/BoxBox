@@ -109,13 +109,14 @@ class _ErgastApiCalls {
   FutureOr<List<DriverResult>> getSprintStandings(String round) async {
     var url = Uri.parse(
         'https://ergast.com/api/f1/${DateTime.now().year}/$round/sprint.json');
+    print(url.toString());
     var response = await http.get(url);
     Map<String, dynamic> responseAsJson = jsonDecode(response.body);
     List<DriverResult> formatedRaceStandings = [];
     if ((responseAsJson['MRData']['RaceTable']['Races'].isEmpty) ||
         (responseAsJson['MRData']['RaceTable']['Races'][0]['SprintResults'] ==
             null)) {
-      throw Exception;
+      return [];
     } else {
       List jsonResponse =
           responseAsJson['MRData']['RaceTable']['Races'][0]['SprintResults'];
@@ -426,7 +427,10 @@ class _ErgastApiCalls {
             race['Results'][0]['Driver']['familyName'],
             race['Results'][0]['Driver']['code'],
             race['Results'][0]['Constructor']['constructorId'],
-            race['Results'][0]['Time']?['time'] ?? 'DNF',
+            race['Results'][0]['positionText'] == 'R'
+                ? 'DNF'
+                : race['Results'][0]['Time']?['time'] ??
+                    race['Results'][0]['status'],
             int.parse(race['Results'][0]['FastestLap']?['rank'] ?? '20') == 1
                 ? true
                 : false,
@@ -436,26 +440,32 @@ class _ErgastApiCalls {
             points: race['Results'][0]['points'],
             raceId: race['Circuit']['circuitId'],
             raceName: race['raceName'],
+            status: race['Results'][0]['status'],
           ),
-          DriverResult(
-            race['Results'][1]['Driver']['driverId'],
-            race['Results'][1]['position'],
-            race['Results'][1]['number'],
-            race['Results'][1]['Driver']['givenName'],
-            race['Results'][1]['Driver']['familyName'],
-            race['Results'][1]['Driver']['code'],
-            race['Results'][1]['Constructor']['constructorId'],
-            race['Results'][1]['Time']?['time'] ?? 'DNF',
-            int.parse(race['Results'][1]['FastestLap']?['rank'] ?? '20') == 1
-                ? true
-                : false,
-            race['Results'][1]['FastestLap']?['Time']['time'] ?? '00:00:00',
-            race['Results'][1]['FastestLap']?['rank'] ?? '20',
-            lapsDone: race['Results'][1]['laps'],
-            points: race['Results'][1]['points'],
-            raceId: race['Circuit']['circuitId'],
-            raceName: race['raceName'],
-          ),
+          if (race['Results'].length > 1)
+            DriverResult(
+              race['Results'][1]['Driver']['driverId'],
+              race['Results'][1]['position'],
+              race['Results'][1]['number'],
+              race['Results'][1]['Driver']['givenName'],
+              race['Results'][1]['Driver']['familyName'],
+              race['Results'][1]['Driver']['code'],
+              race['Results'][1]['Constructor']['constructorId'],
+              race['Results'][1]['positionText'] == 'R'
+                  ? 'DNF'
+                  : race['Results'][1]['Time']?['time'] ??
+                      race['Results'][1]['status'],
+              int.parse(race['Results'][1]['FastestLap']?['rank'] ?? '20') == 1
+                  ? true
+                  : false,
+              race['Results'][1]['FastestLap']?['Time']['time'] ?? '00:00:00',
+              race['Results'][1]['FastestLap']?['rank'] ?? '20',
+              lapsDone: race['Results'][1]['laps'],
+              points: race['Results'][1]['points'],
+              raceId: race['Circuit']['circuitId'],
+              raceName: race['raceName'],
+              status: race['Results'][1]['status'],
+            ),
         ],
       );
     }
