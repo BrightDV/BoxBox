@@ -127,6 +127,7 @@ class CircuitScreen extends StatelessWidget {
                               CircuitMapScreen(
                                 race.circuitId,
                               ),
+                              isDialog: true,
                             ),
                             snapshot.data!['raceResults'] != null &&
                                     snapshot.data!['raceResults'].isNotEmpty
@@ -245,6 +246,7 @@ class CircuitScreen extends StatelessWidget {
                                           CircuitMapScreen(
                                             race.circuitId,
                                           ),
+                                          isDialog: false,
                                         ),
                                         snapshot.data!['raceResults'] != null &&
                                                 snapshot.data!['raceResults']

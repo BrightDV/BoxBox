@@ -23,10 +23,12 @@ class BoxBoxButton extends StatelessWidget {
   final String title;
   final Icon icon;
   final Widget destination;
+  final bool isDialog;
   const BoxBoxButton(
     this.title,
     this.icon,
     this.destination, {
+    this.isDialog = false,
     super.key,
   });
 
@@ -60,12 +62,17 @@ class BoxBoxButton extends StatelessWidget {
             ),
           ),
         ),
-        onTap: () => Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => destination,
-          ),
-        ),
+        onTap: () => isDialog
+            ? showDialog(
+                context: context,
+                builder: (BuildContext context) => destination,
+              )
+            : Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => destination,
+                ),
+              ),
       ),
     );
   }
