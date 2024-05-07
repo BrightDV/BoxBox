@@ -370,12 +370,12 @@ class FormulaOneScraper {
 
     List<dom.Element> tempDriverArticles =
         document.getElementsByClassName('f1-driver-article-card');
-    for (var element in tempDriverArticles) {
+    for (dom.Element element in tempDriverArticles) {
       if (element.attributes['href'] != null) {
         results[1].add(
           [
             element.attributes['href']!.split('.').last,
-            element.children[0].children[0].attributes['src']!,
+            element.getElementsByTagName("img").first.attributes['src']!,
             element.children[0].children[1].children[1].text,
             element.children[0].children[1].children[0].text,
           ],
@@ -399,18 +399,13 @@ class FormulaOneScraper {
         document.getElementsByClassName('f1-carousel__slide');
     for (var element in tempDriverMedias) {
       String imageUrl = element.firstChild!.firstChild!.attributes['src'] ?? '';
-
       results[3][0].add(imageUrl);
     }
-
-    print("gllery ok");
 
     tempDriverMedias = document.getElementsByClassName('gallery-description');
     for (var element in tempDriverMedias) {
       results[3][1].add(element.text);
     }
-
-    print("gallery desc ok");
 
     return results;
   }
