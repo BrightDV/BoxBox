@@ -137,8 +137,7 @@ class CircuitScreen extends StatelessWidget {
                                     snapshot.data!['curatedSection']['items'])
                                 : Container(),
                             TrackLayoutImage(race),
-                            CircuitFacts(race.circuitId),
-                            CircuitHistory(race.circuitId),
+                            CircuitFactsAndHistory(race.circuitId),
                           ],
                         )
                       : BoxBoxButton(
@@ -258,8 +257,7 @@ class CircuitScreen extends StatelessWidget {
                                                     ['items'])
                                             : Container(),
                                         TrackLayoutImage(race),
-                                        CircuitFacts(race.circuitId),
-                                        CircuitHistory(race.circuitId),
+                                        CircuitFactsAndHistory(race.circuitId),
                                       ],
                                     )
                                   : BoxBoxButton(
@@ -650,112 +648,92 @@ class CuratedSection extends StatelessWidget {
   }
 }
 
-class CircuitFacts extends StatelessWidget {
+class CircuitFactsAndHistory extends StatelessWidget {
   final String circuitId;
-  const CircuitFacts(this.circuitId, {super.key});
+  const CircuitFactsAndHistory(this.circuitId, {super.key});
 
   @override
   Widget build(BuildContext context) {
+    bool useDarkMode =
+        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     return Padding(
       padding: const EdgeInsets.all(10),
       child: FutureBuilder<Map>(
-        future: FormulaOneScraper().scrapeCircuitFacts(
+        future: FormulaOneScraper().scrapeCircuitFactsAndHistory(
           Convert().circuitNameFromErgastToFormulaOneForRaceHub(
             circuitId,
           ),
           context,
         ),
         builder: (context, snapshot) => snapshot.hasData
-            ? ListView.builder(
-                itemCount: snapshot.data!.length,
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemBuilder: (context, index) => Column(
-                  children: [
-                    Text(
-                      snapshot.data!.keys.elementAt(index),
-                      textAlign: TextAlign.center,
+            ? Column(
+                children: [
+                  ListView.builder(
+                    itemCount: snapshot.data!['facts'].length,
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemBuilder: (context, index) => Column(
+                      children: [
+                        Text(
+                          snapshot.data!['facts'].keys.elementAt(index),
+                          textAlign: TextAlign.center,
+                        ),
+                        Text(
+                          snapshot.data!['facts']
+                              [snapshot.data!['facts'].keys.elementAt(index)],
+                          style: TextStyle(
+                            fontSize: 25,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
                     ),
-                    Text(
-                      snapshot.data![snapshot.data!.keys.elementAt(index)],
-                      style: TextStyle(
-                        fontSize: 25,
+                  ),
+                  MarkdownBody(
+                    data: snapshot.data!['history'],
+                    selectable: true,
+                    onTapLink: (text, href, title) => launchUrl(
+                      Uri.parse(href!),
+                    ),
+                    styleSheet: MarkdownStyleSheet(
+                      textAlign: WrapAlignment.spaceBetween,
+                      strong: TextStyle(
+                        color: useDarkMode
+                            ? HSLColor.fromColor(
+                                Theme.of(context).colorScheme.onPrimary,
+                              ).withLightness(0.35).toColor()
+                            : Theme.of(context).colorScheme.onPrimary,
+                        fontSize: 20,
                         fontWeight: FontWeight.w500,
                       ),
-                      textAlign: TextAlign.center,
+                      p: TextStyle(
+                        fontSize: 14,
+                      ),
+                      pPadding: const EdgeInsets.only(
+                        top: 10,
+                        bottom: 10,
+                      ),
+                      a: TextStyle(
+                        color: useDarkMode
+                            ? HSLColor.fromColor(
+                                Theme.of(context).colorScheme.onPrimary,
+                              ).withLightness(0.35).toColor()
+                            : Theme.of(context).colorScheme.onPrimary,
+                        decoration: TextDecoration.underline,
+                        decorationColor: useDarkMode
+                            ? HSLColor.fromColor(
+                                Theme.of(context).colorScheme.onPrimary,
+                              ).withLightness(0.35).toColor()
+                            : Theme.of(context).colorScheme.onPrimary,
+                        fontWeight: FontWeight.normal,
+                      ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               )
             : const SizedBox(
-                height: 400,
-                child: LoadingIndicatorUtil(),
-              ),
-      ),
-    );
-  }
-}
-
-class CircuitHistory extends StatelessWidget {
-  final String circuitId;
-  const CircuitHistory(this.circuitId, {super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    bool useDarkMode =
-        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
-
-    return Padding(
-      padding: const EdgeInsets.all(10),
-      child: FutureBuilder<String>(
-        future: FormulaOneScraper().scrapeCircuitHistory(
-          Convert().circuitNameFromErgastToFormulaOneForRaceHub(
-            circuitId,
-          ),
-        ),
-        builder: (context, snapshot) => snapshot.hasData
-            ? MarkdownBody(
-                data: snapshot.data!,
-                selectable: true,
-                onTapLink: (text, href, title) => launchUrl(
-                  Uri.parse(href!),
-                ),
-                styleSheet: MarkdownStyleSheet(
-                  textAlign: WrapAlignment.spaceBetween,
-                  strong: TextStyle(
-                    color: useDarkMode
-                        ? HSLColor.fromColor(
-                            Theme.of(context).colorScheme.onPrimary,
-                          ).withLightness(0.35).toColor()
-                        : Theme.of(context).colorScheme.onPrimary,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w500,
-                  ),
-                  p: TextStyle(
-                    fontSize: 14,
-                  ),
-                  pPadding: const EdgeInsets.only(
-                    top: 10,
-                    bottom: 10,
-                  ),
-                  a: TextStyle(
-                    color: useDarkMode
-                        ? HSLColor.fromColor(
-                            Theme.of(context).colorScheme.onPrimary,
-                          ).withLightness(0.35).toColor()
-                        : Theme.of(context).colorScheme.onPrimary,
-                    decoration: TextDecoration.underline,
-                    decorationColor: useDarkMode
-                        ? HSLColor.fromColor(
-                            Theme.of(context).colorScheme.onPrimary,
-                          ).withLightness(0.35).toColor()
-                        : Theme.of(context).colorScheme.onPrimary,
-                    fontWeight: FontWeight.normal,
-                  ),
-                ),
-              )
-            : const SizedBox(
-                height: 400,
+                height: 800,
                 child: LoadingIndicatorUtil(),
               ),
       ),
