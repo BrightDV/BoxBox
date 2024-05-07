@@ -694,6 +694,7 @@ class FormulaOneScraper {
   }
 
   Future<String> scrapeCircuitHistory(String formulaOneCircuitName) async {
+    // TODO merge with scrapeCircuitFact to avoid double request
     late Uri formulaOneCircuitPageUrl;
     String endpoint = Hive.box('settings')
         .get('server', defaultValue: defaultEndpoint) as String;

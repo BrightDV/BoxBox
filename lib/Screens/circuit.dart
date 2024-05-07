@@ -25,6 +25,7 @@ import 'package:boxbox/api/ergast.dart';
 import 'package:boxbox/api/event_tracker.dart';
 import 'package:boxbox/api/formula1.dart';
 import 'package:boxbox/api/race_components.dart';
+import 'package:boxbox/helpers/buttons.dart';
 import 'package:boxbox/helpers/convert_ergast_and_formula_one.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/news.dart';
@@ -51,10 +52,6 @@ class CircuitScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool useDarkMode =
-        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
-    bool useDataSaverMode = Hive.box('settings')
-        .get('useDataSaverMode', defaultValue: false) as bool;
     return Scaffold(
       body: isFetched ?? true
           ? NestedScrollView(
@@ -87,559 +84,71 @@ class CircuitScreen extends StatelessWidget {
                       ? Column(
                           children: [
                             snapshot.data!['headline'] != null
-                                ? Padding(
-                                    padding: const EdgeInsets.all(10),
-                                    child: Text(
-                                      snapshot.data!['headline'],
-                                      style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                      textAlign: TextAlign.justify,
-                                    ),
-                                  )
+                                ? Headline(snapshot.data!['headline'])
                                 : Container(),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 3,
-                                horizontal: 10,
+                            BoxBoxButton(
+                              AppLocalizations.of(context)!.viewResults,
+                              Icon(
+                                Icons.arrow_forward_rounded,
                               ),
-                              child: GestureDetector(
-                                child: Container(
-                                  width: double.infinity,
-                                  decoration: BoxDecoration(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onSecondary,
-                                    borderRadius: BorderRadius.circular(5),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.fromLTRB(
-                                      20,
-                                      10,
-                                      20,
-                                      10,
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        Text(
-                                          AppLocalizations.of(context)!
-                                              .viewResults,
-                                        ),
-                                        const Spacer(),
-                                        Icon(
-                                          Icons.arrow_forward_rounded,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                onTap: () => Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => RaceDetailsScreen(
-                                      race,
-                                      snapshot.data!['meetingContext']
-                                              ['timetables'][2]['session'] ==
-                                          's',
-                                    ),
-                                  ),
-                                ),
+                              RaceDetailsScreen(
+                                race,
+                                snapshot.data!['meetingContext']['timetables']
+                                        [2]['session'] ==
+                                    's',
                               ),
                             ),
                             snapshot.data!['links'] != null &&
                                     snapshot.data!['links'].isNotEmpty
-                                ? Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 3,
-                                      horizontal: 10,
+                                ? BoxBoxButton(
+                                    AppLocalizations.of(context)!
+                                        .viewHighlights,
+                                    Icon(
+                                      Icons.arrow_forward_rounded,
                                     ),
-                                    child: GestureDetector(
-                                      child: Container(
-                                        width: double.infinity,
-                                        decoration: BoxDecoration(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .onSecondary,
-                                          borderRadius:
-                                              BorderRadius.circular(5),
-                                        ),
-                                        child: Padding(
-                                          padding: const EdgeInsets.fromLTRB(
-                                              20, 10, 20, 10),
-                                          child: Row(
-                                            children: [
-                                              Text(
-                                                AppLocalizations.of(context)!
-                                                    .viewHighlights,
-                                              ),
-                                              const Spacer(),
-                                              Icon(
-                                                Icons.arrow_forward_rounded,
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                      onTap: () => Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => ArticleScreen(
-                                            snapshot.data!['links'][1]['url']
-                                                    .endsWith('.html')
-                                                ? snapshot.data!['links'][1]
-                                                        ['url']
-                                                    .split('.')[4]
-                                                : snapshot.data!['links'][1]
-                                                        ['url']
-                                                    .split('.')
-                                                    .last,
-                                            '',
-                                            true,
-                                          ),
-                                        ),
-                                      ),
+                                    ArticleScreen(
+                                      snapshot.data!['links'][1]['url']
+                                              .endsWith('.html')
+                                          ? snapshot.data!['links'][1]['url']
+                                              .split('.')[4]
+                                          : snapshot.data!['links'][1]['url']
+                                              .split('.')
+                                              .last,
+                                      '',
+                                      true,
                                     ),
                                   )
                                 : Container(),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 3,
-                                horizontal: 10,
+                            BoxBoxButton(
+                              AppLocalizations.of(context)!.grandPrixMap,
+                              Icon(
+                                Icons.map_outlined,
                               ),
-                              child: GestureDetector(
-                                child: Container(
-                                  width: double.infinity,
-                                  decoration: BoxDecoration(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onSecondary,
-                                    borderRadius: BorderRadius.circular(5),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.fromLTRB(
-                                      20,
-                                      10,
-                                      20,
-                                      10,
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        Text(
-                                          AppLocalizations.of(context)!
-                                              .grandPrixMap,
-                                        ),
-                                        const Spacer(),
-                                        Icon(
-                                          Icons.map_outlined,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                onTap: () => showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) =>
-                                      CircuitMapScreen(
-                                    race.circuitId,
-                                  ),
-                                ),
+                              CircuitMapScreen(
+                                race.circuitId,
                               ),
                             ),
                             snapshot.data!['raceResults'] != null &&
                                     snapshot.data!['raceResults'].isNotEmpty
-                                ? Padding(
-                                    padding: const EdgeInsets.all(
-                                      10,
-                                    ),
-                                    child: Container(
-                                      height: 240,
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .onSecondary,
-                                        ),
-                                        borderRadius:
-                                            BorderRadius.circular(15.0),
-                                      ),
-                                      child: Column(
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                              top: 15,
-                                            ),
-                                            child: Text(
-                                              snapshot.data!['race']
-                                                  ['meetingCountryName'],
-                                              style: TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.w500,
-                                              ),
-                                            ),
-                                          ),
-                                          Text(
-                                            AppLocalizations.of(context)!.race,
-                                            style: TextStyle(
-                                              fontSize: 14,
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                              top: 15,
-                                              left: 15,
-                                            ),
-                                            child: Row(
-                                              children: [
-                                                Expanded(
-                                                  flex: 5,
-                                                  child: Text(
-                                                    AppLocalizations.of(
-                                                            context)!
-                                                        .positionAbbreviation,
-                                                  ),
-                                                ),
-                                                const Spacer(),
-                                                Expanded(
-                                                  flex: 5,
-                                                  child: Text(
-                                                    AppLocalizations.of(
-                                                            context)!
-                                                        .time,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          for (Map driverResults
-                                              in snapshot.data!['raceResults'])
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                top: 7,
-                                              ),
-                                              child: Row(
-                                                children: [
-                                                  Expanded(
-                                                    flex: 2,
-                                                    child: Text(
-                                                      driverResults[
-                                                                  'positionNumber'] ==
-                                                              '66666'
-                                                          ? 'DQ'
-                                                          : driverResults[
-                                                              'positionNumber'],
-                                                      style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.w500,
-                                                      ),
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                    ),
-                                                  ),
-                                                  Expanded(
-                                                    flex: 1,
-                                                    child: SizedBox(
-                                                      height: 15,
-                                                      child: VerticalDivider(
-                                                        color: Color(
-                                                          int.parse(
-                                                            'FF${driverResults['teamColourCode']}',
-                                                            radix: 16,
-                                                          ),
-                                                        ),
-                                                        thickness: 5,
-                                                        width: 5,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Expanded(
-                                                    flex: 3,
-                                                    child: Text(
-                                                      driverResults['driverTLA']
-                                                          .toString(),
-                                                    ),
-                                                  ),
-                                                  const Spacer(),
-                                                  Expanded(
-                                                    flex: 6,
-                                                    child: Text(
-                                                      driverResults['gapToLeader'] !=
-                                                                  "0.0" &&
-                                                              driverResults[
-                                                                      'gapToLeader'] !=
-                                                                  "0"
-                                                          ? '+${driverResults['gapToLeader']}'
-                                                          : driverResults[
-                                                              'raceTime'],
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          Expanded(
-                                            child: Padding(
-                                              padding: const EdgeInsets.only(
-                                                top: 15,
-                                              ),
-                                              child: SizedBox(
-                                                width: double.infinity,
-                                                child: ClipRRect(
-                                                  borderRadius:
-                                                      const BorderRadius.only(
-                                                    topLeft: Radius.zero,
-                                                    topRight: Radius.zero,
-                                                    bottomLeft:
-                                                        Radius.circular(15),
-                                                    bottomRight:
-                                                        Radius.circular(15),
-                                                  ),
-                                                  child: ElevatedButton(
-                                                    onPressed: () =>
-                                                        Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            RaceDetailsScreen(
-                                                          race,
-                                                          snapshot.data!['meetingContext']
-                                                                      [
-                                                                      'timetables']
-                                                                  [
-                                                                  2]['session'] ==
-                                                              's',
-                                                          tab: 10,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    style: ElevatedButton
-                                                        .styleFrom(
-                                                      shape:
-                                                          const ContinuousRectangleBorder(
-                                                        borderRadius:
-                                                            BorderRadius.zero,
-                                                      ),
-                                                    ),
-                                                    child: Text(
-                                                      AppLocalizations.of(
-                                                              context)!
-                                                          .viewResults,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  )
+                                ? RaceResults(snapshot, race)
                                 : Container(),
                             snapshot.data!['curatedSection'] != null
-                                ? Padding(
-                                    padding: EdgeInsets.only(left: 10),
-                                    child: SingleChildScrollView(
-                                      scrollDirection: Axis.horizontal,
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          for (Map article in snapshot
-                                              .data!['curatedSection']['items'])
-                                            NewsItem(
-                                              News(
-                                                article['id'],
-                                                article['articleType'],
-                                                article['slug'],
-                                                article['title'],
-                                                article['metaDescription'] ??
-                                                    ' ',
-                                                DateTime.parse(
-                                                    article['updatedAt']),
-                                                useDataSaverMode
-                                                    ? article['thumbnail']
-                                                                    ['image'][
-                                                                'renditions'] !=
-                                                            null
-                                                        ? article['thumbnail']
-                                                                    ['image']
-                                                                ['renditions']
-                                                            ['2col']
-                                                        : article['thumbnail']
-                                                                    ['image']
-                                                                ['url'] +
-                                                            '.transform/2col-retina/image.jpg'
-                                                    : article['thumbnail']
-                                                        ['image']['url'],
-                                              ),
-                                              true,
-                                            ),
-                                          SizedBox(width: 5),
-                                        ],
-                                      ),
-                                    ),
-                                  )
+                                ? CuratedSection(
+                                    snapshot.data!['curatedSection']['items'])
                                 : Container(),
-                            Padding(
-                              padding: const EdgeInsets.all(5),
-                              child: TrackLayoutImage(race),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(10),
-                              child: FutureBuilder<Map>(
-                                future: FormulaOneScraper().scrapeCircuitFacts(
-                                  Convert()
-                                      .circuitNameFromErgastToFormulaOneForRaceHub(
-                                    race.circuitId,
-                                  ),
-                                  context,
-                                ),
-                                builder: (context, snapshot) => snapshot.hasData
-                                    ? ListView.builder(
-                                        itemCount: snapshot.data!.length,
-                                        physics:
-                                            const NeverScrollableScrollPhysics(),
-                                        shrinkWrap: true,
-                                        itemBuilder: (context, index) => Column(
-                                          children: [
-                                            Text(
-                                              snapshot.data!.keys
-                                                  .elementAt(index),
-                                              textAlign: TextAlign.center,
-                                            ),
-                                            Text(
-                                              snapshot.data![snapshot.data!.keys
-                                                  .elementAt(index)],
-                                              style: TextStyle(
-                                                fontSize: 25,
-                                                fontWeight: FontWeight.w500,
-                                              ),
-                                              textAlign: TextAlign.center,
-                                            ),
-                                          ],
-                                        ),
-                                      )
-                                    : const SizedBox(
-                                        height: 400,
-                                        child: LoadingIndicatorUtil(),
-                                      ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(10),
-                              child: FutureBuilder<String>(
-                                future:
-                                    FormulaOneScraper().scrapeCircuitHistory(
-                                  Convert()
-                                      .circuitNameFromErgastToFormulaOneForRaceHub(
-                                    race.circuitId,
-                                  ),
-                                ),
-                                builder: (context, snapshot) => snapshot.hasData
-                                    ? MarkdownBody(
-                                        data: snapshot.data!,
-                                        selectable: true,
-                                        onTapLink: (text, href, title) =>
-                                            launchUrl(
-                                          Uri.parse(href!),
-                                        ),
-                                        styleSheet: MarkdownStyleSheet(
-                                          textAlign: WrapAlignment.spaceBetween,
-                                          strong: TextStyle(
-                                            color: useDarkMode
-                                                ? HSLColor.fromColor(
-                                                    Theme.of(context)
-                                                        .colorScheme
-                                                        .onPrimary,
-                                                  )
-                                                    .withLightness(0.35)
-                                                    .toColor()
-                                                : Theme.of(context)
-                                                    .colorScheme
-                                                    .onPrimary,
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                          p: TextStyle(
-                                            fontSize: 14,
-                                          ),
-                                          pPadding: const EdgeInsets.only(
-                                            top: 10,
-                                            bottom: 10,
-                                          ),
-                                          a: TextStyle(
-                                            color: useDarkMode
-                                                ? HSLColor.fromColor(
-                                                    Theme.of(context)
-                                                        .colorScheme
-                                                        .onPrimary,
-                                                  )
-                                                    .withLightness(0.35)
-                                                    .toColor()
-                                                : Theme.of(context)
-                                                    .colorScheme
-                                                    .onPrimary,
-                                            decoration:
-                                                TextDecoration.underline,
-                                            decorationColor: useDarkMode
-                                                ? HSLColor.fromColor(
-                                                    Theme.of(context)
-                                                        .colorScheme
-                                                        .onPrimary,
-                                                  )
-                                                    .withLightness(0.35)
-                                                    .toColor()
-                                                : Theme.of(context)
-                                                    .colorScheme
-                                                    .onPrimary,
-                                            fontWeight: FontWeight.normal,
-                                          ),
-                                        ),
-                                      )
-                                    : const SizedBox(
-                                        height: 400,
-                                        child: LoadingIndicatorUtil(),
-                                      ),
-                              ),
-                            ),
+                            TrackLayoutImage(race),
+                            CircuitFacts(race.circuitId),
+                            CircuitHistory(race.circuitId),
                           ],
                         )
-                      : Padding(
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 3,
-                            horizontal: 10,
+                      : BoxBoxButton(
+                          AppLocalizations.of(context)!.viewResults,
+                          Icon(
+                            Icons.arrow_forward_rounded,
                           ),
-                          child: GestureDetector(
-                            child: Container(
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                color:
-                                    Theme.of(context).colorScheme.onSecondary,
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(20, 10, 20, 10),
-                                child: Row(
-                                  children: [
-                                    Text(
-                                      AppLocalizations.of(context)!.viewResults,
-                                    ),
-                                    const Spacer(),
-                                    Icon(
-                                      Icons.arrow_forward_rounded,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            onTap: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => RaceDetailsScreen(
-                                  race,
-                                  false, // offline
-                                ),
-                              ),
-                            ),
+                          RaceDetailsScreen(
+                            race,
+                            false, // offline
                           ),
                         ),
                 ),
@@ -686,657 +195,81 @@ class CircuitScreen extends StatelessWidget {
                                   ? Column(
                                       children: [
                                         snapshot.data!['headline'] != null
-                                            ? Padding(
-                                                padding:
-                                                    const EdgeInsets.all(10),
-                                                child: Text(
-                                                  snapshot.data!['headline'],
-                                                  style: TextStyle(
-                                                    fontSize: 20,
-                                                    fontWeight: FontWeight.w500,
-                                                  ),
-                                                  textAlign: TextAlign.justify,
-                                                ),
-                                              )
+                                            ? Headline(
+                                                snapshot.data!['headline'])
                                             : Container(),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                            vertical: 3,
-                                            horizontal: 10,
+                                        BoxBoxButton(
+                                          AppLocalizations.of(context)!
+                                              .viewResults,
+                                          Icon(
+                                            Icons.arrow_forward_rounded,
                                           ),
-                                          child: GestureDetector(
-                                            child: Container(
-                                              width: double.infinity,
-                                              decoration: BoxDecoration(
-                                                color: Theme.of(context)
-                                                    .colorScheme
-                                                    .onSecondary,
-                                                borderRadius:
-                                                    BorderRadius.circular(5),
-                                              ),
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.fromLTRB(
-                                                  20,
-                                                  10,
-                                                  20,
-                                                  10,
-                                                ),
-                                                child: Row(
-                                                  children: [
-                                                    Text(
-                                                      AppLocalizations.of(
-                                                              context)!
-                                                          .viewResults,
-                                                    ),
-                                                    const Spacer(),
-                                                    Icon(
-                                                      Icons
-                                                          .arrow_forward_rounded,
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                            onTap: () => Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    RaceDetailsScreen(
-                                                  circuitSnapshot.data!,
-                                                  snapshot.data!['meetingContext']
-                                                              ['timetables'][2]
-                                                          ['session'] ==
-                                                      's',
-                                                ),
-                                              ),
-                                            ),
+                                          RaceDetailsScreen(
+                                            race,
+                                            snapshot.data!['meetingContext']
+                                                        ['timetables'][2]
+                                                    ['session'] ==
+                                                's',
                                           ),
                                         ),
-                                        snapshot.data!['links'].isNotEmpty
-                                            ? Padding(
-                                                padding:
-                                                    const EdgeInsets.all(5),
-                                                child: GestureDetector(
-                                                  child: Container(
-                                                    width: double.infinity,
-                                                    decoration: BoxDecoration(
-                                                      color: Theme.of(context)
-                                                          .colorScheme
-                                                          .onSecondary,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                        5,
-                                                      ),
-                                                    ),
-                                                    child: Padding(
-                                                      padding: const EdgeInsets
-                                                          .fromLTRB(
-                                                        20,
-                                                        10,
-                                                        20,
-                                                        10,
-                                                      ),
-                                                      child: Row(
-                                                        children: [
-                                                          Text(
-                                                            AppLocalizations.of(
-                                                                    context)!
-                                                                .viewHighlights,
-                                                          ),
-                                                          const Spacer(),
-                                                          Icon(
-                                                            Icons
-                                                                .arrow_forward_rounded,
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  onTap: () => Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          ArticleScreen(
-                                                        snapshot.data!['links']
-                                                                    [1]['url']
-                                                                .endsWith(
-                                                                    '.html')
-                                                            ? snapshot
-                                                                .data!['links']
-                                                                    [1]['url']
-                                                                .split('.')[4]
-                                                            : snapshot
-                                                                .data!['links']
-                                                                    [1]['url']
-                                                                .split('.')
-                                                                .last,
-                                                        '',
-                                                        true,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              )
-                                            : Container(),
-                                        Padding(
-                                          padding: const EdgeInsets.all(5),
-                                          child: GestureDetector(
-                                            child: Container(
-                                              width: double.infinity,
-                                              decoration: BoxDecoration(
-                                                color: Theme.of(context)
-                                                    .colorScheme
-                                                    .onSecondary,
-                                                borderRadius:
-                                                    BorderRadius.circular(5),
-                                              ),
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.fromLTRB(
-                                                  20,
-                                                  10,
-                                                  20,
-                                                  10,
-                                                ),
-                                                child: Row(
-                                                  children: [
-                                                    Text(
-                                                      AppLocalizations.of(
-                                                              context)!
-                                                          .grandPrixMap,
-                                                    ),
-                                                    const Spacer(),
-                                                    Icon(
-                                                      Icons.map_outlined,
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                            onTap: () => showDialog(
-                                              context: context,
-                                              builder: (BuildContext context) =>
-                                                  CircuitMapScreen(
-                                                circuitSnapshot.data!.circuitId,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        snapshot.data!['raceResults'].isNotEmpty
-                                            ? Padding(
-                                                padding: const EdgeInsets.all(
-                                                  10,
-                                                ),
-                                                child: Container(
-                                                  height: 240,
-                                                  decoration: BoxDecoration(
-                                                    border: Border.all(
-                                                      color: Theme.of(context)
-                                                          .colorScheme
-                                                          .onSecondary,
-                                                    ),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            15.0),
-                                                  ),
-                                                  child: Column(
-                                                    children: [
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .only(
-                                                          top: 15,
-                                                        ),
-                                                        child: Text(
-                                                          snapshot.data!['race']
-                                                              [
-                                                              'meetingCountryName'],
-                                                          style: TextStyle(
-                                                            fontSize: 16,
-                                                            fontWeight:
-                                                                FontWeight.w500,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      Text(
-                                                        AppLocalizations.of(
-                                                                context)!
-                                                            .race,
-                                                        style: TextStyle(
-                                                          fontSize: 14,
-                                                        ),
-                                                      ),
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .only(
-                                                          top: 15,
-                                                          left: 15,
-                                                        ),
-                                                        child: Row(
-                                                          children: [
-                                                            Expanded(
-                                                              flex: 5,
-                                                              child: Text(
-                                                                AppLocalizations.of(
-                                                                        context)!
-                                                                    .positionAbbreviation,
-                                                              ),
-                                                            ),
-                                                            const Spacer(),
-                                                            Expanded(
-                                                              flex: 5,
-                                                              child: Text(
-                                                                AppLocalizations.of(
-                                                                        context)!
-                                                                    .time,
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      for (Map driverResults
-                                                          in snapshot.data![
-                                                              'raceResults'])
-                                                        Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .only(
-                                                            top: 7,
-                                                          ),
-                                                          child: Row(
-                                                            children: [
-                                                              Expanded(
-                                                                flex: 2,
-                                                                child: Text(
-                                                                  driverResults[
-                                                                              'positionNumber'] ==
-                                                                          '66666'
-                                                                      ? 'DQ'
-                                                                      : driverResults[
-                                                                          'positionNumber'],
-                                                                  style:
-                                                                      TextStyle(
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w500,
-                                                                  ),
-                                                                  textAlign:
-                                                                      TextAlign
-                                                                          .center,
-                                                                ),
-                                                              ),
-                                                              Expanded(
-                                                                flex: 1,
-                                                                child: SizedBox(
-                                                                  height: 15,
-                                                                  child:
-                                                                      VerticalDivider(
-                                                                    color:
-                                                                        Color(
-                                                                      int.parse(
-                                                                          'FF${driverResults['teamColourCode']}',
-                                                                          radix:
-                                                                              16),
-                                                                    ),
-                                                                    thickness:
-                                                                        5,
-                                                                    width: 5,
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                              Expanded(
-                                                                flex: 3,
-                                                                child: Text(
-                                                                  driverResults[
-                                                                          'driverTLA']
-                                                                      .toString(),
-                                                                ),
-                                                              ),
-                                                              const Spacer(),
-                                                              Expanded(
-                                                                flex: 6,
-                                                                child: Text(
-                                                                  driverResults['gapToLeader'] !=
-                                                                              "0.0" &&
-                                                                          driverResults['gapToLeader'] !=
-                                                                              "0"
-                                                                      ? '+${driverResults['gapToLeader']}'
-                                                                      : driverResults[
-                                                                          'raceTime'],
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                      Expanded(
-                                                        child: Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .only(
-                                                            top: 15,
-                                                          ),
-                                                          child: SizedBox(
-                                                            width:
-                                                                double.infinity,
-                                                            child: ClipRRect(
-                                                              borderRadius:
-                                                                  const BorderRadius
-                                                                      .only(
-                                                                topLeft:
-                                                                    Radius.zero,
-                                                                topRight:
-                                                                    Radius.zero,
-                                                                bottomLeft: Radius
-                                                                    .circular(
-                                                                        15),
-                                                                bottomRight:
-                                                                    Radius
-                                                                        .circular(
-                                                                            15),
-                                                              ),
-                                                              child:
-                                                                  ElevatedButton(
-                                                                onPressed: () =>
-                                                                    Navigator
-                                                                        .push(
-                                                                  context,
-                                                                  MaterialPageRoute(
-                                                                    builder:
-                                                                        (context) =>
-                                                                            RaceDetailsScreen(
-                                                                      circuitSnapshot
-                                                                          .data!,
-                                                                      snapshot.data!['meetingContext']['timetables'][2]
-                                                                              [
-                                                                              'session'] ==
-                                                                          's',
-                                                                      tab: 10,
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                                style: ElevatedButton
-                                                                    .styleFrom(
-                                                                  shape:
-                                                                      const ContinuousRectangleBorder(
-                                                                    borderRadius:
-                                                                        BorderRadius
-                                                                            .zero,
-                                                                  ),
-                                                                ),
-                                                                child: Text(
-                                                                  AppLocalizations.of(
-                                                                          context)!
-                                                                      .viewResults,
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              )
-                                            : Container(),
-                                        snapshot.data!['curatedSection'] != null
-                                            ? Padding(
-                                                padding: const EdgeInsets.only(
-                                                  left: 10,
-                                                ),
-                                                child: SingleChildScrollView(
-                                                  scrollDirection:
-                                                      Axis.horizontal,
-                                                  child: Row(
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
-                                                    children: [
-                                                      for (Map article in snapshot
-                                                                  .data![
-                                                              'curatedSection']
-                                                          ['items'])
-                                                        NewsItem(
-                                                          News(
-                                                            article['id'],
-                                                            article[
-                                                                'articleType'],
-                                                            article['slug'],
-                                                            article['title'],
-                                                            article['metaDescription'] ??
-                                                                ' ',
-                                                            DateTime.parse(
-                                                                article[
-                                                                    'updatedAt']),
-                                                            useDataSaverMode
-                                                                ? article['thumbnail']['image']
-                                                                            [
-                                                                            'renditions'] !=
-                                                                        null
-                                                                    ? article['thumbnail']
-                                                                                ['image']
-                                                                            [
-                                                                            'renditions']
-                                                                        ['2col']
-                                                                    : article['thumbnail']
-                                                                                ['image']
-                                                                            [
-                                                                            'url'] +
-                                                                        '.transform/2col-retina/image.jpg'
-                                                                : article['thumbnail']
-                                                                        [
-                                                                        'image']
-                                                                    ['url'],
-                                                          ),
-                                                          true,
-                                                        ),
-                                                      SizedBox(width: 5),
-                                                    ],
-                                                  ),
-                                                ),
-                                              )
-                                            : Container(),
-                                        Padding(
-                                          padding: const EdgeInsets.all(5),
-                                          child: TrackLayoutImage(
-                                            circuitSnapshot.data!,
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.all(10),
-                                          child: FutureBuilder<Map>(
-                                            future: FormulaOneScraper()
-                                                .scrapeCircuitFacts(
-                                              Convert()
-                                                  .circuitNameFromErgastToFormulaOneForRaceHub(
-                                                circuitSnapshot.data!.circuitId,
-                                              ),
-                                              context,
-                                            ),
-                                            builder: (context, snapshot) =>
-                                                snapshot.hasData
-                                                    ? ListView.builder(
-                                                        itemCount: snapshot
-                                                            .data!.length,
-                                                        physics:
-                                                            const NeverScrollableScrollPhysics(),
-                                                        shrinkWrap: true,
-                                                        itemBuilder:
-                                                            (context, index) =>
-                                                                Column(
-                                                          children: [
-                                                            Text(
-                                                              snapshot
-                                                                  .data!.keys
-                                                                  .elementAt(
-                                                                      index),
-                                                              textAlign:
-                                                                  TextAlign
-                                                                      .center,
-                                                            ),
-                                                            Text(
-                                                              snapshot.data![
-                                                                  snapshot.data!
-                                                                      .keys
-                                                                      .elementAt(
-                                                                          index)],
-                                                              style: TextStyle(
-                                                                fontSize: 25,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w500,
-                                                              ),
-                                                              textAlign:
-                                                                  TextAlign
-                                                                      .center,
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      )
-                                                    : const SizedBox(
-                                                        height: 400,
-                                                        child:
-                                                            LoadingIndicatorUtil(),
-                                                      ),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.all(10),
-                                          child: FutureBuilder<String>(
-                                            future: FormulaOneScraper()
-                                                .scrapeCircuitHistory(
-                                              Convert()
-                                                  .circuitNameFromErgastToFormulaOneForRaceHub(
-                                                circuitSnapshot.data!.circuitId,
-                                              ),
-                                            ),
-                                            builder: (context, snapshot) =>
-                                                snapshot.hasData
-                                                    ? MarkdownBody(
-                                                        data: snapshot.data!,
-                                                        selectable: true,
-                                                        onTapLink: (text, href,
-                                                                title) =>
-                                                            launchUrl(
-                                                          Uri.parse(href!),
-                                                        ),
-                                                        styleSheet:
-                                                            MarkdownStyleSheet(
-                                                          textAlign:
-                                                              WrapAlignment
-                                                                  .spaceBetween,
-                                                          strong: TextStyle(
-                                                            color: Theme.of(
-                                                                    context)
-                                                                .primaryColor,
-                                                            fontSize: 20,
-                                                            fontWeight:
-                                                                FontWeight.w500,
-                                                          ),
-                                                          p: TextStyle(
-                                                            fontSize: 14,
-                                                          ),
-                                                          pPadding:
-                                                              const EdgeInsets
-                                                                  .only(
-                                                            top: 10,
-                                                            bottom: 10,
-                                                          ),
-                                                          a: TextStyle(
-                                                            color: useDarkMode
-                                                                ? HSLColor
-                                                                        .fromColor(
-                                                                    Theme.of(
-                                                                            context)
-                                                                        .colorScheme
-                                                                        .onPrimary,
-                                                                  )
-                                                                    .withLightness(
-                                                                        0.35)
-                                                                    .toColor()
-                                                                : Theme.of(
-                                                                        context)
-                                                                    .colorScheme
-                                                                    .onPrimary,
-                                                            decoration:
-                                                                TextDecoration
-                                                                    .underline,
-                                                            decorationColor:
-                                                                useDarkMode
-                                                                    ? HSLColor
-                                                                            .fromColor(
-                                                                        Theme.of(context)
-                                                                            .colorScheme
-                                                                            .onPrimary,
-                                                                      )
-                                                                        .withLightness(
-                                                                            0.35)
-                                                                        .toColor()
-                                                                    : Theme.of(
-                                                                            context)
-                                                                        .colorScheme
-                                                                        .onPrimary,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .normal,
-                                                          ),
-                                                        ),
-                                                      )
-                                                    : const SizedBox(
-                                                        height: 400,
-                                                        child:
-                                                            LoadingIndicatorUtil(),
-                                                      ),
-                                          ),
-                                        ),
-                                      ],
-                                    )
-                                  : Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                        vertical: 3,
-                                        horizontal: 10,
-                                      ),
-                                      child: GestureDetector(
-                                        child: Container(
-                                          width: double.infinity,
-                                          decoration: BoxDecoration(
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .onSecondary,
-                                            borderRadius:
-                                                BorderRadius.circular(5),
-                                          ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.fromLTRB(
-                                              20,
-                                              10,
-                                              20,
-                                              10,
-                                            ),
-                                            child: Row(
-                                              children: [
-                                                Text(
-                                                  AppLocalizations.of(context)!
-                                                      .viewResults,
-                                                ),
-                                                const Spacer(),
+                                        snapshot.data!['links'] != null &&
+                                                snapshot
+                                                    .data!['links'].isNotEmpty
+                                            ? BoxBoxButton(
+                                                AppLocalizations.of(context)!
+                                                    .viewHighlights,
                                                 Icon(
                                                   Icons.arrow_forward_rounded,
                                                 ),
-                                              ],
-                                            ),
+                                                ArticleScreen(
+                                                  snapshot.data!['links'][1]
+                                                              ['url']
+                                                          .endsWith('.html')
+                                                      ? snapshot.data!['links']
+                                                              [1]['url']
+                                                          .split('.')[4]
+                                                      : snapshot.data!['links']
+                                                              [1]['url']
+                                                          .split('.')
+                                                          .last,
+                                                  '',
+                                                  true,
+                                                ),
+                                              )
+                                            : Container(),
+                                        BoxBoxButton(
+                                          AppLocalizations.of(context)!
+                                              .grandPrixMap,
+                                          Icon(
+                                            Icons.map_outlined,
+                                          ),
+                                          CircuitMapScreen(
+                                            race.circuitId,
                                           ),
                                         ),
-                                        onTap: () => Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                RaceDetailsScreen(
-                                              race,
-                                              false, // offline
-                                            ),
-                                          ),
-                                        ),
+                                        snapshot.data!['raceResults'] != null &&
+                                                snapshot.data!['raceResults']
+                                                    .isNotEmpty
+                                            ? RaceResults(snapshot, race)
+                                            : Container(),
+                                        snapshot.data!['curatedSection'] != null
+                                            ? CuratedSection(
+                                                snapshot.data!['curatedSection']
+                                                    ['items'])
+                                            : Container(),
+                                        TrackLayoutImage(race),
+                                        CircuitFacts(race.circuitId),
+                                        CircuitHistory(race.circuitId),
+                                      ],
+                                    )
+                                  : BoxBoxButton(
+                                      AppLocalizations.of(context)!.viewResults,
+                                      Icon(
+                                        Icons.arrow_forward_rounded,
+                                      ),
+                                      RaceDetailsScreen(
+                                        race,
+                                        false, // offline
                                       ),
                                     ),
                             ),
@@ -1467,24 +400,364 @@ class TrackLayoutImage extends StatelessWidget {
           },
         );
       },
-      child: Stack(
-        alignment: Alignment.bottomCenter,
-        children: [
-          Image.network(
-            getTrackLayoutImageUrl(race),
-            loadingBuilder: (context, child, loadingProgress) =>
-                loadingProgress == null
-                    ? child
-                    : SizedBox(
-                        height: MediaQuery.of(context).size.width / (16 / 9),
-                        child: const LoadingIndicatorUtil(),
-                      ),
-            errorBuilder: (context, url, error) => Icon(
-              Icons.error_outlined,
-              size: 30,
+      child: Padding(
+        padding: const EdgeInsets.all(5),
+        child: Stack(
+          alignment: Alignment.bottomCenter,
+          children: [
+            Image.network(
+              getTrackLayoutImageUrl(race),
+              loadingBuilder: (context, child, loadingProgress) =>
+                  loadingProgress == null
+                      ? child
+                      : SizedBox(
+                          height: MediaQuery.of(context).size.width / (16 / 9),
+                          child: const LoadingIndicatorUtil(),
+                        ),
+              errorBuilder: (context, url, error) => Icon(
+                Icons.error_outlined,
+                size: 30,
+              ),
             ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class Headline extends StatelessWidget {
+  final String headline;
+  const Headline(this.headline, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(10),
+      child: Text(
+        headline,
+        style: TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.w500,
+        ),
+        textAlign: TextAlign.justify,
+      ),
+    );
+  }
+}
+
+class RaceResults extends StatelessWidget {
+  final AsyncSnapshot snapshot;
+  final Race race;
+  const RaceResults(this.snapshot, this.race, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(
+        10,
+      ),
+      child: Container(
+        height: 240,
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: Theme.of(context).colorScheme.onSecondary,
           ),
-        ],
+          borderRadius: BorderRadius.circular(15.0),
+        ),
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(
+                top: 15,
+              ),
+              child: Text(
+                snapshot.data!['race']['meetingCountryName'],
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+            Text(
+              AppLocalizations.of(context)!.race,
+              style: TextStyle(
+                fontSize: 14,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(
+                top: 15,
+                left: 15,
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: 5,
+                    child: Text(
+                      AppLocalizations.of(context)!.positionAbbreviation,
+                    ),
+                  ),
+                  const Spacer(),
+                  Expanded(
+                    flex: 5,
+                    child: Text(
+                      AppLocalizations.of(context)!.time,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            for (Map driverResults in snapshot.data!['raceResults'])
+              Padding(
+                padding: const EdgeInsets.only(
+                  top: 7,
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 2,
+                      child: Text(
+                        driverResults['positionNumber'] == '66666'
+                            ? 'DQ'
+                            : driverResults['positionNumber'],
+                        style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: SizedBox(
+                        height: 15,
+                        child: VerticalDivider(
+                          color: Color(
+                            int.parse(
+                              'FF${driverResults['teamColourCode']}',
+                              radix: 16,
+                            ),
+                          ),
+                          thickness: 5,
+                          width: 5,
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 3,
+                      child: Text(
+                        driverResults['driverTLA'].toString(),
+                      ),
+                    ),
+                    const Spacer(),
+                    Expanded(
+                      flex: 6,
+                      child: Text(
+                        driverResults['gapToLeader'] != "0.0" &&
+                                driverResults['gapToLeader'] != "0"
+                            ? '+${driverResults['gapToLeader']}'
+                            : driverResults['raceTime'],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.only(
+                  top: 15,
+                ),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: ClipRRect(
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.zero,
+                      topRight: Radius.zero,
+                      bottomLeft: Radius.circular(15),
+                      bottomRight: Radius.circular(15),
+                    ),
+                    child: ElevatedButton(
+                      onPressed: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => RaceDetailsScreen(
+                            race,
+                            snapshot.data!['meetingContext']['timetables'][2]
+                                    ['session'] ==
+                                's',
+                            tab: 10,
+                          ),
+                        ),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        shape: const ContinuousRectangleBorder(
+                          borderRadius: BorderRadius.zero,
+                        ),
+                      ),
+                      child: Text(
+                        AppLocalizations.of(context)!.viewResults,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class CuratedSection extends StatelessWidget {
+  final List items;
+  const CuratedSection(this.items, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    bool useDataSaverMode = Hive.box('settings')
+        .get('useDataSaverMode', defaultValue: false) as bool;
+    return Padding(
+      padding: EdgeInsets.only(left: 10),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            for (Map article in items)
+              NewsItem(
+                News(
+                  article['id'],
+                  article['articleType'],
+                  article['slug'],
+                  article['title'],
+                  article['metaDescription'] ?? ' ',
+                  DateTime.parse(article['updatedAt']),
+                  useDataSaverMode
+                      ? article['thumbnail']['image']['renditions'] != null
+                          ? article['thumbnail']['image']['renditions']['2col']
+                          : article['thumbnail']['image']['url'] +
+                              '.transform/2col-retina/image.jpg'
+                      : article['thumbnail']['image']['url'],
+                ),
+                true,
+              ),
+            SizedBox(width: 5),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class CircuitFacts extends StatelessWidget {
+  final String circuitId;
+  const CircuitFacts(this.circuitId, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(10),
+      child: FutureBuilder<Map>(
+        future: FormulaOneScraper().scrapeCircuitFacts(
+          Convert().circuitNameFromErgastToFormulaOneForRaceHub(
+            circuitId,
+          ),
+          context,
+        ),
+        builder: (context, snapshot) => snapshot.hasData
+            ? ListView.builder(
+                itemCount: snapshot.data!.length,
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemBuilder: (context, index) => Column(
+                  children: [
+                    Text(
+                      snapshot.data!.keys.elementAt(index),
+                      textAlign: TextAlign.center,
+                    ),
+                    Text(
+                      snapshot.data![snapshot.data!.keys.elementAt(index)],
+                      style: TextStyle(
+                        fontSize: 25,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+              )
+            : const SizedBox(
+                height: 400,
+                child: LoadingIndicatorUtil(),
+              ),
+      ),
+    );
+  }
+}
+
+class CircuitHistory extends StatelessWidget {
+  final String circuitId;
+  const CircuitHistory(this.circuitId, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    bool useDarkMode =
+        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
+
+    return Padding(
+      padding: const EdgeInsets.all(10),
+      child: FutureBuilder<String>(
+        future: FormulaOneScraper().scrapeCircuitHistory(
+          Convert().circuitNameFromErgastToFormulaOneForRaceHub(
+            circuitId,
+          ),
+        ),
+        builder: (context, snapshot) => snapshot.hasData
+            ? MarkdownBody(
+                data: snapshot.data!,
+                selectable: true,
+                onTapLink: (text, href, title) => launchUrl(
+                  Uri.parse(href!),
+                ),
+                styleSheet: MarkdownStyleSheet(
+                  textAlign: WrapAlignment.spaceBetween,
+                  strong: TextStyle(
+                    color: useDarkMode
+                        ? HSLColor.fromColor(
+                            Theme.of(context).colorScheme.onPrimary,
+                          ).withLightness(0.35).toColor()
+                        : Theme.of(context).colorScheme.onPrimary,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  p: TextStyle(
+                    fontSize: 14,
+                  ),
+                  pPadding: const EdgeInsets.only(
+                    top: 10,
+                    bottom: 10,
+                  ),
+                  a: TextStyle(
+                    color: useDarkMode
+                        ? HSLColor.fromColor(
+                            Theme.of(context).colorScheme.onPrimary,
+                          ).withLightness(0.35).toColor()
+                        : Theme.of(context).colorScheme.onPrimary,
+                    decoration: TextDecoration.underline,
+                    decorationColor: useDarkMode
+                        ? HSLColor.fromColor(
+                            Theme.of(context).colorScheme.onPrimary,
+                          ).withLightness(0.35).toColor()
+                        : Theme.of(context).colorScheme.onPrimary,
+                    fontWeight: FontWeight.normal,
+                  ),
+                ),
+              )
+            : const SizedBox(
+                height: 400,
+                child: LoadingIndicatorUtil(),
+              ),
       ),
     );
   }
