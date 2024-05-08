@@ -301,6 +301,8 @@
   "@topics": {},
   "tryAgain": "Réessayer",
   "@tryAgain": {},
+  "twelveHourClock": "Utiliser une horloge de 12 heures",
+  "@twelveHourClock": {},
   "unavailableOffline": "Indisponible hors-ligne",
   "@unavailableOffline": {},
   "updates": "Mises à jour",

@@ -301,6 +301,8 @@
   "@topics": {},
   "tryAgain": "Try Again",
   "@tryAgain": {},
+  "twelveHourClock": "Use a 12-hour clock",
+  "@twelveHourClock": {},
   "unavailableOffline": "Unavailable offline",
   "@unavailableOffline": {},
   "updates": "New versions",

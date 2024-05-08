@@ -1460,6 +1460,9 @@ class BottomActionBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool shouldUse12HourClock = Hive.box('settings')
+        .get('shouldUse12HourClock', defaultValue: false) as bool;
+    String languageCode = Localizations.localeOf(context).languageCode;
     return Card(
       elevation: 5,
       child: Row(
@@ -1498,8 +1501,9 @@ class BottomActionBar extends StatelessWidget {
                     onPressed: () {},
                   ),
                   Text(
-                    DateFormat('kk:mm\nyyyy-MM-dd')
-                        .format(article.publishedDate),
+                    shouldUse12HourClock
+                        ? '${DateFormat.jm().format(article.publishedDate)}\n${DateFormat.yMMMMd(languageCode).format(article.publishedDate)}'
+                        : '${DateFormat.Hm().format(article.publishedDate)}\n${DateFormat.yMMMMd(languageCode).format(article.publishedDate)}',
                     textAlign: TextAlign.center,
                   ),
                 ],
