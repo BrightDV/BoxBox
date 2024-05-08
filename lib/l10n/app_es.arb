@@ -326,5 +326,11 @@
   "useOfficialWebview": "Utilice Webview oficial para las sesiones en directo",
   "@useOfficialWebview": {},
   "loading": "Cargando",
-  "@loading": {}
+  "@loading": {},
+  "copied": "Copiado",
+  "@copied": {},
+  "copyTitle": "Copiar título",
+  "@copyTitle": {},
+  "twelveHourClock": "Utilizar un reloj analógico",
+  "@twelveHourClock": {}
 }
