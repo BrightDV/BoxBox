@@ -492,9 +492,11 @@ class _ErgastApiCalls {
           Uri.parse('https://ergast.com/api/f1/${DateTime.now().year}.json');
       var response = await http.get(url);
       Map<String, dynamic> responseAsJson = jsonDecode(response.body);
+      List<Race> races = formatLastSchedule(responseAsJson, toCome);
       Hive.box('requests').put('schedule', responseAsJson);
       Hive.box('requests').put('scheduleLatestQuery', DateTime.now());
-      return formatLastSchedule(responseAsJson, toCome);
+      Hive.box('requests').put('scheduleLastSavedFormat', 'ergast');
+      return races;
     }
   }
 
