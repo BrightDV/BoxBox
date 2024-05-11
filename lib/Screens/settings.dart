@@ -553,6 +553,8 @@ class _OtherCardstate extends State<OtherCard> {
         .get('useOfficialWebview', defaultValue: true) as bool;
     bool useOfficialDataSoure = Hive.box('settings')
         .get('useOfficialDataSoure', defaultValue: false) as bool;
+    bool shouldUse12HourClock = Hive.box('settings')
+        .get('shouldUse12HourClock', defaultValue: false) as bool;
     bool enableExperimentalFeatures = Hive.box('settings')
         .get('enableExperimentalFeatures', defaultValue: false) as bool;
 
@@ -667,6 +669,20 @@ class _OtherCardstate extends State<OtherCard> {
                 () {
                   useOfficialWebview = value;
                   Hive.box('settings').put('useOfficialWebview', value);
+                },
+              );
+            },
+          ),
+          SwitchListTile(
+            title: Text(
+              AppLocalizations.of(context)!.twelveHourClock,
+            ),
+            value: shouldUse12HourClock,
+            onChanged: (bool value) {
+              setState(
+                () {
+                  shouldUse12HourClock = value;
+                  Hive.box('settings').put('shouldUse12HourClock', value);
                 },
               );
             },

@@ -36,6 +36,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
@@ -124,6 +125,25 @@ class NewsItem extends StatelessWidget {
               ],
             ),
           ),
+          PopupMenuItem(
+            value: 2,
+            child: Row(
+              children: [
+                Icon(
+                  Icons.copy_outlined,
+                ),
+                const Padding(
+                  padding: EdgeInsets.all(5),
+                ),
+                Text(
+                  AppLocalizations.of(context)!.copyTitle,
+                  style: TextStyle(
+                    fontSize: 14,
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
         position: RelativeRect.fromRect(
           tapPosition & const Size(40, 40),
@@ -132,16 +152,29 @@ class NewsItem extends StatelessWidget {
       ).then<void>(
         (int? delta) {
           if (delta == null) return;
-          delta == 0
-              ? launchUrl(
-                  Uri.parse(
-                    "https://www.formula1.com/en/latest/article/${item.slug}.${item.newsId}",
-                  ),
-                  mode: LaunchMode.externalApplication,
-                )
-              : Share.share(
-                  "https://www.formula1.com/en/latest/article/${item.slug}.${item.newsId}",
-                );
+          if (delta == 0)
+            launchUrl(
+              Uri.parse(
+                "https://www.formula1.com/en/latest/article/${item.slug}.${item.newsId}",
+              ),
+              mode: LaunchMode.externalApplication,
+            );
+          else if (delta == 1)
+            Share.share(
+              "https://www.formula1.com/en/latest/article/${item.slug}.${item.newsId}",
+            );
+          else {
+            Clipboard.setData(ClipboardData(text: item.title));
+            Fluttertoast.showToast(
+              msg: AppLocalizations.of(context)!.copied,
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              textColor: Colors.white,
+              fontSize: 16.0,
+            );
+          }
+          ;
         },
       );
     }

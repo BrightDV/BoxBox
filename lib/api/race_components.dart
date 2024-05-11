@@ -100,6 +100,8 @@ class RaceListItem extends StatelessWidget {
     String day = item.date.split("-")[2];
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
+    bool shouldUse12HourClock = Hive.box('settings')
+        .get('shouldUse12HourClock', defaultValue: false) as bool;
     List months = [
       AppLocalizations.of(context)?.monthAbbreviationJanuary,
       AppLocalizations.of(context)?.monthAbbreviationFebruary,
@@ -116,7 +118,9 @@ class RaceListItem extends StatelessWidget {
     ];
     DateTime raceDate =
         DateTime.parse('${item.date} ${item.raceHour}').toLocal();
-    String formatedRaceDate = DateFormat('HH:mm').format(raceDate);
+    String formatedRaceDate = shouldUse12HourClock
+        ? DateFormat.jm().format(raceDate)
+        : DateFormat.Hm().format(raceDate);
 
     return Container(
       padding: const EdgeInsets.all(2),
@@ -175,8 +179,17 @@ class RaceListItem extends StatelessWidget {
                     title: Text(
                       item.country,
                     ),
-                    subtitle: Text(
-                      '${item.circuitName}\n${formatedRaceDate}',
+                    subtitle: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          item.circuitName,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        Text(formatedRaceDate),
+                      ],
                     ),
                   ),
                 ),
