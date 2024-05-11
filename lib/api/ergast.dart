@@ -480,12 +480,16 @@ class _ErgastApiCalls {
         const Duration(hours: 2),
       ),
     ) as DateTime;
+    String scheduleLastSavedFormat = Hive.box('requests')
+        .get('scheduleLastSavedFormat', defaultValue: 'ergast');
+
     if (latestQuery
             .add(
               const Duration(hours: 1),
             )
             .isAfter(DateTime.now()) &&
-        schedule.isNotEmpty) {
+        schedule.isNotEmpty &&
+        scheduleLastSavedFormat == 'ergast') {
       return formatLastSchedule(schedule, toCome);
     } else {
       var url =
