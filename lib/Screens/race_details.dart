@@ -40,6 +40,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_timer_countdown/flutter_timer_countdown.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
@@ -1135,20 +1136,9 @@ class _SessionCountdownTimerState extends State<SessionCountdownTimer> {
   Widget build(BuildContext context) {
     bool shouldUseCountdown = Hive.box('settings')
         .get('shouldUseCountdown', defaultValue: true) as bool;
-    List months = [
-      AppLocalizations.of(context)?.monthAbbreviationJanuary,
-      AppLocalizations.of(context)?.monthAbbreviationFebruary,
-      AppLocalizations.of(context)?.monthAbbreviationMarch,
-      AppLocalizations.of(context)?.monthAbbreviationApril,
-      AppLocalizations.of(context)?.monthAbbreviationMay,
-      AppLocalizations.of(context)?.monthAbbreviationJune,
-      AppLocalizations.of(context)?.monthAbbreviationJuly,
-      AppLocalizations.of(context)?.monthAbbreviationAugust,
-      AppLocalizations.of(context)?.monthAbbreviationSeptember,
-      AppLocalizations.of(context)?.monthAbbreviationOctober,
-      AppLocalizations.of(context)?.monthAbbreviationNovember,
-      AppLocalizations.of(context)?.monthAbbreviationDecember,
-    ];
+    bool shouldUse12HourClock = Hive.box('settings')
+        .get('shouldUse12HourClock', defaultValue: false) as bool;
+    String languageCode = Localizations.localeOf(context).languageCode;
 
     late int timeToRace;
     late int days;
@@ -1233,7 +1223,9 @@ class _SessionCountdownTimerState extends State<SessionCountdownTimer> {
             : Padding(
                 padding: const EdgeInsets.all(15.5),
                 child: Text(
-                  '${raceFullDateParsed.day} ${months[raceFullDateParsed.month - 1]} - ${raceFullDateParsed.toLocal().toIso8601String().split('T')[1].split('.')[0]}',
+                  shouldUse12HourClock
+                      ? '${DateFormat.MMMMd(languageCode).format(raceFullDateParsed.toLocal()).toUpperCase()} - ${DateFormat.jm().format(raceFullDateParsed.toLocal())}'
+                      : '${DateFormat.MMMMd(languageCode).format(raceFullDateParsed.toLocal()).toUpperCase()} - ${DateFormat.Hm().format(raceFullDateParsed.toLocal())}',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 23,

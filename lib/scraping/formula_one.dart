@@ -650,9 +650,9 @@ class FormulaOneScraper {
     }
   }
 
-  Future<Map> scrapeCircuitFacts(
+  Future<Map> scrapeCircuitFactsAndHistory(
       String formulaOneCircuitName, BuildContext context) async {
-    Map results = {};
+    Map results = {"facts": {}, "history": {}};
     late Uri formulaOneCircuitPageUrl;
     String endpoint = Hive.box('settings')
         .get('server', defaultValue: defaultEndpoint) as String;
@@ -666,7 +666,9 @@ class FormulaOneScraper {
       );
     }
     http.Response response = await http.get(formulaOneCircuitPageUrl);
-    dom.Document document = parser.parse(response.body);
+
+    // facts
+    dom.Document document = parser.parse(utf8.decode(response.bodyBytes));
     dom.Element tempResult = document.getElementsByTagName('main')[0];
     tempResult.getElementsByClassName('f1-stat').forEach((element) {
       String elementSubstring = element.innerHtml
@@ -688,29 +690,11 @@ class FormulaOneScraper {
                   : elementSubstringSplitted[1] == "Race Distance"
                       ? factLabel = AppLocalizations.of(context)!.raceDistance
                       : factLabel = AppLocalizations.of(context)!.lapRecord;
-      results[factLabel] = elementSubstringSplitted[2];
+      results["facts"][factLabel] = elementSubstringSplitted[2];
     });
-    return results;
-  }
 
-  Future<String> scrapeCircuitHistory(String formulaOneCircuitName) async {
-    late Uri formulaOneCircuitPageUrl;
-    String endpoint = Hive.box('settings')
-        .get('server', defaultValue: defaultEndpoint) as String;
-    if (endpoint != defaultEndpoint) {
-      formulaOneCircuitPageUrl = Uri.parse(
-        '$endpoint/en/racing/${DateTime.now().year}/$formulaOneCircuitName/Circuit.html',
-      );
-    } else {
-      formulaOneCircuitPageUrl = Uri.parse(
-        'https://www.formula1.com/en/racing/${DateTime.now().year}/$formulaOneCircuitName/Circuit.html',
-      );
-    }
-    http.Response response = await http.get(formulaOneCircuitPageUrl);
-    dom.Document document = parser.parse(
-      utf8.decode(response.bodyBytes),
-    );
-    dom.Element tempResult = document.getElementsByTagName('main')[0];
+    // history
+    tempResult = document.getElementsByTagName('main')[0];
     String circuitHistory = tempResult
         .getElementsByClassName('f1-race-hub--content')[0]
         .children[0]
@@ -742,7 +726,10 @@ class FormulaOneScraper {
       )}';
       position = circuitHistory.indexOf('<a ');
     }
-    return circuitHistory;
+
+    results["history"] = circuitHistory;
+
+    return results;
   }
 }
 
