@@ -177,8 +177,17 @@ class RaceListItem extends StatelessWidget {
                     title: Text(
                       item.country,
                     ),
-                    subtitle: Text(
-                      '${item.circuitName}\n${formatedRaceDate}',
+                    subtitle: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          item.circuitName,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        Text(formatedRaceDate),
+                      ],
                     ),
                   ),
                 ),
