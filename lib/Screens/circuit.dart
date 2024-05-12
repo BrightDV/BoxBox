@@ -17,8 +17,6 @@
  * Copyright (c) 2022-2024, BrightDV
  */
 
-import 'dart:async';
-
 import 'package:boxbox/Screens/article.dart';
 import 'package:boxbox/Screens/race_details.dart';
 import 'package:boxbox/api/ergast.dart';
@@ -52,6 +50,9 @@ class CircuitScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String scheduleLastSavedFormat = Hive.box('requests')
+        .get('scheduleLastSavedFormat', defaultValue: 'ergast');
+
     return Scaffold(
       body: isFetched ?? true
           ? NestedScrollView(
@@ -76,9 +77,11 @@ class CircuitScreen extends StatelessWidget {
               body: SingleChildScrollView(
                 child: FutureBuilder<Map>(
                   future: EventTracker().getCircuitDetails(
-                    Convert().circuitIdFromErgastToFormulaOne(
-                      race.circuitId,
-                    ),
+                    scheduleLastSavedFormat == 'ergast'
+                        ? Convert().circuitIdFromErgastToFormulaOne(
+                            race.circuitId,
+                          )
+                        : race.meetingId,
                   ),
                   builder: (context, snapshot) => snapshot.hasData
                       ? Column(
@@ -138,7 +141,11 @@ class CircuitScreen extends StatelessWidget {
                                     snapshot.data!['curatedSection']['items'])
                                 : Container(),
                             TrackLayoutImage(race),
-                            CircuitFactsAndHistory(race.circuitId),
+                            CircuitFactsAndHistory(
+                              race.detailsPath != null
+                                  ? race.detailsPath!
+                                  : race.circuitId,
+                            ),
                           ],
                         )
                       : BoxBoxButton(
@@ -259,7 +266,11 @@ class CircuitScreen extends StatelessWidget {
                                                     ['items'])
                                             : Container(),
                                         TrackLayoutImage(race),
-                                        CircuitFactsAndHistory(race.circuitId),
+                                        CircuitFactsAndHistory(
+                                          race.detailsPath != null
+                                              ? race.detailsPath!
+                                              : race.circuitId,
+                                        ),
                                       ],
                                     )
                                   : BoxBoxButton(
@@ -281,42 +292,66 @@ class CircuitScreen extends StatelessWidget {
   }
 }
 
+// top image behind the title in the sliver appbar
 class RaceImageProvider extends StatelessWidget {
-  Future<String> getCircuitImageUrl(Race race) async {
-    return await RaceTracksUrls().getRaceTrackImageUrl(race.circuitId);
+  String getCircuitImageUrl(Race race) {
+    String scheduleLastSavedFormat = Hive.box('requests')
+        .get('scheduleLastSavedFormat', defaultValue: 'ergast');
+    if (scheduleLastSavedFormat == 'ergast') {
+      return RaceTracksUrls().getRaceTrackImageUrl(race.circuitId);
+    } else {
+      String coverUrl = race.raceCoverUrl!;
+      if (race.country == 'Great Britain') {
+        coverUrl =
+            race.raceCoverUrl!.replaceFirst('United_Kingdom', 'Great_Britain');
+      } else if (race.circuitName == 'Monza') {
+        coverUrl = race.raceCoverUrl!.replaceFirst('Italy', 'Monza');
+      } else if (race.circuitName == 'Las Vegas') {
+        coverUrl =
+            'https://media.formula1.com/image/upload/f_auto/q_auto/v1677238736/content/dam/fom-website/2018-redesign-assets/Racehub%20header%20images%2016x9/Las Vegas.jpg.transform/fullbleed/image.jpg';
+      } else if (race.country == 'Abu Dhabi') {
+        coverUrl = race.raceCoverUrl!
+            .replaceFirst('United_Arab_Emirates', 'Abu_Dhabi');
+      } else if (race.country == 'Miami') {
+        coverUrl = race.raceCoverUrl!.replaceFirst('United_States', 'Miami');
+      }
+      return coverUrl;
+    }
   }
 
   final Race race;
   const RaceImageProvider(this.race, {Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<String>(
-      future: getCircuitImageUrl(race),
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return RequestErrorWidget(
-            snapshot.error.toString(),
-          );
-        }
-        return snapshot.hasData
-            ? CachedNetworkImage(
-                errorWidget: (context, url, error) =>
-                    const Icon(Icons.error_outlined),
-                fadeOutDuration: const Duration(seconds: 1),
-                fadeInDuration: const Duration(seconds: 1),
-                fit: BoxFit.cover,
-                imageUrl: snapshot.data!,
-                placeholder: (context, url) => const LoadingIndicatorUtil(),
-              )
-            : const LoadingIndicatorUtil();
-      },
+    return CachedNetworkImage(
+      errorWidget: (context, url, error) => const Icon(Icons.error_outlined),
+      fadeOutDuration: const Duration(seconds: 1),
+      fadeInDuration: const Duration(seconds: 1),
+      fit: BoxFit.cover,
+      imageUrl: getCircuitImageUrl(race),
+      placeholder: (context, url) => const LoadingIndicatorUtil(),
     );
   }
 }
 
+// track layout in color above the history and facts section
 class TrackLayoutImage extends StatelessWidget {
   String getTrackLayoutImageUrl(Race race) {
-    return RaceTracksUrls().getTrackLayoutImageUrl(race.circuitId);
+    String scheduleLastSavedFormat = Hive.box('requests')
+        .get('scheduleLastSavedFormat', defaultValue: 'ergast');
+    String country = race.country;
+    if (country == 'Monaco') {
+      country = 'Monoco';
+    } else if (country == 'Azerbaijan') {
+      country = 'Baku';
+    } else if (race.circuitName == 'Austin') {
+      country = 'USA';
+    }
+    return scheduleLastSavedFormat == 'ergast'
+        ? RaceTracksUrls().getTrackLayoutImageUrl(
+            race.circuitId,
+          )
+        : 'https://media.formula1.com/image/upload/f_auto/q_auto/v1677244987/content/dam/fom-website/2018-redesign-assets/Circuit%20maps%2016x9/${country.replaceAll("-", "_").replaceAll(" ", "_")}_Circuit.png';
   }
 
   final Race race;
@@ -658,13 +693,17 @@ class CircuitFactsAndHistory extends StatelessWidget {
   Widget build(BuildContext context) {
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
+    String scheduleLastSavedFormat = Hive.box('requests')
+        .get('scheduleLastSavedFormat', defaultValue: 'ergast');
     return Padding(
       padding: const EdgeInsets.all(10),
       child: FutureBuilder<Map>(
         future: FormulaOneScraper().scrapeCircuitFactsAndHistory(
-          Convert().circuitNameFromErgastToFormulaOneForRaceHub(
-            circuitId,
-          ),
+          scheduleLastSavedFormat == 'ergast'
+              ? Convert().circuitNameFromErgastToFormulaOneForRaceHub(
+                  circuitId,
+                )
+              : circuitId,
           context,
         ),
         builder: (context, snapshot) => snapshot.hasData

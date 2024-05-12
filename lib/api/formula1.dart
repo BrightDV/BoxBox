@@ -670,6 +670,16 @@ class Formula1 {
         DateTime now = DateTime.now();
 
         if (now.compareTo(raceEndDate) < 0) {
+          String detailsPath = element['url'].split('/').last.split('.').first;
+          if (element['meetingCountryName'] == 'Emilia-Romagna') {
+            detailsPath = 'EmiliaRomagna';
+          } else if (element['meetingCountryName'] == 'Miami') {
+            detailsPath = 'Miami';
+          } else if (element['meetingCountryName'] == 'Great Britain') {
+            detailsPath = 'Great_Britain';
+          } else if (element['meetingCountryName'] == 'Las Vegas') {
+            detailsPath = 'Las_Vegas';
+          }
           races.add(
             Race(
               finalJson.indexOf(element).toString(),
@@ -684,6 +694,7 @@ class Formula1 {
               [],
               isFirst: races.isEmpty,
               raceCoverUrl: element['thumbnail']['image']['url'],
+              detailsPath: detailsPath,
             ),
           );
         }
@@ -696,6 +707,16 @@ class Formula1 {
         DateTime now = DateTime.now();
 
         if (now.compareTo(raceEndDate) > 0) {
+          String detailsPath = element['url'].split('/').last.split('.').first;
+          if (element['meetingCountryName'] == 'Emilia-Romagna') {
+            detailsPath = 'EmiliaRomagna';
+          } else if (element['meetingCountryName'] == 'Miami') {
+            detailsPath = 'Miami';
+          } else if (element['meetingCountryName'] == 'United Kingdom') {
+            detailsPath = 'Great_Britain';
+          } else if (element['meetingCountryName'] == 'Las Vegas') {
+            detailsPath = 'Las_Vegas';
+          }
           races.add(
             Race(
               finalJson.indexOf(element).toString(),
@@ -710,7 +731,8 @@ class Formula1 {
               element['meetingCountryName'],
               [],
               isFirst: races.isEmpty,
-              raceCoverUrl: element['thumbnail']['url'],
+              raceCoverUrl: element['thumbnail']['image']['url'],
+              detailsPath: detailsPath,
             ),
           );
         }

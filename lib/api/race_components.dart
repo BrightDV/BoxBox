@@ -39,6 +39,7 @@ class Race {
   final List<DateTime> sessionDates;
   final bool? isFirst;
   final String? raceCoverUrl;
+  final String? detailsPath;
 
   Race(
     this.round,
@@ -53,6 +54,7 @@ class Race {
     this.sessionDates, {
     this.isFirst,
     this.raceCoverUrl,
+    this.detailsPath,
   });
 }
 
