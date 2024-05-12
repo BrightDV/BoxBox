@@ -664,9 +664,13 @@ class Formula1 {
     List finalJson = responseAsJson['events'];
     if (toCome) {
       for (var element in finalJson) {
-        DateTime raceEndDate = DateTime.parse(element['meetingEndDate']);
-        DateTime raceDate = DateTime.parse(element['meetingEndDate'])
-            .subtract(Duration(hours: 3));
+        DateTime raceEndDate =
+            DateTime.parse(element['meetingEndDate'] + element['gmtOffset'])
+                .toLocal();
+        DateTime raceDate =
+            DateTime.parse(element['meetingEndDate'] + element['gmtOffset'])
+                .toLocal()
+                .subtract(Duration(hours: 3));
         DateTime now = DateTime.now();
 
         if (now.compareTo(raceEndDate) < 0) {
@@ -685,7 +689,7 @@ class Formula1 {
               finalJson.indexOf(element).toString(),
               element['meetingKey'],
               element['meetingName'],
-              element['meetingStartDate'],
+              element['meetingEndDate'] + element['gmtOffset'],
               DateFormat.Hm().format(raceDate),
               element['meetingLocation'],
               element['meetingLocation'],
@@ -701,9 +705,13 @@ class Formula1 {
       }
     } else {
       for (var element in finalJson) {
-        DateTime raceEndDate = DateTime.parse(element['meetingEndDate']);
-        DateTime raceDate = DateTime.parse(element['meetingEndDate'])
-            .subtract(Duration(hours: 3));
+        DateTime raceEndDate =
+            DateTime.parse(element['meetingEndDate'] + element['gmtOffset'])
+                .toLocal();
+        DateTime raceDate =
+            DateTime.parse(element['meetingEndDate'] + element['gmtOffset'])
+                .subtract(Duration(hours: 3))
+                .toLocal();
         DateTime now = DateTime.now();
 
         if (now.compareTo(raceEndDate) > 0) {
@@ -722,8 +730,7 @@ class Formula1 {
               finalJson.indexOf(element).toString(),
               element['meetingKey'],
               element['meetingName'],
-              // TODO: add gmt offset (timezone)
-              element['meetingStartDate'],
+              element['meetingEndDate'] + element['gmtOffset'],
               DateFormat.Hm().format(raceDate),
               element['meetingLocation'],
               element['meetingLocation'],

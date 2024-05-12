@@ -40,6 +40,7 @@ class Race {
   final bool? isFirst;
   final String? raceCoverUrl;
   final String? detailsPath;
+  final List? sessionStates;
 
   Race(
     this.round,
@@ -55,6 +56,7 @@ class Race {
     this.isFirst,
     this.raceCoverUrl,
     this.detailsPath,
+    this.sessionStates,
   });
 }
 
@@ -212,8 +214,7 @@ class RaceListItem extends StatelessWidget {
         ),
       );
     } else {
-      DateTime raceDate =
-          DateTime.parse(item.date).subtract(Duration(hours: 3)).toLocal();
+      DateTime raceDate = DateTime.parse(item.date);
       int month = raceDate.month;
       String day = raceDate.day.toString();
       String formatedRaceDate = shouldUse12HourClock

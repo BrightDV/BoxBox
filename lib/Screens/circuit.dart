@@ -48,11 +48,37 @@ class CircuitScreen extends StatelessWidget {
     this.isFetched,
   }) : super(key: key);
 
+  Race parseRaceWithSessions(Map event) {
+    // TODO: prefer call once with update on data fetch complete
+    List<DateTime> sessionDates = [];
+    List sessionStates = [];
+    for (var session in event['meetingContext']['timetables']) {
+      sessionDates
+          .add(DateTime.parse(session['startTime'] + session['gmtOffset']));
+      sessionStates.add(session['state']);
+    }
+    return Race(
+      race.round,
+      race.meetingId,
+      race.raceName,
+      race.date,
+      race.raceHour,
+      race.circuitId,
+      race.circuitName,
+      race.circuitUrl,
+      race.country,
+      sessionDates,
+      isFirst: race.isFirst,
+      raceCoverUrl: race.raceCoverUrl,
+      detailsPath: race.detailsPath,
+      sessionStates: sessionStates,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     String scheduleLastSavedFormat = Hive.box('requests')
         .get('scheduleLastSavedFormat', defaultValue: 'ergast');
-
     return Scaffold(
       body: isFetched ?? true
           ? NestedScrollView(
@@ -95,7 +121,9 @@ class CircuitScreen extends StatelessWidget {
                                 Icons.arrow_forward_rounded,
                               ),
                               RaceDetailsScreen(
-                                race,
+                                scheduleLastSavedFormat == 'ergast'
+                                    ? race
+                                    : parseRaceWithSessions(snapshot.data!),
                                 snapshot.data!['meetingContext']['timetables']
                                         [2]['session'] ==
                                     's',
@@ -134,7 +162,12 @@ class CircuitScreen extends StatelessWidget {
                             ),
                             snapshot.data!['raceResults'] != null &&
                                     snapshot.data!['raceResults'].isNotEmpty
-                                ? RaceResults(snapshot, race)
+                                ? RaceResults(
+                                    snapshot,
+                                    scheduleLastSavedFormat == 'ergast'
+                                        ? race
+                                        : parseRaceWithSessions(snapshot.data!),
+                                  )
                                 : Container(),
                             snapshot.data!['curatedSection'] != null
                                 ? CuratedSection(

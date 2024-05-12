@@ -28,12 +28,11 @@ import 'package:boxbox/api/race_components.dart';
 import 'package:boxbox/helpers/convert_ergast_and_formula_one.dart';
 import 'package:boxbox/helpers/driver_result_item.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
-import 'package:boxbox/helpers/racetracks_url.dart';
 import 'package:boxbox/helpers/request_error.dart';
+import 'package:boxbox/Screens/circuit.dart';
 import 'package:boxbox/Screens/free_practice_screen.dart';
 import 'package:boxbox/helpers/team_background_color.dart';
 import 'package:boxbox/scraping/formula_one.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -295,6 +294,8 @@ class _FreePracticesResultsProviderState
 
   @override
   Widget build(BuildContext context) {
+    String scheduleLastSavedFormat = Hive.box('requests')
+        .get('scheduleLastSavedFormat', defaultValue: 'ergast');
     final Race race = widget.race;
     final bool hasSprint = widget.hasSprint;
 
@@ -303,80 +304,139 @@ class _FreePracticesResultsProviderState
       AppLocalizations.of(context)!.freePracticeTwo,
       AppLocalizations.of(context)!.freePracticeThree,
     ];
-    return FutureBuilder<int>(
-      future: FormulaOneScraper().whichSessionsAreFinised(
-        Convert().circuitIdFromErgastToFormulaOne(race.circuitId),
-        Convert().circuitNameFromErgastToFormulaOne(race.circuitId),
-      ),
-      builder: (context, snapshot) => snapshot.hasError
-          ? RequestErrorWidget(
-              snapshot.error.toString(),
-            )
-          : snapshot.hasData
-              ? race.sessionDates.isEmpty // TODO: update when Ergast not down
-                  ? Padding(
-                      padding: const EdgeInsets.all(15),
-                      child: Center(
-                        child: Text(
-                          AppLocalizations.of(context)!.dataNotAvailable,
-                          textAlign: TextAlign.center,
+    if (scheduleLastSavedFormat == 'ergast') {
+      return FutureBuilder<int>(
+        future: FormulaOneScraper().whichSessionsAreFinised(
+          Convert().circuitIdFromErgastToFormulaOne(race.circuitId),
+          Convert().circuitNameFromErgastToFormulaOne(race.circuitId),
+        ),
+        builder: (context, snapshot) => snapshot.hasError
+            ? RequestErrorWidget(
+                snapshot.error.toString(),
+              )
+            : snapshot.hasData
+                ? race.sessionDates.isEmpty // TODO: update when Ergast not down
+                    ? Padding(
+                        padding: const EdgeInsets.all(15),
+                        child: Center(
+                          child: Text(
+                            AppLocalizations.of(context)!.dataNotAvailable,
+                            textAlign: TextAlign.center,
+                          ),
                         ),
-                      ),
-                    )
-                  : ListView.builder(
-                      itemCount: hasSprint ? 1 : 3,
-                      itemBuilder: (context, index) => snapshot.data! > index
-                          ? ListTile(
-                              title: Text(
-                                sessionsTitle[index],
-                                textAlign: TextAlign.center,
-                              ),
-                              onTap: () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => FreePracticeScreen(
-                                    sessionsTitle[index],
-                                    index + 1,
-                                    race.circuitId,
-                                    race.meetingId,
-                                    int.parse(
-                                      race.date.split('-')[2],
+                      )
+                    : ListView.builder(
+                        itemCount: hasSprint ? 1 : 3,
+                        itemBuilder: (context, index) => snapshot.data! > index
+                            ? ListTile(
+                                title: Text(
+                                  sessionsTitle[index],
+                                  textAlign: TextAlign.center,
+                                ),
+                                onTap: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => FreePracticeScreen(
+                                      sessionsTitle[index],
+                                      index + 1,
+                                      race.circuitId,
+                                      race.meetingId,
+                                      int.parse(
+                                        race.date.split('-')[2],
+                                      ),
+                                      race.raceName,
                                     ),
-                                    race.raceName,
                                   ),
                                 ),
-                              ),
-                            )
-                          : Padding(
-                              padding: const EdgeInsets.only(top: 25),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(
-                                    sessionsTitle[index],
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w500,
+                              )
+                            : Padding(
+                                padding: const EdgeInsets.only(top: 25),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      sessionsTitle[index],
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w500,
+                                      ),
                                     ),
-                                  ),
-                                  SessionCountdownTimer(
-                                    race,
-                                    index,
-                                    sessionsTitle[index],
-                                    update: update,
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                      top: 25,
+                                    SessionCountdownTimer(
+                                      race,
+                                      index,
+                                      sessionsTitle[index],
+                                      update: update,
                                     ),
-                                    child: Divider(),
-                                  ),
-                                ],
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                        top: 25,
+                                      ),
+                                      child: Divider(),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                    )
-              : const LoadingIndicatorUtil(),
-    );
+                      )
+                : const LoadingIndicatorUtil(),
+      );
+    } else {
+      int maxSession = 0;
+      for (var session in race.sessionStates!) {
+        if (session == "completed") {
+          maxSession++;
+        }
+      }
+      return ListView.builder(
+        itemCount: hasSprint ? 1 : 3,
+        itemBuilder: (context, index) => maxSession > index
+            ? ListTile(
+                title: Text(
+                  sessionsTitle[index],
+                  textAlign: TextAlign.center,
+                ),
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => FreePracticeScreen(
+                      sessionsTitle[index],
+                      index + 1,
+                      race.circuitId,
+                      race.meetingId,
+                      DateTime.parse(race.date).year,
+                      race.raceName,
+                    ),
+                  ),
+                ),
+              )
+            : Padding(
+                padding: const EdgeInsets.only(top: 25),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      sessionsTitle[index],
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    SessionCountdownTimer(
+                      race,
+                      index,
+                      sessionsTitle[index],
+                      update: update,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        top: 25,
+                      ),
+                      child: Divider(),
+                    ),
+                  ],
+                ),
+              ),
+      );
+    }
   }
 }
 
@@ -420,7 +480,11 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
     late Map savedData;
     late Race race;
     late int timeToRace;
+    late DateTime raceFullDateParsed;
     String raceUrl = '';
+    String scheduleLastSavedFormat = Hive.box('requests')
+        .get('scheduleLastSavedFormat', defaultValue: 'ergast');
+
     if (widget.raceUrl != null) {
       timeToRace = -1;
       raceUrl = widget.raceUrl!;
@@ -428,9 +492,11 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
       race = widget.race!;
       savedData = Hive.box('requests')
           .get('race-${race.round}', defaultValue: {}) as Map;
-      DateTime raceFullDateParsed = DateTime.parse(
-        "${race.date} ${race.raceHour}",
-      );
+      if (scheduleLastSavedFormat == 'ergast') {
+        raceFullDateParsed = DateTime.parse("${race.date} ${race.raceHour}");
+      } else {
+        raceFullDateParsed = DateTime.parse(race.date);
+      }
       int timeBetween(DateTime from, DateTime to) {
         return to.difference(from).inSeconds;
       }
@@ -1082,38 +1148,6 @@ class StartingGridPositionItem extends StatelessWidget {
   }
 }
 
-class RaceImageProvider extends StatelessWidget {
-  Future<String> getCircuitImageUrl(Race race) async {
-    return await RaceTracksUrls().getRaceTrackImageUrl(race.circuitId);
-  }
-
-  final Race race;
-  const RaceImageProvider(this.race, {Key? key}) : super(key: key);
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder<String>(
-      future: getCircuitImageUrl(race),
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return RequestErrorWidget(snapshot.error.toString());
-        }
-        return snapshot.hasData
-            ? CachedNetworkImage(
-                errorWidget: (context, url, error) => const Icon(
-                  Icons.error_outlined,
-                ),
-                fadeOutDuration: const Duration(seconds: 1),
-                fadeInDuration: const Duration(seconds: 1),
-                fit: BoxFit.cover,
-                imageUrl: snapshot.data!,
-                placeholder: (context, url) => const LoadingIndicatorUtil(),
-              )
-            : const LoadingIndicatorUtil();
-      },
-    );
-  }
-}
-
 class SessionCountdownTimer extends StatefulWidget {
   final Race? race;
   final int sessionIndex;
@@ -1138,6 +1172,8 @@ class _SessionCountdownTimerState extends State<SessionCountdownTimer> {
         .get('shouldUseCountdown', defaultValue: true) as bool;
     bool shouldUse12HourClock = Hive.box('settings')
         .get('shouldUse12HourClock', defaultValue: false) as bool;
+    String scheduleLastSavedFormat = Hive.box('requests')
+        .get('scheduleLastSavedFormat', defaultValue: 'ergast');
     String languageCode = Localizations.localeOf(context).languageCode;
 
     late int timeToRace;
@@ -1148,9 +1184,9 @@ class _SessionCountdownTimerState extends State<SessionCountdownTimer> {
     late DateTime raceFullDateParsed;
 
     Race race = widget.race!;
-    if (widget.sessionIndex == 4) {
-      String raceFullDate = "${race.date} ${race.raceHour}";
-      raceFullDateParsed = DateTime.parse(raceFullDate);
+    if (widget.sessionIndex == 4 && scheduleLastSavedFormat == 'ergast') {
+      raceFullDateParsed =
+          DateTime.parse("${race.date} ${race.raceHour}").toLocal();
     } else {
       raceFullDateParsed = race.sessionDates[widget.sessionIndex];
     }
