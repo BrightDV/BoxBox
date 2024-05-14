@@ -1184,9 +1184,13 @@ class _SessionCountdownTimerState extends State<SessionCountdownTimer> {
     late DateTime raceFullDateParsed;
 
     Race race = widget.race!;
-    if (widget.sessionIndex == 4 && scheduleLastSavedFormat == 'ergast') {
-      raceFullDateParsed =
-          DateTime.parse("${race.date} ${race.raceHour}").toLocal();
+    if (widget.sessionIndex == 4) {
+      if (scheduleLastSavedFormat == 'ergast') {
+        raceFullDateParsed =
+            DateTime.parse("${race.date} ${race.raceHour}").toLocal();
+      } else {
+        raceFullDateParsed = DateTime.parse(race.date);
+      }
     } else {
       raceFullDateParsed = race.sessionDates[widget.sessionIndex];
     }
@@ -1259,9 +1263,13 @@ class _SessionCountdownTimerState extends State<SessionCountdownTimer> {
             : Padding(
                 padding: const EdgeInsets.all(15.5),
                 child: Text(
-                  shouldUse12HourClock
-                      ? '${DateFormat.MMMMd(languageCode).format(raceFullDateParsed.toLocal()).toUpperCase()} - ${DateFormat.jm().format(raceFullDateParsed.toLocal())}'
-                      : '${DateFormat.MMMMd(languageCode).format(raceFullDateParsed.toLocal()).toUpperCase()} - ${DateFormat.Hm().format(raceFullDateParsed.toLocal())}',
+                  scheduleLastSavedFormat == 'ergast'
+                      ? shouldUse12HourClock
+                          ? '${DateFormat.MMMMd(languageCode).format(raceFullDateParsed.toLocal()).toUpperCase()} - ${DateFormat.jm().format(raceFullDateParsed.toLocal())}'
+                          : '${DateFormat.MMMMd(languageCode).format(raceFullDateParsed.toLocal()).toUpperCase()} - ${DateFormat.Hm().format(raceFullDateParsed.toLocal())}'
+                      : shouldUse12HourClock
+                          ? '${DateFormat.MMMMd(languageCode).format(raceFullDateParsed).toUpperCase()} - ${DateFormat.jm().format(raceFullDateParsed)}'
+                          : '${DateFormat.MMMMd(languageCode).format(raceFullDateParsed).toUpperCase()} - ${DateFormat.Hm().format(raceFullDateParsed)}',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 23,
