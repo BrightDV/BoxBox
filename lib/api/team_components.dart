@@ -19,14 +19,12 @@
 
 import 'package:boxbox/Screens/team_details.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
-import 'package:boxbox/helpers/request_error.dart';
 import 'package:boxbox/helpers/team_background_color.dart';
 import 'package:boxbox/helpers/team_car_image.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 
 class Team {
   final String constructorId;
@@ -34,14 +32,22 @@ class Team {
   final String name;
   final String points;
   final String wins;
+  final String? teamCarImage;
+  final String? teamCarImageCropped;
+  final String? detailsPath;
+  final Color? teamColor;
 
   Team(
     this.constructorId,
     this.position,
     this.name,
     this.points,
-    this.wins,
-  );
+    this.wins, {
+    this.teamCarImage,
+    this.teamCarImageCropped,
+    this.detailsPath,
+    this.teamColor,
+  });
   factory Team.fromMap(Map<String, dynamic> json) {
     return Team(json['constructorId'], json['position'], json['name'],
         json['points'], json['wins']);
@@ -65,19 +71,23 @@ class TeamItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color finalTeamColors = getTeamColors(item.constructorId);
-    bool useDarkMode =
-        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
+    Color finalTeamColors = item.teamColor != null
+        ? item.teamColor!
+        : getTeamColors(item.constructorId);
+
     return GestureDetector(
       onTap: () => Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) =>
-              TeamDetailsScreen(item.constructorId, item.name),
+          builder: (context) => TeamDetailsScreen(
+            item.constructorId,
+            item.name,
+            detailsPath: item.detailsPath,
+          ),
         ),
       ),
       child: Container(
-        height: 120,
+        height: item.teamCarImageCropped != null ? 113 : 120,
         color: index % 2 == 1
             ? Theme.of(context).colorScheme.onSecondary
             : Theme.of(context).colorScheme.background,
@@ -118,8 +128,6 @@ class TeamItem extends StatelessWidget {
                     style: TextStyle(
                       fontWeight: FontWeight.w600,
                       fontSize: 18,
-                      color:
-                          useDarkMode ? Colors.white : const Color(0xff171717),
                     ),
                   ),
                   int.parse(item.points) == 1
@@ -127,54 +135,53 @@ class TeamItem extends StatelessWidget {
                           "${item.points} ${AppLocalizations.of(context)?.point}",
                           style: TextStyle(
                             fontSize: 18,
-                            color: useDarkMode
-                                ? Colors.white
-                                : const Color(0xff171717),
                           ),
                         )
                       : Text(
                           "${item.points} ${AppLocalizations.of(context)?.points}",
                           style: TextStyle(
                             fontSize: 18,
-                            color: useDarkMode
-                                ? Colors.white
-                                : const Color(0xff171717),
                           ),
                         ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 5),
-                    child: int.parse(item.wins) == 1
-                        ? Text(
-                            "${item.wins} ${AppLocalizations.of(context)?.victory}",
-                            style: TextStyle(
-                              fontSize: 17,
-                              color: useDarkMode
-                                  ? Colors.white
-                                  : const Color(0xff171717),
-                            ),
-                          )
-                        : Text(
-                            "${item.wins} ${AppLocalizations.of(context)?.victories}",
-                            style: TextStyle(
-                              fontSize: 17,
-                              color: useDarkMode
-                                  ? Colors.white
-                                  : const Color(0xff171717),
-                            ),
-                          ),
-                  ),
+                  item.wins != "NA"
+                      ? Padding(
+                          padding: const EdgeInsets.only(top: 5),
+                          child: int.parse(item.wins) == 1
+                              ? Text(
+                                  "${item.wins} ${AppLocalizations.of(context)?.victory}",
+                                  style: TextStyle(
+                                    fontSize: 17,
+                                  ),
+                                )
+                              : Text(
+                                  "${item.wins} ${AppLocalizations.of(context)?.victories}",
+                                  style: TextStyle(
+                                    fontSize: 17,
+                                  ),
+                                ),
+                        )
+                      : Container(),
                 ],
               ),
             ),
-            Expanded(
-              flex: 6,
-              child: Padding(
-                padding: const EdgeInsets.only(left: 10),
-                child: TeamCarImageProvider(
-                  item.constructorId,
-                ),
-              ),
-            ),
+            item.teamCarImageCropped != null
+                ? Expanded(
+                    flex: 6,
+                    child: TeamCarImageProvider(
+                      item.constructorId,
+                      teamCarImageCropped: item.teamCarImageCropped,
+                    ),
+                  )
+                : Expanded(
+                    flex: 6,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 10),
+                      child: TeamCarImageProvider(
+                        item.constructorId,
+                        teamCarImageCropped: item.teamCarImageCropped,
+                      ),
+                    ),
+                  ),
           ],
         ),
       ),
@@ -183,57 +190,67 @@ class TeamItem extends StatelessWidget {
 }
 
 class TeamCarImageProvider extends StatelessWidget {
-  Future<String> getTeamCarImageURL(String teamId) async {
-    return await TeamCarImage().getTeamCarImageURL(teamId);
+  String getTeamCarImageURL(String teamId) {
+    return TeamCarImage().getTeamCarImageURL(teamId);
   }
 
   final String teamId;
-  const TeamCarImageProvider(this.teamId, {Key? key}) : super(key: key);
+  final String? teamCarImageCropped;
+  const TeamCarImageProvider(
+    this.teamId, {
+    Key? key,
+    this.teamCarImageCropped,
+  }) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<String>(
-      future: getTeamCarImageURL(teamId),
-      builder: (context, snapshot) => snapshot.hasError
-          ? RequestErrorWidget(snapshot.error.toString())
-          : snapshot.hasData
-              ? snapshot.data! == 'none'
-                  ? Icon(
-                      Icons.no_photography_outlined,
-                    )
-                  : CachedNetworkImage(
-                      imageBuilder: (context, imageProvider) => Transform.scale(
-                        scale: 1.5,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: imageProvider,
-                              fit: BoxFit.fitHeight,
-                              alignment: FractionalOffset.centerLeft,
-                            ),
-                          ),
-                        ),
-                      ),
-                      imageUrl: snapshot.data!,
-                      placeholder: (context, url) => const SizedBox(
-                        width: 100,
-                        child: LoadingIndicatorUtil(),
-                      ),
-                      errorWidget: (context, url, error) =>
-                          const Icon(Icons.error_outlined),
-                      fadeOutDuration: const Duration(milliseconds: 500),
-                      fadeInDuration: const Duration(milliseconds: 500),
-                      cacheManager: CacheManager(
-                        Config(
-                          "teamCarImages",
-                          stalePeriod: const Duration(days: 7),
-                        ),
-                      ),
-                    )
-              : const SizedBox(
-                  width: 100,
-                  child: LoadingIndicatorUtil(),
+    String teamCarImageUrl = teamCarImageCropped != null
+        ? teamCarImageCropped!
+        : getTeamCarImageURL(teamId);
+    return teamCarImageUrl == 'none'
+        ? SizedBox(
+            width: 120,
+            child: Center(
+              child: Icon(
+                Icons.no_photography_outlined,
+                size: 32,
+              ),
+            ),
+          )
+        : CachedNetworkImage(
+            imageBuilder: (context, imageProvider) => Transform.scale(
+              alignment:
+                  teamCarImageCropped != null ? Alignment.centerRight : null,
+              scale: 1.5,
+              child: Container(
+                alignment:
+                    teamCarImageCropped != null ? Alignment.centerRight : null,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: imageProvider,
+                    fit: teamCarImageCropped != null ? null : BoxFit.fitHeight,
+                    alignment: teamCarImageCropped != null
+                        ? FractionalOffset.centerRight
+                        : FractionalOffset.centerLeft,
+                  ),
                 ),
-    );
+              ),
+            ),
+            imageUrl: teamCarImageUrl,
+            placeholder: (context, url) => const SizedBox(
+              width: 100,
+              child: LoadingIndicatorUtil(),
+            ),
+            errorWidget: (context, url, error) =>
+                const Icon(Icons.error_outlined),
+            fadeOutDuration: const Duration(milliseconds: 500),
+            fadeInDuration: const Duration(milliseconds: 500),
+            cacheManager: CacheManager(
+              Config(
+                "teamCarImages",
+                stalePeriod: const Duration(days: 7),
+              ),
+            ),
+          );
   }
 }
 

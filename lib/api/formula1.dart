@@ -19,6 +19,7 @@
 
 import 'dart:async';
 import 'dart:convert';
+import 'dart:ui';
 
 import 'package:boxbox/api/driver_components.dart';
 import 'package:boxbox/api/race_components.dart';
@@ -550,9 +551,11 @@ class Formula1 {
     List<Driver> drivers = [];
     List finalJson = responseAsJson['drivers'];
     for (var element in finalJson) {
+      String detailsPath =
+          element['driverPageUrl'].split('/').last.split('.').first;
       drivers.add(
         Driver(
-          '',
+          Convert().driverIdFromFormula1(detailsPath),
           element['positionNumber'],
           element['racingNumber'],
           element['driverFirstName'],
@@ -560,6 +563,14 @@ class Formula1 {
           element['driverTLA'],
           Convert().teamsFromFormulaOneApiToErgast(element['teamName']),
           element['championshipPoints'].toString(),
+          driverImage: element['driverImage'],
+          detailsPath: detailsPath,
+          teamColor: Color(
+            int.parse(
+              'FF' + element['teamColourCode'],
+              radix: 16,
+            ),
+          ),
         ),
       );
     }
@@ -573,12 +584,16 @@ class Formula1 {
       'driversStandingsLatestQuery',
       defaultValue: DateTime.now(),
     ) as DateTime;
+    String driverStandingsLastSavedFormat = Hive.box('requests')
+        .get('driverStandingsLastSavedFormat', defaultValue: 'ergast');
+
     if (latestQuery
             .add(
-              const Duration(minutes: 5),
+              const Duration(minutes: 30),
             )
             .isAfter(DateTime.now()) &&
-        driverStandings.isNotEmpty) {
+        driverStandings.isNotEmpty &&
+        driverStandingsLastSavedFormat == 'f1') {
       return formatLastStandings(driverStandings);
     } else {
       var url = Uri.parse(
@@ -603,9 +618,10 @@ class Formula1 {
 
   List<Team> formatLastTeamsStandings(Map responseAsJson) {
     List<Team> drivers = [];
-    List finalJson = responseAsJson['MRData']['StandingsTable']
-        ['StandingsLists'][0]['ConstructorStandings'];
+    List finalJson = responseAsJson['constructors'];
     for (var element in finalJson) {
+      String detailsPath =
+          element['teamPageUrl'].split('/').last.split('.').first;
       drivers.add(
         Team(
           Convert().teamsFromFormulaOneApiToErgast(element['teamName']),
@@ -613,6 +629,15 @@ class Formula1 {
           element['teamName'],
           element['seasonPoints'].toString(),
           'NA',
+          teamCarImage: element['teamImage'],
+          teamCarImageCropped: element['teamCroppedImage'],
+          detailsPath: detailsPath,
+          teamColor: Color(
+            int.parse(
+              'FF' + element['teamColourCode'],
+              radix: 16,
+            ),
+          ),
         ),
       );
     }
@@ -626,12 +651,16 @@ class Formula1 {
       'teamsStandingsLatestQuery',
       defaultValue: DateTime.now(),
     ) as DateTime;
+    String teamStandingsLastSavedFormat = Hive.box('requests')
+        .get('teamStandingsLastSavedFormat', defaultValue: 'ergast');
+
     if (latestQuery
             .add(
-              const Duration(minutes: 10),
+              const Duration(minutes: 30),
             )
             .isAfter(DateTime.now()) &&
-        teamsStandings.isNotEmpty) {
+        teamsStandings.isNotEmpty &&
+        teamStandingsLastSavedFormat == 'f1') {
       return formatLastTeamsStandings(teamsStandings);
     } else {
       var url = Uri.parse(

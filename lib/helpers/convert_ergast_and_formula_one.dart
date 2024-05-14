@@ -57,7 +57,7 @@ class Convert {
       'Aston Martin': 'aston_martin',
       'Williams': 'williams',
       'Kick Sauber': 'sauber',
-      'Haas F1 Team': 'haas',
+      'Haas': 'haas',
     };
     return formulaOneToErgast[teamName] ?? 'none';
   }
@@ -198,6 +198,36 @@ class Convert {
       "mick_schumacher": "mick-schumacher",
     };
     return ergastToFormulaOne[driverId];
+  }
+
+  String driverIdFromFormula1(String driverId) {
+    Map formulaOneToErgast = {
+      "charles-leclerc": "leclerc",
+      "carlos-sainz": "sainz",
+      "max-verstappen": "max_verstappen",
+      "sergio-perez": "perez",
+      "george-russell": "russell",
+      "lewis-hamilton": "hamilton",
+      "esteban-ocon": "ocon",
+      "pierre-gasly": "gasly",
+      "guanyu-zhou": "zhou",
+      "valtteri-bottas": "bottas",
+      "lando-norris": "norris",
+      "oscar-piastri": "piastri",
+      "yuki-tsunoda": "tsunoda",
+      "nyck-de-vries": "de_vries",
+      "fernando-alonso": "alonso",
+      "lance-stroll": "stroll",
+      "nico-hulkenberg": "hulkenberg",
+      "kevin-magnussen": "kevin_magnussen",
+      "alexander-albon": "albon",
+      "logan-sargeant": "sargeant",
+      "daniel-ricciardo": "ricciardo",
+      "nicholas-latifi": "latifi",
+      "sebastian-vettel": "vettel",
+      "mick-schumacher": "mick_schumacher"
+    };
+    return formulaOneToErgast[driverId] ?? 'none';
   }
 
   String driverIdFromErgastForImages(String driverId) {

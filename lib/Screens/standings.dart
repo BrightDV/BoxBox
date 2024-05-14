@@ -19,6 +19,7 @@
 
 import 'dart:async';
 
+import 'package:boxbox/api/formula1.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/request_error.dart';
 import 'package:boxbox/api/driver_components.dart';
@@ -88,20 +89,34 @@ class DriversStandingsWidget extends StatelessWidget {
       : super(key: key);
 
   Future<List<Driver>> getDriversList() async {
-    return await ErgastApi().getLastStandings();
+    bool useOfficialDataSoure = Hive.box('settings')
+        .get('useOfficialDataSoure', defaultValue: false) as bool;
+    if (useOfficialDataSoure) {
+      return await Formula1().getLastStandings();
+    } else {
+      return await ErgastApi().getLastStandings();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     Map driversStandings =
         Hive.box('requests').get('driversStandings', defaultValue: {}) as Map;
+    String driverStandingsLastSavedFormat = Hive.box('requests')
+        .get('driverStandingsLastSavedFormat', defaultValue: 'ergast');
+
     return FutureBuilder<List<Driver>>(
       future: getDriversList(),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
-          driversStandings['MRData'] != null
+          driversStandings[driverStandingsLastSavedFormat == 'ergast'
+                      ? 'MRData'
+                      : 'drivers'] !=
+                  null
               ? DriversList(
-                  items: ErgastApi().formatLastStandings(driversStandings),
+                  items: driverStandingsLastSavedFormat == 'ergast'
+                      ? ErgastApi().formatLastStandings(driversStandings)
+                      : Formula1().formatLastStandings(driversStandings),
                   scrollController: scrollController,
                 )
               : RequestErrorWidget(snapshot.error.toString());
@@ -111,9 +126,14 @@ class DriversStandingsWidget extends StatelessWidget {
                 items: snapshot.data!,
                 scrollController: scrollController,
               )
-            : driversStandings['MRData'] != null
+            : driversStandings[driverStandingsLastSavedFormat == 'ergast'
+                        ? 'MRData'
+                        : 'drivers'] !=
+                    null
                 ? DriversList(
-                    items: ErgastApi().formatLastStandings(driversStandings),
+                    items: driverStandingsLastSavedFormat == 'ergast'
+                        ? ErgastApi().formatLastStandings(driversStandings)
+                        : Formula1().formatLastStandings(driversStandings),
                     scrollController: scrollController,
                   )
                 : const LoadingIndicatorUtil();
@@ -131,20 +151,34 @@ class TeamsStandingsWidget extends StatelessWidget {
   }) : super(key: key);
 
   Future<List<Team>> getLastTeamsStandings() async {
-    return await ErgastApi().getLastTeamsStandings();
+    bool useOfficialDataSoure = Hive.box('settings')
+        .get('useOfficialDataSoure', defaultValue: false) as bool;
+    if (useOfficialDataSoure) {
+      return await Formula1().getLastTeamsStandings();
+    } else {
+      return await ErgastApi().getLastTeamsStandings();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     Map teamsStandings =
         Hive.box('requests').get('teamsStandings', defaultValue: {}) as Map;
+    String teamStandingsLastSavedFormat = Hive.box('requests')
+        .get('teamStandingsLastSavedFormat', defaultValue: 'ergast');
+
     return FutureBuilder<List<Team>>(
       future: getLastTeamsStandings(),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
-          teamsStandings['MRData'] != null
+          teamsStandings[teamStandingsLastSavedFormat == 'ergast'
+                      ? 'MRData'
+                      : 'drivers'] !=
+                  null
               ? TeamsList(
-                  items: ErgastApi().formatLastTeamsStandings(teamsStandings),
+                  items: teamStandingsLastSavedFormat == 'ergast'
+                      ? ErgastApi().formatLastTeamsStandings(teamsStandings)
+                      : Formula1().formatLastTeamsStandings(teamsStandings),
                   scrollController: scrollController,
                 )
               : RequestErrorWidget(snapshot.error.toString());
@@ -154,9 +188,14 @@ class TeamsStandingsWidget extends StatelessWidget {
                 items: snapshot.data!,
                 scrollController: scrollController,
               )
-            : teamsStandings['MRData'] != null
+            : teamsStandings[teamStandingsLastSavedFormat == 'ergast'
+                        ? 'MRData'
+                        : 'drivers'] !=
+                    null
                 ? TeamsList(
-                    items: ErgastApi().formatLastTeamsStandings(teamsStandings),
+                    items: teamStandingsLastSavedFormat == 'ergast'
+                        ? ErgastApi().formatLastTeamsStandings(teamsStandings)
+                        : Formula1().formatLastTeamsStandings(teamsStandings),
                     scrollController: scrollController,
                   )
                 : const LoadingIndicatorUtil();

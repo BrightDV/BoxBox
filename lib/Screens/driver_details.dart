@@ -38,11 +38,13 @@ class DriverDetailsScreen extends StatelessWidget {
   final String driverId;
   final String givenName;
   final String familyName;
+  final String? detailsPath;
   const DriverDetailsScreen(
     this.driverId,
     this.givenName,
     this.familyName, {
     super.key,
+    this.detailsPath,
   });
 
   @override
@@ -82,8 +84,8 @@ class DriverDetailsScreen extends StatelessWidget {
         ),
         body: TabBarView(
           children: [
-            DriverInfo(driverId),
-            DriverResults(driverId),
+            DriverInfo(driverId, detailsPath: detailsPath),
+            DriverResults(driverId), // todo: converter?
           ],
         ),
       ),
@@ -93,7 +95,12 @@ class DriverDetailsScreen extends StatelessWidget {
 
 class DriverInfo extends StatelessWidget {
   final String driverId;
-  const DriverInfo(this.driverId, {super.key});
+  final String? detailsPath;
+  const DriverInfo(
+    this.driverId, {
+    super.key,
+    this.detailsPath,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -106,7 +113,10 @@ class DriverInfo extends StatelessWidget {
             child: DriverImageProvider(driverId, 'driver'),
           ),
           FutureBuilder<List<List>>(
-            future: FormulaOneScraper().scrapeDriversDetails(driverId),
+            future: FormulaOneScraper().scrapeDriversDetails(
+              driverId,
+              detailsPath,
+            ),
             builder: (context, snapshot) => snapshot.hasError
                 ? RequestErrorWidget(
                     snapshot.error.toString(),

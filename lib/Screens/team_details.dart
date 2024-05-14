@@ -37,7 +37,13 @@ import 'package:boxbox/helpers/request_error.dart';
 class TeamDetailsScreen extends StatelessWidget {
   final String teamId;
   final String teamFullName;
-  const TeamDetailsScreen(this.teamId, this.teamFullName, {super.key});
+  final String? detailsPath;
+  const TeamDetailsScreen(
+    this.teamId,
+    this.teamFullName, {
+    super.key,
+    this.detailsPath,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -84,7 +90,10 @@ class TeamDetailsScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     FutureBuilder<Map<String, dynamic>>(
-                      future: FormulaOneScraper().scrapeTeamDetails(teamId),
+                      future: FormulaOneScraper().scrapeTeamDetails(
+                        teamId,
+                        detailsPath,
+                      ),
                       builder: (context, snapshot) => snapshot.hasError
                           ? RequestErrorWidget(
                               snapshot.error.toString(),

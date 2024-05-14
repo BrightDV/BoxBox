@@ -51,7 +51,6 @@ class GetTrackGeoJSONPoints {
   Future<List<List>> getCircuitPoints(String circuitId) async {
     String? encodedCircuitName = circuitIdEncoder[circuitId];
     Uri url;
-    print(circuitId);
     url = Uri.parse(
       'https://raw.githubusercontent.com/bacinger/f1-circuits/master/circuits/$encodedCircuitName.geojson',
     );
