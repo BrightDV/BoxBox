@@ -324,5 +324,11 @@
   "pleaseWait": "Lütfen bekleyin...",
   "@pleaseWait": {},
   "useOfficialWebview": "Canlı oturumlar için resmi web görünümünü kullan",
-  "@useOfficialWebview": {}
+  "@useOfficialWebview": {},
+  "copyTitle": "Başlığı kopyala",
+  "@copyTitle": {},
+  "copied": "Kopyalandı",
+  "@copied": {},
+  "twelveHourClock": "12 saat düzenini kullan",
+  "@twelveHourClock": {}
 }
