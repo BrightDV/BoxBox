@@ -44,6 +44,8 @@ class DriverResultItem extends StatelessWidget {
   Widget build(BuildContext context) {
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
+    String raceResultsLastSavedFormat = Hive.box('requests')
+        .get('raceResultsLastSavedFormat', defaultValue: 'ergast');
     Color finalTeamColors = getTeamColors(item.team);
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
@@ -170,43 +172,53 @@ class DriverResultItem extends StatelessWidget {
                   ),
                 ),
               ),
-              Expanded(
-                flex: 3,
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 5, right: 5),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: item.isFastest
-                          ? const Color(0xffab01ab)
-                          : index % 2 == 1
-                              ? useDarkMode
-                                  ? HSLColor.fromColor(
-                                      Theme.of(context).colorScheme.onSecondary,
-                                    ).withLightness(0.31).toColor()
-                                  : HSLColor.fromColor(
-                                      Theme.of(context).colorScheme.onPrimary,
-                                    ).withLightness(0.84).toColor()
-                              : useDarkMode
-                                  ? HSLColor.fromColor(
-                                      Theme.of(context).colorScheme.onSecondary,
-                                    ).withLightness(0.23).toColor()
-                                  : HSLColor.fromColor(
-                                      Theme.of(context).colorScheme.onPrimary,
-                                    ).withLightness(0.78).toColor(),
-                      borderRadius: BorderRadius.circular(7),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 5, bottom: 5),
-                      child: Text(
-                        item.lapsDone ?? 'NA',
-                        textAlign: TextAlign.center,
+              raceResultsLastSavedFormat == 'ergast'
+                  ? Expanded(
+                      flex: 3,
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 5, right: 5),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: item.isFastest
+                                ? const Color(0xffab01ab)
+                                : index % 2 == 1
+                                    ? useDarkMode
+                                        ? HSLColor.fromColor(
+                                            Theme.of(context)
+                                                .colorScheme
+                                                .onSecondary,
+                                          ).withLightness(0.31).toColor()
+                                        : HSLColor.fromColor(
+                                            Theme.of(context)
+                                                .colorScheme
+                                                .onPrimary,
+                                          ).withLightness(0.84).toColor()
+                                    : useDarkMode
+                                        ? HSLColor.fromColor(
+                                            Theme.of(context)
+                                                .colorScheme
+                                                .onSecondary,
+                                          ).withLightness(0.23).toColor()
+                                        : HSLColor.fromColor(
+                                            Theme.of(context)
+                                                .colorScheme
+                                                .onPrimary,
+                                          ).withLightness(0.78).toColor(),
+                            borderRadius: BorderRadius.circular(7),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 5, bottom: 5),
+                            child: Text(
+                              item.lapsDone ?? 'NA',
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                ),
-              ),
+                    )
+                  : Container(),
               Expanded(
-                flex: 3,
+                flex: raceResultsLastSavedFormat == 'ergast' ? 3 : 6,
                 child: Padding(
                   padding: const EdgeInsets.only(left: 5, right: 5),
                   child: Container(
@@ -254,6 +266,8 @@ class RaceDriversResultsList extends StatelessWidget {
   const RaceDriversResultsList(this.items, {Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    String raceResultsLastSavedFormat = Hive.box('requests')
+        .get('raceResultsLastSavedFormat', defaultValue: 'ergast');
     return ListView.builder(
       scrollDirection: Axis.vertical,
       shrinkWrap: true,
@@ -270,8 +284,7 @@ class RaceDriversResultsList extends StatelessWidget {
                     Expanded(
                       flex: 2,
                       child: Text(
-                        AppLocalizations.of(context)?.positionAbbreviation ??
-                            ' POS',
+                        AppLocalizations.of(context)!.positionAbbreviation,
                         textAlign: TextAlign.center,
                       ),
                     ),
@@ -282,29 +295,29 @@ class RaceDriversResultsList extends StatelessWidget {
                     Expanded(
                       flex: 3,
                       child: Text(
-                        AppLocalizations.of(context)?.driverAbbreviation ??
-                            'DRI',
+                        AppLocalizations.of(context)!.driverAbbreviation,
                       ),
                     ),
                     Expanded(
                       flex: 6,
                       child: Text(
-                        AppLocalizations.of(context)?.time ?? 'TIME',
+                        AppLocalizations.of(context)!.time,
                         textAlign: TextAlign.center,
                       ),
                     ),
+                    raceResultsLastSavedFormat == 'ergast'
+                        ? Expanded(
+                            flex: 3,
+                            child: Text(
+                              AppLocalizations.of(context)!.laps,
+                              textAlign: TextAlign.center,
+                            ),
+                          )
+                        : Container(),
                     Expanded(
-                      flex: 3,
+                      flex: raceResultsLastSavedFormat == 'ergast' ? 3 : 6,
                       child: Text(
-                        AppLocalizations.of(context)?.laps ?? 'Laps',
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    Expanded(
-                      flex: 3,
-                      child: Text(
-                        AppLocalizations.of(context)?.pointsAbbreviation ??
-                            'PTS',
+                        AppLocalizations.of(context)!.pointsAbbreviation,
                         textAlign: TextAlign.center,
                       ),
                     ),
@@ -381,7 +394,7 @@ class QualificationResultsItem extends StatelessWidget {
                     right: 7,
                   ),
                   child: Text(
-                    item.position,
+                    item.position == '666' ? 'DNF' : item.position,
                     style: const TextStyle(
                       fontWeight: FontWeight.w600,
                     ),

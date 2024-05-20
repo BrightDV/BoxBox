@@ -81,12 +81,16 @@ class _ErgastApiCalls {
       'race-$round-latestQuery',
       defaultValue: DateTime.now(),
     ) as DateTime;
+    String raceResultsLastSavedFormat = Hive.box('requests')
+        .get('raceResultsLastSavedFormat', defaultValue: 'ergast');
+
     if (latestQuery
             .add(
               const Duration(minutes: 10),
             )
             .isAfter(DateTime.now()) &&
-        results.isNotEmpty) {
+        results.isNotEmpty &&
+        raceResultsLastSavedFormat == 'ergast') {
       return formatRaceStandings(results);
     } else {
       var url = Uri.parse(

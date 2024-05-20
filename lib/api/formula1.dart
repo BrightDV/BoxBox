@@ -252,6 +252,9 @@ class Formula1 {
         // finished & lapped cars
         if (element['lapsBehindLeader'] == "0") {
           time = "+" + element['gapToLeader'];
+          if (time.substring(time.indexOf('.') + 1).length == 2) {
+            time += "0";
+          }
         } else if (element['lapsBehindLeader'] == "1") {
           // one
           time = "+1 Lap";
@@ -266,6 +269,9 @@ class Formula1 {
           time = element["raceTime"];
         } else {
           time = element["gapToLeader"];
+          if (time.substring(time.indexOf('.') + 1).length == 2) {
+            time += "0";
+          }
         }
       }
 
@@ -304,12 +310,16 @@ class Formula1 {
       'race-$round-latestQuery',
       defaultValue: DateTime.now(),
     ) as DateTime;
+    String raceResultsLastSavedFormat = Hive.box('requests')
+        .get('raceResultsLastSavedFormat', defaultValue: 'ergast');
+
     if (latestQuery
             .add(
               const Duration(minutes: 5),
             )
             .isAfter(DateTime.now()) &&
-        results.isNotEmpty) {
+        results.isNotEmpty &&
+        raceResultsLastSavedFormat == 'f1') {
       return formatRaceStandings(results);
     } else {
       var url = Uri.parse(
@@ -406,6 +416,11 @@ class Formula1 {
     } else {
       List finalJson = responseAsJson['raceResultsPractice$session']['results'];
       for (var element in finalJson) {
+        String time = '+' + element['gapToLeader'];
+        if (time.substring(time.indexOf('.') + 1).length == 2) {
+          time += '0';
+        }
+        time += 's';
         driversResults.add(
           DriverResult(
             // TODO: find another driverId?
@@ -419,7 +434,7 @@ class Formula1 {
             element['classifiedTime'],
             false,
             "",
-            "+" + element['gapToLeader'] + "s",
+            time,
             lapsDone: element['lapsCompleted'],
             points: element['racePoints'].toString(),
             status: element['completionStatusCode'],
@@ -509,9 +524,12 @@ class Formula1 {
           // first
           time = element['sprintQualifyingTime'];
         } else if (element['lapsBehindLeader'] != null) {
-          // finished & lapped cars
+          // finished & lapped? cars
           if (element['lapsBehindLeader'] == "0") {
             time = "+" + element['gapToLeader'];
+            if (time.substring(time.indexOf('.') + 1).length == 2) {
+              time += "0";
+            }
           } else if (element['lapsBehindLeader'] == "1") {
             // one
             time = "+1 Lap";
@@ -521,6 +539,9 @@ class Formula1 {
           }
         } else {
           time = element["gapToLeader"];
+          if (time.substring(time.indexOf('.') + 1).length == 2) {
+            time += "0";
+          }
         }
         driversResults.add(
           DriverResult(
