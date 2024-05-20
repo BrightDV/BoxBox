@@ -219,7 +219,7 @@ class TeamCarImageProvider extends StatelessWidget {
         : CachedNetworkImage(
             imageBuilder: (context, imageProvider) => Transform.scale(
               alignment:
-                  teamCarImageCropped != null ? Alignment.centerRight : null,
+                  teamCarImageCropped != null ? Alignment.centerRight :  Alignment.center,
               scale: 1.5,
               child: Container(
                 alignment:
