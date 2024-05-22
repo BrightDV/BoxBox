@@ -330,5 +330,9 @@
   "copied": "Kopyalandı",
   "@copied": {},
   "twelveHourClock": "12 saat düzenini kullan",
-  "@twelveHourClock": {}
+  "@twelveHourClock": {},
+  "useOfficialDataSource": "Resmi veri kaynağını kullan",
+  "@useOfficialDataSource": {},
+  "useOfficialDataSourceSub": "Resmi mobil uygulamanın veri kaynağını kullanın. Bu daha hızlı sonuç verir, ancak tüm ayrıntılar yoktur. Daha fazla ayrıntı için uzun basın.",
+  "@useOfficialDataSourceSub": {}
 }
