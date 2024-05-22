@@ -20,6 +20,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:boxbox/api/race_components.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart';
 
@@ -199,10 +200,13 @@ class EventTracker {
     return event;
   }
 
-  Future<Map> getCircuitDetails(String formulaOneCircuitId) async {
+  Future<Map> getCircuitDetails(String formulaOneCircuitId,
+      {Race? race}) async {
     Uri uri;
     String endpoint = Hive.box('settings')
         .get('server', defaultValue: defaultEndpoint) as String;
+    bool useOfficialDataSoure = Hive.box('settings')
+        .get('useOfficialDataSoure', defaultValue: false) as bool;
 
     if (endpoint != defaultEndpoint) {
       uri = Uri.parse(
@@ -228,6 +232,37 @@ class EventTracker {
     Map formatedResponse = jsonDecode(
       utf8.decode(res.bodyBytes),
     );
+
+    if (useOfficialDataSoure) {
+      List<DateTime> sessionDates = [];
+      List sessionStates = [];
+      for (var session in formatedResponse['meetingContext']['timetables']) {
+        sessionDates.add(
+          DateTime.parse(
+            session['startTime'] + session['gmtOffset'],
+          ),
+        );
+        sessionStates.add(session['state']);
+      }
+      Race raceWithSessions = Race(
+        race!.round,
+        race.meetingId,
+        race.raceName,
+        race.date,
+        race.raceHour,
+        race.circuitId,
+        race.circuitName,
+        race.circuitUrl,
+        race.country,
+        sessionDates,
+        isFirst: race.isFirst,
+        raceCoverUrl: race.raceCoverUrl,
+        detailsPath: race.detailsPath,
+        sessionStates: sessionStates,
+      );
+
+      formatedResponse['raceCustomBBParameter'] = raceWithSessions;
+    }
 
     return formatedResponse;
   }

@@ -25,6 +25,7 @@ import 'package:boxbox/helpers/team_background_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SettingsScreen extends StatefulWidget {
   final Function update;
@@ -224,7 +225,7 @@ class _AppearanceCardState extends State<AppearanceCard> {
             subtitle: Text(
               AppLocalizations.of(context)!.needsRestart,
               style: TextStyle(
-                fontSize: 13,
+                fontSize: 12,
               ),
             ),
             onTap: () {},
@@ -366,7 +367,7 @@ class _AppearanceCardState extends State<AppearanceCard> {
             subtitle: Text(
               AppLocalizations.of(context)!.fontDescription,
               style: TextStyle(
-                fontSize: 13,
+                fontSize: 12,
               ),
             ),
             trailing: DropdownButton(
@@ -452,7 +453,7 @@ class _PlayerCardState extends State<PlayerCard> {
             subtitle: Text(
               AppLocalizations.of(context)!.playerQualitySub,
               style: TextStyle(
-                fontSize: 13,
+                fontSize: 12,
               ),
             ),
             onTap: () {},
@@ -494,7 +495,7 @@ class _PlayerCardState extends State<PlayerCard> {
             subtitle: Text(
               AppLocalizations.of(context)!.pipedApiUrlSub,
               style: TextStyle(
-                fontSize: 13,
+                fontSize: 12,
               ),
             ),
             onTap: () {},
@@ -551,6 +552,8 @@ class _OtherCardstate extends State<OtherCard> {
         .get('useDataSaverMode', defaultValue: false) as bool;
     bool useOfficialWebview = Hive.box('settings')
         .get('useOfficialWebview', defaultValue: true) as bool;
+    bool useOfficialDataSoure = Hive.box('settings')
+        .get('useOfficialDataSoure', defaultValue: false) as bool;
     bool shouldUse12HourClock = Hive.box('settings')
         .get('shouldUse12HourClock', defaultValue: false) as bool;
     bool enableExperimentalFeatures = Hive.box('settings')
@@ -626,7 +629,7 @@ class _OtherCardstate extends State<OtherCard> {
             subtitle: Text(
               AppLocalizations.of(context)!.dataSaverModeSub,
               style: TextStyle(
-                fontSize: 13,
+                fontSize: 12,
               ),
             ),
             value: useDataSaverMode,
@@ -684,6 +687,36 @@ class _OtherCardstate extends State<OtherCard> {
               );
             },
           ),
+          enableExperimentalFeatures
+              ? GestureDetector(
+                  onLongPress: () async => await launchUrl(
+                    Uri.parse(
+                        'https://github.com/BrightDV/BoxBox/wiki/Ergast-API-vs-Official-API',
+                      ),
+                  ),
+                  child: SwitchListTile(
+                    title: Text(
+                      AppLocalizations.of(context)!.useOfficialDataSource,
+                    ),
+                    subtitle: Text(
+                      AppLocalizations.of(context)!.useOfficialDataSourceSub,
+                      style: TextStyle(
+                        fontSize: 12,
+                      ),
+                    ),
+                    value: useOfficialDataSoure,
+                    onChanged: (bool value) {
+                      setState(
+                        () {
+                          useOfficialDataSoure = value;
+                          Hive.box('settings')
+                              .put('useOfficialDataSoure', value);
+                        },
+                      );
+                    },
+                  ),
+                )
+              : Container(),
         ],
       ),
     );

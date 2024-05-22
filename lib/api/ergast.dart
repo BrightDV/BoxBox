@@ -23,6 +23,7 @@ import 'dart:convert';
 import 'package:boxbox/api/driver_components.dart';
 import 'package:boxbox/api/race_components.dart';
 import 'package:boxbox/api/team_components.dart';
+import 'package:boxbox/helpers/convert_ergast_and_formula_one.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
 
@@ -80,12 +81,16 @@ class _ErgastApiCalls {
       'race-$round-latestQuery',
       defaultValue: DateTime.now(),
     ) as DateTime;
+    String raceResultsLastSavedFormat = Hive.box('requests')
+        .get('raceResultsLastSavedFormat', defaultValue: 'ergast');
+
     if (latestQuery
             .add(
               const Duration(minutes: 10),
             )
             .isAfter(DateTime.now()) &&
-        results.isNotEmpty) {
+        results.isNotEmpty &&
+        raceResultsLastSavedFormat == 'ergast') {
       return formatRaceStandings(results);
     } else {
       var url = Uri.parse(
@@ -93,12 +98,14 @@ class _ErgastApiCalls {
       );
       var response = await http.get(url);
       Map<String, dynamic> responseAsJson = jsonDecode(response.body);
+
+      List<DriverResult> driversResults = formatRaceStandings(responseAsJson);
+      Hive.box('requests').put('raceResultsLastSavedFormat', 'ergast');
       Hive.box('requests').put('race-$round', responseAsJson);
       Hive.box('requests').put(
         'race-$round-latestQuery',
         DateTime.now(),
       );
-      List<DriverResult> driversResults = formatRaceStandings(responseAsJson);
       return driversResults;
     }
   }
@@ -106,7 +113,6 @@ class _ErgastApiCalls {
   FutureOr<List<DriverResult>> getSprintStandings(String round) async {
     var url = Uri.parse(
         'https://ergast.com/api/f1/${DateTime.now().year}/$round/sprint.json');
-    print(url.toString());
     var response = await http.get(url);
     Map<String, dynamic> responseAsJson = jsonDecode(response.body);
     List<DriverResult> formatedRaceStandings = [];
@@ -228,12 +234,16 @@ class _ErgastApiCalls {
       'driversStandingsLatestQuery',
       defaultValue: DateTime.now(),
     ) as DateTime;
+    String scheduleLastSavedFormat = Hive.box('requests')
+        .get('scheduleLastSavedFormat', defaultValue: 'ergast');
+
     if (latestQuery
             .add(
               const Duration(minutes: 10),
             )
             .isAfter(DateTime.now()) &&
-        driverStandings.isNotEmpty) {
+        driverStandings.isNotEmpty &&
+        scheduleLastSavedFormat == 'ergast') {
       return formatLastStandings(driverStandings);
     } else {
       var url = Uri.parse(
@@ -241,12 +251,11 @@ class _ErgastApiCalls {
       );
       var response = await http.get(url);
       Map<String, dynamic> responseAsJson = jsonDecode(response.body);
+      List<Driver> drivers = formatLastStandings(responseAsJson);
       Hive.box('requests').put('driversStandings', responseAsJson);
-      Hive.box('requests').put(
-        'driversStandingsLatestQuery',
-        DateTime.now(),
-      );
-      return formatLastStandings(responseAsJson);
+      Hive.box('requests').put('driversStandingsLatestQuery', DateTime.now());
+      Hive.box('requests').put('driverStandingsLastSavedFormat', 'ergast');
+      return drivers;
     }
   }
 
@@ -297,6 +306,9 @@ class _ErgastApiCalls {
           races.add(
             Race(
               element['round'],
+              Convert().circuitIdFromErgastToFormulaOne(
+                element['Circuit']['circuitId'],
+              ),
               element['raceName'],
               element['date'],
               element['time'] ?? '15:00:00Z', // temporary time
@@ -344,6 +356,9 @@ class _ErgastApiCalls {
           races.add(
             Race(
               element['round'],
+              Convert().circuitIdFromErgastToFormulaOne(
+                element['Circuit']['circuitId'],
+              ),
               element['raceName'],
               element['date'],
               element['time'],
@@ -472,27 +487,34 @@ class _ErgastApiCalls {
         const Duration(hours: 2),
       ),
     ) as DateTime;
+    String scheduleLastSavedFormat = Hive.box('requests')
+        .get('scheduleLastSavedFormat', defaultValue: 'ergast');
+
     if (latestQuery
             .add(
               const Duration(hours: 1),
             )
             .isAfter(DateTime.now()) &&
-        schedule.isNotEmpty) {
+        schedule.isNotEmpty &&
+        scheduleLastSavedFormat == 'ergast') {
       return formatLastSchedule(schedule, toCome);
     } else {
       var url =
           Uri.parse('https://ergast.com/api/f1/${DateTime.now().year}.json');
       var response = await http.get(url);
       Map<String, dynamic> responseAsJson = jsonDecode(response.body);
+      List<Race> races = formatLastSchedule(responseAsJson, toCome);
       Hive.box('requests').put('schedule', responseAsJson);
       Hive.box('requests').put('scheduleLatestQuery', DateTime.now());
-      return formatLastSchedule(responseAsJson, toCome);
+      Hive.box('requests').put('scheduleLastSavedFormat', 'ergast');
+      return races;
     }
   }
 
   Future<Race> getRaceDetails(String round) async {
     var url = Uri.parse(
-        'https://ergast.com/api/f1/${DateTime.now().year}/$round.json');
+      'https://ergast.com/api/f1/${DateTime.now().year}/$round.json',
+    );
     var response = await http.get(url);
     Map<String, dynamic> responseAsJson =
         jsonDecode(response.body)['MRData']['RaceTable']['Races'][0];
@@ -519,9 +541,11 @@ class _ErgastApiCalls {
       );
       raceDates.add(raceDate);
     }
-    print(raceDates);
     Race race = Race(
       responseAsJson['round'],
+      Convert().circuitIdFromErgastToFormulaOne(
+        responseAsJson['Circuit']['circuitId'],
+      ),
       responseAsJson['raceName'],
       responseAsJson['date'],
       responseAsJson['time'],
@@ -559,33 +583,29 @@ class _ErgastApiCalls {
       'teamsStandingsLatestQuery',
       defaultValue: DateTime.now(),
     ) as DateTime;
+    String scheduleLastSavedFormat = Hive.box('requests')
+        .get('scheduleLastSavedFormat', defaultValue: 'ergast');
+
     if (latestQuery
             .add(
               const Duration(minutes: 10),
             )
             .isAfter(DateTime.now()) &&
-        teamsStandings.isNotEmpty) {
+        teamsStandings.isNotEmpty &&
+        scheduleLastSavedFormat == 'ergast') {
       return formatLastTeamsStandings(teamsStandings);
     } else {
       var url = Uri.parse(
-          'https://ergast.com/api/f1/current/constructorStandings.json');
+        'https://ergast.com/api/f1/current/constructorStandings.json',
+      );
       var response = await http.get(url);
       Map<String, dynamic> responseAsJson = jsonDecode(response.body);
+      List<Team> teams = formatLastTeamsStandings(responseAsJson);
       Hive.box('requests').put('teamsStandings', responseAsJson);
-      Hive.box('requests').put(
-        'teamsStandingsLatestQuery',
-        DateTime.now(),
-      );
-      return formatLastTeamsStandings(responseAsJson);
+      Hive.box('requests').put('teamsStandingsLatestQuery', DateTime.now());
+      Hive.box('requests').put('teamStandingsLastSavedFormat', 'ergast');
+      return teams;
     }
-  }
-
-  FutureOr<bool> hasSprintQualifyings(round) async {
-    var url = Uri.parse(
-        'https://ergast.com/api/f1/${DateTime.now().year}/$round/sprint.json');
-    var response = await http.get(url);
-    Map<String, dynamic> responseAsJson = jsonDecode(response.body);
-    return !responseAsJson['MRData']['RaceTable']['Races'].isEmpty;
   }
 }
 
@@ -658,10 +678,6 @@ class ErgastApi {
   FutureOr<List<Team>> getLastTeamsStandings() async {
     var data = await _ErgastApiCalls().getLastTeamsStandings();
     return data;
-  }
-
-  Future<bool> hasSprintQualifyings(String round) async {
-    return await _ErgastApiCalls().hasSprintQualifyings(round);
   }
 
   Future<Race> getRaceDetails(String round) async {

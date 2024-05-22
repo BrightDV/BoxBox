@@ -188,6 +188,7 @@ class _SessionScreenState extends State<SessionScreen> {
                       widget.session.sessionsAbbreviation.substring(1),
                     ),
                     '',
+                    '',
                     0,
                     '',
                     raceUrl: widget.session.baseUrl.replaceAll(

@@ -19,7 +19,6 @@
 
 import 'package:boxbox/helpers/driver_image.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
-import 'package:boxbox/helpers/request_error.dart';
 import 'package:boxbox/helpers/team_background_color.dart';
 import 'package:boxbox/Screens/driver_details.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -35,6 +34,9 @@ class Driver {
   final String code;
   final String team;
   final String points;
+  final String? driverImage;
+  final String? detailsPath;
+  final Color? teamColor;
 
   Driver(
     this.driverId,
@@ -44,8 +46,11 @@ class Driver {
     this.familyName,
     this.code,
     this.team,
-    this.points,
-  );
+    this.points, {
+    this.driverImage,
+    this.detailsPath,
+    this.teamColor,
+  });
 }
 
 class DriverResult {
@@ -173,7 +178,8 @@ class DriverItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color finalTeamColor = getTeamColors(item.team);
+    Color finalTeamColor =
+        item.teamColor != null ? item.teamColor! : getTeamColors(item.team);
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -183,6 +189,7 @@ class DriverItem extends StatelessWidget {
               item.driverId,
               item.givenName,
               item.familyName,
+              detailsPath: item.detailsPath,
             ),
           ),
         );
@@ -280,6 +287,7 @@ class DriverItem extends StatelessWidget {
             ),
             DriverImageProvider(
               item.driverId,
+              driverImage: item.driverImage,
             ),
           ],
         ),
@@ -289,44 +297,42 @@ class DriverItem extends StatelessWidget {
 }
 
 class DriverImageProvider extends StatelessWidget {
-  Future<String> getDriverImageUrl(String driverId) async {
-    return await DriverResultsImage().getDriverImageURL(driverId);
+  String getDriverImageUrl(String driverId) {
+    return DriverResultsImage().getDriverImageURL(driverId);
   }
 
   final String driverId;
-  const DriverImageProvider(this.driverId, {Key? key}) : super(key: key);
+  final String? driverImage;
+  const DriverImageProvider(
+    this.driverId, {
+    Key? key,
+    this.driverImage,
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: getDriverImageUrl(driverId),
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          RequestErrorWidget(snapshot.error.toString());
-        }
-        return snapshot.hasData
-            ? snapshot.data! == 'none'
-                ? SizedBox(
-                    width: 120,
-                    child: Center(
-                      child: Icon(
-                        Icons.no_photography_outlined,
-                        size: 32,
-                      ),
-                    ),
-                  )
-                : CachedNetworkImage(
-                    imageUrl: snapshot.data.toString(),
-                    placeholder: (context, url) => const SizedBox(
-                      width: 120,
-                      child: LoadingIndicatorUtil(),
-                    ),
-                    errorWidget: (context, url, error) =>
-                        const Icon(Icons.error_outlined),
-                    fadeOutDuration: const Duration(milliseconds: 500),
-                    fadeInDuration: const Duration(milliseconds: 500),
-                  )
-            : const LoadingIndicatorUtil();
-      },
-    );
+    String imageUrl =
+        driverImage != null ? driverImage! : getDriverImageUrl(driverId);
+    return imageUrl == 'none'
+        ? SizedBox(
+            width: 120,
+            child: Center(
+              child: Icon(
+                Icons.no_photography_outlined,
+                size: 32,
+              ),
+            ),
+          )
+        : CachedNetworkImage(
+            imageUrl: imageUrl,
+            placeholder: (context, url) => const SizedBox(
+              width: 120,
+              child: LoadingIndicatorUtil(),
+            ),
+            errorWidget: (context, url, error) =>
+                const Icon(Icons.error_outlined),
+            fadeOutDuration: const Duration(milliseconds: 500),
+            fadeInDuration: const Duration(milliseconds: 500),
+          );
   }
 }

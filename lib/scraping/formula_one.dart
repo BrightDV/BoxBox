@@ -337,13 +337,16 @@ class FormulaOneScraper {
 
   Future<List<List>> scrapeDriversDetails(
     String ergastDriverId,
+    String? detailsPath,
   ) async {
-    final String driverId = Convert().driverIdFromErgast(ergastDriverId);
+    final String driverId = detailsPath != null
+        ? detailsPath
+        : Convert().driverIdFromErgast(ergastDriverId);
     late Uri driverDetailsUrl;
     String endpoint = Hive.box('settings')
         .get('server', defaultValue: defaultEndpoint) as String;
     if (endpoint != defaultEndpoint) {
-      driverDetailsUrl = Uri.parse("$endpoint/en/drivers/$driverId.html");
+      driverDetailsUrl = Uri.parse("$endpoint/en/drivers/${driverId}.html");
     } else {
       driverDetailsUrl = Uri.parse(
         "https://www.formula1.com/en/drivers/$driverId",
@@ -410,8 +413,11 @@ class FormulaOneScraper {
     return results;
   }
 
-  Future<Map<String, dynamic>> scrapeTeamDetails(String ergastTeamId) async {
-    final String teamId = Convert().teamsFromErgastToFormulaOne(ergastTeamId);
+  Future<Map<String, dynamic>> scrapeTeamDetails(
+      String ergastTeamId, String? detailsPath) async {
+    final String teamId = detailsPath != null
+        ? detailsPath
+        : Convert().teamsFromErgastToFormulaOne(ergastTeamId);
     late Uri teamDetailsUrl;
     String endpoint = Hive.box('settings')
         .get('server', defaultValue: defaultEndpoint) as String;

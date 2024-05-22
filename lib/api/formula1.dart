@@ -19,9 +19,15 @@
 
 import 'dart:async';
 import 'dart:convert';
+import 'dart:ui';
 
+import 'package:boxbox/api/driver_components.dart';
+import 'package:boxbox/api/race_components.dart';
+import 'package:boxbox/api/team_components.dart';
+import 'package:boxbox/helpers/convert_ergast_and_formula_one.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 
 class Formula1 {
   final String defaultEndpoint = "https://api.formula1.com";
@@ -220,6 +226,610 @@ class Formula1 {
     Hive.box('requests').put('loginCookieLatestQuery', DateTime.now());
 
     return true;
+  }
+
+  List<DriverResult> formatRaceStandings(Map raceStandings) {
+    List<DriverResult> formatedRaceStandings = [];
+    List jsonResponse = raceStandings['raceResultsRace']['results'];
+    String time;
+    String fastestLapDriverName = "";
+    String fastestLapTime = "";
+    for (var award in raceStandings["raceResultsRace"]["awards"]) {
+      // find fastest_lap award, as its index may not be static
+      if (award['type'].toLowerCase() == 'fastest_lap') {
+        fastestLapDriverName = award['winnerName'];
+        fastestLapTime = award['winnerTime'];
+        break;
+      }
+    }
+    for (var element in jsonResponse) {
+      if (element['completionStatusCode'] != 'OK') {
+        // DNF (maybe DSQ?)
+        time = element['completionStatusCode'];
+      } else if (element['positionNumber'] == '1') {
+        time = element['raceTime'];
+      } else if (element['lapsBehindLeader'] != null) {
+        // finished & lapped cars
+        if (element['lapsBehindLeader'] == "0") {
+          time = "+" + element['gapToLeader'];
+          if (time.substring(time.indexOf('.') + 1).length == 2) {
+            time += "0";
+          }
+        } else if (element['lapsBehindLeader'] == "1") {
+          // one
+          time = "+1 Lap";
+        } else {
+          // more laps
+          time = "+${element['lapsBehindLeader']} Laps";
+        }
+      } else {
+        // finished & non-lapped cars
+        if (element['positionNumber'] == "1") {
+          //first
+          time = element["raceTime"];
+        } else {
+          time = element["gapToLeader"];
+          if (time.substring(time.indexOf('.') + 1).length == 2) {
+            time += "0";
+          }
+        }
+      }
+
+      String fastestLapRank = "0";
+      if (element['driverLastName'].toLowerCase() ==
+          fastestLapDriverName.toLowerCase()) {
+        fastestLapRank = "1";
+      }
+      formatedRaceStandings.add(
+        DriverResult(
+          // TODO: find another driverId?
+          '', //element['Driver']['driverId'],
+          element['positionNumber'],
+          element['racingNumber'],
+          element['driverFirstName'],
+          element['driverLastName'],
+          element['driverTLA'],
+          Convert().teamsFromFormulaOneApiToErgast(element['teamName']),
+          time,
+          fastestLapRank != '0' ? true : false,
+          fastestLapRank != '0' ? fastestLapTime : "",
+          "", // data not available
+          points: element['racePoints'].toString(),
+          status: element['completionStatusCode'],
+        ),
+      );
+    }
+    return formatedRaceStandings;
+  }
+
+  FutureOr<List<DriverResult>> getRaceStandings(
+      String meetingId, String round) async {
+    Map results = Hive.box('requests').get('race-$round', defaultValue: {});
+    DateTime latestQuery = Hive.box('requests').get(
+      'race-$round-latestQuery',
+      defaultValue: DateTime.now(),
+    ) as DateTime;
+    String raceResultsLastSavedFormat = Hive.box('requests')
+        .get('raceResultsLastSavedFormat', defaultValue: 'ergast');
+
+    if (latestQuery
+            .add(
+              const Duration(minutes: 5),
+            )
+            .isAfter(DateTime.now()) &&
+        results.isNotEmpty &&
+        raceResultsLastSavedFormat == 'f1') {
+      return formatRaceStandings(results);
+    } else {
+      var url = Uri.parse(
+        '$defaultEndpoint/v1/fom-results/race?meeting=$meetingId',
+      );
+      var response = await http.get(
+        url,
+        headers: {
+          "Accept": "application/json",
+          "apikey": apikey,
+          "locale": "en",
+        },
+      );
+      Map<String, dynamic> responseAsJson = jsonDecode(response.body);
+      List<DriverResult> driversResults = formatRaceStandings(responseAsJson);
+      Hive.box('requests').put('raceResultsLastSavedFormat', 'f1');
+      Hive.box('requests').put('race-$round', responseAsJson);
+      Hive.box('requests').put(
+        'race-$round-latestQuery',
+        DateTime.now(),
+      );
+
+      return driversResults;
+    }
+  }
+
+  FutureOr<List<DriverQualificationResult>> getQualificationStandings(
+      String meetingId) async {
+    List<DriverQualificationResult> driversResults = [];
+    var url = Uri.parse(
+      '$defaultEndpoint/v1/fom-results/qualifying?meeting=$meetingId',
+    );
+    var response = await http.get(
+      url,
+      headers: {
+        "Accept": "application/json",
+        "apikey": apikey,
+        "locale": "en",
+      },
+    );
+    Map<String, dynamic> responseAsJson = jsonDecode(response.body);
+    if (responseAsJson['raceResultsQualifying']['state'] != 'completed') {
+      return [];
+    } else {
+      List finalJson = responseAsJson['raceResultsQualifying']['results'];
+      for (var element in finalJson) {
+        driversResults.add(
+          DriverQualificationResult(
+            '',
+            element['positionNumber'],
+            element['racingNumber'],
+            element['driverFirstName'],
+            element['driverLastName'],
+            element['driverTLA'],
+            Convert().teamsFromFormulaOneApiToErgast(element['teamName']),
+            element['q1']['completionStatusCode'] != 'OK'
+                ? element['q1']['completionStatusCode']
+                : element['q1']['classifiedTime'],
+            element['q2'] == null
+                ? '--'
+                : element['q2']['completionStatusCode'] != 'OK'
+                    ? element['q2']['completionStatusCode']
+                    : element['q2']['classifiedTime'],
+            element['q3'] == null
+                ? '--'
+                : element['q3']['completionStatusCode'] != 'OK'
+                    ? element['q3']['completionStatusCode']
+                    : element['q3']['classifiedTime'],
+          ),
+        );
+      }
+
+      return driversResults;
+    }
+  }
+
+  Future<List<DriverResult>> getFreePracticeStandings(
+      String meetingId, int session) async {
+    List<DriverResult> driversResults = [];
+    var url = Uri.parse(
+      '$defaultEndpoint/v1/fom-results/practice?meeting=$meetingId&session=$session',
+    );
+    var response = await http.get(
+      url,
+      headers: {
+        "Accept": "application/json",
+        "apikey": apikey,
+        "locale": "en",
+      },
+    );
+    Map<String, dynamic> responseAsJson = jsonDecode(response.body);
+    if (responseAsJson['raceResultsPractice$session']['state'] != 'completed') {
+      return [];
+    } else {
+      List finalJson = responseAsJson['raceResultsPractice$session']['results'];
+      for (var element in finalJson) {
+        String time = '+' + element['gapToLeader'];
+        if (time.substring(time.indexOf('.') + 1).length == 2) {
+          time += '0';
+        }
+        time += 's';
+        driversResults.add(
+          DriverResult(
+            // TODO: find another driverId?
+            '',
+            element['positionNumber'],
+            element['racingNumber'],
+            element['driverFirstName'],
+            element['driverLastName'],
+            element['driverTLA'],
+            Convert().teamsFromFormulaOneApiToErgast(element['teamName']),
+            element['classifiedTime'],
+            false,
+            "",
+            time,
+            lapsDone: element['lapsCompleted'],
+            points: element['racePoints'].toString(),
+            status: element['completionStatusCode'],
+          ),
+        );
+      }
+
+      return driversResults;
+    }
+  }
+
+  FutureOr<List<DriverQualificationResult>> getSprintQualifyingStandings(
+      String meetingId) async {
+    List<DriverQualificationResult> driversResults = [];
+    var url = Uri.parse(
+      '$defaultEndpoint/v1/fom-results/sprint-shootout?meeting=$meetingId',
+    );
+    var response = await http.get(
+      url,
+      headers: {
+        "Accept": "application/json",
+        "apikey": apikey,
+        "locale": "en",
+      },
+    );
+    Map<String, dynamic> responseAsJson = jsonDecode(response.body);
+    if (responseAsJson['raceResultsSprintShootout']['state'] != 'completed') {
+      return [];
+    } else {
+      List finalJson = responseAsJson['raceResultsSprintShootout']['results'];
+      for (var element in finalJson) {
+        driversResults.add(
+          DriverQualificationResult(
+            '',
+            element['positionNumber'],
+            element['racingNumber'],
+            element['driverFirstName'],
+            element['driverLastName'],
+            element['driverTLA'],
+            Convert().teamsFromFormulaOneApiToErgast(element['teamName']),
+            element['q1']['completionStatusCode'] != 'OK'
+                ? element['q1']['completionStatusCode']
+                : element['q1']['classifiedTime'],
+            element['q2'] == null
+                ? '--'
+                : element['q2']['completionStatusCode'] != 'OK'
+                    ? element['q2']['completionStatusCode']
+                    : element['q2']['classifiedTime'],
+            element['q3'] == null
+                ? '--'
+                : element['q3']['completionStatusCode'] != 'OK'
+                    ? element['q3']['completionStatusCode']
+                    : element['q3']['classifiedTime'],
+          ),
+        );
+      }
+
+      return driversResults;
+    }
+  }
+
+  FutureOr<List<DriverResult>> getSprintStandings(
+      String meetingId, String session) async {
+    List<DriverResult> driversResults = [];
+    String time;
+    var url = Uri.parse(
+      '$defaultEndpoint/v1/fom-results/sprint?meeting=$meetingId',
+    );
+    var response = await http.get(
+      url,
+      headers: {
+        "Accept": "application/json",
+        "apikey": apikey,
+        "locale": "en",
+      },
+    );
+    Map<String, dynamic> responseAsJson = jsonDecode(response.body);
+    if (responseAsJson['raceResultsSprint']['state'] != 'completed') {
+      return [];
+    } else {
+      List finalJson = responseAsJson['raceResultsSprint']['results'];
+      for (var element in finalJson) {
+        if (element['completionStatusCode'] != 'OK') {
+          // DNF (maybe DSQ?)
+          time = element['completionStatusCode'];
+        } else if (element['positionNumber'] == '1') {
+          // first
+          time = element['sprintQualifyingTime'];
+        } else if (element['lapsBehindLeader'] != null) {
+          // finished & lapped? cars
+          if (element['lapsBehindLeader'] == "0") {
+            time = "+" + element['gapToLeader'];
+            if (time.substring(time.indexOf('.') + 1).length == 2) {
+              time += "0";
+            }
+          } else if (element['lapsBehindLeader'] == "1") {
+            // one
+            time = "+1 Lap";
+          } else {
+            // more laps
+            time = "+${element['lapsBehindLeader']} Laps";
+          }
+        } else {
+          time = element["gapToLeader"];
+          if (time.substring(time.indexOf('.') + 1).length == 2) {
+            time += "0";
+          }
+        }
+        driversResults.add(
+          DriverResult(
+            // TODO: find another driverId?
+            '',
+            element['positionNumber'],
+            element['racingNumber'],
+            element['driverFirstName'],
+            element['driverLastName'],
+            element['driverTLA'],
+            Convert().teamsFromFormulaOneApiToErgast(element['teamName']),
+            time,
+            false,
+            time,
+            time,
+            lapsDone: "NA",
+            points: element['sprintQualifyingPoints'].toString(),
+            status: element['completionStatusCode'],
+          ),
+        );
+      }
+
+      return driversResults;
+    }
+  }
+
+  List<Driver> formatLastStandings(Map responseAsJson) {
+    List<Driver> drivers = [];
+    List finalJson = responseAsJson['drivers'];
+    for (var element in finalJson) {
+      String detailsPath =
+          element['driverPageUrl'].split('/').last.split('.').first;
+      drivers.add(
+        Driver(
+          Convert().driverIdFromFormula1(detailsPath),
+          element['positionNumber'],
+          element['racingNumber'],
+          element['driverFirstName'],
+          element['driverLastName'],
+          element['driverTLA'],
+          Convert().teamsFromFormulaOneApiToErgast(element['teamName']),
+          element['championshipPoints'].toString(),
+          driverImage: element['driverImage'],
+          detailsPath: detailsPath,
+          teamColor: Color(
+            int.parse(
+              'FF' + element['teamColourCode'],
+              radix: 16,
+            ),
+          ),
+        ),
+      );
+    }
+    return drivers;
+  }
+
+  FutureOr<List<Driver>> getLastStandings() async {
+    Map driverStandings =
+        Hive.box('requests').get('driversStandings', defaultValue: {});
+    DateTime latestQuery = Hive.box('requests').get(
+      'driversStandingsLatestQuery',
+      defaultValue: DateTime.now(),
+    ) as DateTime;
+    String driverStandingsLastSavedFormat = Hive.box('requests')
+        .get('driverStandingsLastSavedFormat', defaultValue: 'ergast');
+
+    if (latestQuery
+            .add(
+              const Duration(minutes: 30),
+            )
+            .isAfter(DateTime.now()) &&
+        driverStandings.isNotEmpty &&
+        driverStandingsLastSavedFormat == 'f1') {
+      return formatLastStandings(driverStandings);
+    } else {
+      var url = Uri.parse(
+        '$defaultEndpoint/v1/editorial-driverlisting/listing',
+      );
+      var response = await http.get(
+        url,
+        headers: {
+          "Accept": "application/json",
+          "apikey": apikey,
+          "locale": "en",
+        },
+      );
+      Map<String, dynamic> responseAsJson = jsonDecode(response.body);
+      List<Driver> drivers = formatLastStandings(responseAsJson);
+      Hive.box('requests').put('driversStandings', responseAsJson);
+      Hive.box('requests').put('driversStandingsLatestQuery', DateTime.now());
+      Hive.box('requests').put('driverStandingsLastSavedFormat', 'f1');
+      return drivers;
+    }
+  }
+
+  List<Team> formatLastTeamsStandings(Map responseAsJson) {
+    List<Team> drivers = [];
+    List finalJson = responseAsJson['constructors'];
+    for (var element in finalJson) {
+      String detailsPath =
+          element['teamPageUrl'].split('/').last.split('.').first;
+      drivers.add(
+        Team(
+          Convert().teamsFromFormulaOneApiToErgast(element['teamName']),
+          element['positionNumber'],
+          element['teamName'],
+          element['seasonPoints'].toString(),
+          'NA',
+          teamCarImage: element['teamImage'],
+          teamCarImageCropped: element['teamCroppedImage'],
+          detailsPath: detailsPath,
+          teamColor: Color(
+            int.parse(
+              'FF' + element['teamColourCode'],
+              radix: 16,
+            ),
+          ),
+        ),
+      );
+    }
+    return drivers;
+  }
+
+  FutureOr<List<Team>> getLastTeamsStandings() async {
+    Map teamsStandings =
+        Hive.box('requests').get('teamsStandings', defaultValue: {});
+    DateTime latestQuery = Hive.box('requests').get(
+      'teamsStandingsLatestQuery',
+      defaultValue: DateTime.now(),
+    ) as DateTime;
+    String teamStandingsLastSavedFormat = Hive.box('requests')
+        .get('teamStandingsLastSavedFormat', defaultValue: 'ergast');
+
+    if (latestQuery
+            .add(
+              const Duration(minutes: 30),
+            )
+            .isAfter(DateTime.now()) &&
+        teamsStandings.isNotEmpty &&
+        teamStandingsLastSavedFormat == 'f1') {
+      return formatLastTeamsStandings(teamsStandings);
+    } else {
+      var url = Uri.parse(
+        '$defaultEndpoint/v1/editorial-constructorlisting/listing',
+      );
+      var response = await http.get(
+        url,
+        headers: {
+          "Accept": "application/json",
+          "apikey": apikey,
+          "locale": "en",
+        },
+      );
+      Map<String, dynamic> responseAsJson = jsonDecode(response.body);
+      List<Team> teams = formatLastTeamsStandings(responseAsJson);
+      Hive.box('requests').put('teamsStandings', responseAsJson);
+      Hive.box('requests').put('teamsStandingsLatestQuery', DateTime.now());
+      Hive.box('requests').put('teamStandingsLastSavedFormat', 'f1');
+      return teams;
+    }
+  }
+
+  List<Race> formatLastSchedule(Map responseAsJson, bool toCome) {
+    List<Race> races = [];
+    List finalJson = responseAsJson['events'];
+    if (toCome) {
+      for (var element in finalJson) {
+        DateTime raceEndDate =
+            DateTime.parse(element['meetingEndDate'] + element['gmtOffset'])
+                .toLocal();
+        DateTime raceDate =
+            DateTime.parse(element['meetingEndDate'] + element['gmtOffset'])
+                .toLocal()
+                .subtract(Duration(hours: 3));
+        DateTime now = DateTime.now();
+
+        if (now.compareTo(raceEndDate) < 0) {
+          String detailsPath = element['url'].split('/').last.split('.').first;
+          if (element['meetingCountryName'] == 'Emilia-Romagna') {
+            detailsPath = 'EmiliaRomagna';
+          } else if (element['meetingCountryName'] == 'Miami') {
+            detailsPath = 'Miami';
+          } else if (element['meetingCountryName'] == 'Great Britain') {
+            detailsPath = 'Great_Britain';
+          } else if (element['meetingCountryName'] == 'Las Vegas') {
+            detailsPath = 'Las_Vegas';
+          }
+          races.add(
+            Race(
+              finalJson.indexOf(element).toString(),
+              element['meetingKey'],
+              element['meetingName'],
+              element['meetingEndDate'] + element['gmtOffset'],
+              DateFormat.Hm().format(raceDate),
+              element['meetingLocation'],
+              element['meetingLocation'],
+              '',
+              element['meetingCountryName'],
+              [],
+              isFirst: races.isEmpty,
+              raceCoverUrl: element['thumbnail']['image']['url'],
+              detailsPath: detailsPath,
+            ),
+          );
+        }
+      }
+    } else {
+      for (var element in finalJson) {
+        DateTime raceEndDate =
+            DateTime.parse(element['meetingEndDate'] + element['gmtOffset'])
+                .toLocal();
+        DateTime raceDate =
+            DateTime.parse(element['meetingEndDate'] + element['gmtOffset'])
+                .subtract(Duration(hours: 3))
+                .toLocal();
+        DateTime now = DateTime.now();
+
+        if (now.compareTo(raceEndDate) > 0) {
+          String detailsPath = element['url'].split('/').last.split('.').first;
+          if (element['meetingCountryName'] == 'Emilia-Romagna') {
+            detailsPath = 'EmiliaRomagna';
+          } else if (element['meetingCountryName'] == 'Miami') {
+            detailsPath = 'Miami';
+          } else if (element['meetingCountryName'] == 'United Kingdom') {
+            detailsPath = 'Great_Britain';
+          } else if (element['meetingCountryName'] == 'Las Vegas') {
+            detailsPath = 'Las_Vegas';
+          }
+          races.add(
+            Race(
+              finalJson.indexOf(element).toString(),
+              element['meetingKey'],
+              element['meetingName'],
+              element['meetingEndDate'] + element['gmtOffset'],
+              DateFormat.Hm().format(raceDate),
+              element['meetingLocation'],
+              element['meetingLocation'],
+              '',
+              element['meetingCountryName'],
+              [],
+              isFirst: races.isEmpty,
+              raceCoverUrl: element['thumbnail']['image']['url'],
+              detailsPath: detailsPath,
+            ),
+          );
+        }
+      }
+    }
+    return races;
+  }
+
+  Future<List<Race>> getLastSchedule(bool toCome) async {
+    Map schedule = Hive.box('requests').get('schedule', defaultValue: {});
+    DateTime latestQuery = Hive.box('requests').get(
+      'scheduleLatestQuery',
+      defaultValue: DateTime.now().subtract(
+        const Duration(hours: 1),
+      ),
+    ) as DateTime;
+    String scheduleLastSavedFormat = Hive.box('requests')
+        .get('scheduleLastSavedFormat', defaultValue: 'ergast');
+
+    if (latestQuery
+            .add(
+              const Duration(minutes: 30),
+            )
+            .isAfter(DateTime.now()) &&
+        schedule.isNotEmpty &&
+        scheduleLastSavedFormat == 'f1') {
+      return formatLastSchedule(schedule, toCome);
+    } else {
+      var url = Uri.parse('$defaultEndpoint/v1/editorial-eventlisting/events');
+      var response = await http.get(
+        url,
+        headers: {
+          "Accept": "application/json",
+          "apikey": apikey,
+          "locale": "en",
+        },
+      );
+      Map<String, dynamic> responseAsJson = json.decode(
+        utf8.decode(response.bodyBytes),
+      );
+      List<Race> races = formatLastSchedule(responseAsJson, toCome);
+      Hive.box('requests').put('schedule', responseAsJson);
+      Hive.box('requests').put('scheduleLatestQuery', DateTime.now());
+      Hive.box('requests').put('scheduleLastSavedFormat', 'f1');
+      return races;
+    }
   }
 }
 

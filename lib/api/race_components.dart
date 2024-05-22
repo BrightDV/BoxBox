@@ -28,6 +28,7 @@ import 'package:intl/intl.dart';
 
 class Race {
   final String round;
+  final String meetingId;
   final String raceName;
   final String date;
   final String raceHour;
@@ -37,9 +38,13 @@ class Race {
   final String country;
   final List<DateTime> sessionDates;
   final bool? isFirst;
+  final String? raceCoverUrl;
+  final String? detailsPath;
+  final List? sessionStates;
 
   Race(
     this.round,
+    this.meetingId,
     this.raceName,
     this.date,
     this.raceHour,
@@ -49,6 +54,9 @@ class Race {
     this.country,
     this.sessionDates, {
     this.isFirst,
+    this.raceCoverUrl,
+    this.detailsPath,
+    this.sessionStates,
   });
 }
 
@@ -75,7 +83,9 @@ class RaceItem extends StatelessWidget {
           ? Column(
               children: [
                 ImageRenderer(
-                  RaceTracksUrls().getRaceCoverImageUrl(item.circuitId),
+                  item.raceCoverUrl != null
+                      ? item.raceCoverUrl!
+                      : RaceTracksUrls().getRaceCoverImageUrl(item.circuitId),
                   inSchedule: true,
                 ),
                 RaceListItem(item, index),
@@ -94,8 +104,8 @@ class RaceListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    int month = int.parse(item.date.split("-")[1]);
-    String day = item.date.split("-")[2];
+    String scheduleLastSavedFormat = Hive.box('requests')
+        .get('scheduleLastSavedFormat', defaultValue: 'ergast');
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     bool shouldUse12HourClock = Hive.box('settings')
@@ -114,89 +124,174 @@ class RaceListItem extends StatelessWidget {
       AppLocalizations.of(context)?.monthAbbreviationNovember,
       AppLocalizations.of(context)?.monthAbbreviationDecember,
     ];
-    DateTime raceDate =
-        DateTime.parse('${item.date} ${item.raceHour}').toLocal();
-    String formatedRaceDate = shouldUse12HourClock
-        ? DateFormat.jm().format(raceDate)
-        : DateFormat.Hm().format(raceDate);
+    if (scheduleLastSavedFormat == 'ergast') {
+      int month = int.parse(item.date.split("-")[1]);
+      String day = item.date.split("-")[2];
+      DateTime raceDate =
+          DateTime.parse('${item.date} ${item.raceHour}').toLocal();
 
-    return Container(
-      padding: const EdgeInsets.all(2),
-      height: 84,
-      color: index % 2 == 1
-          ? Theme.of(context).colorScheme.onSecondary
-          : Theme.of(context).colorScheme.background,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Container(
-            padding: index == 0
-                ? const EdgeInsets.fromLTRB(10, 0, 10, 0)
-                : const EdgeInsets.only(left: 5),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Expanded(
-                  flex: 1,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(7),
-                      color: useDarkMode
-                          ? index % 2 == 0
-                              ? HSLColor.fromColor(
-                                  Theme.of(context).colorScheme.background,
-                                ).withLightness(0.2).toColor()
-                              : Theme.of(context).colorScheme.secondaryContainer
-                          : const Color.fromARGB(255, 136, 135, 135),
+      String formatedRaceDate = shouldUse12HourClock
+          ? DateFormat.jm().format(raceDate)
+          : DateFormat.Hm().format(raceDate);
+
+      return Container(
+        padding: const EdgeInsets.all(2),
+        height: 84,
+        color: index % 2 == 1
+            ? Theme.of(context).colorScheme.onSecondary
+            : Theme.of(context).colorScheme.background,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Container(
+              padding: index == 0
+                  ? const EdgeInsets.fromLTRB(10, 0, 10, 0)
+                  : const EdgeInsets.only(left: 5),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Expanded(
+                    flex: 1,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(7),
+                        color: useDarkMode
+                            ? index % 2 == 0
+                                ? HSLColor.fromColor(
+                                    Theme.of(context).colorScheme.background,
+                                  ).withLightness(0.2).toColor()
+                                : Theme.of(context)
+                                    .colorScheme
+                                    .secondaryContainer
+                            : const Color.fromARGB(255, 136, 135, 135),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(5),
+                        child: Column(
+                          children: [
+                            Text(
+                              day,
+                              style: const TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                            Text(
+                              months[month - 1].toLowerCase(),
+                              style: const TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(5),
-                      child: Column(
+                  ),
+                  Expanded(
+                    flex: 5,
+                    child: ListTile(
+                      title: Text(
+                        item.country,
+                      ),
+                      subtitle: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            day,
-                            style: const TextStyle(
-                              color: Colors.white,
-                            ),
+                            item.circuitName,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
-                          Text(
-                            months[month - 1].toLowerCase(),
-                            style: const TextStyle(
-                              color: Colors.white,
-                            ),
-                          ),
+                          Text(formatedRaceDate),
                         ],
                       ),
                     ),
                   ),
-                ),
-                Expanded(
-                  flex: 5,
-                  child: ListTile(
-                    title: Text(
-                      item.country,
-                    ),
-                    subtitle: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          item.circuitName,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
+    } else {
+      DateTime raceDate = DateTime.parse(item.date);
+      int month = raceDate.month;
+      String day = raceDate.day.toString();
+      String formatedRaceDate = shouldUse12HourClock
+          ? DateFormat.jm().format(raceDate)
+          : DateFormat.Hm().format(raceDate);
+
+      return Container(
+        padding: const EdgeInsets.all(2),
+        height: 84,
+        color: index % 2 == 1
+            ? Theme.of(context).colorScheme.onSecondary
+            : Theme.of(context).colorScheme.background,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Container(
+              padding: index == 0
+                  ? const EdgeInsets.fromLTRB(10, 0, 10, 0)
+                  : const EdgeInsets.only(left: 5),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Expanded(
+                    flex: 1,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(7),
+                        color: useDarkMode
+                            ? index % 2 == 0
+                                ? HSLColor.fromColor(
+                                    Theme.of(context).colorScheme.background,
+                                  ).withLightness(0.2).toColor()
+                                : Theme.of(context)
+                                    .colorScheme
+                                    .secondaryContainer
+                            : const Color.fromARGB(255, 136, 135, 135),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(5),
+                        child: Column(
+                          children: [
+                            Text(
+                              day,
+                              style: const TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                            Text(
+                              months[month - 1].toLowerCase(),
+                              style: const TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
                         ),
-                        Text(formatedRaceDate),
-                      ],
+                      ),
                     ),
                   ),
-                ),
-              ],
+                  Expanded(
+                    flex: 5,
+                    child: ListTile(
+                      title: Text(
+                        item.country,
+                      ),
+                      subtitle: Text(
+                        '${item.circuitName}\n${formatedRaceDate}',
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
-      ),
-    );
+          ],
+        ),
+      );
+    }
   }
 }
 
