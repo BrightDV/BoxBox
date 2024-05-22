@@ -294,8 +294,6 @@ class Formula1 {
           fastestLapRank != '0' ? true : false,
           fastestLapRank != '0' ? fastestLapTime : "",
           "", // data not available
-          // TODO: new UI when lapsDone missing for race results, gap to previous instead?
-          //lapsDone: element['laps'],
           points: element['racePoints'].toString(),
           status: element['completionStatusCode'],
         ),

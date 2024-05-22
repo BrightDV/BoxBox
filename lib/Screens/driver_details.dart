@@ -85,7 +85,7 @@ class DriverDetailsScreen extends StatelessWidget {
         body: TabBarView(
           children: [
             DriverInfo(driverId, detailsPath: detailsPath),
-            DriverResults(driverId), // todo: converter?
+            DriverResults(driverId),
           ],
         ),
       ),
