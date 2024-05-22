@@ -76,28 +76,15 @@ class TeamDetailsScreen extends StatelessWidget {
         ),
         body: TabBarView(
           children: [
-            Padding(
-              padding: const EdgeInsets.all(5),
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    FutureBuilder<Map<String, dynamic>>(
-                      future: FormulaOneScraper().scrapeTeamDetails(teamId),
-                      builder: (context, snapshot) => snapshot.hasError
-                          ? RequestErrorWidget(
-                              snapshot.error.toString(),
-                            )
-                          : snapshot.hasData
-                              ? TeamDetailsFragment(
-                                  snapshot.data!,
-                                )
-                              : const LoadingIndicatorUtil(),
-                    ),
-                  ],
-                ),
-              ),
+            FutureBuilder<Map<String, dynamic>>(
+              future: FormulaOneScraper().scrapeTeamDetails(teamId),
+              builder: (context, snapshot) => snapshot.hasError
+                  ? RequestErrorWidget(
+                      snapshot.error.toString(),
+                    )
+                  : snapshot.hasData
+                      ? TeamDetailsFragment(snapshot.data!)
+                      : const LoadingIndicatorUtil(),
             ),
             TeamResults(teamId),
           ],
@@ -115,226 +102,224 @@ class TeamDetailsFragment extends StatelessWidget {
   Widget build(BuildContext context) {
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
-    return Column(
-      children: [
-        Row(
-          children: [
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Image.network(
-                  teamDetails["drivers"]["images"][0],
-                  height: (MediaQuery.of(context).size.width - 10) / 2,
-                  width: (MediaQuery.of(context).size.width - 10) / 2,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 7),
-                  child: Text(
-                    teamDetails["drivers"]["names"][0],
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            Column(
-              children: [
-                Image.network(
-                  teamDetails["drivers"]["images"][1],
-                  height: (MediaQuery.of(context).size.width - 10) / 2,
-                  width: (MediaQuery.of(context).size.width - 10) / 2,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 7),
-                  child: Text(
-                    teamDetails["drivers"]["names"][1],
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-        Padding(
-          padding: const EdgeInsets.all(5),
-          child: Column(
+    final List<String> teamInfosLabels = [
+      AppLocalizations.of(context)!.team,
+      AppLocalizations.of(context)!.teamBase,
+      AppLocalizations.of(context)!.teamChief,
+      AppLocalizations.of(context)!.technicalChief,
+      AppLocalizations.of(context)!.chassis,
+      AppLocalizations.of(context)!.powerUnit,
+      AppLocalizations.of(context)!.firstTeamEntry,
+      AppLocalizations.of(context)!.worldChampionships,
+      AppLocalizations.of(context)!.highestRaceFinish,
+      AppLocalizations.of(context)!.polePositions,
+      AppLocalizations.of(context)!.fastestLaps,
+    ];
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Row(
             children: [
-              for (int i = 0;
-                  i < teamDetails["teamStats"]["attributes"].length;
-                  i++)
-                Padding(
-                  padding: const EdgeInsets.only(
-                    top: 2,
-                    bottom: 2,
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Image.network(
+                    teamDetails["drivers"]["images"][0],
+                    width: (MediaQuery.of(context).size.width) / 2,
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Expanded(
-                        flex: 3,
-                        child: Text(
-                          // localize it
-                          teamDetails["teamStats"]["attributes"][i],
-                          textAlign: TextAlign.start,
-                          style: TextStyle(
-                            fontSize: 14,
-                          ),
-                        ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 7),
+                    child: Text(
+                      teamDetails["drivers"]["names"][0],
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
                       ),
-                      Expanded(
-                        flex: 2,
-                        child: Text(
-                          teamDetails["teamStats"]["values"][i],
-                          textAlign: TextAlign.start,
-                          style: TextStyle(),
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
-                ),
+                ],
+              ),
+              Column(
+                children: [
+                  Image.network(
+                    teamDetails["drivers"]["images"][1],
+                    width: (MediaQuery.of(context).size.width) / 2,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 7),
+                    child: Text(
+                      teamDetails["drivers"]["names"][1],
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
-        ),
-        Column(
-          children: [
-            Text(
-              AppLocalizations.of(context)!.news,
-              style: TextStyle(
-                fontSize: 18,
-              ),
-            ),
-            SizedBox(
-              height: 275,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                //controller: scrollController,
-                physics: const PagingScrollPhysics(
-                  itemDimension: 300,
-                ),
-                itemCount: teamDetails["articles"].length,
-                itemBuilder: (context, index) => FutureBuilder<Article>(
-                  future: Formula1()
-                      .getArticleData(teamDetails["articles"][index][0]),
-                  builder: (context, snapshot) {
-                    return snapshot.hasError
-                        ? RequestErrorWidget(
-                            snapshot.error.toString(),
-                          )
-                        : snapshot.hasData
-                            ? NewsItem(
-                                News(
-                                  snapshot.data!.articleId,
-                                  'News',
-                                  snapshot.data!.articleSlug,
-                                  snapshot.data!.articleName,
-                                  '',
-                                  snapshot.data!.publishedDate,
-                                  snapshot.data!.articleHero['contentType'] ==
-                                          'atomVideo'
-                                      ? snapshot.data!.articleHero['fields']
-                                          ['thumbnail']['url']
-                                      : snapshot.data!
-                                                  .articleHero['contentType'] ==
-                                              'atomImageGallery'
-                                          ? snapshot.data!.articleHero['fields']
-                                              ['imageGallery'][0]['url']
-                                          : snapshot.data!.articleHero['fields']
-                                              ['image']['url'],
-                                ),
-                                true,
-                              )
-                            : const SizedBox(
-                                height: 200,
-                                child: LoadingIndicatorUtil(),
-                              );
-                  },
-                ),
-              ),
-            ),
-          ],
-        ),
-        Padding(
-          padding: const EdgeInsets.only(top: 15, left: 5, right: 5),
-          child: MarkdownBody(
-            data: teamDetails["information"].join("\n"),
-            fitContent: false,
-            styleSheet: MarkdownStyleSheet(
-              p: TextStyle(),
-              pPadding: const EdgeInsets.only(
-                top: 10,
-                bottom: 10,
-              ),
-              a: const TextStyle(fontSize: 0),
-              h1: TextStyle(
-                fontWeight: FontWeight.w500,
-              ),
-              h3: TextStyle(
-                color: useDarkMode
-                    ? HSLColor.fromColor(
-                        Theme.of(context).colorScheme.onPrimary,
-                      ).withLightness(0.35).toColor()
-                    : Theme.of(context).colorScheme.onPrimary,
-                fontWeight: FontWeight.w500,
-                fontSize: 16,
-              ),
-              textAlign: WrapAlignment.spaceEvenly,
-            ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(left: 5, right: 5),
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(bottom: 15),
-                child: Text(
-                  AppLocalizations.of(context)!.gallery,
-                  style: TextStyle(
-                    fontSize: 18,
-                  ),
-                ),
-              ),
-              CarouselSlider(
-                items: [
-                  for (int i = 0;
-                      i < teamDetails["medias"]["images"].length;
-                      i++)
-                    Column(
+          Padding(
+            padding: const EdgeInsets.all(10),
+            child: Column(
+              children: [
+                for (int i = 0; i < teamDetails["teamStats"].length; i++)
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      top: 2,
+                      bottom: 2,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Image.network(teamDetails["medias"]["images"][i]),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                            top: 10,
-                          ),
+                        Expanded(
+                          flex: 3,
                           child: Text(
-                            teamDetails["medias"]["captions"][i].toString(),
+                            teamInfosLabels[i],
+                            textAlign: TextAlign.start,
                             style: TextStyle(
-                              fontSize: 12,
+                              fontSize: 14,
                             ),
-                            textAlign: TextAlign.justify,
+                          ),
+                        ),
+                        Expanded(
+                          flex: 2,
+                          child: Text(
+                            teamDetails["teamStats"][i],
+                            textAlign: TextAlign.start,
+                            style: TextStyle(),
                           ),
                         ),
                       ],
                     ),
-                ],
-                options: CarouselOptions(
-                  height: 351,
-                  autoPlay: true,
-                  viewportFraction: 0.85,
-                  autoPlayInterval: const Duration(seconds: 7),
-                  enlargeCenterPage: true,
-                  aspectRatio: 16 / 9,
+                  ),
+              ],
+            ),
+          ),
+          Column(
+            children: [
+              Text(
+                AppLocalizations.of(context)!.news,
+                style: TextStyle(
+                  fontSize: 18,
+                ),
+              ),
+              SizedBox(
+                height: 275,
+                child: ListView.builder(
+                  padding: EdgeInsets.only(left: 4),
+                  scrollDirection: Axis.horizontal,
+                  physics: const PagingScrollPhysics(
+                    itemDimension: 300,
+                  ),
+                  itemCount: teamDetails["articles"].length,
+                  itemBuilder: (context, index) => FutureBuilder<Article>(
+                    future: Formula1().getArticleData(
+                      teamDetails["articles"][index][0],
+                    ),
+                    builder: (context, snapshot) {
+                      return snapshot.hasError
+                          ? RequestErrorWidget(
+                              snapshot.error.toString(),
+                            )
+                          : snapshot.hasData
+                              ? NewsItem(
+                                  News(
+                                    snapshot.data!.articleId,
+                                    'News',
+                                    snapshot.data!.articleSlug,
+                                    snapshot.data!.articleName,
+                                    '',
+                                    snapshot.data!.publishedDate,
+                                    snapshot.data!.articleHero['contentType'] ==
+                                            'atomVideo'
+                                        ? snapshot.data!.articleHero['fields']
+                                            ['thumbnail']['url']
+                                        : snapshot.data!.articleHero[
+                                                    'contentType'] ==
+                                                'atomImageGallery'
+                                            ? snapshot
+                                                    .data!.articleHero['fields']
+                                                ['imageGallery'][0]['url']
+                                            : snapshot
+                                                    .data!.articleHero['fields']
+                                                ['image']['url'],
+                                  ),
+                                  true,
+                                )
+                              : const SizedBox(
+                                  height: 200,
+                                  width: 300,
+                                  child: LoadingIndicatorUtil(),
+                                );
+                    },
+                  ),
                 ),
               ),
             ],
           ),
-        ),
-      ],
+          Padding(
+            padding: const EdgeInsets.only(top: 15, left: 10, right: 10),
+            child: MarkdownBody(
+              data: teamDetails["information"].join("\n"),
+              fitContent: false,
+              styleSheet: MarkdownStyleSheet(
+                p: TextStyle(),
+                pPadding: const EdgeInsets.only(
+                  top: 10,
+                  bottom: 10,
+                ),
+                a: const TextStyle(fontSize: 0),
+                h1: TextStyle(
+                  fontWeight: FontWeight.w500,
+                ),
+                h3: TextStyle(
+                  color: useDarkMode
+                      ? HSLColor.fromColor(
+                          Theme.of(context).colorScheme.onPrimary,
+                        ).withLightness(0.35).toColor()
+                      : Theme.of(context).colorScheme.onPrimary,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 16,
+                ),
+                textAlign: WrapAlignment.spaceEvenly,
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 5, right: 5),
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 15),
+                  child: Text(
+                    AppLocalizations.of(context)!.gallery,
+                    style: TextStyle(
+                      fontSize: 18,
+                    ),
+                  ),
+                ),
+                CarouselSlider(
+                  items: [
+                    for (int i = 0; i < teamDetails["medias"].length; i++)
+                      Image.network(teamDetails["medias"][i]),
+                  ],
+                  options: CarouselOptions(
+                    height: 351,
+                    autoPlay: true,
+                    viewportFraction: 0.85,
+                    autoPlayInterval: const Duration(seconds: 7),
+                    enlargeCenterPage: true,
+                    aspectRatio: 16 / 9,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
