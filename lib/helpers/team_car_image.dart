@@ -45,7 +45,7 @@ class TeamCarImage {
     "alfa":
         "https://media.formula1.com/content/dam/fom-website/teams/2023/alfa-romeo-racing-left.png",
   };
-  Future<String> getTeamCarImageURL(String teamId) async {
+  String getTeamCarImageURL(String teamId) {
     String teamCarImageUrl = teamCarDecoder[teamId] ?? 'none';
     return teamCarImageUrl;
   }

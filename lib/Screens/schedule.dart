@@ -19,6 +19,7 @@
 
 import 'dart:async';
 
+import 'package:boxbox/api/formula1.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/request_error.dart';
 import 'package:boxbox/api/ergast.dart';
@@ -91,23 +92,34 @@ class ScheduleWidget extends StatelessWidget {
   }) : super(key: key);
 
   Future<List<Race>> getRacesList(bool toCome) async {
-    return await ErgastApi().getLastSchedule(toCome);
+    bool useOfficialDataSoure = Hive.box('settings')
+        .get('useOfficialDataSoure', defaultValue: false) as bool;
+    if (useOfficialDataSoure) {
+      return await Formula1().getLastSchedule(toCome);
+    } else {
+      return await ErgastApi().getLastSchedule(toCome);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     Map schedule =
         Hive.box('requests').get('schedule', defaultValue: {}) as Map;
+    String scheduleLastSavedFormat = Hive.box('requests')
+        .get('scheduleLastSavedFormat', defaultValue: 'ergast');
     return FutureBuilder<List<Race>>(
       future: getRacesList(toCome),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
-          schedule['MRData'] != null
+          schedule[scheduleLastSavedFormat == 'ergast' ? 'MRData' : 'events'] !=
+                  null
               ? RacesList(
-                  ErgastApi().formatLastSchedule(
-                    schedule,
-                    toCome,
-                  ),
+                  scheduleLastSavedFormat == 'ergast'
+                      ? ErgastApi().formatLastSchedule(
+                          schedule,
+                          toCome,
+                        )
+                      : Formula1().formatLastSchedule(schedule, toCome),
                   toCome,
                   scrollController: scrollController,
                 )
@@ -121,19 +133,25 @@ class ScheduleWidget extends StatelessWidget {
                     toCome,
                     scrollController: scrollController,
                   )
-            : schedule['MRData'] != null
-                ? ErgastApi()
-                        .formatLastSchedule(
-                          schedule,
-                          toCome,
-                        )
+            : schedule[scheduleLastSavedFormat == 'ergast'
+                        ? 'MRData'
+                        : 'events'] !=
+                    null
+                ? (scheduleLastSavedFormat == 'ergast'
+                            ? ErgastApi().formatLastSchedule(
+                                schedule,
+                                toCome,
+                              )
+                            : Formula1().formatLastSchedule(schedule, toCome))
                         .isEmpty
                     ? const EmptySchedule()
                     : RacesList(
-                        ErgastApi().formatLastSchedule(
-                          schedule,
-                          toCome,
-                        ),
+                        scheduleLastSavedFormat == 'ergast'
+                            ? ErgastApi().formatLastSchedule(
+                                schedule,
+                                toCome,
+                              )
+                            : Formula1().formatLastSchedule(schedule, toCome),
                         toCome,
                         scrollController: scrollController,
                       )

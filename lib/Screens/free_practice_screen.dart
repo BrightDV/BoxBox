@@ -18,6 +18,7 @@
  */
 
 import 'package:boxbox/api/driver_components.dart';
+import 'package:boxbox/api/formula1.dart';
 import 'package:boxbox/helpers/request_error.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/team_background_color.dart';
@@ -33,6 +34,7 @@ class FreePracticeScreen extends StatelessWidget {
   final String sessionTitle;
   final int sessionIndex;
   final String circuitId;
+  final String meetingId;
   final int raceYear;
   final String raceName;
   final String? raceUrl;
@@ -41,6 +43,7 @@ class FreePracticeScreen extends StatelessWidget {
     this.sessionTitle,
     this.sessionIndex,
     this.circuitId,
+    this.meetingId,
     this.raceYear,
     this.raceName, {
     Key? key,
@@ -63,12 +66,14 @@ class FreePracticeScreen extends StatelessWidget {
                 false,
                 raceUrl: raceUrl,
               )
-            : FormulaOneScraper().scrapeFreePracticeResult(
+            : Formula1().getFreePracticeStandings(meetingId, sessionIndex),
+        // disable scraping for the moment
+        /* FormulaOneScraper().scrapeFreePracticeResult(
                 circuitId,
                 sessionIndex,
                 'practice-$sessionIndex',
                 true,
-              ),
+              ), */
         builder: (context, snapshot) => snapshot.hasError
             ? snapshot.error.toString() == 'RangeError: Value not in range: 0'
                 ? Center(
@@ -85,16 +90,14 @@ class FreePracticeScreen extends StatelessWidget {
                         '\n' +
                         snapshot.stackTrace.toString(),
                   )
-            : snapshot.hasError
-                ? RequestErrorWidget(snapshot.error.toString())
-                : snapshot.hasData
-                    ? FreePracticeResultsList(
-                        snapshot.data!,
-                        raceYear,
-                        raceName,
-                        sessionIndex,
-                      )
-                    : const LoadingIndicatorUtil(),
+            : snapshot.hasData
+                ? FreePracticeResultsList(
+                    snapshot.data!,
+                    raceYear,
+                    raceName,
+                    sessionIndex,
+                  )
+                : const LoadingIndicatorUtil(),
       ),
     );
   }
@@ -334,7 +337,11 @@ class FreePracticeResultItem extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.only(top: 5, bottom: 5),
                     child: Text(
-                      result.fastestLap == '' ? '--' : result.fastestLap,
+                      index == 0
+                          ? ''
+                          : result.fastestLap == ''
+                              ? '--'
+                              : result.fastestLap,
                       textAlign: TextAlign.center,
                     ),
                   ),

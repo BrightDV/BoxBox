@@ -98,6 +98,7 @@ class RaceTracksUrls {
     "yas_marina": "Abu_Dhabi",
     "shanghai": "Chinese",
   };
+
   String getRaceTrackImageUrl(String gpId) {
     String gpName = trackUrlConverter[gpId]!;
     return "https://media.formula1.com/image/upload/f_auto/q_auto/v1677238736/content/dam/fom-website/2018-redesign-assets/Racehub%20header%20images%2016x9/$gpName.jpg.transform/fullbleed/image.jpg";

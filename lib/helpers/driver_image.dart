@@ -74,13 +74,13 @@ class DriverResultsImage {
     "bearman":
         "https://www.formula1.com/content/dam/fom-website/drivers/O/OLIBEA01_Oliver_Bearman/olibea01.png",
   };
-  Future<String> getDriverImageURL(String driverId) async {
+  String getDriverImageURL(String driverId) {
     return driverDecoder[driverId] ?? 'none';
   }
 }
 
 class DriverStatsImage {
-  Future<String> getDriverImage(String driverId) async {
+  String getDriverImage(String driverId) {
     String driverPath = Convert().driverIdFromErgastForImages(driverId);
     String driverImageUrl =
         "https://media.formula1.com/content/dam/fom-website/drivers/2024Drivers/$driverPath.jpg.img.640.medium.jpg/1677069810695.jpg";
@@ -89,7 +89,7 @@ class DriverStatsImage {
 }
 
 class DriverHelmetImage {
-  Future<String> getDriverHelmetImage(String driverId) async {
+  String getDriverHelmetImage(String driverId) {
     String driverPath = Convert().driverIdFromErgast(driverId);
     String driverImageUrl =
         "https://www.formula1.com/content/fom-website/en/drivers/$driverPath/_jcr_content/helmet.img.png";
@@ -98,7 +98,7 @@ class DriverHelmetImage {
 }
 
 class DriverFlagImage {
-  Future<String> getDriverFlagImage(String driverId) async {
+  String getDriverFlagImage(String driverId) {
     String driverPath = Convert().driverIdFromErgast(driverId);
     String driverImageUrl =
         "https://www.formula1.com/content/fom-website/en/drivers/$driverPath/_jcr_content/countryFlag.img.jpg";
