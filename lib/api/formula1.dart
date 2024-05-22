@@ -276,7 +276,8 @@ class Formula1 {
       }
 
       String fastestLapRank = "0";
-      if (element['driverLastName'].toLowerCase() == fastestLapDriverName) {
+      if (element['driverLastName'].toLowerCase() ==
+          fastestLapDriverName.toLowerCase()) {
         fastestLapRank = "1";
       }
       formatedRaceStandings.add(
