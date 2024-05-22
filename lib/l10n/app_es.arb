@@ -332,5 +332,9 @@
   "copyTitle": "Copiar título",
   "@copyTitle": {},
   "twelveHourClock": "Utilizar un reloj analógico",
-  "@twelveHourClock": {}
+  "@twelveHourClock": {},
+  "useOfficialDataSource": "Utilizar la fuente de datos oficial",
+  "@useOfficialDataSource": {},
+  "useOfficialDataSourceSub": "Utilice la fuente de datos de la aplicación móvil oficial. Esto da resultados más rápidos, pero no todos los detalles están disponibles. Mantenga presionado para obtener más detalles.",
+  "@useOfficialDataSourceSub": {}
 }
