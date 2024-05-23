@@ -130,6 +130,7 @@ class TeamDetailsFragment extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Column(
                 mainAxisSize: MainAxisSize.min,
@@ -137,14 +138,46 @@ class TeamDetailsFragment extends StatelessWidget {
                   Image.network(
                     teamDetails["drivers"]["images"][0],
                     width: (MediaQuery.of(context).size.width) / 2,
+                    height: (MediaQuery.of(context).size.width) / 2,
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 7),
-                    child: Text(
-                      teamDetails["drivers"]["names"][0],
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600,
+                    child: SizedBox(
+                      width: (MediaQuery.of(context).size.width) / 2,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(right: 20),
+                            child: Text(
+                              teamDetails["drivers"]["names"][0][0],
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                teamDetails["drivers"]["names"][0][1],
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              Text(
+                                teamDetails["drivers"]["names"][0][2],
+                                style: TextStyle(
+                                  color: Theme.of(context).disabledColor,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -155,14 +188,46 @@ class TeamDetailsFragment extends StatelessWidget {
                   Image.network(
                     teamDetails["drivers"]["images"][1],
                     width: (MediaQuery.of(context).size.width) / 2,
+                    height: (MediaQuery.of(context).size.width) / 2,
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 7),
-                    child: Text(
-                      teamDetails["drivers"]["names"][1],
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600,
+                    child: SizedBox(
+                      width: (MediaQuery.of(context).size.width) / 2,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(right: 20),
+                            child: Text(
+                              teamDetails["drivers"]["names"][1][0],
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                teamDetails["drivers"]["names"][1][1],
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              Text(
+                                teamDetails["drivers"]["names"][1][2],
+                                style: TextStyle(
+                                  color: Theme.of(context).disabledColor,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -184,7 +249,7 @@ class TeamDetailsFragment extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Expanded(
-                          flex: 3,
+                          flex: 4,
                           child: Text(
                             teamInfosLabels[i],
                             textAlign: TextAlign.start,
@@ -194,7 +259,7 @@ class TeamDetailsFragment extends StatelessWidget {
                           ),
                         ),
                         Expanded(
-                          flex: 2,
+                          flex: 3,
                           child: Text(
                             teamDetails["teamStats"][i],
                             textAlign: TextAlign.start,
@@ -298,7 +363,7 @@ class TeamDetailsFragment extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(left: 5, right: 5),
+            padding: const EdgeInsets.only(left: 5, right: 5, bottom: 5),
             child: Column(
               children: [
                 Padding(

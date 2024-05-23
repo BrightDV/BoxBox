@@ -452,10 +452,10 @@ class FormulaOneScraper {
       results["drivers"]["images"].add(
         tempDetails[i].children[0].children[0].children[0].attributes['src'],
       );
-      String names = "";
+      List names = [];
       for (var name
           in tempDetails[i].children[0].children[1].children[0].children) {
-        names += name.text + '\n';
+        names.add(name.text);
       }
       results["drivers"]["names"].add(
         names,
