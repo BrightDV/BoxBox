@@ -332,5 +332,9 @@
   "copied": "कॉपी किया गया",
   "@copied": {},
   "twelveHourClock": "12 घंटे की घड़ी का प्रयोग करें",
-  "@twelveHourClock": {}
+  "@twelveHourClock": {},
+  "useOfficialDataSource": "आधिकारिक डेटा स्रोत का प्रयोग करें",
+  "@useOfficialDataSource": {},
+  "useOfficialDataSourceSub": "आधिकारिक मोबाइल ऐप के डेटा स्रोत का उपयोग करें। यह तेजी से परिणाम देता है, लेकिन सभी विवरण उपलब्ध नहीं हैं। अधिक विवरण के लिए देर तक दबाएं।",
+  "@useOfficialDataSourceSub": {}
 }
