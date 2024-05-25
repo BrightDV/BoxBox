@@ -21,11 +21,6 @@ public final class GeneratedPluginRegistrant {
       Log.e(TAG, "Error registering plugin add_2_calendar, com.javih.add_2_calendar.Add2CalendarPlugin", e);
     }
     try {
-      flutterEngine.getPlugins().add(new com.jhomlala.better_player.BetterPlayerPlugin());
-    } catch (Exception e) {
-      Log.e(TAG, "Error registering plugin better_player, com.jhomlala.better_player.BetterPlayerPlugin", e);
-    }
-    try {
       flutterEngine.getPlugins().add(new dev.fluttercommunity.plus.connectivity.ConnectivityPlugin());
     } catch (Exception e) {
       Log.e(TAG, "Error registering plugin connectivity_plus, dev.fluttercommunity.plus.connectivity.ConnectivityPlugin", e);
@@ -61,6 +56,11 @@ public final class GeneratedPluginRegistrant {
       Log.e(TAG, "Error registering plugin receive_sharing_intent, com.kasem.receive_sharing_intent.ReceiveSharingIntentPlugin", e);
     }
     try {
+      flutterEngine.getPlugins().add(new ir.r3r.river_player.RiverPlayerPlugin());
+    } catch (Exception e) {
+      Log.e(TAG, "Error registering plugin river_player, ir.r3r.river_player.RiverPlayerPlugin", e);
+    }
+    try {
       flutterEngine.getPlugins().add(new dev.fluttercommunity.plus.share.SharePlusPlugin());
     } catch (Exception e) {
       Log.e(TAG, "Error registering plugin share_plus, dev.fluttercommunity.plus.share.SharePlusPlugin", e);
@@ -91,9 +91,9 @@ public final class GeneratedPluginRegistrant {
       Log.e(TAG, "Error registering plugin video_player_android, io.flutter.plugins.videoplayer.VideoPlayerPlugin", e);
     }
     try {
-      flutterEngine.getPlugins().add(new creativemaybeno.wakelock.WakelockPlugin());
+      flutterEngine.getPlugins().add(new dev.fluttercommunity.plus.wakelock.WakelockPlusPlugin());
     } catch (Exception e) {
-      Log.e(TAG, "Error registering plugin wakelock, creativemaybeno.wakelock.WakelockPlugin", e);
+      Log.e(TAG, "Error registering plugin wakelock_plus, dev.fluttercommunity.plus.wakelock.WakelockPlusPlugin", e);
     }
   }
 }

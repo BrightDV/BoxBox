@@ -20,7 +20,6 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:better_player/better_player.dart';
 import 'package:boxbox/Screens/circuit.dart';
 import 'package:boxbox/Screens/schedule.dart';
 import 'package:boxbox/api/brightcove.dart';
@@ -44,6 +43,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:river_player/river_player.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:url_launcher/url_launcher.dart';
