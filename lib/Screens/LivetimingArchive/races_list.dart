@@ -125,7 +125,7 @@ class ArchiveRaceItem extends StatelessWidget {
         height: 80,
         color: index % 2 == 1
             ? Theme.of(context).colorScheme.onSecondary
-            : Theme.of(context).colorScheme.background,
+            : Theme.of(context).colorScheme.surface,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
@@ -144,7 +144,7 @@ class ArchiveRaceItem extends StatelessWidget {
                         color: useDarkMode
                             ? index % 2 == 0
                                 ? HSLColor.fromColor(
-                                    Theme.of(context).colorScheme.background,
+                                    Theme.of(context).colorScheme.surface,
                                   ).withLightness(0.2).toColor()
                                 : Theme.of(context)
                                     .colorScheme

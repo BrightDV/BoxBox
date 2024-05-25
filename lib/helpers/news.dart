@@ -1761,7 +1761,7 @@ class VideoRenderer extends StatelessWidget {
                             snapshot.data!,
                             autoplay == null ? false : autoplay!,
                             heroTag ?? '',
-                            Theme.of(context).colorScheme.background,
+                            Theme.of(context).colorScheme.surface,
                           ),
                     if (caption != null)
                       Padding(

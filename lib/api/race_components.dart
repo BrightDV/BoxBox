@@ -139,7 +139,7 @@ class RaceListItem extends StatelessWidget {
         height: 84,
         color: index % 2 == 1
             ? Theme.of(context).colorScheme.onSecondary
-            : Theme.of(context).colorScheme.background,
+            : Theme.of(context).colorScheme.surface,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
@@ -159,7 +159,7 @@ class RaceListItem extends StatelessWidget {
                         color: useDarkMode
                             ? index % 2 == 0
                                 ? HSLColor.fromColor(
-                                    Theme.of(context).colorScheme.background,
+                                    Theme.of(context).colorScheme.surface,
                                   ).withLightness(0.2).toColor()
                                 : Theme.of(context)
                                     .colorScheme
@@ -226,7 +226,7 @@ class RaceListItem extends StatelessWidget {
         height: 84,
         color: index % 2 == 1
             ? Theme.of(context).colorScheme.onSecondary
-            : Theme.of(context).colorScheme.background,
+            : Theme.of(context).colorScheme.surface,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
@@ -246,7 +246,7 @@ class RaceListItem extends StatelessWidget {
                         color: useDarkMode
                             ? index % 2 == 0
                                 ? HSLColor.fromColor(
-                                    Theme.of(context).colorScheme.background,
+                                    Theme.of(context).colorScheme.surface,
                                   ).withLightness(0.2).toColor()
                                 : Theme.of(context)
                                     .colorScheme

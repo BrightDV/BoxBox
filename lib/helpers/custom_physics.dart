@@ -36,7 +36,7 @@ class PagingScrollPhysics extends ScrollPhysics {
 
   Tolerance toleranceFor(ScrollMetrics metrics) {
     double devicePixelRatio =
-        MediaQueryData.fromWindow(WidgetsBinding.instance.window)
+        MediaQueryData.fromView(WidgetsBinding.instance.window)
                 .devicePixelRatio /
             WidgetsBinding.instance.window.physicalSize.height;
     return Tolerance(

@@ -470,11 +470,11 @@ class AtomSocialButton extends StatelessWidget {
                     : element['fields']['postType'],
           ),
           style: ButtonStyle(
-            foregroundColor: MaterialStateProperty.all<Color>(
+            foregroundColor: WidgetStateProperty.all<Color>(
               Colors.white,
             ),
             backgroundColor: element['fields']['postType'] == 'Instagram'
-                ? MaterialStateProperty.all<Color>(
+                ? WidgetStateProperty.all<Color>(
                     const Color.fromARGB(
                       255,
                       241,
@@ -483,11 +483,11 @@ class AtomSocialButton extends StatelessWidget {
                     ),
                   )
                 : element['fields']['postType'] == 'Twitter'
-                    ? MaterialStateProperty.all<Color>(Color(0xFF1DA1F2))
-                    : MaterialStateProperty.all<Color>(
+                    ? WidgetStateProperty.all<Color>(Color(0xFF1DA1F2))
+                    : WidgetStateProperty.all<Color>(
                         Theme.of(context).colorScheme.secondary,
                       ),
-            elevation: MaterialStateProperty.all<double>(5),
+            elevation: WidgetStateProperty.all<double>(5),
           ),
         ),
       ),
@@ -1056,7 +1056,7 @@ class AtomSessionResults extends StatelessWidget {
                                         Theme.of(context).colorScheme.onPrimary,
                                   ),
                                   backgroundColor:
-                                      Theme.of(context).colorScheme.background,
+                                      Theme.of(context).colorScheme.surface,
                                   body: element['fields']['sessionType'] ==
                                               'Race' ||
                                           element['fields']['sessionType'] ==

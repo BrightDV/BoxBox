@@ -91,7 +91,7 @@ class TeamItem extends StatelessWidget {
         height: item.teamCarImageCropped != null ? 113 : 120,
         color: index % 2 == 1
             ? Theme.of(context).colorScheme.onSecondary
-            : Theme.of(context).colorScheme.background,
+            : Theme.of(context).colorScheme.surface,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
