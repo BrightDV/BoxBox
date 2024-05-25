@@ -415,11 +415,15 @@ class Formula1 {
     } else {
       List finalJson = responseAsJson['raceResultsPractice$session']['results'];
       for (var element in finalJson) {
-        String time = '+' + element['gapToLeader'];
-        if (time.substring(time.indexOf('.') + 1).length == 2) {
-          time += '0';
+        String time = "";
+        if (element['gapToLeader'] != null) {
+          time = '+' + element['gapToLeader'];
+          if (time.substring(time.indexOf('.') + 1).length == 2) {
+            time += '0';
+          }
+          time += 's';
         }
-        time += 's';
+
         driversResults.add(
           DriverResult(
             // TODO: find another driverId?
@@ -430,7 +434,7 @@ class Formula1 {
             element['driverLastName'],
             element['driverTLA'],
             Convert().teamsFromFormulaOneApiToErgast(element['teamName']),
-            element['classifiedTime'],
+            element['classifiedTime'] ?? '',
             false,
             "",
             time,

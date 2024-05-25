@@ -459,11 +459,11 @@ class QualificationResultsItem extends StatelessWidget {
                         style: TextStyle(
                           color: winningTimeQOne == item.timeq1
                               ? Colors.white
-                              : item.timeq1 != '--' && item.timeq1 != 'DNF'
-                                  ? const Color(0xff00ff00)
-                                  : item.timeq1 == 'DNF'
+                              : item.timeq1 != '--'
+                                  ? item.timeq1 == 'DNF'
                                       ? Colors.yellow
-                                      : Colors.white,
+                                      : const Color(0xff00ff00)
+                                  : Colors.white,
                         ),
                         textAlign: TextAlign.center,
                       ),
@@ -505,7 +505,9 @@ class QualificationResultsItem extends StatelessWidget {
                           color: winningTimeQTwo == item.timeq2
                               ? Colors.white
                               : item.timeq2 != '--'
-                                  ? const Color(0xff00ff00)
+                                  ? item.timeq2 == 'DNF'
+                                      ? Colors.yellow
+                                      : const Color(0xff00ff00)
                                   : Colors.white,
                         ),
                         textAlign: TextAlign.center,
@@ -547,7 +549,9 @@ class QualificationResultsItem extends StatelessWidget {
                           color: index == 0
                               ? Colors.white
                               : item.timeq3 != '--'
-                                  ? const Color(0xff00ff00)
+                                  ? item.timeq3 == 'DNF'
+                                      ? Colors.yellow
+                                      : const Color(0xff00ff00)
                                   : Colors.white,
                         ),
                         textAlign: TextAlign.center,
@@ -613,7 +617,7 @@ class QualificationDriversResultsList extends StatelessWidget {
                     (raceUrl?.contains('sprint-qualifying') ?? false) ||
                             (isSprintQualifying ?? false)
                         ? "Formula 1 Sprint Qualifying Highlights ${race!.raceName} $raceYear"
-                        : "Formula 1 Qualification Highlights ${race!.raceName} $raceYear",
+                        : "Formula 1 Qualifying Highlights ${race!.raceName} $raceYear",
                   );
                   final Video bestVideoMatch = searchResults[0];
                   await launchUrl(
