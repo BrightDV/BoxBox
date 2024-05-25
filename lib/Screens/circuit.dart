@@ -25,6 +25,7 @@ import 'package:boxbox/api/formula1.dart';
 import 'package:boxbox/api/race_components.dart';
 import 'package:boxbox/helpers/buttons.dart';
 import 'package:boxbox/helpers/convert_ergast_and_formula_one.dart';
+import 'package:boxbox/helpers/divider.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/news.dart';
 import 'package:boxbox/helpers/racetracks_url.dart';
@@ -585,15 +586,16 @@ class RaceResults extends StatelessWidget {
                       flex: 1,
                       child: SizedBox(
                         height: 15,
-                        child: VerticalDivider(
+                        child: BoxBoxVerticalDivider(
                           color: Color(
                             int.parse(
                               'FF${driverResults['teamColourCode']}',
                               radix: 16,
                             ),
                           ),
-                          thickness: 5,
-                          width: 5,
+                          thickness: 6,
+                          width: 6,
+                          border: BorderRadius.circular(2.75),
                         ),
                       ),
                     ),

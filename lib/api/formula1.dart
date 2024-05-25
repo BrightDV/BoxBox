@@ -676,7 +676,7 @@ class Formula1 {
 
     if (latestQuery
             .add(
-              const Duration(minutes: 30),
+              const Duration(minutes: 10),
             )
             .isAfter(DateTime.now()) &&
         teamsStandings.isNotEmpty &&

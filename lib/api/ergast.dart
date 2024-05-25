@@ -588,7 +588,7 @@ class _ErgastApiCalls {
 
     if (latestQuery
             .add(
-              const Duration(minutes: 10),
+              const Duration(minutes: 20),
             )
             .isAfter(DateTime.now()) &&
         teamsStandings.isNotEmpty &&

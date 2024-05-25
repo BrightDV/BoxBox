@@ -86,6 +86,11 @@ class NewsItem extends StatelessWidget {
 
       showMenu(
         context: context,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(
+            Radius.circular(20.0),
+          ),
+        ),
         items: <PopupMenuEntry<int>>[
           PopupMenuItem(
             value: 0,

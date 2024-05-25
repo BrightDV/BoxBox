@@ -22,6 +22,7 @@ import 'package:boxbox/Screens/free_practice_screen.dart';
 import 'package:boxbox/Screens/race_details.dart';
 import 'package:boxbox/api/formula1.dart';
 import 'package:boxbox/helpers/custom_physics.dart';
+import 'package:boxbox/helpers/divider.dart';
 import 'package:boxbox/helpers/news.dart';
 import 'package:boxbox/helpers/news_feed_widget.dart';
 import 'package:flutter/foundation.dart';
@@ -811,7 +812,7 @@ class AtomSessionResults extends StatelessWidget {
                             flex: 1,
                             child: SizedBox(
                               height: 15,
-                              child: VerticalDivider(
+                              child: BoxBoxVerticalDivider(
                                 color: Color(
                                   int.parse(
                                     driverResults['teamColourCode'] == null
@@ -822,6 +823,7 @@ class AtomSessionResults extends StatelessWidget {
                                 ),
                                 thickness: 5,
                                 width: 5,
+                                border: BorderRadius.circular(2.0),
                               ),
                             ),
                           ),
@@ -835,7 +837,8 @@ class AtomSessionResults extends StatelessWidget {
                           Expanded(
                             flex: 6,
                             child: Text(
-                              driverResults['gapToLeader'] != "0.0"
+                              (driverResults['gapToLeader'] != "0.0" &&
+                                      driverResults['gapToLeader'] != "0")
                                   ? '+${driverResults['gapToLeader']}'
                                   : element['fields']['sessionType'] == 'Race'
                                       ? driverResults['raceTime']
@@ -879,7 +882,7 @@ class AtomSessionResults extends StatelessWidget {
                                 flex: 1,
                                 child: SizedBox(
                                   height: 15,
-                                  child: VerticalDivider(
+                                  child: BoxBoxVerticalDivider(
                                     color: Color(
                                       int.parse(
                                         driverResults['teamColourCode'] == null
@@ -890,6 +893,7 @@ class AtomSessionResults extends StatelessWidget {
                                     ),
                                     thickness: 5,
                                     width: 5,
+                                    border: BorderRadius.circular(2.0),
                                   ),
                                 ),
                               ),
@@ -931,7 +935,7 @@ class AtomSessionResults extends StatelessWidget {
                                 flex: 1,
                                 child: SizedBox(
                                   height: 15,
-                                  child: VerticalDivider(
+                                  child: BoxBoxVerticalDivider(
                                     color: Color(
                                       int.parse(
                                         driverResults['teamColourCode'] == null
@@ -942,6 +946,7 @@ class AtomSessionResults extends StatelessWidget {
                                     ),
                                     thickness: 5,
                                     width: 5,
+                                    border: BorderRadius.circular(2.0),
                                   ),
                                 ),
                               ),

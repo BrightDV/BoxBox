@@ -173,7 +173,7 @@ class TeamsStandingsWidget extends StatelessWidget {
         if (snapshot.hasError) {
           teamsStandings[teamStandingsLastSavedFormat == 'ergast'
                       ? 'MRData'
-                      : 'drivers'] !=
+                      : 'constructors'] !=
                   null
               ? TeamsList(
                   items: teamStandingsLastSavedFormat == 'ergast'
@@ -190,7 +190,7 @@ class TeamsStandingsWidget extends StatelessWidget {
               )
             : teamsStandings[teamStandingsLastSavedFormat == 'ergast'
                         ? 'MRData'
-                        : 'drivers'] !=
+                        : 'constructors'] !=
                     null
                 ? TeamsList(
                     items: teamStandingsLastSavedFormat == 'ergast'

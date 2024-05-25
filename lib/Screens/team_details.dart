@@ -155,7 +155,7 @@ class TeamDetailsFragment extends StatelessWidget {
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontWeight: FontWeight.w600,
-                                fontSize: 16,
+                                fontSize: 15,
                               ),
                             ),
                           ),
@@ -165,8 +165,8 @@ class TeamDetailsFragment extends StatelessWidget {
                               Text(
                                 teamDetails["drivers"]["names"][0][1],
                                 style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w600,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
                                 ),
                               ),
                               Text(
@@ -205,7 +205,7 @@ class TeamDetailsFragment extends StatelessWidget {
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontWeight: FontWeight.w600,
-                                fontSize: 16,
+                                fontSize: 15,
                               ),
                             ),
                           ),
@@ -215,8 +215,8 @@ class TeamDetailsFragment extends StatelessWidget {
                               Text(
                                 teamDetails["drivers"]["names"][1][1],
                                 style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w600,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
                                 ),
                               ),
                               Text(

@@ -17,6 +17,7 @@
  * Copyright (c) 2022-2024, BrightDV
  */
 
+import 'package:boxbox/helpers/divider.dart';
 import 'package:boxbox/helpers/driver_image.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/team_background_color.dart';
@@ -198,7 +199,7 @@ class DriverItem extends StatelessWidget {
         height: 120,
         color: index % 2 == 1
             ? Theme.of(context).colorScheme.onSecondary
-            : Theme.of(context).colorScheme.background,
+            : Theme.of(context).colorScheme.surface,
         child: Row(
           children: <Widget>[
             Expanded(
@@ -230,10 +231,11 @@ class DriverItem extends StatelessWidget {
                           ),
                           Expanded(
                             flex: 1,
-                            child: VerticalDivider(
-                              color: finalTeamColor,
-                              thickness: 9,
+                            child: BoxBoxVerticalDivider(
                               width: 30,
+                              thickness: 9,
+                              color: finalTeamColor,
+                              border: BorderRadius.circular(3.25),
                             ),
                           ),
                           Expanded(

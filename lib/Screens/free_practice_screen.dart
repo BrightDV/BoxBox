@@ -19,6 +19,7 @@
 
 import 'package:boxbox/api/driver_components.dart';
 import 'package:boxbox/api/formula1.dart';
+import 'package:boxbox/helpers/divider.dart';
 import 'package:boxbox/helpers/request_error.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/team_background_color.dart';
@@ -255,7 +256,7 @@ class FreePracticeResultItem extends StatelessWidget {
             ),
             Expanded(
               flex: 2,
-              child: VerticalDivider(
+              child: BoxBoxVerticalDivider(
                 color: TeamBackgroundColor().getTeamColor(
                   result.team,
                 ),
@@ -263,6 +264,7 @@ class FreePracticeResultItem extends StatelessWidget {
                 width: 25,
                 indent: 7,
                 endIndent: 7,
+                border: BorderRadius.circular(2.75),
               ),
             ),
             Expanded(

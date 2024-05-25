@@ -18,6 +18,7 @@
  */
 
 import 'package:boxbox/Screens/team_details.dart';
+import 'package:boxbox/helpers/divider.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/team_background_color.dart';
 import 'package:boxbox/helpers/team_car_image.dart';
@@ -108,12 +109,13 @@ class TeamItem extends StatelessWidget {
             ),
             Expanded(
               flex: 1,
-              child: VerticalDivider(
+              child: BoxBoxVerticalDivider(
                 color: finalTeamColors,
                 thickness: 9,
                 width: 40,
                 indent: 30,
                 endIndent: 30,
+                border: BorderRadius.circular(3.25),
               ),
             ),
             Expanded(
@@ -218,8 +220,9 @@ class TeamCarImageProvider extends StatelessWidget {
           )
         : CachedNetworkImage(
             imageBuilder: (context, imageProvider) => Transform.scale(
-              alignment:
-                  teamCarImageCropped != null ? Alignment.centerRight :  Alignment.center,
+              alignment: teamCarImageCropped != null
+                  ? Alignment.centerRight
+                  : Alignment.center,
               scale: 1.5,
               child: Container(
                 alignment:

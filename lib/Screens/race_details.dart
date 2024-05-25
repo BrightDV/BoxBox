@@ -26,6 +26,7 @@ import 'package:boxbox/api/ergast.dart';
 import 'package:boxbox/api/formula1.dart';
 import 'package:boxbox/api/race_components.dart';
 import 'package:boxbox/helpers/convert_ergast_and_formula_one.dart';
+import 'package:boxbox/helpers/divider.dart';
 import 'package:boxbox/helpers/driver_result_item.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/request_error.dart';
@@ -1086,12 +1087,13 @@ class StartingGridPositionItem extends StatelessWidget {
             ),
             Expanded(
               flex: 1,
-              child: VerticalDivider(
+              child: BoxBoxVerticalDivider(
                 color: finalTeamColors,
                 thickness: 8,
                 width: 25,
                 indent: 7,
                 endIndent: 7,
+                border: BorderRadius.circular(2.75),
               ),
             ),
             Expanded(

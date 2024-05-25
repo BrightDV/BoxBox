@@ -20,6 +20,7 @@
 import 'package:boxbox/Screens/driver_details.dart';
 import 'package:boxbox/api/driver_components.dart';
 import 'package:boxbox/api/race_components.dart';
+import 'package:boxbox/helpers/divider.dart';
 import 'package:boxbox/helpers/team_background_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -96,12 +97,13 @@ class DriverResultItem extends StatelessWidget {
               ),
               Expanded(
                 flex: 2,
-                child: VerticalDivider(
+                child: BoxBoxVerticalDivider(
                   color: finalTeamColors,
                   thickness: 8,
                   width: 25,
                   indent: 7,
                   endIndent: 7,
+                  border: BorderRadius.circular(2.75),
                 ),
               ),
               Expanded(
@@ -404,12 +406,13 @@ class QualificationResultsItem extends StatelessWidget {
               ),
               Expanded(
                 flex: 1,
-                child: VerticalDivider(
+                child: BoxBoxVerticalDivider(
                   color: finalTeamColors,
                   thickness: 8,
                   width: 25,
                   indent: 7,
                   endIndent: 7,
+                  border: BorderRadius.circular(2.75),
                 ),
               ),
               Expanded(
