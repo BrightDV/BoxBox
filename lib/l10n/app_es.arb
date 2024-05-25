@@ -336,5 +336,21 @@
   "useOfficialDataSource": "Utilizar la fuente de datos oficial",
   "@useOfficialDataSource": {},
   "useOfficialDataSourceSub": "Utilice la fuente de datos de la aplicación móvil oficial. Esto da resultados más rápidos, pero no todos los detalles están disponibles. Mantenga presionado para obtener más detalles.",
-  "@useOfficialDataSourceSub": {}
+  "@useOfficialDataSourceSub": {},
+  "chassis": "Chasis",
+  "@chassis": {},
+  "fastestLaps": "Vueltas más rápidas",
+  "@fastestLaps": {},
+  "firstTeamEntry": "Primera entrada del equipo",
+  "@firstTeamEntry": {},
+  "polePositions": "Posiciones de pole",
+  "@polePositions": {},
+  "powerUnit": "Unidad de potencia",
+  "@powerUnit": {},
+  "teamChief": "Director del equipo",
+  "@teamChief": {},
+  "technicalChief": "Director técnico",
+  "@technicalChief": {},
+  "teamBase": "Sede",
+  "@teamBase": {}
 }
