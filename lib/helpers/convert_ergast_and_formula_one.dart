@@ -138,6 +138,36 @@ class Convert {
     return ergastToFormulaOne[circuitId];
   }
 
+  String circuitNameFromFormulaOneToErgastForCircuitPoints(String circuitId) {
+    Map formulaOneToErgast = {
+      "Bahrain": "bahrain",
+      "Saudi Arabia": "jeddah",
+      "Australia": "albert_park",
+      "Azerbaijan": "baku",
+      "Miami": "miami",
+      "Emilia-Romagna": "imola",
+      "Monaco": "monaco",
+      "Spain": "catalunya",
+      "Canada": "villeneuve",
+      "Austria": "red_bull_ring",
+      "Great Britain": "silverstone",
+      "Hungary": "hungaroring",
+      "Belgium": "spa",
+      "Netherlands": "zandvoort",
+      "Italy": "monza",
+      "Singapore": "marina_bay",
+      "Japan": "suzuka",
+      "Qatar": "losail",
+      "United States": "americas",
+      "Mexico": "rodriguez",
+      "Brazil": "interlagos",
+      "Las Vegas": "vegas",
+      "Abu Dhabi": "yas_marina",
+      "China": "shanghai"
+    };
+    return formulaOneToErgast[circuitId] ?? '';
+  }
+
   String circuitNameFromErgastToFormulaOne(String circuitId) {
     Map ergastToFormulaOne = {
       'bahrain': 'bahrain',

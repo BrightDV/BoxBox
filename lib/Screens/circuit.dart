@@ -131,7 +131,12 @@ class CircuitScreen extends StatelessWidget {
                                 Icons.map_outlined,
                               ),
                               CircuitMapScreen(
-                                race.circuitId,
+                                scheduleLastSavedFormat == 'ergast'
+                                    ? race.circuitId
+                                    : Convert()
+                                        .circuitNameFromFormulaOneToErgastForCircuitPoints(
+                                        race.country,
+                                      ),
                               ),
                               isDialog: true,
                             ),
@@ -213,7 +218,8 @@ class CircuitScreen extends StatelessWidget {
                                       children: [
                                         snapshot.data!['headline'] != null
                                             ? Headline(
-                                                snapshot.data!['headline'])
+                                                snapshot.data!['headline'],
+                                              )
                                             : Container(),
                                         BoxBoxButton(
                                           AppLocalizations.of(context)!
