@@ -380,7 +380,18 @@ class _MyAppState extends State<MyApp> {
       dark: ThemeData(
         useMaterial3: true,
         brightness: Brightness.dark,
-        colorSchemeSeed: finalColor,
+        colorScheme: (finalColor == Color(0xFF000408) ||
+                finalColor == Color(0x00000001))
+            ? ColorScheme.fromSeed(
+                seedColor: finalColor,
+                brightness: Brightness.dark,
+              )
+            : ColorScheme.fromSeed(
+                seedColor: finalColor,
+                onPrimary:
+                    HSLColor.fromColor(finalColor).withLightness(0.4).toColor(),
+                brightness: Brightness.dark,
+              ),
         fontFamily: 'Formula1',
       ),
       initial: useDarkMode ? AdaptiveThemeMode.dark : AdaptiveThemeMode.light,

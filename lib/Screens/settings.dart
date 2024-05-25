@@ -278,8 +278,8 @@ class _AppearanceCardState extends State<AppearanceCard> {
                         dark: ThemeData(
                           useMaterial3: true,
                           brightness: Brightness.dark,
-                          colorScheme: color == Color(0xFF000408) ||
-                                  color == Color(0x00000001)
+                          colorScheme: (color == Color(0xFF000408) ||
+                                  color == Color(0x00000001))
                               ? ColorScheme.fromSeed(
                                   seedColor: color,
                                   brightness: Brightness.dark,
@@ -691,8 +691,8 @@ class _OtherCardstate extends State<OtherCard> {
               ? GestureDetector(
                   onLongPress: () async => await launchUrl(
                     Uri.parse(
-                        'https://github.com/BrightDV/BoxBox/wiki/Ergast-API-vs-Official-API',
-                      ),
+                      'https://github.com/BrightDV/BoxBox/wiki/Ergast-API-vs-Official-API',
+                    ),
                   ),
                   child: SwitchListTile(
                     title: Text(

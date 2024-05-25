@@ -28,7 +28,7 @@ class TeamBackgroundColor {
     "red_bull": const Color(0xFF3671C6),
     "ferrari": const Color(0xFFE8002D),
     "mclaren": const Color(0xFFFF8000),
-    "alpine": const Color(0xFFFF87BC),
+    "alpine": const Color(0xFF3DC9FF),
     "rb": const Color(0xFF6692FF),
     "aston_martin": const Color(0xFF229971),
     "williams": const Color(0xFF64C4FF),
