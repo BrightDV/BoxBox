@@ -201,7 +201,7 @@ class EventTracker {
   }
 
   Future<Map> getCircuitDetails(String formulaOneCircuitId,
-      {Race? race}) async {
+      {Race? race, bool isFromRaceHub = false}) async {
     Uri uri;
     String endpoint = Hive.box('settings')
         .get('server', defaultValue: defaultEndpoint) as String;
@@ -233,7 +233,7 @@ class EventTracker {
       utf8.decode(res.bodyBytes),
     );
 
-    if (useOfficialDataSoure) {
+    if (useOfficialDataSoure && !isFromRaceHub) {
       List<DateTime> sessionDates = [];
       List sessionStates = [];
       for (var session in formatedResponse['meetingContext']['timetables']) {

@@ -48,9 +48,15 @@ class RaceDetailsScreen extends StatelessWidget {
   final Race race;
   final bool hasSprint;
   final int? tab;
+  final bool isFromRaceHub;
 
-  const RaceDetailsScreen(this.race, this.hasSprint, {Key? key, this.tab})
-      : super(key: key);
+  const RaceDetailsScreen(
+    this.race,
+    this.hasSprint, {
+    Key? key,
+    this.tab,
+    this.isFromRaceHub = false,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +80,10 @@ class RaceDetailsScreen extends StatelessWidget {
                   pinned: true,
                   centerTitle: true,
                   flexibleSpace: FlexibleSpaceBar(
-                    background: RaceImageProvider(race),
+                    background: RaceImageProvider(
+                      race,
+                      isFromRaceHub: isFromRaceHub,
+                    ),
                     title: Text(
                       race.country,
                     ),
@@ -126,7 +135,11 @@ class RaceDetailsScreen extends StatelessWidget {
             body: hasSprint
                 ? TabBarView(
                     children: [
-                      FreePracticesResultsProvider(race, hasSprint),
+                      FreePracticesResultsProvider(
+                        race,
+                        hasSprint,
+                        isFromRaceHub: isFromRaceHub,
+                      ),
                       DefaultTabController(
                         length: 2,
                         initialIndex: tab == 10 ? 1 : 0,
@@ -226,7 +239,11 @@ class RaceDetailsScreen extends StatelessWidget {
                   )
                 : TabBarView(
                     children: [
-                      FreePracticesResultsProvider(race, hasSprint),
+                      FreePracticesResultsProvider(
+                        race,
+                        hasSprint,
+                        isFromRaceHub: isFromRaceHub,
+                      ),
                       MediaQuery.removePadding(
                         context: context,
                         removeTop: true,
@@ -279,8 +296,13 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
 class FreePracticesResultsProvider extends StatefulWidget {
   final Race race;
   final bool hasSprint;
-  const FreePracticesResultsProvider(this.race, this.hasSprint, {Key? key})
-      : super(key: key);
+  final bool isFromRaceHub;
+  const FreePracticesResultsProvider(
+    this.race,
+    this.hasSprint, {
+    Key? key,
+    this.isFromRaceHub = false,
+  }) : super(key: key);
 
   @override
   State<FreePracticesResultsProvider> createState() =>
@@ -305,7 +327,7 @@ class _FreePracticesResultsProviderState
       AppLocalizations.of(context)!.freePracticeTwo,
       AppLocalizations.of(context)!.freePracticeThree,
     ];
-    if (scheduleLastSavedFormat == 'ergast') {
+    if (scheduleLastSavedFormat == 'ergast' || widget.isFromRaceHub) {
       return FutureBuilder<int>(
         future: FormulaOneScraper().whichSessionsAreFinised(
           Convert().circuitIdFromErgastToFormulaOne(race.circuitId),
@@ -444,8 +466,13 @@ class _FreePracticesResultsProviderState
 class RaceResultsProvider extends StatefulWidget {
   final Race? race;
   final String? raceUrl;
-  const RaceResultsProvider({Key? key, this.race, this.raceUrl})
-      : super(key: key);
+  final bool isFromRaceHub;
+  const RaceResultsProvider({
+    Key? key,
+    this.race,
+    this.raceUrl,
+    this.isFromRaceHub = false,
+  }) : super(key: key);
   @override
   State<RaceResultsProvider> createState() => _RaceResultsProviderState();
 }
@@ -454,7 +481,7 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
   Future<List<DriverResult>> getRaceStandingsFromApi(Race race) async {
     bool useOfficialDataSoure = Hive.box('settings')
         .get('useOfficialDataSoure', defaultValue: false) as bool;
-    if (useOfficialDataSoure) {
+    if (useOfficialDataSoure && !widget.isFromRaceHub) {
       return await Formula1().getRaceStandings(race.meetingId, race.round);
     } else {
       return await ErgastApi().getRaceStandings(race.round);
@@ -493,7 +520,7 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
       race = widget.race!;
       savedData = Hive.box('requests')
           .get('race-${race.round}', defaultValue: {}) as Map;
-      if (scheduleLastSavedFormat == 'ergast') {
+      if (scheduleLastSavedFormat == 'ergast' || widget.isFromRaceHub) {
         raceFullDateParsed = DateTime.parse("${race.date} ${race.raceHour}");
       } else {
         raceFullDateParsed = DateTime.parse(race.date);
@@ -572,7 +599,8 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
           : FutureBuilder<List<DriverResult>>(
               future: getRaceStandingsFromApi(race),
               builder: (context, snapshot) => snapshot.hasError
-                  ? savedData[raceResultsLastSavedFormat == 'ergast'
+                  ? savedData[raceResultsLastSavedFormat == 'ergast' ||
+                                  widget.isFromRaceHub
                               ? 'MRData'
                               : 'raceResultsRace'] !=
                           null
@@ -591,7 +619,8 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
                                 onTap: () async {},
                               ),
                               RaceDriversResultsList(
-                                raceResultsLastSavedFormat == 'ergast'
+                                raceResultsLastSavedFormat == 'ergast' ||
+                                        widget.isFromRaceHub
                                     ? ErgastApi().formatRaceStandings(savedData)
                                     : Formula1().formatRaceStandings(savedData),
                               ),
@@ -643,7 +672,8 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
                             ],
                           ),
                         )
-                      : savedData[raceResultsLastSavedFormat == 'ergast'
+                      : savedData[raceResultsLastSavedFormat == 'ergast' ||
+                                      widget.isFromRaceHub
                                   ? 'MRData'
                                   : 'raceResultsRace'] !=
                               null
@@ -662,7 +692,8 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
                                     onTap: () async {},
                                   ),
                                   RaceDriversResultsList(
-                                    raceResultsLastSavedFormat == 'ergast'
+                                    raceResultsLastSavedFormat == 'ergast' ||
+                                            widget.isFromRaceHub
                                         ? ErgastApi()
                                             .formatRaceStandings(savedData)
                                         : Formula1()
@@ -1157,12 +1188,14 @@ class SessionCountdownTimer extends StatefulWidget {
   final int sessionIndex;
   final String sessionName;
   final Function? update;
+  final bool isFromRaceHub;
   const SessionCountdownTimer(
     this.race,
     this.sessionIndex,
     this.sessionName, {
     super.key,
     this.update,
+    this.isFromRaceHub = false,
   });
 
   @override
@@ -1189,7 +1222,7 @@ class _SessionCountdownTimerState extends State<SessionCountdownTimer> {
 
     Race race = widget.race!;
     if (widget.sessionIndex == 4) {
-      if (scheduleLastSavedFormat == 'ergast') {
+      if (scheduleLastSavedFormat == 'ergast' || widget.isFromRaceHub) {
         raceFullDateParsed =
             DateTime.parse("${race.date} ${race.raceHour}").toLocal();
       } else {
@@ -1267,7 +1300,7 @@ class _SessionCountdownTimerState extends State<SessionCountdownTimer> {
             : Padding(
                 padding: const EdgeInsets.all(15.5),
                 child: Text(
-                  scheduleLastSavedFormat == 'ergast'
+                  scheduleLastSavedFormat == 'ergast' || widget.isFromRaceHub
                       ? shouldUse12HourClock
                           ? '${DateFormat.MMMMd(languageCode).format(raceFullDateParsed.toLocal()).toUpperCase()} - ${DateFormat.jm().format(raceFullDateParsed.toLocal())}'
                           : '${DateFormat.MMMMd(languageCode).format(raceFullDateParsed.toLocal()).toUpperCase()} - ${DateFormat.Hm().format(raceFullDateParsed.toLocal())}'
