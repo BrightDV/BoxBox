@@ -108,7 +108,8 @@ class CircuitScreen extends StatelessWidget {
                                   ),
                                 ),
                                 snapshot.data!['links'] != null &&
-                                        snapshot.data!['links'].isNotEmpty
+                                        snapshot.data!['links'].isNotEmpty &&
+                                        snapshot.data!['links'].length > 0
                                     ? BoxBoxButton(
                                         AppLocalizations.of(context)!
                                             .viewHighlights,
@@ -251,7 +252,10 @@ class CircuitScreen extends StatelessWidget {
                                             ),
                                             snapshot.data!['links'] != null &&
                                                     snapshot.data!['links']
-                                                        .isNotEmpty
+                                                        .isNotEmpty &&
+                                                    snapshot.data!['links']
+                                                            .length >
+                                                        0
                                                 ? BoxBoxButton(
                                                     AppLocalizations.of(
                                                             context)!
