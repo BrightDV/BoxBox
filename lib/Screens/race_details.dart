@@ -978,13 +978,20 @@ class _QualificationResultsProviderState
 }
 
 class StartingGridProvider extends StatelessWidget {
-  final String raceUrl;
-  const StartingGridProvider(this.raceUrl, {super.key});
+  final String meetingId;
+  const StartingGridProvider(
+    this.meetingId, {
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<StartingGridPosition>>(
-      future: FormulaOneScraper().scrapeStartingGrid(raceUrl),
+    bool useDarkMode =
+        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
+    return FutureBuilder<List>(
+      future: Formula1().getStartingGrid(
+        meetingId,
+      ), //FormulaOneScraper().scrapeStartingGrid(raceUrl),
       builder: (context, snapshot) => snapshot.hasError
           ? RequestErrorWidget(
               snapshot.error.toString(),
@@ -993,11 +1000,13 @@ class StartingGridProvider extends StatelessWidget {
               ? ListView.builder(
                   scrollDirection: Axis.vertical,
                   shrinkWrap: true,
-                  itemCount: snapshot.data!.length + 1,
+                  itemCount: snapshot.data![1] != ''
+                      ? snapshot.data![0].length + 2
+                      : snapshot.data![0].length + 1,
                   physics: const ClampingScrollPhysics(),
                   itemBuilder: (context, index) => index == 0
                       ? Container(
-                          color: const Color(0xff383840),
+                          color: Theme.of(context).colorScheme.onSecondary,
                           height: 45,
                           child: Padding(
                             padding: const EdgeInsets.all(5),
@@ -1012,9 +1021,6 @@ class StartingGridProvider extends StatelessWidget {
                                     child: Text(
                                       AppLocalizations.of(context)!
                                           .positionAbbreviation,
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                      ),
                                       textAlign: TextAlign.center,
                                     ),
                                   ),
@@ -1032,9 +1038,6 @@ class StartingGridProvider extends StatelessWidget {
                                     child: Text(
                                       AppLocalizations.of(context)!
                                           .driverAbbreviation,
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                      ),
                                     ),
                                   ),
                                 ),
@@ -1048,9 +1051,6 @@ class StartingGridProvider extends StatelessWidget {
                                       AppLocalizations.of(context)!
                                           .team
                                           .toUpperCase(),
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                      ),
                                       textAlign: TextAlign.center,
                                     ),
                                   ),
@@ -1059,9 +1059,6 @@ class StartingGridProvider extends StatelessWidget {
                                   flex: 4,
                                   child: Text(
                                     AppLocalizations.of(context)!.time,
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                    ),
                                     textAlign: TextAlign.center,
                                   ),
                                 ),
@@ -1069,10 +1066,26 @@ class StartingGridProvider extends StatelessWidget {
                             ),
                           ),
                         )
-                      : StartingGridPositionItem(
-                          snapshot.data![index - 1],
-                          index - 1,
-                        ),
+                      : (index == snapshot.data![0].length + 1) &&
+                              (snapshot.data![1] != '')
+                          ? ListTile(
+                              title: Text(
+                                snapshot.data![1],
+                                textAlign: TextAlign.justify,
+                                style: TextStyle(fontSize: 15),
+                              ),
+                              tileColor: useDarkMode
+                                  ? HSLColor.fromColor(
+                                      Theme.of(context).colorScheme.onSecondary,
+                                    ).withLightness(0.18).toColor()
+                                  : HSLColor.fromColor(
+                                      Theme.of(context).colorScheme.onPrimary,
+                                    ).withLightness(0.82).toColor(),
+                            )
+                          : StartingGridPositionItem(
+                              snapshot.data![0][index - 1],
+                              index - 1,
+                            ),
                 )
               : const LoadingIndicatorUtil(),
     );
@@ -1093,8 +1106,25 @@ class StartingGridPositionItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Color finalTeamColors = getTeamColors(startingGridPosition.team);
+    bool useDarkMode =
+        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
+
     return Container(
-      color: index % 2 == 1 ? const Color(0xff22222c) : const Color(0xff15151f),
+      color: index % 2 == 1
+          ? useDarkMode
+              ? HSLColor.fromColor(
+                  Theme.of(context).colorScheme.onSecondary,
+                ).withLightness(0.26).toColor()
+              : HSLColor.fromColor(
+                  Theme.of(context).colorScheme.onPrimary,
+                ).withLightness(0.88).toColor()
+          : useDarkMode
+              ? HSLColor.fromColor(
+                  Theme.of(context).colorScheme.onSecondary,
+                ).withLightness(0.18).toColor()
+              : HSLColor.fromColor(
+                  Theme.of(context).colorScheme.onPrimary,
+                ).withLightness(0.82).toColor(),
       height: 45,
       child: Padding(
         padding: const EdgeInsets.all(5),
@@ -1109,7 +1139,6 @@ class StartingGridPositionItem extends StatelessWidget {
                 child: Text(
                   startingGridPosition.position,
                   style: const TextStyle(
-                    color: Colors.white,
                     fontWeight: FontWeight.w600,
                   ),
                   textAlign: TextAlign.center,
@@ -1135,9 +1164,6 @@ class StartingGridPositionItem extends StatelessWidget {
                 ),
                 child: Text(
                   startingGridPosition.driver,
-                  style: const TextStyle(
-                    color: Colors.white,
-                  ),
                 ),
               ),
             ),
@@ -1147,9 +1173,6 @@ class StartingGridPositionItem extends StatelessWidget {
                 padding: const EdgeInsets.only(left: 4, right: 4),
                 child: Text(
                   startingGridPosition.teamFullName,
-                  style: const TextStyle(
-                    color: Colors.white,
-                  ),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -1160,16 +1183,27 @@ class StartingGridPositionItem extends StatelessWidget {
                 padding: const EdgeInsets.only(left: 2, right: 2),
                 child: Container(
                   decoration: BoxDecoration(
-                    color: const Color(0xff383840),
+                    color: index % 2 == 1
+                        ? useDarkMode
+                            ? HSLColor.fromColor(
+                                Theme.of(context).colorScheme.onSecondary,
+                              ).withLightness(0.31).toColor()
+                            : HSLColor.fromColor(
+                                Theme.of(context).colorScheme.onPrimary,
+                              ).withLightness(0.84).toColor()
+                        : useDarkMode
+                            ? HSLColor.fromColor(
+                                Theme.of(context).colorScheme.onSecondary,
+                              ).withLightness(0.23).toColor()
+                            : HSLColor.fromColor(
+                                Theme.of(context).colorScheme.onPrimary,
+                              ).withLightness(0.78).toColor(),
                     borderRadius: BorderRadius.circular(7),
                   ),
                   child: Padding(
                     padding: const EdgeInsets.only(top: 5, bottom: 5),
                     child: Text(
                       startingGridPosition.time,
-                      style: const TextStyle(
-                        color: Colors.white,
-                      ),
                       textAlign: TextAlign.center,
                     ),
                   ),

@@ -835,6 +835,42 @@ class Formula1 {
       return races;
     }
   }
+
+  Future<List> getStartingGrid(String meetingId) async {
+    var url = Uri.parse(
+      '$defaultEndpoint/v1/fom-results/starting-grid?meeting=$meetingId',
+    );
+    var response = await http.get(
+      url,
+      headers: {
+        "Accept": "application/json",
+        "apikey": apikey,
+        "locale": "en",
+      },
+    );
+    Map<String, dynamic> responseAsJson = json.decode(
+      utf8.decode(response.bodyBytes),
+    );
+
+    List<StartingGridPosition> results = [];
+
+    for (var result in responseAsJson['startingGrid']) {
+      results.add(
+        StartingGridPosition(
+          result['positionNumber'],
+          result['positionNumber'],
+          result['driverLastName'],
+          Convert().teamsFromFormulaOneApiToErgast(
+            result['teamName'],
+          ),
+          result['teamName'],
+          result['classifiedTime'] != null ? result['classifiedTime'] : '--',
+        ),
+      );
+    }
+
+    return [results, responseAsJson['startingGridFootnote'] ?? ''];
+  }
 }
 
 class News {

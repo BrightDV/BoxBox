@@ -664,8 +664,8 @@ class AtomSessionResults extends StatelessWidget {
         10,
       ),
       child: Container(
-        height: element['fields']['sessionType'].startsWith('Starting Grid')
-            ? 378
+        height: element['fields']['sessionType'].contains('Starting Grid')
+            ? 428
             : 290,
         decoration: BoxDecoration(
           border: Border.all(
@@ -1036,21 +1036,26 @@ class AtomSessionResults extends StatelessWidget {
                                               : element['fields']
                                                           ['sessionType'] ==
                                                       'Sprint Shootout'
-                                                  ? element['fields'][
+                                                  ? element['fields']
+                                                                  [
                                                                   'raceResultsSprintShootout']
                                                               ['description'] ==
                                                           'Sprint Qualifying'
                                                       ? 'Sprint Qualifying'
                                                       : 'Sprint Shootout'
-                                                  : element['fields']['cta']
-                                                          .endsWith(
-                                                              'starting-grid.html')
+                                                  : element['fields']
+                                                              ['sessionType']
+                                                          .contains(
+                                                              'Starting Grid')
                                                       ? AppLocalizations.of(
                                                               context)!
                                                           .startingGrid
                                                       : AppLocalizations.of(
                                                               context)!
                                                           .qualifyings,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                      ),
                                     ),
                                     backgroundColor:
                                         Theme.of(context).colorScheme.onPrimary,
@@ -1065,11 +1070,12 @@ class AtomSessionResults extends StatelessWidget {
                                           raceUrl: element['fields']['cta'],
                                         )
                                       : SingleChildScrollView(
-                                          child: element['fields']['cta']
-                                                  .endsWith(
-                                                      'starting-grid.html')
+                                          child: element['fields']
+                                                      ['sessionType']
+                                                  .contains('Starting Grid')
                                               ? StartingGridProvider(
-                                                  element['fields']['cta'],
+                                                  element['fields']
+                                                      ['meetingKey'],
                                                 )
                                               : QualificationResultsProvider(
                                                   raceUrl: element['fields']
