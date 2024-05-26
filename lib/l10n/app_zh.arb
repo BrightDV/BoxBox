@@ -61,7 +61,7 @@
   "@editOrderDescription": {},
   "errorOccurred": "有问题",
   "@errorOccurred": {},
-  "aboutDescription": "Box,Box！是自由软件，履行GPLv3+授权。目标是在没有广告或追踪器的情况下获得F1最新资讯。",
+  "aboutDescription": "Box,Box！是自由软件，履行GPLv3+授权。目标是在没有广告或追踪器之下获得F1最新资讯。",
   "@aboutDescription": {},
   "fiaRegulations": "FIA 规则",
   "@fiaRegulations": {},
@@ -322,5 +322,7 @@
   "search": "搜索",
   "@search": {},
   "listen": "听着",
-  "@listen": {}
+  "@listen": {},
+  "useOfficialWebview": "使用官网版本现场直播",
+  "@useOfficialWebview": {}
 }

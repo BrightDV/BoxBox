@@ -318,5 +318,11 @@
   "monthAbbreviationNovember": "নোভ",
   "@monthAbbreviationNovember": {},
   "monthAbbreviationDecember": "ডিসেম",
-  "@monthAbbreviationDecember": {}
+  "@monthAbbreviationDecember": {},
+  "loading": "লোড হচ্ছে",
+  "@loading": {},
+  "pleaseWait": "অনুগ্রহপূর্বক অপেক্ষা করুন..।",
+  "@pleaseWait": {},
+  "useOfficialWebview": "লাইভ সেশনের জন্য অফিসিয়াল ওয়েবভিউ ব্যবহার করুন",
+  "@useOfficialWebview": {}
 }
