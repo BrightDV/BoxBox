@@ -1,0 +1,12 @@
+- Official API support (experimental features)
+- Fix and improve driver and team details
+- Use f1-dash as the alternative livetiming provider
+- Fix dark mode theming and Alpine's color
+- Add support for 12-hour clock
+- Refactor the circuit screen for performances and improve UI
+- Use new article route
+- Fix no countdown in sprint
+- Fix wrong DNFs
+- A lot of other UI improvements and bug fixes
+- Update translations from Weblate
+- Bump Flutter and dependencies

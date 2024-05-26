@@ -14,8 +14,7 @@ publish_to: none
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 
-# Before releasing a new version, isInDebugMode must be set to false (main.dart#74).
-version: 0.7.3+32 # Read above before bump.
+version: 0.7.4+33
 
 environment:
   sdk: ">=2.19.0 <3.4.4"
