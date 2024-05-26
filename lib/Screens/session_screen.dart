@@ -203,7 +203,7 @@ class _SessionScreenState extends State<SessionScreen> {
                 widget.sessionFullName,
               ),
             ),
-            body: widget.session.state == 'upcoming' && false ||
+            body: widget.session.state == 'upcoming' ||
                     widget.session.startTime.isAfter(DateTime.now())
                 ? Column(
                     mainAxisAlignment: MainAxisAlignment.center,

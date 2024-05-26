@@ -35,37 +35,6 @@ class _UnofficialWebviewScreenState extends State<UnofficialWebviewScreen> {
   @override
   void initState() {
     super.initState();
-    if (!kIsWeb) {
-      ContentBlocker(
-        trigger: ContentBlockerTrigger(
-          urlFilter: ".*",
-          unlessDomain: ["live.planetf1.com"],
-          resourceType: [
-            ContentBlockerTriggerResourceType.SCRIPT,
-            ContentBlockerTriggerResourceType.RAW,
-          ],
-        ),
-        action: ContentBlockerAction(
-          type: ContentBlockerActionType.BLOCK,
-        ),
-      );
-      List<String> selectors = [
-        ".bs-sticky",
-        ".bs-block",
-        ".unic",
-      ];
-      contentBlockers.add(
-        ContentBlocker(
-          trigger: ContentBlockerTrigger(
-            urlFilter: ".*",
-          ),
-          action: ContentBlockerAction(
-            type: ContentBlockerActionType.CSS_DISPLAY_NONE,
-            selector: selectors.join(', '),
-          ),
-        ),
-      );
-    }
   }
 
   @override
@@ -73,7 +42,7 @@ class _UnofficialWebviewScreenState extends State<UnofficialWebviewScreen> {
     return InAppWebView(
       initialUrlRequest: URLRequest(
         url: WebUri(
-          "https://live.planetf1.com/",
+          "https://f1-dash.com/dashboard",
         ),
       ),
       initialSettings: InAppWebViewSettings(
