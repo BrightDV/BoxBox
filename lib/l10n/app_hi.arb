@@ -336,5 +336,21 @@
   "useOfficialDataSource": "आधिकारिक डेटा स्रोत का प्रयोग करें",
   "@useOfficialDataSource": {},
   "useOfficialDataSourceSub": "आधिकारिक मोबाइल ऐप के डेटा स्रोत का उपयोग करें। यह तेजी से परिणाम देता है, लेकिन सभी विवरण उपलब्ध नहीं हैं। अधिक विवरण के लिए देर तक दबाएं।",
-  "@useOfficialDataSourceSub": {}
+  "@useOfficialDataSourceSub": {},
+  "firstTeamEntry": "पहली टीम की एंट्री",
+  "@firstTeamEntry": {},
+  "polePositions": "पोल स्थितियां",
+  "@polePositions": {},
+  "powerUnit": "पावर यूनिट",
+  "@powerUnit": {},
+  "chassis": "चेसिस",
+  "@chassis": {},
+  "fastestLaps": "सबसे तेज लैप्स",
+  "@fastestLaps": {},
+  "teamBase": "टीम बेस",
+  "@teamBase": {},
+  "teamChief": "टीम प्रमुख",
+  "@teamChief": {},
+  "technicalChief": "तकनीकी प्रमुख",
+  "@technicalChief": {}
 }
