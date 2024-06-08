@@ -181,7 +181,16 @@ class _SessionScreenState extends State<SessionScreen> {
                     widget.session.endTime.isAfter(DateTime.now())
                 ? useOfficialWebview
                     ? WebViewManagerScreen(widget.sessionFullName)
-                    : UnofficialWebviewScreen()
+                    : Scaffold(
+                        appBar: AppBar(
+                          backgroundColor:
+                              Theme.of(context).colorScheme.onPrimary,
+                          title: Text(
+                            widget.sessionFullName,
+                          ),
+                        ),
+                        body: UnofficialWebviewScreen(),
+                      )
                 : FreePracticeScreen(
                     widget.sessionFullName,
                     int.parse(
