@@ -19,8 +19,10 @@
 
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'dart:ui';
 
+import 'package:background_downloader/background_downloader.dart';
 import 'package:boxbox/api/driver_components.dart';
 import 'package:boxbox/api/race_components.dart';
 import 'package:boxbox/api/team_components.dart';
@@ -34,10 +36,11 @@ class Formula1 {
   final String apikey = "qPgPPRJyGCIPxFT3el4MF7thXHyJCzAP";
 
   List<News> formatResponse(Map responseAsJson) {
-    List finalJson = responseAsJson['items'];
-    List<News> newsList = [];
     bool useDataSaverMode = Hive.box('settings')
         .get('useDataSaverMode', defaultValue: false) as bool;
+
+    List finalJson = responseAsJson['items'];
+    List<News> newsList = [];
 
     for (var element in finalJson) {
       element['title'] = element['title'].replaceAll("\n", "");
@@ -57,6 +60,7 @@ class Formula1 {
           }
         }
       }
+
       newsList.add(
         News(
           element['id'],
@@ -176,6 +180,90 @@ class Formula1 {
       responseAsJson['author'] ?? {},
     );
     return article;
+  }
+
+  Future<String> downloadArticle(String articleId,
+      {Function(TaskStatusUpdate)? callback}) async {
+    String endpoint = Hive.box('settings')
+        .get('server', defaultValue: defaultEndpoint) as String;
+
+    bool isDownloaded = await downloadedFileCheck('article_$articleId');
+
+    if (!isDownloaded) {
+      FileDownloader().unregisterCallbacks(callback: callback);
+      if (callback != null) {
+        FileDownloader().registerCallbacks(taskStatusCallback: callback);
+      }
+
+      final task = DownloadTask(
+        taskId: 'article_$articleId',
+        url: '$endpoint/v1/editorial/articles/$articleId',
+        filename: 'article_$articleId.json',
+        headers: endpoint != defaultEndpoint
+            ? {
+                "Accept": "application/json",
+              }
+            : {
+                "Accept": "application/json",
+                "apikey": apikey,
+                "locale": "en",
+              },
+        //directory: 'Box, Box! Downloads',
+        updates: Updates.statusAndProgress,
+        //requiresWiFi: true,
+        retries: 5,
+        allowPause: true,
+      );
+
+      final successfullyEnqueued = await FileDownloader().enqueue(task);
+
+      if (successfullyEnqueued) {
+        List downloads = Hive.box('requests').get(
+          'downloads',
+          defaultValue: [],
+        );
+        downloads.insert(0, 'article_$articleId');
+        Hive.box('requests').put('downloads', downloads);
+        return "downloading";
+      } else {
+        return "not downloaded";
+      }
+    } else {
+      return "already downloaded";
+    }
+  }
+
+  Future<bool> downloadedFileCheck(String taskId) async {
+    final record = await FileDownloader().database.recordForId(taskId);
+    if (record != null) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<String?> downloadedFilePathIfExists(String taskId) async {
+    final record = await FileDownloader().database.recordForId(taskId);
+    if (record != null) {
+      return await record.task.filePath();
+    } else {
+      return null;
+    }
+  }
+
+  Future<void> deleteFile(String taskId) async {
+    final record = await FileDownloader().database.recordForId(taskId);
+    if (record != null) {
+      String filePath = await record.task.filePath();
+      await File(filePath).delete();
+      await FileDownloader().database.deleteRecordWithId(taskId);
+      List downloads = await Hive.box('requests').get(
+        'downloads',
+        defaultValue: [],
+      );
+      downloads.remove(taskId);
+      await Hive.box('requests').put('downloads', downloads);
+    }
   }
 
   Future<bool> saveLoginCookie(String cookieValue) async {

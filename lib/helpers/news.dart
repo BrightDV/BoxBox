@@ -832,7 +832,7 @@ class NewsItem extends StatelessWidget {
                                         child: Padding(
                                           padding: const EdgeInsets.only(
                                             right: 16,
-                                            bottom: 10,
+                                            bottom: 5,
                                           ),
                                           child: Row(
                                             mainAxisAlignment:
