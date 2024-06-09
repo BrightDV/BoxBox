@@ -45,6 +45,7 @@ void main() async {
   final historyBox = await Hive.openBox('history');
   final feedsBox = await Hive.openBox('feeds');
   final compareBox = await Hive.openBox('compare');
+  final downloads = await Hive.openBox('downloads');
 
   await FileDownloader().trackTasks();
 

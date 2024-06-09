@@ -218,12 +218,12 @@ class Formula1 {
       final successfullyEnqueued = await FileDownloader().enqueue(task);
 
       if (successfullyEnqueued) {
-        List downloads = Hive.box('requests').get(
-          'downloads',
+        List downloads = Hive.box('downloads').get(
+          'downloadsList',
           defaultValue: [],
         );
         downloads.insert(0, 'article_$articleId');
-        Hive.box('requests').put('downloads', downloads);
+        Hive.box('downloads').put('downloadsList', downloads);
         return "downloading";
       } else {
         return "not downloaded";
@@ -257,12 +257,12 @@ class Formula1 {
       String filePath = await record.task.filePath();
       await File(filePath).delete();
       await FileDownloader().database.deleteRecordWithId(taskId);
-      List downloads = await Hive.box('requests').get(
-        'downloads',
+      List downloads = await Hive.box('downloads').get(
+        'downloadsList',
         defaultValue: [],
       );
       downloads.remove(taskId);
-      await Hive.box('requests').put('downloads', downloads);
+      await Hive.box('requests').put('downloadsList', downloads);
     }
   }
 

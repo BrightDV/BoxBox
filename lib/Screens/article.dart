@@ -60,6 +60,41 @@ class _ArticleScreenState extends State<ArticleScreen> {
 
   void updateWithType(TaskStatusUpdate update) {
     if (update.status == TaskStatus.complete) {
+      Map downloadsDescriptions = Hive.box('downloads').get(
+        'downloadsDescriptions',
+        defaultValue: {},
+      );
+
+      Formula1().downloadedFilePathIfExists(update.task.taskId).then(
+        (path) async {
+          File file = File(path!);
+          Map savedArticle = json.decode(await file.readAsString());
+
+          String heroImageUrl = "";
+          if (savedArticle['hero'].isNotEmpty) {
+            if (savedArticle['hero']['contentType'] == 'atomVideo') {
+              heroImageUrl = savedArticle['hero']['fields']['thumbnail']['url'];
+            } else if (savedArticle['hero']['contentType'] ==
+                'atomVideoYouTube') {
+              heroImageUrl = savedArticle['hero']['fields']['image']['url'];
+            } else if (savedArticle['hero']['contentType'] ==
+                'atomImageGallery') {
+              heroImageUrl =
+                  savedArticle['hero']['fields']['imageGallery'][0]['url'];
+            } else {
+              heroImageUrl = savedArticle['hero']['fields']['image']['url'];
+            }
+          }
+
+          downloadsDescriptions['article_${savedArticle['id']}'] = {
+            'articleId': savedArticle['id'],
+            'articleTitle': savedArticle['title'],
+            'articleThumbnail': heroImageUrl,
+          };
+          Hive.box('downloads')
+              .put('downloadsDescriptions', downloadsDescriptions);
+        },
+      );
       setState(() {});
     }
   }
@@ -67,8 +102,8 @@ class _ArticleScreenState extends State<ArticleScreen> {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    List downloads = Hive.box('requests').get(
-      'downloads',
+    List downloads = Hive.box('downloads').get(
+      'downloadsList',
       defaultValue: [],
     );
     return Scaffold(

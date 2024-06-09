@@ -33,8 +33,6 @@ class HistoryScreen extends StatefulWidget {
 class _HistoryScreenState extends State<HistoryScreen> {
   @override
   Widget build(BuildContext context) {
-    bool useDarkMode =
-        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     List articlesHistory =
         Hive.box('history').get('articlesHistory', defaultValue: []) as List;
     articlesHistory = articlesHistory.reversed.toList();
@@ -111,11 +109,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                   articlesHistory[index]['timeVisited']
                                           .indexOf('.') -
                                       3,
-                                ),
-                                style: TextStyle(
-                                  color: useDarkMode
-                                      ? Colors.grey.shade700
-                                      : Colors.grey.shade50,
                                 ),
                               ),
                             ],

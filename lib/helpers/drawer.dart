@@ -21,6 +21,7 @@ import 'package:boxbox/Screens/FormulaYou/home.dart';
 import 'package:boxbox/Screens/LivetimingArchive/races_list.dart';
 import 'package:boxbox/Screens/about.dart';
 import 'package:boxbox/Screens/Compare/compare_home.dart';
+import 'package:boxbox/Screens/downloads.dart';
 import 'package:boxbox/Screens/hall_of_fame.dart';
 import 'package:boxbox/Screens/history.dart';
 import 'package:boxbox/Screens/MixedNews/mixed_news.dart';
@@ -125,6 +126,27 @@ class MainDrawer extends StatelessWidget {
                 ),
               );
             },
+          ),
+          ListTile(
+            title: Text(
+              'Downloads',
+            ),
+            leading: Icon(
+              Icons.save_alt_rounded,
+            ),
+            onTap: () {
+              Navigator.of(context).pop();
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const DownloadsScreen(),
+                ),
+              );
+            },
+          ),
+          Divider(
+            indent: 15,
+            endIndent: 15,
           ),
           ListTile(
             title: Text(
