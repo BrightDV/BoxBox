@@ -23,6 +23,7 @@ import 'dart:io';
 import 'dart:ui';
 
 import 'package:background_downloader/background_downloader.dart';
+import 'package:boxbox/api/brightcove.dart';
 import 'package:boxbox/api/driver_components.dart';
 import 'package:boxbox/api/race_components.dart';
 import 'package:boxbox/api/team_components.dart';
@@ -223,6 +224,62 @@ class Formula1 {
           defaultValue: [],
         );
         downloads.insert(0, 'article_$articleId');
+        Hive.box('downloads').put('downloadsList', downloads);
+        return "downloading";
+      } else {
+        return "not downloaded";
+      }
+    } else {
+      return "already downloaded";
+    }
+  }
+
+  Future<String> downloadVideo(
+    String videoId,
+    String quality,
+    String title,
+    String thumbnail, {
+    Function(TaskStatusUpdate)? callback,
+  }) async {
+    bool isDownloaded = await downloadedFileCheck('video_$videoId');
+
+    if (!isDownloaded) {
+      FileDownloader().unregisterCallbacks(callback: callback);
+      if (callback != null) {
+        FileDownloader().registerCallbacks(taskStatusCallback: callback);
+      }
+
+      Map links = await BrightCove().getVideoLinks(videoId);
+      String link =
+          links['videos'][links['qualities'].indexOf('${quality}p') + 1];
+      // index 0 is preferred quality
+
+      Map videoDetails = {
+        'videoId': videoId,
+        'title': title,
+        'thumbnail': thumbnail,
+      };
+
+      final task = DownloadTask(
+        taskId: 'video_$videoId',
+        url: link,
+        filename: 'video_$videoId.mp4',
+        //directory: 'Box, Box! Downloads',
+        updates: Updates.statusAndProgress,
+        //requiresWiFi: true,
+        retries: 3,
+        allowPause: true,
+        metaData: json.encode(videoDetails),
+      );
+
+      final successfullyEnqueued = await FileDownloader().enqueue(task);
+
+      if (successfullyEnqueued) {
+        List downloads = Hive.box('downloads').get(
+          'downloadsList',
+          defaultValue: [],
+        );
+        downloads.insert(0, 'video_$videoId');
         Hive.box('downloads').put('downloadsList', downloads);
         return "downloading";
       } else {

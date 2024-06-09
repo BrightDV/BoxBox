@@ -19,6 +19,8 @@
 
 import 'package:background_downloader/background_downloader.dart';
 import 'package:boxbox/Screens/article.dart';
+import 'package:boxbox/Screens/video.dart';
+import 'package:boxbox/api/videos.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/request_error.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -77,11 +79,30 @@ class DownloadsList extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => ArticleScreen(
-                downloadsDescriptions[records[index].taskId]['articleId'],
-                downloadsDescriptions[records[index].taskId]['articleTitle'],
-                false,
-              ),
+              builder: (context) => downloadsDescriptions[records[index].taskId]
+                          ['type'] ==
+                      'article'
+                  ? ArticleScreen(
+                      downloadsDescriptions[records[index].taskId]['id'],
+                      downloadsDescriptions[records[index].taskId]['title'],
+                      false,
+                    )
+                  : Scaffold(
+                      body: FutureBuilder<Video>(
+                        future: F1VideosFetcher().getVideoDetails(
+                          downloadsDescriptions[records[index].taskId]['id'],
+                        ),
+                        builder: (context, snapshot) => snapshot.hasError
+                            ? RequestErrorWidget(
+                                snapshot.error.toString(),
+                              )
+                            : snapshot.hasData
+                                ? VideoScreen(snapshot.data!)
+                                : const Center(
+                                    child: LoadingIndicatorUtil(),
+                                  ),
+                      ),
+                    ),
             ),
           );
         },
@@ -93,7 +114,7 @@ class DownloadsList extends StatelessWidget {
                 flex: 3,
                 child: CachedNetworkImage(
                   imageUrl: downloadsDescriptions[records[index].taskId]
-                      ['articleThumbnail'],
+                      ['thumbnail'],
                 ),
               ),
               Expanded(
@@ -104,8 +125,7 @@ class DownloadsList extends StatelessWidget {
                     right: 8,
                   ),
                   child: Text(
-                    downloadsDescriptions[records[index].taskId]
-                        ['articleTitle'],
+                    downloadsDescriptions[records[index].taskId]['title'],
                     maxLines: 3,
                     textAlign: TextAlign.justify,
                     overflow: TextOverflow.ellipsis,

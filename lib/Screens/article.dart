@@ -58,14 +58,14 @@ class _ArticleScreenState extends State<ArticleScreen> {
     setState(() {});
   }
 
-  void updateWithType(TaskStatusUpdate update) {
-    if (update.status == TaskStatus.complete) {
+  void updateWithType(TaskStatusUpdate statusUpdate) {
+    if (statusUpdate.status == TaskStatus.complete) {
       Map downloadsDescriptions = Hive.box('downloads').get(
         'downloadsDescriptions',
         defaultValue: {},
       );
 
-      Formula1().downloadedFilePathIfExists(update.task.taskId).then(
+      Formula1().downloadedFilePathIfExists(statusUpdate.task.taskId).then(
         (path) async {
           File file = File(path!);
           Map savedArticle = json.decode(await file.readAsString());
@@ -87,15 +87,16 @@ class _ArticleScreenState extends State<ArticleScreen> {
           }
 
           downloadsDescriptions['article_${savedArticle['id']}'] = {
-            'articleId': savedArticle['id'],
-            'articleTitle': savedArticle['title'],
-            'articleThumbnail': heroImageUrl,
+            'id': savedArticle['id'],
+            'type': 'article',
+            'title': savedArticle['title'],
+            'thumbnail': heroImageUrl,
           };
           Hive.box('downloads')
               .put('downloadsDescriptions', downloadsDescriptions);
+          update();
         },
       );
-      setState(() {});
     }
   }
 
@@ -134,7 +135,7 @@ class _ArticleScreenState extends State<ArticleScreen> {
                         } else if (downloadingState == "already downloaded") {
                           showDialog(
                             context: context,
-                            builder: (context) => downloadedFileActionPopup(
+                            builder: (context) => downloadedArticleActionPopup(
                               'article_${widget.articleId}',
                               widget.articleId,
                               update,
@@ -146,7 +147,7 @@ class _ArticleScreenState extends State<ArticleScreen> {
                           Fluttertoast.showToast(
                             msg: AppLocalizations.of(context)!.errorOccurred,
                             toastLength: Toast.LENGTH_SHORT,
-                            gravity: ToastGravity.CENTER,
+                            gravity: ToastGravity.BOTTOM,
                             timeInSecForIosWeb: 1,
                             textColor: Colors.white,
                             fontSize: 16.0,
@@ -269,7 +270,7 @@ class ArticleProvider extends StatelessWidget {
   }
 }
 
-AlertDialog downloadedFileActionPopup(
+AlertDialog downloadedArticleActionPopup(
   String taskId,
   String articleId,
   Function update,

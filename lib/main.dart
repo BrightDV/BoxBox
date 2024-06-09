@@ -48,6 +48,13 @@ void main() async {
   final downloads = await Hive.openBox('downloads');
 
   await FileDownloader().trackTasks();
+  FileDownloader().configureNotification(
+    running: TaskNotification('Downloading', 'Progress = {progress}'),
+    complete: const TaskNotification('Downloaded', 'Download complete.'),
+    error: const TaskNotification('Error', 'Download failed.'),
+    paused: const TaskNotification('Paused', 'Waiting.'),
+    progressBar: true,
+  );
 
   /* if (!kIsWeb) {
     AwesomeNotifications().initialize(

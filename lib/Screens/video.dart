@@ -17,9 +17,15 @@
  * Copyright (c) 2022-2024, BrightDV
  */
 
+import 'dart:convert';
+
+import 'package:background_downloader/background_downloader.dart';
+import 'package:boxbox/api/formula1.dart';
 import 'package:boxbox/api/videos.dart';
 import 'package:boxbox/helpers/news.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:marquee/marquee.dart';
 import 'package:share_plus/share_plus.dart';
@@ -34,10 +40,45 @@ class VideoScreen extends StatefulWidget {
 }
 
 class _VideoScreenState extends State<VideoScreen> {
+  void update() {
+    setState(() {});
+  }
+
+  void updateWithType(TaskStatusUpdate statusUpdate) {
+    if (statusUpdate.status == TaskStatus.complete) {
+      Map downloadsDescriptions = Hive.box('downloads').get(
+        'downloadsDescriptions',
+        defaultValue: {},
+      );
+
+      Formula1().downloadedFilePathIfExists(statusUpdate.task.taskId).then(
+        (path) {
+          Map details = json.decode(statusUpdate.task.metaData);
+          downloadsDescriptions[statusUpdate.task.taskId] = {
+            'id': details['videoId'],
+            'type': 'video',
+            'title': details['title'],
+            'thumbnail': details['thumbnail'],
+          };
+          Hive.box('downloads').put(
+            'downloadsDescriptions',
+            downloadsDescriptions,
+          );
+          setState(() {});
+        },
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     String fontUsedInArticles = Hive.box('settings')
         .get('fontUsedInArticles', defaultValue: 'Formula1') as String;
+    List downloads = Hive.box('downloads').get(
+      'downloadsList',
+      defaultValue: [],
+    );
+
     final Video video = widget.video;
     return Scaffold(
       appBar: AppBar(
@@ -58,6 +99,54 @@ class _VideoScreenState extends State<VideoScreen> {
                 ),
         ),
         actions: [
+          IconButton(
+            onPressed: () async {
+              if (downloads.contains('video_${widget.video.videoId}')) {
+                await Formula1().deleteFile('video_${widget.video.videoId}');
+                update();
+              } else {
+                String? quality = await videoDownloadQualitySelector(
+                  widget.video.videoId,
+                  updateWithType,
+                  setState,
+                  context,
+                );
+                if (quality != null) {
+                  String downloadingState = await Formula1().downloadVideo(
+                    widget.video.videoId,
+                    quality,
+                    widget.video.caption,
+                    widget.video.thumbnailUrl,
+                    callback: updateWithType,
+                  );
+                  if (downloadingState == "downloading") {
+                    await Fluttertoast.showToast(
+                      msg: 'Downloading',
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.BOTTOM,
+                      timeInSecForIosWeb: 1,
+                      textColor: Colors.white,
+                      fontSize: 16.0,
+                    );
+                  } else {
+                    Fluttertoast.showToast(
+                      msg: AppLocalizations.of(context)!.errorOccurred,
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.BOTTOM,
+                      timeInSecForIosWeb: 1,
+                      textColor: Colors.white,
+                      fontSize: 16.0,
+                    );
+                  }
+                }
+              }
+            },
+            icon: Icon(
+              downloads.contains('video_${widget.video.videoId}')
+                  ? Icons.delete_outline
+                  : Icons.save_alt_rounded,
+            ),
+          ),
           Padding(
             padding: const EdgeInsets.only(
               left: 3,
@@ -137,4 +226,90 @@ class _VideoScreenState extends State<VideoScreen> {
       ),
     );
   }
+}
+
+Future<String?> videoDownloadQualitySelector(
+  String videoId,
+  Function(TaskStatusUpdate) updateWithType,
+  Function setState,
+  BuildContext context,
+) async {
+  String quality = await showDialog(
+    context: context,
+    builder: (context) {
+      String selectedQuality = "360"; // TODO: default from settings
+      return StatefulBuilder(
+        builder: (context, setState) => AlertDialog(
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(
+                20.0,
+              ),
+            ),
+          ),
+          contentPadding: const EdgeInsets.all(
+            20.0,
+          ),
+          title: Text(
+            'Select which quality to download.',
+            style: TextStyle(
+              fontSize: 24.0,
+            ), // here
+            textAlign: TextAlign.center,
+          ),
+          content: Row(
+            children: [
+              Radio(
+                value: "180",
+                groupValue: selectedQuality,
+                onChanged: (String? value) => setState(() {
+                  selectedQuality = value!;
+                }),
+              ),
+              Text(
+                '180p',
+              ),
+              Radio(
+                value: "360",
+                groupValue: selectedQuality,
+                onChanged: (String? value) => setState(() {
+                  selectedQuality = value!;
+                }),
+              ),
+              Text(
+                '360p',
+              ),
+              Radio(
+                value: "720",
+                groupValue: selectedQuality,
+                onChanged: (String? value) => setState(() {
+                  selectedQuality = value!;
+                }),
+              ),
+              Text(
+                '720p',
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                AppLocalizations.of(context)!.cancel,
+              ),
+            ),
+            TextButton(
+              child: Text('Download'),
+              onPressed: () async {
+                Navigator.of(context).pop(selectedQuality);
+              },
+            ),
+          ],
+        ),
+      );
+    },
+  );
+  return quality;
 }
