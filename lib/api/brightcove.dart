@@ -19,6 +19,7 @@
 
 import 'dart:convert';
 
+import 'package:boxbox/api/formula1.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_cache_manager/file.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
@@ -73,34 +74,41 @@ class BrightCove {
   }
 
   Future<Map<String, dynamic>> getVideoLinks(String videoId) async {
-    int playerQuality =
-        Hive.box('settings').get('playerQuality', defaultValue: 360) as int;
-    Map streamsData = await fetchStreamData(videoId);
-    Map<String, dynamic> streamUrls = {};
-    streamUrls['poster'] = streamsData['poster'];
-    streamUrls['videos'] = [];
-    streamUrls['qualities'] = [];
-    bool foundPreferedQuality = false;
-    List<int> resSelected = [];
-    for (var element in streamsData['sources']) {
-      if (element['height'] == playerQuality && !foundPreferedQuality) {
-        streamUrls['videos'].insert(0, element['src']);
-        foundPreferedQuality = true;
-      } else if (element['codec'] == 'H264' &&
-          !resSelected.contains(element['height'])) {
-        resSelected.add(element['height']);
-        streamUrls['videos'].add(element['src']);
-        streamUrls['qualities'].add('${element['height']}p');
+    String? filePath =
+        await Formula1().downloadedFilePathIfExists('video_${videoId}');
+    if (filePath != null) {
+      return {'file': filePath};
+    } else {
+      int playerQuality =
+          Hive.box('settings').get('playerQuality', defaultValue: 360) as int;
+      Map streamsData = await fetchStreamData(videoId);
+      Map<String, dynamic> streamUrls = {};
+      streamUrls['poster'] = streamsData['poster'];
+      streamUrls['videos'] = [];
+      streamUrls['qualities'] = [];
+      bool foundPreferedQuality = false;
+      List<int> resSelected = [];
+      for (var element in streamsData['sources']) {
+        if (element['height'] == playerQuality && !foundPreferedQuality) {
+          streamUrls['videos'].insert(0, element['src']);
+          foundPreferedQuality = true;
+        } else if (element['codec'] == 'H264' &&
+            !resSelected.contains(element['height'])) {
+          resSelected.add(element['height']);
+          streamUrls['videos'].add(element['src']);
+          streamUrls['qualities'].add('${element['height']}p');
+        }
       }
-    }
-    int c = 0;
-    for (String streamUrl in streamUrls['videos']) {
-      if (streamUrl.startsWith('http://')) {
-        streamUrls['videos'][c] = streamUrl.replaceFirst('http://', 'https://');
+      int c = 0;
+      for (String streamUrl in streamUrls['videos']) {
+        if (streamUrl.startsWith('http://')) {
+          streamUrls['videos'][c] =
+              streamUrl.replaceFirst('http://', 'https://');
+        }
+        c++;
       }
-      c++;
+      streamUrls['name'] = streamsData['name'];
+      return streamUrls;
     }
-    streamUrls['name'] = streamsData['name'];
-    return streamUrls;
   }
 }

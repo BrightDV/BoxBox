@@ -1823,69 +1823,116 @@ class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
   @override
   void initState() {
     super.initState();
-    Map<String, String>? qualities = {};
-    int c = 0;
-    for (c; c < widget.videoUrls['qualities'].length; c++) {
-      String quality = widget.videoUrls['qualities'][c];
-      qualities[quality] = widget.videoUrls['videos'][c + 1];
+    if (widget.videoUrls['file'] != null) {
+      BetterPlayerDataSource betterPlayerDataSource = BetterPlayerDataSource(
+        BetterPlayerDataSourceType.file,
+        widget.videoUrls['file'],
+        notificationConfiguration: BetterPlayerNotificationConfiguration(
+          showNotification: true,
+          author: widget.videoUrls['author'] ?? "Formula 1",
+          imageUrl: widget.videoUrls['poster'],
+          activityName: "MainActivity",
+        ),
+      );
+
+      BetterPlayerConfiguration betterPlayerConfiguration =
+          BetterPlayerConfiguration(
+        autoPlay: widget.autoplay,
+        allowedScreenSleep: false,
+        autoDetectFullscreenDeviceOrientation: true,
+        fit: BoxFit.contain,
+        controlsConfiguration: BetterPlayerControlsConfiguration(
+          enableAudioTracks: false,
+          enableSubtitles: false,
+          overflowModalColor: widget.primaryColor,
+          overflowMenuIconsColor: useDarkMode ? Colors.white : Colors.black,
+          overflowModalTextColor: useDarkMode ? Colors.white : Colors.black,
+          showControlsOnInitialize: false,
+          enableQualities: false,
+        ),
+        placeholder: _buildVideoPlaceholder(),
+        showPlaceholderUntilPlay: true,
+      );
+
+      // setup the controller
+      _betterPlayerController = BetterPlayerController(
+        betterPlayerConfiguration,
+        betterPlayerDataSource: betterPlayerDataSource,
+      );
+
+      // add event listener for the placeholder
+      _betterPlayerController.addEventsListener(
+        (event) {
+          if (event.betterPlayerEventType == BetterPlayerEventType.play) {
+            _setPlaceholderVisibleState(false);
+          }
+        },
+      );
+    } else {
+      Map<String, String>? qualities = {};
+      int c = 0;
+      for (c; c < widget.videoUrls['qualities'].length; c++) {
+        String quality = widget.videoUrls['qualities'][c];
+        qualities[quality] = widget.videoUrls['videos'][c + 1];
+      }
+      BetterPlayerDataSource betterPlayerDataSource = BetterPlayerDataSource(
+        BetterPlayerDataSourceType.network,
+        widget.videoUrls['videos'][0],
+        resolutions: qualities,
+        notificationConfiguration: BetterPlayerNotificationConfiguration(
+          showNotification: true,
+          title: widget.videoUrls['name'] ?? 'Video',
+          author: widget.videoUrls['author'] ?? "Formula 1",
+          imageUrl: widget.videoUrls['poster'],
+          activityName: "MainActivity",
+        ),
+        bufferingConfiguration: const BetterPlayerBufferingConfiguration(
+          maxBufferMs: 1000 * 30,
+          bufferForPlaybackMs: 3000,
+        ),
+        cacheConfiguration: const BetterPlayerCacheConfiguration(
+          useCache: false,
+          preCacheSize: 0,
+        ),
+        headers: {
+          'user-agent':
+              'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36',
+        },
+      );
+
+      BetterPlayerConfiguration betterPlayerConfiguration =
+          BetterPlayerConfiguration(
+        autoPlay: widget.autoplay,
+        allowedScreenSleep: false,
+        autoDetectFullscreenDeviceOrientation: true,
+        fit: BoxFit.contain,
+        controlsConfiguration: BetterPlayerControlsConfiguration(
+          enableAudioTracks: false,
+          enableSubtitles: false,
+          overflowModalColor: widget.primaryColor,
+          overflowMenuIconsColor: useDarkMode ? Colors.white : Colors.black,
+          overflowModalTextColor: useDarkMode ? Colors.white : Colors.black,
+          showControlsOnInitialize: false,
+        ),
+        placeholder: _buildVideoPlaceholder(),
+        showPlaceholderUntilPlay: true,
+      );
+
+      // setup the controller
+      _betterPlayerController = BetterPlayerController(
+        betterPlayerConfiguration,
+        betterPlayerDataSource: betterPlayerDataSource,
+      );
+
+      // add event listener for the placeholder
+      _betterPlayerController.addEventsListener(
+        (event) {
+          if (event.betterPlayerEventType == BetterPlayerEventType.play) {
+            _setPlaceholderVisibleState(false);
+          }
+        },
+      );
     }
-    BetterPlayerDataSource betterPlayerDataSource = BetterPlayerDataSource(
-      BetterPlayerDataSourceType.network,
-      widget.videoUrls['videos'][0],
-      resolutions: qualities,
-      notificationConfiguration: BetterPlayerNotificationConfiguration(
-        showNotification: true,
-        title: widget.videoUrls['name'] ?? 'Video',
-        author: widget.videoUrls['author'] ?? "Formula 1",
-        imageUrl: widget.videoUrls['poster'],
-        activityName: "MainActivity",
-      ),
-      bufferingConfiguration: const BetterPlayerBufferingConfiguration(
-        maxBufferMs: 1000 * 30,
-        bufferForPlaybackMs: 3000,
-      ),
-      cacheConfiguration: const BetterPlayerCacheConfiguration(
-        useCache: false,
-        preCacheSize: 0,
-      ),
-      headers: {
-        'user-agent':
-            'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36',
-      },
-    );
-
-    BetterPlayerConfiguration betterPlayerConfiguration =
-        BetterPlayerConfiguration(
-      autoPlay: widget.autoplay,
-      allowedScreenSleep: false,
-      autoDetectFullscreenDeviceOrientation: true,
-      fit: BoxFit.contain,
-      controlsConfiguration: BetterPlayerControlsConfiguration(
-        enableAudioTracks: false,
-        enableSubtitles: false,
-        overflowModalColor: widget.primaryColor,
-        overflowMenuIconsColor: useDarkMode ? Colors.white : Colors.black,
-        overflowModalTextColor: useDarkMode ? Colors.white : Colors.black,
-        showControlsOnInitialize: false,
-      ),
-      placeholder: _buildVideoPlaceholder(),
-      showPlaceholderUntilPlay: true,
-    );
-
-    // setup the controller
-    _betterPlayerController = BetterPlayerController(
-      betterPlayerConfiguration,
-      betterPlayerDataSource: betterPlayerDataSource,
-    );
-
-    // add event listener for the placeholder
-    _betterPlayerController.addEventsListener(
-      (event) {
-        if (event.betterPlayerEventType == BetterPlayerEventType.play) {
-          _setPlaceholderVisibleState(false);
-        }
-      },
-    );
   }
 
   void _setPlaceholderVisibleState(bool hidden) {
@@ -1900,7 +1947,7 @@ class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
         return _showPlaceholder
             ? Stack(
                 children: [
-                  widget.heroTag != ''
+                  widget.videoUrls['poster'] != null
                       ? CachedNetworkImage(
                           imageUrl: widget.videoUrls['poster'],
                           placeholder: (context, url) => SizedBox(
@@ -1918,18 +1965,12 @@ class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
                           fadeOutDuration: const Duration(milliseconds: 100),
                           fadeInDuration: const Duration(seconds: 1),
                         )
-                      : Container(
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              fit: BoxFit.cover,
-                              colorFilter: ColorFilter.mode(
-                                Colors.black.withOpacity(0.4),
-                                BlendMode.dstATop,
-                              ),
-                              image: NetworkImage(
-                                widget.videoUrls['poster'],
-                              ),
-                            ),
+                      : SizedBox(
+                          height: MediaQuery.of(context).size.width / (16 / 9),
+                          child: const LoadingIndicatorUtil(
+                            replaceImage: true,
+                            fullBorderRadius: false,
+                            borderRadius: false,
                           ),
                         ),
                   const Align(
