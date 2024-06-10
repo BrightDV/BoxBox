@@ -87,20 +87,21 @@ class DownloadsList extends StatelessWidget {
                       downloadsDescriptions[records[index].taskId]['title'],
                       false,
                     )
-                  : Scaffold(
-                      body: FutureBuilder<Video>(
-                        future: F1VideosFetcher().getVideoDetails(
-                          downloadsDescriptions[records[index].taskId]['id'],
+                  : VideoScreen(
+                      Video(
+                        downloadsDescriptions[records[index].taskId]['id'],
+                        downloadsDescriptions[records[index].taskId]['url'],
+                        downloadsDescriptions[records[index].taskId]['title'],
+                        downloadsDescriptions[records[index].taskId]
+                            ['description'],
+                        downloadsDescriptions[records[index].taskId]
+                            ['videoDuration'],
+                        downloadsDescriptions[records[index].taskId]
+                            ['thumbnail'],
+                        DateTime.parse(
+                          downloadsDescriptions[records[index].taskId]
+                              ['datePosted'],
                         ),
-                        builder: (context, snapshot) => snapshot.hasError
-                            ? RequestErrorWidget(
-                                snapshot.error.toString(),
-                              )
-                            : snapshot.hasData
-                                ? VideoScreen(snapshot.data!)
-                                : const Center(
-                                    child: LoadingIndicatorUtil(),
-                                  ),
                       ),
                     ),
             ),

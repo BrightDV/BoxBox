@@ -27,6 +27,7 @@ import 'package:boxbox/api/brightcove.dart';
 import 'package:boxbox/api/driver_components.dart';
 import 'package:boxbox/api/race_components.dart';
 import 'package:boxbox/api/team_components.dart';
+import 'package:boxbox/api/videos.dart';
 import 'package:boxbox/helpers/convert_ergast_and_formula_one.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
@@ -236,9 +237,8 @@ class Formula1 {
 
   Future<String> downloadVideo(
     String videoId,
-    String quality,
-    String title,
-    String thumbnail, {
+    String quality, {
+    Video? video,
     Function(TaskStatusUpdate)? callback,
   }) async {
     bool isDownloaded = await downloadedFileCheck('video_$videoId');
@@ -248,6 +248,9 @@ class Formula1 {
       if (callback != null) {
         FileDownloader().registerCallbacks(taskStatusCallback: callback);
       }
+      if (video == null) {
+        video = await F1VideosFetcher().getVideoDetails(videoId);
+      }
 
       Map links = await BrightCove().getVideoLinks(videoId);
       String link =
@@ -255,9 +258,13 @@ class Formula1 {
       // index 0 is preferred quality
 
       Map videoDetails = {
-        'videoId': videoId,
-        'title': title,
-        'thumbnail': thumbnail,
+        'id': video.videoId,
+        'title': video.caption,
+        'thumbnail': video.thumbnailUrl,
+        'url': video.videoUrl,
+        'description': video.description,
+        'videoDuration': video.videoDuration,
+        'datePosted': video.datePosted.toIso8601String(),
       };
 
       final task = DownloadTask(

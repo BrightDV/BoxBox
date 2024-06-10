@@ -20,11 +20,13 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:background_downloader/background_downloader.dart' as bgdl;
 import 'package:boxbox/Screens/circuit.dart';
 import 'package:boxbox/Screens/schedule.dart';
 import 'package:boxbox/api/brightcove.dart';
 import 'package:boxbox/api/formula1.dart';
 import 'package:boxbox/api/race_components.dart';
+import 'package:boxbox/helpers/download.dart';
 import 'package:boxbox/helpers/hover.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/request_error.dart';
@@ -1667,6 +1669,7 @@ class VideoRenderer extends StatelessWidget {
   final String? youtubeId;
   final String? heroTag;
   final String? caption;
+  final Function? update;
 
   const VideoRenderer(
     this.videoId, {
@@ -1675,6 +1678,7 @@ class VideoRenderer extends StatelessWidget {
     this.youtubeId,
     this.heroTag,
     this.caption,
+    this.update,
   }) : super(key: key);
 
   Future<Map<String, dynamic>> getYouTubeVideoLinks(String videoId) async {
@@ -1759,9 +1763,12 @@ class VideoRenderer extends StatelessWidget {
                           )
                         : BetterPlayerVideoPlayer(
                             snapshot.data!,
+                            videoId,
                             autoplay == null ? false : autoplay!,
                             heroTag ?? '',
                             Theme.of(context).colorScheme.surface,
+                            (youtubeId ?? '') != '',
+                            update: update,
                           ),
                     if (caption != null)
                       Padding(
@@ -1795,16 +1802,22 @@ class VideoRenderer extends StatelessWidget {
 
 class BetterPlayerVideoPlayer extends StatefulWidget {
   final Map<String, dynamic> videoUrls;
+  final String videoId;
   final bool autoplay;
   final String heroTag;
   final Color primaryColor;
+  final bool isFromYouTube;
+  final Function? update;
 
   const BetterPlayerVideoPlayer(
     this.videoUrls,
+    this.videoId,
     this.autoplay,
     this.heroTag,
-    this.primaryColor, {
+    this.primaryColor,
+    this.isFromYouTube, {
     Key? key,
+    this.update,
   }) : super(key: key);
 
   @override
@@ -1819,6 +1832,74 @@ class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
   bool _showPlaceholder = true;
   bool useDarkMode =
       Hive.box('settings').get('darkMode', defaultValue: true) as bool;
+
+  void updateWithType(bgdl.TaskStatusUpdate statusUpdate) {
+    if (statusUpdate.status == bgdl.TaskStatus.complete) {
+      Map downloadsDescriptions = Hive.box('downloads').get(
+        'downloadsDescriptions',
+        defaultValue: {},
+      );
+
+      Formula1().downloadedFilePathIfExists(statusUpdate.task.taskId).then(
+        (path) {
+          Map details = json.decode(statusUpdate.task.metaData);
+          downloadsDescriptions[statusUpdate.task.taskId] = {
+            'id': details['id'],
+            'type': 'video',
+            'title': details['title'],
+            'thumbnail': details['thumbnail'],
+            'url': details['url'],
+            'description': details['description'],
+            'videoDuration': details['videoDuration'],
+            'datePosted': details['datePosted'],
+          };
+          Hive.box('downloads').put(
+            'downloadsDescriptions',
+            downloadsDescriptions,
+          );
+          if (widget.update != null) {
+            widget.update!();
+          }
+        },
+      );
+    }
+  }
+
+  Future<void> downloadVideo(
+      String videoId, String caption, String thumbnail) async {
+    String? quality = await DownloadUtils().videoDownloadQualitySelector(
+      widget.videoId,
+      updateWithType,
+      setState,
+      context,
+    );
+    if (quality != null) {
+      String downloadingState = await Formula1().downloadVideo(
+        widget.videoId,
+        quality,
+        callback: updateWithType,
+      );
+      if (downloadingState == "downloading") {
+        await Fluttertoast.showToast(
+          msg: 'Downloading',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+      } else {
+        Fluttertoast.showToast(
+          msg: AppLocalizations.of(context)!.errorOccurred,
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+      }
+    }
+  }
 
   @override
   void initState() {
@@ -1913,6 +1994,19 @@ class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
           overflowMenuIconsColor: useDarkMode ? Colors.white : Colors.black,
           overflowModalTextColor: useDarkMode ? Colors.white : Colors.black,
           showControlsOnInitialize: false,
+          overflowMenuCustomItems: !widget.isFromYouTube
+              ? [
+                  BetterPlayerOverflowMenuItem(
+                    Icons.save_alt_outlined,
+                    'Download', // TODO: localize
+                    () async => await downloadVideo(
+                      widget.videoId,
+                      widget.videoUrls['name'],
+                      widget.videoUrls['poster'],
+                    ),
+                  ),
+                ]
+              : [],
         ),
         placeholder: _buildVideoPlaceholder(),
         showPlaceholderUntilPlay: true,

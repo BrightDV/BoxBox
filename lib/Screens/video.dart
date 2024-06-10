@@ -22,6 +22,7 @@ import 'dart:convert';
 import 'package:background_downloader/background_downloader.dart';
 import 'package:boxbox/api/formula1.dart';
 import 'package:boxbox/api/videos.dart';
+import 'package:boxbox/helpers/download.dart';
 import 'package:boxbox/helpers/news.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -55,10 +56,14 @@ class _VideoScreenState extends State<VideoScreen> {
         (path) {
           Map details = json.decode(statusUpdate.task.metaData);
           downloadsDescriptions[statusUpdate.task.taskId] = {
-            'id': details['videoId'],
+            'id': details['id'],
             'type': 'video',
             'title': details['title'],
             'thumbnail': details['thumbnail'],
+            'url': details['url'],
+            'description': details['description'],
+            'videoDuration': details['videoDuration'],
+            'datePosted': details['datePosted'],
           };
           Hive.box('downloads').put(
             'downloadsDescriptions',
@@ -105,7 +110,8 @@ class _VideoScreenState extends State<VideoScreen> {
                 await Formula1().deleteFile('video_${widget.video.videoId}');
                 update();
               } else {
-                String? quality = await videoDownloadQualitySelector(
+                String? quality =
+                    await DownloadUtils().videoDownloadQualitySelector(
                   widget.video.videoId,
                   updateWithType,
                   setState,
@@ -115,8 +121,7 @@ class _VideoScreenState extends State<VideoScreen> {
                   String downloadingState = await Formula1().downloadVideo(
                     widget.video.videoId,
                     quality,
-                    widget.video.caption,
-                    widget.video.thumbnailUrl,
+                    video: widget.video,
                     callback: updateWithType,
                   );
                   if (downloadingState == "downloading") {
@@ -174,6 +179,7 @@ class _VideoScreenState extends State<VideoScreen> {
               video.videoId,
               autoplay: true,
               heroTag: video.videoId,
+              update: update,
             ),
           ),
           Padding(
@@ -226,90 +232,4 @@ class _VideoScreenState extends State<VideoScreen> {
       ),
     );
   }
-}
-
-Future<String?> videoDownloadQualitySelector(
-  String videoId,
-  Function(TaskStatusUpdate) updateWithType,
-  Function setState,
-  BuildContext context,
-) async {
-  String quality = await showDialog(
-    context: context,
-    builder: (context) {
-      String selectedQuality = "360"; // TODO: default from settings
-      return StatefulBuilder(
-        builder: (context, setState) => AlertDialog(
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(
-              Radius.circular(
-                20.0,
-              ),
-            ),
-          ),
-          contentPadding: const EdgeInsets.all(
-            20.0,
-          ),
-          title: Text(
-            'Select which quality to download.',
-            style: TextStyle(
-              fontSize: 24.0,
-            ), // here
-            textAlign: TextAlign.center,
-          ),
-          content: Row(
-            children: [
-              Radio(
-                value: "180",
-                groupValue: selectedQuality,
-                onChanged: (String? value) => setState(() {
-                  selectedQuality = value!;
-                }),
-              ),
-              Text(
-                '180p',
-              ),
-              Radio(
-                value: "360",
-                groupValue: selectedQuality,
-                onChanged: (String? value) => setState(() {
-                  selectedQuality = value!;
-                }),
-              ),
-              Text(
-                '360p',
-              ),
-              Radio(
-                value: "720",
-                groupValue: selectedQuality,
-                onChanged: (String? value) => setState(() {
-                  selectedQuality = value!;
-                }),
-              ),
-              Text(
-                '720p',
-              ),
-            ],
-          ),
-          actions: <Widget>[
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text(
-                AppLocalizations.of(context)!.cancel,
-              ),
-            ),
-            TextButton(
-              child: Text('Download'),
-              onPressed: () async {
-                Navigator.of(context).pop(selectedQuality);
-              },
-            ),
-          ],
-        ),
-      );
-    },
-  );
-  return quality;
 }
