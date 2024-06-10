@@ -27,8 +27,17 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
-class DownloadsScreen extends StatelessWidget {
+class DownloadsScreen extends StatefulWidget {
   const DownloadsScreen({super.key});
+
+  @override
+  State<DownloadsScreen> createState() => _DownloadsScreenState();
+}
+
+class _DownloadsScreenState extends State<DownloadsScreen> {
+  void update() {
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +62,7 @@ class DownloadsScreen extends StatelessWidget {
                           ),
                         ),
                       )
-                    : DownloadsList(snapshot.data!)
+                    : DownloadsList(snapshot.data!, update)
                 : LoadingIndicatorUtil(),
       ),
     );
@@ -62,7 +71,8 @@ class DownloadsScreen extends StatelessWidget {
 
 class DownloadsList extends StatelessWidget {
   final List<TaskRecord> records;
-  const DownloadsList(this.records, {super.key});
+  final Function update;
+  const DownloadsList(this.records, this.update, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -86,6 +96,7 @@ class DownloadsList extends StatelessWidget {
                       downloadsDescriptions[records[index].taskId]['id'],
                       downloadsDescriptions[records[index].taskId]['title'],
                       false,
+                      update: update,
                     )
                   : VideoScreen(
                       Video(
@@ -103,6 +114,7 @@ class DownloadsList extends StatelessWidget {
                               ['datePosted'],
                         ),
                       ),
+                      update: update,
                     ),
             ),
           );

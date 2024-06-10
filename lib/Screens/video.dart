@@ -34,7 +34,8 @@ import 'package:timeago/timeago.dart' as timeago;
 
 class VideoScreen extends StatefulWidget {
   final Video video;
-  const VideoScreen(this.video, {Key? key}) : super(key: key);
+  final Function? update;
+  const VideoScreen(this.video, {this.update, Key? key}) : super(key: key);
 
   @override
   State<VideoScreen> createState() => _VideoScreenState();
@@ -109,6 +110,9 @@ class _VideoScreenState extends State<VideoScreen> {
               if (downloads.contains('video_${widget.video.videoId}')) {
                 await Formula1().deleteFile('video_${widget.video.videoId}');
                 update();
+                if (widget.update != null) {
+                  widget.update!();
+                }
               } else {
                 String? quality =
                     await DownloadUtils().videoDownloadQualitySelector(

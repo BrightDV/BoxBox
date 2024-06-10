@@ -35,11 +35,13 @@ class ArticleScreen extends StatefulWidget {
   final String articleId;
   final String articleName;
   final bool isFromLink;
+  final Function? update;
 
   const ArticleScreen(
     this.articleId,
     this.articleName,
     this.isFromLink, {
+    this.update,
     Key? key,
   }) : super(key: key);
 
@@ -56,6 +58,9 @@ class _ArticleScreenState extends State<ArticleScreen> {
 
   void update() {
     setState(() {});
+    if (widget.update != null) {
+      widget.update!();
+    }
   }
 
   void updateWithType(TaskStatusUpdate statusUpdate) {
