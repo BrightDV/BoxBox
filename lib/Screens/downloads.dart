@@ -17,6 +17,9 @@
  * Copyright (c) 2022-2024, BrightDV
  */
 
+import 'dart:async';
+import 'dart:convert';
+
 import 'package:background_downloader/background_downloader.dart';
 import 'package:boxbox/Screens/article.dart';
 import 'package:boxbox/Screens/video.dart';
@@ -81,73 +84,246 @@ class DownloadsList extends StatelessWidget {
       defaultValue: {},
     );
 
-    return ListView.builder(
-      shrinkWrap: true,
-      itemCount: records.length,
-      itemBuilder: (context, index) => GestureDetector(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => downloadsDescriptions[records[index].taskId]
-                          ['type'] ==
-                      'article'
-                  ? ArticleScreen(
-                      downloadsDescriptions[records[index].taskId]['id'],
-                      downloadsDescriptions[records[index].taskId]['title'],
-                      false,
-                      update: update,
-                    )
-                  : VideoScreen(
-                      Video(
-                        downloadsDescriptions[records[index].taskId]['id'],
-                        downloadsDescriptions[records[index].taskId]['url'],
-                        downloadsDescriptions[records[index].taskId]['title'],
-                        downloadsDescriptions[records[index].taskId]
-                            ['description'],
-                        downloadsDescriptions[records[index].taskId]
-                            ['videoDuration'],
-                        downloadsDescriptions[records[index].taskId]
-                            ['thumbnail'],
-                        DateTime.parse(
-                          downloadsDescriptions[records[index].taskId]
-                              ['datePosted'],
+    List<List<TaskRecord>> separatedRecords = [[], []];
+
+    for (var record in records) {
+      if (record.status != TaskStatus.complete) {
+        separatedRecords[0].add(record);
+      } else {
+        separatedRecords[1].add(record);
+      }
+    }
+    return SingleChildScrollView(
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 5),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            separatedRecords[0].length != 0
+                ? Padding(
+                    padding: EdgeInsets.only(top: 5, bottom: 5, left: 5),
+                    child: Text(
+                      'Pending',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                  )
+                : Container(),
+            separatedRecords[0].length != 0
+                ? ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: separatedRecords[0].length,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      return PendingDownloadItem(
+                        separatedRecords[0][index],
+                        update,
+                      );
+                    },
+                  )
+                : Container(),
+            separatedRecords[1].length != 0
+                ? Padding(
+                    padding: EdgeInsets.only(top: 5, bottom: 5, left: 5),
+                    child: Text(
+                      'Done',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                  )
+                : Container(),
+            separatedRecords[1].length != 0
+                ? ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: separatedRecords[1].length,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemBuilder: (context, index) => GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => downloadsDescriptions[
+                                            separatedRecords[1][index].taskId]
+                                        ['type'] ==
+                                    'article'
+                                ? ArticleScreen(
+                                    downloadsDescriptions[
+                                            separatedRecords[1][index].taskId]
+                                        ['id'],
+                                    downloadsDescriptions[
+                                            separatedRecords[1][index].taskId]
+                                        ['title'],
+                                    false,
+                                    update: update,
+                                  )
+                                : VideoScreen(
+                                    Video(
+                                      downloadsDescriptions[
+                                              separatedRecords[1][index].taskId]
+                                          ['id'],
+                                      downloadsDescriptions[
+                                              separatedRecords[1][index].taskId]
+                                          ['url'],
+                                      downloadsDescriptions[
+                                              separatedRecords[1][index].taskId]
+                                          ['title'],
+                                      downloadsDescriptions[
+                                              separatedRecords[1][index].taskId]
+                                          ['description'],
+                                      downloadsDescriptions[
+                                              separatedRecords[1][index].taskId]
+                                          ['videoDuration'],
+                                      downloadsDescriptions[
+                                              separatedRecords[1][index].taskId]
+                                          ['thumbnail'],
+                                      DateTime.parse(
+                                        downloadsDescriptions[
+                                            separatedRecords[1][index]
+                                                .taskId]['datePosted'],
+                                      ),
+                                    ),
+                                    update: update,
+                                  ),
+                          ),
+                        );
+                      },
+                      child: Card(
+                        elevation: 5.0,
+                        child: Row(
+                          children: [
+                            Expanded(
+                              flex: 3,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(10),
+                                  topLeft: Radius.circular(10),
+                                ),
+                                child: CachedNetworkImage(
+                                  imageUrl: downloadsDescriptions[
+                                          separatedRecords[1][index].taskId]
+                                      ['thumbnail'],
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              flex: 5,
+                              child: Padding(
+                                padding: const EdgeInsets.only(
+                                  left: 8,
+                                  right: 8,
+                                ),
+                                child: Text(
+                                  downloadsDescriptions[
+                                          separatedRecords[1][index].taskId]
+                                      ['title'],
+                                  maxLines: 3,
+                                  textAlign: TextAlign.justify,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      update: update,
                     ),
-            ),
-          );
-        },
-        child: Card(
-          elevation: 5.0,
-          child: Row(
-            children: [
-              Expanded(
-                flex: 3,
-                child: CachedNetworkImage(
-                  imageUrl: downloadsDescriptions[records[index].taskId]
-                      ['thumbnail'],
-                ),
-              ),
-              Expanded(
-                flex: 5,
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                    left: 8,
-                    right: 8,
-                  ),
-                  child: Text(
-                    downloadsDescriptions[records[index].taskId]['title'],
-                    maxLines: 3,
-                    textAlign: TextAlign.justify,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ),
-            ],
-          ),
+                  )
+                : Container(),
+          ],
         ),
+      ),
+    );
+  }
+}
+
+class PendingDownloadItem extends StatefulWidget {
+  final TaskRecord taskRecord;
+  final Function updateWhenDownloadComplete;
+  const PendingDownloadItem(
+    this.taskRecord,
+    this.updateWhenDownloadComplete, {
+    super.key,
+  });
+
+  @override
+  State<PendingDownloadItem> createState() => _PendingDownloadItemState();
+}
+
+class _PendingDownloadItemState extends State<PendingDownloadItem> {
+  late Timer timer;
+  bool isDownloadFinished = false;
+
+  @override
+  void initState() {
+    timer = Timer.periodic(Duration(seconds: 1), (Timer t) {
+      if (isDownloadFinished) {
+        widget.updateWhenDownloadComplete();
+      } else {
+        setState(
+          () {},
+        );
+      }
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    timer.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    Map taskDetails = json.decode(
+      widget.taskRecord.task.metaData,
+    );
+    final List<Color> gradient = [
+      Theme.of(context).colorScheme.onPrimary.withAlpha(150),
+      Theme.of(context).colorScheme.onPrimary.withAlpha(200),
+      Colors.transparent,
+      Colors.transparent,
+    ];
+
+    return Card(
+      elevation: 5.0,
+      child: FutureBuilder(
+        future: FileDownloader().database.recordForId(widget.taskRecord.taskId),
+        builder: (context, snapshot) {
+          if (snapshot.hasData &&
+              snapshot.data!.status == TaskStatus.complete) {
+            isDownloadFinished = true;
+            return Container();
+          } else {
+            return Container(
+              decoration: snapshot.hasData
+                  ? BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      gradient: LinearGradient(
+                        colors: gradient,
+                        stops: [
+                          0.0,
+                          snapshot.data!.progress,
+                          snapshot.data!.progress,
+                          1.0,
+                        ],
+                      ),
+                    )
+                  : null,
+              child: SizedBox(
+                height: 80,
+                child: Center(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    child: Text(
+                      taskDetails['title'],
+                      maxLines: 3,
+                      textAlign: TextAlign.justify,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ),
+              ),
+            );
+          }
+        },
       ),
     );
   }

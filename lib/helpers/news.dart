@@ -1868,9 +1868,6 @@ class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
   Future<void> downloadVideo(
       String videoId, String caption, String thumbnail) async {
     String? quality = await DownloadUtils().videoDownloadQualitySelector(
-      widget.videoId,
-      updateWithType,
-      setState,
       context,
     );
     if (quality != null) {

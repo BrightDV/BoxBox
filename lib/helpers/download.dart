@@ -17,15 +17,11 @@
  * Copyright (c) 2022-2024, BrightDV
  */
 
-import 'package:background_downloader/background_downloader.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class DownloadUtils {
   Future<String?> videoDownloadQualitySelector(
-    String videoId,
-    Function(TaskStatusUpdate) updateWithType,
-    Function setState,
     BuildContext context,
   ) async {
     String quality = await showDialog(

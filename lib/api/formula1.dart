@@ -318,15 +318,26 @@ class Formula1 {
   Future<void> deleteFile(String taskId) async {
     final record = await FileDownloader().database.recordForId(taskId);
     if (record != null) {
-      String filePath = await record.task.filePath();
-      await File(filePath).delete();
+      // delete download record
       await FileDownloader().database.deleteRecordWithId(taskId);
+      // delete download taskId
       List downloads = await Hive.box('downloads').get(
         'downloadsList',
         defaultValue: [],
       );
       downloads.remove(taskId);
       await Hive.box('requests').put('downloadsList', downloads);
+      // delete download description
+      Map downloadsDescriptions = Hive.box('downloads').get(
+        'downloadsDescriptions',
+        defaultValue: {},
+      );
+      downloadsDescriptions.remove(taskId);
+      await Hive.box('downloads')
+          .put('downloadsDescriptions', downloadsDescriptions);
+      String filePath = await record.task.filePath();
+      // delete file from device
+      await File(filePath).delete();
     }
   }
 

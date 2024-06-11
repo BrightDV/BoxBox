@@ -51,15 +51,18 @@ class ArticleScreen extends StatefulWidget {
 
 class _ArticleScreenState extends State<ArticleScreen> {
   ValueNotifier<String> articleTitle = ValueNotifier('Loading...');
+  bool shouldRefresh = true;
 
   void updateTitle(String title) {
     articleTitle.value = title;
   }
 
   void update() {
-    setState(() {});
-    if (widget.update != null) {
-      widget.update!();
+    if (shouldRefresh) {
+      setState(() {});
+      if (widget.update != null) {
+        widget.update!();
+      }
     }
   }
 
@@ -220,6 +223,7 @@ class _ArticleScreenState extends State<ArticleScreen> {
 
   @override
   void dispose() {
+    shouldRefresh = false;
     super.dispose();
   }
 }

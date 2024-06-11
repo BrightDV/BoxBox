@@ -42,8 +42,11 @@ class VideoScreen extends StatefulWidget {
 }
 
 class _VideoScreenState extends State<VideoScreen> {
+  bool shouldRefresh = true;
   void update() {
-    setState(() {});
+    if (shouldRefresh) {
+      setState(() {});
+    }
   }
 
   void updateWithType(TaskStatusUpdate statusUpdate) {
@@ -70,10 +73,16 @@ class _VideoScreenState extends State<VideoScreen> {
             'downloadsDescriptions',
             downloadsDescriptions,
           );
-          setState(() {});
+          update();
         },
       );
     }
+  }
+
+  @override
+  void dispose() {
+    shouldRefresh = false;
+    super.dispose();
   }
 
   @override
@@ -116,9 +125,6 @@ class _VideoScreenState extends State<VideoScreen> {
               } else {
                 String? quality =
                     await DownloadUtils().videoDownloadQualitySelector(
-                  widget.video.videoId,
-                  updateWithType,
-                  setState,
                   context,
                 );
                 if (quality != null) {
