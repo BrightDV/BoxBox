@@ -1857,11 +1857,22 @@ class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
             'downloadsDescriptions',
             downloadsDescriptions,
           );
+          List downloads = Hive.box('downloads').get(
+            'downloadsList',
+            defaultValue: [],
+          );
+          downloads.insert(0, 'video_${details['id']}');
+          Hive.box('downloads').put('downloadsList', downloads);
           if (widget.update != null) {
             widget.update!();
           }
         },
       );
+    } else if ((statusUpdate.status == bgdl.TaskStatus.canceled) ||
+        (statusUpdate.status == bgdl.TaskStatus.failed)) {
+      bgdl.FileDownloader()
+          .database
+          .deleteRecordWithId(statusUpdate.task.taskId);
     }
   }
 
