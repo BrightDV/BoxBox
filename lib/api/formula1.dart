@@ -221,12 +221,6 @@ class Formula1 {
       final successfullyEnqueued = await FileDownloader().enqueue(task);
 
       if (successfullyEnqueued) {
-        List downloads = Hive.box('downloads').get(
-          'downloadsList',
-          defaultValue: [],
-        );
-        downloads.insert(0, 'article_$articleId');
-        Hive.box('downloads').put('downloadsList', downloads);
         return "downloading";
       } else {
         return "not downloaded";
@@ -284,12 +278,6 @@ class Formula1 {
       final successfullyEnqueued = await FileDownloader().enqueue(task);
 
       if (successfullyEnqueued) {
-        List downloads = Hive.box('downloads').get(
-          'downloadsList',
-          defaultValue: [],
-        );
-        downloads.insert(0, 'video_$videoId');
-        Hive.box('downloads').put('downloadsList', downloads);
         return "downloading";
       } else {
         return "not downloaded";

@@ -102,6 +102,12 @@ class _ArticleScreenState extends State<ArticleScreen> {
           };
           Hive.box('downloads')
               .put('downloadsDescriptions', downloadsDescriptions);
+          List downloads = Hive.box('downloads').get(
+            'downloadsList',
+            defaultValue: [],
+          );
+          downloads.insert(0, 'article_${savedArticle['id']}');
+          Hive.box('downloads').put('downloadsList', downloads);
           update();
         },
       );

@@ -76,6 +76,12 @@ class _VideoScreenState extends State<VideoScreen> {
             'downloadsDescriptions',
             downloadsDescriptions,
           );
+          List downloads = Hive.box('downloads').get(
+            'downloadsList',
+            defaultValue: [],
+          );
+          downloads.insert(0, 'video_${details['id']}');
+          Hive.box('downloads').put('downloadsList', downloads);
           update();
         },
       );
@@ -144,14 +150,25 @@ class _VideoScreenState extends State<VideoScreen> {
                       fontSize: 16.0,
                     );
                   } else {
-                    Fluttertoast.showToast(
-                      msg: AppLocalizations.of(context)!.errorOccurred,
-                      toastLength: Toast.LENGTH_SHORT,
-                      gravity: ToastGravity.BOTTOM,
-                      timeInSecForIosWeb: 1,
-                      textColor: Colors.white,
-                      fontSize: 16.0,
-                    );
+                    if (downloadingState == "downloading") {
+                      Fluttertoast.showToast(
+                        msg: 'Already downloading',
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.BOTTOM,
+                        timeInSecForIosWeb: 1,
+                        textColor: Colors.white,
+                        fontSize: 16.0,
+                      );
+                    } else {
+                      Fluttertoast.showToast(
+                        msg: AppLocalizations.of(context)!.errorOccurred,
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.BOTTOM,
+                        timeInSecForIosWeb: 1,
+                        textColor: Colors.white,
+                        fontSize: 16.0,
+                      );
+                    }
                   }
                 }
               }
