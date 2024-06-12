@@ -326,7 +326,7 @@ class Formula1 {
         defaultValue: [],
       );
       downloads.remove(taskId);
-      await Hive.box('requests').put('downloadsList', downloads);
+      await Hive.box('downloads').put('downloadsList', downloads);
       // delete download record
       await FileDownloader().database.deleteRecordWithId(taskId);
       // delete download description
