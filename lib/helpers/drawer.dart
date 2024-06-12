@@ -129,7 +129,7 @@ class MainDrawer extends StatelessWidget {
           ),
           ListTile(
             title: Text(
-              'Downloads',
+              AppLocalizations.of(context)!.downloads,
             ),
             leading: Icon(
               Icons.save_alt_rounded,

@@ -44,7 +44,7 @@ class DownloadUtils {
               20.0,
             ),
             title: Text(
-              'Select which quality to download.', // TODO: localize
+              AppLocalizations.of(context)!.qualityToDownload,
               style: TextStyle(
                 fontSize: 24.0,
               ), // here
@@ -94,7 +94,9 @@ class DownloadUtils {
                 ),
               ),
               TextButton(
-                child: Text('Download'), // TODO: localize
+                child: Text(
+                  AppLocalizations.of(context)!.download,
+                ),
                 onPressed: () async {
                   Navigator.of(context).pop(selectedQuality);
                 },

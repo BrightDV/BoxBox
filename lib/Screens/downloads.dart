@@ -30,6 +30,7 @@ import 'package:boxbox/helpers/request_error.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:filesize/filesize.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class DownloadsScreen extends StatefulWidget {
@@ -99,7 +100,7 @@ class _DownloadsScreenState extends State<DownloadsScreen> {
           ? Scaffold(
               appBar: AppBar(
                 title: Text(
-                  'Downloads',
+                  AppLocalizations.of(context)!.downloads,
                 ),
                 backgroundColor: Theme.of(context).colorScheme.onPrimary,
               ),
@@ -112,7 +113,7 @@ class _DownloadsScreenState extends State<DownloadsScreen> {
                   ? Scaffold(
                       appBar: AppBar(
                         title: Text(
-                          'Downloads',
+                          AppLocalizations.of(context)!.downloads,
                         ),
                         backgroundColor:
                             Theme.of(context).colorScheme.onPrimary,
@@ -129,7 +130,7 @@ class _DownloadsScreenState extends State<DownloadsScreen> {
                   : Scaffold(
                       appBar: AppBar(
                         title: Text(
-                          'Downloads',
+                          AppLocalizations.of(context)!.downloads,
                         ),
                         actions: [
                           snapshot.data!.length != downloads.length
@@ -165,7 +166,7 @@ class _DownloadsScreenState extends State<DownloadsScreen> {
               : Scaffold(
                   appBar: AppBar(
                     title: Text(
-                      'Downloads',
+                      AppLocalizations.of(context)!.downloads,
                     ),
                     backgroundColor: Theme.of(context).colorScheme.onPrimary,
                   ),
@@ -206,7 +207,7 @@ class DownloadsList extends StatelessWidget {
                 ? Padding(
                     padding: EdgeInsets.only(top: 5, bottom: 5, left: 5),
                     child: Text(
-                      'Running',
+                      AppLocalizations.of(context)!.running,
                       style: TextStyle(fontSize: 20),
                     ),
                   )
@@ -228,7 +229,7 @@ class DownloadsList extends StatelessWidget {
                 ? Padding(
                     padding: EdgeInsets.only(top: 5, bottom: 5, left: 5),
                     child: Text(
-                      'Done',
+                      AppLocalizations.of(context)!.done,
                       style: TextStyle(fontSize: 20),
                     ),
                   )

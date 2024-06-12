@@ -1993,7 +1993,7 @@ class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
               ? [
                   BetterPlayerOverflowMenuItem(
                     Icons.save_alt_outlined,
-                    'Download', // TODO: localize
+                    'Download',
                     () async => await downloadVideo(
                       widget.videoId,
                       widget.videoUrls['name'],

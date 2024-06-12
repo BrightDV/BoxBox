@@ -140,7 +140,7 @@ class _ArticleScreenState extends State<ArticleScreen> {
                         );
                         if (downloadingState == "downloading") {
                           await Fluttertoast.showToast(
-                            msg: 'Downloading',
+                            msg: AppLocalizations.of(context)!.downloading,
                             toastLength: Toast.LENGTH_SHORT,
                             gravity: ToastGravity.BOTTOM,
                             timeInSecForIosWeb: 1,
@@ -307,7 +307,7 @@ AlertDialog downloadedArticleActionPopup(
       50.0,
     ),
     title: Text(
-      'This article has already been downloaded.',
+      AppLocalizations.of(context)!.alreadyDownloadedArticle,
       style: TextStyle(
         fontSize: 24.0,
       ), // here
@@ -329,7 +329,7 @@ AlertDialog downloadedArticleActionPopup(
           update();
         },
         icon: Icon(Icons.delete_outline),
-        tooltip: 'Delete',
+        tooltip: AppLocalizations.of(context)!.delete,
       ),
       IconButton(
         onPressed: () async {
@@ -341,7 +341,7 @@ AlertDialog downloadedArticleActionPopup(
           Navigator.of(context).pop();
         },
         icon: Icon(Icons.refresh),
-        tooltip: 'Refresh',
+        tooltip: AppLocalizations.of(context)!.refresh,
       ),
     ],
   );

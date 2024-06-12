@@ -145,7 +145,7 @@ class _VideoScreenState extends State<VideoScreen> {
                   );
                   if (downloadingState == "downloading") {
                     await Fluttertoast.showToast(
-                      msg: 'Downloading',
+                      msg: AppLocalizations.of(context)!.downloading,
                       toastLength: Toast.LENGTH_SHORT,
                       gravity: ToastGravity.BOTTOM,
                       timeInSecForIosWeb: 1,
@@ -155,7 +155,7 @@ class _VideoScreenState extends State<VideoScreen> {
                   } else {
                     if (downloadingState == "downloading") {
                       Fluttertoast.showToast(
-                        msg: 'Already downloading',
+                        msg: AppLocalizations.of(context)!.alreadyDownloading,
                         toastLength: Toast.LENGTH_SHORT,
                         gravity: ToastGravity.BOTTOM,
                         timeInSecForIosWeb: 1,
