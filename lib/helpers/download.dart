@@ -19,15 +19,18 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 class DownloadUtils {
   Future<String?> videoDownloadQualitySelector(
     BuildContext context,
   ) async {
+    int playerQuality =
+        Hive.box('settings').get('playerQuality', defaultValue: 360) as int;
     String quality = await showDialog(
       context: context,
       builder: (context) {
-        String selectedQuality = "360"; // TODO: default from settings
+        String selectedQuality = playerQuality.toString();
         return StatefulBuilder(
           builder: (context, setState) => AlertDialog(
             shape: const RoundedRectangleBorder(
