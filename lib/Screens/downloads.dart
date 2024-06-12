@@ -80,7 +80,9 @@ class _DownloadsScreenState extends State<DownloadsScreen> {
 
   Future deleteDownloads(List<TaskRecord> records) async {
     for (var record in records) {
-      await Formula1().deleteFile(record.taskId);
+      try {
+        await Formula1().deleteFile(record.taskId);
+      } on Exception catch (_) {}
     }
     update();
   }
