@@ -28,6 +28,7 @@ import 'package:boxbox/api/videos.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/request_error.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:filesize/filesize.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
@@ -203,7 +204,7 @@ class DownloadsList extends StatelessWidget {
                 ? Padding(
                     padding: EdgeInsets.only(top: 5, bottom: 5, left: 5),
                     child: Text(
-                      'Pending',
+                      'Running',
                       style: TextStyle(fontSize: 20),
                     ),
                   )
@@ -214,7 +215,7 @@ class DownloadsList extends StatelessWidget {
                     itemCount: separatedRecords[0].length,
                     physics: NeverScrollableScrollPhysics(),
                     itemBuilder: (context, index) {
-                      return PendingDownloadItem(
+                      return RunningDownloadItem(
                         separatedRecords[0][index],
                         update,
                       );
@@ -333,20 +334,20 @@ class DownloadsList extends StatelessWidget {
   }
 }
 
-class PendingDownloadItem extends StatefulWidget {
+class RunningDownloadItem extends StatefulWidget {
   final TaskRecord taskRecord;
   final Function updateWhenDownloadComplete;
-  const PendingDownloadItem(
+  const RunningDownloadItem(
     this.taskRecord,
     this.updateWhenDownloadComplete, {
     super.key,
   });
 
   @override
-  State<PendingDownloadItem> createState() => _PendingDownloadItemState();
+  State<RunningDownloadItem> createState() => _RunningDownloadItemState();
 }
 
-class _PendingDownloadItemState extends State<PendingDownloadItem> {
+class _RunningDownloadItemState extends State<RunningDownloadItem> {
   late Timer timer;
   bool isDownloadFinished = false;
 
@@ -408,16 +409,29 @@ class _PendingDownloadItemState extends State<PendingDownloadItem> {
                     )
                   : null,
               child: SizedBox(
-                height: 80,
-                child: Center(
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10),
-                    child: Text(
-                      taskDetails['title'],
-                      maxLines: 3,
-                      textAlign: TextAlign.justify,
-                      overflow: TextOverflow.ellipsis,
-                    ),
+                height: 90,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        taskDetails['title'],
+                        maxLines: 3,
+                        textAlign: TextAlign.justify,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      taskDetails['fileSize'] != null &&
+                              taskDetails['fileSize'] != -1
+                          ? Padding(
+                              padding: EdgeInsets.only(top: 5),
+                              child: Text(
+                                filesize(taskDetails['fileSize']),
+                              ),
+                            )
+                          : Container(),
+                    ],
                   ),
                 ),
               ),

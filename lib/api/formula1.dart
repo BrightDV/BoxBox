@@ -261,7 +261,16 @@ class Formula1 {
         'datePosted': video.datePosted.toIso8601String(),
       };
 
-      final task = DownloadTask(
+      DownloadTask task = DownloadTask(
+        taskId: 'video_$videoId',
+        url: link,
+        filename: 'video_$videoId.mp4',
+      );
+
+      int fileSize = await task.expectedFileSize();
+      videoDetails['fileSize'] = fileSize;
+
+      task = DownloadTask(
         taskId: 'video_$videoId',
         url: link,
         filename: 'video_$videoId.mp4',

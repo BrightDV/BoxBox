@@ -241,6 +241,15 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.1.4"
+  filesize:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: master
+      resolved-ref: "502c3e9d344b2e257e2279817a6919c6fb838f62"
+      url: "https://github.com/BrightDV/filesize.git"
+    source: git
+    version: "2.0.1"
   flutter:
     dependency: "direct main"
     description: flutter
