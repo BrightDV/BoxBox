@@ -66,7 +66,7 @@ class _ArticleScreenState extends State<ArticleScreen> {
     }
   }
 
-  void updateWithType(TaskStatusUpdate statusUpdate) {
+  void updateArticleWithType(TaskStatusUpdate statusUpdate) {
     if (statusUpdate.status == TaskStatus.complete) {
       Map downloadsDescriptions = Hive.box('downloads').get(
         'downloadsDescriptions',
@@ -129,7 +129,8 @@ class _ArticleScreenState extends State<ArticleScreen> {
                         String downloadingState =
                             await Formula1().downloadArticle(
                           widget.articleId,
-                          callback: updateWithType,
+                          widget.articleName,
+                          callback: updateArticleWithType,
                         );
                         if (downloadingState == "downloading") {
                           await Fluttertoast.showToast(
@@ -146,8 +147,9 @@ class _ArticleScreenState extends State<ArticleScreen> {
                             builder: (context) => downloadedArticleActionPopup(
                               'article_${widget.articleId}',
                               widget.articleId,
+                              widget.articleName,
                               update,
-                              updateWithType,
+                              updateArticleWithType,
                               context,
                             ),
                           );
@@ -282,8 +284,9 @@ class ArticleProvider extends StatelessWidget {
 AlertDialog downloadedArticleActionPopup(
   String taskId,
   String articleId,
+  String articleName,
   Function update,
-  Function(TaskStatusUpdate) updateWithType,
+  Function(TaskStatusUpdate) updateArticleWithType,
   BuildContext context,
 ) {
   return AlertDialog(
@@ -326,7 +329,8 @@ AlertDialog downloadedArticleActionPopup(
         onPressed: () async {
           await Formula1().downloadArticle(
             articleId,
-            callback: updateWithType,
+            articleName,
+            callback: updateArticleWithType,
           );
           Navigator.of(context).pop();
         },

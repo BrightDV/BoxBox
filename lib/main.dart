@@ -49,10 +49,10 @@ void main() async {
 
   await FileDownloader().trackTasks();
   FileDownloader().configureNotification(
-    running: TaskNotification('Downloading', 'Progress = {progress}'),
-    complete: const TaskNotification('Downloaded', 'Download complete.'),
-    error: const TaskNotification('Error', 'Download failed.'),
-    paused: const TaskNotification('Paused', 'Waiting.'),
+    running: TaskNotification('Download in progress', '{displayName}'),
+    complete: const TaskNotification('Download complete', '{displayName}'),
+    error: const TaskNotification('Download failed', '{displayName}'),
+    paused: const TaskNotification('Download paused', '{displayName}'),
     progressBar: true,
   );
 

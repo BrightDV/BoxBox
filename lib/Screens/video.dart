@@ -52,7 +52,7 @@ class _VideoScreenState extends State<VideoScreen> {
     }
   }
 
-  void updateWithType(TaskStatusUpdate statusUpdate) {
+  void updateVideoWithType(TaskStatusUpdate statusUpdate) {
     if (statusUpdate.status == TaskStatus.complete) {
       Map downloadsDescriptions = Hive.box('downloads').get(
         'downloadsDescriptions',
@@ -132,7 +132,7 @@ class _VideoScreenState extends State<VideoScreen> {
                     widget.video.videoId,
                     quality,
                     video: widget.video,
-                    callback: updateWithType,
+                    callback: updateVideoWithType,
                   );
                   if (downloadingState == "downloading") {
                     await Fluttertoast.showToast(

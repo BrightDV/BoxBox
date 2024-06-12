@@ -184,7 +184,7 @@ class Formula1 {
     return article;
   }
 
-  Future<String> downloadArticle(String articleId,
+  Future<String> downloadArticle(String articleId, String articleTitle,
       {Function(TaskStatusUpdate)? callback}) async {
     String endpoint = Hive.box('settings')
         .get('server', defaultValue: defaultEndpoint) as String;
@@ -201,6 +201,7 @@ class Formula1 {
         taskId: 'article_$articleId',
         url: '$endpoint/v1/editorial/articles/$articleId',
         filename: 'article_$articleId.json',
+        displayName: articleTitle,
         headers: endpoint != defaultEndpoint
             ? {
                 "Accept": "application/json",
@@ -271,6 +272,7 @@ class Formula1 {
         taskId: 'video_$videoId',
         url: link,
         filename: 'video_$videoId.mp4',
+        displayName: video.caption,
         //directory: 'Box, Box! Downloads',
         updates: Updates.statusAndProgress,
         //requiresWiFi: true,
@@ -318,8 +320,6 @@ class Formula1 {
   Future<void> deleteFile(String taskId) async {
     final record = await FileDownloader().database.recordForId(taskId);
     if (record != null) {
-      // delete download record
-      await FileDownloader().database.deleteRecordWithId(taskId);
       // delete download taskId
       List downloads = await Hive.box('downloads').get(
         'downloadsList',
@@ -327,6 +327,8 @@ class Formula1 {
       );
       downloads.remove(taskId);
       await Hive.box('requests').put('downloadsList', downloads);
+      // delete download record
+      await FileDownloader().database.deleteRecordWithId(taskId);
       // delete download description
       Map downloadsDescriptions = Hive.box('downloads').get(
         'downloadsDescriptions',
