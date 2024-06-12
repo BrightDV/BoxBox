@@ -1916,12 +1916,6 @@ class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
       BetterPlayerDataSource betterPlayerDataSource = BetterPlayerDataSource(
         BetterPlayerDataSourceType.file,
         widget.videoUrls['file'],
-        notificationConfiguration: BetterPlayerNotificationConfiguration(
-          showNotification: true,
-          author: widget.videoUrls['author'] ?? "Formula 1",
-          imageUrl: widget.videoUrls['poster'],
-          activityName: "MainActivity",
-        ),
       );
 
       BetterPlayerConfiguration betterPlayerConfiguration =
@@ -1968,13 +1962,6 @@ class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
         BetterPlayerDataSourceType.network,
         widget.videoUrls['videos'][0],
         resolutions: qualities,
-        notificationConfiguration: BetterPlayerNotificationConfiguration(
-          showNotification: true,
-          title: widget.videoUrls['name'] ?? 'Video',
-          author: widget.videoUrls['author'] ?? "Formula 1",
-          imageUrl: widget.videoUrls['poster'],
-          activityName: "MainActivity",
-        ),
         bufferingConfiguration: const BetterPlayerBufferingConfiguration(
           maxBufferMs: 1000 * 30,
           bufferForPlaybackMs: 3000,
