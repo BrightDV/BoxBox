@@ -215,7 +215,6 @@ class Formula1 {
         updates: Updates.statusAndProgress,
         //requiresWiFi: true,
         retries: 5,
-        allowPause: true,
       );
 
       final successfullyEnqueued = await FileDownloader().enqueue(task);

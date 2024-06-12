@@ -85,6 +85,9 @@ class _VideoScreenState extends State<VideoScreen> {
           update();
         },
       );
+    } else if ((statusUpdate.status == TaskStatus.canceled) ||
+        (statusUpdate.status == TaskStatus.failed)) {
+      FileDownloader().database.deleteRecordWithId(statusUpdate.task.taskId);
     }
   }
 

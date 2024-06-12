@@ -23,6 +23,7 @@ import 'dart:convert';
 import 'package:background_downloader/background_downloader.dart';
 import 'package:boxbox/Screens/article.dart';
 import 'package:boxbox/Screens/video.dart';
+import 'package:boxbox/api/formula1.dart';
 import 'package:boxbox/api/videos.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/request_error.dart';
@@ -42,32 +43,131 @@ class _DownloadsScreenState extends State<DownloadsScreen> {
     setState(() {});
   }
 
+  Future updateDownloadsState(String newStatus) async {
+    if (newStatus == 'pause') {
+      List<TaskRecord> records = await FileDownloader()
+          .database
+          .allRecordsWithStatus(TaskStatus.running);
+      for (var record in records) {
+        final task = record.task;
+        if (task is DownloadTask) {
+          await FileDownloader().pause(task);
+        }
+      }
+    } else {
+      List<TaskRecord> records = await FileDownloader()
+          .database
+          .allRecordsWithStatus(TaskStatus.paused);
+      for (var record in records) {
+        final task = record.task;
+        if (task is DownloadTask) {
+          await FileDownloader().resume(task);
+        }
+      }
+    }
+    await Future.delayed(Duration(milliseconds: 300), update);
+  }
+
+  bool hasRunningDownloads(List<TaskRecord> records) {
+    for (var record in records) {
+      if (record.status == TaskStatus.running) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  Future deleteDownloads(List<TaskRecord> records) async {
+    for (var record in records) {
+      await Formula1().deleteFile(record.taskId);
+    }
+    update();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Downloads',
-        ),
-        backgroundColor: Theme.of(context).colorScheme.onPrimary,
-      ),
-      body: FutureBuilder(
-        future: FileDownloader().database.allRecords(),
-        builder: (context, snapshot) => snapshot.hasError
-            ? RequestErrorWidget(snapshot.error.toString())
-            : snapshot.hasData
-                ? snapshot.data!.isEmpty
-                    ? Center(
+    List downloads = Hive.box('downloads').get(
+      'downloadsList',
+      defaultValue: [],
+    );
+    return FutureBuilder(
+      future: FileDownloader().database.allRecords(),
+      builder: (context, snapshot) => snapshot.hasError
+          ? Scaffold(
+              appBar: AppBar(
+                title: Text(
+                  'Downloads',
+                ),
+                backgroundColor: Theme.of(context).colorScheme.onPrimary,
+              ),
+              body: Center(
+                child: RequestErrorWidget(snapshot.error.toString()),
+              ),
+            )
+          : snapshot.hasData
+              ? snapshot.data!.isEmpty
+                  ? Scaffold(
+                      appBar: AppBar(
+                        title: Text(
+                          'Downloads',
+                        ),
+                        backgroundColor:
+                            Theme.of(context).colorScheme.onPrimary,
+                      ),
+                      body: Center(
                         child: Text(
                           '¯\\_(ツ)_/¯',
                           style: TextStyle(
                             fontSize: 40,
                           ),
                         ),
-                      )
-                    : DownloadsList(snapshot.data!, update)
-                : LoadingIndicatorUtil(),
-      ),
+                      ),
+                    )
+                  : Scaffold(
+                      appBar: AppBar(
+                        title: Text(
+                          'Downloads',
+                        ),
+                        actions: [
+                          snapshot.data!.length != downloads.length
+                              ? hasRunningDownloads(snapshot.data!)
+                                  ? IconButton(
+                                      onPressed: () async =>
+                                          await updateDownloadsState('pause'),
+                                      icon: Icon(
+                                        Icons.pause_outlined,
+                                      ),
+                                    )
+                                  : IconButton(
+                                      onPressed: () async =>
+                                          await updateDownloadsState('resume'),
+                                      icon: Icon(
+                                        Icons.play_arrow_outlined,
+                                      ),
+                                    )
+                              : Container(),
+                          IconButton(
+                            onPressed: () async =>
+                                await deleteDownloads(snapshot.data!),
+                            icon: Icon(
+                              Icons.delete_outline,
+                            ),
+                          )
+                        ],
+                        backgroundColor:
+                            Theme.of(context).colorScheme.onPrimary,
+                      ),
+                      body: DownloadsList(snapshot.data!, update),
+                    )
+              : Scaffold(
+                  appBar: AppBar(
+                    title: Text(
+                      'Downloads',
+                    ),
+                    backgroundColor: Theme.of(context).colorScheme.onPrimary,
+                  ),
+                  body: LoadingIndicatorUtil(),
+                ),
     );
   }
 }
