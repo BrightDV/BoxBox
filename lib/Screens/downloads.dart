@@ -19,11 +19,11 @@
 
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:background_downloader/background_downloader.dart';
 import 'package:boxbox/Screens/article.dart';
 import 'package:boxbox/Screens/video.dart';
-import 'package:boxbox/api/formula1.dart';
 import 'package:boxbox/api/videos.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/request_error.dart';
@@ -80,9 +80,16 @@ class _DownloadsScreenState extends State<DownloadsScreen> {
   }
 
   Future deleteDownloads(List<TaskRecord> records) async {
+    // delete local databases data
+    await Hive.box('downloads').put('downloadsList', []);
+    await Hive.box('downloads').put('downloadsDescriptions', {});
     for (var record in records) {
       try {
-        await Formula1().deleteFile(record.taskId);
+        // delete download record
+        await FileDownloader().database.deleteRecordWithId(record.taskId);
+        String filePath = await record.task.filePath();
+        // delete file from device
+        await File(filePath).delete();
       } on Exception catch (_) {}
     }
     update();
@@ -217,12 +224,14 @@ class DownloadsList extends StatelessWidget {
                     shrinkWrap: true,
                     itemCount: separatedRecords[0].length,
                     physics: NeverScrollableScrollPhysics(),
-                    itemBuilder: (context, index) {
-                      return RunningDownloadItem(
-                        separatedRecords[0][index],
-                        update,
-                      );
-                    },
+                    itemBuilder: (context, index) => downloadsDescriptions[
+                                separatedRecords[1][index].taskId] ==
+                            null
+                        ? Container()
+                        : RunningDownloadItem(
+                            separatedRecords[0][index],
+                            update,
+                          ),
                   )
                 : Container(),
             separatedRecords[1].length != 0
@@ -239,95 +248,99 @@ class DownloadsList extends StatelessWidget {
                     shrinkWrap: true,
                     itemCount: separatedRecords[1].length,
                     physics: NeverScrollableScrollPhysics(),
-                    itemBuilder: (context, index) => GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => downloadsDescriptions[
-                                            separatedRecords[1][index].taskId]
-                                        ['type'] ==
-                                    'article'
-                                ? ArticleScreen(
-                                    downloadsDescriptions[
-                                            separatedRecords[1][index].taskId]
-                                        ['id'],
-                                    downloadsDescriptions[
-                                            separatedRecords[1][index].taskId]
-                                        ['title'],
-                                    false,
-                                    update: update,
-                                  )
-                                : VideoScreen(
-                                    Video(
-                                      downloadsDescriptions[
-                                              separatedRecords[1][index].taskId]
-                                          ['id'],
-                                      downloadsDescriptions[
-                                              separatedRecords[1][index].taskId]
-                                          ['url'],
-                                      downloadsDescriptions[
-                                              separatedRecords[1][index].taskId]
-                                          ['title'],
-                                      downloadsDescriptions[
-                                              separatedRecords[1][index].taskId]
-                                          ['description'],
-                                      downloadsDescriptions[
-                                              separatedRecords[1][index].taskId]
-                                          ['videoDuration'],
-                                      downloadsDescriptions[
-                                              separatedRecords[1][index].taskId]
-                                          ['thumbnail'],
-                                      DateTime.parse(
-                                        downloadsDescriptions[
+                    itemBuilder: (context, index) => downloadsDescriptions[
+                                separatedRecords[1][index].taskId] ==
+                            null
+                        ? Container()
+                        : GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => downloadsDescriptions[
+                                              separatedRecords[1][index]
+                                                  .taskId]['type'] ==
+                                          'article'
+                                      ? ArticleScreen(
+                                          downloadsDescriptions[
+                                              separatedRecords[1][index]
+                                                  .taskId]['id'],
+                                          downloadsDescriptions[
+                                              separatedRecords[1][index]
+                                                  .taskId]['title'],
+                                          false,
+                                          update: update,
+                                        )
+                                      : VideoScreen(
+                                          Video(
+                                            downloadsDescriptions[
+                                                separatedRecords[1][index]
+                                                    .taskId]['id'],
+                                            downloadsDescriptions[
+                                                separatedRecords[1][index]
+                                                    .taskId]['url'],
+                                            downloadsDescriptions[
+                                                separatedRecords[1][index]
+                                                    .taskId]['title'],
+                                            downloadsDescriptions[
+                                                separatedRecords[1][index]
+                                                    .taskId]['description'],
+                                            downloadsDescriptions[
+                                                separatedRecords[1][index]
+                                                    .taskId]['videoDuration'],
+                                            downloadsDescriptions[
+                                                separatedRecords[1][index]
+                                                    .taskId]['thumbnail'],
+                                            DateTime.parse(
+                                              downloadsDescriptions[
+                                                  separatedRecords[1][index]
+                                                      .taskId]['datePosted'],
+                                            ),
+                                          ),
+                                          update: update,
+                                        ),
+                                ),
+                              );
+                            },
+                            child: Card(
+                              elevation: 5.0,
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    flex: 3,
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.only(
+                                        bottomLeft: Radius.circular(10),
+                                        topLeft: Radius.circular(10),
+                                      ),
+                                      child: CachedNetworkImage(
+                                        imageUrl: downloadsDescriptions[
                                             separatedRecords[1][index]
-                                                .taskId]['datePosted'],
+                                                .taskId]['thumbnail'],
                                       ),
                                     ),
-                                    update: update,
                                   ),
+                                  Expanded(
+                                    flex: 5,
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(
+                                        left: 8,
+                                        right: 8,
+                                      ),
+                                      child: Text(
+                                        downloadsDescriptions[
+                                            separatedRecords[1][index]
+                                                .taskId]['title'],
+                                        maxLines: 3,
+                                        textAlign: TextAlign.justify,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
-                        );
-                      },
-                      child: Card(
-                        elevation: 5.0,
-                        child: Row(
-                          children: [
-                            Expanded(
-                              flex: 3,
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.only(
-                                  bottomLeft: Radius.circular(10),
-                                  topLeft: Radius.circular(10),
-                                ),
-                                child: CachedNetworkImage(
-                                  imageUrl: downloadsDescriptions[
-                                          separatedRecords[1][index].taskId]
-                                      ['thumbnail'],
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              flex: 5,
-                              child: Padding(
-                                padding: const EdgeInsets.only(
-                                  left: 8,
-                                  right: 8,
-                                ),
-                                child: Text(
-                                  downloadsDescriptions[
-                                          separatedRecords[1][index].taskId]
-                                      ['title'],
-                                  maxLines: 3,
-                                  textAlign: TextAlign.justify,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
                   )
                 : Container(),
           ],

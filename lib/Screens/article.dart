@@ -310,7 +310,7 @@ AlertDialog downloadedArticleActionPopup(
       AppLocalizations.of(context)!.alreadyDownloadedArticle,
       style: TextStyle(
         fontSize: 24.0,
-      ), // here
+      ),
       textAlign: TextAlign.center,
     ),
     actions: <Widget>[

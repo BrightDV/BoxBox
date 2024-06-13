@@ -47,7 +47,7 @@ class DownloadUtils {
               AppLocalizations.of(context)!.qualityToDownload,
               style: TextStyle(
                 fontSize: 24.0,
-              ), // here
+              ),
               textAlign: TextAlign.center,
             ),
             content: Row(
