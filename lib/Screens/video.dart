@@ -131,7 +131,15 @@ class _VideoScreenState extends State<VideoScreen> {
             onPressed: () async {
               if (downloads.contains('video_${widget.video.videoId}')) {
                 await Formula1().deleteFile('video_${widget.video.videoId}');
-                update();
+                if (widget.update != null) {
+                  Future.delayed(
+                    Duration(milliseconds: 100),
+                  ).then(
+                    (_) => update(),
+                  );
+                } else {
+                  update();
+                }
               } else {
                 String? quality =
                     await DownloadUtils().videoDownloadQualitySelector(
@@ -145,6 +153,9 @@ class _VideoScreenState extends State<VideoScreen> {
                     callback: updateVideoWithType,
                   );
                   if (downloadingState == "downloading") {
+                    if (widget.update != null) {
+                      widget.update!();
+                    }
                     await Fluttertoast.showToast(
                       msg: AppLocalizations.of(context)!.downloading,
                       toastLength: Toast.LENGTH_SHORT,
@@ -155,7 +166,7 @@ class _VideoScreenState extends State<VideoScreen> {
                     );
                   } else {
                     if (downloadingState == "downloading") {
-                      Fluttertoast.showToast(
+                      await Fluttertoast.showToast(
                         msg: AppLocalizations.of(context)!.alreadyDownloading,
                         toastLength: Toast.LENGTH_SHORT,
                         gravity: ToastGravity.BOTTOM,
@@ -164,7 +175,7 @@ class _VideoScreenState extends State<VideoScreen> {
                         fontSize: 16.0,
                       );
                     } else {
-                      Fluttertoast.showToast(
+                      await Fluttertoast.showToast(
                         msg: AppLocalizations.of(context)!.errorOccurred,
                         toastLength: Toast.LENGTH_SHORT,
                         gravity: ToastGravity.BOTTOM,

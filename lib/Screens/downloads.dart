@@ -72,7 +72,8 @@ class _DownloadsScreenState extends State<DownloadsScreen> {
 
   bool hasRunningDownloads(List<TaskRecord> records) {
     for (var record in records) {
-      if (record.status == TaskStatus.running) {
+      if (record.status == TaskStatus.running ||
+          record.status == TaskStatus.enqueued) {
         return true;
       }
     }
@@ -224,14 +225,10 @@ class DownloadsList extends StatelessWidget {
                     shrinkWrap: true,
                     itemCount: separatedRecords[0].length,
                     physics: NeverScrollableScrollPhysics(),
-                    itemBuilder: (context, index) => downloadsDescriptions[
-                                separatedRecords[1][index].taskId] ==
-                            null
-                        ? Container()
-                        : RunningDownloadItem(
-                            separatedRecords[0][index],
-                            update,
-                          ),
+                    itemBuilder: (context, index) => RunningDownloadItem(
+                      separatedRecords[0][index],
+                      update,
+                    ),
                   )
                 : Container(),
             separatedRecords[1].length != 0
@@ -406,7 +403,7 @@ class DownloadsList extends StatelessWidget {
                                                         -1
                                                 ? Padding(
                                                     padding:
-                                                        EdgeInsets.only(top: 5),
+                                                        EdgeInsets.only(top: 4),
                                                     child: Text(
                                                       filesize(
                                                         downloadsDescriptions[
@@ -415,6 +412,9 @@ class DownloadsList extends StatelessWidget {
                                                                     .taskId]
                                                             ['fileSize'],
                                                       ),
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .labelSmall,
                                                     ),
                                                   )
                                                 : Container(),

@@ -27,7 +27,7 @@ class DownloadUtils {
   ) async {
     int playerQuality =
         Hive.box('settings').get('playerQuality', defaultValue: 360) as int;
-    String quality = await showDialog(
+    String? quality = await showDialog(
       context: context,
       builder: (context) {
         String selectedQuality = playerQuality.toString();

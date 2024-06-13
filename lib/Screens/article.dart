@@ -160,7 +160,7 @@ class _ArticleScreenState extends State<ArticleScreen> {
                             ),
                           );
                         } else {
-                          Fluttertoast.showToast(
+                          await Fluttertoast.showToast(
                             msg: AppLocalizations.of(context)!.errorOccurred,
                             toastLength: Toast.LENGTH_SHORT,
                             gravity: ToastGravity.BOTTOM,
