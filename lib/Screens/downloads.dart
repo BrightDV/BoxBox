@@ -304,40 +304,126 @@ class DownloadsList extends StatelessWidget {
                             },
                             child: Card(
                               elevation: 5.0,
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    flex: 3,
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.only(
-                                        bottomLeft: Radius.circular(10),
-                                        topLeft: Radius.circular(10),
-                                      ),
-                                      child: CachedNetworkImage(
-                                        imageUrl: downloadsDescriptions[
-                                            separatedRecords[1][index]
-                                                .taskId]['thumbnail'],
+                              child: SizedBox(
+                                height: 100,
+                                child: Row(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
+                                  children: [
+                                    Expanded(
+                                      flex: 3,
+                                      child: Stack(
+                                        alignment: Alignment.center,
+                                        children: [
+                                          Positioned.fill(
+                                            child: ClipRRect(
+                                              borderRadius: BorderRadius.only(
+                                                bottomLeft: Radius.circular(10),
+                                                topLeft: Radius.circular(10),
+                                              ),
+                                              child: CachedNetworkImage(
+                                                imageUrl: downloadsDescriptions[
+                                                    separatedRecords[1][index]
+                                                        .taskId]['thumbnail'],
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
+                                          ),
+                                          Align(
+                                            alignment: Alignment.bottomRight,
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(
+                                                left: 8,
+                                              ),
+                                              child: Container(
+                                                width: 35,
+                                                height: 27,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      const BorderRadius.only(
+                                                    topLeft: Radius.circular(8),
+                                                  ),
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .onPrimary,
+                                                ),
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                    left: 6,
+                                                  ),
+                                                  child: Icon(
+                                                    downloadsDescriptions[
+                                                                    separatedRecords[1]
+                                                                            [index]
+                                                                        .taskId]
+                                                                ['type'] ==
+                                                            'video'
+                                                        ? Icons
+                                                            .play_arrow_outlined
+                                                        : Icons.feed_outlined,
+                                                    size: 24,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                  ),
-                                  Expanded(
-                                    flex: 5,
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(
-                                        left: 8,
-                                        right: 8,
-                                      ),
-                                      child: Text(
-                                        downloadsDescriptions[
-                                            separatedRecords[1][index]
-                                                .taskId]['title'],
-                                        maxLines: 3,
-                                        textAlign: TextAlign.justify,
-                                        overflow: TextOverflow.ellipsis,
+                                    Expanded(
+                                      flex: 5,
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(
+                                          left: 8,
+                                          right: 8,
+                                        ),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              downloadsDescriptions[
+                                                  separatedRecords[1][index]
+                                                      .taskId]['title'],
+                                              maxLines: 3,
+                                              textAlign: TextAlign.justify,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                            downloadsDescriptions[
+                                                                separatedRecords[
+                                                                        1][index]
+                                                                    .taskId]
+                                                            ['fileSize'] !=
+                                                        null &&
+                                                    downloadsDescriptions[
+                                                                separatedRecords[
+                                                                        1][index]
+                                                                    .taskId]
+                                                            ['fileSize'] !=
+                                                        -1
+                                                ? Padding(
+                                                    padding:
+                                                        EdgeInsets.only(top: 5),
+                                                    child: Text(
+                                                      filesize(
+                                                        downloadsDescriptions[
+                                                                separatedRecords[
+                                                                        1][index]
+                                                                    .taskId]
+                                                            ['fileSize'],
+                                                      ),
+                                                    ),
+                                                  )
+                                                : Container(),
+                                          ],
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
                           ),
@@ -425,7 +511,7 @@ class _RunningDownloadItemState extends State<RunningDownloadItem> {
                     )
                   : null,
               child: SizedBox(
-                height: 90,
+                height: 100,
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 10),
                   child: Column(

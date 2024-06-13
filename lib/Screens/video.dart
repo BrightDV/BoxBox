@@ -71,6 +71,7 @@ class _VideoScreenState extends State<VideoScreen> {
             'description': details['description'],
             'videoDuration': details['videoDuration'],
             'datePosted': details['datePosted'],
+            'fileSize': details['fileSize'],
           };
           Hive.box('downloads').put(
             'downloadsDescriptions',
