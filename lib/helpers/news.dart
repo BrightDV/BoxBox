@@ -20,11 +20,13 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:background_downloader/background_downloader.dart' as bgdl;
 import 'package:boxbox/Screens/circuit.dart';
 import 'package:boxbox/Screens/schedule.dart';
 import 'package:boxbox/api/brightcove.dart';
 import 'package:boxbox/api/formula1.dart';
 import 'package:boxbox/api/race_components.dart';
+import 'package:boxbox/helpers/download.dart';
 import 'package:boxbox/helpers/hover.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/request_error.dart';
@@ -832,7 +834,7 @@ class NewsItem extends StatelessWidget {
                                         child: Padding(
                                           padding: const EdgeInsets.only(
                                             right: 16,
-                                            bottom: 10,
+                                            bottom: 5,
                                           ),
                                           child: Row(
                                             mainAxisAlignment:
@@ -1667,6 +1669,7 @@ class VideoRenderer extends StatelessWidget {
   final String? youtubeId;
   final String? heroTag;
   final String? caption;
+  final Function? update;
 
   const VideoRenderer(
     this.videoId, {
@@ -1675,6 +1678,7 @@ class VideoRenderer extends StatelessWidget {
     this.youtubeId,
     this.heroTag,
     this.caption,
+    this.update,
   }) : super(key: key);
 
   Future<Map<String, dynamic>> getYouTubeVideoLinks(String videoId) async {
@@ -1759,9 +1763,12 @@ class VideoRenderer extends StatelessWidget {
                           )
                         : BetterPlayerVideoPlayer(
                             snapshot.data!,
+                            videoId,
                             autoplay == null ? false : autoplay!,
                             heroTag ?? '',
                             Theme.of(context).colorScheme.surface,
+                            (youtubeId ?? '') != '',
+                            update: update,
                           ),
                     if (caption != null)
                       Padding(
@@ -1795,16 +1802,22 @@ class VideoRenderer extends StatelessWidget {
 
 class BetterPlayerVideoPlayer extends StatefulWidget {
   final Map<String, dynamic> videoUrls;
+  final String videoId;
   final bool autoplay;
   final String heroTag;
   final Color primaryColor;
+  final bool isFromYouTube;
+  final Function? update;
 
   const BetterPlayerVideoPlayer(
     this.videoUrls,
+    this.videoId,
     this.autoplay,
     this.heroTag,
-    this.primaryColor, {
+    this.primaryColor,
+    this.isFromYouTube, {
     Key? key,
+    this.update,
   }) : super(key: key);
 
   @override
@@ -1820,72 +1833,210 @@ class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
   bool useDarkMode =
       Hive.box('settings').get('darkMode', defaultValue: true) as bool;
 
+  void updateWithType(bgdl.TaskStatusUpdate statusUpdate) {
+    if (statusUpdate.status == bgdl.TaskStatus.complete) {
+      Map downloadsDescriptions = Hive.box('downloads').get(
+        'downloadsDescriptions',
+        defaultValue: {},
+      );
+
+      Formula1().downloadedFilePathIfExists(statusUpdate.task.taskId).then(
+        (path) {
+          Map details = json.decode(statusUpdate.task.metaData);
+          downloadsDescriptions[statusUpdate.task.taskId] = {
+            'id': details['id'],
+            'type': 'video',
+            'title': details['title'],
+            'thumbnail': details['thumbnail'],
+            'url': details['url'],
+            'description': details['description'],
+            'videoDuration': details['videoDuration'],
+            'datePosted': details['datePosted'],
+            'fileSize': details['fileSize'],
+          };
+          Hive.box('downloads').put(
+            'downloadsDescriptions',
+            downloadsDescriptions,
+          );
+          List downloads = Hive.box('downloads').get(
+            'downloadsList',
+            defaultValue: [],
+          );
+          downloads.insert(0, 'video_${details['id']}');
+          Hive.box('downloads').put('downloadsList', downloads);
+          if (widget.update != null) {
+            widget.update!();
+          }
+        },
+      );
+    } else if ((statusUpdate.status == bgdl.TaskStatus.canceled) ||
+        (statusUpdate.status == bgdl.TaskStatus.failed)) {
+      bgdl.FileDownloader()
+          .database
+          .deleteRecordWithId(statusUpdate.task.taskId);
+    }
+  }
+
+  Future<void> downloadVideo(
+      String videoId, String caption, String thumbnail) async {
+    String? quality = await DownloadUtils().videoDownloadQualitySelector(
+      context,
+    );
+    if (quality != null) {
+      String downloadingState = await Formula1().downloadVideo(
+        widget.videoId,
+        quality,
+        callback: updateWithType,
+      );
+      if (downloadingState == "downloading") {
+        if (widget.update != null) {
+          widget.update!();
+        }
+        await Fluttertoast.showToast(
+          msg: AppLocalizations.of(context)!.downloading,
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+      } else {
+        if (downloadingState == "downloading") {
+          await Fluttertoast.showToast(
+            msg: AppLocalizations.of(context)!.alreadyDownloading,
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            textColor: Colors.white,
+            fontSize: 16.0,
+          );
+        } else {
+          await Fluttertoast.showToast(
+            msg: AppLocalizations.of(context)!.errorOccurred,
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            textColor: Colors.white,
+            fontSize: 16.0,
+          );
+        }
+      }
+    }
+  }
+
   @override
   void initState() {
     super.initState();
-    Map<String, String>? qualities = {};
-    int c = 0;
-    for (c; c < widget.videoUrls['qualities'].length; c++) {
-      String quality = widget.videoUrls['qualities'][c];
-      qualities[quality] = widget.videoUrls['videos'][c + 1];
+    if (widget.videoUrls['file'] != null) {
+      BetterPlayerDataSource betterPlayerDataSource = BetterPlayerDataSource(
+        BetterPlayerDataSourceType.file,
+        widget.videoUrls['file'],
+      );
+
+      BetterPlayerConfiguration betterPlayerConfiguration =
+          BetterPlayerConfiguration(
+        autoPlay: widget.autoplay,
+        allowedScreenSleep: false,
+        autoDetectFullscreenDeviceOrientation: true,
+        fit: BoxFit.contain,
+        controlsConfiguration: BetterPlayerControlsConfiguration(
+          enableAudioTracks: false,
+          enableSubtitles: false,
+          overflowModalColor: widget.primaryColor,
+          overflowMenuIconsColor: useDarkMode ? Colors.white : Colors.black,
+          overflowModalTextColor: useDarkMode ? Colors.white : Colors.black,
+          showControlsOnInitialize: false,
+          enableQualities: false,
+        ),
+        placeholder: _buildVideoPlaceholder(),
+        showPlaceholderUntilPlay: true,
+      );
+
+      // setup the controller
+      _betterPlayerController = BetterPlayerController(
+        betterPlayerConfiguration,
+        betterPlayerDataSource: betterPlayerDataSource,
+      );
+
+      // add event listener for the placeholder
+      _betterPlayerController.addEventsListener(
+        (event) {
+          if (event.betterPlayerEventType == BetterPlayerEventType.play) {
+            _setPlaceholderVisibleState(false);
+          }
+        },
+      );
+    } else {
+      Map<String, String>? qualities = {};
+      int c = 0;
+      for (c; c < widget.videoUrls['qualities'].length; c++) {
+        String quality = widget.videoUrls['qualities'][c];
+        qualities[quality] = widget.videoUrls['videos'][c + 1];
+      }
+      BetterPlayerDataSource betterPlayerDataSource = BetterPlayerDataSource(
+        BetterPlayerDataSourceType.network,
+        widget.videoUrls['videos'][0],
+        resolutions: qualities,
+        bufferingConfiguration: const BetterPlayerBufferingConfiguration(
+          maxBufferMs: 1000 * 30,
+          bufferForPlaybackMs: 3000,
+        ),
+        cacheConfiguration: const BetterPlayerCacheConfiguration(
+          useCache: false,
+          preCacheSize: 0,
+        ),
+        headers: {
+          'user-agent':
+              'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36',
+        },
+      );
+
+      BetterPlayerConfiguration betterPlayerConfiguration =
+          BetterPlayerConfiguration(
+        autoPlay: widget.autoplay,
+        allowedScreenSleep: false,
+        autoDetectFullscreenDeviceOrientation: true,
+        fit: BoxFit.contain,
+        controlsConfiguration: BetterPlayerControlsConfiguration(
+          enableAudioTracks: false,
+          enableSubtitles: false,
+          overflowModalColor: widget.primaryColor,
+          overflowMenuIconsColor: useDarkMode ? Colors.white : Colors.black,
+          overflowModalTextColor: useDarkMode ? Colors.white : Colors.black,
+          showControlsOnInitialize: false,
+          overflowMenuCustomItems: !widget.isFromYouTube
+              ? [
+                  BetterPlayerOverflowMenuItem(
+                    Icons.save_alt_outlined,
+                    'Download',
+                    () async => await downloadVideo(
+                      widget.videoId,
+                      widget.videoUrls['name'],
+                      widget.videoUrls['poster'],
+                    ),
+                  ),
+                ]
+              : [],
+        ),
+        placeholder: _buildVideoPlaceholder(),
+        showPlaceholderUntilPlay: true,
+      );
+
+      // setup the controller
+      _betterPlayerController = BetterPlayerController(
+        betterPlayerConfiguration,
+        betterPlayerDataSource: betterPlayerDataSource,
+      );
+
+      // add event listener for the placeholder
+      _betterPlayerController.addEventsListener(
+        (event) {
+          if (event.betterPlayerEventType == BetterPlayerEventType.play) {
+            _setPlaceholderVisibleState(false);
+          }
+        },
+      );
     }
-    BetterPlayerDataSource betterPlayerDataSource = BetterPlayerDataSource(
-      BetterPlayerDataSourceType.network,
-      widget.videoUrls['videos'][0],
-      resolutions: qualities,
-      notificationConfiguration: BetterPlayerNotificationConfiguration(
-        showNotification: true,
-        title: widget.videoUrls['name'] ?? 'Video',
-        author: widget.videoUrls['author'] ?? "Formula 1",
-        imageUrl: widget.videoUrls['poster'],
-        activityName: "MainActivity",
-      ),
-      bufferingConfiguration: const BetterPlayerBufferingConfiguration(
-        maxBufferMs: 1000 * 30,
-        bufferForPlaybackMs: 3000,
-      ),
-      cacheConfiguration: const BetterPlayerCacheConfiguration(
-        useCache: false,
-        preCacheSize: 0,
-      ),
-      headers: {
-        'user-agent':
-            'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36',
-      },
-    );
-
-    BetterPlayerConfiguration betterPlayerConfiguration =
-        BetterPlayerConfiguration(
-      autoPlay: widget.autoplay,
-      allowedScreenSleep: false,
-      autoDetectFullscreenDeviceOrientation: true,
-      fit: BoxFit.contain,
-      controlsConfiguration: BetterPlayerControlsConfiguration(
-        enableAudioTracks: false,
-        enableSubtitles: false,
-        overflowModalColor: widget.primaryColor,
-        overflowMenuIconsColor: useDarkMode ? Colors.white : Colors.black,
-        overflowModalTextColor: useDarkMode ? Colors.white : Colors.black,
-        showControlsOnInitialize: false,
-      ),
-      placeholder: _buildVideoPlaceholder(),
-      showPlaceholderUntilPlay: true,
-    );
-
-    // setup the controller
-    _betterPlayerController = BetterPlayerController(
-      betterPlayerConfiguration,
-      betterPlayerDataSource: betterPlayerDataSource,
-    );
-
-    // add event listener for the placeholder
-    _betterPlayerController.addEventsListener(
-      (event) {
-        if (event.betterPlayerEventType == BetterPlayerEventType.play) {
-          _setPlaceholderVisibleState(false);
-        }
-      },
-    );
   }
 
   void _setPlaceholderVisibleState(bool hidden) {
@@ -1900,7 +2051,7 @@ class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
         return _showPlaceholder
             ? Stack(
                 children: [
-                  widget.heroTag != ''
+                  widget.videoUrls['poster'] != null
                       ? CachedNetworkImage(
                           imageUrl: widget.videoUrls['poster'],
                           placeholder: (context, url) => SizedBox(
@@ -1918,18 +2069,12 @@ class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
                           fadeOutDuration: const Duration(milliseconds: 100),
                           fadeInDuration: const Duration(seconds: 1),
                         )
-                      : Container(
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              fit: BoxFit.cover,
-                              colorFilter: ColorFilter.mode(
-                                Colors.black.withOpacity(0.4),
-                                BlendMode.dstATop,
-                              ),
-                              image: NetworkImage(
-                                widget.videoUrls['poster'],
-                              ),
-                            ),
+                      : SizedBox(
+                          height: MediaQuery.of(context).size.width / (16 / 9),
+                          child: const LoadingIndicatorUtil(
+                            replaceImage: true,
+                            fullBorderRadius: false,
+                            borderRadius: false,
                           ),
                         ),
                   const Align(

@@ -17,22 +17,31 @@
  * Copyright (c) 2022-2024, BrightDV
  */
 
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:background_downloader/background_downloader.dart';
 import 'package:boxbox/api/article_parts.dart';
 import 'package:boxbox/api/formula1.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/request_error.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:marquee/marquee.dart';
 
 class ArticleScreen extends StatefulWidget {
   final String articleId;
   final String articleName;
   final bool isFromLink;
+  final Function? update;
 
   const ArticleScreen(
     this.articleId,
     this.articleName,
     this.isFromLink, {
+    this.update,
     Key? key,
   }) : super(key: key);
 
@@ -42,17 +51,134 @@ class ArticleScreen extends StatefulWidget {
 
 class _ArticleScreenState extends State<ArticleScreen> {
   ValueNotifier<String> articleTitle = ValueNotifier('Loading...');
+  bool shouldRefresh = true;
 
   void updateTitle(String title) {
     articleTitle.value = title;
   }
 
+  void update() {
+    if (shouldRefresh) {
+      setState(() {});
+      if (widget.update != null) {
+        widget.update!();
+      }
+    }
+  }
+
+  void updateArticleWithType(TaskStatusUpdate statusUpdate) {
+    if (statusUpdate.status == TaskStatus.complete) {
+      Map downloadsDescriptions = Hive.box('downloads').get(
+        'downloadsDescriptions',
+        defaultValue: {},
+      );
+
+      Formula1().downloadedFilePathIfExists(statusUpdate.task.taskId).then(
+        (path) async {
+          File file = File(path!);
+          Map savedArticle = json.decode(await file.readAsString());
+
+          String heroImageUrl = "";
+          if (savedArticle['hero'].isNotEmpty) {
+            if (savedArticle['hero']['contentType'] == 'atomVideo') {
+              heroImageUrl = savedArticle['hero']['fields']['thumbnail']['url'];
+            } else if (savedArticle['hero']['contentType'] ==
+                'atomVideoYouTube') {
+              heroImageUrl = savedArticle['hero']['fields']['image']['url'];
+            } else if (savedArticle['hero']['contentType'] ==
+                'atomImageGallery') {
+              heroImageUrl =
+                  savedArticle['hero']['fields']['imageGallery'][0]['url'];
+            } else {
+              heroImageUrl = savedArticle['hero']['fields']['image']['url'];
+            }
+          }
+
+          downloadsDescriptions['article_${savedArticle['id']}'] = {
+            'id': savedArticle['id'],
+            'type': 'article',
+            'title': savedArticle['title'],
+            'thumbnail': heroImageUrl,
+          };
+          Hive.box('downloads')
+              .put('downloadsDescriptions', downloadsDescriptions);
+          List downloads = Hive.box('downloads').get(
+            'downloadsList',
+            defaultValue: [],
+          );
+          downloads.insert(0, 'article_${savedArticle['id']}');
+          Hive.box('downloads').put('downloadsList', downloads);
+          update();
+        },
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
+    List downloads = Hive.box('downloads').get(
+      'downloadsList',
+      defaultValue: [],
+    );
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.onPrimary,
+        actions: [
+          ValueListenableBuilder(
+            valueListenable: articleTitle,
+            builder: (context, value, _) {
+              return value.toString() == 'Loading...'
+                  ? Container()
+                  : IconButton(
+                      onPressed: () async {
+                        String downloadingState =
+                            await Formula1().downloadArticle(
+                          widget.articleId,
+                          widget.articleName,
+                          callback: updateArticleWithType,
+                        );
+                        if (downloadingState == "downloading") {
+                          await Fluttertoast.showToast(
+                            msg: AppLocalizations.of(context)!.downloading,
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.BOTTOM,
+                            timeInSecForIosWeb: 1,
+                            textColor: Colors.white,
+                            fontSize: 16.0,
+                          );
+                        } else if (downloadingState == "already downloaded") {
+                          showDialog(
+                            context: context,
+                            builder: (context) => downloadedArticleActionPopup(
+                              'article_${widget.articleId}',
+                              widget.articleId,
+                              widget.articleName,
+                              update,
+                              updateArticleWithType,
+                              context,
+                            ),
+                          );
+                        } else {
+                          await Fluttertoast.showToast(
+                            msg: AppLocalizations.of(context)!.errorOccurred,
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.BOTTOM,
+                            timeInSecForIosWeb: 1,
+                            textColor: Colors.white,
+                            fontSize: 16.0,
+                          );
+                        }
+                      },
+                      icon: Icon(
+                        downloads.contains('article_${widget.articleId}')
+                            ? Icons.download_done_rounded
+                            : Icons.save_alt_rounded,
+                      ),
+                    );
+            },
+          ),
+        ],
         title: SizedBox(
           height: AppBar().preferredSize.height,
           width: AppBar().preferredSize.width,
@@ -105,6 +231,7 @@ class _ArticleScreenState extends State<ArticleScreen> {
 
   @override
   void dispose() {
+    shouldRefresh = false;
     super.dispose();
   }
 }
@@ -112,9 +239,29 @@ class _ArticleScreenState extends State<ArticleScreen> {
 class ArticleProvider extends StatelessWidget {
   Future<Article> getArticleData(
       String articleId, Function updateArticleTitle) async {
-    Article article = await Formula1().getArticleData(articleId);
-    updateArticleTitle(article.articleName);
-    return article;
+    String? filePath =
+        await Formula1().downloadedFilePathIfExists('article_${articleId}');
+    if (filePath != null) {
+      File file = File(filePath);
+      Map savedArticle = await json.decode(await file.readAsString());
+      Article article = Article(
+        savedArticle['id'],
+        savedArticle['slug'],
+        savedArticle['title'],
+        DateTime.parse(savedArticle['createdAt']),
+        savedArticle['articleTags'],
+        savedArticle['hero'] ?? {},
+        savedArticle['body'],
+        savedArticle['relatedArticles'],
+        savedArticle['author'] ?? {},
+      );
+      updateArticleTitle(article.articleName);
+      return article;
+    } else {
+      Article article = await Formula1().getArticleData(articleId);
+      updateArticleTitle(article.articleName);
+      return article;
+    }
   }
 
   final String articleId;
@@ -138,4 +285,64 @@ class ArticleProvider extends StatelessWidget {
       },
     );
   }
+}
+
+AlertDialog downloadedArticleActionPopup(
+  String taskId,
+  String articleId,
+  String articleName,
+  Function update,
+  Function(TaskStatusUpdate) updateArticleWithType,
+  BuildContext context,
+) {
+  return AlertDialog(
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.all(
+        Radius.circular(
+          20.0,
+        ),
+      ),
+    ),
+    contentPadding: const EdgeInsets.all(
+      50.0,
+    ),
+    title: Text(
+      AppLocalizations.of(context)!.alreadyDownloadedArticle,
+      style: TextStyle(
+        fontSize: 24.0,
+      ),
+      textAlign: TextAlign.center,
+    ),
+    actions: <Widget>[
+      ElevatedButton(
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+        child: Text(
+          AppLocalizations.of(context)!.cancel,
+        ),
+      ),
+      IconButton(
+        onPressed: () async {
+          await Formula1().deleteFile(taskId);
+          Navigator.of(context).pop();
+          update();
+        },
+        icon: Icon(Icons.delete_outline),
+        tooltip: AppLocalizations.of(context)!.delete,
+      ),
+      IconButton(
+        onPressed: () async {
+          await Formula1().downloadArticle(
+            articleId,
+            articleName,
+            callback: updateArticleWithType,
+          );
+          Navigator.of(context).pop();
+        },
+        icon: Icon(Icons.refresh),
+        tooltip: AppLocalizations.of(context)!.refresh,
+      ),
+    ],
+  );
 }

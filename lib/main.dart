@@ -22,6 +22,7 @@
 import 'dart:async';
 
 import 'package:adaptive_theme/adaptive_theme.dart';
+import 'package:background_downloader/background_downloader.dart';
 // import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:boxbox/helpers/bottom_navigation_bar.dart';
 import 'package:boxbox/helpers/handle_native.dart';
@@ -44,6 +45,9 @@ void main() async {
   final historyBox = await Hive.openBox('history');
   final feedsBox = await Hive.openBox('feeds');
   final compareBox = await Hive.openBox('compare');
+  final downloads = await Hive.openBox('downloads');
+
+  await FileDownloader().trackTasks();
 
   /* if (!kIsWeb) {
     AwesomeNotifications().initialize(

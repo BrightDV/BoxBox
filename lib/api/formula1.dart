@@ -19,11 +19,15 @@
 
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'dart:ui';
 
+import 'package:background_downloader/background_downloader.dart';
+import 'package:boxbox/api/brightcove.dart';
 import 'package:boxbox/api/driver_components.dart';
 import 'package:boxbox/api/race_components.dart';
 import 'package:boxbox/api/team_components.dart';
+import 'package:boxbox/api/videos.dart';
 import 'package:boxbox/helpers/convert_ergast_and_formula_one.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
@@ -34,10 +38,11 @@ class Formula1 {
   final String apikey = "qPgPPRJyGCIPxFT3el4MF7thXHyJCzAP";
 
   List<News> formatResponse(Map responseAsJson) {
-    List finalJson = responseAsJson['items'];
-    List<News> newsList = [];
     bool useDataSaverMode = Hive.box('settings')
         .get('useDataSaverMode', defaultValue: false) as bool;
+
+    List finalJson = responseAsJson['items'];
+    List<News> newsList = [];
 
     for (var element in finalJson) {
       element['title'] = element['title'].replaceAll("\n", "");
@@ -57,6 +62,7 @@ class Formula1 {
           }
         }
       }
+
       newsList.add(
         News(
           element['id'],
@@ -176,6 +182,161 @@ class Formula1 {
       responseAsJson['author'] ?? {},
     );
     return article;
+  }
+
+  Future<String> downloadArticle(String articleId, String articleTitle,
+      {Function(TaskStatusUpdate)? callback}) async {
+    String endpoint = Hive.box('settings')
+        .get('server', defaultValue: defaultEndpoint) as String;
+
+    bool isDownloaded = await downloadedFileCheck('article_$articleId');
+
+    if (!isDownloaded) {
+      FileDownloader().unregisterCallbacks(callback: callback);
+      if (callback != null) {
+        FileDownloader().registerCallbacks(taskStatusCallback: callback);
+      }
+
+      final task = DownloadTask(
+        taskId: 'article_$articleId',
+        url: '$endpoint/v1/editorial/articles/$articleId',
+        filename: 'article_$articleId.json',
+        displayName: articleTitle,
+        headers: endpoint != defaultEndpoint
+            ? {
+                "Accept": "application/json",
+              }
+            : {
+                "Accept": "application/json",
+                "apikey": apikey,
+                "locale": "en",
+              },
+        //directory: 'Box, Box! Downloads',
+        updates: Updates.statusAndProgress,
+        //requiresWiFi: true,
+        retries: 5,
+      );
+
+      final successfullyEnqueued = await FileDownloader().enqueue(task);
+
+      if (successfullyEnqueued) {
+        return "downloading";
+      } else {
+        return "not downloaded";
+      }
+    } else {
+      return "already downloaded";
+    }
+  }
+
+  Future<String> downloadVideo(
+    String videoId,
+    String quality, {
+    Video? video,
+    Function(TaskStatusUpdate)? callback,
+  }) async {
+    bool isDownloaded = await downloadedFileCheck('video_$videoId');
+
+    if (!isDownloaded) {
+      FileDownloader().unregisterCallbacks(callback: callback);
+      if (callback != null) {
+        FileDownloader().registerCallbacks(taskStatusCallback: callback);
+      }
+      if (video == null) {
+        video = await F1VideosFetcher().getVideoDetails(videoId);
+      }
+
+      Map links = await BrightCove().getVideoLinks(videoId);
+      String link =
+          links['videos'][links['qualities'].indexOf('${quality}p') + 1];
+      // index 0 is preferred quality
+
+      Map videoDetails = {
+        'id': video.videoId,
+        'title': video.caption,
+        'thumbnail': video.thumbnailUrl,
+        'url': video.videoUrl,
+        'description': video.description,
+        'videoDuration': video.videoDuration,
+        'datePosted': video.datePosted.toIso8601String(),
+      };
+
+      DownloadTask task = DownloadTask(
+        taskId: 'video_$videoId',
+        url: link,
+        filename: 'video_$videoId.mp4',
+      );
+
+      int fileSize = await task.expectedFileSize();
+      videoDetails['fileSize'] = fileSize;
+
+      task = DownloadTask(
+        taskId: 'video_$videoId',
+        url: link,
+        filename: 'video_$videoId.mp4',
+        displayName: video.caption,
+        //directory: 'Box, Box! Downloads',
+        updates: Updates.statusAndProgress,
+        //requiresWiFi: true,
+        retries: 3,
+        allowPause: true,
+        metaData: json.encode(videoDetails),
+      );
+
+      final successfullyEnqueued = await FileDownloader().enqueue(task);
+
+      if (successfullyEnqueued) {
+        return "downloading";
+      } else {
+        return "not downloaded";
+      }
+    } else {
+      return "already downloaded";
+    }
+  }
+
+  Future<bool> downloadedFileCheck(String taskId) async {
+    final record = await FileDownloader().database.recordForId(taskId);
+    if (record != null) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<String?> downloadedFilePathIfExists(String taskId) async {
+    final record = await FileDownloader().database.recordForId(taskId);
+    if (record != null) {
+      return await record.task.filePath();
+    } else {
+      return null;
+    }
+  }
+
+  Future<void> deleteFile(String taskId) async {
+    final record = await FileDownloader().database.recordForId(taskId);
+    if (record != null) {
+      // delete download taskId
+      List downloads = await Hive.box('downloads').get(
+        'downloadsList',
+        defaultValue: [],
+      );
+      downloads.remove(taskId);
+      await Hive.box('downloads').put('downloadsList', downloads);
+      // delete download record
+      await FileDownloader().database.deleteRecordWithId(taskId);
+      // delete download description
+      Map downloadsDescriptions = Hive.box('downloads').get(
+        'downloadsDescriptions',
+        defaultValue: {},
+      );
+      downloadsDescriptions.remove(taskId);
+      await Hive.box('downloads')
+          .put('downloadsDescriptions', downloadsDescriptions);
+      String filePath = await record.task.filePath();
+      // delete file from device
+      await File(filePath).delete();
+    }
   }
 
   Future<bool> saveLoginCookie(String cookieValue) async {

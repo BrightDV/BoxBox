@@ -12,6 +12,12 @@
 @import add_2_calendar;
 #endif
 
+#if __has_include(<background_downloader/BackgroundDownloaderPlugin.h>)
+#import <background_downloader/BackgroundDownloaderPlugin.h>
+#else
+@import background_downloader;
+#endif
+
 #if __has_include(<connectivity_plus/ConnectivityPlusPlugin.h>)
 #import <connectivity_plus/ConnectivityPlusPlugin.h>
 #else
@@ -106,6 +112,7 @@
 
 + (void)registerWithRegistry:(NSObject<FlutterPluginRegistry>*)registry {
   [Add2CalendarPlugin registerWithRegistrar:[registry registrarForPlugin:@"Add2CalendarPlugin"]];
+  [BackgroundDownloaderPlugin registerWithRegistrar:[registry registrarForPlugin:@"BackgroundDownloaderPlugin"]];
   [ConnectivityPlusPlugin registerWithRegistrar:[registry registrarForPlugin:@"ConnectivityPlusPlugin"]];
   [FLTDeviceInfoPlusPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTDeviceInfoPlusPlugin"]];
   [InAppWebViewFlutterPlugin registerWithRegistrar:[registry registrarForPlugin:@"InAppWebViewFlutterPlugin"]];
