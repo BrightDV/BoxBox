@@ -1852,6 +1852,7 @@ class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
             'description': details['description'],
             'videoDuration': details['videoDuration'],
             'datePosted': details['datePosted'],
+            'fileSize': details['fileSize'],
           };
           Hive.box('downloads').put(
             'downloadsDescriptions',
@@ -1888,8 +1889,11 @@ class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
         callback: updateWithType,
       );
       if (downloadingState == "downloading") {
+        if (widget.update != null) {
+          widget.update!();
+        }
         await Fluttertoast.showToast(
-          msg: 'Downloading',
+          msg: AppLocalizations.of(context)!.downloading,
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
           timeInSecForIosWeb: 1,
@@ -1897,14 +1901,25 @@ class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
           fontSize: 16.0,
         );
       } else {
-        Fluttertoast.showToast(
-          msg: AppLocalizations.of(context)!.errorOccurred,
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 1,
-          textColor: Colors.white,
-          fontSize: 16.0,
-        );
+        if (downloadingState == "downloading") {
+          await Fluttertoast.showToast(
+            msg: AppLocalizations.of(context)!.alreadyDownloading,
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            textColor: Colors.white,
+            fontSize: 16.0,
+          );
+        } else {
+          await Fluttertoast.showToast(
+            msg: AppLocalizations.of(context)!.errorOccurred,
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            textColor: Colors.white,
+            fontSize: 16.0,
+          );
+        }
       }
     }
   }
