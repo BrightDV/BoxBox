@@ -768,77 +768,80 @@ class CircuitFactsAndHistory extends StatelessWidget {
               : circuitId,
           context,
         ),
-        builder: (context, snapshot) => snapshot.hasData
-            ? Column(
-                children: [
-                  ListView.builder(
-                    itemCount: snapshot.data!['facts'].length,
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemBuilder: (context, index) => Column(
-                      children: [
-                        Text(
-                          snapshot.data!['facts'].keys.elementAt(index),
-                          textAlign: TextAlign.center,
+        builder: (context, snapshot) => snapshot.hasError
+            ? RequestErrorWidget(snapshot.error.toString())
+            : snapshot.hasData
+                ? Column(
+                    children: [
+                      ListView.builder(
+                        itemCount: snapshot.data!['facts'].length,
+                        physics: const NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemBuilder: (context, index) => Column(
+                          children: [
+                            Text(
+                              snapshot.data!['facts'].keys.elementAt(index),
+                              textAlign: TextAlign.center,
+                            ),
+                            Text(
+                              snapshot.data!['facts'][snapshot
+                                  .data!['facts'].keys
+                                  .elementAt(index)],
+                              style: TextStyle(
+                                fontSize: 25,
+                                fontWeight: FontWeight.w500,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
                         ),
-                        Text(
-                          snapshot.data!['facts']
-                              [snapshot.data!['facts'].keys.elementAt(index)],
-                          style: TextStyle(
-                            fontSize: 25,
+                      ),
+                      MarkdownBody(
+                        data: snapshot.data!['history'],
+                        selectable: true,
+                        onTapLink: (text, href, title) => launchUrl(
+                          Uri.parse(href!),
+                        ),
+                        styleSheet: MarkdownStyleSheet(
+                          textAlign: WrapAlignment.spaceBetween,
+                          strong: TextStyle(
+                            color: useDarkMode
+                                ? HSLColor.fromColor(
+                                    Theme.of(context).colorScheme.onPrimary,
+                                  ).withLightness(0.35).toColor()
+                                : Theme.of(context).colorScheme.onPrimary,
+                            fontSize: 20,
                             fontWeight: FontWeight.w500,
                           ),
-                          textAlign: TextAlign.center,
+                          p: TextStyle(
+                            fontSize: 14,
+                          ),
+                          pPadding: const EdgeInsets.only(
+                            top: 10,
+                            bottom: 10,
+                          ),
+                          a: TextStyle(
+                            color: useDarkMode
+                                ? HSLColor.fromColor(
+                                    Theme.of(context).colorScheme.onPrimary,
+                                  ).withLightness(0.35).toColor()
+                                : Theme.of(context).colorScheme.onPrimary,
+                            decoration: TextDecoration.underline,
+                            decorationColor: useDarkMode
+                                ? HSLColor.fromColor(
+                                    Theme.of(context).colorScheme.onPrimary,
+                                  ).withLightness(0.35).toColor()
+                                : Theme.of(context).colorScheme.onPrimary,
+                            fontWeight: FontWeight.normal,
+                          ),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
+                  )
+                : const SizedBox(
+                    height: 800,
+                    child: LoadingIndicatorUtil(),
                   ),
-                  MarkdownBody(
-                    data: snapshot.data!['history'],
-                    selectable: true,
-                    onTapLink: (text, href, title) => launchUrl(
-                      Uri.parse(href!),
-                    ),
-                    styleSheet: MarkdownStyleSheet(
-                      textAlign: WrapAlignment.spaceBetween,
-                      strong: TextStyle(
-                        color: useDarkMode
-                            ? HSLColor.fromColor(
-                                Theme.of(context).colorScheme.onPrimary,
-                              ).withLightness(0.35).toColor()
-                            : Theme.of(context).colorScheme.onPrimary,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w500,
-                      ),
-                      p: TextStyle(
-                        fontSize: 14,
-                      ),
-                      pPadding: const EdgeInsets.only(
-                        top: 10,
-                        bottom: 10,
-                      ),
-                      a: TextStyle(
-                        color: useDarkMode
-                            ? HSLColor.fromColor(
-                                Theme.of(context).colorScheme.onPrimary,
-                              ).withLightness(0.35).toColor()
-                            : Theme.of(context).colorScheme.onPrimary,
-                        decoration: TextDecoration.underline,
-                        decorationColor: useDarkMode
-                            ? HSLColor.fromColor(
-                                Theme.of(context).colorScheme.onPrimary,
-                              ).withLightness(0.35).toColor()
-                            : Theme.of(context).colorScheme.onPrimary,
-                        fontWeight: FontWeight.normal,
-                      ),
-                    ),
-                  ),
-                ],
-              )
-            : const SizedBox(
-                height: 800,
-                child: LoadingIndicatorUtil(),
-              ),
       ),
     );
   }
