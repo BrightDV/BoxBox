@@ -128,70 +128,71 @@ class _CustomeHomeFeedSettingsScreenState
             for (var feed in customFeeds)
               GestureDetector(
                 onLongPress: () => showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(
-                              20.0,
-                            ),
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(
+                            20.0,
                           ),
                         ),
-                        contentPadding: const EdgeInsets.all(
-                          50.0,
-                        ),
-                        title: Text(
-                          AppLocalizations.of(context)!.deleteCustomFeed,
-                          style: TextStyle(
-                            fontSize: 24.0,
-                          ), // here
-                          textAlign: TextAlign.center,
-                        ),
-                        content: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            Text(
-                              AppLocalizations.of(context)!.deleteUrl,
-                            ),
-                          ],
-                        ),
-                        actions: <Widget>[
-                          ElevatedButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: Text(
-                              AppLocalizations.of(context)!.cancel,
-                            ),
-                          ),
-                          ElevatedButton(
-                            onPressed: () {
-                              customFeeds.remove(feed);
-                              Hive.box('settings').put(
-                                'customFeeds',
-                                customFeeds,
-                              );
-                              if (savedFeedUrl[0] == feed[0]) {
-                                savedFeedUrl = [officialFeed, "api"];
-                                Hive.box('settings').put(
-                                  'homeFeed',
-                                  savedFeedUrl,
-                                );
-                              }
-                              Navigator.of(context).pop();
-                              _setState();
-                              widget.updateParent();
-                            },
-                            child: Text(
-                              AppLocalizations.of(context)!.yes,
-                            ),
+                      ),
+                      contentPadding: const EdgeInsets.all(
+                        50.0,
+                      ),
+                      title: Text(
+                        AppLocalizations.of(context)!.deleteCustomFeed,
+                        style: TextStyle(
+                          fontSize: 24.0,
+                        ), // here
+                        textAlign: TextAlign.center,
+                      ),
+                      content: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Text(
+                            AppLocalizations.of(context)!.deleteUrl,
                           ),
                         ],
-                      );
-                    }),
+                      ),
+                      actions: <Widget>[
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Text(
+                            AppLocalizations.of(context)!.cancel,
+                          ),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            customFeeds.remove(feed);
+                            Hive.box('settings').put(
+                              'customFeeds',
+                              customFeeds,
+                            );
+                            if (savedFeedUrl[0] == feed[0]) {
+                              savedFeedUrl = [officialFeed, "api"];
+                              Hive.box('settings').put(
+                                'homeFeed',
+                                savedFeedUrl,
+                              );
+                            }
+                            Navigator.of(context).pop();
+                            _setState();
+                            widget.updateParent();
+                          },
+                          child: Text(
+                            AppLocalizations.of(context)!.yes,
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                ),
                 child: InkWell(
                   child: RadioListTile(
                     value: feed[0],

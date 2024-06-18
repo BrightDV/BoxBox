@@ -650,38 +650,31 @@ class FormulaOneScraper {
 
     // facts
     dom.Document document = parser.parse(utf8.decode(response.bodyBytes));
-    dom.Element tempResult = document.getElementsByTagName('main')[0];
-    tempResult.getElementsByClassName('f1-stat').forEach((element) {
-      String elementSubstring = element.innerHtml
-          .replaceAll('  ', '')
-          .replaceAll('<p class="misc--label">', '')
-          .replaceAll('</p>', '')
-          .replaceAll('<p class="f1-bold--stat">', '')
-          .replaceAll('<span class="misc--label">', '')
-          .replaceAll('</span>', '')
-          .replaceAll('<span class="misc--label d-block d-md-inline">', ' — ');
-      List<String> elementSubstringSplitted = elementSubstring.split('\n');
+    // dom.Element tempResult = document.getElementsByTagName('main')[0];
+    document.getElementsByClassName('f1-grid')[1].children.forEach((element) {
+      String originalFactLabel =
+          element.getElementsByClassName("f1-text")[0].text;
+      String factValue = element.getElementsByClassName("f1-heading")[0].text;
+      if (originalFactLabel.startsWith('Lap')) {
+        factValue = factValue.substring(0, 8) + '\n' + factValue.substring(8);
+      }
       String factLabel = "";
-      elementSubstringSplitted[1] == "First Grand Prix"
+      originalFactLabel == "First Grand Prix"
           ? factLabel = AppLocalizations.of(context)!.firstGrandPrix
-          : elementSubstringSplitted[1] == "Number of Laps"
+          : originalFactLabel == "Number of Laps"
               ? factLabel = AppLocalizations.of(context)!.numberOfLaps
-              : elementSubstringSplitted[1] == "Circuit Length"
+              : originalFactLabel == "Circuit Length"
                   ? factLabel = AppLocalizations.of(context)!.circuitLength
-                  : elementSubstringSplitted[1] == "Race Distance"
+                  : originalFactLabel == "Race Distance"
                       ? factLabel = AppLocalizations.of(context)!.raceDistance
                       : factLabel = AppLocalizations.of(context)!.lapRecord;
-      results["facts"][factLabel] = elementSubstringSplitted[2];
+      results["facts"][factLabel] = factValue;
     });
 
     // history
-    tempResult = document.getElementsByTagName('main')[0];
-    String circuitHistory = tempResult
-        .getElementsByClassName('f1-race-hub--content')[0]
-        .children[0]
-        .children[0]
+    String circuitHistory = document
+        .getElementsByClassName('prose')[0]
         .innerHtml
-        .substring(160)
         .replaceAll('<h2>', '__')
         .replaceAll('</h2>', '__\n')
         .replaceAll('<h3>', '*')
