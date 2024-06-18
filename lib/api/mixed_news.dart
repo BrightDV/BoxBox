@@ -20,6 +20,7 @@
 import 'dart:convert';
 
 import 'package:boxbox/api/rss.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
 
 class Wordpress {
@@ -65,21 +66,41 @@ class Wordpress {
 }
 
 class MergedFeeds {
-  Map<String, dynamic> feedsUrl = {
-    'WTF1.com': 'https://wtf1.com',
-    'Racefans.net': 'https://racefans.net',
-    // 'Beyondtheflag.com': 'https://beyondtheflag.com',
-    'Motorsport.com': 'https://www.motorsport.com/rss/f1/news/',
-    'Autosport.com': 'https://www.autosport.com/rss/f1/news/',
-    'GPFans.com': 'https://www.gpfans.com/en/rss.xml',
-    'Racer.com': 'https://racer.com/f1/feed/',
-    'Thecheckeredflag.co.uk':
-        'https://www.thecheckeredflag.co.uk/open-wheel/formula-1/feed/',
-    'Motorsportweek.com': 'https://www.motorsportweek.com/feed/',
-    'Crash.net': 'https://www.crash.net/rss/f1',
-    'Pitpass.com':
-        'https://www.pitpass.com/fes_php/fes_usr_sit_newsfeed.php?fes_prepend_aty_sht_name=1',
-  };
+  Map<String, dynamic> feedsDetails = Hive.box('feeds').get(
+    'feedsDetails',
+    defaultValue: {
+      'WTF1.com': {'url': 'https://wtf1.com', 'type': 'wp'},
+      'Racefans.net': {'url': 'https://racefans.net', 'type': 'wp'},
+      /* 'Beyondtheflag.com': {
+          'url': 'https://beyondtheflag.com',
+          'type': 'wp'
+        }, */
+      'Motorsport.com': {
+        'url': 'https://www.motorsport.com/rss/f1/news/',
+        'type': 'rss'
+      },
+      'Autosport.com': {
+        'url': 'https://www.autosport.com/rss/f1/news/',
+        'type': 'rss'
+      },
+      'GPFans.com': {'url': 'https://www.gpfans.com/en/rss.xml', 'type': 'rss'},
+      'Racer.com': {'url': 'https://racer.com/f1/feed/', 'type': 'rss'},
+      'Thecheckeredflag.co.uk': {
+        'url': 'https://www.thecheckeredflag.co.uk/open-wheel/formula-1/feed/',
+        'type': 'rss'
+      },
+      'Motorsportweek.com': {
+        'url': 'https://www.motorsportweek.com/feed/',
+        'type': 'rss'
+      },
+      'Crash.net': {'url': 'https://www.crash.net/rss/f1', 'type': 'rss'},
+      /* 'Pitpass.com': {
+          'url':
+              'https://www.pitpass.com/fes_php/fes_usr_sit_newsfeed.php?fes_prepend_aty_sht_name=1',
+          'type': 'rss'
+        }, */
+    },
+  );
 
   Future<List<MergedNewsItemDefinition>> getWordpressArticles(
       String feedUrl) async {
@@ -129,16 +150,14 @@ class MergedFeeds {
       List feedsNames) async {
     List<MergedNewsItemDefinition> feeds = [];
     for (String feedName in feedsNames) {
-      feedName == 'WTF1.com' ||
-              feedName == 'Racefans.net' ||
-              feedName == 'Beyondtheflag.com'
+      feedsDetails[feedName]['type'] == 'wp'
           ? feeds = feeds +
               await getWordpressArticles(
-                feedsUrl[feedName],
+                feedsDetails[feedName]['url'],
               )
           : feeds = feeds +
               await getRssArticles(
-                feedsUrl[feedName],
+                feedsDetails[feedName]['url'],
               );
     }
     feeds.sort(

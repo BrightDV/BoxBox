@@ -45,8 +45,6 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    bool useDarkMode =
-        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     bool useMergedFeeds =
         Hive.box('feeds').get('mergedFeeds', defaultValue: false) as bool;
     String newsLayout =
@@ -65,24 +63,49 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
         'Thecheckeredflag.co.uk',
         'Motorsportweek.com',
         'Crash.net',
-        'Pitpass.com',
+        //'Pitpass.com',
       ],
     ) as List;
-    Map<String, dynamic> feedsUrl = {
-      'WTF1.com': 'https://wtf1.com',
-      'Racefans.net': 'https://racefans.net',
-      //'Beyondtheflag.com': 'https://beyondtheflag.com',
-      'Motorsport.com': 'https://www.motorsport.com/rss/f1/news/',
-      'Autosport.com': 'https://www.autosport.com/rss/f1/news/',
-      'GPFans.com': 'https://www.gpfans.com/en/rss.xml',
-      'Racer.com': 'https://racer.com/f1/feed/',
-      'Thecheckeredflag.co.uk':
-          'https://www.thecheckeredflag.co.uk/open-wheel/formula-1/feed/',
-      'Motorsportweek.com': 'https://www.motorsportweek.com/feed/',
-      'Crash.net': 'https://www.crash.net/rss/f1',
-      'Pitpass.com':
-          'https://www.pitpass.com/fes_php/fes_usr_sit_newsfeed.php?fes_prepend_aty_sht_name=1',
-    };
+    Map<String, dynamic> feedsDetails = Hive.box('feeds').get(
+      'feedsDetails',
+      defaultValue: {
+        'WTF1.com': {'url': 'https://wtf1.com', 'type': 'wp'},
+        'Racefans.net': {'url': 'https://racefans.net', 'type': 'wp'},
+        /* 'Beyondtheflag.com': {
+          'url': 'https://beyondtheflag.com',
+          'type': 'wp'
+        }, */
+        'Motorsport.com': {
+          'url': 'https://www.motorsport.com/rss/f1/news/',
+          'type': 'rss'
+        },
+        'Autosport.com': {
+          'url': 'https://www.autosport.com/rss/f1/news/',
+          'type': 'rss'
+        },
+        'GPFans.com': {
+          'url': 'https://www.gpfans.com/en/rss.xml',
+          'type': 'rss'
+        },
+        'Racer.com': {'url': 'https://racer.com/f1/feed/', 'type': 'rss'},
+        'Thecheckeredflag.co.uk': {
+          'url':
+              'https://www.thecheckeredflag.co.uk/open-wheel/formula-1/feed/',
+          'type': 'rss'
+        },
+        'Motorsportweek.com': {
+          'url': 'https://www.motorsportweek.com/feed/',
+          'type': 'rss'
+        },
+        'Crash.net': {'url': 'https://www.crash.net/rss/f1', 'type': 'rss'},
+        /* 'Pitpass.com': {
+          'url':
+              'https://www.pitpass.com/fes_php/fes_usr_sit_newsfeed.php?fes_prepend_aty_sht_name=1',
+          'type': 'rss'
+        }, */
+      },
+    );
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -100,24 +123,22 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
               );
             },
             icon: Icon(
-              useMergedFeeds ? Icons.splitscreen : Icons.merge,
+              useMergedFeeds ? Icons.splitscreen : Icons.merge_outlined,
             ),
           ),
-          useMergedFeeds
-              ? Container()
-              : IconButton(
-                  onPressed: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => EditOrderScreen(
-                        updateParent,
-                      ),
-                    ),
-                  ),
-                  icon: const Icon(
-                    Icons.edit,
-                  ),
+          IconButton(
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => EditOrderScreen(
+                  updateParent,
                 ),
+              ),
+            ),
+            icon: const Icon(
+              Icons.edit_outlined,
+            ),
+          ),
         ],
       ),
       body: useMergedFeeds
@@ -279,17 +300,12 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
                                         children: [
                                           Text(
                                             AppLocalizations.of(context)!.from,
-                                            style: TextStyle(
-                                              color: useDarkMode
-                                                  ? Colors.grey.shade300
-                                                  : Colors.grey[700],
-                                            ),
                                           ),
                                           Text(
-                                            feedsUrl.keys
+                                            feedsDetails.keys
                                                 .firstWhere(
                                                   (k) =>
-                                                      feedsUrl[k] ==
+                                                      feedsDetails[k]['url'] ==
                                                       snapshot
                                                           .data![index].source,
                                                   orElse: () => '',
@@ -306,9 +322,6 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
                                             ),
                                             child: Icon(
                                               Icons.schedule,
-                                              color: useDarkMode
-                                                  ? Colors.grey.shade300
-                                                  : Colors.grey[800],
                                               size: 20.0,
                                             ),
                                           ),
@@ -320,11 +333,6 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
                                               locale: Localizations.localeOf(
                                                       context)
                                                   .toString(),
-                                            ),
-                                            style: TextStyle(
-                                              color: useDarkMode
-                                                  ? Colors.grey.shade300
-                                                  : Colors.grey[700],
                                             ),
                                           ),
                                         ],
@@ -345,9 +353,7 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   for (String feed in feeds)
-                    feed == 'WTF1.com' ||
-                            feed == 'Racefans.net' ||
-                            feed == 'Beyondtheflag.com'
+                    feedsDetails[feed]['type'] == 'wp'
                         ? Column(
                             children: [
                               Padding(
@@ -369,7 +375,7 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
                                         MaterialPageRoute(
                                           builder: (context) => WordpressScreen(
                                             feed,
-                                            feedsUrl[feed],
+                                            feedsDetails[feed]['url'],
                                           ),
                                         ),
                                       ),
@@ -393,7 +399,7 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
                                 scrollDirection: Axis.horizontal,
                                 child: FutureBuilder<List>(
                                   future: Wordpress().getWordpressNews(
-                                    feedsUrl[feed],
+                                    feedsDetails[feed]['url'],
                                     max: 5,
                                   ),
                                   builder: (context, snapshot) => snapshot
@@ -409,7 +415,7 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
                                                     in snapshot.data!)
                                                   SizedBox(
                                                     width: width / 2.1,
-                                                    height: 232,
+                                                    height: 239,
                                                     child: Padding(
                                                       padding:
                                                           const EdgeInsets.only(
@@ -515,7 +521,7 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
                                               ],
                                             )
                                           : const SizedBox(
-                                              height: 232,
+                                              height: 239,
                                               child: LoadingIndicatorUtil(),
                                             ),
                                 ),
@@ -543,7 +549,7 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
                                         MaterialPageRoute(
                                           builder: (context) => RssFeedScreen(
                                             feed,
-                                            feedsUrl[feed],
+                                            feedsDetails[feed]['url'],
                                           ),
                                         ),
                                       ),
@@ -567,7 +573,7 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
                                 scrollDirection: Axis.horizontal,
                                 child: FutureBuilder<Map<String, dynamic>>(
                                   future: RssFeeds().getFeedArticles(
-                                    feedsUrl[feed],
+                                    feedsDetails[feed]['url'],
                                     max: 5,
                                   ),
                                   builder: (context, snapshot) => snapshot
@@ -593,8 +599,8 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
                                                                 .media
                                                                 .contents
                                                                 .isNotEmpty
-                                                        ? 232
-                                                        : 110,
+                                                        ? 239
+                                                        : 115,
                                                     child: Padding(
                                                       padding:
                                                           const EdgeInsets.only(
@@ -686,7 +692,7 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
                                               ],
                                             )
                                           : const SizedBox(
-                                              height: 232,
+                                              height: 239,
                                               child: LoadingIndicatorUtil(),
                                             ),
                                 ),
