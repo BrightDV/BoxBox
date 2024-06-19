@@ -908,6 +908,7 @@ class Formula1 {
               isFirst: races.isEmpty,
               raceCoverUrl: element['thumbnail']['image']['url'],
               detailsPath: detailsPath,
+              isPreSeasonTesting: element['type'] == 'fom-testing',
             ),
           );
         }
@@ -949,6 +950,7 @@ class Formula1 {
               isFirst: races.isEmpty,
               raceCoverUrl: element['thumbnail']['image']['url'],
               detailsPath: detailsPath,
+              isPreSeasonTesting: element['type'] == 'fom-testing',
             ),
           );
         }

@@ -259,6 +259,7 @@ class EventTracker {
         raceCoverUrl: race.raceCoverUrl,
         detailsPath: race.detailsPath,
         sessionStates: sessionStates,
+        isPreSeasonTesting: race.isPreSeasonTesting,
       );
 
       formatedResponse['raceCustomBBParameter'] = raceWithSessions;

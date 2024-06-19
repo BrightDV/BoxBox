@@ -41,6 +41,7 @@ class Race {
   final String? raceCoverUrl;
   final String? detailsPath;
   final List? sessionStates;
+  final bool? isPreSeasonTesting;
 
   Race(
     this.round,
@@ -57,6 +58,7 @@ class Race {
     this.raceCoverUrl,
     this.detailsPath,
     this.sessionStates,
+    this.isPreSeasonTesting,
   });
 }
 
