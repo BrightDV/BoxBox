@@ -548,6 +548,8 @@ class OtherCard extends StatefulWidget {
 class _OtherCardstate extends State<OtherCard> {
   @override
   Widget build(BuildContext context) {
+    String championship = Hive.box('settings')
+        .get('championship', defaultValue: 'Formula 1') as String;
     bool useDataSaverMode = Hive.box('settings')
         .get('useDataSaverMode', defaultValue: false) as bool;
     bool useOfficialWebview = Hive.box('settings')
@@ -574,6 +576,47 @@ class _OtherCardstate extends State<OtherCard> {
                 fontWeight: FontWeight.w500,
                 fontSize: 20,
               ),
+            ),
+          ),
+          ListTile(
+            title: Text(
+              'Championship',
+            ),
+            subtitle: Text(
+              'not needed yet', //AppLocalizations.of(context)!.needsRestart,
+              style: TextStyle(
+                fontSize: 12,
+              ),
+            ),
+            onTap: () {},
+            trailing: DropdownButton(
+              value: championship,
+              onChanged: (String? newValue) {
+                if (newValue != null) {
+                  setState(
+                    () {
+                      championship = newValue;
+                      Hive.box('settings').put('championship', newValue);
+                    },
+                  );
+                }
+              },
+              items: <String>[
+                'Formula 1',
+                'Formula E',
+              ].map<DropdownMenuItem<String>>(
+                (String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(
+                      value,
+                      style: TextStyle(
+                        fontSize: 12,
+                      ),
+                    ),
+                  );
+                },
+              ).toList(),
             ),
           ),
           ListTile(

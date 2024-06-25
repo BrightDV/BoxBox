@@ -41,6 +41,8 @@ class MainDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     bool enableExperimentalFeatures = Hive.box('settings')
         .get('enableExperimentalFeatures', defaultValue: false) as bool;
+    String championship = Hive.box('settings')
+        .get('championship', defaultValue: 'Formula 1') as String;
 
     return Drawer(
       child: Column(
@@ -59,23 +61,25 @@ class MainDrawer extends StatelessWidget {
               ),
             ),
           ),
-          ListTile(
-            title: Text(
-              'Formula You',
-            ),
-            leading: Icon(
-              Icons.account_circle_outlined,
-            ),
-            onTap: () {
-              Navigator.of(context).pop();
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const PersonalizedHomeScreen(),
-                ),
-              );
-            },
-          ),
+          championship == 'f1'
+              ? ListTile(
+                  title: Text(
+                    'Formula You',
+                  ),
+                  leading: Icon(
+                    Icons.account_circle_outlined,
+                  ),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const PersonalizedHomeScreen(),
+                      ),
+                    );
+                  },
+                )
+              : Container(),
           ListTile(
             title: Text(
               AppLocalizations.of(context)!.newsMix,
@@ -93,23 +97,25 @@ class MainDrawer extends StatelessWidget {
               );
             },
           ),
-          ListTile(
-            title: Text(
-              AppLocalizations.of(context)!.hallOfFame,
-            ),
-            leading: Icon(
-              Icons.emoji_events_outlined,
-            ),
-            onTap: () {
-              Navigator.of(context).pop();
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const HallOfFameScreen(),
-                ),
-              );
-            },
-          ),
+          championship == 'f1'
+              ? ListTile(
+                  title: Text(
+                    AppLocalizations.of(context)!.hallOfFame,
+                  ),
+                  leading: Icon(
+                    Icons.emoji_events_outlined,
+                  ),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const HallOfFameScreen(),
+                      ),
+                    );
+                  },
+                )
+              : Container(),
           ListTile(
             title: Text(
               AppLocalizations.of(context)!.history,
