@@ -121,7 +121,7 @@ class _MainBottomNavigationBarState extends State<MainBottomNavigationBar> {
       progressBar: true,
     );
 
-    List<Widget> screens = championship == 'f1'
+    List<Widget> screens = championship == 'Formula 1'
         ? [
             HomeScreen(scrollController),
             VideosScreen(scrollController),
@@ -135,7 +135,7 @@ class _MainBottomNavigationBarState extends State<MainBottomNavigationBar> {
           ];
     if (_selectedIndex == 0) {
       actions = [
-        !kIsWeb && championship == 'f1'
+        !kIsWeb && championship == 'Formula 1'
             ? IconButton(
                 icon: Icon(
                   Icons.search,
@@ -149,7 +149,7 @@ class _MainBottomNavigationBarState extends State<MainBottomNavigationBar> {
                 ),
               )
             : Container(),
-        championship == 'f1'
+        championship == 'Formula 1'
             ? IconButton(
                 icon: Icon(
                   Icons.sort_outlined,
@@ -326,7 +326,7 @@ class _MainBottomNavigationBarState extends State<MainBottomNavigationBar> {
               type: BottomNavigationBarType.fixed,
               currentIndex: _selectedIndex,
               elevation: 10.0,
-              items: championship == 'f1'
+              items: championship == 'Formula 1'
                   ? <BottomNavigationBarItem>[
                       BottomNavigationBarItem(
                         icon: const Icon(
@@ -408,7 +408,7 @@ class _MainBottomNavigationBarState extends State<MainBottomNavigationBar> {
                 type: BottomNavigationBarType.fixed,
                 currentIndex: _selectedIndex,
                 elevation: 10.0,
-                items: championship == 'f1'
+                items: championship == 'Formula 1'
                     ? <BottomNavigationBarItem>[
                         BottomNavigationBarItem(
                           icon: const Icon(

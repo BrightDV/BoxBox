@@ -25,6 +25,7 @@ import 'package:boxbox/Screens/circuit.dart';
 import 'package:boxbox/Screens/schedule.dart';
 import 'package:boxbox/api/brightcove.dart';
 import 'package:boxbox/api/formula1.dart';
+import 'package:boxbox/api/formulae.dart';
 import 'package:boxbox/api/race_components.dart';
 import 'package:boxbox/helpers/download.dart';
 import 'package:boxbox/helpers/hover.dart';
@@ -357,6 +358,7 @@ class NewsItem extends StatelessWidget {
                           item.newsId,
                           item.title,
                           false,
+                          news: item,
                         ),
                       ),
                     ),
@@ -436,106 +438,122 @@ class NewsItem extends StatelessWidget {
                                                 ),
                                               ),
                                             ),
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                left: 8,
-                                              ),
-                                              child: Container(
-                                                width: item.newsType ==
-                                                            'Podcast' ||
-                                                        item.newsType ==
-                                                            'Feature' ||
-                                                        item.newsType ==
-                                                            'Opinion' ||
-                                                        item.newsType ==
-                                                            'Report'
-                                                    ? 110
-                                                    : item.newsType ==
-                                                                'Technical' ||
-                                                            item.newsType ==
-                                                                'Live Blog' ||
-                                                            item.newsType ==
-                                                                'Interview'
-                                                        ? 120
-                                                        : item.newsType ==
-                                                                'Image Gallery'
-                                                            ? 150
-                                                            : 90,
-                                                height: 27,
-                                                alignment: Alignment.bottomLeft,
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      const BorderRadius.only(
-                                                    topLeft: Radius.circular(3),
-                                                    topRight:
-                                                        Radius.circular(8),
-                                                    bottomRight:
-                                                        Radius.circular(3),
-                                                  ),
-                                                  color: Theme.of(context)
-                                                      .colorScheme
-                                                      .onPrimary,
-                                                ),
-                                                child: Row(
-                                                  mainAxisSize:
-                                                      MainAxisSize.min,
-                                                  children: [
-                                                    Padding(
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                        left: 6,
-                                                      ),
-                                                      child: Icon(
-                                                        item.newsType == 'Video'
-                                                            ? Icons
-                                                                .play_arrow_outlined
-                                                            : item.newsType ==
-                                                                    'Image Gallery'
-                                                                ? Icons
-                                                                    .image_outlined
-                                                                : item.newsType ==
-                                                                        'Podcast'
-                                                                    ? Icons
-                                                                        .podcasts_outlined
-                                                                    : item.newsType ==
-                                                                            'Poll'
-                                                                        ? Icons
-                                                                            .bar_chart
-                                                                        : item.newsType ==
-                                                                                'News'
-                                                                            ? Icons.feed_outlined
-                                                                            : item.newsType == 'Report'
-                                                                                ? Icons.report_outlined
-                                                                                : item.newsType == 'Interview'
-                                                                                    ? Icons.mic_outlined
-                                                                                    : item.newsType == 'Feature'
-                                                                                        ? Icons.star_outline_outlined
-                                                                                        : item.newsType == 'Opinion'
-                                                                                            ? Icons.chat_outlined
-                                                                                            : item.newsType == 'Technical'
-                                                                                                ? Icons.construction_outlined
-                                                                                                : item.newsType == 'Live Blog'
-                                                                                                    ? Icons.live_tv_outlined
-                                                                                                    : Icons.info_outlined,
-                                                        size: 24,
-                                                      ),
+                                            item.newsType != ''
+                                                ? Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                      left: 8,
                                                     ),
-                                                    Padding(
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                        left: 5,
-                                                      ),
-                                                      child: Text(
-                                                        item.newsType,
-                                                        style: const TextStyle(
-                                                          fontSize: 14,
+                                                    child: Container(
+                                                      width: item.newsType == 'Podcast' ||
+                                                              item.newsType ==
+                                                                  'Feature' ||
+                                                              item.newsType ==
+                                                                  'Opinion' ||
+                                                              item.newsType ==
+                                                                  'Report' ||
+                                                              item.newsType ==
+                                                                  'Preview'
+                                                          ? 110
+                                                          : item.newsType ==
+                                                                      'Technical' ||
+                                                                  item.newsType ==
+                                                                      'Live Blog' ||
+                                                                  item.newsType ==
+                                                                      'Interview'
+                                                              ? 120
+                                                              : item.newsType ==
+                                                                      'Image Gallery'
+                                                                  ? 150
+                                                                  : 90,
+                                                      height: 27,
+                                                      alignment:
+                                                          Alignment.bottomLeft,
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            const BorderRadius
+                                                                .only(
+                                                          topLeft:
+                                                              Radius.circular(
+                                                                  3),
+                                                          topRight:
+                                                              Radius.circular(
+                                                                  8),
+                                                          bottomRight:
+                                                              Radius.circular(
+                                                                  3),
                                                         ),
+                                                        color: Theme.of(context)
+                                                            .colorScheme
+                                                            .onPrimary,
+                                                      ),
+                                                      child: Row(
+                                                        mainAxisSize:
+                                                            MainAxisSize.min,
+                                                        children: [
+                                                          Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .only(
+                                                              left: 6,
+                                                            ),
+                                                            child: Icon(
+                                                              item.newsType ==
+                                                                      'Video'
+                                                                  ? Icons
+                                                                      .play_arrow_outlined
+                                                                  : item.newsType ==
+                                                                          'Image Gallery'
+                                                                      ? Icons
+                                                                          .image_outlined
+                                                                      : item.newsType ==
+                                                                              'Podcast'
+                                                                          ? Icons
+                                                                              .podcasts_outlined
+                                                                          : item.newsType == 'Poll'
+                                                                              ? Icons.bar_chart
+                                                                              : item.newsType == 'News'
+                                                                                  ? Icons.feed_outlined
+                                                                                  : item.newsType == 'Report'
+                                                                                      ? Icons.report_outlined
+                                                                                      : item.newsType == 'Interview'
+                                                                                          ? Icons.mic_outlined
+                                                                                          : item.newsType == 'Feature'
+                                                                                              ? Icons.star_outline_outlined
+                                                                                              : item.newsType == 'Opinion'
+                                                                                                  ? Icons.chat_outlined
+                                                                                                  : item.newsType == 'Technical'
+                                                                                                      ? Icons.construction_outlined
+                                                                                                      : item.newsType == 'Live Blog'
+                                                                                                          ? Icons.live_tv_outlined
+                                                                                                          : item.newsType == 'Preview'
+                                                                                                              ? Icons.remove_red_eye_outlined
+                                                                                                              : Icons.info_outlined,
+                                                              size: 24,
+                                                            ),
+                                                          ),
+                                                          Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .only(
+                                                              left: 5,
+                                                            ),
+                                                            child: Text(
+                                                              item.newsType,
+                                                              style:
+                                                                  const TextStyle(
+                                                                fontSize: 14,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
                                                       ),
                                                     ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
+                                                  )
+                                                : const SizedBox(
+                                                    height: 0.0,
+                                                    width: 0.0,
+                                                  ),
                                           ],
                                         )
                                       : const SizedBox(
@@ -699,103 +717,119 @@ class NewsItem extends StatelessWidget {
                                             ),
                                           ),
                                         ),
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                            left: 8,
-                                          ),
-                                          child: Container(
-                                            width: item.newsType == 'Podcast' ||
-                                                    item.newsType ==
-                                                        'Feature' ||
-                                                    item.newsType ==
-                                                        'Opinion' ||
-                                                    item.newsType == 'Report'
-                                                ? 110
-                                                : item.newsType ==
-                                                            'Technical' ||
-                                                        item.newsType ==
-                                                            'Live Blog' ||
-                                                        item.newsType ==
-                                                            'Interview'
-                                                    ? 120
-                                                    : item.newsType ==
-                                                            'Image Gallery'
-                                                        ? 150
-                                                        : 90,
-                                            height: 27,
-                                            alignment: Alignment.bottomLeft,
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  const BorderRadius.only(
-                                                topLeft: Radius.circular(3),
-                                                topRight: Radius.circular(8),
-                                                bottomRight: Radius.circular(3),
-                                              ),
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .onPrimary,
-                                            ),
-                                            child: Row(
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: [
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                    left: 6,
-                                                  ),
-                                                  child: Icon(
-                                                    item.newsType == 'Video'
-                                                        ? Icons
-                                                            .play_arrow_outlined
-                                                        : item.newsType ==
-                                                                'Image Gallery'
-                                                            ? Icons
-                                                                .image_outlined
-                                                            : item.newsType ==
-                                                                    'Podcast'
-                                                                ? Icons
-                                                                    .podcasts_outlined
-                                                                : item.newsType ==
-                                                                        'Poll'
-                                                                    ? Icons
-                                                                        .bar_chart
-                                                                    : item.newsType ==
-                                                                            'News'
-                                                                        ? Icons
-                                                                            .feed_outlined
-                                                                        : item.newsType ==
-                                                                                'Report'
-                                                                            ? Icons.report_outlined
-                                                                            : item.newsType == 'Interview'
-                                                                                ? Icons.mic_outlined
-                                                                                : item.newsType == 'Feature'
-                                                                                    ? Icons.star_outline_outlined
-                                                                                    : item.newsType == 'Opinion'
-                                                                                        ? Icons.chat_outlined
-                                                                                        : item.newsType == 'Technical'
-                                                                                            ? Icons.construction_outlined
-                                                                                            : item.newsType == 'Live Blog'
-                                                                                                ? Icons.live_tv_outlined
-                                                                                                : Icons.info_outlined,
-                                                    size: 24,
-                                                  ),
+                                        item.newsType != ''
+                                            ? Padding(
+                                                padding: const EdgeInsets.only(
+                                                  left: 8,
                                                 ),
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                    left: 5,
-                                                  ),
-                                                  child: Text(
-                                                    item.newsType,
-                                                    style: const TextStyle(
-                                                      fontSize: 14,
+                                                child: Container(
+                                                  width: item.newsType == 'Podcast' ||
+                                                          item.newsType ==
+                                                              'Feature' ||
+                                                          item.newsType ==
+                                                              'Opinion' ||
+                                                          item.newsType ==
+                                                              'Report' ||
+                                                          item.newsType ==
+                                                              'Preview'
+                                                      ? 110
+                                                      : item.newsType ==
+                                                                  'Technical' ||
+                                                              item.newsType ==
+                                                                  'Live Blog' ||
+                                                              item.newsType ==
+                                                                  'Interview'
+                                                          ? 120
+                                                          : item.newsType ==
+                                                                  'Image Gallery'
+                                                              ? 150
+                                                              : 90,
+                                                  height: 27,
+                                                  alignment:
+                                                      Alignment.bottomLeft,
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        const BorderRadius.only(
+                                                      topLeft:
+                                                          Radius.circular(3),
+                                                      topRight:
+                                                          Radius.circular(8),
+                                                      bottomRight:
+                                                          Radius.circular(3),
                                                     ),
+                                                    color: Theme.of(context)
+                                                        .colorScheme
+                                                        .onPrimary,
+                                                  ),
+                                                  child: Row(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: [
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .only(
+                                                          left: 6,
+                                                        ),
+                                                        child: Icon(
+                                                          item.newsType ==
+                                                                  'Video'
+                                                              ? Icons
+                                                                  .play_arrow_outlined
+                                                              : item.newsType ==
+                                                                      'Image Gallery'
+                                                                  ? Icons
+                                                                      .image_outlined
+                                                                  : item.newsType ==
+                                                                          'Podcast'
+                                                                      ? Icons
+                                                                          .podcasts_outlined
+                                                                      : item.newsType ==
+                                                                              'Poll'
+                                                                          ? Icons
+                                                                              .bar_chart
+                                                                          : item.newsType == 'News'
+                                                                              ? Icons.feed_outlined
+                                                                              : item.newsType == 'Report'
+                                                                                  ? Icons.report_outlined
+                                                                                  : item.newsType == 'Interview'
+                                                                                      ? Icons.mic_outlined
+                                                                                      : item.newsType == 'Feature'
+                                                                                          ? Icons.star_outline_outlined
+                                                                                          : item.newsType == 'Opinion'
+                                                                                              ? Icons.chat_outlined
+                                                                                              : item.newsType == 'Technical'
+                                                                                                  ? Icons.construction_outlined
+                                                                                                  : item.newsType == 'Live Blog'
+                                                                                                      ? Icons.live_tv_outlined
+                                                                                                      : item.newsType == 'Preview'
+                                                                                                          ? Icons.remove_red_eye_outlined
+                                                                                                          : Icons.info_outlined,
+                                                          size: 24,
+                                                        ),
+                                                      ),
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .only(
+                                                          left: 5,
+                                                        ),
+                                                        child: Text(
+                                                          item.newsType,
+                                                          style:
+                                                              const TextStyle(
+                                                            fontSize: 14,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
                                                   ),
                                                 ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
+                                              )
+                                            : const SizedBox(
+                                                height: 0.0,
+                                                width: 0.0,
+                                              ),
                                       ],
                                     )
                                   : const SizedBox(
@@ -925,6 +959,8 @@ class _NewsListState extends State<NewsList> {
   static const _pageSize = 16;
   final PagingController<int, News> _pagingController =
       PagingController(firstPageKey: 0);
+  String championship = Hive.box('settings')
+      .get('championship', defaultValue: 'Formula 1') as String;
 
   @override
   void initState() {
@@ -936,11 +972,17 @@ class _NewsListState extends State<NewsList> {
 
   Future<void> _fetchPage(int offset) async {
     try {
-      List<News> newItems = await Formula1().getMoreNews(
-        offset,
-        tagId: widget.tagId,
-        articleType: widget.articleType,
-      );
+      List<News> newItems = championship == 'Formula 1'
+          ? await Formula1().getMoreNews(
+              offset,
+              tagId: widget.tagId,
+              articleType: widget.articleType,
+            )
+          : await FormulaE().getMoreNews(
+              offset,
+              tagId: widget.tagId,
+              articleType: widget.articleType,
+            );
       final isLastPage = newItems.length < _pageSize;
       if (isLastPage) {
         _pagingController.appendLastPage(newItems);
@@ -966,7 +1008,8 @@ class _NewsListState extends State<NewsList> {
             widget.tagId == null &&
             widget.articleType == null
         ? OfflineNewsList(
-            items: Formula1().formatResponse(latestNews),
+            items: Formula1()
+                .formatResponse(latestNews), // TODO: check last saved format
             scrollController: widget.scrollController,
           )
         : width < 500
@@ -1670,6 +1713,7 @@ class VideoRenderer extends StatelessWidget {
   final String? heroTag;
   final String? caption;
   final Function? update;
+  final String? player;
 
   const VideoRenderer(
     this.videoId, {
@@ -1679,6 +1723,7 @@ class VideoRenderer extends StatelessWidget {
     this.heroTag,
     this.caption,
     this.update,
+    this.player,
   }) : super(key: key);
 
   Future<Map<String, dynamic>> getYouTubeVideoLinks(String videoId) async {
@@ -1734,7 +1779,7 @@ class VideoRenderer extends StatelessWidget {
     return FutureBuilder<Map<String, dynamic>>(
       future: (youtubeId ?? '') != ''
           ? getYouTubeVideoLinks(youtubeId!)
-          : BrightCove().getVideoLinks(videoId),
+          : BrightCove().getVideoLinks(videoId, player),
       builder: (context, snapshot) => snapshot.hasError
           ? RequestErrorWidget(
               snapshot.error.toString(),

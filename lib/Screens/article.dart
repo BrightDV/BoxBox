@@ -25,6 +25,7 @@ import 'package:boxbox/api/article_parts.dart';
 import 'package:boxbox/api/formula1.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/request_error.dart';
+import 'package:boxbox/scraping/formulae.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -36,12 +37,14 @@ class ArticleScreen extends StatefulWidget {
   final String articleName;
   final bool isFromLink;
   final Function? update;
+  final News? news;
 
   const ArticleScreen(
     this.articleId,
     this.articleName,
     this.isFromLink, {
     this.update,
+    this.news,
     Key? key,
   }) : super(key: key);
 
@@ -121,6 +124,9 @@ class _ArticleScreenState extends State<ArticleScreen> {
       'downloadsList',
       defaultValue: [],
     );
+    String championship = Hive.box('settings')
+        .get('championship', defaultValue: 'Formula 1') as String;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.onPrimary,
@@ -128,7 +134,8 @@ class _ArticleScreenState extends State<ArticleScreen> {
           ValueListenableBuilder(
             valueListenable: articleTitle,
             builder: (context, value, _) {
-              return value.toString() == 'Loading...'
+              return value.toString() == 'Loading...' ||
+                      championship != 'Formula 1'
                   ? Container()
                   : IconButton(
                       onPressed: () async {
@@ -225,7 +232,11 @@ class _ArticleScreenState extends State<ArticleScreen> {
                     ),
         ),
       ),
-      body: ArticleProvider(widget.articleId, updateTitle),
+      body: ArticleProvider(
+        widget.articleId,
+        updateTitle,
+        news: widget.news,
+      ),
     );
   }
 
@@ -237,40 +248,55 @@ class _ArticleScreenState extends State<ArticleScreen> {
 }
 
 class ArticleProvider extends StatelessWidget {
+  final String articleId;
+  final Function updateArticleTitle;
+  final News? news;
+
+  const ArticleProvider(
+    this.articleId,
+    this.updateArticleTitle, {
+    this.news,
+    Key? key,
+  }) : super(key: key);
+
   Future<Article> getArticleData(
       String articleId, Function updateArticleTitle) async {
-    String? filePath =
-        await Formula1().downloadedFilePathIfExists('article_${articleId}');
-    if (filePath != null) {
-      File file = File(filePath);
-      Map savedArticle = await json.decode(await file.readAsString());
-      Article article = Article(
-        savedArticle['id'],
-        savedArticle['slug'],
-        savedArticle['title'],
-        DateTime.parse(savedArticle['createdAt']),
-        savedArticle['articleTags'],
-        savedArticle['hero'] ?? {},
-        savedArticle['body'],
-        savedArticle['relatedArticles'],
-        savedArticle['author'] ?? {},
-      );
-      updateArticleTitle(article.articleName);
-      return article;
+    String championship = Hive.box('settings')
+        .get('championship', defaultValue: 'Formula 1') as String;
+    if (championship == 'Formula 1') {
+      String? filePath =
+          await Formula1().downloadedFilePathIfExists('article_${articleId}');
+      if (filePath != null) {
+        File file = File(filePath);
+        Map savedArticle = await json.decode(await file.readAsString());
+        Article article = Article(
+          savedArticle['id'],
+          savedArticle['slug'],
+          savedArticle['title'],
+          DateTime.parse(savedArticle['createdAt']),
+          savedArticle['articleTags'],
+          savedArticle['hero'] ?? {},
+          savedArticle['body'],
+          savedArticle['relatedArticles'],
+          savedArticle['author'] ?? {},
+        );
+        updateArticleTitle(article.articleName);
+        return article;
+      } else {
+        Article article = await Formula1().getArticleData(articleId);
+        updateArticleTitle(article.articleName);
+        return article;
+      }
     } else {
-      Article article = await Formula1().getArticleData(articleId);
+      Article article = await FormulaEScraper().getArticleData(
+        news!,
+        articleId,
+      );
       updateArticleTitle(article.articleName);
       return article;
     }
   }
 
-  final String articleId;
-  final Function updateArticleTitle;
-  const ArticleProvider(
-    this.articleId,
-    this.updateArticleTitle, {
-    Key? key,
-  }) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<Article>(

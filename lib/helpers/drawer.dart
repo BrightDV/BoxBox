@@ -61,7 +61,7 @@ class MainDrawer extends StatelessWidget {
               ),
             ),
           ),
-          championship == 'f1'
+          championship == 'Formula 1'
               ? ListTile(
                   title: Text(
                     'Formula You',
@@ -97,7 +97,7 @@ class MainDrawer extends StatelessWidget {
               );
             },
           ),
-          championship == 'f1'
+          championship == 'Formula 1'
               ? ListTile(
                   title: Text(
                     AppLocalizations.of(context)!.hallOfFame,

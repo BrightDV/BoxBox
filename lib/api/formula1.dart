@@ -236,6 +236,7 @@ class Formula1 {
     Function(TaskStatusUpdate)? callback,
   }) async {
     bool isDownloaded = await downloadedFileCheck('video_$videoId');
+    // TODO: update to download video from FE
 
     if (!isDownloaded) {
       FileDownloader().unregisterCallbacks(callback: callback);
@@ -246,7 +247,7 @@ class Formula1 {
         video = await F1VideosFetcher().getVideoDetails(videoId);
       }
 
-      Map links = await BrightCove().getVideoLinks(videoId);
+      Map links = await BrightCove().getVideoLinks(videoId, '');
       String link =
           links['videos'][links['qualities'].indexOf('${quality}p') + 1];
       // index 0 is preferred quality
@@ -1044,6 +1045,8 @@ class News {
   final String subtitle;
   final DateTime datePosted;
   final String imageUrl;
+  final List? tags;
+  final Map? author;
 
   News(
     this.newsId,
@@ -1052,8 +1055,10 @@ class News {
     this.title,
     this.subtitle,
     this.datePosted,
-    this.imageUrl,
-  );
+    this.imageUrl, {
+    this.tags,
+    this.author,
+  });
 }
 
 class Article {

@@ -71,6 +71,7 @@ class ArticleParts extends StatelessWidget {
                         youtubeId: article.articleHero['fields']
                                 ['youTubeVideoId'] ??
                             '',
+                        player: article.articleHero['fields']['player'],
                       ),
                     ),
                   ),
@@ -221,7 +222,7 @@ class WidgetsList extends StatelessWidget {
                 : Container(),
 
         // tags
-        TagsList(article),
+        if (article.articleTags.isNotEmpty) TagsList(article),
 
         // content
         for (var element in articleContent)
@@ -231,6 +232,7 @@ class WidgetsList extends StatelessWidget {
                   ? VideoRenderer(
                       element['fields']['videoId'],
                       caption: element['fields']?['caption'] ?? '',
+                      player: element['fields']['player'],
                     )
                   : element['contentType'] == 'atomVideoYouTube'
                       ? VideoRenderer(
@@ -298,7 +300,9 @@ class WidgetsList extends StatelessWidget {
         BottomActionBar(article),
 
         // related articles
-        RelatedArticles(article, scrollController),
+        article.relatedArticles.isNotEmpty
+            ? RelatedArticles(article, scrollController)
+            : SizedBox(height: 10),
       ],
     );
   }

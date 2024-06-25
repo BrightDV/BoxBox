@@ -583,7 +583,7 @@ class _OtherCardstate extends State<OtherCard> {
               'Championship',
             ),
             subtitle: Text(
-              'not needed yet', //AppLocalizations.of(context)!.needsRestart,
+              AppLocalizations.of(context)!.needsRestart,
               style: TextStyle(
                 fontSize: 12,
               ),
