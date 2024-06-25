@@ -51,25 +51,14 @@ class FIAScraper {
     List<dom.Element> tempResult = document
         .getElementsByClassName('event-wrapper')[0]
         .getElementsByClassName('document-row');
-    for (var document in tempResult) {
-      if (document.firstChild!.nodeType == 3) {
-        documents.add(
-          SessionDocument(
-            'This document cannot be parsed.',
-            'none',
-            'https://www.fia.com/documents/championships/fia-formula-one-world-championship-14/season/season-2024-2043',
-          ),
-        );
-      } else {
-        documents.add(
-          SessionDocument(
-            document.firstChild!.children[1].text.substring(
-                13, document.firstChild!.children[1].text.length - 3),
-            document.firstChild!.children[2].children[0].text,
-            'https://www.fia.com${document.firstChild?.attributes['href']}',
-          ),
-        );
-      }
+    for (dom.Element document in tempResult) {
+      documents.add(
+        SessionDocument(
+          document.getElementsByClassName('title').first.text.trim(),
+          document.getElementsByClassName('published').first.text.trim(),
+          'https://www.fia.com${document.getElementsByTagName('a').first.attributes['href']}',
+        ),
+      );
     }
     return documents;
   }

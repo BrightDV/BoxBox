@@ -315,7 +315,7 @@ class Convert {
       "qatar": '1251',
       "united_arab_emirates": '1252',
     };
-    return ergastToFormulaOne[circuitId];
+    return ergastToFormulaOne[circuitId.toLowerCase()];
   }
 
   String circuitNameFromFormulaOneToRoundNumber(String circuitId) {

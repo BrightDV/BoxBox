@@ -135,10 +135,10 @@ class RaceHubScreen extends StatelessWidget {
                                   elevation: 5,
                                   child: ListTile(
                                     title: Text(
-                                      snapshot.data?[index - 1].name ?? '',
+                                      snapshot.data![index - 1].name,
                                     ),
                                     subtitle: Text(
-                                      'Published on ${snapshot.data?[index - 1].postedDate}',
+                                      snapshot.data![index - 1].postedDate,
                                       style: TextStyle(
                                         fontSize: 12,
                                       ),
