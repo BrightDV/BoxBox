@@ -113,6 +113,7 @@ class Formula1 {
         json.decode(utf8.decode(response.bodyBytes));
     if (offset == 0 && tagId == null && articleType == null) {
       Hive.box('requests').put('news', responseAsJson);
+      Hive.box('requests').put('newsLastSavedFormat', 'f1');
     }
     return formatResponse(responseAsJson);
   }

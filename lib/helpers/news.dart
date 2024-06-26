@@ -959,8 +959,6 @@ class _NewsListState extends State<NewsList> {
   static const _pageSize = 16;
   final PagingController<int, News> _pagingController =
       PagingController(firstPageKey: 0);
-  String championship = Hive.box('settings')
-      .get('championship', defaultValue: 'Formula 1') as String;
 
   @override
   void initState() {
@@ -972,6 +970,8 @@ class _NewsListState extends State<NewsList> {
 
   Future<void> _fetchPage(int offset) async {
     try {
+      String championship = Hive.box('settings')
+          .get('championship', defaultValue: 'Formula 1') as String;
       List<News> newItems = championship == 'Formula 1'
           ? await Formula1().getMoreNews(
               offset,
@@ -1000,16 +1000,20 @@ class _NewsListState extends State<NewsList> {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     Map latestNews = Hive.box('requests').get('news', defaultValue: {}) as Map;
+    String newsLastSavedFormat =
+        Hive.box('requests').get('newsLastSavedFormat', defaultValue: 'f1');
+
     return (_pagingController.error.toString() == 'XMLHttpRequest error.' ||
                 _pagingController.error
                     .toString()
                     .startsWith('Failed host lookup')) &&
-            latestNews['items'] != null &&
+            (latestNews['items'] != null || latestNews['content'] != null) &&
             widget.tagId == null &&
             widget.articleType == null
         ? OfflineNewsList(
-            items: Formula1()
-                .formatResponse(latestNews), // TODO: check last saved format
+            items: newsLastSavedFormat == 'f1'
+                ? Formula1().formatResponse(latestNews)
+                : FormulaE().formatResponse(latestNews),
             scrollController: widget.scrollController,
           )
         : width < 500
@@ -1085,7 +1089,7 @@ class _NewsListState extends State<NewsList> {
 }
 
 class OfflineNewsList extends StatelessWidget {
-  final List items;
+  final List<News> items;
   final ScrollController? scrollController;
 
   const OfflineNewsList({
@@ -1096,23 +1100,21 @@ class OfflineNewsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Map cachedNews = Hive.box('requests').get('news', defaultValue: {}) as Map;
     double width = MediaQuery.of(context).size.width;
-    List<News> formatedNews = Formula1().formatResponse(cachedNews);
 
     return width < 500
         ? ListView.builder(
             controller: scrollController,
             scrollDirection: Axis.vertical,
             shrinkWrap: true,
-            itemCount: formatedNews.length,
+            itemCount: items.length,
             physics: const BouncingScrollPhysics(),
-            itemBuilder: (context, index) => index == formatedNews.length - 1
+            itemBuilder: (context, index) => index == items.length - 1
                 ? const Padding(
                     padding: EdgeInsets.all(15),
                   )
                 : NewsItem(
-                    formatedNews[index],
+                    items[index],
                     false,
                   ),
           )
@@ -1125,14 +1127,14 @@ class OfflineNewsList extends StatelessWidget {
             controller: scrollController,
             scrollDirection: Axis.vertical,
             shrinkWrap: true,
-            itemCount: formatedNews.length,
+            itemCount: items.length,
             physics: const BouncingScrollPhysics(),
-            itemBuilder: (context, index) => index == formatedNews.length - 1
+            itemBuilder: (context, index) => index == items.length - 1
                 ? const Padding(
                     padding: EdgeInsets.all(15),
                   )
                 : NewsItem(
-                    formatedNews[index],
+                    items[index],
                     false,
                     showSmallDescription: true,
                     itemPerRow: width < 750 ? 2 : 3,
