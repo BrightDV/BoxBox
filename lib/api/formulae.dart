@@ -226,7 +226,7 @@ class FormulaE {
           races.add(
             Race(
               element['sequence'].toString(),
-              '',
+              element['id'],
               element['name'],
               element['date'],
               '',
@@ -252,7 +252,7 @@ class FormulaE {
           races.add(
             Race(
               element['sequence'].toString(),
-              '',
+              element['id'],
               element['name'],
               element['date'],
               '',
@@ -311,6 +311,331 @@ class FormulaE {
       Hive.box('requests').put('scheduleLatestQuery', DateTime.now());
       Hive.box('requests').put('scheduleLastSavedFormat', 'fe');
       return races;
+    }
+  }
+
+  Future<Map> getSessions(Race race) async {
+    var url = Uri.parse(
+      '$defaultEndpoint/formula-e/v1/races/${race.meetingId}/sessions',
+    );
+    var response = await http.get(
+      url,
+      headers: {
+        'Accept': 'application/json',
+        'User-Agent':
+            'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:124.0) Gecko/20100101 Firefox/124.0',
+      },
+    );
+    Map<String, dynamic> responseAsJson = json.decode(
+      utf8.decode(response.bodyBytes),
+    );
+
+    List<DateTime> sessionDates = [];
+    List sessionStates = [];
+    List sessionIds = [];
+    for (var session in responseAsJson['sessions']) {
+      if ((session['sessionName'].startsWith('Free Practice') ||
+          (session['sessionName'] == 'Race'))) {
+        if (session['offsetGMT'].startsWith('-')) {
+          if (session['offsetGMT'].length < 6) {
+            session['offsetGMT'] = session['offsetGMT'].substring(0, 1) +
+                '0' +
+                session['offsetGMT'].substring(1);
+          }
+        } else {
+          session['offsetGMT'] = '+' + session['offsetGMT'];
+        }
+
+        sessionDates.add(
+          DateTime.parse(
+            session['sessionDate'] +
+                ' ' +
+                session['startTime'] +
+                session['offsetGMT'],
+          ),
+        );
+        sessionStates.add(session['sessionLiveStatus']);
+        sessionIds.add(session['id']);
+      } else if (session['sessionNme'] == 'Qual Group A') {
+        if (session['offsetGMT'].startsWith('-')) {
+          if (session['offsetGMT'].length < 6) {
+            session['offsetGMT'] = session['offsetGMT'].substring(0, 1) +
+                '0' +
+                session['offsetGMT'].substring(1);
+          }
+        } else {
+          session['offsetGMT'] = '+' + session['offsetGMT'];
+        }
+
+        sessionDates.add(
+          DateTime.parse(
+            session['sessionDate'] +
+                ' ' +
+                session['startTime'] +
+                session['offsetGMT'],
+          ),
+        );
+      } else if (session['sessionName'] == 'Qual Final') {
+        sessionStates.add(session['sessionLiveStatus']);
+      } else if (session['sessionName'] == 'Combined qualifying') {
+        sessionIds.add(session['id']);
+      }
+    }
+
+    Race raceWithSessions = Race(
+      race.round,
+      race.meetingId,
+      race.raceName,
+      race.date,
+      responseAsJson['sessions'].last['startTime'],
+      race.circuitId,
+      race.circuitName,
+      race.circuitUrl,
+      race.country,
+      sessionDates,
+      raceCoverUrl: race.raceCoverUrl,
+      sessionStates: sessionStates,
+    );
+
+    Map formatedMap = {
+      'raceCustomBBParameter': raceWithSessions,
+      'sessionsIdsCustomBBParameter': sessionIds,
+    };
+    return formatedMap;
+  }
+
+  List<DriverResult> formatRaceStandings(Map raceStandings) {
+    List<DriverResult> formatedRaceStandings = [];
+    List jsonResponse = raceStandings['results'];
+    for (var element in jsonResponse) {
+      String time = element['delay'];
+      while (time.startsWith('0:')) {
+        time = time.substring(2);
+      }
+      if (time.startsWith('00')) {
+        time = time.substring(1);
+      }
+      if (time == '-') {
+        time = '';
+      } else {
+        time = '+' + time + 's';
+      }
+
+      if (time.lastIndexOf(':') != -1) {
+        time = time.replaceFirst(':', '.', time.lastIndexOf(':'));
+      }
+
+      formatedRaceStandings.add(
+        DriverResult(
+          element['driverId'],
+          element['driverPosition'].toString(),
+          element['driverNumber'],
+          element['driverFirstName'],
+          element['driverLastName'],
+          element['driverTLA'],
+          element['team']['id'],
+          time,
+          element['fastestLap'] ?? false,
+          element['bestTime'] ?? '',
+          '',
+          points: element['points'].toString(),
+          status: (element['dnf'] ?? false)
+              ? 'DNF'
+              : (element['dnq'] ?? false)
+                  ? 'DNQ'
+                  : (element['dns'] ?? false)
+                      ? 'DNS'
+                      : (element['dsq'] ?? false)
+                          ? 'DSQ'
+                          : (element['exc'] ?? false)
+                              ? 'EXC'
+                              : null,
+          lapsDone: '--',
+        ),
+      );
+    }
+    return formatedRaceStandings;
+  }
+
+  Future<Map<String, dynamic>> _getSessionStandings(
+      String raceId, String sessionId) async {
+    var url = Uri.parse(
+      '$defaultEndpoint/formula-e/v1/races/$raceId/sessions/$sessionId/results',
+    );
+    var response = await http.get(
+      url,
+      headers: {
+        'Accept': 'application/json',
+        'User-Agent':
+            'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:124.0) Gecko/20100101 Firefox/124.0',
+      },
+    );
+    String bodyAsMap = '{"results": ${utf8.decode(response.bodyBytes)}}';
+    Map<String, dynamic> responseAsJson = jsonDecode(bodyAsMap);
+
+    return responseAsJson;
+  }
+
+  Future<List<DriverResult>> getRaceStandings(
+      String raceId, String sessionId) async {
+    Map results = Hive.box('requests').get('fe-race-$raceId', defaultValue: {});
+    DateTime latestQuery = Hive.box('requests').get(
+      'fe-race-$raceId-latestQuery',
+      defaultValue: DateTime.now(),
+    ) as DateTime;
+
+    if (latestQuery
+            .add(
+              const Duration(minutes: 5),
+            )
+            .isAfter(DateTime.now()) &&
+        results.isNotEmpty) {
+      return formatRaceStandings(results);
+    } else {
+      Map<String, dynamic> responseAsJson =
+          await _getSessionStandings(raceId, sessionId);
+
+      List<DriverResult> driversResults = formatRaceStandings(responseAsJson);
+      Hive.box('requests').put('fe-race-$raceId', responseAsJson);
+      Hive.box('requests').put(
+        'fe-race-$raceId-latestQuery',
+        DateTime.now(),
+      );
+      return driversResults;
+    }
+  }
+
+  FutureOr<List<DriverResult>> getQualificationStandings(
+      String raceId, String sessionId) async {
+    List<DriverResult> driversResults = [];
+    Map<String, dynamic> responseAsJson =
+        await _getSessionStandings(raceId, sessionId);
+
+    if (responseAsJson['results'].isEmpty) {
+      return [];
+    } else {
+      List finalJson = responseAsJson['results'];
+      for (var element in finalJson) {
+        String time = element['sessionTime'];
+        while (time.startsWith('0:')) {
+          time = time.substring(2);
+        }
+        time = time.replaceFirst(':', '.', time.lastIndexOf(':'));
+
+        String gap = element['delay'];
+        while (gap.startsWith('0:')) {
+          gap = gap.substring(2);
+        }
+        if (gap.startsWith('00')) {
+          gap = gap.substring(1);
+        }
+        if (gap == '-') {
+          gap = '';
+        } else {
+          gap = '+' + gap + 's';
+        }
+        if (gap.lastIndexOf(':') != -1) {
+          gap = gap.replaceFirst(':', '.', gap.lastIndexOf(':'));
+        }
+
+        driversResults.add(
+          DriverResult(
+            element['driverId'],
+            element['driverPosition'].toString(),
+            element['driverNumber'],
+            element['driverFirstName'],
+            element['driverLastName'],
+            element['driverTLA'],
+            element['team']['id'],
+            time, // TODO
+            element['fastestLap'] ?? false,
+            element['bestTime'] ?? '',
+            gap,
+            points: element['points'].toString(),
+            status: (element['dnf'] ?? false)
+                ? 'DNF'
+                : (element['dnq'] ?? false)
+                    ? 'DNQ'
+                    : (element['dns'] ?? false)
+                        ? 'DNS'
+                        : (element['dsq'] ?? false)
+                            ? 'DSQ'
+                            : (element['exc'] ?? false)
+                                ? 'EXC'
+                                : null,
+            lapsDone: '--',
+          ),
+        );
+      }
+
+      return driversResults;
+    }
+  }
+
+  Future<List<DriverResult>> getFreePracticeStandings(
+      String raceId, String sessionId) async {
+    List<DriverResult> driversResults = [];
+
+    Map<String, dynamic> responseAsJson =
+        await _getSessionStandings(raceId, sessionId);
+    if (responseAsJson['results'].isEmpty) {
+      return [];
+    } else {
+      List finalJson = responseAsJson['results'];
+      for (var element in finalJson) {
+        String time = element['sessionTime'];
+        while (time.startsWith('0:')) {
+          time = time.substring(2);
+        }
+        time = time.replaceFirst(':', '.', time.lastIndexOf(':'));
+
+        String gap = element['delay'];
+        while (gap.startsWith('0:')) {
+          gap = gap.substring(2);
+        }
+        if (gap.startsWith('00')) {
+          gap = gap.substring(1);
+        }
+        if (gap == '-') {
+          gap = '';
+        } else {
+          gap = '+' + gap + 's';
+        }
+        if (gap.lastIndexOf(':') != -1) {
+          gap = gap.replaceFirst(':', '.', gap.lastIndexOf(':'));
+        }
+
+        driversResults.add(
+          DriverResult(
+            element['driverId'],
+            element['driverPosition'].toString(),
+            element['driverNumber'],
+            element['driverFirstName'],
+            element['driverLastName'],
+            element['driverTLA'],
+            element['team']['id'],
+            time, // TODO
+            element['fastestLap'] ?? false,
+            element['bestTime'] ?? '',
+            gap,
+            points: element['points'].toString(),
+            status: (element['dnf'] ?? false)
+                ? 'DNF'
+                : (element['dnq'] ?? false)
+                    ? 'DNQ'
+                    : (element['dns'] ?? false)
+                        ? 'DNS'
+                        : (element['dsq'] ?? false)
+                            ? 'DSQ'
+                            : (element['exc'] ?? false)
+                                ? 'EXC'
+                                : null,
+            lapsDone: '--',
+          ),
+        );
+      }
+
+      return driversResults;
     }
   }
 }

@@ -19,6 +19,7 @@
 
 import 'package:boxbox/api/driver_components.dart';
 import 'package:boxbox/api/formula1.dart';
+import 'package:boxbox/api/formulae.dart';
 import 'package:boxbox/helpers/divider.dart';
 import 'package:boxbox/helpers/request_error.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
@@ -39,6 +40,7 @@ class FreePracticeScreen extends StatelessWidget {
   final int raceYear;
   final String raceName;
   final String? raceUrl;
+  final String? sessionId;
 
   const FreePracticeScreen(
     this.sessionTitle,
@@ -49,25 +51,33 @@ class FreePracticeScreen extends StatelessWidget {
     this.raceName, {
     Key? key,
     this.raceUrl,
+    this.sessionId,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    String championship = Hive.box('settings')
+        .get('championship', defaultValue: 'Formula 1') as String;
     return Scaffold(
       appBar: AppBar(
         title: Text(sessionTitle),
         backgroundColor: Theme.of(context).colorScheme.onPrimary,
       ),
       body: FutureBuilder<List<DriverResult>>(
-        future: raceUrl != null
-            ? FormulaOneScraper().scrapeFreePracticeResult(
-                '',
-                0,
-                '',
-                false,
-                raceUrl: raceUrl,
-              )
-            : Formula1().getFreePracticeStandings(meetingId, sessionIndex),
+        future: championship == 'Formula 1'
+            ? raceUrl != null
+                ? FormulaOneScraper().scrapeFreePracticeResult(
+                    '',
+                    0,
+                    '',
+                    false,
+                    raceUrl: raceUrl,
+                  )
+                : Formula1().getFreePracticeStandings(meetingId, sessionIndex)
+            : FormulaE().getFreePracticeStandings(
+                meetingId,
+                sessionId!,
+              ),
         // disable scraping for the moment
         /* FormulaOneScraper().scrapeFreePracticeResult(
                 circuitId,
@@ -105,7 +115,7 @@ class FreePracticeScreen extends StatelessWidget {
 }
 
 class FreePracticeResultsList extends StatelessWidget {
-  final List<DriverResult> results;
+  final List results;
   final int raceYear;
   final String raceName;
   final int sessionIndex;
@@ -120,6 +130,8 @@ class FreePracticeResultsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String championship = Hive.box('settings')
+        .get('championship', defaultValue: 'Formula 1') as String;
     return ListView.builder(
       itemCount: results.length + 2,
       itemBuilder: (context, index) => index == 0
@@ -134,7 +146,9 @@ class FreePracticeResultsList extends StatelessWidget {
               onTap: () async {
                 var yt = YoutubeExplode();
                 final List<Video> searchResults = await yt.search.search(
-                  "Formula 1 Free Practice $sessionIndex $raceName $raceYear",
+                  sessionIndex == 10
+                      ? "$championship Free Practice $sessionIndex $raceName $raceYear"
+                      : "$championship Qualifyings $sessionIndex $raceName $raceYear",
                 );
                 final Video bestVideoMatch = searchResults[0];
                 await launchUrl(

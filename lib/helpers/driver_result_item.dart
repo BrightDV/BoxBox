@@ -569,7 +569,7 @@ class QualificationResultsItem extends StatelessWidget {
 }
 
 class QualificationDriversResultsList extends StatelessWidget {
-  final List<DriverQualificationResult> items;
+  final List items;
   final Race? race;
   final String? raceUrl;
   final bool? isSprintQualifying;
@@ -583,6 +583,8 @@ class QualificationDriversResultsList extends StatelessWidget {
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    String championship = Hive.box('settings')
+        .get('championship', defaultValue: 'Formula 1') as String;
     List resultsQOne = [];
     List resultsQTwo = [];
     for (var element in items) {
@@ -617,7 +619,7 @@ class QualificationDriversResultsList extends StatelessWidget {
                     (raceUrl?.contains('sprint-qualifying') ?? false) ||
                             (isSprintQualifying ?? false)
                         ? "Formula 1 Sprint Qualifying Highlights ${race!.raceName} $raceYear"
-                        : "Formula 1 Qualifying Highlights ${race!.raceName} $raceYear",
+                        : "$championship Qualifying Highlights ${race!.raceName} $raceYear",
                   );
                   final Video bestVideoMatch = searchResults[0];
                   await launchUrl(

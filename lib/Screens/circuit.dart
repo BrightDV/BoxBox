@@ -22,6 +22,7 @@ import 'package:boxbox/Screens/race_details.dart';
 import 'package:boxbox/api/ergast.dart';
 import 'package:boxbox/api/event_tracker.dart';
 import 'package:boxbox/api/formula1.dart';
+import 'package:boxbox/api/formulae.dart';
 import 'package:boxbox/api/race_components.dart';
 import 'package:boxbox/helpers/buttons.dart';
 import 'package:boxbox/helpers/convert_ergast_and_formula_one.dart';
@@ -53,6 +54,8 @@ class CircuitScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     String scheduleLastSavedFormat = Hive.box('requests')
         .get('scheduleLastSavedFormat', defaultValue: 'ergast');
+    String championship = Hive.box('settings')
+        .get('championship', defaultValue: 'Formula 1') as String;
     return Scaffold(
       body: isFetched ?? true
           ? NestedScrollView(
@@ -76,14 +79,17 @@ class CircuitScreen extends StatelessWidget {
               },
               body: SingleChildScrollView(
                 child: FutureBuilder<Map>(
-                  future: EventTracker().getCircuitDetails(
-                    scheduleLastSavedFormat == 'ergast'
-                        ? Convert().circuitIdFromErgastToFormulaOne(
-                            race.circuitId,
-                          )
-                        : race.meetingId,
-                    race: scheduleLastSavedFormat == 'ergast' ? null : race,
-                  ),
+                  future: championship == 'Formula 1'
+                      ? EventTracker().getCircuitDetails(
+                          scheduleLastSavedFormat == 'ergast'
+                              ? Convert().circuitIdFromErgastToFormulaOne(
+                                  race.circuitId,
+                                )
+                              : race.meetingId,
+                          race:
+                              scheduleLastSavedFormat == 'ergast' ? null : race,
+                        )
+                      : FormulaE().getSessions(race),
                   builder: (context, snapshot) => snapshot.hasError
                       ? RequestErrorWidget(snapshot.error.toString())
                       : snapshot.hasData
@@ -102,9 +108,15 @@ class CircuitScreen extends StatelessWidget {
                                         ? race
                                         : snapshot
                                             .data!['raceCustomBBParameter'],
-                                    snapshot.data!['meetingContext']
-                                            ['timetables'][2]['session'] ==
-                                        's',
+                                    championship == 'Formula E'
+                                        ? false
+                                        : snapshot.data!['meetingContext']
+                                                ['timetables'][2]['session'] ==
+                                            's',
+                                    sessions: championship == 'Formula E'
+                                        ? snapshot.data![
+                                            'sessionsIdsCustomBBParameter']
+                                        : null,
                                   ),
                                 ),
                                 snapshot.data!['links'] != null &&
@@ -131,21 +143,24 @@ class CircuitScreen extends StatelessWidget {
                                         ),
                                       )
                                     : Container(),
-                                BoxBoxButton(
-                                  AppLocalizations.of(context)!.grandPrixMap,
-                                  Icon(
-                                    Icons.map_outlined,
-                                  ),
-                                  CircuitMapScreen(
-                                    scheduleLastSavedFormat == 'ergast'
-                                        ? race.circuitId
-                                        : Convert()
-                                            .circuitNameFromFormulaOneToErgastForCircuitPoints(
-                                            race.country,
-                                          ),
-                                  ),
-                                  isDialog: true,
-                                ),
+                                championship == 'Formula 1'
+                                    ? BoxBoxButton(
+                                        AppLocalizations.of(context)!
+                                            .grandPrixMap,
+                                        Icon(
+                                          Icons.map_outlined,
+                                        ),
+                                        CircuitMapScreen(
+                                          scheduleLastSavedFormat == 'ergast'
+                                              ? race.circuitId
+                                              : Convert()
+                                                  .circuitNameFromFormulaOneToErgastForCircuitPoints(
+                                                  race.country,
+                                                ),
+                                        ),
+                                        isDialog: true,
+                                      )
+                                    : Container(),
                                 snapshot.data!['raceResults'] != null &&
                                         snapshot.data!['raceResults'].isNotEmpty
                                     ? RaceResults(
@@ -162,12 +177,19 @@ class CircuitScreen extends StatelessWidget {
                                             ['items'],
                                       )
                                     : Container(),
-                                TrackLayoutImage(race),
-                                CircuitFactsAndHistory(
-                                  race.detailsPath != null
-                                      ? race.detailsPath!
-                                      : race.circuitId,
-                                ),
+                                championship == 'Formula 1'
+                                    ? TrackLayoutImage(race)
+                                    : Container(),
+                                championship == 'Formula 1'
+                                    ? CircuitFactsAndHistory(
+                                        race.detailsPath != null
+                                            ? race.detailsPath!
+                                            : race.circuitId,
+                                      )
+                                    : Container(),
+                                championship == 'Formula E'
+                                    ? Text('Loading done')
+                                    : Container(),
                               ],
                             )
                           : BoxBoxButton(
