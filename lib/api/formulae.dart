@@ -22,6 +22,7 @@ import 'dart:convert';
 
 import 'package:boxbox/api/driver_components.dart';
 import 'package:boxbox/api/formula1.dart';
+import 'package:boxbox/api/race_components.dart';
 import 'package:boxbox/api/team_components.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
@@ -209,6 +210,107 @@ class FormulaE {
       Hive.box('requests').put('teamsStandingsLatestQuery', DateTime.now());
       Hive.box('requests').put('teamStandingsLastSavedFormat', 'fe');
       return teams;
+    }
+  }
+
+  List<Race> formatLastSchedule(Map responseAsJson, bool toCome) {
+    List<Race> races = [];
+    List finalJson = responseAsJson['races'];
+    if (toCome) {
+      for (var element in finalJson) {
+        DateTime raceDate = DateTime.parse(element['date']);
+        DateTime raceEndDate = raceDate.add(Duration(days: 1));
+        DateTime now = DateTime.now();
+
+        if (now.compareTo(raceEndDate) < 0) {
+          races.add(
+            Race(
+              element['sequence'].toString(),
+              '',
+              element['name'],
+              element['date'],
+              '',
+              element['name'],
+              element['name'],
+              '',
+              element['circuit']['circuitName'],
+              [],
+              isFirst: races.isEmpty,
+              raceCoverUrl: 'none',
+              hasRaceHour: false,
+            ),
+          );
+        }
+      }
+    } else {
+      for (var element in finalJson) {
+        DateTime raceDate = DateTime.parse(element['date']);
+        DateTime raceEndDate = raceDate.add(Duration(days: 1));
+        DateTime now = DateTime.now();
+
+        if (now.compareTo(raceEndDate) > 0) {
+          races.add(
+            Race(
+              element['sequence'].toString(),
+              '',
+              element['name'],
+              element['date'],
+              '',
+              element['name'],
+              element['name'],
+              '',
+              element['city'],
+              [],
+              isFirst: races.isEmpty,
+              raceCoverUrl: 'none',
+              hasRaceHour: false,
+            ),
+          );
+        }
+      }
+    }
+    return races;
+  }
+
+  Future<List<Race>> getLastSchedule(bool toCome) async {
+    Map schedule = Hive.box('requests').get('schedule', defaultValue: {});
+    DateTime latestQuery = Hive.box('requests').get(
+      'scheduleLatestQuery',
+      defaultValue: DateTime.now().subtract(
+        const Duration(hours: 1),
+      ),
+    ) as DateTime;
+    String scheduleLastSavedFormat = Hive.box('requests')
+        .get('scheduleLastSavedFormat', defaultValue: 'ergast');
+
+    if (latestQuery
+            .add(
+              const Duration(minutes: 30),
+            )
+            .isAfter(DateTime.now()) &&
+        schedule.isNotEmpty &&
+        scheduleLastSavedFormat == 'fe') {
+      return formatLastSchedule(schedule, toCome);
+    } else {
+      var url = Uri.parse(
+        '$defaultEndpoint/formula-e/v1/races?championshipId=$championshipId',
+      );
+      var response = await http.get(
+        url,
+        headers: {
+          'Accept': 'application/json',
+          'User-Agent':
+              'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:124.0) Gecko/20100101 Firefox/124.0',
+        },
+      );
+      Map<String, dynamic> responseAsJson = json.decode(
+        utf8.decode(response.bodyBytes),
+      );
+      List<Race> races = formatLastSchedule(responseAsJson, toCome);
+      Hive.box('requests').put('schedule', responseAsJson);
+      Hive.box('requests').put('scheduleLatestQuery', DateTime.now());
+      Hive.box('requests').put('scheduleLastSavedFormat', 'fe');
+      return races;
     }
   }
 }

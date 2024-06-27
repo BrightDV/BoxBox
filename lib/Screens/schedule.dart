@@ -20,6 +20,7 @@
 import 'dart:async';
 
 import 'package:boxbox/api/formula1.dart';
+import 'package:boxbox/api/formulae.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/request_error.dart';
 import 'package:boxbox/api/ergast.dart';
@@ -92,12 +93,18 @@ class ScheduleWidget extends StatelessWidget {
   }) : super(key: key);
 
   Future<List<Race>> getRacesList(bool toCome) async {
-    bool useOfficialDataSoure = Hive.box('settings')
-        .get('useOfficialDataSoure', defaultValue: false) as bool;
-    if (useOfficialDataSoure) {
-      return await Formula1().getLastSchedule(toCome);
+    String championship = Hive.box('settings')
+        .get('championship', defaultValue: 'Formula 1') as String;
+    if (championship == 'Formula 1') {
+      bool useOfficialDataSoure = Hive.box('settings')
+          .get('useOfficialDataSoure', defaultValue: false) as bool;
+      if (useOfficialDataSoure) {
+        return await Formula1().getLastSchedule(toCome);
+      } else {
+        return await ErgastApi().getLastSchedule(toCome);
+      }
     } else {
-      return await ErgastApi().getLastSchedule(toCome);
+      return await FormulaE().getLastSchedule(toCome);
     }
   }
 
@@ -111,7 +118,11 @@ class ScheduleWidget extends StatelessWidget {
       future: getRacesList(toCome),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
-          schedule[scheduleLastSavedFormat == 'ergast' ? 'MRData' : 'events'] !=
+          schedule[scheduleLastSavedFormat == 'ergast'
+                      ? 'MRData'
+                      : scheduleLastSavedFormat == 'f1'
+                          ? 'events'
+                          : 'races'] !=
                   null
               ? RacesList(
                   scheduleLastSavedFormat == 'ergast'
@@ -119,7 +130,9 @@ class ScheduleWidget extends StatelessWidget {
                           schedule,
                           toCome,
                         )
-                      : Formula1().formatLastSchedule(schedule, toCome),
+                      : scheduleLastSavedFormat == 'f1'
+                          ? Formula1().formatLastSchedule(schedule, toCome)
+                          : FormulaE().formatLastSchedule(schedule, toCome),
                   toCome,
                   scrollController: scrollController,
                 )
@@ -135,14 +148,20 @@ class ScheduleWidget extends StatelessWidget {
                   )
             : schedule[scheduleLastSavedFormat == 'ergast'
                         ? 'MRData'
-                        : 'events'] !=
+                        : scheduleLastSavedFormat == 'f1'
+                            ? 'events'
+                            : 'races'] !=
                     null
                 ? (scheduleLastSavedFormat == 'ergast'
                             ? ErgastApi().formatLastSchedule(
                                 schedule,
                                 toCome,
                               )
-                            : Formula1().formatLastSchedule(schedule, toCome))
+                            : scheduleLastSavedFormat == 'f1'
+                                ? Formula1()
+                                    .formatLastSchedule(schedule, toCome)
+                                : FormulaE()
+                                    .formatLastSchedule(schedule, toCome))
                         .isEmpty
                     ? const EmptySchedule()
                     : RacesList(
@@ -151,7 +170,11 @@ class ScheduleWidget extends StatelessWidget {
                                 schedule,
                                 toCome,
                               )
-                            : Formula1().formatLastSchedule(schedule, toCome),
+                            : scheduleLastSavedFormat == 'f1'
+                                ? Formula1()
+                                    .formatLastSchedule(schedule, toCome)
+                                : FormulaE()
+                                    .formatLastSchedule(schedule, toCome),
                         toCome,
                         scrollController: scrollController,
                       )
