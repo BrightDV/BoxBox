@@ -20,6 +20,7 @@
 import 'dart:async';
 
 import 'package:boxbox/api/formula1.dart';
+import 'package:boxbox/api/formulae.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/request_error.dart';
 import 'package:boxbox/api/driver_components.dart';
@@ -89,12 +90,18 @@ class DriversStandingsWidget extends StatelessWidget {
       : super(key: key);
 
   Future<List<Driver>> getDriversList() async {
-    bool useOfficialDataSoure = Hive.box('settings')
-        .get('useOfficialDataSoure', defaultValue: false) as bool;
-    if (useOfficialDataSoure) {
-      return await Formula1().getLastStandings();
+    String championship = Hive.box('settings')
+        .get('championship', defaultValue: 'Formula 1') as String;
+    if (championship == 'Formula 1') {
+      bool useOfficialDataSoure = Hive.box('settings')
+          .get('useOfficialDataSoure', defaultValue: false) as bool;
+      if (useOfficialDataSoure) {
+        return await Formula1().getLastStandings();
+      } else {
+        return await ErgastApi().getLastStandings();
+      }
     } else {
-      return await ErgastApi().getLastStandings();
+      return await FormulaE().getLastStandings();
     }
   }
 
@@ -116,7 +123,9 @@ class DriversStandingsWidget extends StatelessWidget {
               ? DriversList(
                   items: driverStandingsLastSavedFormat == 'ergast'
                       ? ErgastApi().formatLastStandings(driversStandings)
-                      : Formula1().formatLastStandings(driversStandings),
+                      : driverStandingsLastSavedFormat == 'f1'
+                          ? Formula1().formatLastStandings(driversStandings)
+                          : FormulaE().formatLastStandings(driversStandings),
                   scrollController: scrollController,
                 )
               : RequestErrorWidget(snapshot.error.toString());
@@ -133,7 +142,9 @@ class DriversStandingsWidget extends StatelessWidget {
                 ? DriversList(
                     items: driverStandingsLastSavedFormat == 'ergast'
                         ? ErgastApi().formatLastStandings(driversStandings)
-                        : Formula1().formatLastStandings(driversStandings),
+                        : driverStandingsLastSavedFormat == 'f1'
+                            ? Formula1().formatLastStandings(driversStandings)
+                            : FormulaE().formatLastStandings(driversStandings),
                     scrollController: scrollController,
                   )
                 : const LoadingIndicatorUtil();
@@ -151,12 +162,18 @@ class TeamsStandingsWidget extends StatelessWidget {
   }) : super(key: key);
 
   Future<List<Team>> getLastTeamsStandings() async {
-    bool useOfficialDataSoure = Hive.box('settings')
-        .get('useOfficialDataSoure', defaultValue: false) as bool;
-    if (useOfficialDataSoure) {
-      return await Formula1().getLastTeamsStandings();
+    String championship = Hive.box('settings')
+        .get('championship', defaultValue: 'Formula 1') as String;
+    if (championship == 'Formula 1') {
+      bool useOfficialDataSoure = Hive.box('settings')
+          .get('useOfficialDataSoure', defaultValue: false) as bool;
+      if (useOfficialDataSoure) {
+        return await Formula1().getLastTeamsStandings();
+      } else {
+        return await ErgastApi().getLastTeamsStandings();
+      }
     } else {
-      return await ErgastApi().getLastTeamsStandings();
+      return await FormulaE().getLastTeamsStandings();
     }
   }
 
@@ -178,7 +195,9 @@ class TeamsStandingsWidget extends StatelessWidget {
               ? TeamsList(
                   items: teamStandingsLastSavedFormat == 'ergast'
                       ? ErgastApi().formatLastTeamsStandings(teamsStandings)
-                      : Formula1().formatLastTeamsStandings(teamsStandings),
+                      : teamStandingsLastSavedFormat == 'f1'
+                          ? Formula1().formatLastTeamsStandings(teamsStandings)
+                          : FormulaE().formatLastTeamsStandings(teamsStandings),
                   scrollController: scrollController,
                 )
               : RequestErrorWidget(snapshot.error.toString());
@@ -195,7 +214,11 @@ class TeamsStandingsWidget extends StatelessWidget {
                 ? TeamsList(
                     items: teamStandingsLastSavedFormat == 'ergast'
                         ? ErgastApi().formatLastTeamsStandings(teamsStandings)
-                        : Formula1().formatLastTeamsStandings(teamsStandings),
+                        : teamStandingsLastSavedFormat == 'f1'
+                            ? Formula1()
+                                .formatLastTeamsStandings(teamsStandings)
+                            : FormulaE()
+                                .formatLastTeamsStandings(teamsStandings),
                     scrollController: scrollController,
                   )
                 : const LoadingIndicatorUtil();

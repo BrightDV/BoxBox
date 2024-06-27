@@ -20,12 +20,16 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:boxbox/api/driver_components.dart';
 import 'package:boxbox/api/formula1.dart';
+import 'package:boxbox/api/team_components.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
 
 class FormulaE {
   final String defaultEndpoint = "https://api.formula-e.pulselive.com";
+  final String championshipId = "84467676-4d5d-4c97-ae07-0b7520bb95ea";
+  // TODO: needs update for a new season ?
 
   List<News> formatResponse(Map responseAsJson) {
     List finalJson = responseAsJson['content'];
@@ -87,6 +91,125 @@ class FormulaE {
       Hive.box('requests').put('newsLastSavedFormat', 'fe');
     }
     return formatResponse(responseAsJson);
+  }
+
+  List<Driver> formatLastStandings(Map responseAsJson) {
+    List<Driver> drivers = [];
+    List finalJson = responseAsJson['drivers'];
+    for (var element in finalJson) {
+      drivers.add(
+        Driver(
+          element['driverId'],
+          element['driverPosition'].toString(),
+          '',
+          element['driverFirstName'],
+          element['driverLastName'],
+          element['driverTLA'],
+          element['driverTeamName'],
+          element['driverPoints'].toString(),
+        ),
+      );
+    }
+    return drivers;
+  }
+
+  FutureOr<List<Driver>> getLastStandings() async {
+    Map driverStandings =
+        Hive.box('requests').get('driversStandings', defaultValue: {});
+    DateTime latestQuery = Hive.box('requests').get(
+      'driversStandingsLatestQuery',
+      defaultValue: DateTime.now(),
+    ) as DateTime;
+    String driverStandingsLastSavedFormat = Hive.box('requests')
+        .get('driverStandingsLastSavedFormat', defaultValue: 'ergast');
+
+    if (latestQuery
+            .add(
+              const Duration(minutes: 30),
+            )
+            .isAfter(DateTime.now()) &&
+        driverStandings.isNotEmpty &&
+        driverStandingsLastSavedFormat == 'fe') {
+      return formatLastStandings(driverStandings);
+    } else {
+      var url = Uri.parse(
+        '$defaultEndpoint/formula-e/v1/standings/drivers?championshipId=$championshipId',
+      );
+      var response = await http.get(
+        url,
+        headers: {
+          'Accept': 'application/json',
+          'User-Agent':
+              'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:124.0) Gecko/20100101 Firefox/124.0',
+        },
+      );
+      String bodyAsMap = '{"drivers": ${utf8.decode(response.bodyBytes)}}';
+
+      Map<String, dynamic> responseAsJson = jsonDecode(bodyAsMap);
+      List<Driver> drivers = formatLastStandings(responseAsJson);
+      Hive.box('requests').put('driversStandings', responseAsJson);
+      Hive.box('requests').put('driversStandingsLatestQuery', DateTime.now());
+      Hive.box('requests').put('driverStandingsLastSavedFormat', 'fe');
+      return drivers;
+    }
+  }
+
+  List<Team> formatLastTeamsStandings(Map responseAsJson) {
+    List<Team> drivers = [];
+    List finalJson = responseAsJson['constructors'];
+    for (var element in finalJson) {
+      drivers.add(
+        Team(
+          element['teamId'],
+          element['teamPosition'].toString(),
+          element['teamName'],
+          element['teamPoints'].toString(),
+          'NA',
+        ),
+      );
+    }
+    return drivers;
+  }
+
+  FutureOr<List<Team>> getLastTeamsStandings() async {
+    Map teamsStandings =
+        Hive.box('requests').get('teamsStandings', defaultValue: {});
+    DateTime latestQuery = Hive.box('requests').get(
+      'teamsStandingsLatestQuery',
+      defaultValue: DateTime.now(),
+    ) as DateTime;
+    String teamStandingsLastSavedFormat = Hive.box('requests')
+        .get('teamStandingsLastSavedFormat', defaultValue: 'ergast');
+
+    if (latestQuery
+            .add(
+              const Duration(minutes: 10),
+            )
+            .isAfter(DateTime.now()) &&
+        teamsStandings.isNotEmpty &&
+        teamStandingsLastSavedFormat == 'fe') {
+      return formatLastTeamsStandings(teamsStandings);
+    } else {
+      var url = Uri.parse(
+        '$defaultEndpoint/formula-e/v1/standings/teams?championshipId=$championshipId',
+      );
+      var response = await http.get(
+        url,
+        headers: {
+          'Accept': 'application/json',
+          'User-Agent':
+              'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:124.0) Gecko/20100101 Firefox/124.0',
+        },
+      );
+      String bodyAsMap = '{"constructors": ${utf8.decode(response.bodyBytes)}}';
+
+      Map<String, dynamic> responseAsJson = jsonDecode(bodyAsMap);
+      List<Team> teams = formatLastTeamsStandings(responseAsJson);
+      Hive.box('requests').put('teamsStandings', responseAsJson);
+      Hive.box('requests').put('teamsStandingsLatestQuery', DateTime.now());
+      Hive.box('requests').put('teamStandingsLastSavedFormat', 'fe');
+      return teams;
+    }
   }
 }
 
