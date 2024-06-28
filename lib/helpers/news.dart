@@ -219,6 +219,7 @@ class NewsItem extends StatelessWidget {
                           item.newsId,
                           item.title,
                           false,
+                          news: item,
                         ),
                       ),
                     ),

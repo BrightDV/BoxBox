@@ -1479,6 +1479,9 @@ class BottomActionBar extends StatelessWidget {
   Widget build(BuildContext context) {
     bool shouldUse12HourClock = Hive.box('settings')
         .get('shouldUse12HourClock', defaultValue: false) as bool;
+    String championship = Hive.box('settings')
+        .get('championship', defaultValue: 'Formula 1') as String;
+
     String languageCode = Localizations.localeOf(context).languageCode;
     return Card(
       elevation: 5,
@@ -1496,7 +1499,9 @@ class BottomActionBar extends StatelessWidget {
                       Icons.share_outlined,
                     ),
                     onPressed: () => Share.share(
-                      "https://www.formula1.com/en/latest/article/${article.articleSlug}.${article.articleId}",
+                      championship == 'Formula 1'
+                          ? "https://www.formula1.com/en/latest/article/${article.articleSlug}.${article.articleId}"
+                          : "https://www.fiaformulae.com/en/news/${article.articleId}",
                     ),
                   ),
                   Text(

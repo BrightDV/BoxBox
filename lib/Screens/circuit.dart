@@ -788,7 +788,9 @@ class CuratedSection extends StatelessWidget {
                           article['publishFrom'],
                         ),
                         article['imageUrl'],
-                        author: article['author'],
+                        author: article['author'] != null
+                            ? {'fullName': article['author']}
+                            : null,
                       ),
                 true,
               ),

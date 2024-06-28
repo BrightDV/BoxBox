@@ -58,7 +58,9 @@ class FormulaE {
           element['description'] ?? '',
           DateTime.fromMillisecondsSinceEpoch(element['publishFrom']),
           element['imageUrl'],
-          author: element['author'],
+          author: element['author'] != null
+              ? {'fullName': element['author']}
+              : null,
         ),
       );
     }
@@ -399,7 +401,7 @@ class FormulaE {
     );
 
     url = Uri.parse(
-      '$defaultEndpoint/content/formula-e/EN?contentTypes=video&contentTypes=news&page=0&pageSize=100&references=FORMULA_E_RACE:${race.meetingId}&onlyRestrictedContent=false&detail=DETAILED',
+      '$defaultEndpoint/content/formula-e/EN?contentTypes=video&contentTypes=news&page=0&pageSize=10&references=FORMULA_E_RACE:${race.meetingId}&onlyRestrictedContent=false&detail=DETAILED',
     );
     response = await http.get(
       url,
