@@ -175,7 +175,14 @@ class DriverItem extends StatelessWidget {
   }) : super(key: key);
 
   Color getTeamColors(String teamId) {
-    Color tC = TeamBackgroundColor().getTeamColor(teamId);
+    String championship = Hive.box('settings')
+        .get('championship', defaultValue: 'Formula 1') as String;
+    Color tC;
+    if (championship == 'Formula 1') {
+      tC = TeamBackgroundColor().getTeamColor(teamId);
+    } else {
+      tC = FormulaE().getTeamColor(teamId);
+    }
     return tC;
   }
 

@@ -19,6 +19,7 @@
 
 import 'package:boxbox/Screens/driver_details.dart';
 import 'package:boxbox/api/driver_components.dart';
+import 'package:boxbox/api/formulae.dart';
 import 'package:boxbox/api/race_components.dart';
 import 'package:boxbox/helpers/divider.dart';
 import 'package:boxbox/helpers/team_background_color.dart';
@@ -37,7 +38,14 @@ class DriverResultItem extends StatelessWidget {
   const DriverResultItem(this.item, this.index, {Key? key}) : super(key: key);
 
   Color getTeamColors(String teamId) {
-    Color tC = TeamBackgroundColor().getTeamColor(teamId);
+    String championship = Hive.box('settings')
+        .get('championship', defaultValue: 'Formula 1') as String;
+    Color tC;
+    if (championship == 'Formula 1') {
+      tC = TeamBackgroundColor().getTeamColor(teamId);
+    } else {
+      tC = FormulaE().getTeamColor(teamId);
+    }
     return tC;
   }
 
@@ -346,7 +354,14 @@ class QualificationResultsItem extends StatelessWidget {
       : super(key: key);
 
   Color getTeamColors(String teamId) {
-    Color tC = TeamBackgroundColor().getTeamColor(teamId);
+    String championship = Hive.box('settings')
+        .get('championship', defaultValue: 'Formula 1') as String;
+    Color tC;
+    if (championship == 'Formula 1') {
+      tC = TeamBackgroundColor().getTeamColor(teamId);
+    } else {
+      tC = FormulaE().getTeamColor(teamId);
+    }
     return tC;
   }
 

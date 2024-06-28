@@ -19,6 +19,7 @@
 
 import 'dart:async';
 import 'dart:convert';
+import 'dart:ui';
 
 import 'package:boxbox/api/driver_components.dart';
 import 'package:boxbox/api/formula1.dart';
@@ -418,7 +419,7 @@ class FormulaE {
       if (time == '-') {
         time = '';
       } else {
-        time = '+' + time + 's';
+        time = '+$time';
       }
 
       if (time.lastIndexOf(':') != -1) {
@@ -433,7 +434,7 @@ class FormulaE {
           element['driverFirstName'],
           element['driverLastName'],
           element['driverTLA'],
-          element['team']['id'],
+          element['team']['name'],
           time,
           element['fastestLap'] ?? false,
           element['bestTime'] ?? '',
@@ -546,8 +547,8 @@ class FormulaE {
             element['driverFirstName'],
             element['driverLastName'],
             element['driverTLA'],
-            element['team']['id'],
-            time, // TODO
+            element['team']['name'],
+            time,
             element['fastestLap'] ?? false,
             element['bestTime'] ?? '',
             gap,
@@ -613,8 +614,8 @@ class FormulaE {
             element['driverFirstName'],
             element['driverLastName'],
             element['driverTLA'],
-            element['team']['id'],
-            time, // TODO
+            element['team']['name'],
+            time,
             element['fastestLap'] ?? false,
             element['bestTime'] ?? '',
             gap,
@@ -645,6 +646,40 @@ class FormulaE {
 
   String getTeamCarImageURL(String teamId) {
     return 'https://static-files.formula-e.pulselive.com/cars/$championshipId/$teamId.png';
+  }
+
+  Color getTeamColor(String teamName) {
+    Map colors = {
+      'jaguar': Color(0xff000000),
+      'tag': Color(0xffd5001c),
+      'nissan': Color(0xffc3002f),
+      'ds': Color(0xffcba65f),
+      'andretti': Color(0xffed3124),
+      'neom': Color(0xffff8000),
+      'maserati': Color(0xff001489),
+      'envision': Color(0xff00be26),
+      'ert': Color(0xff3c3c3c),
+      'abt': Color(0xff194997),
+      'mahindra': Color(0xffdd052b),
+    };
+    return colors[teamName.split(' ')[0].toLowerCase()];
+  }
+
+  Future<String> getCircuitImageUrl(String raceId) async {
+    var url = Uri.parse(
+      '$defaultEndpoint/content/formula-e/photo/en/?references=FORMULA_E_RACE:$raceId&tagNames=race:bg-image',
+    );
+    var response = await http.get(
+      url,
+      headers: {
+        'Accept': 'application/json',
+        'User-Agent':
+            'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:124.0) Gecko/20100101 Firefox/124.0',
+      },
+    );
+    Map<String, dynamic> responseAsJson = jsonDecode(response.body);
+
+    return responseAsJson['content'][0]['imageUrl'];
   }
 }
 

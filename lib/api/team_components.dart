@@ -67,8 +67,15 @@ class TeamItem extends StatelessWidget {
 
   const TeamItem(this.item, this.index, {Key? key}) : super(key: key);
 
-  Color getTeamColors(String teamId) {
-    Color tC = TeamBackgroundColor().getTeamColor(teamId);
+  Color getTeamColors(String teamId, String teamName) {
+    String championship = Hive.box('settings')
+        .get('championship', defaultValue: 'Formula 1') as String;
+    Color tC;
+    if (championship == 'Formula 1') {
+      tC = TeamBackgroundColor().getTeamColor(teamId);
+    } else {
+      tC = FormulaE().getTeamColor(teamName);
+    }
     return tC;
   }
 
@@ -76,7 +83,7 @@ class TeamItem extends StatelessWidget {
   Widget build(BuildContext context) {
     Color finalTeamColors = item.teamColor != null
         ? item.teamColor!
-        : getTeamColors(item.constructorId);
+        : getTeamColors(item.constructorId, item.name);
 
     return GestureDetector(
       onTap: () => Navigator.push(

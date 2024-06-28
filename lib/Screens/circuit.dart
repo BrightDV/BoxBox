@@ -367,28 +367,35 @@ class CircuitScreen extends StatelessWidget {
 
 // top image behind the title in the sliver appbar
 class RaceImageProvider extends StatelessWidget {
-  String getCircuitImageUrl(Race race, {bool isFromRaceHub = false}) {
-    String scheduleLastSavedFormat = Hive.box('requests')
-        .get('scheduleLastSavedFormat', defaultValue: 'ergast');
-    if (scheduleLastSavedFormat == 'ergast' || isFromRaceHub) {
-      return RaceTracksUrls().getRaceTrackImageUrl(race.circuitId);
-    } else {
-      String coverUrl = race.raceCoverUrl!;
-      if (race.country == 'Great Britain') {
-        coverUrl =
-            race.raceCoverUrl!.replaceFirst('United_Kingdom', 'Great_Britain');
-      } else if (race.circuitName == 'Monza') {
-        coverUrl = race.raceCoverUrl!.replaceFirst('Italy', 'Monza');
-      } else if (race.circuitName == 'Las Vegas') {
-        coverUrl =
-            'https://media.formula1.com/image/upload/f_auto/q_auto/v1677238736/content/dam/fom-website/2018-redesign-assets/Racehub%20header%20images%2016x9/Las Vegas.jpg.transform/fullbleed/image.jpg';
-      } else if (race.country == 'Abu Dhabi') {
-        coverUrl = race.raceCoverUrl!
-            .replaceFirst('United_Arab_Emirates', 'Abu_Dhabi');
-      } else if (race.country == 'Miami') {
-        coverUrl = race.raceCoverUrl!.replaceFirst('United_States', 'Miami');
+  Future<String> getCircuitImageUrl(Race race,
+      {bool isFromRaceHub = false}) async {
+    String championship = Hive.box('settings')
+        .get('championship', defaultValue: 'Formula 1') as String;
+    if (championship == 'Formula 1') {
+      String scheduleLastSavedFormat = Hive.box('requests')
+          .get('scheduleLastSavedFormat', defaultValue: 'ergast');
+      if (scheduleLastSavedFormat == 'ergast' || isFromRaceHub) {
+        return RaceTracksUrls().getRaceTrackImageUrl(race.circuitId);
+      } else {
+        String coverUrl = race.raceCoverUrl!;
+        if (race.country == 'Great Britain') {
+          coverUrl = race.raceCoverUrl!
+              .replaceFirst('United_Kingdom', 'Great_Britain');
+        } else if (race.circuitName == 'Monza') {
+          coverUrl = race.raceCoverUrl!.replaceFirst('Italy', 'Monza');
+        } else if (race.circuitName == 'Las Vegas') {
+          coverUrl =
+              'https://media.formula1.com/image/upload/f_auto/q_auto/v1677238736/content/dam/fom-website/2018-redesign-assets/Racehub%20header%20images%2016x9/Las Vegas.jpg.transform/fullbleed/image.jpg';
+        } else if (race.country == 'Abu Dhabi') {
+          coverUrl = race.raceCoverUrl!
+              .replaceFirst('United_Arab_Emirates', 'Abu_Dhabi');
+        } else if (race.country == 'Miami') {
+          coverUrl = race.raceCoverUrl!.replaceFirst('United_States', 'Miami');
+        }
+        return coverUrl;
       }
-      return coverUrl;
+    } else {
+      return await FormulaE().getCircuitImageUrl(race.meetingId);
     }
   }
 
@@ -401,13 +408,21 @@ class RaceImageProvider extends StatelessWidget {
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return CachedNetworkImage(
-      errorWidget: (context, url, error) => const Icon(Icons.error_outlined),
-      fadeOutDuration: const Duration(seconds: 1),
-      fadeInDuration: const Duration(seconds: 1),
-      fit: BoxFit.cover,
-      imageUrl: getCircuitImageUrl(race, isFromRaceHub: isFromRaceHub),
-      placeholder: (context, url) => const LoadingIndicatorUtil(),
+    return FutureBuilder(
+      future: getCircuitImageUrl(race),
+      builder: (context, snapshot) => snapshot.hasError
+          ? Icon(Icons.error_outlined)
+          : snapshot.hasData
+              ? CachedNetworkImage(
+                  errorWidget: (context, url, error) =>
+                      const Icon(Icons.error_outlined),
+                  fadeOutDuration: const Duration(seconds: 1),
+                  fadeInDuration: const Duration(seconds: 1),
+                  fit: BoxFit.cover,
+                  imageUrl: snapshot.data!,
+                  placeholder: (context, url) => const LoadingIndicatorUtil(),
+                )
+              : LoadingIndicatorUtil(),
     );
   }
 }

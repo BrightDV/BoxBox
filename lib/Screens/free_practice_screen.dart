@@ -232,6 +232,8 @@ class FreePracticeResultItem extends StatelessWidget {
   Widget build(BuildContext context) {
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
+    String championship = Hive.box('settings')
+        .get('championship', defaultValue: 'Formula 1') as String;
     return Container(
       color: index % 2 == 1
           ? useDarkMode
@@ -271,9 +273,11 @@ class FreePracticeResultItem extends StatelessWidget {
             Expanded(
               flex: 2,
               child: BoxBoxVerticalDivider(
-                color: TeamBackgroundColor().getTeamColor(
-                  result.team,
-                ),
+                color: championship == 'Formula 1'
+                    ? TeamBackgroundColor().getTeamColor(
+                        result.team,
+                      )
+                    : FormulaE().getTeamColor(result.team),
                 thickness: 8,
                 width: 25,
                 indent: 7,
