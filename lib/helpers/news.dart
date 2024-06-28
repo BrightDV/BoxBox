@@ -1797,7 +1797,7 @@ class VideoRenderer extends StatelessWidget {
     return FutureBuilder<Map<String, dynamic>>(
       future: (youtubeId ?? '') != ''
           ? getYouTubeVideoLinks(youtubeId!)
-          : BrightCove().getVideoLinks(videoId, player),
+          : BrightCove().getVideoLinks(videoId, player: player),
       builder: (context, snapshot) => snapshot.hasError
           ? RequestErrorWidget(
               snapshot.error.toString(),

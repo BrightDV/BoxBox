@@ -248,7 +248,7 @@ class Formula1 {
         video = await F1VideosFetcher().getVideoDetails(videoId);
       }
 
-      Map links = await BrightCove().getVideoLinks(videoId, '');
+      Map links = await BrightCove().getVideoLinks(videoId);
       String link =
           links['videos'][links['qualities'].indexOf('${quality}p') + 1];
       // index 0 is preferred quality

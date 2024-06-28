@@ -94,8 +94,8 @@ class BrightCove {
     return responseAsJson;
   }
 
-  Future<Map<String, dynamic>> getVideoLinks(
-      String videoId, String? player) async {
+  Future<Map<String, dynamic>> getVideoLinks(String videoId,
+      {String? player}) async {
     String? filePath =
         await Formula1().downloadedFilePathIfExists('video_${videoId}');
     if (filePath != null) {
