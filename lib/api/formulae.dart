@@ -315,7 +315,7 @@ class FormulaE {
     }
   }
 
-  Future<Map> getSessions(Race race) async {
+  Future<Map> getSessionsAndRaceDetails(Race race) async {
     var url = Uri.parse(
       '$defaultEndpoint/formula-e/v1/races/${race.meetingId}/sessions',
     );
@@ -398,9 +398,25 @@ class FormulaE {
       sessionStates: sessionStates,
     );
 
+    url = Uri.parse(
+      '$defaultEndpoint/content/formula-e/EN?contentTypes=video&contentTypes=news&page=0&pageSize=100&references=FORMULA_E_RACE:${race.meetingId}&onlyRestrictedContent=false&detail=DETAILED',
+    );
+    response = await http.get(
+      url,
+      headers: {
+        'Accept': 'application/json',
+        'User-Agent':
+            'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:124.0) Gecko/20100101 Firefox/124.0',
+      },
+    );
+    responseAsJson = json.decode(
+      utf8.decode(response.bodyBytes),
+    );
+
     Map formatedMap = {
       'raceCustomBBParameter': raceWithSessions,
       'sessionsIdsCustomBBParameter': sessionIds,
+      'contentsCustomBBParameter': responseAsJson['content'],
     };
     return formatedMap;
   }

@@ -67,9 +67,6 @@ class NewsItem extends StatelessWidget {
     this.itemPerRow = 1,
   }) : super(key: key);
 
-  final String endpoint = 'https://formula1.com';
-  final String articleLink = '/en/latest/article/';
-
   @override
   Widget build(BuildContext context) {
     String imageUrl = item.imageUrl;
@@ -84,6 +81,8 @@ class NewsItem extends StatelessWidget {
     }
 
     void showDetailsMenu() {
+      String championship = Hive.box('settings')
+          .get('championship', defaultValue: 'Formula 1') as String;
       final RenderObject overlay =
           Overlay.of(context).context.findRenderObject()!;
 
@@ -163,13 +162,17 @@ class NewsItem extends StatelessWidget {
           if (delta == 0)
             launchUrl(
               Uri.parse(
-                "https://www.formula1.com/en/latest/article/${item.slug}.${item.newsId}",
+                championship == 'Formula 1'
+                    ? "https://www.formula1.com/en/latest/article/${item.slug}.${item.newsId}"
+                    : "https://www.fiaformulae.com/en/news/${item.newsId}",
               ),
               mode: LaunchMode.externalApplication,
             );
           else if (delta == 1)
             Share.share(
-              "https://www.formula1.com/en/latest/article/${item.slug}.${item.newsId}",
+              championship == 'Formula 1'
+                  ? "https://www.formula1.com/en/latest/article/${item.slug}.${item.newsId}"
+                  : "https://www.fiaformulae.com/en/news/${item.newsId}",
             );
           else {
             Clipboard.setData(ClipboardData(text: item.title));
@@ -1290,6 +1293,7 @@ class TextParagraphRenderer extends StatelessWidget {
               Uri.parse("https://web.formula1rp.com/"),
             );
           } else {
+            // TODO: add formula e article opening
             launchUrl(Uri.parse(url));
           }
         },

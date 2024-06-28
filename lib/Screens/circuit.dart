@@ -89,7 +89,7 @@ class CircuitScreen extends StatelessWidget {
                           race:
                               scheduleLastSavedFormat == 'ergast' ? null : race,
                         )
-                      : FormulaE().getSessions(race),
+                      : FormulaE().getSessionsAndRaceDetails(race),
                   builder: (context, snapshot) => snapshot.hasError
                       ? RequestErrorWidget(snapshot.error.toString())
                       : snapshot.hasData
@@ -177,6 +177,12 @@ class CircuitScreen extends StatelessWidget {
                                             ['items'],
                                       )
                                     : Container(),
+                                championship == 'Formula E'
+                                    ? CuratedSection(
+                                        snapshot
+                                            .data!['contentsCustomBBParameter'],
+                                      )
+                                    : Container(),
                                 championship == 'Formula 1'
                                     ? TrackLayoutImage(race)
                                     : Container(),
@@ -186,9 +192,6 @@ class CircuitScreen extends StatelessWidget {
                                             ? race.detailsPath!
                                             : race.circuitId,
                                       )
-                                    : Container(),
-                                championship == 'Formula E'
-                                    ? Text('Loading done')
                                     : Container(),
                               ],
                             )
@@ -746,6 +749,9 @@ class CuratedSection extends StatelessWidget {
   Widget build(BuildContext context) {
     bool useDataSaverMode = Hive.box('settings')
         .get('useDataSaverMode', defaultValue: false) as bool;
+    String championship = Hive.box('settings')
+        .get('championship', defaultValue: 'Formula 1') as String;
+
     return Padding(
       padding: EdgeInsets.only(left: 10),
       child: SingleChildScrollView(
@@ -755,20 +761,35 @@ class CuratedSection extends StatelessWidget {
           children: [
             for (Map article in items)
               NewsItem(
-                News(
-                  article['id'],
-                  article['articleType'],
-                  article['slug'],
-                  article['title'],
-                  article['metaDescription'] ?? ' ',
-                  DateTime.parse(article['updatedAt']),
-                  useDataSaverMode
-                      ? article['thumbnail']['image']['renditions'] != null
-                          ? article['thumbnail']['image']['renditions']['2col']
-                          : article['thumbnail']['image']['url'] +
-                              '.transform/2col-retina/image.jpg'
-                      : article['thumbnail']['image']['url'],
-                ),
+                championship == 'Formula 1'
+                    ? News(
+                        article['id'],
+                        article['articleType'],
+                        article['slug'],
+                        article['title'],
+                        article['metaDescription'] ?? ' ',
+                        DateTime.parse(article['updatedAt']),
+                        useDataSaverMode
+                            ? article['thumbnail']['image']['renditions'] !=
+                                    null
+                                ? article['thumbnail']['image']['renditions']
+                                    ['2col']
+                                : article['thumbnail']['image']['url'] +
+                                    '.transform/2col-retina/image.jpg'
+                            : article['thumbnail']['image']['url'],
+                      )
+                    : News(
+                        article['id'].toString(),
+                        '',
+                        '',
+                        article['title'],
+                        article['description'] ?? ' ',
+                        DateTime.fromMillisecondsSinceEpoch(
+                          article['publishFrom'],
+                        ),
+                        article['imageUrl'],
+                        author: article['author'],
+                      ),
                 true,
               ),
             SizedBox(width: 5),
