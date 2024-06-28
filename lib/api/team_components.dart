@@ -18,6 +18,7 @@
  */
 
 import 'package:boxbox/Screens/team_details.dart';
+import 'package:boxbox/api/formulae.dart';
 import 'package:boxbox/helpers/divider.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/team_background_color.dart';
@@ -26,6 +27,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 class Team {
   final String constructorId;
@@ -193,7 +195,13 @@ class TeamItem extends StatelessWidget {
 
 class TeamCarImageProvider extends StatelessWidget {
   String getTeamCarImageURL(String teamId) {
-    return TeamCarImage().getTeamCarImageURL(teamId);
+    String championship = Hive.box('settings')
+        .get('championship', defaultValue: 'Formula 1') as String;
+    if (championship == 'Formula 1') {
+      return TeamCarImage().getTeamCarImageURL(teamId);
+    } else {
+      return FormulaE().getTeamCarImageURL(teamId);
+    }
   }
 
   final String teamId;
@@ -205,55 +213,64 @@ class TeamCarImageProvider extends StatelessWidget {
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    String championship = Hive.box('settings')
+        .get('championship', defaultValue: 'Formula 1') as String;
     String teamCarImageUrl = teamCarImageCropped != null
         ? teamCarImageCropped!
         : getTeamCarImageURL(teamId);
-    return teamCarImageUrl == 'none'
-        ? SizedBox(
-            width: 120,
-            child: Center(
+    return SizedBox(
+      width: 120,
+      child: teamCarImageUrl == 'none'
+          ? Center(
               child: Icon(
                 Icons.no_photography_outlined,
                 size: 32,
               ),
-            ),
-          )
-        : CachedNetworkImage(
-            imageBuilder: (context, imageProvider) => Transform.scale(
-              alignment: teamCarImageCropped != null
-                  ? Alignment.centerRight
-                  : Alignment.center,
-              scale: 1.5,
-              child: Container(
-                alignment:
-                    teamCarImageCropped != null ? Alignment.centerRight : null,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: imageProvider,
-                    fit: teamCarImageCropped != null ? null : BoxFit.fitHeight,
-                    alignment: teamCarImageCropped != null
-                        ? FractionalOffset.centerRight
-                        : FractionalOffset.centerLeft,
+            )
+          : CachedNetworkImage(
+              imageBuilder: (context, imageProvider) => Transform.scale(
+                alignment: championship == 'Formula 1'
+                    ? teamCarImageCropped != null
+                        ? Alignment.centerRight
+                        : Alignment.center
+                    : Alignment.centerLeft,
+                scale: championship == 'Formula 1' ? 1.5 : 1.6,
+                child: Container(
+                  alignment: teamCarImageCropped != null
+                      ? Alignment.centerRight
+                      : null,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: imageProvider,
+                      fit: championship == 'Formula 1'
+                          ? teamCarImageCropped != null
+                              ? null
+                              : BoxFit.fitHeight
+                          : BoxFit.fitWidth,
+                      alignment: teamCarImageCropped != null
+                          ? FractionalOffset.centerRight
+                          : FractionalOffset.centerLeft,
+                    ),
                   ),
                 ),
               ),
-            ),
-            imageUrl: teamCarImageUrl,
-            placeholder: (context, url) => const SizedBox(
-              width: 100,
-              child: LoadingIndicatorUtil(),
-            ),
-            errorWidget: (context, url, error) =>
-                const Icon(Icons.error_outlined),
-            fadeOutDuration: const Duration(milliseconds: 500),
-            fadeInDuration: const Duration(milliseconds: 500),
-            cacheManager: CacheManager(
-              Config(
-                "teamCarImages",
-                stalePeriod: const Duration(days: 7),
+              imageUrl: teamCarImageUrl,
+              placeholder: (context, url) => const SizedBox(
+                width: 100,
+                child: LoadingIndicatorUtil(),
+              ),
+              errorWidget: (context, url, error) =>
+                  const Icon(Icons.error_outlined),
+              fadeOutDuration: const Duration(milliseconds: 500),
+              fadeInDuration: const Duration(milliseconds: 500),
+              cacheManager: CacheManager(
+                Config(
+                  "teamCarImages",
+                  stalePeriod: const Duration(days: 7),
+                ),
               ),
             ),
-          );
+    );
   }
 }
 

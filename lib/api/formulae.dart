@@ -638,6 +638,14 @@ class FormulaE {
       return driversResults;
     }
   }
+
+  String getDriverImageURL(String driverId) {
+    return 'https://static-files.formula-e.pulselive.com/drivers/$championshipId/right/small/$driverId.png';
+  }
+
+  String getTeamCarImageURL(String teamId) {
+    return 'https://static-files.formula-e.pulselive.com/cars/$championshipId/$teamId.png';
+  }
 }
 
 extension StringExtension on String {
