@@ -121,18 +121,12 @@ class _MainBottomNavigationBarState extends State<MainBottomNavigationBar> {
       progressBar: true,
     );
 
-    List<Widget> screens = championship == 'Formula 1'
-        ? [
-            HomeScreen(scrollController),
-            VideosScreen(scrollController),
-            StandingsScreen(scrollController: scrollController),
-            ScheduleScreen(scrollController: scrollController),
-          ]
-        : [
-            HomeScreen(scrollController),
-            StandingsScreen(scrollController: scrollController),
-            ScheduleScreen(scrollController: scrollController),
-          ];
+    List<Widget> screens = [
+      HomeScreen(scrollController),
+      VideosScreen(scrollController),
+      StandingsScreen(scrollController: scrollController),
+      ScheduleScreen(scrollController: scrollController),
+    ];
     if (_selectedIndex == 0) {
       actions = [
         !kIsWeb && championship == 'Formula 1'
@@ -326,74 +320,44 @@ class _MainBottomNavigationBarState extends State<MainBottomNavigationBar> {
               type: BottomNavigationBarType.fixed,
               currentIndex: _selectedIndex,
               elevation: 10.0,
-              items: championship == 'Formula 1'
-                  ? <BottomNavigationBarItem>[
-                      BottomNavigationBarItem(
-                        icon: const Icon(
-                          Icons.feed_outlined,
-                        ),
-                        activeIcon: const Icon(
-                          Icons.feed,
-                        ),
-                        label: AppLocalizations.of(context)?.news,
-                      ),
-                      BottomNavigationBarItem(
-                        icon: const Icon(
-                          Icons.play_circle_outline,
-                        ),
-                        activeIcon: const Icon(
-                          Icons.play_circle,
-                        ),
-                        label: AppLocalizations.of(context)?.videos,
-                      ),
-                      BottomNavigationBarItem(
-                        icon: const Icon(
-                          Icons.emoji_events_outlined,
-                        ),
-                        activeIcon: const Icon(
-                          Icons.emoji_events,
-                        ),
-                        label: AppLocalizations.of(context)?.standings,
-                      ),
-                      BottomNavigationBarItem(
-                        icon: const Icon(
-                          Icons.calendar_today_outlined,
-                        ),
-                        activeIcon: const Icon(
-                          Icons.calendar_today,
-                        ),
-                        label: AppLocalizations.of(context)?.schedule,
-                      ),
-                    ]
-                  : <BottomNavigationBarItem>[
-                      BottomNavigationBarItem(
-                        icon: const Icon(
-                          Icons.feed_outlined,
-                        ),
-                        activeIcon: const Icon(
-                          Icons.feed,
-                        ),
-                        label: AppLocalizations.of(context)?.news,
-                      ),
-                      BottomNavigationBarItem(
-                        icon: const Icon(
-                          Icons.emoji_events_outlined,
-                        ),
-                        activeIcon: const Icon(
-                          Icons.emoji_events,
-                        ),
-                        label: AppLocalizations.of(context)?.standings,
-                      ),
-                      BottomNavigationBarItem(
-                        icon: const Icon(
-                          Icons.calendar_today_outlined,
-                        ),
-                        activeIcon: const Icon(
-                          Icons.calendar_today,
-                        ),
-                        label: AppLocalizations.of(context)?.schedule,
-                      ),
-                    ],
+              items: <BottomNavigationBarItem>[
+                BottomNavigationBarItem(
+                  icon: const Icon(
+                    Icons.feed_outlined,
+                  ),
+                  activeIcon: const Icon(
+                    Icons.feed,
+                  ),
+                  label: AppLocalizations.of(context)?.news,
+                ),
+                BottomNavigationBarItem(
+                  icon: const Icon(
+                    Icons.play_circle_outline,
+                  ),
+                  activeIcon: const Icon(
+                    Icons.play_circle,
+                  ),
+                  label: AppLocalizations.of(context)?.videos,
+                ),
+                BottomNavigationBarItem(
+                  icon: const Icon(
+                    Icons.emoji_events_outlined,
+                  ),
+                  activeIcon: const Icon(
+                    Icons.emoji_events,
+                  ),
+                  label: AppLocalizations.of(context)?.standings,
+                ),
+                BottomNavigationBarItem(
+                  icon: const Icon(
+                    Icons.calendar_today_outlined,
+                  ),
+                  activeIcon: const Icon(
+                    Icons.calendar_today,
+                  ),
+                  label: AppLocalizations.of(context)?.schedule,
+                ),
+              ],
               onTap: _onItemTapped,
             )
           : Hidable(
@@ -408,74 +372,44 @@ class _MainBottomNavigationBarState extends State<MainBottomNavigationBar> {
                 type: BottomNavigationBarType.fixed,
                 currentIndex: _selectedIndex,
                 elevation: 10.0,
-                items: championship == 'Formula 1'
-                    ? <BottomNavigationBarItem>[
-                        BottomNavigationBarItem(
-                          icon: const Icon(
-                            Icons.feed_outlined,
-                          ),
-                          activeIcon: const Icon(
-                            Icons.feed,
-                          ),
-                          label: AppLocalizations.of(context)?.news,
-                        ),
-                        BottomNavigationBarItem(
-                          icon: const Icon(
-                            Icons.play_circle_outline,
-                          ),
-                          activeIcon: const Icon(
-                            Icons.play_circle,
-                          ),
-                          label: AppLocalizations.of(context)?.videos,
-                        ),
-                        BottomNavigationBarItem(
-                          icon: const Icon(
-                            Icons.emoji_events_outlined,
-                          ),
-                          activeIcon: const Icon(
-                            Icons.emoji_events,
-                          ),
-                          label: AppLocalizations.of(context)?.standings,
-                        ),
-                        BottomNavigationBarItem(
-                          icon: const Icon(
-                            Icons.calendar_today_outlined,
-                          ),
-                          activeIcon: const Icon(
-                            Icons.calendar_today,
-                          ),
-                          label: AppLocalizations.of(context)?.schedule,
-                        ),
-                      ]
-                    : <BottomNavigationBarItem>[
-                        BottomNavigationBarItem(
-                          icon: const Icon(
-                            Icons.feed_outlined,
-                          ),
-                          activeIcon: const Icon(
-                            Icons.feed,
-                          ),
-                          label: AppLocalizations.of(context)?.news,
-                        ),
-                        BottomNavigationBarItem(
-                          icon: const Icon(
-                            Icons.emoji_events_outlined,
-                          ),
-                          activeIcon: const Icon(
-                            Icons.emoji_events,
-                          ),
-                          label: AppLocalizations.of(context)?.standings,
-                        ),
-                        BottomNavigationBarItem(
-                          icon: const Icon(
-                            Icons.calendar_today_outlined,
-                          ),
-                          activeIcon: const Icon(
-                            Icons.calendar_today,
-                          ),
-                          label: AppLocalizations.of(context)?.schedule,
-                        ),
-                      ],
+                items: <BottomNavigationBarItem>[
+                  BottomNavigationBarItem(
+                    icon: const Icon(
+                      Icons.feed_outlined,
+                    ),
+                    activeIcon: const Icon(
+                      Icons.feed,
+                    ),
+                    label: AppLocalizations.of(context)?.news,
+                  ),
+                  BottomNavigationBarItem(
+                    icon: const Icon(
+                      Icons.play_circle_outline,
+                    ),
+                    activeIcon: const Icon(
+                      Icons.play_circle,
+                    ),
+                    label: AppLocalizations.of(context)?.videos,
+                  ),
+                  BottomNavigationBarItem(
+                    icon: const Icon(
+                      Icons.emoji_events_outlined,
+                    ),
+                    activeIcon: const Icon(
+                      Icons.emoji_events,
+                    ),
+                    label: AppLocalizations.of(context)?.standings,
+                  ),
+                  BottomNavigationBarItem(
+                    icon: const Icon(
+                      Icons.calendar_today_outlined,
+                    ),
+                    activeIcon: const Icon(
+                      Icons.calendar_today,
+                    ),
+                    label: AppLocalizations.of(context)?.schedule,
+                  ),
+                ],
                 onTap: _onItemTapped,
               ),
             ),

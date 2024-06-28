@@ -25,6 +25,7 @@ import 'package:boxbox/api/driver_components.dart';
 import 'package:boxbox/api/formula1.dart';
 import 'package:boxbox/api/race_components.dart';
 import 'package:boxbox/api/team_components.dart';
+import 'package:boxbox/api/videos.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
 
@@ -95,6 +96,61 @@ class FormulaE {
       Hive.box('requests').put('newsLastSavedFormat', 'fe');
     }
     return formatResponse(responseAsJson);
+  }
+
+  List<Video> formatVideos(Map responseAsJson) {
+    List finalJson = responseAsJson['items'];
+    List<Video> videosList = [];
+
+    for (var element in finalJson) {
+      String formatedDuration;
+      Duration duration = Duration(seconds: element['response']['duration']);
+      if (duration.inHours > 0) {
+        String hours = duration.inHours.toString().padLeft(2, '0');
+        String minutes = (duration.inMinutes % 60).toString().padLeft(2, '0');
+        String seconds = (duration.inSeconds % 60).toString().padLeft(2, '0');
+        formatedDuration = '$hours:$minutes:$seconds';
+      } else {
+        String minutes = duration.inMinutes.toString().padLeft(2, '0');
+        String seconds = (duration.inSeconds % 60).toString().padLeft(2, '0');
+        formatedDuration = '$minutes:$seconds';
+      }
+      videosList.add(
+        Video(
+          element['response']['mediaId'].toString(),
+          'https://fiaformulae.com/en/video/${element['response']['id']}',
+          element['response']['title'],
+          element['response']['description'] ?? '',
+          formatedDuration,
+          element['response']['imageUrl'],
+          DateTime.fromMillisecondsSinceEpoch(
+            element['response']['publishFrom'],
+          ),
+        ),
+      );
+    }
+    return videosList;
+  }
+
+  Future<List<Video>> getLatestVideos(int limit, int offset) async {
+    int page = offset ~/ limit;
+    Uri url = Uri.parse(
+      'https://api.formula-e.pulselive.com/content/formula-e/playlist/EN/15?page=$page&pageSize=$limit&detail=DETAILED&size=$limit',
+    );
+
+    var response = await http.get(
+      url,
+      headers: {
+        'Accept': 'application/json',
+        'User-Agent':
+            'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:124.0) Gecko/20100101 Firefox/124.0',
+      },
+    );
+
+    Map<String, dynamic> responseAsJson = json.decode(
+      utf8.decode(response.bodyBytes),
+    );
+    return formatVideos(responseAsJson);
   }
 
   List<Driver> formatLastStandings(Map responseAsJson) {

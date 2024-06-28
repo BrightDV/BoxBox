@@ -39,6 +39,8 @@ class BrightCove {
   );
 
   Future<Map> fetchStreamData(String videoId, String? player) async {
+    String championship = Hive.box('settings')
+        .get('championship', defaultValue: 'Formula 1') as String;
     late Map responseAsJson;
     if (kIsWeb) {
       late Uri uri;
@@ -48,13 +50,15 @@ class BrightCove {
         );
       } else {
         uri = Uri.parse(
-          'https://edge.api.brightcove.com/playback/v1/accounts/6057949432001/videos/$videoId',
+          championship == 'Formula 1'
+              ? 'https://edge.api.brightcove.com/playback/v1/accounts/6057949432001/videos/$videoId'
+              : 'https://edge.api.brightcove.com/playback/v1/accounts/6275361344001/videos/$videoId',
         );
       }
       Response res = await get(
         uri,
         headers: {
-          'Accept': player == null // TODO: update if multiple websites
+          'Accept': championship == 'Formula 1'
               ? ' application/json;pk=BCpkADawqM1hQVBuXkSlsl6hUsBZQMmrLbIfOjJQ3_n8zmPOhlNSwZhQBF6d5xggxm0t052lQjYyhqZR3FW2eP03YGOER9ihJkUnIhRZGBxuLhnL-QiFpvcDWIh_LvwN5j8zkjTtGKarhsdV'
               : ' application/json;pk=BCpkADawqM0CZElkVwfs62q-JTOc4CeZSNJRfxT923qzbMSqp6qn5VEgWV1iao1cEf2sXX9ce8achTuOfYKUvfchSis_rB5Sxz_ih70GYLYdf8bZgHi3Yq1VK_6v3mj29rxxcJjF3OX6Ri32',
         },
@@ -67,16 +71,16 @@ class BrightCove {
         url =
             'https://edge.api.brightcove.com/playback/v1/accounts/$player/videos/$videoId';
       } else {
-        url =
-            'https://edge.api.brightcove.com/playback/v1/accounts/6057949432001/videos/$videoId';
+        url = championship == 'Formula 1'
+            ? 'https://edge.api.brightcove.com/playback/v1/accounts/6057949432001/videos/$videoId'
+            : 'https://edge.api.brightcove.com/playback/v1/accounts/6275361344001/videos/$videoId';
       }
       final Future<File> fileStream = videoCache.getSingleFile(
         url,
         headers: {
-          'Accept': player == null // TODO: update if multiple websites
+          'Accept': championship == 'Formula 1'
               ? ' application/json;pk=BCpkADawqM1hQVBuXkSlsl6hUsBZQMmrLbIfOjJQ3_n8zmPOhlNSwZhQBF6d5xggxm0t052lQjYyhqZR3FW2eP03YGOER9ihJkUnIhRZGBxuLhnL-QiFpvcDWIh_LvwN5j8zkjTtGKarhsdV'
               : ' application/json;pk=BCpkADawqM0CZElkVwfs62q-JTOc4CeZSNJRfxT923qzbMSqp6qn5VEgWV1iao1cEf2sXX9ce8achTuOfYKUvfchSis_rB5Sxz_ih70GYLYdf8bZgHi3Yq1VK_6v3mj29rxxcJjF3OX6Ri32',
-          if (player != null) 'Origin': 'https://fiaformulae.com',
         },
       );
       final response = await fileStream;
