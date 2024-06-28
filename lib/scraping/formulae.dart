@@ -20,6 +20,7 @@
 import 'dart:convert';
 
 import 'package:boxbox/api/formula1.dart';
+import 'package:boxbox/api/formulae.dart';
 import 'package:html/parser.dart' as parser;
 import 'package:html/dom.dart' as dom;
 import 'package:html2md/html2md.dart' as html2md;
@@ -45,7 +46,7 @@ class FormulaEScraper {
     ),
   ];
 
-  Future<Article> getArticleData(News item, String articleId) async {
+  Future<Article> getArticleData(News? item, String articleId) async {
     http.Response response = await http.get(
       Uri.parse('$defaultEndpoint/en/news/$articleId'),
       headers: {
@@ -96,24 +97,43 @@ class FormulaEScraper {
         );
       }
     }
-
-    Article article = Article(
-      item.newsId,
-      item.slug,
-      item.title,
-      item.datePosted,
-      item.tags ?? [],
-      {
-        'contentType': 'atomImage',
-        'fields': {
-          'image': {'url': item.imageUrl}
-        }
-      },
-      body,
-      [],
-      item.author ?? {},
-    );
-
+    Article article;
+    if (item != null) {
+      article = Article(
+        item.newsId,
+        item.slug,
+        item.title,
+        item.datePosted,
+        item.tags ?? [],
+        {
+          'contentType': 'atomImage',
+          'fields': {
+            'image': {'url': item.imageUrl}
+          }
+        },
+        body,
+        [],
+        item.author ?? {},
+      );
+    } else {
+      News newsItem = await FormulaE().getArticle(articleId);
+      article = Article(
+        newsItem.newsId,
+        newsItem.slug,
+        newsItem.title,
+        newsItem.datePosted,
+        newsItem.tags ?? [],
+        {
+          'contentType': 'atomImage',
+          'fields': {
+            'image': {'url': newsItem.imageUrl}
+          }
+        },
+        body,
+        [],
+        newsItem.author ?? {},
+      );
+    }
     return article;
   }
 }

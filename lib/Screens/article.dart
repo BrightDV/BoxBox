@@ -289,7 +289,7 @@ class ArticleProvider extends StatelessWidget {
       }
     } else {
       Article article = await FormulaEScraper().getArticleData(
-        news!,
+        news,
         articleId,
       );
       updateArticleTitle(article.articleName);

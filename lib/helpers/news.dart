@@ -1293,8 +1293,19 @@ class TextParagraphRenderer extends StatelessWidget {
             launchUrl(
               Uri.parse("https://web.formula1rp.com/"),
             );
+          } else if (url.startsWith('https://www.fiaformulae.com/en/news/')) {
+            String articleId = url.split('/').last;
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ArticleScreen(
+                  articleId,
+                  text,
+                  true,
+                ),
+              ),
+            );
           } else {
-            // TODO: add formula e article opening
             launchUrl(Uri.parse(url));
           }
         },

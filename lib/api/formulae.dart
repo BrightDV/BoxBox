@@ -34,6 +34,37 @@ class FormulaE {
   final String championshipId = "84467676-4d5d-4c97-ae07-0b7520bb95ea";
   // TODO: needs update for a new season ?
 
+  Future<News> getArticle(String articleId) async {
+    Uri url = Uri.parse(
+      'https://api.formula-e.pulselive.com/content/formula-e/text/EN/$articleId',
+    );
+
+    var response = await http.get(
+      url,
+      headers: {
+        'Accept': 'application/json',
+        'User-Agent':
+            'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:124.0) Gecko/20100101 Firefox/124.0',
+      },
+    );
+
+    Map<String, dynamic> responseAsJson =
+        json.decode(utf8.decode(response.bodyBytes));
+
+    return News(
+      responseAsJson['id'].toString(),
+      '',
+      '',
+      responseAsJson['title'],
+      responseAsJson['description'] ?? '',
+      DateTime.fromMillisecondsSinceEpoch(responseAsJson['publishFrom']),
+      responseAsJson['imageUrl'],
+      author: responseAsJson['author'] != null
+          ? {'fullName': responseAsJson['author']}
+          : null,
+    );
+  }
+
   List<News> formatResponse(Map responseAsJson) {
     List finalJson = responseAsJson['content'];
     List<News> newsList = [];
