@@ -108,8 +108,13 @@ class RaceListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String scheduleLastSavedFormat = Hive.box('requests')
-        .get('scheduleLastSavedFormat', defaultValue: 'ergast');
+    String championship = Hive.box('settings')
+        .get('championship', defaultValue: 'Formula 1') as String;
+    String scheduleLastSavedFormat = '';
+    if (championship == 'Formula 1') {
+      scheduleLastSavedFormat = Hive.box('requests')
+          .get('f1ScheduleLastSavedFormat', defaultValue: 'ergast');
+    }
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     bool shouldUse12HourClock = Hive.box('settings')

@@ -370,10 +370,14 @@ class _FreePracticesResultsProviderState
 
   @override
   Widget build(BuildContext context) {
-    String scheduleLastSavedFormat = Hive.box('requests')
-        .get('scheduleLastSavedFormat', defaultValue: 'ergast');
     String championship = Hive.box('settings')
         .get('championship', defaultValue: 'Formula 1') as String;
+    String scheduleLastSavedFormat = '';
+    if (championship == 'Formula 1') {
+      scheduleLastSavedFormat = Hive.box('requests')
+          .get('f1ScheduleLastSavedFormat', defaultValue: 'ergast');
+    }
+
     final Race race = widget.race;
     final bool hasSprint = widget.hasSprint;
 
@@ -592,24 +596,38 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
     late int timeToRace;
     late DateTime raceFullDateParsed;
     String raceUrl = '';
-    String scheduleLastSavedFormat = Hive.box('requests')
-        .get('scheduleLastSavedFormat', defaultValue: 'ergast');
     String championship = Hive.box('settings')
         .get('championship', defaultValue: 'Formula 1') as String;
+    String scheduleLastSavedFormat = '';
+    if (championship == 'Formula 1') {
+      scheduleLastSavedFormat = Hive.box('requests')
+          .get('f1ScheduleLastSavedFormat', defaultValue: 'ergast');
+    }
 
     if (widget.raceUrl != null) {
       timeToRace = -1;
       raceUrl = widget.raceUrl!;
     } else {
       race = widget.race!;
-      savedData = Hive.box('requests')
-          .get('race-${race.round}', defaultValue: {}) as Map;
-      if (scheduleLastSavedFormat == 'ergast' ||
-          widget.isFromRaceHub ||
-          championship == 'Formula E') {
-        raceFullDateParsed = DateTime.parse("${race.date} ${race.raceHour}");
+      if (championship == 'Formula 1') {
+        savedData = Hive.box('requests')
+            .get('f1Race-${race.round}', defaultValue: {}) as Map;
       } else {
-        raceFullDateParsed = DateTime.parse(race.date);
+        savedData = Hive.box('requests')
+            .get('feRace-${race.meetingId}', defaultValue: {}) as Map;
+      }
+      if (championship == 'Formula 1') {
+        if (scheduleLastSavedFormat == 'ergast' || widget.isFromRaceHub) {
+          raceFullDateParsed = DateTime.parse("${race.date} ${race.raceHour}");
+        } else {
+          raceFullDateParsed = DateTime.parse(race.date);
+        }
+      } else {
+        if (race.raceHour != '') {
+          raceFullDateParsed = DateTime.parse("${race.date} ${race.raceHour}");
+        } else {
+          raceFullDateParsed = DateTime.parse(race.date);
+        }
       }
       int timeBetween(DateTime from, DateTime to) {
         return to.difference(from).inSeconds;
@@ -628,8 +646,11 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
         update: _setState,
       );
     } else {
-      String raceResultsLastSavedFormat = Hive.box('requests')
-          .get('raceResultsLastSavedFormat', defaultValue: 'ergast');
+      String raceResultsLastSavedFormat = '';
+      if (championship == 'Formula 1') {
+        raceResultsLastSavedFormat = Hive.box('requests')
+            .get('f1RaceResultsLastSavedFormat', defaultValue: 'ergast');
+      }
       return raceUrl != ''
           ? FutureBuilder<List<DriverResult>>(
               future: getRaceStandingsFromF1(raceUrl),
@@ -1364,8 +1385,13 @@ class _SessionCountdownTimerState extends State<SessionCountdownTimer> {
         .get('shouldUseCountdown', defaultValue: true) as bool;
     bool shouldUse12HourClock = Hive.box('settings')
         .get('shouldUse12HourClock', defaultValue: false) as bool;
-    String scheduleLastSavedFormat = Hive.box('requests')
-        .get('scheduleLastSavedFormat', defaultValue: 'ergast');
+    String championship = Hive.box('settings')
+        .get('championship', defaultValue: 'Formula 1') as String;
+    String scheduleLastSavedFormat = '';
+    if (championship == 'Formula 1') {
+      scheduleLastSavedFormat = Hive.box('requests')
+          .get('f1ScheduleLastSavedFormat', defaultValue: 'ergast');
+    }
     String languageCode = Localizations.localeOf(context).languageCode;
 
     late int timeToRace;

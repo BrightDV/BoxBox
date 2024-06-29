@@ -52,10 +52,13 @@ class CircuitScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String scheduleLastSavedFormat = Hive.box('requests')
-        .get('scheduleLastSavedFormat', defaultValue: 'ergast');
     String championship = Hive.box('settings')
         .get('championship', defaultValue: 'Formula 1') as String;
+    String scheduleLastSavedFormat = '';
+    if (championship == 'Formula 1') {
+      scheduleLastSavedFormat = Hive.box('requests')
+          .get('f1ScheduleLastSavedFormat', defaultValue: 'ergast');
+    }
     return Scaffold(
       body: isFetched ?? true
           ? NestedScrollView(
@@ -91,7 +94,16 @@ class CircuitScreen extends StatelessWidget {
                         )
                       : FormulaE().getSessionsAndRaceDetails(race),
                   builder: (context, snapshot) => snapshot.hasError
-                      ? RequestErrorWidget(snapshot.error.toString())
+                      ? BoxBoxButton(
+                          AppLocalizations.of(context)!.viewResults,
+                          Icon(
+                            Icons.arrow_forward_rounded,
+                          ),
+                          RaceDetailsScreen(
+                            race,
+                            false, // offline
+                          ),
+                        )
                       : snapshot.hasData
                           ? Column(
                               children: [
@@ -376,7 +388,7 @@ class RaceImageProvider extends StatelessWidget {
         .get('championship', defaultValue: 'Formula 1') as String;
     if (championship == 'Formula 1') {
       String scheduleLastSavedFormat = Hive.box('requests')
-          .get('scheduleLastSavedFormat', defaultValue: 'ergast');
+          .get('f1ScheduleLastSavedFormat', defaultValue: 'ergast');
       if (scheduleLastSavedFormat == 'ergast' || isFromRaceHub) {
         return RaceTracksUrls().getRaceTrackImageUrl(race.circuitId);
       } else {
@@ -434,7 +446,7 @@ class RaceImageProvider extends StatelessWidget {
 class TrackLayoutImage extends StatelessWidget {
   String getTrackLayoutImageUrl(Race race) {
     String scheduleLastSavedFormat = Hive.box('requests')
-        .get('scheduleLastSavedFormat', defaultValue: 'ergast');
+        .get('f1ScheduleLastSavedFormat', defaultValue: 'ergast');
     String country = race.country;
     if (country == 'Monaco') {
       country = 'Monoco';
@@ -816,7 +828,7 @@ class CircuitFactsAndHistory extends StatelessWidget {
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     String scheduleLastSavedFormat = Hive.box('requests')
-        .get('scheduleLastSavedFormat', defaultValue: 'ergast');
+        .get('f1ScheduleLastSavedFormat', defaultValue: 'ergast');
     return Padding(
       padding: const EdgeInsets.all(10),
       child: FutureBuilder<Map>(

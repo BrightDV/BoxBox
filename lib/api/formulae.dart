@@ -205,23 +205,20 @@ class FormulaE {
   }
 
   FutureOr<List<Driver>> getLastStandings() async {
-    Map driverStandings =
-        Hive.box('requests').get('driversStandings', defaultValue: {});
+    Map driversStandings =
+        Hive.box('requests').get('feDriversStandings', defaultValue: {});
     DateTime latestQuery = Hive.box('requests').get(
-      'driversStandingsLatestQuery',
+      'feDriversStandingsLatestQuery',
       defaultValue: DateTime.now(),
     ) as DateTime;
-    String driverStandingsLastSavedFormat = Hive.box('requests')
-        .get('driverStandingsLastSavedFormat', defaultValue: 'ergast');
 
     if (latestQuery
             .add(
               const Duration(minutes: 30),
             )
             .isAfter(DateTime.now()) &&
-        driverStandings.isNotEmpty &&
-        driverStandingsLastSavedFormat == 'fe') {
-      return formatLastStandings(driverStandings);
+        driversStandings.isNotEmpty) {
+      return formatLastStandings(driversStandings);
     } else {
       var url = Uri.parse(
         '$defaultEndpoint/formula-e/v1/standings/drivers?championshipId=$championshipId',
@@ -238,9 +235,8 @@ class FormulaE {
 
       Map<String, dynamic> responseAsJson = jsonDecode(bodyAsMap);
       List<Driver> drivers = formatLastStandings(responseAsJson);
-      Hive.box('requests').put('driversStandings', responseAsJson);
-      Hive.box('requests').put('driversStandingsLatestQuery', DateTime.now());
-      Hive.box('requests').put('driverStandingsLastSavedFormat', 'fe');
+      Hive.box('requests').put('feDriversStandings', responseAsJson);
+      Hive.box('requests').put('feDriversStandingsLatestQuery', DateTime.now());
       return drivers;
     }
   }
@@ -264,21 +260,18 @@ class FormulaE {
 
   FutureOr<List<Team>> getLastTeamsStandings() async {
     Map teamsStandings =
-        Hive.box('requests').get('teamsStandings', defaultValue: {});
+        Hive.box('requests').get('feTeamsStandings', defaultValue: {});
     DateTime latestQuery = Hive.box('requests').get(
-      'teamsStandingsLatestQuery',
+      'feTeamsStandingsLatestQuery',
       defaultValue: DateTime.now(),
     ) as DateTime;
-    String teamStandingsLastSavedFormat = Hive.box('requests')
-        .get('teamStandingsLastSavedFormat', defaultValue: 'ergast');
 
     if (latestQuery
             .add(
               const Duration(minutes: 10),
             )
             .isAfter(DateTime.now()) &&
-        teamsStandings.isNotEmpty &&
-        teamStandingsLastSavedFormat == 'fe') {
+        teamsStandings.isNotEmpty) {
       return formatLastTeamsStandings(teamsStandings);
     } else {
       var url = Uri.parse(
@@ -296,9 +289,8 @@ class FormulaE {
 
       Map<String, dynamic> responseAsJson = jsonDecode(bodyAsMap);
       List<Team> teams = formatLastTeamsStandings(responseAsJson);
-      Hive.box('requests').put('teamsStandings', responseAsJson);
-      Hive.box('requests').put('teamsStandingsLatestQuery', DateTime.now());
-      Hive.box('requests').put('teamStandingsLastSavedFormat', 'fe');
+      Hive.box('requests').put('feTeamsStandings', responseAsJson);
+      Hive.box('requests').put('feTeamsStandingsLatestQuery', DateTime.now());
       return teams;
     }
   }
@@ -363,23 +355,20 @@ class FormulaE {
   }
 
   Future<List<Race>> getLastSchedule(bool toCome) async {
-    Map schedule = Hive.box('requests').get('schedule', defaultValue: {});
+    Map schedule = Hive.box('requests').get('feSchedule', defaultValue: {});
     DateTime latestQuery = Hive.box('requests').get(
-      'scheduleLatestQuery',
+      'feScheduleLatestQuery',
       defaultValue: DateTime.now().subtract(
         const Duration(hours: 1),
       ),
     ) as DateTime;
-    String scheduleLastSavedFormat = Hive.box('requests')
-        .get('scheduleLastSavedFormat', defaultValue: 'ergast');
 
     if (latestQuery
             .add(
               const Duration(minutes: 30),
             )
             .isAfter(DateTime.now()) &&
-        schedule.isNotEmpty &&
-        scheduleLastSavedFormat == 'fe') {
+        schedule.isNotEmpty) {
       return formatLastSchedule(schedule, toCome);
     } else {
       var url = Uri.parse(
@@ -397,9 +386,8 @@ class FormulaE {
         utf8.decode(response.bodyBytes),
       );
       List<Race> races = formatLastSchedule(responseAsJson, toCome);
-      Hive.box('requests').put('schedule', responseAsJson);
-      Hive.box('requests').put('scheduleLatestQuery', DateTime.now());
-      Hive.box('requests').put('scheduleLastSavedFormat', 'fe');
+      Hive.box('requests').put('feSchedule', responseAsJson);
+      Hive.box('requests').put('feScheduleLatestQuery', DateTime.now());
       return races;
     }
   }
@@ -584,9 +572,9 @@ class FormulaE {
 
   Future<List<DriverResult>> getRaceStandings(
       String raceId, String sessionId) async {
-    Map results = Hive.box('requests').get('fe-race-$raceId', defaultValue: {});
+    Map results = Hive.box('requests').get('feRace-$raceId', defaultValue: {});
     DateTime latestQuery = Hive.box('requests').get(
-      'fe-race-$raceId-latestQuery',
+      'feRace-$raceId-latestQuery',
       defaultValue: DateTime.now(),
     ) as DateTime;
 
@@ -602,9 +590,9 @@ class FormulaE {
           await _getSessionStandings(raceId, sessionId);
 
       List<DriverResult> driversResults = formatRaceStandings(responseAsJson);
-      Hive.box('requests').put('fe-race-$raceId', responseAsJson);
+      Hive.box('requests').put('feRace-$raceId', responseAsJson);
       Hive.box('requests').put(
-        'fe-race-$raceId-latestQuery',
+        'feRace-$raceId-latestQuery',
         DateTime.now(),
       );
       return driversResults;
