@@ -81,7 +81,7 @@ class _VideoScreenState extends State<VideoScreen> {
             'downloadsList',
             defaultValue: [],
           );
-          downloads.insert(0, 'video_${details['id']}');
+          downloads.insert(0, 'video_f1_${details['id']}');
           Hive.box('downloads').put('downloadsList', downloads);
           update();
         },
@@ -106,6 +106,8 @@ class _VideoScreenState extends State<VideoScreen> {
       'downloadsList',
       defaultValue: [],
     );
+    String championship = Hive.box('settings')
+        .get('championship', defaultValue: 'Formula 1') as String;
 
     final Video video = widget.video;
     return Scaffold(
@@ -127,73 +129,79 @@ class _VideoScreenState extends State<VideoScreen> {
                 ),
         ),
         actions: [
-          IconButton(
-            onPressed: () async {
-              if (downloads.contains('video_${widget.video.videoId}')) {
-                await Formula1().deleteFile('video_${widget.video.videoId}');
-                if (widget.update != null) {
-                  Future.delayed(
-                    Duration(milliseconds: 100),
-                  ).then(
-                    (_) => update(),
-                  );
-                } else {
-                  update();
-                }
-              } else {
-                String? quality =
-                    await DownloadUtils().videoDownloadQualitySelector(
-                  context,
-                );
-                if (quality != null) {
-                  String downloadingState = await Formula1().downloadVideo(
-                    widget.video.videoId,
-                    quality,
-                    video: widget.video,
-                    callback: updateVideoWithType,
-                  );
-                  if (downloadingState == "downloading") {
-                    if (widget.update != null) {
-                      widget.update!();
-                    }
-                    await Fluttertoast.showToast(
-                      msg: AppLocalizations.of(context)!.downloading,
-                      toastLength: Toast.LENGTH_SHORT,
-                      gravity: ToastGravity.BOTTOM,
-                      timeInSecForIosWeb: 1,
-                      textColor: Colors.white,
-                      fontSize: 16.0,
-                    );
-                  } else {
-                    if (downloadingState == "downloading") {
-                      await Fluttertoast.showToast(
-                        msg: AppLocalizations.of(context)!.alreadyDownloading,
-                        toastLength: Toast.LENGTH_SHORT,
-                        gravity: ToastGravity.BOTTOM,
-                        timeInSecForIosWeb: 1,
-                        textColor: Colors.white,
-                        fontSize: 16.0,
-                      );
+          championship == 'Formula 1'
+              ? IconButton(
+                  onPressed: () async {
+                    if (downloads
+                        .contains('video_f1_${widget.video.videoId}')) {
+                      await Formula1()
+                          .deleteFile('video_f1_${widget.video.videoId}');
+                      if (widget.update != null) {
+                        Future.delayed(
+                          Duration(milliseconds: 100),
+                        ).then(
+                          (_) => update(),
+                        );
+                      } else {
+                        update();
+                      }
                     } else {
-                      await Fluttertoast.showToast(
-                        msg: AppLocalizations.of(context)!.errorOccurred,
-                        toastLength: Toast.LENGTH_SHORT,
-                        gravity: ToastGravity.BOTTOM,
-                        timeInSecForIosWeb: 1,
-                        textColor: Colors.white,
-                        fontSize: 16.0,
+                      String? quality =
+                          await DownloadUtils().videoDownloadQualitySelector(
+                        context,
                       );
+                      if (quality != null) {
+                        String downloadingState =
+                            await Formula1().downloadVideo(
+                          widget.video.videoId,
+                          quality,
+                          video: widget.video,
+                          callback: updateVideoWithType,
+                        );
+                        if (downloadingState == "downloading") {
+                          if (widget.update != null) {
+                            widget.update!();
+                          }
+                          await Fluttertoast.showToast(
+                            msg: AppLocalizations.of(context)!.downloading,
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.BOTTOM,
+                            timeInSecForIosWeb: 1,
+                            textColor: Colors.white,
+                            fontSize: 16.0,
+                          );
+                        } else {
+                          if (downloadingState == "downloading") {
+                            await Fluttertoast.showToast(
+                              msg: AppLocalizations.of(context)!
+                                  .alreadyDownloading,
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.BOTTOM,
+                              timeInSecForIosWeb: 1,
+                              textColor: Colors.white,
+                              fontSize: 16.0,
+                            );
+                          } else {
+                            await Fluttertoast.showToast(
+                              msg: AppLocalizations.of(context)!.errorOccurred,
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.BOTTOM,
+                              timeInSecForIosWeb: 1,
+                              textColor: Colors.white,
+                              fontSize: 16.0,
+                            );
+                          }
+                        }
+                      }
                     }
-                  }
-                }
-              }
-            },
-            icon: Icon(
-              downloads.contains('video_${widget.video.videoId}')
-                  ? Icons.delete_outline
-                  : Icons.save_alt_rounded,
-            ),
-          ),
+                  },
+                  icon: Icon(
+                    downloads.contains('video_f1_${widget.video.videoId}')
+                        ? Icons.delete_outline
+                        : Icons.save_alt_rounded,
+                  ),
+                )
+              : Container(),
           Padding(
             padding: const EdgeInsets.only(
               left: 3,

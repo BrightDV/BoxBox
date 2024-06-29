@@ -1925,7 +1925,7 @@ class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
             'downloadsList',
             defaultValue: [],
           );
-          downloads.insert(0, 'video_${details['id']}');
+          downloads.insert(0, 'video_f1_${details['id']}');
           Hive.box('downloads').put('downloadsList', downloads);
           if (widget.update != null) {
             widget.update!();
@@ -2030,6 +2030,8 @@ class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
         },
       );
     } else {
+      String championship = Hive.box('settings')
+          .get('championship', defaultValue: 'Formula 1') as String;
       Map<String, String>? qualities = {};
       int c = 0;
       for (c; c < widget.videoUrls['qualities'].length; c++) {
@@ -2067,19 +2069,20 @@ class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
           overflowMenuIconsColor: useDarkMode ? Colors.white : Colors.black,
           overflowModalTextColor: useDarkMode ? Colors.white : Colors.black,
           showControlsOnInitialize: false,
-          overflowMenuCustomItems: !widget.isFromYouTube
-              ? [
-                  BetterPlayerOverflowMenuItem(
-                    Icons.save_alt_outlined,
-                    'Download',
-                    () async => await downloadVideo(
-                      widget.videoId,
-                      widget.videoUrls['name'],
-                      widget.videoUrls['poster'],
-                    ),
-                  ),
-                ]
-              : [],
+          overflowMenuCustomItems:
+              !widget.isFromYouTube && championship == 'Formula 1'
+                  ? [
+                      BetterPlayerOverflowMenuItem(
+                        Icons.save_alt_outlined,
+                        'Download',
+                        () async => await downloadVideo(
+                          widget.videoId,
+                          widget.videoUrls['name'],
+                          widget.videoUrls['poster'],
+                        ),
+                      ),
+                    ]
+                  : [],
         ),
         placeholder: _buildVideoPlaceholder(),
         showPlaceholderUntilPlay: true,

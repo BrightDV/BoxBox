@@ -36,7 +36,7 @@ class FormulaE {
 
   Future<News> getArticle(String articleId) async {
     Uri url = Uri.parse(
-      'https://api.formula-e.pulselive.com/content/formula-e/text/EN/$articleId',
+      '$defaultEndpoint/content/formula-e/text/EN/$articleId',
     );
 
     var response = await http.get(
@@ -166,7 +166,7 @@ class FormulaE {
   Future<List<Video>> getLatestVideos(int limit, int offset) async {
     int page = offset ~/ limit;
     Uri url = Uri.parse(
-      'https://api.formula-e.pulselive.com/content/formula-e/playlist/EN/15?page=$page&pageSize=$limit&detail=DETAILED&size=$limit',
+      '$defaultEndpoint/content/formula-e/playlist/EN/15?page=$page&pageSize=$limit&detail=DETAILED&size=$limit',
     );
 
     var response = await http.get(

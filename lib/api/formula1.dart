@@ -236,8 +236,7 @@ class Formula1 {
     Video? video,
     Function(TaskStatusUpdate)? callback,
   }) async {
-    bool isDownloaded = await downloadedFileCheck('video_$videoId');
-    // TODO: update to download video from FE
+    bool isDownloaded = await downloadedFileCheck('video_f1_$videoId');
 
     if (!isDownloaded) {
       FileDownloader().unregisterCallbacks(callback: callback);
@@ -263,19 +262,22 @@ class Formula1 {
         'datePosted': video.datePosted.toIso8601String(),
       };
 
+      String taskId = 'video_f1_$videoId';
+      String filename = 'video_f1_$videoId.mp4';
+
       DownloadTask task = DownloadTask(
-        taskId: 'video_$videoId',
+        taskId: taskId,
         url: link,
-        filename: 'video_$videoId.mp4',
+        filename: filename,
       );
 
       int fileSize = await task.expectedFileSize();
       videoDetails['fileSize'] = fileSize;
 
       task = DownloadTask(
-        taskId: 'video_$videoId',
+        taskId: taskId,
         url: link,
-        filename: 'video_$videoId.mp4',
+        filename: filename,
         displayName: video.caption,
         //directory: 'Box, Box! Downloads',
         updates: Updates.statusAndProgress,
