@@ -1732,6 +1732,7 @@ class VideoRenderer extends StatelessWidget {
   final String? caption;
   final Function? update;
   final String? player;
+  final String? articleChampionship;
 
   const VideoRenderer(
     this.videoId, {
@@ -1742,6 +1743,7 @@ class VideoRenderer extends StatelessWidget {
     this.caption,
     this.update,
     this.player,
+    this.articleChampionship,
   }) : super(key: key);
 
   Future<Map<String, dynamic>> getYouTubeVideoLinks(String videoId) async {
@@ -1797,7 +1799,11 @@ class VideoRenderer extends StatelessWidget {
     return FutureBuilder<Map<String, dynamic>>(
       future: (youtubeId ?? '') != ''
           ? getYouTubeVideoLinks(youtubeId!)
-          : BrightCove().getVideoLinks(videoId, player: player),
+          : BrightCove().getVideoLinks(
+              videoId,
+              player: player,
+              articleChampionship: articleChampionship,
+            ),
       builder: (context, snapshot) => snapshot.hasError
           ? RequestErrorWidget(
               snapshot.error.toString(),

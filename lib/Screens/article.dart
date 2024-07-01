@@ -38,6 +38,7 @@ class ArticleScreen extends StatefulWidget {
   final bool isFromLink;
   final Function? update;
   final News? news;
+  final String championshipOfArticle;
 
   const ArticleScreen(
     this.articleId,
@@ -45,6 +46,7 @@ class ArticleScreen extends StatefulWidget {
     this.isFromLink, {
     this.update,
     this.news,
+    this.championshipOfArticle = '',
     Key? key,
   }) : super(key: key);
 
@@ -126,6 +128,10 @@ class _ArticleScreenState extends State<ArticleScreen> {
     );
     String championship = Hive.box('settings')
         .get('championship', defaultValue: 'Formula 1') as String;
+    String championshipOfArticle = widget.championshipOfArticle;
+    if (championshipOfArticle == '') {
+      championshipOfArticle = championship;
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -135,7 +141,8 @@ class _ArticleScreenState extends State<ArticleScreen> {
             valueListenable: articleTitle,
             builder: (context, value, _) {
               return value.toString() == 'Loading...' ||
-                      championship != 'Formula 1'
+                      championship != 'Formula 1' ||
+                      widget.championshipOfArticle != 'Formula 1'
                   ? Container()
                   : IconButton(
                       onPressed: () async {
@@ -235,6 +242,7 @@ class _ArticleScreenState extends State<ArticleScreen> {
       body: ArticleProvider(
         widget.articleId,
         updateTitle,
+        championshipOfArticle,
         news: widget.news,
       ),
     );
@@ -250,50 +258,67 @@ class _ArticleScreenState extends State<ArticleScreen> {
 class ArticleProvider extends StatelessWidget {
   final String articleId;
   final Function updateArticleTitle;
+  final String championshipOfArticle;
   final News? news;
 
   const ArticleProvider(
     this.articleId,
-    this.updateArticleTitle, {
+    this.updateArticleTitle,
+    this.championshipOfArticle, {
     this.news,
     Key? key,
   }) : super(key: key);
+
+  Future<Article> getArticleFromFormula1(
+      String articleId, Function updateArticleTitle) async {
+    String? filePath =
+        await Formula1().downloadedFilePathIfExists('article_${articleId}');
+    if (filePath != null) {
+      File file = File(filePath);
+      Map savedArticle = await json.decode(await file.readAsString());
+      Article article = Article(
+        savedArticle['id'],
+        savedArticle['slug'],
+        savedArticle['title'],
+        DateTime.parse(savedArticle['createdAt']),
+        savedArticle['articleTags'],
+        savedArticle['hero'] ?? {},
+        savedArticle['body'],
+        savedArticle['relatedArticles'],
+        savedArticle['author'] ?? {},
+      );
+      updateArticleTitle(article.articleName);
+      return article;
+    } else {
+      Article article = await Formula1().getArticleData(articleId);
+      updateArticleTitle(article.articleName);
+      return article;
+    }
+  }
+
+  Future<Article> getArticleFromFormulaE(String articleId) async {
+    Article article = await FormulaEScraper().getArticleData(
+      news,
+      articleId,
+    );
+    updateArticleTitle(article.articleName);
+    return article;
+  }
 
   Future<Article> getArticleData(
       String articleId, Function updateArticleTitle) async {
     String championship = Hive.box('settings')
         .get('championship', defaultValue: 'Formula 1') as String;
-    if (championship == 'Formula 1') {
-      String? filePath =
-          await Formula1().downloadedFilePathIfExists('article_${articleId}');
-      if (filePath != null) {
-        File file = File(filePath);
-        Map savedArticle = await json.decode(await file.readAsString());
-        Article article = Article(
-          savedArticle['id'],
-          savedArticle['slug'],
-          savedArticle['title'],
-          DateTime.parse(savedArticle['createdAt']),
-          savedArticle['articleTags'],
-          savedArticle['hero'] ?? {},
-          savedArticle['body'],
-          savedArticle['relatedArticles'],
-          savedArticle['author'] ?? {},
-        );
-        updateArticleTitle(article.articleName);
-        return article;
+    if (championshipOfArticle != '') {
+      if (championshipOfArticle == 'Formula 1') {
+        return await getArticleFromFormula1(articleId, updateArticleTitle);
       } else {
-        Article article = await Formula1().getArticleData(articleId);
-        updateArticleTitle(article.articleName);
-        return article;
+        return await getArticleFromFormulaE(articleId);
       }
+    } else if (championship == 'Formula 1') {
+      return await getArticleFromFormula1(articleId, updateArticleTitle);
     } else {
-      Article article = await FormulaEScraper().getArticleData(
-        news,
-        articleId,
-      );
-      updateArticleTitle(article.articleName);
-      return article;
+      return await getArticleFromFormulaE(articleId);
     }
   }
 
@@ -306,7 +331,10 @@ class ArticleProvider extends StatelessWidget {
           return RequestErrorWidget(snapshot.error.toString());
         }
         return snapshot.hasData
-            ? ArticleParts(snapshot.data!)
+            ? ArticleParts(
+                snapshot.data!,
+                articleChampionship: championshipOfArticle,
+              )
             : const LoadingIndicatorUtil();
       },
     );

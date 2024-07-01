@@ -35,7 +35,13 @@ import 'package:timeago/timeago.dart' as timeago;
 class VideoScreen extends StatefulWidget {
   final Video video;
   final Function? update;
-  const VideoScreen(this.video, {this.update, Key? key}) : super(key: key);
+  final String? videoChampionship;
+  const VideoScreen(
+    this.video, {
+    this.update,
+    this.videoChampionship,
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<VideoScreen> createState() => _VideoScreenState();
@@ -230,6 +236,7 @@ class _VideoScreenState extends State<VideoScreen> {
               autoplay: true,
               heroTag: video.videoId,
               update: update,
+              articleChampionship: widget.videoChampionship,
             ),
           ),
           Padding(

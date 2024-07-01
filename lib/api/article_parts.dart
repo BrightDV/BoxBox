@@ -39,8 +39,13 @@ import 'package:url_launcher/url_launcher.dart';
 
 class ArticleParts extends StatelessWidget {
   final Article article;
+  final String? articleChampionship;
 
-  const ArticleParts(this.article, {Key? key}) : super(key: key);
+  const ArticleParts(
+    this.article, {
+    this.articleChampionship,
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -72,6 +77,7 @@ class ArticleParts extends StatelessWidget {
                                 ['youTubeVideoId'] ??
                             '',
                         player: article.articleHero['fields']['player'],
+                        articleChampionship: articleChampionship,
                       ),
                     ),
                   ),
@@ -91,7 +97,11 @@ class ArticleParts extends StatelessWidget {
                         minWidth: 300,
                         maxWidth: 800,
                       ),
-                      child: WidgetsList(article, articleScrollController),
+                      child: WidgetsList(
+                        article,
+                        articleScrollController,
+                        articleChampionship: articleChampionship,
+                      ),
                     ),
                   ),
                 ),
@@ -111,7 +121,11 @@ class ArticleParts extends StatelessWidget {
                           minWidth: 300,
                           maxWidth: 800,
                         ),
-                        child: WidgetsList(article, articleScrollController),
+                        child: WidgetsList(
+                          article,
+                          articleScrollController,
+                          articleChampionship: articleChampionship,
+                        ),
                       ),
                     ),
                   ),
@@ -124,7 +138,11 @@ class ArticleParts extends StatelessWidget {
                   child: SizedBox(
                     height: MediaQuery.of(context).size.height,
                     width: MediaQuery.of(context).size.width,
-                    child: WidgetsList(article, articleScrollController),
+                    child: WidgetsList(
+                      article,
+                      articleScrollController,
+                      articleChampionship: articleChampionship,
+                    ),
                   ),
                 ),
               );
@@ -134,13 +152,21 @@ class ArticleParts extends StatelessWidget {
 class WidgetsList extends StatelessWidget {
   final Article article;
   final ScrollController articleScrollController;
-  const WidgetsList(this.article, this.articleScrollController, {super.key});
+  final String? articleChampionship;
+  const WidgetsList(
+    this.article,
+    this.articleScrollController, {
+    this.articleChampionship,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
     // load static variables
     bool useDataSaverMode = Hive.box('settings')
         .get('useDataSaverMode', defaultValue: false) as bool;
+    String championship = Hive.box('settings')
+        .get('championship', defaultValue: 'Formula 1') as String;
     List articleContent = article.articleContent;
 
     // set the heroImageUrl for the history
@@ -167,6 +193,7 @@ class WidgetsList extends StatelessWidget {
           'articleId': article.articleId,
           'articleTitle': article.articleName,
           'timeVisited': DateTime.now().toString(),
+          'articleChampionship': articleChampionship ?? championship,
         },
       );
     } else {
@@ -178,6 +205,7 @@ class WidgetsList extends StatelessWidget {
             'articleId': article.articleId,
             'articleTitle': article.articleName,
             'timeVisited': DateTime.now().toString(),
+            'articleChampionship': articleChampionship ?? championship,
           },
         );
       }
@@ -233,6 +261,7 @@ class WidgetsList extends StatelessWidget {
                       element['fields']['videoId'],
                       caption: element['fields']?['caption'] ?? '',
                       player: element['fields']['player'],
+                      articleChampionship: articleChampionship,
                     )
                   : element['contentType'] == 'atomVideoYouTube'
                       ? VideoRenderer(
