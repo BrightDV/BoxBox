@@ -96,7 +96,9 @@ class DriverResultItem extends StatelessWidget {
               Expanded(
                 flex: 2,
                 child: Text(
-                  item.position == '666' ? 'DNF' : item.position,
+                  item.position == '666' || item.position == '0'
+                      ? 'DNF'
+                      : item.position,
                   style: const TextStyle(
                     fontWeight: FontWeight.w600,
                   ),

@@ -19,13 +19,13 @@
 
 import 'dart:async';
 import 'dart:convert';
-import 'dart:ui';
 
 import 'package:boxbox/api/driver_components.dart';
 import 'package:boxbox/api/formula1.dart';
 import 'package:boxbox/api/race_components.dart';
 import 'package:boxbox/api/team_components.dart';
 import 'package:boxbox/api/videos.dart';
+import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
 
@@ -503,15 +503,18 @@ class FormulaE {
     List jsonResponse = raceStandings['results'];
     for (var element in jsonResponse) {
       String time = element['delay'];
+      if (time == '-') {
+        time = element['sessionTime'];
+      }
       while (time.startsWith('0:')) {
         time = time.substring(2);
       }
       if (time.startsWith('00')) {
         time = time.substring(1);
       }
-      if (time == '-') {
-        time = '';
-      } else {
+      if (time == '') {
+        time = 'DNF';
+      } else if (element['delay'] != '-') {
         time = '+$time';
       }
 
@@ -527,7 +530,7 @@ class FormulaE {
           element['driverFirstName'],
           element['driverLastName'],
           element['driverTLA'],
-          element['team']['name'],
+          element['team']?['name'] ?? '',
           time,
           element['fastestLap'] ?? false,
           element['bestTime'] ?? '',
@@ -640,7 +643,7 @@ class FormulaE {
             element['driverFirstName'],
             element['driverLastName'],
             element['driverTLA'],
-            element['team']['name'],
+            element['team']?['name'] ?? '',
             time,
             element['fastestLap'] ?? false,
             element['bestTime'] ?? '',
@@ -707,7 +710,7 @@ class FormulaE {
             element['driverFirstName'],
             element['driverLastName'],
             element['driverTLA'],
-            element['team']['name'],
+            element['team']?['name'] ?? '',
             time,
             element['fastestLap'] ?? false,
             element['bestTime'] ?? '',
@@ -755,7 +758,7 @@ class FormulaE {
       'abt': Color(0xff194997),
       'mahindra': Color(0xffdd052b),
     };
-    return colors[teamName.split(' ')[0].toLowerCase()];
+    return colors[teamName.split(' ')[0].toLowerCase()] ?? Colors.transparent;
   }
 
   Future<String> getCircuitImageUrl(String raceId) async {
