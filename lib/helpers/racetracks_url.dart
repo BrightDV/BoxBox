@@ -110,7 +110,11 @@ class RaceTracksUrls {
   }
 
   String getRaceCoverImageUrl(String gpId) {
-    String gpName = raceCoverImageConverter[gpId]!;
-    return "https://media.formula1.com/content/dam/fom-website/races/${DateTime.now().year}/${gpName}_Grand_Prix.png";
+    String? gpName = raceCoverImageConverter[gpId];
+    if (gpName != null) {
+      return "https://media.formula1.com/content/dam/fom-website/races/${DateTime.now().year}/${gpName}_Grand_Prix.png";
+    } else {
+      return 'none';
+    }
   }
 }

@@ -17,6 +17,7 @@
  * Copyright (c) 2022-2024, BrightDV
  */
 
+import 'package:boxbox/api/formulae.dart';
 import 'package:boxbox/helpers/divider.dart';
 import 'package:boxbox/helpers/driver_image.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
@@ -25,6 +26,7 @@ import 'package:boxbox/Screens/driver_details.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 class Driver {
   final String driverId;
@@ -173,7 +175,14 @@ class DriverItem extends StatelessWidget {
   }) : super(key: key);
 
   Color getTeamColors(String teamId) {
-    Color tC = TeamBackgroundColor().getTeamColor(teamId);
+    String championship = Hive.box('settings')
+        .get('championship', defaultValue: 'Formula 1') as String;
+    Color tC;
+    if (championship == 'Formula 1') {
+      tC = TeamBackgroundColor().getTeamColor(teamId);
+    } else {
+      tC = FormulaE().getTeamColor(teamId);
+    }
     return tC;
   }
 
@@ -300,7 +309,13 @@ class DriverItem extends StatelessWidget {
 
 class DriverImageProvider extends StatelessWidget {
   String getDriverImageUrl(String driverId) {
-    return DriverResultsImage().getDriverImageURL(driverId);
+    String championship = Hive.box('settings')
+        .get('championship', defaultValue: 'Formula 1') as String;
+    if (championship == 'Formula 1') {
+      return DriverResultsImage().getDriverImageURL(driverId);
+    } else {
+      return FormulaE().getDriverImageURL(driverId);
+    }
   }
 
   final String driverId;
@@ -315,26 +330,26 @@ class DriverImageProvider extends StatelessWidget {
   Widget build(BuildContext context) {
     String imageUrl =
         driverImage != null ? driverImage! : getDriverImageUrl(driverId);
-    return imageUrl == 'none'
-        ? SizedBox(
-            width: 120,
-            child: Center(
+    return SizedBox(
+      width: 120,
+      child: imageUrl == 'none'
+          ? Center(
               child: Icon(
                 Icons.no_photography_outlined,
                 size: 32,
               ),
+            )
+          : CachedNetworkImage(
+              imageUrl: imageUrl,
+              placeholder: (context, url) => const SizedBox(
+                width: 120,
+                child: LoadingIndicatorUtil(),
+              ),
+              errorWidget: (context, url, error) =>
+                  const Icon(Icons.error_outlined),
+              fadeOutDuration: const Duration(milliseconds: 500),
+              fadeInDuration: const Duration(milliseconds: 500),
             ),
-          )
-        : CachedNetworkImage(
-            imageUrl: imageUrl,
-            placeholder: (context, url) => const SizedBox(
-              width: 120,
-              child: LoadingIndicatorUtil(),
-            ),
-            errorWidget: (context, url, error) =>
-                const Icon(Icons.error_outlined),
-            fadeOutDuration: const Duration(milliseconds: 500),
-            fadeInDuration: const Duration(milliseconds: 500),
-          );
+    );
   }
 }

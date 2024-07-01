@@ -75,6 +75,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
                         articlesHistory[index]['articleId'],
                         articlesHistory[index]['articleTitle'],
                         false,
+                        championshipOfArticle: articlesHistory[index]
+                                ['articleChampionship'] ??
+                            'Formula 1',
                       ),
                     ),
                   );

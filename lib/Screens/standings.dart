@@ -20,6 +20,7 @@
 import 'dart:async';
 
 import 'package:boxbox/api/formula1.dart';
+import 'package:boxbox/api/formulae.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/request_error.dart';
 import 'package:boxbox/api/driver_components.dart';
@@ -89,55 +90,84 @@ class DriversStandingsWidget extends StatelessWidget {
       : super(key: key);
 
   Future<List<Driver>> getDriversList() async {
-    bool useOfficialDataSoure = Hive.box('settings')
-        .get('useOfficialDataSoure', defaultValue: false) as bool;
-    if (useOfficialDataSoure) {
-      return await Formula1().getLastStandings();
+    String championship = Hive.box('settings')
+        .get('championship', defaultValue: 'Formula 1') as String;
+    if (championship == 'Formula 1') {
+      bool useOfficialDataSoure = Hive.box('settings')
+          .get('useOfficialDataSoure', defaultValue: false) as bool;
+      if (useOfficialDataSoure) {
+        return await Formula1().getLastStandings();
+      } else {
+        return await ErgastApi().getLastStandings();
+      }
     } else {
-      return await ErgastApi().getLastStandings();
+      return await FormulaE().getLastStandings();
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    Map driversStandings =
-        Hive.box('requests').get('driversStandings', defaultValue: {}) as Map;
-    String driverStandingsLastSavedFormat = Hive.box('requests')
-        .get('driverStandingsLastSavedFormat', defaultValue: 'ergast');
+    String championship = Hive.box('settings')
+        .get('championship', defaultValue: 'Formula 1') as String;
+    Map driversStandings = {};
+    String driversStandingsLastSavedFormat = '';
+    if (championship == 'Formula 1') {
+      driversStandings = Hive.box('requests')
+          .get('f1DriversStandings', defaultValue: {}) as Map;
+      driversStandingsLastSavedFormat = Hive.box('requests')
+          .get('f1DriversStandingsLastSavedFormat', defaultValue: 'ergast');
+    } else {
+      driversStandings = Hive.box('requests')
+          .get('feDriversStandings', defaultValue: {}) as Map;
+    }
 
     return FutureBuilder<List<Driver>>(
       future: getDriversList(),
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          driversStandings[driverStandingsLastSavedFormat == 'ergast'
-                      ? 'MRData'
-                      : 'drivers'] !=
-                  null
+      builder: (context, snapshot) => snapshot.hasError
+          ? championship == 'Formula 1'
+              ? driversStandings[driversStandingsLastSavedFormat == 'ergast'
+                          ? 'MRData'
+                          : 'drivers'] !=
+                      null
+                  ? DriversList(
+                      items: driversStandingsLastSavedFormat == 'ergast'
+                          ? ErgastApi().formatLastStandings(driversStandings)
+                          : Formula1().formatLastStandings(driversStandings),
+                      scrollController: scrollController,
+                    )
+                  : RequestErrorWidget(snapshot.error.toString())
+              : driversStandings['drivers'] != null
+                  ? DriversList(
+                      items: FormulaE().formatLastStandings(driversStandings),
+                      scrollController: scrollController,
+                    )
+                  : RequestErrorWidget(snapshot.error.toString())
+          : snapshot.hasData
               ? DriversList(
-                  items: driverStandingsLastSavedFormat == 'ergast'
-                      ? ErgastApi().formatLastStandings(driversStandings)
-                      : Formula1().formatLastStandings(driversStandings),
+                  items: snapshot.data!,
                   scrollController: scrollController,
                 )
-              : RequestErrorWidget(snapshot.error.toString());
-        }
-        return snapshot.hasData
-            ? DriversList(
-                items: snapshot.data!,
-                scrollController: scrollController,
-              )
-            : driversStandings[driverStandingsLastSavedFormat == 'ergast'
-                        ? 'MRData'
-                        : 'drivers'] !=
-                    null
-                ? DriversList(
-                    items: driverStandingsLastSavedFormat == 'ergast'
-                        ? ErgastApi().formatLastStandings(driversStandings)
-                        : Formula1().formatLastStandings(driversStandings),
-                    scrollController: scrollController,
-                  )
-                : const LoadingIndicatorUtil();
-      },
+              : championship == 'Formula 1'
+                  ? driversStandings[driversStandingsLastSavedFormat == 'ergast'
+                              ? 'MRData'
+                              : 'drivers'] !=
+                          null
+                      ? DriversList(
+                          items: driversStandingsLastSavedFormat == 'ergast'
+                              ? ErgastApi()
+                                  .formatLastStandings(driversStandings)
+                              : Formula1()
+                                  .formatLastStandings(driversStandings),
+                          scrollController: scrollController,
+                        )
+                      : const LoadingIndicatorUtil()
+                  : driversStandings['drivers'] != null
+                      ? DriversList(
+                          items:
+                              FormulaE().formatLastStandings(driversStandings),
+                          scrollController: scrollController,
+                        )
+                      : const LoadingIndicatorUtil(),
     );
   }
 }
@@ -151,55 +181,85 @@ class TeamsStandingsWidget extends StatelessWidget {
   }) : super(key: key);
 
   Future<List<Team>> getLastTeamsStandings() async {
-    bool useOfficialDataSoure = Hive.box('settings')
-        .get('useOfficialDataSoure', defaultValue: false) as bool;
-    if (useOfficialDataSoure) {
-      return await Formula1().getLastTeamsStandings();
+    String championship = Hive.box('settings')
+        .get('championship', defaultValue: 'Formula 1') as String;
+    if (championship == 'Formula 1') {
+      bool useOfficialDataSoure = Hive.box('settings')
+          .get('useOfficialDataSoure', defaultValue: false) as bool;
+      if (useOfficialDataSoure) {
+        return await Formula1().getLastTeamsStandings();
+      } else {
+        return await ErgastApi().getLastTeamsStandings();
+      }
     } else {
-      return await ErgastApi().getLastTeamsStandings();
+      return await FormulaE().getLastTeamsStandings();
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    Map teamsStandings =
-        Hive.box('requests').get('teamsStandings', defaultValue: {}) as Map;
-    String teamStandingsLastSavedFormat = Hive.box('requests')
-        .get('teamStandingsLastSavedFormat', defaultValue: 'ergast');
+    String championship = Hive.box('settings')
+        .get('championship', defaultValue: 'Formula 1') as String;
+    Map teamsStandings = {};
+    String teamsStandingsLastSavedFormat = '';
+    if (championship == 'Formula 1') {
+      teamsStandings =
+          Hive.box('requests').get('feTeamsStandings', defaultValue: {}) as Map;
+      teamsStandingsLastSavedFormat = Hive.box('requests')
+          .get('feTeamsStandingsLastSavedFormat', defaultValue: 'ergast');
+    } else {
+      teamsStandings =
+          Hive.box('requests').get('feTeamsStandings', defaultValue: {}) as Map;
+    }
 
     return FutureBuilder<List<Team>>(
       future: getLastTeamsStandings(),
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          teamsStandings[teamStandingsLastSavedFormat == 'ergast'
-                      ? 'MRData'
-                      : 'constructors'] !=
-                  null
+      builder: (context, snapshot) => snapshot.hasError
+          ? championship == 'Formula 1'
+              ? teamsStandings[teamsStandingsLastSavedFormat == 'ergast'
+                          ? 'MRData'
+                          : 'constructors'] !=
+                      null
+                  ? TeamsList(
+                      items: teamsStandingsLastSavedFormat == 'ergast'
+                          ? ErgastApi().formatLastTeamsStandings(teamsStandings)
+                          : Formula1().formatLastTeamsStandings(teamsStandings),
+                      scrollController: scrollController,
+                    )
+                  : RequestErrorWidget(snapshot.error.toString())
+              : teamsStandings['constructors'] != null
+                  ? TeamsList(
+                      items:
+                          FormulaE().formatLastTeamsStandings(teamsStandings),
+                      scrollController: scrollController,
+                    )
+                  : RequestErrorWidget(snapshot.error.toString())
+          : snapshot.hasData
               ? TeamsList(
-                  items: teamStandingsLastSavedFormat == 'ergast'
-                      ? ErgastApi().formatLastTeamsStandings(teamsStandings)
-                      : Formula1().formatLastTeamsStandings(teamsStandings),
+                  items: snapshot.data!,
                   scrollController: scrollController,
                 )
-              : RequestErrorWidget(snapshot.error.toString());
-        }
-        return snapshot.hasData
-            ? TeamsList(
-                items: snapshot.data!,
-                scrollController: scrollController,
-              )
-            : teamsStandings[teamStandingsLastSavedFormat == 'ergast'
-                        ? 'MRData'
-                        : 'constructors'] !=
-                    null
-                ? TeamsList(
-                    items: teamStandingsLastSavedFormat == 'ergast'
-                        ? ErgastApi().formatLastTeamsStandings(teamsStandings)
-                        : Formula1().formatLastTeamsStandings(teamsStandings),
-                    scrollController: scrollController,
-                  )
-                : const LoadingIndicatorUtil();
-      },
+              : championship == 'Formula 1'
+                  ? teamsStandings[teamsStandingsLastSavedFormat == 'ergast'
+                              ? 'MRData'
+                              : 'constructors'] !=
+                          null
+                      ? TeamsList(
+                          items: teamsStandingsLastSavedFormat == 'ergast'
+                              ? ErgastApi()
+                                  .formatLastTeamsStandings(teamsStandings)
+                              : Formula1()
+                                  .formatLastTeamsStandings(teamsStandings),
+                          scrollController: scrollController,
+                        )
+                      : const LoadingIndicatorUtil()
+                  : teamsStandings['constructors'] != null
+                      ? TeamsList(
+                          items: FormulaE()
+                              .formatLastTeamsStandings(teamsStandings),
+                          scrollController: scrollController,
+                        )
+                      : const LoadingIndicatorUtil(),
     );
   }
 }

@@ -50,6 +50,7 @@ dependencies:
   hive: ^2.1.0
   hive_flutter: ^1.1.0
   html: ^0.15.4
+  html2md: ^1.3.2
   http: ^0.13.6
   infinite_scroll_pagination: ^4.0.0
   intl: ^0.18.0

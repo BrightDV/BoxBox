@@ -76,13 +76,13 @@ class _ErgastApiCalls {
   }
 
   FutureOr<List<DriverResult>> getRaceStandings(String round) async {
-    Map results = Hive.box('requests').get('race-$round', defaultValue: {});
+    Map results = Hive.box('requests').get('f1Race-$round', defaultValue: {});
     DateTime latestQuery = Hive.box('requests').get(
-      'race-$round-latestQuery',
+      'f1Race-$round-latestQuery',
       defaultValue: DateTime.now(),
     ) as DateTime;
     String raceResultsLastSavedFormat = Hive.box('requests')
-        .get('raceResultsLastSavedFormat', defaultValue: 'ergast');
+        .get('f1RaceResultsLastSavedFormat', defaultValue: 'ergast');
 
     if (latestQuery
             .add(
@@ -100,10 +100,10 @@ class _ErgastApiCalls {
       Map<String, dynamic> responseAsJson = jsonDecode(response.body);
 
       List<DriverResult> driversResults = formatRaceStandings(responseAsJson);
-      Hive.box('requests').put('raceResultsLastSavedFormat', 'ergast');
-      Hive.box('requests').put('race-$round', responseAsJson);
+      Hive.box('requests').put('f1RaceResultsLastSavedFormat', 'ergast');
+      Hive.box('requests').put('f1Race-$round', responseAsJson);
       Hive.box('requests').put(
-        'race-$round-latestQuery',
+        'f1Race-$round-latestQuery',
         DateTime.now(),
       );
       return driversResults;
@@ -228,23 +228,23 @@ class _ErgastApiCalls {
   }
 
   FutureOr<List<Driver>> getLastStandings() async {
-    Map driverStandings =
-        Hive.box('requests').get('driversStandings', defaultValue: {});
+    Map driversStandings =
+        Hive.box('requests').get('f1DriversStandings', defaultValue: {});
     DateTime latestQuery = Hive.box('requests').get(
-      'driversStandingsLatestQuery',
+      'f1DriversStandingsLatestQuery',
       defaultValue: DateTime.now(),
     ) as DateTime;
-    String scheduleLastSavedFormat = Hive.box('requests')
-        .get('scheduleLastSavedFormat', defaultValue: 'ergast');
+    String driversStandingsLastSavedFormat = Hive.box('requests')
+        .get('f1DriversStandingsLastSavedFormat', defaultValue: 'ergast');
 
     if (latestQuery
             .add(
               const Duration(minutes: 10),
             )
             .isAfter(DateTime.now()) &&
-        driverStandings.isNotEmpty &&
-        scheduleLastSavedFormat == 'ergast') {
-      return formatLastStandings(driverStandings);
+        driversStandings.isNotEmpty &&
+        driversStandingsLastSavedFormat == 'ergast') {
+      return formatLastStandings(driversStandings);
     } else {
       var url = Uri.parse(
         'https://ergast.com/api/f1/current/driverStandings.json',
@@ -252,9 +252,9 @@ class _ErgastApiCalls {
       var response = await http.get(url);
       Map<String, dynamic> responseAsJson = jsonDecode(response.body);
       List<Driver> drivers = formatLastStandings(responseAsJson);
-      Hive.box('requests').put('driversStandings', responseAsJson);
-      Hive.box('requests').put('driversStandingsLatestQuery', DateTime.now());
-      Hive.box('requests').put('driverStandingsLastSavedFormat', 'ergast');
+      Hive.box('requests').put('f1DriversStandings', responseAsJson);
+      Hive.box('requests').put('f1DriversStandingsLatestQuery', DateTime.now());
+      Hive.box('requests').put('f1DriversStandingsLastSavedFormat', 'ergast');
       return drivers;
     }
   }
@@ -480,15 +480,15 @@ class _ErgastApiCalls {
   }
 
   FutureOr<List<Race>> getLastSchedule(bool toCome) async {
-    Map schedule = Hive.box('requests').get('schedule', defaultValue: {});
+    Map schedule = Hive.box('requests').get('f1Schedule', defaultValue: {});
     DateTime latestQuery = Hive.box('requests').get(
-      'scheduleLatestQuery',
+      'f1ScheduleLatestQuery',
       defaultValue: DateTime.now().subtract(
         const Duration(hours: 2),
       ),
     ) as DateTime;
     String scheduleLastSavedFormat = Hive.box('requests')
-        .get('scheduleLastSavedFormat', defaultValue: 'ergast');
+        .get('f1ScheduleLastSavedFormat', defaultValue: 'ergast');
 
     if (latestQuery
             .add(
@@ -504,9 +504,9 @@ class _ErgastApiCalls {
       var response = await http.get(url);
       Map<String, dynamic> responseAsJson = jsonDecode(response.body);
       List<Race> races = formatLastSchedule(responseAsJson, toCome);
-      Hive.box('requests').put('schedule', responseAsJson);
-      Hive.box('requests').put('scheduleLatestQuery', DateTime.now());
-      Hive.box('requests').put('scheduleLastSavedFormat', 'ergast');
+      Hive.box('requests').put('f1Schedule', responseAsJson);
+      Hive.box('requests').put('f1ScheduleLatestQuery', DateTime.now());
+      Hive.box('requests').put('f1ScheduleLastSavedFormat', 'ergast');
       return races;
     }
   }
@@ -578,13 +578,13 @@ class _ErgastApiCalls {
 
   FutureOr<List<Team>> getLastTeamsStandings() async {
     Map teamsStandings =
-        Hive.box('requests').get('teamsStandings', defaultValue: {});
+        Hive.box('requests').get('f1TeamsStandings', defaultValue: {});
     DateTime latestQuery = Hive.box('requests').get(
-      'teamsStandingsLatestQuery',
+      'f1TeamsStandingsLatestQuery',
       defaultValue: DateTime.now(),
     ) as DateTime;
-    String scheduleLastSavedFormat = Hive.box('requests')
-        .get('scheduleLastSavedFormat', defaultValue: 'ergast');
+    String teamsStandingsLastSavedFormat = Hive.box('requests')
+        .get('f1TeamsStandingsLastSavedFormat', defaultValue: 'ergast');
 
     if (latestQuery
             .add(
@@ -592,7 +592,7 @@ class _ErgastApiCalls {
             )
             .isAfter(DateTime.now()) &&
         teamsStandings.isNotEmpty &&
-        scheduleLastSavedFormat == 'ergast') {
+        teamsStandingsLastSavedFormat == 'ergast') {
       return formatLastTeamsStandings(teamsStandings);
     } else {
       var url = Uri.parse(
@@ -601,9 +601,9 @@ class _ErgastApiCalls {
       var response = await http.get(url);
       Map<String, dynamic> responseAsJson = jsonDecode(response.body);
       List<Team> teams = formatLastTeamsStandings(responseAsJson);
-      Hive.box('requests').put('teamsStandings', responseAsJson);
-      Hive.box('requests').put('teamsStandingsLatestQuery', DateTime.now());
-      Hive.box('requests').put('teamStandingsLastSavedFormat', 'ergast');
+      Hive.box('requests').put('f1TeamsStandings', responseAsJson);
+      Hive.box('requests').put('f1TeamsStandingsLatestQuery', DateTime.now());
+      Hive.box('requests').put('f1TeamsStandingsLastSavedFormat', 'ergast');
       return teams;
     }
   }
