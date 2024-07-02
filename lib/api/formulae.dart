@@ -31,8 +31,8 @@ import 'package:http/http.dart' as http;
 
 class FormulaE {
   final String defaultEndpoint = "https://api.formula-e.pulselive.com";
-  final String championshipId = "84467676-4d5d-4c97-ae07-0b7520bb95ea";
-  // TODO: needs update for a new season ?
+  late final String championshipId =
+      Hive.box('settings').get('feChampionshipId', defaultValue: 'test');
 
   Future<News> getArticle(String articleId) async {
     Uri url = Uri.parse(
@@ -776,6 +776,23 @@ class FormulaE {
     Map<String, dynamic> responseAsJson = jsonDecode(response.body);
 
     return responseAsJson['content'][0]['imageUrl'];
+  }
+
+  Future<void> updateChampionshipId() async {
+    var url = Uri.parse(
+      '$defaultEndpoint/formula-e/v1/championships/latest',
+    );
+    var response = await http.get(
+      url,
+      headers: {
+        'Accept': 'application/json',
+        'User-Agent':
+            'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:124.0) Gecko/20100101 Firefox/124.0',
+      },
+    );
+    Map<String, dynamic> responseAsJson = jsonDecode(response.body);
+    String championshipId = responseAsJson['id'];
+    Hive.box('settings').put('feChampionshipId', championshipId);
   }
 }
 
