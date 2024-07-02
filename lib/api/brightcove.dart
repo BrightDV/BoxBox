@@ -19,7 +19,7 @@
 
 import 'dart:convert';
 
-import 'package:boxbox/api/formula1.dart';
+import 'package:boxbox/helpers/download.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_cache_manager/file.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
@@ -116,7 +116,7 @@ class BrightCove {
   Future<Map<String, dynamic>> getVideoLinks(String videoId,
       {String? player, String? articleChampionship}) async {
     String? filePath =
-        await Formula1().downloadedFilePathIfExists('video_f1_${videoId}');
+        await DownloadUtils().downloadedFilePathIfExists('video_f1_${videoId}');
 
     if (filePath != null) {
       return {'file': filePath};

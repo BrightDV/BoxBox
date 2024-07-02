@@ -23,6 +23,7 @@ import 'dart:io';
 import 'package:background_downloader/background_downloader.dart';
 import 'package:boxbox/api/article_parts.dart';
 import 'package:boxbox/api/formula1.dart';
+import 'package:boxbox/helpers/download.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/request_error.dart';
 import 'package:boxbox/scraping/formulae.dart';
@@ -77,33 +78,39 @@ class _ArticleScreenState extends State<ArticleScreen> {
         'downloadsDescriptions',
         defaultValue: {},
       );
-
-      Formula1().downloadedFilePathIfExists(statusUpdate.task.taskId).then(
+      DownloadUtils().downloadedFilePathIfExists(statusUpdate.task.taskId).then(
         (path) async {
+          String championship = Hive.box('settings')
+              .get('championship', defaultValue: 'Formula 1') as String;
           File file = File(path!);
           Map savedArticle = json.decode(await file.readAsString());
-
           String heroImageUrl = "";
-          if (savedArticle['hero'].isNotEmpty) {
-            if (savedArticle['hero']['contentType'] == 'atomVideo') {
-              heroImageUrl = savedArticle['hero']['fields']['thumbnail']['url'];
-            } else if (savedArticle['hero']['contentType'] ==
-                'atomVideoYouTube') {
-              heroImageUrl = savedArticle['hero']['fields']['image']['url'];
-            } else if (savedArticle['hero']['contentType'] ==
-                'atomImageGallery') {
-              heroImageUrl =
-                  savedArticle['hero']['fields']['imageGallery'][0]['url'];
-            } else {
-              heroImageUrl = savedArticle['hero']['fields']['image']['url'];
+          if (championship == 'Formula 1') {
+            if (savedArticle['hero'].isNotEmpty) {
+              if (savedArticle['hero']['contentType'] == 'atomVideo') {
+                heroImageUrl =
+                    savedArticle['hero']['fields']['thumbnail']['url'];
+              } else if (savedArticle['hero']['contentType'] ==
+                  'atomVideoYouTube') {
+                heroImageUrl = savedArticle['hero']['fields']['image']['url'];
+              } else if (savedArticle['hero']['contentType'] ==
+                  'atomImageGallery') {
+                heroImageUrl =
+                    savedArticle['hero']['fields']['imageGallery'][0]['url'];
+              } else {
+                heroImageUrl = savedArticle['hero']['fields']['image']['url'];
+              }
             }
           }
 
-          downloadsDescriptions['article_${savedArticle['id']}'] = {
-            'id': savedArticle['id'],
+          String taskId = 'article_f1_${savedArticle['id']}';
+
+          downloadsDescriptions[taskId] = {
+            'id': savedArticle['id'].toString(),
             'type': 'article',
             'title': savedArticle['title'],
             'thumbnail': heroImageUrl,
+            'championship': championship,
           };
           Hive.box('downloads')
               .put('downloadsDescriptions', downloadsDescriptions);
@@ -111,7 +118,7 @@ class _ArticleScreenState extends State<ArticleScreen> {
             'downloadsList',
             defaultValue: [],
           );
-          downloads.insert(0, 'article_${savedArticle['id']}');
+          downloads.insert(0, taskId);
           Hive.box('downloads').put('downloadsList', downloads);
           update();
         },
@@ -141,15 +148,15 @@ class _ArticleScreenState extends State<ArticleScreen> {
             valueListenable: articleTitle,
             builder: (context, value, _) {
               return value.toString() == 'Loading...' ||
-                      championship != 'Formula 1' ||
-                      widget.championshipOfArticle != 'Formula 1'
+                      championshipOfArticle != 'Formula 1'
                   ? Container()
                   : IconButton(
                       onPressed: () async {
                         String downloadingState =
-                            await Formula1().downloadArticle(
+                            await DownloadUtils().downloadArticle(
                           widget.articleId,
                           widget.articleName,
+                          championshipOfArticle,
                           callback: updateArticleWithType,
                         );
                         if (downloadingState == "downloading") {
@@ -164,13 +171,15 @@ class _ArticleScreenState extends State<ArticleScreen> {
                         } else if (downloadingState == "already downloaded") {
                           showDialog(
                             context: context,
-                            builder: (context) => downloadedArticleActionPopup(
-                              'article_${widget.articleId}',
+                            builder: (context) =>
+                                DownloadUtils().downloadedArticleActionPopup(
+                              'article_f1_${widget.articleId}',
                               widget.articleId,
                               widget.articleName,
                               update,
                               updateArticleWithType,
                               context,
+                              championshipOfArticle,
                             ),
                           );
                         } else {
@@ -185,7 +194,9 @@ class _ArticleScreenState extends State<ArticleScreen> {
                         }
                       },
                       icon: Icon(
-                        downloads.contains('article_${widget.articleId}')
+                        downloads.contains(
+                          'article_f1_${widget.articleId}',
+                        )
                             ? Icons.download_done_rounded
                             : Icons.save_alt_rounded,
                       ),
@@ -271,8 +282,8 @@ class ArticleProvider extends StatelessWidget {
 
   Future<Article> getArticleFromFormula1(
       String articleId, Function updateArticleTitle) async {
-    String? filePath =
-        await Formula1().downloadedFilePathIfExists('article_${articleId}');
+    String? filePath = await DownloadUtils()
+        .downloadedFilePathIfExists('article_f1_${articleId}');
     if (filePath != null) {
       File file = File(filePath);
       Map savedArticle = await json.decode(await file.readAsString());
@@ -339,64 +350,4 @@ class ArticleProvider extends StatelessWidget {
       },
     );
   }
-}
-
-AlertDialog downloadedArticleActionPopup(
-  String taskId,
-  String articleId,
-  String articleName,
-  Function update,
-  Function(TaskStatusUpdate) updateArticleWithType,
-  BuildContext context,
-) {
-  return AlertDialog(
-    shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.all(
-        Radius.circular(
-          20.0,
-        ),
-      ),
-    ),
-    contentPadding: const EdgeInsets.all(
-      50.0,
-    ),
-    title: Text(
-      AppLocalizations.of(context)!.alreadyDownloadedArticle,
-      style: TextStyle(
-        fontSize: 24.0,
-      ),
-      textAlign: TextAlign.center,
-    ),
-    actions: <Widget>[
-      ElevatedButton(
-        onPressed: () {
-          Navigator.of(context).pop();
-        },
-        child: Text(
-          AppLocalizations.of(context)!.cancel,
-        ),
-      ),
-      IconButton(
-        onPressed: () async {
-          await Formula1().deleteFile(taskId);
-          Navigator.of(context).pop();
-          update();
-        },
-        icon: Icon(Icons.delete_outline),
-        tooltip: AppLocalizations.of(context)!.delete,
-      ),
-      IconButton(
-        onPressed: () async {
-          await Formula1().downloadArticle(
-            articleId,
-            articleName,
-            callback: updateArticleWithType,
-          );
-          Navigator.of(context).pop();
-        },
-        icon: Icon(Icons.refresh),
-        tooltip: AppLocalizations.of(context)!.refresh,
-      ),
-    ],
-  );
 }

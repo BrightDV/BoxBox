@@ -20,7 +20,6 @@
 import 'dart:convert';
 
 import 'package:background_downloader/background_downloader.dart';
-import 'package:boxbox/api/formula1.dart';
 import 'package:boxbox/api/videos.dart';
 import 'package:boxbox/helpers/download.dart';
 import 'package:boxbox/helpers/news.dart';
@@ -65,7 +64,7 @@ class _VideoScreenState extends State<VideoScreen> {
         defaultValue: {},
       );
 
-      Formula1().downloadedFilePathIfExists(statusUpdate.task.taskId).then(
+      DownloadUtils().downloadedFilePathIfExists(statusUpdate.task.taskId).then(
         (path) {
           Map details = json.decode(statusUpdate.task.metaData);
           downloadsDescriptions[statusUpdate.task.taskId] = {
@@ -140,7 +139,7 @@ class _VideoScreenState extends State<VideoScreen> {
                   onPressed: () async {
                     if (downloads
                         .contains('video_f1_${widget.video.videoId}')) {
-                      await Formula1()
+                      await DownloadUtils()
                           .deleteFile('video_f1_${widget.video.videoId}');
                       if (widget.update != null) {
                         Future.delayed(
@@ -158,7 +157,7 @@ class _VideoScreenState extends State<VideoScreen> {
                       );
                       if (quality != null) {
                         String downloadingState =
-                            await Formula1().downloadVideo(
+                            await DownloadUtils().downloadVideo(
                           widget.video.videoId,
                           quality,
                           video: widget.video,

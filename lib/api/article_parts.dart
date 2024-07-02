@@ -330,7 +330,7 @@ class WidgetsList extends StatelessWidget {
 
         // related articles
         article.relatedArticles.isNotEmpty
-            ? RelatedArticles(article, scrollController)
+            ? RelatedArticles(article, scrollController, articleChampionship)
             : SizedBox(height: 10),
       ],
     );
@@ -1570,7 +1570,13 @@ class BottomActionBar extends StatelessWidget {
 class RelatedArticles extends StatelessWidget {
   final Article article;
   final ScrollController scrollController;
-  const RelatedArticles(this.article, this.scrollController, {super.key});
+  final String? articleChampionship;
+  const RelatedArticles(
+    this.article,
+    this.scrollController,
+    this.articleChampionship, {
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -1610,6 +1616,7 @@ class RelatedArticles extends StatelessWidget {
                               : '',
                         ),
                         true,
+                        articleChampionship: articleChampionship,
                       ),
                   ],
                 ),
@@ -1704,6 +1711,7 @@ class RelatedArticles extends StatelessWidget {
                   ),
                   true,
                   width: 300,
+                  articleChampionship: articleChampionship,
                 ),
               ),
             ),

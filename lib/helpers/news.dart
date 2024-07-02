@@ -57,6 +57,7 @@ class NewsItem extends StatelessWidget {
   final bool? showSmallDescription;
   final double? width;
   final int itemPerRow;
+  final String? articleChampionship;
 
   const NewsItem(
     this.item,
@@ -65,6 +66,7 @@ class NewsItem extends StatelessWidget {
     this.showSmallDescription,
     this.width,
     this.itemPerRow = 1,
+    this.articleChampionship,
   }) : super(key: key);
 
   @override
@@ -220,6 +222,7 @@ class NewsItem extends StatelessWidget {
                           item.title,
                           false,
                           news: item,
+                          championshipOfArticle: articleChampionship ?? '',
                         ),
                       ),
                     ),
@@ -363,6 +366,7 @@ class NewsItem extends StatelessWidget {
                           item.title,
                           false,
                           news: item,
+                          championshipOfArticle: articleChampionship ?? '',
                         ),
                       ),
                     ),
@@ -1176,6 +1180,7 @@ class TextParagraphRenderer extends StatelessWidget {
                   articleId,
                   text,
                   true,
+                  championshipOfArticle: 'Formula 1',
                 ),
               ),
             );
@@ -1189,6 +1194,7 @@ class TextParagraphRenderer extends StatelessWidget {
                   articleId,
                   text,
                   true,
+                  championshipOfArticle: 'Formula 1',
                 ),
               ),
             );
@@ -1302,6 +1308,7 @@ class TextParagraphRenderer extends StatelessWidget {
                   articleId,
                   text,
                   true,
+                  championshipOfArticle: 'Formula E',
                 ),
               ),
             );
@@ -1909,7 +1916,7 @@ class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
         defaultValue: {},
       );
 
-      Formula1().downloadedFilePathIfExists(statusUpdate.task.taskId).then(
+      DownloadUtils().downloadedFilePathIfExists(statusUpdate.task.taskId).then(
         (path) {
           Map details = json.decode(statusUpdate.task.metaData);
           downloadsDescriptions[statusUpdate.task.taskId] = {
@@ -1952,7 +1959,7 @@ class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
       context,
     );
     if (quality != null) {
-      String downloadingState = await Formula1().downloadVideo(
+      String downloadingState = await DownloadUtils().downloadVideo(
         widget.videoId,
         quality,
         callback: updateWithType,

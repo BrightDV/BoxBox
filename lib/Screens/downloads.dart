@@ -267,6 +267,13 @@ class DownloadsList extends StatelessWidget {
                                                   .taskId]['title'],
                                           false,
                                           update: update,
+                                          championshipOfArticle:
+                                              downloadsDescriptions[
+                                                          separatedRecords[1]
+                                                                  [index]
+                                                              .taskId]
+                                                      ['championship'] ??
+                                                  'Formula 1',
                                         )
                                       : VideoScreen(
                                           Video(
