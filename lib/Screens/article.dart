@@ -27,8 +27,11 @@ import 'package:boxbox/helpers/download.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/request_error.dart';
 import 'package:boxbox/scraping/formulae.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:marquee/marquee.dart';
@@ -342,11 +345,82 @@ class ArticleProvider extends StatelessWidget {
           return RequestErrorWidget(snapshot.error.toString());
         }
         return snapshot.hasData
-            ? ArticleParts(
-                snapshot.data!,
-                articleChampionship: championshipOfArticle,
-              )
+            ? snapshot.data!.articleContent.length == 0
+                ? ArticleWebView(snapshot.data!)
+                : ArticleParts(
+                    snapshot.data!,
+                    articleChampionship: championshipOfArticle,
+                  )
             : const LoadingIndicatorUtil();
+      },
+    );
+  }
+}
+
+class ArticleWebView extends StatefulWidget {
+  final Article article;
+  const ArticleWebView(this.article, {super.key});
+
+  @override
+  State<ArticleWebView> createState() => _ArticleWebViewState();
+}
+
+class _ArticleWebViewState extends State<ArticleWebView> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return InAppWebView(
+      initialUrlRequest: URLRequest(
+        url: WebUri(
+          'https://www.fiaformulae.com/en/news/${widget.article.articleId}?webview=true',
+        ),
+        headers: {
+          'User-Agent':
+              'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:124.0) Gecko/20100101 Firefox/124.0',
+          'Accept-Encoding': 'gzip, deflate, br',
+          'DNT': '1',
+          'Sec-GPC': '1',
+          'Connection': 'keep-alive',
+          'Upgrade-Insecure-Requests': '1',
+          'Sec-Fetch-Dest': 'document',
+          'Sec-Fetch-Mode': 'navigate',
+          'Sec-Fetch-Site': 'none',
+          'Sec-Fetch-User': '?1',
+        },
+      ),
+      initialSettings: InAppWebViewSettings(
+        contentBlockers: [
+          ContentBlocker(
+            trigger: ContentBlockerTrigger(
+              urlFilter: '.*',
+            ),
+            action: ContentBlockerAction(
+              type: ContentBlockerActionType.CSS_DISPLAY_NONE,
+              selector:
+                  '.onetrust-pc-dark-filter, .otFlat, ._hj_feedback_container, .global-race-bar',
+            ),
+          ),
+        ],
+      ),
+      gestureRecognizers: {
+        Factory<VerticalDragGestureRecognizer>(
+          () => VerticalDragGestureRecognizer(),
+        ),
+        Factory<HorizontalDragGestureRecognizer>(
+          () => HorizontalDragGestureRecognizer(),
+        ),
+        Factory<ScaleGestureRecognizer>(
+          () => ScaleGestureRecognizer(),
+        ),
       },
     );
   }

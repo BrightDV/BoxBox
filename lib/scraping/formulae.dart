@@ -87,14 +87,16 @@ class FormulaEScraper {
         );
       } else {
         String parsedElement = html2md.convert(element, rules: rules);
-        body.add(
-          {
-            'contentType': 'atomRichText',
-            'fields': {
-              'richTextBlock': parsedElement,
+        if (parsedElement != '') {
+          body.add(
+            {
+              'contentType': 'atomRichText',
+              'fields': {
+                'richTextBlock': parsedElement,
+              },
             },
-          },
-        );
+          );
+        }
       }
     }
     Article article;
