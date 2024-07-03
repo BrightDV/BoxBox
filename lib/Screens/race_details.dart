@@ -63,7 +63,7 @@ class RaceDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: race.isPreSeasonTesting ?? false
+        body: race.isPreSeasonTesting ?? false // only f1
             ? NestedScrollView(
                 headerSliverBuilder:
                     (BuildContext context, bool innerBoxIsScrolled) {
@@ -164,7 +164,7 @@ class RaceDetailsScreen extends StatelessWidget {
                           ),
                         ];
                       },
-                      body: hasSprint
+                      body: hasSprint // only f1
                           ? TabBarView(
                               children: [
                                 FreePracticesResultsProvider(
@@ -285,7 +285,7 @@ class RaceDetailsScreen extends StatelessWidget {
                                       ? sessions!.length == 4
                                           ? sessions!.sublist(0, 2)
                                           : sessions!.sublist(0, 1)
-                                      : null,
+                                      : [],
                                 ),
                                 MediaQuery.removePadding(
                                   context: context,
@@ -489,14 +489,20 @@ class _FreePracticesResultsProviderState
       itemBuilder: (context, index) => maxSession > index
           ? ListTile(
               title: Text(
-                sessionsTitle[index],
+                championship == 'Formula E' &&
+                        (widget.sessionsId?.length ?? 0) == 1
+                    ? sessionsTitle[2]
+                    : sessionsTitle[index],
                 textAlign: TextAlign.center,
               ),
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => FreePracticeScreen(
-                    sessionsTitle[index],
+                    championship == 'Formula E' &&
+                            (widget.sessionsId?.length ?? 0) == 1
+                        ? sessionsTitle[2]
+                        : sessionsTitle[index],
                     index + 1,
                     race.circuitId,
                     race.meetingId,

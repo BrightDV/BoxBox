@@ -511,21 +511,21 @@ class FormulaE {
   }
 
   Future<Map> getSessionsAndRaceDetails(Race race) async {
-    Map responseAsJson = await getSessions(race.meetingId);
+    Map sessions = await getSessions(race.meetingId);
 
     Race raceWithSessions = Race(
       race.round,
       race.meetingId,
       race.raceName,
       race.date,
-      responseAsJson['original']['sessions'].last['startTime'],
+      sessions['original']['sessions'].last['startTime'],
       race.circuitId,
       race.circuitName,
       race.circuitUrl,
       race.country,
-      responseAsJson['sessionDates'],
+      sessions['sessionDates'],
       raceCoverUrl: race.raceCoverUrl,
-      sessionStates: responseAsJson['sessionStates'],
+      sessionStates: sessions['sessionStates'],
     );
 
     Uri url = Uri.parse(
@@ -539,13 +539,13 @@ class FormulaE {
             'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:124.0) Gecko/20100101 Firefox/124.0',
       },
     );
-    responseAsJson = json.decode(
+    Map responseAsJson = json.decode(
       utf8.decode(response.bodyBytes),
     );
 
     Map formatedMap = {
       'raceCustomBBParameter': raceWithSessions,
-      'sessionsIdsCustomBBParameter': responseAsJson['sessionIds'],
+      'sessionsIdsCustomBBParameter': sessions['sessionIds'],
       'contentsCustomBBParameter': responseAsJson['content'],
     };
     return formatedMap;
