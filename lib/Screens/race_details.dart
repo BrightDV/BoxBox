@@ -654,7 +654,7 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
     if (timeToRace > 0) {
       return SessionCountdownTimer(
         race,
-        championship == 'Formula 1' ? 4 : 3,
+        championship == 'Formula 1' ? 4 : race.sessionDates.length - 1,
         AppLocalizations.of(context)!.race,
         update: _setState,
       );
@@ -1111,8 +1111,15 @@ class _QualificationResultsProviderState
                                     'Sprint Qualifying',
                                     update: _setState,
                                   )
-                            : widget.race!.sessionDates[3]
-                                    .isBefore(DateTime.now())
+                            : (championship == 'Formula 1'
+                                    ? widget.race!.sessionDates[3]
+                                        .isBefore(DateTime.now())
+                                    : widget
+                                        .race!
+                                        .sessionDates[
+                                            widget.race!.sessionDates.length -
+                                                2]
+                                        .isBefore(DateTime.now()))
                                 ? Padding(
                                     padding: const EdgeInsets.all(10),
                                     child: Center(
@@ -1125,7 +1132,9 @@ class _QualificationResultsProviderState
                                   )
                                 : SessionCountdownTimer(
                                     widget.race,
-                                    3,
+                                    championship == 'Formula 1'
+                                        ? 3
+                                        : widget.race!.sessionDates.length - 2,
                                     AppLocalizations.of(context)!.qualifyings,
                                     update: _setState,
                                   )

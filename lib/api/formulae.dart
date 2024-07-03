@@ -31,8 +31,10 @@ import 'package:http/http.dart' as http;
 
 class FormulaE {
   final String defaultEndpoint = "https://api.formula-e.pulselive.com";
-  late final String championshipId =
-      Hive.box('settings').get('feChampionshipId', defaultValue: 'test');
+  late final String championshipId = Hive.box('settings').get(
+    'feChampionshipId',
+    defaultValue: '84467676-4d5d-4c97-ae07-0b7520bb95ea',
+  );
 
   Future<News> getArticle(String articleId) async {
     Uri url = Uri.parse(
@@ -670,8 +672,9 @@ class FormulaE {
         while (time.startsWith('0:')) {
           time = time.substring(2);
         }
-        time = time.replaceFirst(':', '.', time.lastIndexOf(':'));
-
+        if (time.lastIndexOf(':') != -1) {
+          time = time.replaceFirst(':', '.', time.lastIndexOf(':'));
+        }
         String gap = element['delay'];
         while (gap.startsWith('0:')) {
           gap = gap.substring(2);
@@ -737,7 +740,9 @@ class FormulaE {
         while (time.startsWith('0:')) {
           time = time.substring(2);
         }
-        time = time.replaceFirst(':', '.', time.lastIndexOf(':'));
+        if (time.lastIndexOf(':') != -1) {
+          time = time.replaceFirst(':', '.', time.lastIndexOf(':'));
+        }
 
         String gap = element['delay'];
         while (gap.startsWith('0:')) {
