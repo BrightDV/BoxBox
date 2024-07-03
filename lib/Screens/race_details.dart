@@ -543,12 +543,14 @@ class RaceResultsProvider extends StatefulWidget {
   final String? raceUrl;
   final bool isFromRaceHub;
   final String? sessionId;
+  final String? raceId;
   const RaceResultsProvider({
     Key? key,
     this.race,
     this.raceUrl,
     this.isFromRaceHub = false,
     this.sessionId,
+    this.raceId,
   }) : super(key: key);
   @override
   State<RaceResultsProvider> createState() => _RaceResultsProviderState();
@@ -583,6 +585,11 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
       false,
       raceUrl: raceUrl,
     );
+  }
+
+  Future<List<DriverResult>> getRaceStandingsFromFE(
+      String raceId, String sessionId) async {
+    return await FormulaE().getRaceStandings(raceId, sessionId);
   }
 
   void _setState() {
@@ -653,7 +660,9 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
       }
       return raceUrl != ''
           ? FutureBuilder<List<DriverResult>>(
-              future: getRaceStandingsFromF1(raceUrl),
+              future: championship == 'Formula 1'
+                  ? getRaceStandingsFromF1(raceUrl)
+                  : getRaceStandingsFromFE(widget.raceId!, raceUrl),
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
                   return Padding(

@@ -30,7 +30,6 @@ import 'package:hive_flutter/hive_flutter.dart';
 class DownloadUtils {
   final String f1Endpoint = 'https://api.formula1.com';
   final String f1ApiKey = "qPgPPRJyGCIPxFT3el4MF7thXHyJCzAP";
-  final String fEEndpoint = 'https://api.formula-e.pulselive.com';
   Future<String?> videoDownloadQualitySelector(
     BuildContext context,
   ) async {

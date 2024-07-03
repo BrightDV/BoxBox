@@ -56,60 +56,96 @@ class FreePracticeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String championship = Hive.box('settings')
-        .get('championship', defaultValue: 'Formula 1') as String;
     return Scaffold(
       appBar: AppBar(
         title: Text(sessionTitle),
         backgroundColor: Theme.of(context).colorScheme.onPrimary,
       ),
-      body: FutureBuilder<List<DriverResult>>(
-        future: championship == 'Formula 1'
-            ? raceUrl != null
-                ? FormulaOneScraper().scrapeFreePracticeResult(
-                    '',
-                    0,
-                    '',
-                    false,
-                    raceUrl: raceUrl,
-                  )
-                : Formula1().getFreePracticeStandings(meetingId, sessionIndex)
-            : FormulaE().getFreePracticeStandings(
-                meetingId,
-                sessionId!,
-              ),
-        // disable scraping for the moment
-        /* FormulaOneScraper().scrapeFreePracticeResult(
+      body: FreePracticeResultsProvider(
+        sessionTitle,
+        sessionIndex,
+        circuitId,
+        meetingId,
+        raceYear,
+        raceName,
+        raceUrl: raceUrl,
+        sessionId: sessionId,
+      ),
+    );
+  }
+}
+
+class FreePracticeResultsProvider extends StatelessWidget {
+  final String sessionTitle;
+  final int sessionIndex;
+  final String circuitId;
+  final String meetingId;
+  final int raceYear;
+  final String raceName;
+  final String? raceUrl;
+  final String? sessionId;
+  const FreePracticeResultsProvider(
+    this.sessionTitle,
+    this.sessionIndex,
+    this.circuitId,
+    this.meetingId,
+    this.raceYear,
+    this.raceName, {
+    Key? key,
+    this.raceUrl,
+    this.sessionId,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    String championship = Hive.box('settings')
+        .get('championship', defaultValue: 'Formula 1') as String;
+    return FutureBuilder<List<DriverResult>>(
+      future: championship == 'Formula 1'
+          ? raceUrl != null
+              ? FormulaOneScraper().scrapeFreePracticeResult(
+                  '',
+                  0,
+                  '',
+                  false,
+                  raceUrl: raceUrl,
+                )
+              : Formula1().getFreePracticeStandings(meetingId, sessionIndex)
+          : FormulaE().getFreePracticeStandings(
+              meetingId,
+              sessionId!,
+            ),
+      // disable scraping for the moment
+      /* FormulaOneScraper().scrapeFreePracticeResult(
                 circuitId,
                 sessionIndex,
                 'practice-$sessionIndex',
                 true,
               ), */
-        builder: (context, snapshot) => snapshot.hasError
-            ? snapshot.error.toString() == 'RangeError: Value not in range: 0'
-                ? Center(
-                    child: Padding(
-                      padding: const EdgeInsets.all(30),
-                      child: Text(
-                        AppLocalizations.of(context)!.dataNotAvailable,
-                        textAlign: TextAlign.center,
-                      ),
+      builder: (context, snapshot) => snapshot.hasError
+          ? snapshot.error.toString() == 'RangeError: Value not in range: 0'
+              ? Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(30),
+                    child: Text(
+                      AppLocalizations.of(context)!.dataNotAvailable,
+                      textAlign: TextAlign.center,
                     ),
-                  )
-                : RequestErrorWidget(
-                    snapshot.error.toString() +
-                        '\n' +
-                        snapshot.stackTrace.toString(),
-                  )
-            : snapshot.hasData
-                ? FreePracticeResultsList(
-                    snapshot.data!,
-                    raceYear,
-                    raceName,
-                    sessionIndex,
-                  )
-                : const LoadingIndicatorUtil(),
-      ),
+                  ),
+                )
+              : RequestErrorWidget(
+                  snapshot.error.toString() +
+                      '\n' +
+                      snapshot.stackTrace.toString(),
+                )
+          : snapshot.hasData
+              ? FreePracticeResultsList(
+                  snapshot.data!,
+                  raceYear,
+                  raceName,
+                  sessionIndex,
+                )
+              : const LoadingIndicatorUtil(),
     );
   }
 }

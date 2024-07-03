@@ -20,6 +20,7 @@
 import 'package:boxbox/Screens/circuit.dart';
 import 'package:boxbox/api/event_tracker.dart';
 import 'package:boxbox/api/race_components.dart';
+import 'package:boxbox/helpers/buttons.dart';
 import 'package:boxbox/helpers/hover.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/request_error.dart';
@@ -47,14 +48,8 @@ class RaceHubScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    late String meetingName;
-    event.meetingName == 'United States'
-        ? meetingName = 'USA'
-        : meetingName = event.meetingName;
-    if (meetingName != 'Great Britain') {
-      meetingName = meetingName.replaceAll(' ', '_');
-    }
-
+    String championship = Hive.box('settings')
+        .get('championship', defaultValue: 'Formula 1') as String;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.onPrimary,
@@ -75,406 +70,412 @@ class RaceHubScreen extends StatelessWidget {
                 ),
         ),
       ),
-      body: SlidingUpPanel(
-        backdropEnabled: true,
-        color: Theme.of(context).colorScheme.surface,
-        collapsed: GestureDetector(
-          behavior: HitTestBehavior.deferToChild,
-          child: Container(
-            color: Theme.of(context).colorScheme.surface,
-            child: Padding(
-              padding: const EdgeInsets.all(40),
-              child: Center(
-                child: Text(
-                  "Grand-Prix documents",
-                  style: TextStyle(
-                    fontSize: 16,
+      body: championship == 'Formula 1'
+          ? SlidingUpPanel(
+              backdropEnabled: true,
+              color: Theme.of(context).colorScheme.surface,
+              collapsed: GestureDetector(
+                behavior: HitTestBehavior.deferToChild,
+                child: Container(
+                  color: Theme.of(context).colorScheme.surface,
+                  child: Padding(
+                    padding: const EdgeInsets.all(40),
+                    child: Center(
+                      child: Text(
+                        "Grand-Prix documents",
+                        style: TextStyle(
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
                   ),
                 ),
               ),
-            ),
-          ),
-        ),
-        panel: Center(
-          child: FutureBuilder<List<SessionDocument>>(
-            future: FIAScraper().scrapeSessionDocuments(),
-            builder: (context, snapshot) => snapshot.hasError
-                ? RequestErrorWidget(snapshot.error.toString())
-                : snapshot.hasData
-                    ? ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: snapshot.data!.length + 1,
-                        itemBuilder: (context, index) => index == 0
-                            ? Container(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(40),
-                                  child: Center(
-                                    child: Text(
-                                      "Grand-Prix documents",
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              )
-                            : GestureDetector(
-                                onTap: () => !snapshot.data![index - 1].src
-                                        .endsWith('pdf')
-                                    ? {}
-                                    : Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => PdfViewer(
-                                            snapshot.data![index - 1].src,
-                                            snapshot.data![index - 1].name,
+              panel: Center(
+                child: FutureBuilder<List<SessionDocument>>(
+                  future: FIAScraper().scrapeSessionDocuments(),
+                  builder: (context, snapshot) => snapshot.hasError
+                      ? RequestErrorWidget(snapshot.error.toString())
+                      : snapshot.hasData
+                          ? ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: snapshot.data!.length + 1,
+                              itemBuilder: (context, index) => index == 0
+                                  ? Container(
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(40),
+                                        child: Center(
+                                          child: Text(
+                                            "Grand-Prix documents",
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                            ),
                                           ),
                                         ),
                                       ),
-                                child: Card(
-                                  elevation: 5,
-                                  child: ListTile(
-                                    title: Text(
-                                      snapshot.data![index - 1].name,
-                                    ),
-                                    subtitle: Text(
-                                      snapshot.data![index - 1].postedDate,
-                                      style: TextStyle(
-                                        fontSize: 12,
+                                    )
+                                  : GestureDetector(
+                                      onTap: () => !snapshot
+                                              .data![index - 1].src
+                                              .endsWith('pdf')
+                                          ? {}
+                                          : Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) => PdfViewer(
+                                                  snapshot.data![index - 1].src,
+                                                  snapshot
+                                                      .data![index - 1].name,
+                                                ),
+                                              ),
+                                            ),
+                                      child: Card(
+                                        elevation: 5,
+                                        child: ListTile(
+                                          title: Text(
+                                            snapshot.data![index - 1].name,
+                                          ),
+                                          subtitle: Text(
+                                            snapshot
+                                                .data![index - 1].postedDate,
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                            ),
+                                          ),
+                                          leading: Icon(
+                                            Icons.picture_as_pdf_outlined,
+                                          ),
+                                        ),
                                       ),
                                     ),
-                                    leading: Icon(
-                                      Icons.picture_as_pdf_outlined,
-                                    ),
+                            )
+                          : Padding(
+                              padding: const EdgeInsets.all(15),
+                              child: Center(
+                                child: Text(
+                                  "Grand-Prix documents",
+                                  style: TextStyle(
+                                    fontSize: 16,
                                   ),
                                 ),
                               ),
-                      )
-                    : Padding(
-                        padding: const EdgeInsets.all(15),
-                        child: Center(
-                          child: Text(
-                            "Grand-Prix documents",
-                            style: TextStyle(
-                              fontSize: 16,
+                            ),
+                ),
+              ),
+              body: RaceHubContent(event),
+            )
+          : RaceHubContent(event),
+    );
+  }
+}
+
+class RaceHubContent extends StatelessWidget {
+  final Event event;
+  const RaceHubContent(this.event, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    String championship = Hive.box('settings')
+        .get('championship', defaultValue: 'Formula 1') as String;
+    late String meetingName;
+    if (championship == 'Formula 1') {
+      event.meetingName == 'United States'
+          ? meetingName = 'USA'
+          : meetingName = event.meetingName;
+      if (meetingName != 'Great Britain') {
+        meetingName = meetingName.replaceAll(' ', '_');
+      } else {
+        meetingName = event.meetingName;
+      }
+    }
+    return MediaQuery.of(context).size.width > 1000
+        ? SingleChildScrollView(
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 400,
+                  width: MediaQuery.of(context).size.width,
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      championship == 'Formula 1'
+                          ? CachedNetworkImage(
+                              imageUrl:
+                                  'https://media.formula1.com/image/upload/content/dam/fom-website/2018-redesign-assets/Racehub%20header%20images%2016x9/$meetingName.jpg.transform/fullbleed/image.jpg',
+                              placeholder: (context, url) => const SizedBox(
+                                height: 400,
+                                child: LoadingIndicatorUtil(),
+                              ),
+                              errorWidget: (context, url, error) => const Icon(
+                                Icons.error_outlined,
+                              ),
+                              fadeOutDuration: const Duration(seconds: 1),
+                              fadeInDuration: const Duration(seconds: 1),
+                              fit: BoxFit.cover,
+                              colorBlendMode: BlendMode.darken,
+                              color: Colors.black.withOpacity(0.5),
+                              width: double.infinity,
+                              alignment: Alignment.bottomCenter,
+                            )
+                          : Container(),
+                      Text(
+                        event.meetingName.toUpperCase(),
+                        style: const TextStyle(
+                          fontSize: 70,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                ConstrainedBox(
+                  constraints: const BoxConstraints(
+                    minWidth: 1000,
+                    maxWidth: 1200,
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 12),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Expanded(
+                          flex: 2,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              for (var session in event.sessions)
+                                SessionItem(
+                                  session,
+                                  event.raceId,
+                                  event.meetingCountryName,
+                                  event.meetingOfficialName,
+                                ),
+                            ],
+                          ),
+                        ),
+                        Expanded(
+                          flex: 1,
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 10),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(5),
+                                  child: GestureDetector(
+                                    child: Container(
+                                      width: double.infinity,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(5),
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.fromLTRB(
+                                          20,
+                                          10,
+                                          20,
+                                          10,
+                                        ),
+                                        child: Row(
+                                          children: [
+                                            Text(
+                                              AppLocalizations.of(context)!
+                                                  .information,
+                                            ),
+                                            const Spacer(),
+                                            Icon(
+                                              Icons.arrow_forward_rounded,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    onTap: () => Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => CircuitScreen(
+                                          Race(
+                                            '0',
+                                            '',
+                                            '',
+                                            '',
+                                            '',
+                                            event.circuitImage
+                                                .split('/')
+                                                .last
+                                                .split('.')[0],
+                                            '',
+                                            '',
+                                            '',
+                                            [],
+                                          ),
+                                          isFetched: false,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(5),
+                                  child: GestureDetector(
+                                    child: Container(
+                                      width: double.infinity,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(5),
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.fromLTRB(
+                                          20,
+                                          10,
+                                          20,
+                                          10,
+                                        ),
+                                        child: Row(
+                                          children: [
+                                            Text(
+                                              'Race Programme',
+                                            ),
+                                            const Spacer(),
+                                            Icon(
+                                              Icons.open_in_new_outlined,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    onTap: () => launchUrl(
+                                      Uri.parse(
+                                        "https://raceprogramme.formula1.com/#/catalogue",
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 160),
+              ],
+            ),
+          )
+        : Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(
+                minWidth: 300,
+                maxWidth: 800,
+              ),
+              child: ListView(
+                children: [
+                  championship == 'Formula 1'
+                      ? CachedNetworkImage(
+                          imageUrl:
+                              'https://media.formula1.com/image/upload/content/dam/fom-website/2018-redesign-assets/Racehub%20header%20images%2016x9/$meetingName.jpg.transform/fullbleed/image.jpg',
+                          placeholder: (context, url) => SizedBox(
+                            height: MediaQuery.of(context).size.width / 16 / 9,
+                            child: const LoadingIndicatorUtil(),
+                          ),
+                          errorWidget: (context, url, error) => const Icon(
+                            Icons.error_outlined,
+                          ),
+                          fadeOutDuration: const Duration(seconds: 1),
+                          fadeInDuration: const Duration(seconds: 1),
+                          fit: BoxFit.scaleDown,
+                        )
+                      : Container(),
+                  for (var session in event.sessions)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 5,
                       ),
-          ),
-        ),
-        body: MediaQuery.of(context).size.width > 1000
-            ? SingleChildScrollView(
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: 400,
-                      width: MediaQuery.of(context).size.width,
-                      child: Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          CachedNetworkImage(
-                            imageUrl:
-                                'https://media.formula1.com/image/upload/content/dam/fom-website/2018-redesign-assets/Racehub%20header%20images%2016x9/$meetingName.jpg.transform/fullbleed/image.jpg',
-                            placeholder: (context, url) => const SizedBox(
-                              height: 400,
-                              child: LoadingIndicatorUtil(),
-                            ),
-                            errorWidget: (context, url, error) => const Icon(
-                              Icons.error_outlined,
-                            ),
-                            fadeOutDuration: const Duration(seconds: 1),
-                            fadeInDuration: const Duration(seconds: 1),
-                            fit: BoxFit.cover,
-                            colorBlendMode: BlendMode.darken,
-                            color: Colors.black.withOpacity(0.5),
-                            width: double.infinity,
-                            alignment: Alignment.bottomCenter,
-                          ),
-                          Text(
-                            event.meetingName.toUpperCase(),
-                            style: const TextStyle(
-                              fontSize: 70,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ],
+                      child: SessionItem(
+                        session,
+                        event.raceId,
+                        event.meetingCountryName,
+                        event.meetingOfficialName,
                       ),
                     ),
-                    ConstrainedBox(
-                      constraints: const BoxConstraints(
-                        minWidth: 1000,
-                        maxWidth: 1200,
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 12),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Expanded(
-                              flex: 2,
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  for (var session in event.sessions)
-                                    SessionItem(
-                                      session,
-                                      event.raceId,
-                                      event.meetingCountryName,
-                                      event.meetingOfficialName,
-                                    ),
-                                ],
-                              ),
+                  championship == 'Formula 1'
+                      ? Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 30,
+                            vertical: 10,
+                          ),
+                          child: Divider(),
+                        )
+                      : Container(),
+                  championship == 'Formula 1'
+                      ? BoxBoxButton(
+                          AppLocalizations.of(context)!.information,
+                          Icon(
+                            Icons.arrow_forward_rounded,
+                          ),
+                          CircuitScreen(
+                            Race(
+                              '0',
+                              '',
+                              '',
+                              '',
+                              '',
+                              event.circuitImage.split('/').last.split('.')[0],
+                              '',
+                              '',
+                              '',
+                              [],
                             ),
-                            Expanded(
-                              flex: 1,
+                            isFetched: false,
+                          ),
+                        )
+                      : Container(),
+                  championship == 'Formula 1'
+                      ? Padding(
+                          padding: const EdgeInsets.all(5),
+                          child: GestureDetector(
+                            child: Container(
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
+                                color:
+                                    Theme.of(context).colorScheme.onSecondary,
+                              ),
                               child: Padding(
-                                padding: const EdgeInsets.only(top: 10),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
+                                padding: const EdgeInsets.fromLTRB(
+                                  20,
+                                  10,
+                                  20,
+                                  10,
+                                ),
+                                child: Row(
                                   children: [
-                                    Padding(
-                                      padding: const EdgeInsets.all(5),
-                                      child: GestureDetector(
-                                        child: Container(
-                                          width: double.infinity,
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(5),
-                                          ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.fromLTRB(
-                                              20,
-                                              10,
-                                              20,
-                                              10,
-                                            ),
-                                            child: Row(
-                                              children: [
-                                                Text(
-                                                  AppLocalizations.of(context)!
-                                                      .information,
-                                                ),
-                                                const Spacer(),
-                                                Icon(
-                                                  Icons.arrow_forward_rounded,
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                        onTap: () => Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => CircuitScreen(
-                                              Race(
-                                                '0',
-                                                '',
-                                                '',
-                                                '',
-                                                '',
-                                                event.circuitImage
-                                                    .split('/')
-                                                    .last
-                                                    .split('.')[0],
-                                                '',
-                                                '',
-                                                '',
-                                                [],
-                                              ),
-                                              isFetched: false,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
+                                    Text(
+                                      'Race Programme',
                                     ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(5),
-                                      child: GestureDetector(
-                                        child: Container(
-                                          width: double.infinity,
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(5),
-                                          ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.fromLTRB(
-                                              20,
-                                              10,
-                                              20,
-                                              10,
-                                            ),
-                                            child: Row(
-                                              children: [
-                                                Text(
-                                                  'Race Programme',
-                                                ),
-                                                const Spacer(),
-                                                Icon(
-                                                  Icons.open_in_new_outlined,
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                        onTap: () => launchUrl(
-                                          Uri.parse(
-                                            "https://raceprogramme.formula1.com/#/catalogue",
-                                          ),
-                                        ),
-                                      ),
+                                    const Spacer(),
+                                    Icon(
+                                      Icons.open_in_new_outlined,
                                     ),
                                   ],
                                 ),
                               ),
                             ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 160),
-                  ],
-                ),
-              )
-            : Center(
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(
-                    minWidth: 300,
-                    maxWidth: 800,
-                  ),
-                  child: ListView(
-                    children: [
-                      CachedNetworkImage(
-                        imageUrl:
-                            'https://media.formula1.com/image/upload/content/dam/fom-website/2018-redesign-assets/Racehub%20header%20images%2016x9/$meetingName.jpg.transform/fullbleed/image.jpg',
-                        placeholder: (context, url) => SizedBox(
-                          height: MediaQuery.of(context).size.width / 16 / 9,
-                          child: const LoadingIndicatorUtil(),
-                        ),
-                        errorWidget: (context, url, error) => const Icon(
-                          Icons.error_outlined,
-                        ),
-                        fadeOutDuration: const Duration(seconds: 1),
-                        fadeInDuration: const Duration(seconds: 1),
-                        fit: BoxFit.scaleDown,
-                      ),
-                      for (var session in event.sessions)
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 5,
-                          ),
-                          child: SessionItem(
-                            session,
-                            event.raceId,
-                            event.meetingCountryName,
-                            event.meetingOfficialName,
-                          ),
-                        ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 30,
-                          vertical: 10,
-                        ),
-                        child: Divider(),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(5),
-                        child: GestureDetector(
-                          child: Container(
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(5),
-                              color: Theme.of(context).colorScheme.onSecondary,
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.fromLTRB(
-                                20,
-                                10,
-                                20,
-                                10,
-                              ),
-                              child: Row(
-                                children: [
-                                  Text(
-                                    AppLocalizations.of(context)!.information,
-                                  ),
-                                  const Spacer(),
-                                  Icon(
-                                    Icons.arrow_forward_rounded,
-                                  ),
-                                ],
+                            onTap: () => launchUrl(
+                              Uri.parse(
+                                "https://web.formula1rp.com/",
                               ),
                             ),
                           ),
-                          onTap: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => CircuitScreen(
-                                Race(
-                                  '0',
-                                  '',
-                                  '',
-                                  '',
-                                  '',
-                                  event.circuitImage
-                                      .split('/')
-                                      .last
-                                      .split('.')[0],
-                                  '',
-                                  '',
-                                  '',
-                                  [],
-                                ),
-                                isFetched: false,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(5),
-                        child: GestureDetector(
-                          child: Container(
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(5),
-                              color: Theme.of(context).colorScheme.onSecondary,
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.fromLTRB(
-                                20,
-                                10,
-                                20,
-                                10,
-                              ),
-                              child: Row(
-                                children: [
-                                  Text(
-                                    'Race Programme',
-                                  ),
-                                  const Spacer(),
-                                  Icon(
-                                    Icons.open_in_new_outlined,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          onTap: () => launchUrl(
-                            Uri.parse(
-                              "https://web.formula1rp.com/",
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 200),
-                    ],
-                  ),
-                ),
+                        )
+                      : Container(),
+                  championship == 'Formula 1'
+                      ? const SizedBox(height: 200)
+                      : Container(),
+                ],
               ),
-      ),
-    );
+            ),
+          );
   }
 }
 
@@ -742,6 +743,7 @@ class SessionItem extends StatelessWidget {
                     session,
                     meetingCountryName,
                     meetingOfficialName,
+                    raceId,
                   ),
                 ),
               ),
@@ -794,7 +796,8 @@ class SessionItem extends StatelessWidget {
                     child: Column(
                       children: [
                         Text(
-                          sessionsAbbreviations[session.sessionsAbbreviation],
+                          sessionsAbbreviations[session.sessionsAbbreviation] ??
+                              session.sessionsAbbreviation,
                           style: TextStyle(
                             fontSize: 20,
                           ),
@@ -871,10 +874,12 @@ class SessionItem extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                   builder: (context) => SessionScreen(
-                    sessionsAbbreviations[session.sessionsAbbreviation],
+                    sessionsAbbreviations[session.sessionsAbbreviation] ??
+                        session.sessionsAbbreviation,
                     session,
                     meetingCountryName,
                     meetingOfficialName,
+                    raceId,
                   ),
                 ),
               ),

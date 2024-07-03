@@ -392,93 +392,146 @@ class FormulaE {
     }
   }
 
-  Future<Map> getSessionsAndRaceDetails(Race race) async {
-    var url = Uri.parse(
-      '$defaultEndpoint/formula-e/v1/races/${race.meetingId}/sessions',
-    );
-    var response = await http.get(
-      url,
-      headers: {
-        'Accept': 'application/json',
-        'User-Agent':
-            'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:124.0) Gecko/20100101 Firefox/124.0',
-      },
-    );
-    Map<String, dynamic> responseAsJson = json.decode(
-      utf8.decode(response.bodyBytes),
-    );
-
-    List<DateTime> sessionDates = [];
-    List sessionStates = [];
-    List sessionIds = [];
-    for (var session in responseAsJson['sessions']) {
-      if ((session['sessionName'].startsWith('Free Practice') ||
-          (session['sessionName'] == 'Race'))) {
-        if (session['offsetGMT'].startsWith('-')) {
-          if (session['offsetGMT'].length < 6) {
-            session['offsetGMT'] = session['offsetGMT'].substring(0, 1) +
-                '0' +
-                session['offsetGMT'].substring(1);
+  Future<Map> getSessions(String raceId) async {
+    if (raceId != '') {
+      var url = Uri.parse(
+        '$defaultEndpoint/formula-e/v1/races/$raceId/sessions',
+      );
+      var response = await http.get(
+        url,
+        headers: {
+          'Accept': 'application/json',
+          'User-Agent':
+              'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:124.0) Gecko/20100101 Firefox/124.0',
+        },
+      );
+      Map<String, dynamic> responseAsJson = json.decode(
+        utf8.decode(response.bodyBytes),
+      );
+      List<DateTime> sessionDates = [];
+      List<DateTime> sessionEndDates = [];
+      List sessionStates = [];
+      List sessionIds = [];
+      List sessionNames = [];
+      bool hasCombinedQualifs = false;
+      Map qualifFinal = {};
+      for (var session in responseAsJson['sessions']) {
+        if ((session['sessionName'].startsWith('Free Practice') ||
+            (session['sessionName'] == 'Race'))) {
+          if (session['offsetGMT'].startsWith('-')) {
+            if (session['offsetGMT'].length < 6) {
+              session['offsetGMT'] = session['offsetGMT'].substring(0, 1) +
+                  '0' +
+                  session['offsetGMT'].substring(1);
+            }
+          } else {
+            session['offsetGMT'] = '+' + session['offsetGMT'];
           }
-        } else {
-          session['offsetGMT'] = '+' + session['offsetGMT'];
-        }
 
-        sessionDates.add(
-          DateTime.parse(
-            session['sessionDate'] +
-                ' ' +
-                session['startTime'] +
-                session['offsetGMT'],
-          ),
-        );
-        sessionStates.add(session['sessionLiveStatus']);
-        sessionIds.add(session['id']);
-      } else if (session['sessionNme'] == 'Qual Group A') {
-        if (session['offsetGMT'].startsWith('-')) {
-          if (session['offsetGMT'].length < 6) {
-            session['offsetGMT'] = session['offsetGMT'].substring(0, 1) +
-                '0' +
-                session['offsetGMT'].substring(1);
+          sessionDates.add(
+            DateTime.parse(
+              session['sessionDate'] +
+                  ' ' +
+                  session['startTime'] +
+                  session['offsetGMT'],
+            ),
+          );
+          sessionEndDates.add(
+            DateTime.parse(
+              session['sessionDate'] +
+                  ' ' +
+                  session['finishTime'] +
+                  session['offsetGMT'],
+            ),
+          );
+          sessionStates.add(session['sessionLiveStatus']);
+          sessionIds.add(session['id']);
+          sessionNames.add(session['sessionName']);
+        } else if (session['sessionName'] == 'Qual Group A') {
+          if (session['offsetGMT'].startsWith('-')) {
+            if (session['offsetGMT'].length < 6) {
+              session['offsetGMT'] = session['offsetGMT'].substring(0, 1) +
+                  '0' +
+                  session['offsetGMT'].substring(1);
+            }
+          } else {
+            session['offsetGMT'] = '+' + session['offsetGMT'];
           }
-        } else {
-          session['offsetGMT'] = '+' + session['offsetGMT'];
-        }
 
-        sessionDates.add(
-          DateTime.parse(
-            session['sessionDate'] +
-                ' ' +
-                session['startTime'] +
-                session['offsetGMT'],
-          ),
-        );
-      } else if (session['sessionName'] == 'Qual Final') {
-        sessionStates.add(session['sessionLiveStatus']);
-      } else if (session['sessionName'] == 'Combined qualifying') {
-        sessionIds.add(session['id']);
+          sessionDates.add(
+            DateTime.parse(
+              session['sessionDate'] +
+                  ' ' +
+                  session['startTime'] +
+                  session['offsetGMT'],
+            ),
+          );
+        } else if (session['sessionName'] == 'Qual Final') {
+          sessionStates.add(session['sessionLiveStatus']);
+          if (session['offsetGMT'].startsWith('-')) {
+            if (session['offsetGMT'].length < 6) {
+              session['offsetGMT'] = session['offsetGMT'].substring(0, 1) +
+                  '0' +
+                  session['offsetGMT'].substring(1);
+            }
+          } else {
+            session['offsetGMT'] = '+' + session['offsetGMT'];
+          }
+          sessionEndDates.add(
+            DateTime.parse(
+              session['sessionDate'] +
+                  ' ' +
+                  session['finishTime'] +
+                  session['offsetGMT'],
+            ),
+          );
+          if (!hasCombinedQualifs) {
+            qualifFinal = session;
+          }
+        } else if (session['sessionName'] == 'Combined qualifying') {
+          hasCombinedQualifs = true;
+          qualifFinal = session;
+        }
       }
+
+      sessionIds.insert(sessionIds.length - 1, qualifFinal['id']);
+      sessionNames.insert(sessionNames.length - 1, 'Combined qualifying');
+
+      return {
+        'sessionDates': sessionDates,
+        'sessionEndDates': sessionEndDates,
+        'sessionStates': sessionStates,
+        'sessionIds': sessionIds,
+        'original': responseAsJson,
+        'sessionNames': sessionNames,
+      };
+    } else {
+      return {};
     }
+  }
+
+  Future<Map> getSessionsAndRaceDetails(Race race) async {
+    Map responseAsJson = await getSessions(race.meetingId);
 
     Race raceWithSessions = Race(
       race.round,
       race.meetingId,
       race.raceName,
       race.date,
-      responseAsJson['sessions'].last['startTime'],
+      responseAsJson['original']['sessions'].last['startTime'],
       race.circuitId,
       race.circuitName,
       race.circuitUrl,
       race.country,
-      sessionDates,
+      responseAsJson['sessionDates'],
       raceCoverUrl: race.raceCoverUrl,
-      sessionStates: sessionStates,
+      sessionStates: responseAsJson['sessionStates'],
     );
 
-    url = Uri.parse(
+    Uri url = Uri.parse(
       '$defaultEndpoint/content/formula-e/EN?contentTypes=video&contentTypes=news&page=0&pageSize=10&references=FORMULA_E_RACE:${race.meetingId}&onlyRestrictedContent=false&detail=DETAILED',
     );
-    response = await http.get(
+    http.Response response = await http.get(
       url,
       headers: {
         'Accept': 'application/json',
@@ -492,7 +545,7 @@ class FormulaE {
 
     Map formatedMap = {
       'raceCustomBBParameter': raceWithSessions,
-      'sessionsIdsCustomBBParameter': sessionIds,
+      'sessionsIdsCustomBBParameter': responseAsJson['sessionIds'],
       'contentsCustomBBParameter': responseAsJson['content'],
     };
     return formatedMap;
@@ -602,7 +655,7 @@ class FormulaE {
     }
   }
 
-  FutureOr<List<DriverResult>> getQualificationStandings(
+  Future<List<DriverResult>> getQualificationStandings(
       String raceId, String sessionId) async {
     List<DriverResult> driversResults = [];
     Map<String, dynamic> responseAsJson =
@@ -778,7 +831,7 @@ class FormulaE {
     return responseAsJson['content'][0]['imageUrl'];
   }
 
-  Future<void> updateChampionshipId() async {
+  Future<Map> getLatestChampionship() async {
     var url = Uri.parse(
       '$defaultEndpoint/formula-e/v1/championships/latest',
     );
@@ -790,9 +843,17 @@ class FormulaE {
             'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:124.0) Gecko/20100101 Firefox/124.0',
       },
     );
-    Map<String, dynamic> responseAsJson = jsonDecode(response.body);
-    String championshipId = responseAsJson['id'];
-    Hive.box('settings').put('feChampionshipId', championshipId);
+    Map<String, dynamic> responseAsJson = jsonDecode(
+      utf8.decode(
+        response.bodyBytes,
+      ),
+    );
+    return responseAsJson;
+  }
+
+  Future<void> updateChampionshipId() async {
+    Map latestData = await getLatestChampionship();
+    Hive.box('settings').put('feChampionshipId', latestData['id']);
   }
 }
 
