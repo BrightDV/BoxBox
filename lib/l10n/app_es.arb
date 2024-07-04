@@ -1,7 +1,7 @@
 {
   "about": "Acerca de",
   "@about": {},
-  "aboutDescription": "Box, Box! es de software libre con copyleft, con licencia GPLv3+. Su objetivo es permitir a los usuarios seguir la Fórmula 1 sin anuncios ni rastreadores.",
+  "aboutDescription": "Box, Box! es software libre con copyleft, licenciado bajo GPLv3+. Su objetivo es permitir a los usuarios seguir la Fórmula 1 y la Fórmula E sin anuncios ni trackers.",
   "@aboutDescription": {},
   "aboutBottomLine": "Con ❤ por BrightDV.",
   "@aboutBottomLine": {},
@@ -380,5 +380,11 @@
   "refresh": "Refrescar",
   "@refresh": {},
   "running": "Ejecutándose",
-  "@running": {}
+  "@running": {},
+  "championship": "Campeonato",
+  "@championship": {},
+  "refreshChampionshipData": "Actualizar los datos del campeonato",
+  "@refreshChampionshipData": {},
+  "refreshChampionshipDataSub": "Actualice los datos del campeonato antes de una nueva temporada.",
+  "@refreshChampionshipDataSub": {}
 }
