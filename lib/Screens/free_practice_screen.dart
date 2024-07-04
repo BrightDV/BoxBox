@@ -183,8 +183,8 @@ class FreePracticeResultsList extends StatelessWidget {
                 var yt = YoutubeExplode();
                 final List<Video> searchResults = await yt.search.search(
                   sessionIndex == 10
-                      ? "$championship Free Practice $sessionIndex $raceName $raceYear"
-                      : "$championship Qualifyings $sessionIndex $raceName $raceYear",
+                      ? "$championship Qualifyings $raceName $raceYear"
+                      : "$championship Free Practice $sessionIndex $raceName $raceYear",
                 );
                 final Video bestVideoMatch = searchResults[0];
                 await launchUrl(

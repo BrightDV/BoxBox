@@ -7,5 +7,6 @@ Features:
 - While a Grand Prix is running, follow the schedule of the different sessions and read the related FIA's documents.
 - Enjoy the app in the colours of your favorite team!
 - Open links in-app.
+- Follow both Formula 1 and Formula E from the same app!
 
 Be in the action even without ads or trackers ;)
