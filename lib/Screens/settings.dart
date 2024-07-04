@@ -584,9 +584,7 @@ class _OtherCardstate extends State<OtherCard> {
             ),
           ),
           ListTile(
-            title: Text(
-              'Championship',
-            ),
+            title: Text(AppLocalizations.of(context)!.championship),
             subtitle: Text(
               AppLocalizations.of(context)!.needsRestart,
               style: TextStyle(
@@ -730,9 +728,14 @@ class _OtherCardstate extends State<OtherCard> {
           championship == 'Formula E'
               ? ListTile(
                   title: Text(
-                    'Refresh data',
+                    AppLocalizations.of(context)!.refreshChampionshipData,
                   ),
-                  subtitle: Text('Refresh the championship year.'),
+                  subtitle: Text(
+                    AppLocalizations.of(context)!.refreshChampionshipDataSub,
+                    style: TextStyle(
+                      fontSize: 12,
+                    ),
+                  ),
                   onTap: () async {
                     setState(
                       () {
