@@ -54,7 +54,7 @@ class DriverResultItem extends StatelessWidget {
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     String raceResultsLastSavedFormat = Hive.box('requests')
-        .get('raceResultsLastSavedFormat', defaultValue: 'ergast');
+        .get('f1RaceResultsLastSavedFormat', defaultValue: 'ergast');
     Color finalTeamColors = getTeamColors(item.team);
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
@@ -279,7 +279,7 @@ class RaceDriversResultsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String raceResultsLastSavedFormat = Hive.box('requests')
-        .get('raceResultsLastSavedFormat', defaultValue: 'ergast');
+        .get('f1RaceResultsLastSavedFormat', defaultValue: 'ergast');
     return ListView.builder(
       scrollDirection: Axis.vertical,
       shrinkWrap: true,
