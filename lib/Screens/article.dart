@@ -23,10 +23,15 @@ import 'dart:io';
 import 'package:background_downloader/background_downloader.dart';
 import 'package:boxbox/api/article_parts.dart';
 import 'package:boxbox/api/formula1.dart';
+import 'package:boxbox/helpers/download.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/request_error.dart';
+import 'package:boxbox/scraping/formulae.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:marquee/marquee.dart';
@@ -36,12 +41,16 @@ class ArticleScreen extends StatefulWidget {
   final String articleName;
   final bool isFromLink;
   final Function? update;
+  final News? news;
+  final String championshipOfArticle;
 
   const ArticleScreen(
     this.articleId,
     this.articleName,
     this.isFromLink, {
     this.update,
+    this.news,
+    this.championshipOfArticle = '',
     Key? key,
   }) : super(key: key);
 
@@ -72,33 +81,39 @@ class _ArticleScreenState extends State<ArticleScreen> {
         'downloadsDescriptions',
         defaultValue: {},
       );
-
-      Formula1().downloadedFilePathIfExists(statusUpdate.task.taskId).then(
+      DownloadUtils().downloadedFilePathIfExists(statusUpdate.task.taskId).then(
         (path) async {
+          String championship = Hive.box('settings')
+              .get('championship', defaultValue: 'Formula 1') as String;
           File file = File(path!);
           Map savedArticle = json.decode(await file.readAsString());
-
           String heroImageUrl = "";
-          if (savedArticle['hero'].isNotEmpty) {
-            if (savedArticle['hero']['contentType'] == 'atomVideo') {
-              heroImageUrl = savedArticle['hero']['fields']['thumbnail']['url'];
-            } else if (savedArticle['hero']['contentType'] ==
-                'atomVideoYouTube') {
-              heroImageUrl = savedArticle['hero']['fields']['image']['url'];
-            } else if (savedArticle['hero']['contentType'] ==
-                'atomImageGallery') {
-              heroImageUrl =
-                  savedArticle['hero']['fields']['imageGallery'][0]['url'];
-            } else {
-              heroImageUrl = savedArticle['hero']['fields']['image']['url'];
+          if (championship == 'Formula 1') {
+            if (savedArticle['hero'].isNotEmpty) {
+              if (savedArticle['hero']['contentType'] == 'atomVideo') {
+                heroImageUrl =
+                    savedArticle['hero']['fields']['thumbnail']['url'];
+              } else if (savedArticle['hero']['contentType'] ==
+                  'atomVideoYouTube') {
+                heroImageUrl = savedArticle['hero']['fields']['image']['url'];
+              } else if (savedArticle['hero']['contentType'] ==
+                  'atomImageGallery') {
+                heroImageUrl =
+                    savedArticle['hero']['fields']['imageGallery'][0]['url'];
+              } else {
+                heroImageUrl = savedArticle['hero']['fields']['image']['url'];
+              }
             }
           }
 
-          downloadsDescriptions['article_${savedArticle['id']}'] = {
-            'id': savedArticle['id'],
+          String taskId = 'article_f1_${savedArticle['id']}';
+
+          downloadsDescriptions[taskId] = {
+            'id': savedArticle['id'].toString(),
             'type': 'article',
             'title': savedArticle['title'],
             'thumbnail': heroImageUrl,
+            'championship': championship,
           };
           Hive.box('downloads')
               .put('downloadsDescriptions', downloadsDescriptions);
@@ -106,7 +121,7 @@ class _ArticleScreenState extends State<ArticleScreen> {
             'downloadsList',
             defaultValue: [],
           );
-          downloads.insert(0, 'article_${savedArticle['id']}');
+          downloads.insert(0, taskId);
           Hive.box('downloads').put('downloadsList', downloads);
           update();
         },
@@ -121,6 +136,13 @@ class _ArticleScreenState extends State<ArticleScreen> {
       'downloadsList',
       defaultValue: [],
     );
+    String championship = Hive.box('settings')
+        .get('championship', defaultValue: 'Formula 1') as String;
+    String championshipOfArticle = widget.championshipOfArticle;
+    if (championshipOfArticle == '') {
+      championshipOfArticle = championship;
+    }
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.onPrimary,
@@ -128,14 +150,16 @@ class _ArticleScreenState extends State<ArticleScreen> {
           ValueListenableBuilder(
             valueListenable: articleTitle,
             builder: (context, value, _) {
-              return value.toString() == 'Loading...'
+              return value.toString() == 'Loading...' ||
+                      championshipOfArticle != 'Formula 1'
                   ? Container()
                   : IconButton(
                       onPressed: () async {
                         String downloadingState =
-                            await Formula1().downloadArticle(
+                            await DownloadUtils().downloadArticle(
                           widget.articleId,
                           widget.articleName,
+                          championshipOfArticle,
                           callback: updateArticleWithType,
                         );
                         if (downloadingState == "downloading") {
@@ -150,13 +174,15 @@ class _ArticleScreenState extends State<ArticleScreen> {
                         } else if (downloadingState == "already downloaded") {
                           showDialog(
                             context: context,
-                            builder: (context) => downloadedArticleActionPopup(
-                              'article_${widget.articleId}',
+                            builder: (context) =>
+                                DownloadUtils().downloadedArticleActionPopup(
+                              'article_f1_${widget.articleId}',
                               widget.articleId,
                               widget.articleName,
                               update,
                               updateArticleWithType,
                               context,
+                              championshipOfArticle,
                             ),
                           );
                         } else {
@@ -171,7 +197,9 @@ class _ArticleScreenState extends State<ArticleScreen> {
                         }
                       },
                       icon: Icon(
-                        downloads.contains('article_${widget.articleId}')
+                        downloads.contains(
+                          'article_f1_${widget.articleId}',
+                        )
                             ? Icons.download_done_rounded
                             : Icons.save_alt_rounded,
                       ),
@@ -225,7 +253,12 @@ class _ArticleScreenState extends State<ArticleScreen> {
                     ),
         ),
       ),
-      body: ArticleProvider(widget.articleId, updateTitle),
+      body: ArticleProvider(
+        widget.articleId,
+        updateTitle,
+        championshipOfArticle,
+        news: widget.news,
+      ),
     );
   }
 
@@ -237,10 +270,23 @@ class _ArticleScreenState extends State<ArticleScreen> {
 }
 
 class ArticleProvider extends StatelessWidget {
-  Future<Article> getArticleData(
+  final String articleId;
+  final Function updateArticleTitle;
+  final String championshipOfArticle;
+  final News? news;
+
+  const ArticleProvider(
+    this.articleId,
+    this.updateArticleTitle,
+    this.championshipOfArticle, {
+    this.news,
+    Key? key,
+  }) : super(key: key);
+
+  Future<Article> getArticleFromFormula1(
       String articleId, Function updateArticleTitle) async {
-    String? filePath =
-        await Formula1().downloadedFilePathIfExists('article_${articleId}');
+    String? filePath = await DownloadUtils()
+        .downloadedFilePathIfExists('article_f1_${articleId}');
     if (filePath != null) {
       File file = File(filePath);
       Map savedArticle = await json.decode(await file.readAsString());
@@ -264,13 +310,32 @@ class ArticleProvider extends StatelessWidget {
     }
   }
 
-  final String articleId;
-  final Function updateArticleTitle;
-  const ArticleProvider(
-    this.articleId,
-    this.updateArticleTitle, {
-    Key? key,
-  }) : super(key: key);
+  Future<Article> getArticleFromFormulaE(String articleId) async {
+    Article article = await FormulaEScraper().getArticleData(
+      news,
+      articleId,
+    );
+    updateArticleTitle(article.articleName);
+    return article;
+  }
+
+  Future<Article> getArticleData(
+      String articleId, Function updateArticleTitle) async {
+    String championship = Hive.box('settings')
+        .get('championship', defaultValue: 'Formula 1') as String;
+    if (championshipOfArticle != '') {
+      if (championshipOfArticle == 'Formula 1') {
+        return await getArticleFromFormula1(articleId, updateArticleTitle);
+      } else {
+        return await getArticleFromFormulaE(articleId);
+      }
+    } else if (championship == 'Formula 1') {
+      return await getArticleFromFormula1(articleId, updateArticleTitle);
+    } else {
+      return await getArticleFromFormulaE(articleId);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<Article>(
@@ -280,69 +345,83 @@ class ArticleProvider extends StatelessWidget {
           return RequestErrorWidget(snapshot.error.toString());
         }
         return snapshot.hasData
-            ? ArticleParts(snapshot.data!)
+            ? snapshot.data!.articleContent.length == 0
+                ? ArticleWebView(snapshot.data!)
+                : ArticleParts(
+                    snapshot.data!,
+                    articleChampionship: championshipOfArticle,
+                  )
             : const LoadingIndicatorUtil();
       },
     );
   }
 }
 
-AlertDialog downloadedArticleActionPopup(
-  String taskId,
-  String articleId,
-  String articleName,
-  Function update,
-  Function(TaskStatusUpdate) updateArticleWithType,
-  BuildContext context,
-) {
-  return AlertDialog(
-    shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.all(
-        Radius.circular(
-          20.0,
+class ArticleWebView extends StatefulWidget {
+  final Article article;
+  const ArticleWebView(this.article, {super.key});
+
+  @override
+  State<ArticleWebView> createState() => _ArticleWebViewState();
+}
+
+class _ArticleWebViewState extends State<ArticleWebView> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return InAppWebView(
+      initialUrlRequest: URLRequest(
+        url: WebUri(
+          'https://www.fiaformulae.com/en/news/${widget.article.articleId}?webview=true',
         ),
-      ),
-    ),
-    contentPadding: const EdgeInsets.all(
-      50.0,
-    ),
-    title: Text(
-      AppLocalizations.of(context)!.alreadyDownloadedArticle,
-      style: TextStyle(
-        fontSize: 24.0,
-      ),
-      textAlign: TextAlign.center,
-    ),
-    actions: <Widget>[
-      ElevatedButton(
-        onPressed: () {
-          Navigator.of(context).pop();
+        headers: {
+          'User-Agent':
+              'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:124.0) Gecko/20100101 Firefox/124.0',
+          'Accept-Encoding': 'gzip, deflate, br',
+          'DNT': '1',
+          'Sec-GPC': '1',
+          'Connection': 'keep-alive',
+          'Upgrade-Insecure-Requests': '1',
+          'Sec-Fetch-Dest': 'document',
+          'Sec-Fetch-Mode': 'navigate',
+          'Sec-Fetch-Site': 'none',
+          'Sec-Fetch-User': '?1',
         },
-        child: Text(
-          AppLocalizations.of(context)!.cancel,
+      ),
+      initialSettings: InAppWebViewSettings(
+        contentBlockers: [
+          ContentBlocker(
+            trigger: ContentBlockerTrigger(
+              urlFilter: '.*',
+            ),
+            action: ContentBlockerAction(
+              type: ContentBlockerActionType.CSS_DISPLAY_NONE,
+              selector:
+                  '.onetrust-pc-dark-filter, .otFlat, ._hj_feedback_container, .global-race-bar',
+            ),
+          ),
+        ],
+      ),
+      gestureRecognizers: {
+        Factory<VerticalDragGestureRecognizer>(
+          () => VerticalDragGestureRecognizer(),
         ),
-      ),
-      IconButton(
-        onPressed: () async {
-          await Formula1().deleteFile(taskId);
-          Navigator.of(context).pop();
-          update();
-        },
-        icon: Icon(Icons.delete_outline),
-        tooltip: AppLocalizations.of(context)!.delete,
-      ),
-      IconButton(
-        onPressed: () async {
-          await Formula1().downloadArticle(
-            articleId,
-            articleName,
-            callback: updateArticleWithType,
-          );
-          Navigator.of(context).pop();
-        },
-        icon: Icon(Icons.refresh),
-        tooltip: AppLocalizations.of(context)!.refresh,
-      ),
-    ],
-  );
+        Factory<HorizontalDragGestureRecognizer>(
+          () => HorizontalDragGestureRecognizer(),
+        ),
+        Factory<ScaleGestureRecognizer>(
+          () => ScaleGestureRecognizer(),
+        ),
+      },
+    );
+  }
 }

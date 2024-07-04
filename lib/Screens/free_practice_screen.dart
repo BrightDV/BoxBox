@@ -19,6 +19,7 @@
 
 import 'package:boxbox/api/driver_components.dart';
 import 'package:boxbox/api/formula1.dart';
+import 'package:boxbox/api/formulae.dart';
 import 'package:boxbox/helpers/divider.dart';
 import 'package:boxbox/helpers/request_error.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
@@ -39,6 +40,7 @@ class FreePracticeScreen extends StatelessWidget {
   final int raceYear;
   final String raceName;
   final String? raceUrl;
+  final String? sessionId;
 
   const FreePracticeScreen(
     this.sessionTitle,
@@ -49,6 +51,7 @@ class FreePracticeScreen extends StatelessWidget {
     this.raceName, {
     Key? key,
     this.raceUrl,
+    this.sessionId,
   }) : super(key: key);
 
   @override
@@ -58,54 +61,97 @@ class FreePracticeScreen extends StatelessWidget {
         title: Text(sessionTitle),
         backgroundColor: Theme.of(context).colorScheme.onPrimary,
       ),
-      body: FutureBuilder<List<DriverResult>>(
-        future: raceUrl != null
-            ? FormulaOneScraper().scrapeFreePracticeResult(
-                '',
-                0,
-                '',
-                false,
-                raceUrl: raceUrl,
-              )
-            : Formula1().getFreePracticeStandings(meetingId, sessionIndex),
-        // disable scraping for the moment
-        /* FormulaOneScraper().scrapeFreePracticeResult(
-                circuitId,
-                sessionIndex,
-                'practice-$sessionIndex',
-                true,
-              ), */
-        builder: (context, snapshot) => snapshot.hasError
-            ? snapshot.error.toString() == 'RangeError: Value not in range: 0'
-                ? Center(
-                    child: Padding(
-                      padding: const EdgeInsets.all(30),
-                      child: Text(
-                        AppLocalizations.of(context)!.dataNotAvailable,
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  )
-                : RequestErrorWidget(
-                    snapshot.error.toString() +
-                        '\n' +
-                        snapshot.stackTrace.toString(),
-                  )
-            : snapshot.hasData
-                ? FreePracticeResultsList(
-                    snapshot.data!,
-                    raceYear,
-                    raceName,
-                    sessionIndex,
-                  )
-                : const LoadingIndicatorUtil(),
+      body: FreePracticeResultsProvider(
+        sessionTitle,
+        sessionIndex,
+        circuitId,
+        meetingId,
+        raceYear,
+        raceName,
+        raceUrl: raceUrl,
+        sessionId: sessionId,
       ),
     );
   }
 }
 
+class FreePracticeResultsProvider extends StatelessWidget {
+  final String sessionTitle;
+  final int sessionIndex;
+  final String circuitId;
+  final String meetingId;
+  final int raceYear;
+  final String raceName;
+  final String? raceUrl;
+  final String? sessionId;
+  const FreePracticeResultsProvider(
+    this.sessionTitle,
+    this.sessionIndex,
+    this.circuitId,
+    this.meetingId,
+    this.raceYear,
+    this.raceName, {
+    Key? key,
+    this.raceUrl,
+    this.sessionId,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    String championship = Hive.box('settings')
+        .get('championship', defaultValue: 'Formula 1') as String;
+    return FutureBuilder<List<DriverResult>>(
+      future: championship == 'Formula 1'
+          ? raceUrl != null
+              ? FormulaOneScraper().scrapeFreePracticeResult(
+                  '',
+                  0,
+                  '',
+                  false,
+                  raceUrl: raceUrl,
+                )
+              : Formula1().getFreePracticeStandings(meetingId, sessionIndex)
+          : FormulaE().getFreePracticeStandings(
+              meetingId,
+              sessionId!,
+            ),
+      // disable scraping for the moment
+      /* FormulaOneScraper().scrapeFreePracticeResult(
+                circuitId,
+                sessionIndex,
+                'practice-$sessionIndex',
+                true,
+              ), */
+      builder: (context, snapshot) => snapshot.hasError
+          ? snapshot.error.toString() == 'RangeError: Value not in range: 0'
+              ? Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(30),
+                    child: Text(
+                      AppLocalizations.of(context)!.dataNotAvailable,
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                )
+              : RequestErrorWidget(
+                  snapshot.error.toString() +
+                      '\n' +
+                      snapshot.stackTrace.toString(),
+                )
+          : snapshot.hasData
+              ? FreePracticeResultsList(
+                  snapshot.data!,
+                  raceYear,
+                  raceName,
+                  sessionIndex,
+                )
+              : const LoadingIndicatorUtil(),
+    );
+  }
+}
+
 class FreePracticeResultsList extends StatelessWidget {
-  final List<DriverResult> results;
+  final List results;
   final int raceYear;
   final String raceName;
   final int sessionIndex;
@@ -120,6 +166,8 @@ class FreePracticeResultsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String championship = Hive.box('settings')
+        .get('championship', defaultValue: 'Formula 1') as String;
     return ListView.builder(
       itemCount: results.length + 2,
       itemBuilder: (context, index) => index == 0
@@ -134,7 +182,9 @@ class FreePracticeResultsList extends StatelessWidget {
               onTap: () async {
                 var yt = YoutubeExplode();
                 final List<Video> searchResults = await yt.search.search(
-                  "Formula 1 Free Practice $sessionIndex $raceName $raceYear",
+                  sessionIndex == 10
+                      ? "$championship Free Practice $sessionIndex $raceName $raceYear"
+                      : "$championship Qualifyings $sessionIndex $raceName $raceYear",
                 );
                 final Video bestVideoMatch = searchResults[0];
                 await launchUrl(
@@ -218,6 +268,8 @@ class FreePracticeResultItem extends StatelessWidget {
   Widget build(BuildContext context) {
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
+    String championship = Hive.box('settings')
+        .get('championship', defaultValue: 'Formula 1') as String;
     return Container(
       color: index % 2 == 1
           ? useDarkMode
@@ -257,9 +309,11 @@ class FreePracticeResultItem extends StatelessWidget {
             Expanded(
               flex: 2,
               child: BoxBoxVerticalDivider(
-                color: TeamBackgroundColor().getTeamColor(
-                  result.team,
-                ),
+                color: championship == 'Formula 1'
+                    ? TeamBackgroundColor().getTeamColor(
+                        result.team,
+                      )
+                    : FormulaE().getTeamColor(result.team),
                 thickness: 8,
                 width: 25,
                 indent: 7,

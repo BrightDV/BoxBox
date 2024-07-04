@@ -22,6 +22,7 @@ import 'package:boxbox/Screens/race_details.dart';
 import 'package:boxbox/api/ergast.dart';
 import 'package:boxbox/api/event_tracker.dart';
 import 'package:boxbox/api/formula1.dart';
+import 'package:boxbox/api/formulae.dart';
 import 'package:boxbox/api/race_components.dart';
 import 'package:boxbox/helpers/buttons.dart';
 import 'package:boxbox/helpers/convert_ergast_and_formula_one.dart';
@@ -51,8 +52,13 @@ class CircuitScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String scheduleLastSavedFormat = Hive.box('requests')
-        .get('scheduleLastSavedFormat', defaultValue: 'ergast');
+    String championship = Hive.box('settings')
+        .get('championship', defaultValue: 'Formula 1') as String;
+    String scheduleLastSavedFormat = '';
+    if (championship == 'Formula 1') {
+      scheduleLastSavedFormat = Hive.box('requests')
+          .get('f1ScheduleLastSavedFormat', defaultValue: 'ergast');
+    }
     return Scaffold(
       body: isFetched ?? true
           ? NestedScrollView(
@@ -76,16 +82,28 @@ class CircuitScreen extends StatelessWidget {
               },
               body: SingleChildScrollView(
                 child: FutureBuilder<Map>(
-                  future: EventTracker().getCircuitDetails(
-                    scheduleLastSavedFormat == 'ergast'
-                        ? Convert().circuitIdFromErgastToFormulaOne(
-                            race.circuitId,
-                          )
-                        : race.meetingId,
-                    race: scheduleLastSavedFormat == 'ergast' ? null : race,
-                  ),
+                  future: championship == 'Formula 1'
+                      ? EventTracker().getCircuitDetails(
+                          scheduleLastSavedFormat == 'ergast'
+                              ? Convert().circuitIdFromErgastToFormulaOne(
+                                  race.circuitId,
+                                )
+                              : race.meetingId,
+                          race:
+                              scheduleLastSavedFormat == 'ergast' ? null : race,
+                        )
+                      : FormulaE().getSessionsAndRaceDetails(race),
                   builder: (context, snapshot) => snapshot.hasError
-                      ? RequestErrorWidget(snapshot.error.toString())
+                      ? BoxBoxButton(
+                          AppLocalizations.of(context)!.viewResults,
+                          Icon(
+                            Icons.arrow_forward_rounded,
+                          ),
+                          RaceDetailsScreen(
+                            race,
+                            false, // offline
+                          ),
+                        )
                       : snapshot.hasData
                           ? Column(
                               children: [
@@ -102,9 +120,15 @@ class CircuitScreen extends StatelessWidget {
                                         ? race
                                         : snapshot
                                             .data!['raceCustomBBParameter'],
-                                    snapshot.data!['meetingContext']
-                                            ['timetables'][2]['session'] ==
-                                        's',
+                                    championship == 'Formula E'
+                                        ? false
+                                        : snapshot.data!['meetingContext']
+                                                ['timetables'][2]['session'] ==
+                                            's',
+                                    sessions: championship == 'Formula E'
+                                        ? snapshot.data![
+                                            'sessionsIdsCustomBBParameter']
+                                        : null,
                                   ),
                                 ),
                                 snapshot.data!['links'] != null &&
@@ -131,21 +155,24 @@ class CircuitScreen extends StatelessWidget {
                                         ),
                                       )
                                     : Container(),
-                                BoxBoxButton(
-                                  AppLocalizations.of(context)!.grandPrixMap,
-                                  Icon(
-                                    Icons.map_outlined,
-                                  ),
-                                  CircuitMapScreen(
-                                    scheduleLastSavedFormat == 'ergast'
-                                        ? race.circuitId
-                                        : Convert()
-                                            .circuitNameFromFormulaOneToErgastForCircuitPoints(
-                                            race.country,
-                                          ),
-                                  ),
-                                  isDialog: true,
-                                ),
+                                championship == 'Formula 1'
+                                    ? BoxBoxButton(
+                                        AppLocalizations.of(context)!
+                                            .grandPrixMap,
+                                        Icon(
+                                          Icons.map_outlined,
+                                        ),
+                                        CircuitMapScreen(
+                                          scheduleLastSavedFormat == 'ergast'
+                                              ? race.circuitId
+                                              : Convert()
+                                                  .circuitNameFromFormulaOneToErgastForCircuitPoints(
+                                                  race.country,
+                                                ),
+                                        ),
+                                        isDialog: true,
+                                      )
+                                    : Container(),
                                 snapshot.data!['raceResults'] != null &&
                                         snapshot.data!['raceResults'].isNotEmpty
                                     ? RaceResults(
@@ -162,12 +189,22 @@ class CircuitScreen extends StatelessWidget {
                                             ['items'],
                                       )
                                     : Container(),
-                                TrackLayoutImage(race),
-                                CircuitFactsAndHistory(
-                                  race.detailsPath != null
-                                      ? race.detailsPath!
-                                      : race.circuitId,
-                                ),
+                                championship == 'Formula E'
+                                    ? CuratedSection(
+                                        snapshot
+                                            .data!['contentsCustomBBParameter'],
+                                      )
+                                    : Container(),
+                                championship == 'Formula 1'
+                                    ? TrackLayoutImage(race)
+                                    : Container(),
+                                championship == 'Formula 1'
+                                    ? CircuitFactsAndHistory(
+                                        race.detailsPath != null
+                                            ? race.detailsPath!
+                                            : race.circuitId,
+                                      )
+                                    : Container(),
                               ],
                             )
                           : BoxBoxButton(
@@ -345,28 +382,35 @@ class CircuitScreen extends StatelessWidget {
 
 // top image behind the title in the sliver appbar
 class RaceImageProvider extends StatelessWidget {
-  String getCircuitImageUrl(Race race, {bool isFromRaceHub = false}) {
-    String scheduleLastSavedFormat = Hive.box('requests')
-        .get('scheduleLastSavedFormat', defaultValue: 'ergast');
-    if (scheduleLastSavedFormat == 'ergast' || isFromRaceHub) {
-      return RaceTracksUrls().getRaceTrackImageUrl(race.circuitId);
-    } else {
-      String coverUrl = race.raceCoverUrl!;
-      if (race.country == 'Great Britain') {
-        coverUrl =
-            race.raceCoverUrl!.replaceFirst('United_Kingdom', 'Great_Britain');
-      } else if (race.circuitName == 'Monza') {
-        coverUrl = race.raceCoverUrl!.replaceFirst('Italy', 'Monza');
-      } else if (race.circuitName == 'Las Vegas') {
-        coverUrl =
-            'https://media.formula1.com/image/upload/f_auto/q_auto/v1677238736/content/dam/fom-website/2018-redesign-assets/Racehub%20header%20images%2016x9/Las Vegas.jpg.transform/fullbleed/image.jpg';
-      } else if (race.country == 'Abu Dhabi') {
-        coverUrl = race.raceCoverUrl!
-            .replaceFirst('United_Arab_Emirates', 'Abu_Dhabi');
-      } else if (race.country == 'Miami') {
-        coverUrl = race.raceCoverUrl!.replaceFirst('United_States', 'Miami');
+  Future<String> getCircuitImageUrl(Race race,
+      {bool isFromRaceHub = false}) async {
+    String championship = Hive.box('settings')
+        .get('championship', defaultValue: 'Formula 1') as String;
+    if (championship == 'Formula 1') {
+      String scheduleLastSavedFormat = Hive.box('requests')
+          .get('f1ScheduleLastSavedFormat', defaultValue: 'ergast');
+      if (scheduleLastSavedFormat == 'ergast' || isFromRaceHub) {
+        return RaceTracksUrls().getRaceTrackImageUrl(race.circuitId);
+      } else {
+        String coverUrl = race.raceCoverUrl!;
+        if (race.country == 'Great Britain') {
+          coverUrl = race.raceCoverUrl!
+              .replaceFirst('United_Kingdom', 'Great_Britain');
+        } else if (race.circuitName == 'Monza') {
+          coverUrl = race.raceCoverUrl!.replaceFirst('Italy', 'Monza');
+        } else if (race.circuitName == 'Las Vegas') {
+          coverUrl =
+              'https://media.formula1.com/image/upload/f_auto/q_auto/v1677238736/content/dam/fom-website/2018-redesign-assets/Racehub%20header%20images%2016x9/Las Vegas.jpg.transform/fullbleed/image.jpg';
+        } else if (race.country == 'Abu Dhabi') {
+          coverUrl = race.raceCoverUrl!
+              .replaceFirst('United_Arab_Emirates', 'Abu_Dhabi');
+        } else if (race.country == 'Miami') {
+          coverUrl = race.raceCoverUrl!.replaceFirst('United_States', 'Miami');
+        }
+        return coverUrl;
       }
-      return coverUrl;
+    } else {
+      return await FormulaE().getCircuitImageUrl(race.meetingId);
     }
   }
 
@@ -379,13 +423,21 @@ class RaceImageProvider extends StatelessWidget {
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return CachedNetworkImage(
-      errorWidget: (context, url, error) => const Icon(Icons.error_outlined),
-      fadeOutDuration: const Duration(seconds: 1),
-      fadeInDuration: const Duration(seconds: 1),
-      fit: BoxFit.cover,
-      imageUrl: getCircuitImageUrl(race, isFromRaceHub: isFromRaceHub),
-      placeholder: (context, url) => const LoadingIndicatorUtil(),
+    return FutureBuilder(
+      future: getCircuitImageUrl(race),
+      builder: (context, snapshot) => snapshot.hasError
+          ? Icon(Icons.error_outlined)
+          : snapshot.hasData
+              ? CachedNetworkImage(
+                  errorWidget: (context, url, error) =>
+                      const Icon(Icons.error_outlined),
+                  fadeOutDuration: const Duration(seconds: 1),
+                  fadeInDuration: const Duration(seconds: 1),
+                  fit: BoxFit.cover,
+                  imageUrl: snapshot.data!,
+                  placeholder: (context, url) => const LoadingIndicatorUtil(),
+                )
+              : LoadingIndicatorUtil(),
     );
   }
 }
@@ -394,7 +446,7 @@ class RaceImageProvider extends StatelessWidget {
 class TrackLayoutImage extends StatelessWidget {
   String getTrackLayoutImageUrl(Race race) {
     String scheduleLastSavedFormat = Hive.box('requests')
-        .get('scheduleLastSavedFormat', defaultValue: 'ergast');
+        .get('f1ScheduleLastSavedFormat', defaultValue: 'ergast');
     String country = race.country;
     if (country == 'Monaco') {
       country = 'Monoco';
@@ -709,6 +761,9 @@ class CuratedSection extends StatelessWidget {
   Widget build(BuildContext context) {
     bool useDataSaverMode = Hive.box('settings')
         .get('useDataSaverMode', defaultValue: false) as bool;
+    String championship = Hive.box('settings')
+        .get('championship', defaultValue: 'Formula 1') as String;
+
     return Padding(
       padding: EdgeInsets.only(left: 10),
       child: SingleChildScrollView(
@@ -718,20 +773,37 @@ class CuratedSection extends StatelessWidget {
           children: [
             for (Map article in items)
               NewsItem(
-                News(
-                  article['id'],
-                  article['articleType'],
-                  article['slug'],
-                  article['title'],
-                  article['metaDescription'] ?? ' ',
-                  DateTime.parse(article['updatedAt']),
-                  useDataSaverMode
-                      ? article['thumbnail']['image']['renditions'] != null
-                          ? article['thumbnail']['image']['renditions']['2col']
-                          : article['thumbnail']['image']['url'] +
-                              '.transform/2col-retina/image.jpg'
-                      : article['thumbnail']['image']['url'],
-                ),
+                championship == 'Formula 1'
+                    ? News(
+                        article['id'],
+                        article['articleType'],
+                        article['slug'],
+                        article['title'],
+                        article['metaDescription'] ?? ' ',
+                        DateTime.parse(article['updatedAt']),
+                        useDataSaverMode
+                            ? article['thumbnail']['image']['renditions'] !=
+                                    null
+                                ? article['thumbnail']['image']['renditions']
+                                    ['2col']
+                                : article['thumbnail']['image']['url'] +
+                                    '.transform/2col-retina/image.jpg'
+                            : article['thumbnail']['image']['url'],
+                      )
+                    : News(
+                        article['id'].toString(),
+                        '',
+                        '',
+                        article['title'],
+                        article['description'] ?? ' ',
+                        DateTime.fromMillisecondsSinceEpoch(
+                          article['publishFrom'],
+                        ),
+                        article['imageUrl'],
+                        author: article['author'] != null
+                            ? {'fullName': article['author']}
+                            : null,
+                      ),
                 true,
               ),
             SizedBox(width: 5),
@@ -756,7 +828,7 @@ class CircuitFactsAndHistory extends StatelessWidget {
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     String scheduleLastSavedFormat = Hive.box('requests')
-        .get('scheduleLastSavedFormat', defaultValue: 'ergast');
+        .get('f1ScheduleLastSavedFormat', defaultValue: 'ergast');
     return Padding(
       padding: const EdgeInsets.all(10),
       child: FutureBuilder<Map>(

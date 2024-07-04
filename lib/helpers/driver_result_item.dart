@@ -19,6 +19,7 @@
 
 import 'package:boxbox/Screens/driver_details.dart';
 import 'package:boxbox/api/driver_components.dart';
+import 'package:boxbox/api/formulae.dart';
 import 'package:boxbox/api/race_components.dart';
 import 'package:boxbox/helpers/divider.dart';
 import 'package:boxbox/helpers/team_background_color.dart';
@@ -37,7 +38,14 @@ class DriverResultItem extends StatelessWidget {
   const DriverResultItem(this.item, this.index, {Key? key}) : super(key: key);
 
   Color getTeamColors(String teamId) {
-    Color tC = TeamBackgroundColor().getTeamColor(teamId);
+    String championship = Hive.box('settings')
+        .get('championship', defaultValue: 'Formula 1') as String;
+    Color tC;
+    if (championship == 'Formula 1') {
+      tC = TeamBackgroundColor().getTeamColor(teamId);
+    } else {
+      tC = FormulaE().getTeamColor(teamId);
+    }
     return tC;
   }
 
@@ -88,7 +96,9 @@ class DriverResultItem extends StatelessWidget {
               Expanded(
                 flex: 2,
                 child: Text(
-                  item.position == '666' ? 'DNF' : item.position,
+                  item.position == '666' || item.position == '0'
+                      ? 'DNF'
+                      : item.position,
                   style: const TextStyle(
                     fontWeight: FontWeight.w600,
                   ),
@@ -346,7 +356,14 @@ class QualificationResultsItem extends StatelessWidget {
       : super(key: key);
 
   Color getTeamColors(String teamId) {
-    Color tC = TeamBackgroundColor().getTeamColor(teamId);
+    String championship = Hive.box('settings')
+        .get('championship', defaultValue: 'Formula 1') as String;
+    Color tC;
+    if (championship == 'Formula 1') {
+      tC = TeamBackgroundColor().getTeamColor(teamId);
+    } else {
+      tC = FormulaE().getTeamColor(teamId);
+    }
     return tC;
   }
 
@@ -569,7 +586,7 @@ class QualificationResultsItem extends StatelessWidget {
 }
 
 class QualificationDriversResultsList extends StatelessWidget {
-  final List<DriverQualificationResult> items;
+  final List items;
   final Race? race;
   final String? raceUrl;
   final bool? isSprintQualifying;
@@ -583,6 +600,8 @@ class QualificationDriversResultsList extends StatelessWidget {
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    String championship = Hive.box('settings')
+        .get('championship', defaultValue: 'Formula 1') as String;
     List resultsQOne = [];
     List resultsQTwo = [];
     for (var element in items) {
@@ -617,7 +636,7 @@ class QualificationDriversResultsList extends StatelessWidget {
                     (raceUrl?.contains('sprint-qualifying') ?? false) ||
                             (isSprintQualifying ?? false)
                         ? "Formula 1 Sprint Qualifying Highlights ${race!.raceName} $raceYear"
-                        : "Formula 1 Qualifying Highlights ${race!.raceName} $raceYear",
+                        : "$championship Qualifying Highlights ${race!.raceName} $raceYear",
                   );
                   final Video bestVideoMatch = searchResults[0];
                   await launchUrl(

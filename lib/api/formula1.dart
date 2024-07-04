@@ -19,15 +19,11 @@
 
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 import 'dart:ui';
 
-import 'package:background_downloader/background_downloader.dart';
-import 'package:boxbox/api/brightcove.dart';
 import 'package:boxbox/api/driver_components.dart';
 import 'package:boxbox/api/race_components.dart';
 import 'package:boxbox/api/team_components.dart';
-import 'package:boxbox/api/videos.dart';
 import 'package:boxbox/helpers/convert_ergast_and_formula_one.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
@@ -113,6 +109,7 @@ class Formula1 {
         json.decode(utf8.decode(response.bodyBytes));
     if (offset == 0 && tagId == null && articleType == null) {
       Hive.box('requests').put('news', responseAsJson);
+      Hive.box('requests').put('newsLastSavedFormat', 'f1');
     }
     return formatResponse(responseAsJson);
   }
@@ -182,161 +179,6 @@ class Formula1 {
       responseAsJson['author'] ?? {},
     );
     return article;
-  }
-
-  Future<String> downloadArticle(String articleId, String articleTitle,
-      {Function(TaskStatusUpdate)? callback}) async {
-    String endpoint = Hive.box('settings')
-        .get('server', defaultValue: defaultEndpoint) as String;
-
-    bool isDownloaded = await downloadedFileCheck('article_$articleId');
-
-    if (!isDownloaded) {
-      FileDownloader().unregisterCallbacks(callback: callback);
-      if (callback != null) {
-        FileDownloader().registerCallbacks(taskStatusCallback: callback);
-      }
-
-      final task = DownloadTask(
-        taskId: 'article_$articleId',
-        url: '$endpoint/v1/editorial/articles/$articleId',
-        filename: 'article_$articleId.json',
-        displayName: articleTitle,
-        headers: endpoint != defaultEndpoint
-            ? {
-                "Accept": "application/json",
-              }
-            : {
-                "Accept": "application/json",
-                "apikey": apikey,
-                "locale": "en",
-              },
-        //directory: 'Box, Box! Downloads',
-        updates: Updates.statusAndProgress,
-        //requiresWiFi: true,
-        retries: 5,
-      );
-
-      final successfullyEnqueued = await FileDownloader().enqueue(task);
-
-      if (successfullyEnqueued) {
-        return "downloading";
-      } else {
-        return "not downloaded";
-      }
-    } else {
-      return "already downloaded";
-    }
-  }
-
-  Future<String> downloadVideo(
-    String videoId,
-    String quality, {
-    Video? video,
-    Function(TaskStatusUpdate)? callback,
-  }) async {
-    bool isDownloaded = await downloadedFileCheck('video_$videoId');
-
-    if (!isDownloaded) {
-      FileDownloader().unregisterCallbacks(callback: callback);
-      if (callback != null) {
-        FileDownloader().registerCallbacks(taskStatusCallback: callback);
-      }
-      if (video == null) {
-        video = await F1VideosFetcher().getVideoDetails(videoId);
-      }
-
-      Map links = await BrightCove().getVideoLinks(videoId);
-      String link =
-          links['videos'][links['qualities'].indexOf('${quality}p') + 1];
-      // index 0 is preferred quality
-
-      Map videoDetails = {
-        'id': video.videoId,
-        'title': video.caption,
-        'thumbnail': video.thumbnailUrl,
-        'url': video.videoUrl,
-        'description': video.description,
-        'videoDuration': video.videoDuration,
-        'datePosted': video.datePosted.toIso8601String(),
-      };
-
-      DownloadTask task = DownloadTask(
-        taskId: 'video_$videoId',
-        url: link,
-        filename: 'video_$videoId.mp4',
-      );
-
-      int fileSize = await task.expectedFileSize();
-      videoDetails['fileSize'] = fileSize;
-
-      task = DownloadTask(
-        taskId: 'video_$videoId',
-        url: link,
-        filename: 'video_$videoId.mp4',
-        displayName: video.caption,
-        //directory: 'Box, Box! Downloads',
-        updates: Updates.statusAndProgress,
-        //requiresWiFi: true,
-        retries: 3,
-        allowPause: true,
-        metaData: json.encode(videoDetails),
-      );
-
-      final successfullyEnqueued = await FileDownloader().enqueue(task);
-
-      if (successfullyEnqueued) {
-        return "downloading";
-      } else {
-        return "not downloaded";
-      }
-    } else {
-      return "already downloaded";
-    }
-  }
-
-  Future<bool> downloadedFileCheck(String taskId) async {
-    final record = await FileDownloader().database.recordForId(taskId);
-    if (record != null) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  Future<String?> downloadedFilePathIfExists(String taskId) async {
-    final record = await FileDownloader().database.recordForId(taskId);
-    if (record != null) {
-      return await record.task.filePath();
-    } else {
-      return null;
-    }
-  }
-
-  Future<void> deleteFile(String taskId) async {
-    final record = await FileDownloader().database.recordForId(taskId);
-    if (record != null) {
-      // delete download taskId
-      List downloads = await Hive.box('downloads').get(
-        'downloadsList',
-        defaultValue: [],
-      );
-      downloads.remove(taskId);
-      await Hive.box('downloads').put('downloadsList', downloads);
-      // delete download record
-      await FileDownloader().database.deleteRecordWithId(taskId);
-      // delete download description
-      Map downloadsDescriptions = Hive.box('downloads').get(
-        'downloadsDescriptions',
-        defaultValue: {},
-      );
-      downloadsDescriptions.remove(taskId);
-      await Hive.box('downloads')
-          .put('downloadsDescriptions', downloadsDescriptions);
-      String filePath = await record.task.filePath();
-      // delete file from device
-      await File(filePath).delete();
-    }
   }
 
   Future<bool> saveLoginCookie(String cookieValue) async {
@@ -465,13 +307,13 @@ class Formula1 {
 
   FutureOr<List<DriverResult>> getRaceStandings(
       String meetingId, String round) async {
-    Map results = Hive.box('requests').get('race-$round', defaultValue: {});
+    Map results = Hive.box('requests').get('f1Race-$round', defaultValue: {});
     DateTime latestQuery = Hive.box('requests').get(
-      'race-$round-latestQuery',
+      'f1Race-$round-latestQuery',
       defaultValue: DateTime.now(),
     ) as DateTime;
     String raceResultsLastSavedFormat = Hive.box('requests')
-        .get('raceResultsLastSavedFormat', defaultValue: 'ergast');
+        .get('f1RaceResultsLastSavedFormat', defaultValue: 'ergast');
 
     if (latestQuery
             .add(
@@ -495,10 +337,10 @@ class Formula1 {
       );
       Map<String, dynamic> responseAsJson = jsonDecode(response.body);
       List<DriverResult> driversResults = formatRaceStandings(responseAsJson);
-      Hive.box('requests').put('raceResultsLastSavedFormat', 'f1');
-      Hive.box('requests').put('race-$round', responseAsJson);
+      Hive.box('requests').put('f1RaceResultsLastSavedFormat', 'f1');
+      Hive.box('requests').put('f1Race-$round', responseAsJson);
       Hive.box('requests').put(
-        'race-$round-latestQuery',
+        'f1Race-$round-latestQuery',
         DateTime.now(),
       );
 
@@ -763,23 +605,23 @@ class Formula1 {
   }
 
   FutureOr<List<Driver>> getLastStandings() async {
-    Map driverStandings =
-        Hive.box('requests').get('driversStandings', defaultValue: {});
+    Map driversStandings =
+        Hive.box('requests').get('f1DriversStandings', defaultValue: {});
     DateTime latestQuery = Hive.box('requests').get(
-      'driversStandingsLatestQuery',
+      'f1DriversStandingsLatestQuery',
       defaultValue: DateTime.now(),
     ) as DateTime;
-    String driverStandingsLastSavedFormat = Hive.box('requests')
-        .get('driverStandingsLastSavedFormat', defaultValue: 'ergast');
+    String driversStandingsLastSavedFormat = Hive.box('requests')
+        .get('f1DriversStandingsLastSavedFormat', defaultValue: 'ergast');
 
     if (latestQuery
             .add(
               const Duration(minutes: 30),
             )
             .isAfter(DateTime.now()) &&
-        driverStandings.isNotEmpty &&
-        driverStandingsLastSavedFormat == 'f1') {
-      return formatLastStandings(driverStandings);
+        driversStandings.isNotEmpty &&
+        driversStandingsLastSavedFormat == 'f1') {
+      return formatLastStandings(driversStandings);
     } else {
       var url = Uri.parse(
         '$defaultEndpoint/v1/editorial-driverlisting/listing',
@@ -794,9 +636,9 @@ class Formula1 {
       );
       Map<String, dynamic> responseAsJson = jsonDecode(response.body);
       List<Driver> drivers = formatLastStandings(responseAsJson);
-      Hive.box('requests').put('driversStandings', responseAsJson);
-      Hive.box('requests').put('driversStandingsLatestQuery', DateTime.now());
-      Hive.box('requests').put('driverStandingsLastSavedFormat', 'f1');
+      Hive.box('requests').put('f1DriversStandings', responseAsJson);
+      Hive.box('requests').put('f1DriversStandingsLatestQuery', DateTime.now());
+      Hive.box('requests').put('f1DriversStandingsLastSavedFormat', 'f1');
       return drivers;
     }
   }
@@ -831,13 +673,13 @@ class Formula1 {
 
   FutureOr<List<Team>> getLastTeamsStandings() async {
     Map teamsStandings =
-        Hive.box('requests').get('teamsStandings', defaultValue: {});
+        Hive.box('requests').get('f1TeamsStandings', defaultValue: {});
     DateTime latestQuery = Hive.box('requests').get(
-      'teamsStandingsLatestQuery',
+      'f1TeamsStandingsLatestQuery',
       defaultValue: DateTime.now(),
     ) as DateTime;
-    String teamStandingsLastSavedFormat = Hive.box('requests')
-        .get('teamStandingsLastSavedFormat', defaultValue: 'ergast');
+    String teamsStandingsLastSavedFormat = Hive.box('requests')
+        .get('f1TeamsStandingsLastSavedFormat', defaultValue: 'ergast');
 
     if (latestQuery
             .add(
@@ -845,7 +687,7 @@ class Formula1 {
             )
             .isAfter(DateTime.now()) &&
         teamsStandings.isNotEmpty &&
-        teamStandingsLastSavedFormat == 'f1') {
+        teamsStandingsLastSavedFormat == 'f1') {
       return formatLastTeamsStandings(teamsStandings);
     } else {
       var url = Uri.parse(
@@ -861,9 +703,9 @@ class Formula1 {
       );
       Map<String, dynamic> responseAsJson = jsonDecode(response.body);
       List<Team> teams = formatLastTeamsStandings(responseAsJson);
-      Hive.box('requests').put('teamsStandings', responseAsJson);
-      Hive.box('requests').put('teamsStandingsLatestQuery', DateTime.now());
-      Hive.box('requests').put('teamStandingsLastSavedFormat', 'f1');
+      Hive.box('requests').put('f1TeamsStandings', responseAsJson);
+      Hive.box('requests').put('f1TeamsStandingsLatestQuery', DateTime.now());
+      Hive.box('requests').put('f1TeamsStandingsLastSavedFormat', 'f1');
       return teams;
     }
   }
@@ -960,15 +802,15 @@ class Formula1 {
   }
 
   Future<List<Race>> getLastSchedule(bool toCome) async {
-    Map schedule = Hive.box('requests').get('schedule', defaultValue: {});
+    Map schedule = Hive.box('requests').get('f1Schedule', defaultValue: {});
     DateTime latestQuery = Hive.box('requests').get(
-      'scheduleLatestQuery',
+      'f1ScheduleLatestQuery',
       defaultValue: DateTime.now().subtract(
         const Duration(hours: 1),
       ),
     ) as DateTime;
     String scheduleLastSavedFormat = Hive.box('requests')
-        .get('scheduleLastSavedFormat', defaultValue: 'ergast');
+        .get('f1ScheduleLastSavedFormat', defaultValue: 'ergast');
 
     if (latestQuery
             .add(
@@ -992,9 +834,9 @@ class Formula1 {
         utf8.decode(response.bodyBytes),
       );
       List<Race> races = formatLastSchedule(responseAsJson, toCome);
-      Hive.box('requests').put('schedule', responseAsJson);
-      Hive.box('requests').put('scheduleLatestQuery', DateTime.now());
-      Hive.box('requests').put('scheduleLastSavedFormat', 'f1');
+      Hive.box('requests').put('f1Schedule', responseAsJson);
+      Hive.box('requests').put('f1ScheduleLatestQuery', DateTime.now());
+      Hive.box('requests').put('f1ScheduleLastSavedFormat', 'f1');
       return races;
     }
   }
@@ -1044,6 +886,8 @@ class News {
   final String subtitle;
   final DateTime datePosted;
   final String imageUrl;
+  final List? tags;
+  final Map? author;
 
   News(
     this.newsId,
@@ -1052,8 +896,10 @@ class News {
     this.title,
     this.subtitle,
     this.datePosted,
-    this.imageUrl,
-  );
+    this.imageUrl, {
+    this.tags,
+    this.author,
+  });
 }
 
 class Article {

@@ -42,6 +42,7 @@ class Race {
   final String? detailsPath;
   final List? sessionStates;
   final bool? isPreSeasonTesting;
+  final bool? hasRaceHour;
 
   Race(
     this.round,
@@ -59,6 +60,7 @@ class Race {
     this.detailsPath,
     this.sessionStates,
     this.isPreSeasonTesting,
+    this.hasRaceHour,
   });
 }
 
@@ -81,7 +83,7 @@ class RaceItem extends StatelessWidget {
           ),
         ),
       ),
-      child: index == 0 && isUpNext
+      child: index == 0 && isUpNext && (item.raceCoverUrl ?? '') != 'none'
           ? Column(
               children: [
                 ImageRenderer(
@@ -106,8 +108,13 @@ class RaceListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String scheduleLastSavedFormat = Hive.box('requests')
-        .get('scheduleLastSavedFormat', defaultValue: 'ergast');
+    String championship = Hive.box('settings')
+        .get('championship', defaultValue: 'Formula 1') as String;
+    String scheduleLastSavedFormat = '';
+    if (championship == 'Formula 1') {
+      scheduleLastSavedFormat = Hive.box('requests')
+          .get('f1ScheduleLastSavedFormat', defaultValue: 'ergast');
+    }
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     bool shouldUse12HourClock = Hive.box('settings')
@@ -204,7 +211,7 @@ class RaceListItem extends StatelessWidget {
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
-                          Text(formatedRaceDate),
+                          if (item.hasRaceHour ?? true) Text(formatedRaceDate),
                         ],
                       ),
                     ),
@@ -282,8 +289,17 @@ class RaceListItem extends StatelessWidget {
                       title: Text(
                         item.country,
                       ),
-                      subtitle: Text(
-                        '${item.circuitName}\n${formatedRaceDate}',
+                      subtitle: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            item.circuitName,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          if (item.hasRaceHour ?? true) Text(formatedRaceDate),
+                        ],
                       ),
                     ),
                   ),

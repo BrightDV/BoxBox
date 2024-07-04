@@ -21,6 +21,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 class UnofficialWebviewScreen extends StatefulWidget {
   const UnofficialWebviewScreen({Key? key}) : super(key: key);
@@ -30,8 +31,6 @@ class UnofficialWebviewScreen extends StatefulWidget {
 }
 
 class _UnofficialWebviewScreenState extends State<UnofficialWebviewScreen> {
-  final List<ContentBlocker> contentBlockers = [];
-
   @override
   void initState() {
     super.initState();
@@ -39,14 +38,15 @@ class _UnofficialWebviewScreenState extends State<UnofficialWebviewScreen> {
 
   @override
   Widget build(BuildContext context) {
+    String championship = Hive.box('settings')
+        .get('championship', defaultValue: 'Formula 1') as String;
     return InAppWebView(
       initialUrlRequest: URLRequest(
         url: WebUri(
-          "https://f1-dash.com/dashboard",
+          championship == 'Formula 1'
+              ? 'https://f1-dash.com/dashboard'
+              : 'https://livetiming-formula-e.alkamelsystems.com/fiaformulae',
         ),
-      ),
-      initialSettings: InAppWebViewSettings(
-        contentBlockers: contentBlockers,
       ),
       gestureRecognizers: {
         Factory<VerticalDragGestureRecognizer>(

@@ -34,11 +34,16 @@ class SessionScreen extends StatefulWidget {
   final Session session;
   final String meetingCountryName;
   final String meetingOfficialName;
+  final String meetingId;
 
-  const SessionScreen(this.sessionFullName, this.session,
-      this.meetingCountryName, this.meetingOfficialName,
-      {Key? key})
-      : super(key: key);
+  const SessionScreen(
+    this.sessionFullName,
+    this.session,
+    this.meetingCountryName,
+    this.meetingOfficialName,
+    this.meetingId, {
+    Key? key,
+  }) : super(key: key);
   @override
   State<SessionScreen> createState() => _SessionScreenState();
 }
@@ -48,6 +53,8 @@ class _SessionScreenState extends State<SessionScreen> {
   Widget build(BuildContext context) {
     bool useOfficialWebview = Hive.box('settings')
         .get('useOfficialWebview', defaultValue: true) as bool;
+    String championship = Hive.box('settings')
+        .get('championship', defaultValue: 'Formula 1') as String;
 
     int timeBetween(DateTime from, DateTime to) {
       return to.difference(from).inSeconds;
@@ -65,7 +72,8 @@ class _SessionScreenState extends State<SessionScreen> {
     int seconds =
         (timeToRace - days * 24 * 60 * 60 - hours * 60 * 60 - minutes * 60);
 
-    return widget.session.sessionsAbbreviation.startsWith('p')
+    return widget.session.sessionsAbbreviation.startsWith('p') ||
+            widget.session.sessionsAbbreviation.startsWith('Free Practice')
         ? widget.session.state == 'upcoming' ||
                 widget.session.startTime.isAfter(DateTime.now())
             ? Scaffold(
@@ -179,8 +187,19 @@ class _SessionScreenState extends State<SessionScreen> {
               )
             : widget.session.startTime.isBefore(DateTime.now()) &&
                     widget.session.endTime.isAfter(DateTime.now())
-                ? useOfficialWebview
-                    ? WebViewManagerScreen(widget.sessionFullName)
+                ? championship == 'Formula 1'
+                    ? useOfficialWebview
+                        ? WebViewManagerScreen(widget.sessionFullName)
+                        : Scaffold(
+                            appBar: AppBar(
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.onPrimary,
+                              title: Text(
+                                widget.sessionFullName,
+                              ),
+                            ),
+                            body: UnofficialWebviewScreen(),
+                          )
                     : Scaffold(
                         appBar: AppBar(
                           backgroundColor:
@@ -194,16 +213,23 @@ class _SessionScreenState extends State<SessionScreen> {
                 : FreePracticeScreen(
                     widget.sessionFullName,
                     int.parse(
-                      widget.session.sessionsAbbreviation.substring(1),
+                      championship == 'Formula 1'
+                          ? widget.session.sessionsAbbreviation.substring(1)
+                          : widget.session.sessionsAbbreviation.split(' ').last,
                     ),
                     '',
-                    '',
+                    championship == 'Formula 1' ? '' : widget.meetingId,
                     0,
                     '',
-                    raceUrl: widget.session.baseUrl.replaceAll(
-                      'session-type',
-                      'practice-${widget.session.sessionsAbbreviation.substring(1)}',
-                    ),
+                    raceUrl: championship == 'Formula 1'
+                        ? widget.session.baseUrl.replaceAll(
+                            'session-type',
+                            'practice-${widget.session.sessionsAbbreviation.substring(1)}',
+                          )
+                        : widget.session.baseUrl,
+                    sessionId: championship == 'Formula 1'
+                        ? null
+                        : widget.session.baseUrl,
                   )
         : Scaffold(
             appBar: AppBar(
@@ -320,25 +346,42 @@ class _SessionScreenState extends State<SessionScreen> {
                 : widget.session.state == 'completed' ||
                         widget.session.endTime.isBefore(DateTime.now())
                     ? widget.session.sessionsAbbreviation == 'r' ||
-                            widget.session.sessionsAbbreviation == 's'
+                            widget.session.sessionsAbbreviation == 's' ||
+                            widget.session.sessionsAbbreviation == 'Race'
                         ? RaceResultsProvider(
-                            raceUrl: widget.session.sessionsAbbreviation == 'r'
-                                ? widget.session.baseUrl
-                                    .replaceAll('session-type', 'race-result')
-                                : widget.session.baseUrl.replaceAll(
-                                    'session-type',
-                                    'sprint-results',
-                                  ),
+                            raceUrl: championship == 'Formula 1'
+                                ? widget.session.sessionsAbbreviation == 'r'
+                                    ? widget.session.baseUrl.replaceAll(
+                                        'session-type', 'race-result')
+                                    : widget.session.baseUrl.replaceAll(
+                                        'session-type',
+                                        'sprint-results',
+                                      )
+                                : widget.session.baseUrl,
+                            raceId: widget.meetingId,
                           )
-                        : QualificationResultsProvider(
-                            raceUrl: widget.session.baseUrl.replaceAll(
-                              'session-type',
-                              widget.session.sessionsAbbreviation == 'ss'
-                                  ? 'sprint-qualifying'
-                                  : 'qualifying',
-                            ),
-                          )
-                    : useOfficialWebview
+                        : championship == 'Formula 1'
+                            ? QualificationResultsProvider(
+                                raceUrl: championship == 'Formula 1'
+                                    ? widget.session.baseUrl.replaceAll(
+                                        'session-type',
+                                        widget.session.sessionsAbbreviation ==
+                                                'ss'
+                                            ? 'sprint-qualifying'
+                                            : 'qualifying',
+                                      )
+                                    : widget.session.baseUrl,
+                              )
+                            : FreePracticeResultsProvider(
+                                widget.sessionFullName,
+                                10,
+                                '',
+                                widget.meetingId,
+                                DateTime.now().year,
+                                widget.meetingOfficialName,
+                                sessionId: widget.session.baseUrl,
+                              )
+                    : useOfficialWebview && championship == 'Formula 1'
                         ? WebViewManagerScreen(widget.sessionFullName)
                         : UnofficialWebviewScreen(),
           );

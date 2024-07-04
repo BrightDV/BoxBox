@@ -19,7 +19,7 @@
 
 import 'dart:convert';
 
-import 'package:boxbox/api/formula1.dart';
+import 'package:boxbox/helpers/download.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_cache_manager/file.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
@@ -38,28 +38,68 @@ class BrightCove {
     ),
   );
 
-  Future<Map> fetchStreamData(String videoId) async {
+  Future<Map> fetchStreamData(
+      String videoId, String? player, String? articleChampionship) async {
+    String championship = Hive.box('settings')
+        .get('championship', defaultValue: 'Formula 1') as String;
     late Map responseAsJson;
     if (kIsWeb) {
-      Uri uri = Uri.parse(
-        'https://edge.api.brightcove.com/playback/v1/accounts/6057949432001/videos/$videoId',
-      );
+      late Uri uri;
+      if (articleChampionship != null) {
+        uri = Uri.parse(
+          articleChampionship == 'Formula 1'
+              ? 'https://edge.api.brightcove.com/playback/v1/accounts/6057949432001/videos/$videoId'
+              : 'https://edge.api.brightcove.com/playback/v1/accounts/6275361344001/videos/$videoId',
+        );
+      } else if (player != null) {
+        uri = Uri.parse(
+          'https://edge.api.brightcove.com/playback/v1/accounts/$player/videos/$videoId',
+        );
+      } else {
+        uri = Uri.parse(
+          championship == 'Formula 1'
+              ? 'https://edge.api.brightcove.com/playback/v1/accounts/6057949432001/videos/$videoId'
+              : 'https://edge.api.brightcove.com/playback/v1/accounts/6275361344001/videos/$videoId',
+        );
+      }
       Response res = await get(
         uri,
         headers: {
-          'Accept':
-              ' application/json;pk=BCpkADawqM1hQVBuXkSlsl6hUsBZQMmrLbIfOjJQ3_n8zmPOhlNSwZhQBF6d5xggxm0t052lQjYyhqZR3FW2eP03YGOER9ihJkUnIhRZGBxuLhnL-QiFpvcDWIh_LvwN5j8zkjTtGKarhsdV',
+          'Accept': articleChampionship != null
+              ? articleChampionship == 'Formula 1'
+                  ? ' application/json;pk=BCpkADawqM1hQVBuXkSlsl6hUsBZQMmrLbIfOjJQ3_n8zmPOhlNSwZhQBF6d5xggxm0t052lQjYyhqZR3FW2eP03YGOER9ihJkUnIhRZGBxuLhnL-QiFpvcDWIh_LvwN5j8zkjTtGKarhsdV'
+                  : ' application/json;pk=BCpkADawqM0CZElkVwfs62q-JTOc4CeZSNJRfxT923qzbMSqp6qn5VEgWV1iao1cEf2sXX9ce8achTuOfYKUvfchSis_rB5Sxz_ih70GYLYdf8bZgHi3Yq1VK_6v3mj29rxxcJjF3OX6Ri32'
+              : championship == 'Formula 1'
+                  ? ' application/json;pk=BCpkADawqM1hQVBuXkSlsl6hUsBZQMmrLbIfOjJQ3_n8zmPOhlNSwZhQBF6d5xggxm0t052lQjYyhqZR3FW2eP03YGOER9ihJkUnIhRZGBxuLhnL-QiFpvcDWIh_LvwN5j8zkjTtGKarhsdV'
+                  : ' application/json;pk=BCpkADawqM0CZElkVwfs62q-JTOc4CeZSNJRfxT923qzbMSqp6qn5VEgWV1iao1cEf2sXX9ce8achTuOfYKUvfchSis_rB5Sxz_ih70GYLYdf8bZgHi3Yq1VK_6v3mj29rxxcJjF3OX6Ri32',
         },
       );
       responseAsJson = jsonDecode(res.body);
     } else {
-      String url =
-          'https://edge.api.brightcove.com/playback/v1/accounts/6057949432001/videos/$videoId';
+      late String url;
+
+      if (articleChampionship != null) {
+        url = articleChampionship == 'Formula 1'
+            ? 'https://edge.api.brightcove.com/playback/v1/accounts/6057949432001/videos/$videoId'
+            : 'https://edge.api.brightcove.com/playback/v1/accounts/6275361344001/videos/$videoId';
+      } else if (player != null) {
+        url =
+            'https://edge.api.brightcove.com/playback/v1/accounts/$player/videos/$videoId';
+      } else {
+        url = championship == 'Formula 1'
+            ? 'https://edge.api.brightcove.com/playback/v1/accounts/6057949432001/videos/$videoId'
+            : 'https://edge.api.brightcove.com/playback/v1/accounts/6275361344001/videos/$videoId';
+      }
       final Future<File> fileStream = videoCache.getSingleFile(
         url,
         headers: {
-          'Accept':
-              ' application/json;pk=BCpkADawqM1hQVBuXkSlsl6hUsBZQMmrLbIfOjJQ3_n8zmPOhlNSwZhQBF6d5xggxm0t052lQjYyhqZR3FW2eP03YGOER9ihJkUnIhRZGBxuLhnL-QiFpvcDWIh_LvwN5j8zkjTtGKarhsdV',
+          'Accept': articleChampionship != null
+              ? articleChampionship == 'Formula 1'
+                  ? ' application/json;pk=BCpkADawqM1hQVBuXkSlsl6hUsBZQMmrLbIfOjJQ3_n8zmPOhlNSwZhQBF6d5xggxm0t052lQjYyhqZR3FW2eP03YGOER9ihJkUnIhRZGBxuLhnL-QiFpvcDWIh_LvwN5j8zkjTtGKarhsdV'
+                  : ' application/json;pk=BCpkADawqM0CZElkVwfs62q-JTOc4CeZSNJRfxT923qzbMSqp6qn5VEgWV1iao1cEf2sXX9ce8achTuOfYKUvfchSis_rB5Sxz_ih70GYLYdf8bZgHi3Yq1VK_6v3mj29rxxcJjF3OX6Ri32'
+              : championship == 'Formula 1'
+                  ? ' application/json;pk=BCpkADawqM1hQVBuXkSlsl6hUsBZQMmrLbIfOjJQ3_n8zmPOhlNSwZhQBF6d5xggxm0t052lQjYyhqZR3FW2eP03YGOER9ihJkUnIhRZGBxuLhnL-QiFpvcDWIh_LvwN5j8zkjTtGKarhsdV'
+                  : ' application/json;pk=BCpkADawqM0CZElkVwfs62q-JTOc4CeZSNJRfxT923qzbMSqp6qn5VEgWV1iao1cEf2sXX9ce8achTuOfYKUvfchSis_rB5Sxz_ih70GYLYdf8bZgHi3Yq1VK_6v3mj29rxxcJjF3OX6Ri32',
         },
       );
       final response = await fileStream;
@@ -73,15 +113,18 @@ class BrightCove {
     return responseAsJson;
   }
 
-  Future<Map<String, dynamic>> getVideoLinks(String videoId) async {
+  Future<Map<String, dynamic>> getVideoLinks(String videoId,
+      {String? player, String? articleChampionship}) async {
     String? filePath =
-        await Formula1().downloadedFilePathIfExists('video_${videoId}');
+        await DownloadUtils().downloadedFilePathIfExists('video_f1_${videoId}');
+
     if (filePath != null) {
       return {'file': filePath};
     } else {
       int playerQuality =
           Hive.box('settings').get('playerQuality', defaultValue: 360) as int;
-      Map streamsData = await fetchStreamData(videoId);
+      Map streamsData =
+          await fetchStreamData(videoId, player, articleChampionship);
       Map<String, dynamic> streamUrls = {};
       streamUrls['poster'] = streamsData['poster'];
       streamUrls['videos'] = [];
@@ -106,6 +149,9 @@ class BrightCove {
               streamUrl.replaceFirst('http://', 'https://');
         }
         c++;
+      }
+      if (streamUrls['videos'].isEmpty) {
+        streamUrls['videos'].add(streamsData['sources'][0]['src']);
       }
       streamUrls['name'] = streamsData['name'];
       return streamUrls;

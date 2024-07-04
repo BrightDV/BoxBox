@@ -20,6 +20,7 @@
 import 'dart:async';
 
 import 'package:boxbox/api/formula1.dart';
+import 'package:boxbox/api/formulae.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/request_error.dart';
 import 'package:boxbox/api/ergast.dart';
@@ -92,71 +93,106 @@ class ScheduleWidget extends StatelessWidget {
   }) : super(key: key);
 
   Future<List<Race>> getRacesList(bool toCome) async {
-    bool useOfficialDataSoure = Hive.box('settings')
-        .get('useOfficialDataSoure', defaultValue: false) as bool;
-    if (useOfficialDataSoure) {
-      return await Formula1().getLastSchedule(toCome);
+    String championship = Hive.box('settings')
+        .get('championship', defaultValue: 'Formula 1') as String;
+    if (championship == 'Formula 1') {
+      bool useOfficialDataSoure = Hive.box('settings')
+          .get('useOfficialDataSoure', defaultValue: false) as bool;
+      if (useOfficialDataSoure) {
+        return await Formula1().getLastSchedule(toCome);
+      } else {
+        return await ErgastApi().getLastSchedule(toCome);
+      }
     } else {
-      return await ErgastApi().getLastSchedule(toCome);
+      return await FormulaE().getLastSchedule(toCome);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    Map schedule =
-        Hive.box('requests').get('schedule', defaultValue: {}) as Map;
-    String scheduleLastSavedFormat = Hive.box('requests')
-        .get('scheduleLastSavedFormat', defaultValue: 'ergast');
+    String championship = Hive.box('settings')
+        .get('championship', defaultValue: 'Formula 1') as String;
+    Map schedule = {};
+    String scheduleLastSavedFormat = '';
+    if (championship == 'Formula 1') {
+      schedule =
+          Hive.box('requests').get('f1Schedule', defaultValue: {}) as Map;
+      scheduleLastSavedFormat = Hive.box('requests')
+          .get('f1ScheduleLastSavedFormat', defaultValue: 'ergast');
+    } else {
+      schedule =
+          Hive.box('requests').get('feSchedule', defaultValue: {}) as Map;
+    }
+
     return FutureBuilder<List<Race>>(
       future: getRacesList(toCome),
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          schedule[scheduleLastSavedFormat == 'ergast' ? 'MRData' : 'events'] !=
-                  null
-              ? RacesList(
-                  scheduleLastSavedFormat == 'ergast'
-                      ? ErgastApi().formatLastSchedule(
-                          schedule,
-                          toCome,
-                        )
-                      : Formula1().formatLastSchedule(schedule, toCome),
-                  toCome,
-                  scrollController: scrollController,
-                )
-              : RequestErrorWidget(snapshot.error.toString());
-        }
-        return snapshot.hasData
-            ? snapshot.data!.isEmpty
-                ? const EmptySchedule()
-                : RacesList(
-                    snapshot.data!,
-                    toCome,
-                    scrollController: scrollController,
-                  )
-            : schedule[scheduleLastSavedFormat == 'ergast'
-                        ? 'MRData'
-                        : 'events'] !=
-                    null
-                ? (scheduleLastSavedFormat == 'ergast'
-                            ? ErgastApi().formatLastSchedule(
-                                schedule,
-                                toCome,
-                              )
-                            : Formula1().formatLastSchedule(schedule, toCome))
-                        .isEmpty
-                    ? const EmptySchedule()
-                    : RacesList(
-                        scheduleLastSavedFormat == 'ergast'
-                            ? ErgastApi().formatLastSchedule(
-                                schedule,
-                                toCome,
-                              )
-                            : Formula1().formatLastSchedule(schedule, toCome),
-                        toCome,
-                        scrollController: scrollController,
-                      )
-                : const LoadingIndicatorUtil();
-      },
+      builder: (context, snapshot) => snapshot.hasError
+          ? championship == 'Formula 1'
+              ? schedule[scheduleLastSavedFormat == 'ergast'
+                          ? 'MRData'
+                          : 'events'] !=
+                      null
+                  ? RacesList(
+                      scheduleLastSavedFormat == 'ergast'
+                          ? ErgastApi().formatLastSchedule(
+                              schedule,
+                              toCome,
+                            )
+                          : Formula1().formatLastSchedule(schedule, toCome),
+                      toCome,
+                      scrollController: scrollController,
+                    )
+                  : RequestErrorWidget(snapshot.error.toString())
+              : schedule['races'] != null
+                  ? RacesList(
+                      FormulaE().formatLastSchedule(schedule, toCome),
+                      toCome,
+                      scrollController: scrollController,
+                    )
+                  : RequestErrorWidget(snapshot.error.toString())
+          : snapshot.hasData
+              ? snapshot.data!.isEmpty
+                  ? const EmptySchedule()
+                  : RacesList(
+                      snapshot.data!,
+                      toCome,
+                      scrollController: scrollController,
+                    )
+              : championship == 'Formula 1'
+                  ? schedule[scheduleLastSavedFormat == 'ergast'
+                              ? 'MRData'
+                              : 'events'] !=
+                          null
+                      ? (scheduleLastSavedFormat == 'ergast'
+                                  ? ErgastApi().formatLastSchedule(
+                                      schedule,
+                                      toCome,
+                                    )
+                                  : Formula1()
+                                      .formatLastSchedule(schedule, toCome))
+                              .isEmpty
+                          ? const EmptySchedule()
+                          : RacesList(
+                              scheduleLastSavedFormat == 'ergast'
+                                  ? ErgastApi().formatLastSchedule(
+                                      schedule,
+                                      toCome,
+                                    )
+                                  : Formula1()
+                                      .formatLastSchedule(schedule, toCome),
+                              toCome,
+                              scrollController: scrollController,
+                            )
+                      : const LoadingIndicatorUtil()
+                  : schedule['races'] != null
+                      ? FormulaE().formatLastSchedule(schedule, toCome).isEmpty
+                          ? const EmptySchedule()
+                          : RacesList(
+                              FormulaE().formatLastSchedule(schedule, toCome),
+                              toCome,
+                              scrollController: scrollController,
+                            )
+                      : const LoadingIndicatorUtil(),
     );
   }
 }
