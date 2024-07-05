@@ -21,6 +21,7 @@ import 'package:boxbox/Screens/article.dart';
 import 'package:boxbox/Screens/free_practice_screen.dart';
 import 'package:boxbox/Screens/race_details.dart';
 import 'package:boxbox/api/formula1.dart';
+import 'package:boxbox/helpers/buttons.dart';
 import 'package:boxbox/helpers/custom_physics.dart';
 import 'package:boxbox/helpers/divider.dart';
 import 'package:boxbox/helpers/news.dart';
@@ -406,70 +407,38 @@ class AtomQuiz extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 5.0,
-        vertical: 20.0,
+    return BoxBoxButton(
+      AppLocalizations.of(context)!.openQuiz,
+      Icon(
+        Icons.bar_chart,
       ),
-      child: GestureDetector(
-        child: Container(
-          width: double.infinity,
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.onSecondary,
-            borderRadius: BorderRadius.circular(5),
+      Scaffold(
+        appBar: AppBar(
+          title: Text(
+            AppLocalizations.of(context)!.quiz,
           ),
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(
-              20,
-              10,
-              20,
-              10,
-            ),
-            child: Row(
-              children: [
-                Text(
-                  AppLocalizations.of(context)!.openQuiz,
-                ),
-                const Spacer(),
-                Icon(
-                  Icons.bar_chart,
-                ),
-              ],
-            ),
-          ),
+          backgroundColor: Theme.of(context).colorScheme.onPrimary,
         ),
-        onTap: () => Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => Scaffold(
-              appBar: AppBar(
-                title: Text(
-                  AppLocalizations.of(context)!.quiz,
-                ),
-                backgroundColor: Theme.of(context).colorScheme.onPrimary,
-              ),
-              body: InAppWebView(
-                initialUrlRequest: URLRequest(
-                  url: WebUri(
-                    "https://www.riddle.com/view/${element['fields']['riddleId']}",
-                  ),
-                ),
-                initialSettings: InAppWebViewSettings(
-                  preferredContentMode: UserPreferredContentMode.DESKTOP,
-                ),
-                gestureRecognizers: {
-                  Factory<VerticalDragGestureRecognizer>(
-                      () => VerticalDragGestureRecognizer()),
-                  Factory<HorizontalDragGestureRecognizer>(
-                      () => HorizontalDragGestureRecognizer()),
-                  Factory<ScaleGestureRecognizer>(
-                      () => ScaleGestureRecognizer()),
-                },
-              ),
+        body: InAppWebView(
+          initialUrlRequest: URLRequest(
+            url: WebUri(
+              "https://www.riddle.com/view/${element['fields']['riddleId']}",
             ),
           ),
+          initialSettings: InAppWebViewSettings(
+            preferredContentMode: UserPreferredContentMode.DESKTOP,
+          ),
+          gestureRecognizers: {
+            Factory<VerticalDragGestureRecognizer>(
+                () => VerticalDragGestureRecognizer()),
+            Factory<HorizontalDragGestureRecognizer>(
+                () => HorizontalDragGestureRecognizer()),
+            Factory<ScaleGestureRecognizer>(() => ScaleGestureRecognizer()),
+          },
         ),
       ),
+      verticalPadding: 20.0,
+      horizontalPadding: 5.0,
     );
   }
 }
@@ -534,76 +503,42 @@ class AtomScribbleLive extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 5.0,
-        vertical: 30.0,
-      ),
-      child: GestureDetector(
-        child: Container(
-          width: double.infinity,
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.onSecondary,
-            borderRadius: BorderRadius.circular(
-              5,
-            ),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(
-              20,
-              10,
-              20,
-              10,
-            ),
-            child: Row(
-              children: [
-                Text(
-                  AppLocalizations.of(context)!.openLiveBlog,
-                ),
-                const Spacer(),
-                SizedBox(
-                  width: 30.0,
-                  height: 30.0,
-                  child: LoadingIndicator(
-                    indicatorType: Indicator.ballScaleMultiple,
-                    colors: [
-                      Theme.of(context).colorScheme.onPrimary,
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        onTap: () => Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => Scaffold(
-              appBar: AppBar(
-                title: Text(
-                  AppLocalizations.of(context)!.liveBlog,
-                ),
-                backgroundColor: Theme.of(context).colorScheme.onPrimary,
-              ),
-              body: InAppWebView(
-                initialUrlRequest: URLRequest(
-                  url: WebUri(
-                    "https://embed.scribblelive.com/Embed/v7.aspx?Id=${element['fields']['scribbleEventId'].split('/')[2]}&ThemeId=37480",
-                  ),
-                ),
-                gestureRecognizers: {
-                  Factory<VerticalDragGestureRecognizer>(
-                      () => VerticalDragGestureRecognizer()),
-                  Factory<HorizontalDragGestureRecognizer>(
-                      () => HorizontalDragGestureRecognizer()),
-                  Factory<ScaleGestureRecognizer>(
-                      () => ScaleGestureRecognizer()),
-                },
-              ),
-            ),
-          ),
+    return BoxBoxButton(
+      AppLocalizations.of(context)!.openLiveBlog,
+      SizedBox(
+        width: 24.0,
+        height: 24.0,
+        child: LoadingIndicator(
+          indicatorType: Indicator.ballScaleMultiple,
+          colors: [
+            Theme.of(context).colorScheme.onPrimary,
+          ],
         ),
       ),
+      Scaffold(
+        appBar: AppBar(
+          title: Text(
+            AppLocalizations.of(context)!.liveBlog,
+          ),
+          backgroundColor: Theme.of(context).colorScheme.onPrimary,
+        ),
+        body: InAppWebView(
+          initialUrlRequest: URLRequest(
+            url: WebUri(
+              "https://embed.scribblelive.com/Embed/v7.aspx?Id=${element['fields']['scribbleEventId'].split('/')[2]}&ThemeId=37480",
+            ),
+          ),
+          gestureRecognizers: {
+            Factory<VerticalDragGestureRecognizer>(
+                () => VerticalDragGestureRecognizer()),
+            Factory<HorizontalDragGestureRecognizer>(
+                () => HorizontalDragGestureRecognizer()),
+            Factory<ScaleGestureRecognizer>(() => ScaleGestureRecognizer()),
+          },
+        ),
+      ),
+      verticalPadding: 20.0,
+      horizontalPadding: 5.0,
     );
   }
 }
@@ -614,74 +549,42 @@ class AtomInteractiveExperience extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 5.0,
-        vertical: 30.0,
-      ),
-      child: GestureDetector(
-        child: Container(
-          width: double.infinity,
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.onSecondary,
-            borderRadius: BorderRadius.circular(5),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(
-              20,
-              10,
-              20,
-              10,
-            ),
-            child: Row(
-              children: [
-                Text(
-                  AppLocalizations.of(context)!.openLiveBlog,
-                ),
-                const Spacer(),
-                SizedBox(
-                  width: 30.0,
-                  height: 30.0,
-                  child: LoadingIndicator(
-                    indicatorType: Indicator.ballScaleMultiple,
-                    colors: [
-                      Theme.of(context).colorScheme.onPrimary,
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        onTap: () => Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => Scaffold(
-              appBar: AppBar(
-                title: Text(
-                  element['fields']['title'],
-                ),
-                backgroundColor: Theme.of(context).colorScheme.onPrimary,
-              ),
-              body: InAppWebView(
-                initialUrlRequest: URLRequest(
-                  url: WebUri(
-                    element['fields']['eventUrl'],
-                  ),
-                ),
-                gestureRecognizers: {
-                  Factory<VerticalDragGestureRecognizer>(
-                      () => VerticalDragGestureRecognizer()),
-                  Factory<HorizontalDragGestureRecognizer>(
-                      () => HorizontalDragGestureRecognizer()),
-                  Factory<ScaleGestureRecognizer>(
-                      () => ScaleGestureRecognizer()),
-                },
-              ),
-            ),
-          ),
+    return BoxBoxButton(
+      AppLocalizations.of(context)!.openLiveBlog,
+      SizedBox(
+        width: 24.0,
+        height: 24.0,
+        child: LoadingIndicator(
+          indicatorType: Indicator.ballScaleMultiple,
+          colors: [
+            Theme.of(context).colorScheme.onPrimary,
+          ],
         ),
       ),
+      Scaffold(
+        appBar: AppBar(
+          title: Text(
+            element['fields']['title'],
+          ),
+          backgroundColor: Theme.of(context).colorScheme.onPrimary,
+        ),
+        body: InAppWebView(
+          initialUrlRequest: URLRequest(
+            url: WebUri(
+              element['fields']['eventUrl'],
+            ),
+          ),
+          gestureRecognizers: {
+            Factory<VerticalDragGestureRecognizer>(
+                () => VerticalDragGestureRecognizer()),
+            Factory<HorizontalDragGestureRecognizer>(
+                () => HorizontalDragGestureRecognizer()),
+            Factory<ScaleGestureRecognizer>(() => ScaleGestureRecognizer()),
+          },
+        ),
+      ),
+      verticalPadding: 20.0,
+      horizontalPadding: 5.0,
     );
   }
 }

@@ -25,21 +25,25 @@ class BoxBoxButton extends StatelessWidget {
   final Widget destination;
   final bool isDialog;
   final Function? toExecute;
+  final double? verticalPadding;
+  final double? horizontalPadding;
   const BoxBoxButton(
     this.title,
     this.icon,
     this.destination, {
     this.isDialog = false,
     this.toExecute,
+    this.verticalPadding,
+    this.horizontalPadding,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(
-        vertical: 3,
-        horizontal: 10,
+      padding: EdgeInsets.symmetric(
+        vertical: verticalPadding ?? 3,
+        horizontal: horizontalPadding ?? 10,
       ),
       child: GestureDetector(
         child: Container(
