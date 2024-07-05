@@ -767,6 +767,36 @@ class _OtherCardstate extends State<OtherCard> {
                         ),
                 )
               : Container(),
+          championship == 'Formula 1'
+              ? GestureDetector(
+                  onLongPress: () async => await launchUrl(
+                    Uri.parse(
+                      'https://github.com/BrightDV/BoxBox/wiki/Ergast-API-vs-Official-API',
+                    ),
+                  ),
+                  child: SwitchListTile(
+                    title: Text(
+                      AppLocalizations.of(context)!.useOfficialDataSource,
+                    ),
+                    subtitle: Text(
+                      AppLocalizations.of(context)!.useOfficialDataSourceSub,
+                      style: TextStyle(
+                        fontSize: 12,
+                      ),
+                    ),
+                    value: useOfficialDataSoure,
+                    onChanged: (bool value) {
+                      setState(
+                        () {
+                          useOfficialDataSoure = value;
+                          Hive.box('settings')
+                              .put('useOfficialDataSoure', value);
+                        },
+                      );
+                    },
+                  ),
+                )
+              : Container(),
           SwitchListTile(
             title: Text(
               AppLocalizations.of(context)!.experimentalFeatures,
@@ -781,39 +811,6 @@ class _OtherCardstate extends State<OtherCard> {
               );
             },
           ),
-          enableExperimentalFeatures
-              ? championship == 'Formula 1'
-                  ? GestureDetector(
-                      onLongPress: () async => await launchUrl(
-                        Uri.parse(
-                          'https://github.com/BrightDV/BoxBox/wiki/Ergast-API-vs-Official-API',
-                        ),
-                      ),
-                      child: SwitchListTile(
-                        title: Text(
-                          AppLocalizations.of(context)!.useOfficialDataSource,
-                        ),
-                        subtitle: Text(
-                          AppLocalizations.of(context)!
-                              .useOfficialDataSourceSub,
-                          style: TextStyle(
-                            fontSize: 12,
-                          ),
-                        ),
-                        value: useOfficialDataSoure,
-                        onChanged: (bool value) {
-                          setState(
-                            () {
-                              useOfficialDataSoure = value;
-                              Hive.box('settings')
-                                  .put('useOfficialDataSoure', value);
-                            },
-                          );
-                        },
-                      ),
-                    )
-                  : Container()
-              : Container(),
         ],
       ),
     );
