@@ -287,68 +287,6 @@ class Convert {
     return ergastToFormulaOne[driverId];
   }
 
-  String circuitNameFromFormulaOneToFormulaOneIdForRaceHub(String circuitId) {
-    Map ergastToFormulaOne = {
-      "bahrain": '1229',
-      "saudi_arabia": '1230',
-      "australia": '1231',
-      "japan": '1232',
-      "china": '1233',
-      "miami": '1234',
-      "emiliaromagna": '1235',
-      "monaco": '1236',
-      "monte%20carlo": '1236',
-      "canada": '1237',
-      "spain": '1238',
-      "austria": '1239',
-      "great_britain": '1240',
-      "hungary": '1241',
-      "belgium": '1242',
-      "netherlands": '1243',
-      "italy": '1244',
-      "azerbaijan": '1245',
-      "singapore": '1246',
-      "USA": '1247',
-      "mexico": '1248',
-      "brazil": '1249',
-      "las_vegas": '1250',
-      "qatar": '1251',
-      "united_arab_emirates": '1252',
-    };
-    return ergastToFormulaOne[circuitId.toLowerCase()];
-  }
-
-  String circuitNameFromFormulaOneToRoundNumber(String circuitId) {
-    Map ergastToFormulaOne = {
-      "bahrain": '1',
-      "saudi_arabia": '2',
-      "australia": '3',
-      "japan": '4',
-      "china": '5',
-      "miami": '6',
-      "emiliaromagna": '7',
-      "monaco": '8',
-      "monte%20carlo": '8',
-      "canada": '9',
-      "spain": '10',
-      "austria": '11',
-      "great_britain": '12',
-      "hungary": '13',
-      "belgium": '14',
-      "netherlands": '15',
-      "italy": '16',
-      "azerbaijan": '17',
-      "singapore": '18',
-      "USA": '19',
-      "mexico": '20',
-      "brazil": '21',
-      "las_vegas": '22',
-      "qatar": '23',
-      "united_arab_emirates": '24',
-    };
-    return ergastToFormulaOne[circuitId.toLowerCase()];
-  }
-
   String driverCodeToTeam(String driverCode) {
     Map dict = {
       "1": "red_bull",
