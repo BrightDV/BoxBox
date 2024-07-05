@@ -49,6 +49,15 @@ class CircuitScreen extends StatelessWidget {
     this.isFetched,
   }) : super(key: key);
 
+  bool hasHighlights(List links) {
+    for (Map link in links) {
+      if (link['text'] == 'HIGHLIGHTS') {
+        return true;
+      }
+    }
+    return false;
+  }
+
   @override
   Widget build(BuildContext context) {
     String championship = Hive.box('settings')
@@ -132,7 +141,7 @@ class CircuitScreen extends StatelessWidget {
                                 ),
                                 snapshot.data!['links'] != null &&
                                         snapshot.data!['links'].isNotEmpty &&
-                                        snapshot.data!['links'].length > 0
+                                        hasHighlights(snapshot.data!['links'])
                                     ? BoxBoxButton(
                                         AppLocalizations.of(context)!
                                             .viewHighlights,
@@ -140,13 +149,13 @@ class CircuitScreen extends StatelessWidget {
                                           Icons.arrow_forward_rounded,
                                         ),
                                         ArticleScreen(
-                                          snapshot.data!['links'][1]['url']
+                                          snapshot.data!['links'].last['url']
                                                   .endsWith('.html')
-                                              ? snapshot.data!['links'][1]
-                                                      ['url']
+                                              ? snapshot
+                                                  .data!['links'].last['url']
                                                   .split('.')[4]
-                                              : snapshot.data!['links'][1]
-                                                      ['url']
+                                              : snapshot
+                                                  .data!['links'].last['url']
                                                   .split('.')
                                                   .last,
                                           '',
