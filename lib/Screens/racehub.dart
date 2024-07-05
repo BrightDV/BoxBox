@@ -29,8 +29,10 @@ import 'package:boxbox/Screens/session_screen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:loading_indicator/loading_indicator.dart';
@@ -172,6 +174,14 @@ class RaceHubScreen extends StatelessWidget {
 class RaceHubContent extends StatelessWidget {
   final Event event;
   const RaceHubContent(this.event, {super.key});
+
+  Future openRaceProgramme() async {
+    launchUrl(
+      Uri.parse(
+        "https://web.formula1rp.com/",
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -371,19 +381,20 @@ class RaceHubContent extends StatelessWidget {
               child: ListView(
                 children: [
                   championship == 'Formula 1'
-                      ? CachedNetworkImage(
-                          imageUrl:
-                              'https://media.formula1.com/image/upload/content/dam/fom-website/2018-redesign-assets/Racehub%20header%20images%2016x9/$meetingName.jpg.transform/fullbleed/image.jpg',
-                          placeholder: (context, url) => SizedBox(
-                            height: MediaQuery.of(context).size.width / 16 / 9,
-                            child: const LoadingIndicatorUtil(),
+                      ? SizedBox(
+                          height: MediaQuery.of(context).size.width / (16 / 9),
+                          child: CachedNetworkImage(
+                            imageUrl:
+                                'https://media.formula1.com/image/upload/content/dam/fom-website/2018-redesign-assets/Racehub%20header%20images%2016x9/$meetingName.jpg.transform/fullbleed/image.jpg',
+                            placeholder: (context, url) =>
+                                const LoadingIndicatorUtil(),
+                            errorWidget: (context, url, error) => const Icon(
+                              Icons.error_outlined,
+                            ),
+                            fadeOutDuration: const Duration(seconds: 1),
+                            fadeInDuration: const Duration(seconds: 1),
+                            fit: BoxFit.scaleDown,
                           ),
-                          errorWidget: (context, url, error) => const Icon(
-                            Icons.error_outlined,
-                          ),
-                          fadeOutDuration: const Duration(seconds: 1),
-                          fadeInDuration: const Duration(seconds: 1),
-                          fit: BoxFit.scaleDown,
                         )
                       : Container(),
                   for (var session in event.sessions)
@@ -416,11 +427,11 @@ class RaceHubContent extends StatelessWidget {
                           CircuitScreen(
                             Race(
                               '0',
+                              event.raceId,
                               '',
                               '',
                               '',
                               '',
-                              event.circuitImage.split('/').last.split('.')[0],
                               '',
                               '',
                               '',
@@ -431,40 +442,59 @@ class RaceHubContent extends StatelessWidget {
                         )
                       : Container(),
                   championship == 'Formula 1'
-                      ? Padding(
-                          padding: const EdgeInsets.all(5),
-                          child: GestureDetector(
-                            child: Container(
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5),
-                                color:
-                                    Theme.of(context).colorScheme.onSecondary,
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.fromLTRB(
-                                  20,
-                                  10,
-                                  20,
-                                  10,
-                                ),
-                                child: Row(
-                                  children: [
-                                    Text(
-                                      'Race Programme',
-                                    ),
-                                    const Spacer(),
-                                    Icon(
-                                      Icons.open_in_new_outlined,
-                                    ),
-                                  ],
-                                ),
-                              ),
+                      ? BoxBoxButton(
+                          'Race Programme',
+                          Icon(Icons.open_in_new_outlined),
+                          Container(),
+                          toExecute: openRaceProgramme,
+                        )
+                      : Container(),
+                  championship == 'Formula 1' && event.liveBlog != null
+                      ? BoxBoxButton(
+                          AppLocalizations.of(context)!.openLiveBlog,
+                          SizedBox(
+                            width: 24.0,
+                            height: 24.0,
+                            child: LoadingIndicator(
+                              indicatorType: Indicator.ballScaleMultiple,
+                              colors: [
+                                Theme.of(context).colorScheme.onPrimary,
+                              ],
                             ),
-                            onTap: () => launchUrl(
-                              Uri.parse(
-                                "https://web.formula1rp.com/",
+                          ),
+                          Scaffold(
+                            appBar: AppBar(
+                              title: SizedBox(
+                                height: AppBar().preferredSize.height,
+                                width: AppBar().preferredSize.width,
+                                child: Marquee(
+                                  text: event.liveBlog!['title'],
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                  pauseAfterRound: const Duration(seconds: 1),
+                                  startAfter: const Duration(seconds: 1),
+                                  velocity: 85,
+                                  blankSpace: 100,
+                                ),
                               ),
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.onPrimary,
+                            ),
+                            body: InAppWebView(
+                              initialUrlRequest: URLRequest(
+                                url: WebUri(
+                                  event.liveBlog!['eventUrl'],
+                                ),
+                              ),
+                              gestureRecognizers: {
+                                Factory<VerticalDragGestureRecognizer>(
+                                    () => VerticalDragGestureRecognizer()),
+                                Factory<HorizontalDragGestureRecognizer>(
+                                    () => HorizontalDragGestureRecognizer()),
+                                Factory<ScaleGestureRecognizer>(
+                                    () => ScaleGestureRecognizer()),
+                              },
                             ),
                           ),
                         )

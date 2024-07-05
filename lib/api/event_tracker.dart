@@ -24,6 +24,7 @@ import 'package:boxbox/api/formulae.dart';
 import 'package:boxbox/api/race_components.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart';
+import 'package:intl/intl.dart';
 
 class Event {
   final String raceId;
@@ -36,6 +37,7 @@ class Event {
   final List raceResults;
   final bool isRunning;
   final List<Session> sessions;
+  final Map? liveBlog;
 
   Event(
     this.raceId,
@@ -47,8 +49,9 @@ class Event {
     this.circuitImage,
     this.raceResults,
     this.isRunning,
-    this.sessions,
-  );
+    this.sessions, {
+    this.liveBlog,
+  });
 }
 
 class Session {
@@ -250,6 +253,7 @@ class EventTracker {
       eventAsJson['raceResults'],
       isRunning,
       sessions,
+      liveBlog: eventAsJson['seasonContext']?['liveBlog'] ?? {},
     );
     return event;
   }
@@ -335,8 +339,58 @@ class EventTracker {
     Map formatedResponse = jsonDecode(
       utf8.decode(res.bodyBytes),
     );
+    if (isFromRaceHub) {
+      List<DateTime> sessionDates = [];
+      List sessionStates = [];
+      for (var session in formatedResponse['meetingContext']['timetables']) {
+        sessionDates.add(
+          DateTime.parse(
+            session['startTime'] + session['gmtOffset'],
+          ),
+        );
+        sessionStates.add(session['state']);
+      }
+      String gmtOffset = formatedResponse['meetingContext']['timetables'][0]
+              ?['gmtOffset'] ??
+          '';
+      DateTime raceDate = DateTime.parse(
+        formatedResponse['race']['meetingEndDate'].replaceAll('.000Z', '') +
+            gmtOffset,
+      ).toLocal().subtract(Duration(hours: 3));
 
-    if (useOfficialDataSoure && !isFromRaceHub) {
+      String detailsPath =
+          formatedResponse['race']['url'].split('/').last.split('.').first;
+      if (formatedResponse['race']['meetingCountryName'] == 'Emilia-Romagna') {
+        detailsPath = 'EmiliaRomagna';
+      } else if (formatedResponse['race']['meetingCountryName'] == 'Miami') {
+        detailsPath = 'Miami';
+      } else if (formatedResponse['race']['meetingCountryName'] ==
+          'Great Britain') {
+        detailsPath = 'Great_Britain';
+      } else if (formatedResponse['race']['meetingCountryName'] ==
+          'Las Vegas') {
+        detailsPath = 'Las_Vegas';
+      }
+
+      Race raceWithSessions = Race(
+        '',
+        formatedResponse['meetingContext']['meetingKey'],
+        formatedResponse['race']['meetingCountryName'],
+        formatedResponse['race']['meetingEndDate'] + gmtOffset,
+        DateFormat.Hm().format(raceDate),
+        '',
+        '',
+        '',
+        formatedResponse['race']['meetingCountryName'],
+        sessionDates,
+        isFirst: false,
+        raceCoverUrl: formatedResponse['circuitSmallImage']['url'],
+        detailsPath: detailsPath,
+        isPreSeasonTesting: formatedResponse['meetingContext']['isTestEvent'],
+      );
+
+      formatedResponse['raceCustomBBParameter'] = raceWithSessions;
+    } else if (useOfficialDataSoure) {
       List<DateTime> sessionDates = [];
       List sessionStates = [];
       for (var session in formatedResponse['meetingContext']['timetables']) {

@@ -76,7 +76,6 @@ class RaceDetailsScreen extends StatelessWidget {
                       flexibleSpace: FlexibleSpaceBar(
                         background: RaceImageProvider(
                           race,
-                          isFromRaceHub: isFromRaceHub,
                         ),
                         title: Text(
                           race.country,
@@ -113,7 +112,6 @@ class RaceDetailsScreen extends StatelessWidget {
                             flexibleSpace: FlexibleSpaceBar(
                               background: RaceImageProvider(
                                 race,
-                                isFromRaceHub: isFromRaceHub,
                               ),
                               title: Text(
                                 race.country,

@@ -21,14 +21,16 @@ import 'package:flutter/material.dart';
 
 class BoxBoxButton extends StatelessWidget {
   final String title;
-  final Icon icon;
+  final Widget icon;
   final Widget destination;
   final bool isDialog;
+  final Function? toExecute;
   const BoxBoxButton(
     this.title,
     this.icon,
     this.destination, {
     this.isDialog = false,
+    this.toExecute,
     super.key,
   });
 
@@ -62,17 +64,19 @@ class BoxBoxButton extends StatelessWidget {
             ),
           ),
         ),
-        onTap: () => isDialog
+        onTap: () async => isDialog
             ? showDialog(
                 context: context,
                 builder: (BuildContext context) => destination,
               )
-            : Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => destination,
-                ),
-              ),
+            : toExecute != null
+                ? await toExecute!()
+                : Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => destination,
+                    ),
+                  ),
       ),
     );
   }

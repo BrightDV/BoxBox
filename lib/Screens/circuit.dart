@@ -19,7 +19,6 @@
 
 import 'package:boxbox/Screens/article.dart';
 import 'package:boxbox/Screens/race_details.dart';
-import 'package:boxbox/api/ergast.dart';
 import 'package:boxbox/api/event_tracker.dart';
 import 'package:boxbox/api/formula1.dart';
 import 'package:boxbox/api/formulae.dart';
@@ -220,17 +219,16 @@ class CircuitScreen extends StatelessWidget {
                 ),
               ),
             )
-          : FutureBuilder<Race>(
-              future: ErgastApi().getRaceDetails(
-                Convert().circuitNameFromFormulaOneToRoundNumber(
-                  race.circuitId,
-                ),
+          : FutureBuilder<Map>(
+              future: EventTracker().getCircuitDetails(
+                race.meetingId,
+                isFromRaceHub: true,
               ),
-              builder: (context, circuitSnapshot) => circuitSnapshot.hasError
+              builder: (context, snapshot) => snapshot.hasError
                   ? RequestErrorWidget(
-                      circuitSnapshot.toString(),
+                      snapshot.error.toString(),
                     )
-                  : circuitSnapshot.hasData
+                  : snapshot.hasData
                       ? NestedScrollView(
                           headerSliverBuilder:
                               (BuildContext context, bool innerBoxIsScrolled) {
@@ -241,140 +239,91 @@ class CircuitScreen extends StatelessWidget {
                                 pinned: true,
                                 centerTitle: true,
                                 flexibleSpace: FlexibleSpaceBar(
-                                  background: RaceImageProvider(
-                                    circuitSnapshot.data!,
-                                    isFromRaceHub: true,
+                                  title: Text(
+                                    snapshot.data!['raceCustomBBParameter']
+                                        .raceName,
                                   ),
-                                  title: Text(circuitSnapshot.data!.raceName),
                                 ),
                               ),
                             ];
                           },
                           body: SingleChildScrollView(
-                            child: FutureBuilder<Map>(
-                              future: EventTracker().getCircuitDetails(
-                                Convert()
-                                    .circuitNameFromFormulaOneToFormulaOneIdForRaceHub(
-                                  race.circuitId,
+                            child: Column(
+                              children: [
+                                snapshot.data!['headline'] != null
+                                    ? Headline(
+                                        snapshot.data!['headline'],
+                                      )
+                                    : Container(),
+                                BoxBoxButton(
+                                  AppLocalizations.of(context)!.viewResults,
+                                  Icon(
+                                    Icons.arrow_forward_rounded,
+                                  ),
+                                  RaceDetailsScreen(
+                                    snapshot.data!['raceCustomBBParameter'],
+                                    snapshot.data!['meetingContext']
+                                            ['timetables'][2]['session'] ==
+                                        's',
+                                    isFromRaceHub: true,
+                                  ),
                                 ),
-                                race: circuitSnapshot.data!,
-                                isFromRaceHub: true,
-                              ),
-                              builder: (context, snapshot) => snapshot.hasError
-                                  ? RequestErrorWidget(
-                                      snapshot.error.toString(),
-                                    )
-                                  : snapshot.hasData
-                                      ? Column(
-                                          children: [
-                                            snapshot.data!['headline'] != null
-                                                ? Headline(
-                                                    snapshot.data!['headline'],
-                                                  )
-                                                : Container(),
-                                            BoxBoxButton(
-                                              AppLocalizations.of(context)!
-                                                  .viewResults,
-                                              Icon(
-                                                Icons.arrow_forward_rounded,
-                                              ),
-                                              RaceDetailsScreen(
-                                                circuitSnapshot.data!,
-                                                snapshot.data!['meetingContext']
-                                                            ['timetables'][2]
-                                                        ['session'] ==
-                                                    's',
-                                                isFromRaceHub: true,
-                                              ),
-                                            ),
-                                            snapshot.data!['links'] != null &&
-                                                    snapshot.data!['links']
-                                                        .isNotEmpty &&
-                                                    snapshot.data!['links']
-                                                            .length >
-                                                        0
-                                                ? BoxBoxButton(
-                                                    AppLocalizations.of(
-                                                            context)!
-                                                        .viewHighlights,
-                                                    Icon(
-                                                      Icons
-                                                          .arrow_forward_rounded,
-                                                    ),
-                                                    ArticleScreen(
-                                                      snapshot.data!['links'][1]
-                                                                  ['url']
-                                                              .endsWith('.html')
-                                                          ? snapshot
-                                                              .data!['links'][1]
-                                                                  ['url']
-                                                              .split('.')[4]
-                                                          : snapshot
-                                                              .data!['links'][1]
-                                                                  ['url']
-                                                              .split('.')
-                                                              .last,
-                                                      '',
-                                                      true,
-                                                    ),
-                                                  )
-                                                : Container(),
-                                            BoxBoxButton(
-                                              AppLocalizations.of(context)!
-                                                  .grandPrixMap,
-                                              Icon(
-                                                Icons.map_outlined,
-                                              ),
-                                              CircuitMapScreen(
-                                                circuitSnapshot.data!.circuitId,
-                                              ),
-                                              isDialog: false,
-                                            ),
-                                            snapshot.data!['raceResults'] !=
-                                                        null &&
-                                                    snapshot
-                                                        .data!['raceResults']
-                                                        .isNotEmpty
-                                                ? RaceResults(
-                                                    snapshot,
-                                                    circuitSnapshot.data!,
-                                                  )
-                                                : Container(),
-                                            snapshot.data!['curatedSection'] !=
-                                                    null
-                                                ? CuratedSection(snapshot
-                                                        .data!['curatedSection']
-                                                    ['items'])
-                                                : Container(),
-                                            TrackLayoutImage(
-                                                circuitSnapshot.data!),
-                                            CircuitFactsAndHistory(
-                                              circuitSnapshot
-                                                          .data!.detailsPath !=
-                                                      null
-                                                  ? circuitSnapshot
-                                                      .data!.detailsPath!
-                                                  : circuitSnapshot
-                                                      .data!.circuitId,
-                                              isFromRaceHub: true,
-                                            ),
-                                          ],
-                                        )
-                                      : BoxBoxButton(
-                                          AppLocalizations.of(context)!
-                                              .viewResults,
-                                          Icon(
-                                            Icons.arrow_forward_rounded,
-                                          ),
-                                          RaceDetailsScreen(
-                                            circuitSnapshot.data!,
-                                            false, // offline
-                                          ),
+                                snapshot.data!['links'] != null &&
+                                        snapshot.data!['links'].isNotEmpty &&
+                                        snapshot.data!['links'].length > 0
+                                    ? BoxBoxButton(
+                                        AppLocalizations.of(context)!
+                                            .viewHighlights,
+                                        Icon(
+                                          Icons.arrow_forward_rounded,
                                         ),
+                                        ArticleScreen(
+                                          snapshot.data!['links'][1]['url']
+                                                  .endsWith('.html')
+                                              ? snapshot.data!['links'][1]
+                                                      ['url']
+                                                  .split('.')[4]
+                                              : snapshot.data!['links'][1]
+                                                      ['url']
+                                                  .split('.')
+                                                  .last,
+                                          '',
+                                          true,
+                                        ),
+                                      )
+                                    : Container(),
+                                snapshot.data!['raceResults'] != null &&
+                                        snapshot.data!['raceResults'].isNotEmpty
+                                    ? RaceResults(
+                                        snapshot,
+                                        snapshot.data!['raceCustomBBParameter'],
+                                      )
+                                    : Container(),
+                                snapshot.data!['curatedSection'] != null
+                                    ? CuratedSection(
+                                        snapshot.data!['curatedSection']
+                                            ['items'],
+                                      )
+                                    : Container(),
+                                TrackLayoutImage(
+                                  snapshot.data!['raceCustomBBParameter'],
+                                  isFromRaceHub: true,
+                                ),
+                                CircuitFactsAndHistory(
+                                  snapshot.data!['raceCustomBBParameter']
+                                              .detailsPath !=
+                                          null
+                                      ? snapshot.data!['raceCustomBBParameter']
+                                          .detailsPath!
+                                      : snapshot.data!['raceCustomBBParameter']
+                                          .circuitId,
+                                  isFromRaceHub: true,
+                                ),
+                              ],
                             ),
                           ),
                         )
-                      : const LoadingIndicatorUtil(),
+                      : LoadingIndicatorUtil(),
             ),
     );
   }
@@ -382,14 +331,21 @@ class CircuitScreen extends StatelessWidget {
 
 // top image behind the title in the sliver appbar
 class RaceImageProvider extends StatelessWidget {
-  Future<String> getCircuitImageUrl(Race race,
-      {bool isFromRaceHub = false}) async {
+  final Race race;
+  const RaceImageProvider(
+    this.race, {
+    Key? key,
+  }) : super(key: key);
+
+  Future<String> getCircuitImageUrl(
+    Race race,
+  ) async {
     String championship = Hive.box('settings')
         .get('championship', defaultValue: 'Formula 1') as String;
     if (championship == 'Formula 1') {
       String scheduleLastSavedFormat = Hive.box('requests')
           .get('f1ScheduleLastSavedFormat', defaultValue: 'ergast');
-      if (scheduleLastSavedFormat == 'ergast' || isFromRaceHub) {
+      if (scheduleLastSavedFormat == 'ergast') {
         return RaceTracksUrls().getRaceTrackImageUrl(race.circuitId);
       } else {
         String coverUrl = race.raceCoverUrl!;
@@ -414,13 +370,6 @@ class RaceImageProvider extends StatelessWidget {
     }
   }
 
-  final Race race;
-  final bool isFromRaceHub;
-  const RaceImageProvider(
-    this.race, {
-    this.isFromRaceHub = false,
-    Key? key,
-  }) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -444,7 +393,17 @@ class RaceImageProvider extends StatelessWidget {
 
 // track layout in color above the history and facts section
 class TrackLayoutImage extends StatelessWidget {
-  String getTrackLayoutImageUrl(Race race) {
+  final Race race;
+  final bool isFromRaceHub;
+  const TrackLayoutImage(
+    this.race, {
+    Key? key,
+    this.isFromRaceHub = false,
+  }) : super(key: key);
+
+  String getTrackLayoutImageUrl(
+    Race race,
+  ) {
     String scheduleLastSavedFormat = Hive.box('requests')
         .get('f1ScheduleLastSavedFormat', defaultValue: 'ergast');
     String country = race.country;
@@ -455,15 +414,13 @@ class TrackLayoutImage extends StatelessWidget {
     } else if (race.circuitName == 'Austin') {
       country = 'USA';
     }
-    return scheduleLastSavedFormat == 'ergast'
+    return scheduleLastSavedFormat == 'ergast' && !isFromRaceHub
         ? RaceTracksUrls().getTrackLayoutImageUrl(
             race.circuitId,
           )
         : 'https://media.formula1.com/image/upload/f_auto/q_auto/v1677244987/content/dam/fom-website/2018-redesign-assets/Circuit%20maps%2016x9/${country.replaceAll("-", "_").replaceAll(" ", "_")}_Circuit.png';
   }
 
-  final Race race;
-  const TrackLayoutImage(this.race, {Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -833,7 +790,7 @@ class CircuitFactsAndHistory extends StatelessWidget {
       padding: const EdgeInsets.all(10),
       child: FutureBuilder<Map>(
         future: FormulaOneScraper().scrapeCircuitFactsAndHistory(
-          scheduleLastSavedFormat == 'ergast' || isFromRaceHub
+          scheduleLastSavedFormat == 'ergast' && !isFromRaceHub
               ? Convert().circuitNameFromErgastToFormulaOneForRaceHub(
                   circuitId,
                 )
