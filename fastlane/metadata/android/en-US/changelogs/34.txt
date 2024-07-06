@@ -1,0 +1,10 @@
+Please read the development notice on GitHub.
+
+- Support downloading an article or a video.
+- Full support of Formula E!
+- Support custom feed URLs in the Mixed News.
+- Improvements and fixes to the Race Hub.
+- Stable support of the official API.
+- Fix the Circuit facts and history scraper.
+- Other bug fixes and UI improvements.
+- Update translations.
