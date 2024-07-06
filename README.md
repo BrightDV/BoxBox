@@ -115,7 +115,7 @@ If you like the app, and you want to support its development:
 ### Monero
 ![monero-qrcode](https://github.com/BrightDV/BoxBox/assets/92821484/4e39d4d9-d68f-42f4-a135-30dae73ecbec)
 
-Address: 48Yi7F3jDoQc5BsBQBaHnY6Y9hgP6oHev3AMNwd8QySsP52ZWZLhM3Hi4nccyq7wh81UEoXZvBSVmJ5sCLd9LLcXQPxqtxf
+Address: `48Yi7F3jDoQc5BsBQBaHnY6Y9hgP6oHev3AMNwd8QySsP52ZWZLhM3Hi4nccyq7wh81UEoXZvBSVmJ5sCLd9LLcXQPxqtxf`
 
 ### Github Sponsors may come soon ;)
 
