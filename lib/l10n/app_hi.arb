@@ -1,7 +1,7 @@
 {
   "about": "ऐप के बारे में",
   "@about": {},
-  "aboutDescription": "Box, Box! कॉपीलेफ़्टेड लिबर सॉफ़्टवेयर है, जिसे GPLv3+ के अंतर्गत लाइसेंस प्राप्त है। इसका उद्देश्य उपयोगकर्ताओं को विज्ञापनों या ट्रैकर्स के बिना फॉर्मूला 1 का अनुसरण करने की अनुमति देना है।",
+  "aboutDescription": "बॉक्स, बॉक्स! कॉपीलेफ्टेड लिब्रे सॉफ्टवेयर है, जिसे GPLv3+ के तहत लाइसेंस प्राप्त है। इसका उद्देश्य उपयोगकर्ताओं को बिना विज्ञापन या ट्रैकर के फॉर्मूला 1 और फॉर्मूला ई का अनुसरण करने की अनुमति देना है।",
   "@aboutDescription": {},
   "aboutBottomLine": "BrightDV द्वारा ❤ के साथ।",
   "@aboutBottomLine": {},
@@ -315,7 +315,7 @@
   "@save": {},
   "server": "सर्वर",
   "@server": {},
-  "pipedApiUrlSub": "YouTube वीडियो के लिए उपयोग किया जाता है।",
+  "pipedApiUrlSub": "यूट्यूब वीडियो के लिए उपयोग किया जाता है।",
   "@pipedApiUrlSub": {},
   "search": "खोजें",
   "@search": {},
@@ -380,5 +380,11 @@
   "refresh": "ताजा करें",
   "@refresh": {},
   "running": "चल रहा है",
-  "@running": {}
+  "@running": {},
+  "championship": "चैंपियनशिप",
+  "@championship": {},
+  "refreshChampionshipData": "चैंपियनशिप डेटा ताज़ा करें",
+  "@refreshChampionshipData": {},
+  "refreshChampionshipDataSub": "नये सत्र से पहले चैम्पियनशिप डेटा को ताज़ा करें।",
+  "@refreshChampionshipDataSub": {}
 }
