@@ -23,6 +23,7 @@ import 'package:background_downloader/background_downloader.dart';
 import 'package:boxbox/api/videos.dart';
 import 'package:boxbox/helpers/download.dart';
 import 'package:boxbox/helpers/news.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -134,7 +135,7 @@ class _VideoScreenState extends State<VideoScreen> {
                 ),
         ),
         actions: [
-          championship == 'Formula 1'
+          championship == 'Formula 1' && !kIsWeb
               ? IconButton(
                   onPressed: () async {
                     if (downloads

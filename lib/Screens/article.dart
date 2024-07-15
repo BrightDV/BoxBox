@@ -151,7 +151,8 @@ class _ArticleScreenState extends State<ArticleScreen> {
             valueListenable: articleTitle,
             builder: (context, value, _) {
               return value.toString() == 'Loading...' ||
-                      championshipOfArticle != 'Formula 1'
+                      championshipOfArticle != 'Formula 1' ||
+                      kIsWeb
                   ? Container()
                   : IconButton(
                       onPressed: () async {
@@ -285,8 +286,10 @@ class ArticleProvider extends StatelessWidget {
 
   Future<Article> getArticleFromFormula1(
       String articleId, Function updateArticleTitle) async {
-    String? filePath = await DownloadUtils()
-        .downloadedFilePathIfExists('article_f1_${articleId}');
+    String? filePath = kIsWeb
+        ? null
+        : await DownloadUtils()
+            .downloadedFilePathIfExists('article_f1_${articleId}');
     if (filePath != null) {
       File file = File(filePath);
       Map savedArticle = await json.decode(await file.readAsString());

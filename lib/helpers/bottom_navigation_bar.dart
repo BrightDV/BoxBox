@@ -101,25 +101,27 @@ class _MainBottomNavigationBarState extends State<MainBottomNavigationBar> {
             : Hive.box('settings').put('darkMode', true);
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
-    FileDownloader().configureNotification(
-      running: TaskNotification(
-        AppLocalizations.of(context)!.downloadRunning,
-        '{displayName}',
-      ),
-      complete: TaskNotification(
-        AppLocalizations.of(context)!.downloadComplete,
-        '{displayName}',
-      ),
-      error: TaskNotification(
-        AppLocalizations.of(context)!.downloadFailed,
-        '{displayName}',
-      ),
-      paused: TaskNotification(
-        AppLocalizations.of(context)!.downloadPaused,
-        '{displayName}',
-      ),
-      progressBar: true,
-    );
+    if (!kIsWeb) {
+      FileDownloader().configureNotification(
+        running: TaskNotification(
+          AppLocalizations.of(context)!.downloadRunning,
+          '{displayName}',
+        ),
+        complete: TaskNotification(
+          AppLocalizations.of(context)!.downloadComplete,
+          '{displayName}',
+        ),
+        error: TaskNotification(
+          AppLocalizations.of(context)!.downloadFailed,
+          '{displayName}',
+        ),
+        paused: TaskNotification(
+          AppLocalizations.of(context)!.downloadPaused,
+          '{displayName}',
+        ),
+        progressBar: true,
+      );
+    }
 
     List<Widget> screens = [
       HomeScreen(scrollController),

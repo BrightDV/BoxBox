@@ -27,6 +27,7 @@ import 'package:boxbox/Screens/history.dart';
 import 'package:boxbox/Screens/MixedNews/mixed_news.dart';
 import 'package:boxbox/Screens/settings.dart';
 import 'package:boxbox/Screens/test.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -133,23 +134,25 @@ class MainDrawer extends StatelessWidget {
               );
             },
           ),
-          ListTile(
-            title: Text(
-              AppLocalizations.of(context)!.downloads,
-            ),
-            leading: Icon(
-              Icons.save_alt_rounded,
-            ),
-            onTap: () {
-              Navigator.of(context).pop();
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const DownloadsScreen(),
-                ),
-              );
-            },
-          ),
+          !kIsWeb
+              ? ListTile(
+                  title: Text(
+                    AppLocalizations.of(context)!.downloads,
+                  ),
+                  leading: Icon(
+                    Icons.save_alt_rounded,
+                  ),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const DownloadsScreen(),
+                      ),
+                    );
+                  },
+                )
+              : Container(),
           Divider(
             indent: 15,
             endIndent: 15,

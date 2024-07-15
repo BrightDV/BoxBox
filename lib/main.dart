@@ -47,7 +47,9 @@ void main() async {
   final compareBox = await Hive.openBox('compare');
   final downloads = await Hive.openBox('downloads');
 
-  await FileDownloader().trackTasks();
+  if (!kIsWeb) {
+    await FileDownloader().trackTasks();
+  }
 
   /* if (!kIsWeb) {
     AwesomeNotifications().initialize(
