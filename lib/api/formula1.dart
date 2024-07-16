@@ -721,7 +721,9 @@ class Formula1 {
         DateTime raceDate =
             DateTime.parse(element['meetingEndDate'] + element['gmtOffset'])
                 .toLocal()
-                .subtract(Duration(hours: 3));
+                .subtract(
+                  Duration(hours: 2),
+                );
         DateTime now = DateTime.now();
 
         if (now.compareTo(raceEndDate) < 0) {
@@ -740,7 +742,7 @@ class Formula1 {
               finalJson.indexOf(element).toString(),
               element['meetingKey'],
               element['meetingName'],
-              element['meetingEndDate'] + element['gmtOffset'],
+              raceDate.toIso8601String(),
               DateFormat.Hm().format(raceDate),
               element['meetingLocation'],
               element['meetingLocation'],
@@ -762,7 +764,7 @@ class Formula1 {
                 .toLocal();
         DateTime raceDate =
             DateTime.parse(element['meetingEndDate'] + element['gmtOffset'])
-                .subtract(Duration(hours: 3))
+                .subtract(Duration(hours: 2))
                 .toLocal();
         DateTime now = DateTime.now();
 
@@ -782,7 +784,7 @@ class Formula1 {
               finalJson.indexOf(element).toString(),
               element['meetingKey'],
               element['meetingName'],
-              element['meetingEndDate'] + element['gmtOffset'],
+              raceDate.toIso8601String(),
               DateFormat.Hm().format(raceDate),
               element['meetingLocation'],
               element['meetingLocation'],

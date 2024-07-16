@@ -1438,6 +1438,7 @@ class _SessionCountdownTimerState extends State<SessionCountdownTimer> {
       return to.difference(from).inSeconds;
     }
 
+    // time to race in seconds
     timeToRace = timeBetween(
       DateTime.now(),
       raceFullDateParsed,
@@ -1445,8 +1446,7 @@ class _SessionCountdownTimerState extends State<SessionCountdownTimer> {
     days = (timeToRace / 60 / 60 / 24).round();
     hours = (timeToRace / 60 / 60 - days * 24 - 1).round();
     minutes = (timeToRace / 60 - days * 24 * 60 - hours * 60 + 60).round();
-    seconds =
-        (timeToRace - days * 24 * 60 * 60 - hours * 60 * 60 - minutes * 60);
+    seconds = timeToRace - days * 24 * 60 * 60 - hours * 60 * 60 - minutes * 60;
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
