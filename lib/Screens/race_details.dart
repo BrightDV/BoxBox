@@ -1501,7 +1501,7 @@ class _SessionCountdownTimerState extends State<SessionCountdownTimer> {
                 },
               )
             : Padding(
-                padding: const EdgeInsets.all(15.5),
+                padding: const EdgeInsets.only(top: 18, bottom: 19),
                 child: Text(
                   scheduleLastSavedFormat == 'ergast' || widget.isFromRaceHub
                       ? shouldUse12HourClock
@@ -1535,7 +1535,7 @@ class _SessionCountdownTimerState extends State<SessionCountdownTimer> {
                       width: 1,
                     ),
                   ),
-                  onPressed: () {
+                  onPressed: () async {
                     Event event = Event(
                       title: '${widget.sessionName} - ${race.raceName}',
                       location: race.country,
@@ -1557,7 +1557,7 @@ class _SessionCountdownTimerState extends State<SessionCountdownTimer> {
                         raceFullDateParsed.toLocal().second,
                       ),
                     );
-                    Add2Calendar.addEvent2Cal(event);
+                    await Add2Calendar.addEvent2Cal(event);
                   },
                 ),
               )
