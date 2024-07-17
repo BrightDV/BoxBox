@@ -92,16 +92,9 @@ class EventTracker {
     Map formatedResponse = {};
 
     if (championship == 'Formula 1') {
-      Uri uri;
-      if (endpoint != defaultEndpoint) {
-        uri = Uri.parse(
-          '$endpoint/v1/event-tracker',
-        );
-      } else {
-        uri = Uri.parse(
-          '$defaultEndpoint/v1/event-tracker',
-        );
-      }
+      Uri uri = Uri.parse(
+        '$endpoint/v1/event-tracker',
+      );
       Response res = await get(
         uri,
         headers: endpoint != defaultEndpoint
@@ -309,21 +302,15 @@ class EventTracker {
 
   Future<Map> getCircuitDetails(String formulaOneCircuitId,
       {Race? race, bool isFromRaceHub = false}) async {
-    Uri uri;
     String endpoint = Hive.box('settings')
         .get('server', defaultValue: defaultEndpoint) as String;
     bool useOfficialDataSoure = Hive.box('settings')
         .get('useOfficialDataSoure', defaultValue: false) as bool;
 
-    if (endpoint != defaultEndpoint) {
-      uri = Uri.parse(
-        '$endpoint/v1/event-tracker/meeting/$formulaOneCircuitId',
-      );
-    } else {
-      uri = Uri.parse(
-        '$defaultEndpoint/v1/event-tracker/meeting/$formulaOneCircuitId',
-      );
-    }
+    Uri uri = Uri.parse(
+      '$endpoint/v1/event-tracker/meeting/$formulaOneCircuitId',
+    );
+
     Response res = await get(
       uri,
       headers: endpoint != defaultEndpoint

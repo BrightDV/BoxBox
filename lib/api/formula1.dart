@@ -324,16 +324,24 @@ class Formula1 {
         raceResultsLastSavedFormat == 'f1') {
       return formatRaceStandings(results);
     } else {
-      var url = Uri.parse(
-        '$defaultEndpoint/v1/fom-results/race?meeting=$meetingId',
+      String endpoint = Hive.box('settings')
+          .get('server', defaultValue: defaultEndpoint) as String;
+      Uri url = Uri.parse(
+        endpoint != defaultEndpoint
+            ? '$endpoint/v1/fom-results/race/meeting=$meetingId'
+            : '$endpoint/v1/fom-results/race?meeting=$meetingId',
       );
       var response = await http.get(
         url,
-        headers: {
-          "Accept": "application/json",
-          "apikey": apikey,
-          "locale": "en",
-        },
+        headers: endpoint == defaultEndpoint
+            ? {
+                "Accept": "application/json",
+                "apikey": apikey,
+                "locale": "en",
+              }
+            : {
+                "Accept": "application/json",
+              },
       );
       Map<String, dynamic> responseAsJson = jsonDecode(response.body);
       List<DriverResult> driversResults = formatRaceStandings(responseAsJson);
@@ -351,16 +359,24 @@ class Formula1 {
   FutureOr<List<DriverQualificationResult>> getQualificationStandings(
       String meetingId) async {
     List<DriverQualificationResult> driversResults = [];
-    var url = Uri.parse(
-      '$defaultEndpoint/v1/fom-results/qualifying?meeting=$meetingId',
+    String endpoint = Hive.box('settings')
+        .get('server', defaultValue: defaultEndpoint) as String;
+    Uri url = Uri.parse(
+      endpoint != defaultEndpoint
+          ? '$endpoint/v1/fom-results/qualifying/meeting=$meetingId'
+          : '$endpoint/v1/fom-results/qualifying?meeting=$meetingId',
     );
     var response = await http.get(
       url,
-      headers: {
-        "Accept": "application/json",
-        "apikey": apikey,
-        "locale": "en",
-      },
+      headers: endpoint == defaultEndpoint
+          ? {
+              "Accept": "application/json",
+              "apikey": apikey,
+              "locale": "en",
+            }
+          : {
+              "Accept": "application/json",
+            },
     );
     Map<String, dynamic> responseAsJson = jsonDecode(response.body);
     if (responseAsJson['raceResultsQualifying']['state'] != 'completed') {
@@ -401,16 +417,24 @@ class Formula1 {
   Future<List<DriverResult>> getFreePracticeStandings(
       String meetingId, int session) async {
     List<DriverResult> driversResults = [];
-    var url = Uri.parse(
-      '$defaultEndpoint/v1/fom-results/practice?meeting=$meetingId&session=$session',
+    String endpoint = Hive.box('settings')
+        .get('server', defaultValue: defaultEndpoint) as String;
+    Uri url = Uri.parse(
+      endpoint != defaultEndpoint
+          ? '$endpoint/v1/fom-results/practice/meeting=$meetingId&session=$session'
+          : '$endpoint/v1/fom-results/practice?meeting=$meetingId&session=$session',
     );
     var response = await http.get(
       url,
-      headers: {
-        "Accept": "application/json",
-        "apikey": apikey,
-        "locale": "en",
-      },
+      headers: endpoint == defaultEndpoint
+          ? {
+              "Accept": "application/json",
+              "apikey": apikey,
+              "locale": "en",
+            }
+          : {
+              "Accept": "application/json",
+            },
     );
     Map<String, dynamic> responseAsJson = jsonDecode(response.body);
     if (responseAsJson['raceResultsPractice$session']['state'] != 'completed') {
@@ -455,16 +479,24 @@ class Formula1 {
   FutureOr<List<DriverQualificationResult>> getSprintQualifyingStandings(
       String meetingId) async {
     List<DriverQualificationResult> driversResults = [];
-    var url = Uri.parse(
-      '$defaultEndpoint/v1/fom-results/sprint-shootout?meeting=$meetingId',
+    String endpoint = Hive.box('settings')
+        .get('server', defaultValue: defaultEndpoint) as String;
+    Uri url = Uri.parse(
+      endpoint != defaultEndpoint
+          ? '$endpoint/v1/fom-results/sprint-shootout/meeting=$meetingId'
+          : '$endpoint/v1/fom-results/sprint-shootout?meeting=$meetingId',
     );
     var response = await http.get(
       url,
-      headers: {
-        "Accept": "application/json",
-        "apikey": apikey,
-        "locale": "en",
-      },
+      headers: endpoint == defaultEndpoint
+          ? {
+              "Accept": "application/json",
+              "apikey": apikey,
+              "locale": "en",
+            }
+          : {
+              "Accept": "application/json",
+            },
     );
     Map<String, dynamic> responseAsJson = jsonDecode(response.body);
     if (responseAsJson['raceResultsSprintShootout']['state'] != 'completed') {
@@ -506,16 +538,24 @@ class Formula1 {
       String meetingId, String session) async {
     List<DriverResult> driversResults = [];
     String time;
-    var url = Uri.parse(
-      '$defaultEndpoint/v1/fom-results/sprint?meeting=$meetingId',
+    String endpoint = Hive.box('settings')
+        .get('server', defaultValue: defaultEndpoint) as String;
+    Uri url = Uri.parse(
+      endpoint != defaultEndpoint
+          ? '$endpoint/v1/fom-results/sprint/meeting=$meetingId'
+          : '$endpoint/v1/fom-results/sprint?meeting=$meetingId',
     );
     var response = await http.get(
       url,
-      headers: {
-        "Accept": "application/json",
-        "apikey": apikey,
-        "locale": "en",
-      },
+      headers: endpoint == defaultEndpoint
+          ? {
+              "Accept": "application/json",
+              "apikey": apikey,
+              "locale": "en",
+            }
+          : {
+              "Accept": "application/json",
+            },
     );
     Map<String, dynamic> responseAsJson = jsonDecode(response.body);
     if (responseAsJson['raceResultsSprint']['state'] != 'completed') {
@@ -623,16 +663,22 @@ class Formula1 {
         driversStandingsLastSavedFormat == 'f1') {
       return formatLastStandings(driversStandings);
     } else {
+      String endpoint = Hive.box('settings')
+          .get('server', defaultValue: defaultEndpoint) as String;
       var url = Uri.parse(
-        '$defaultEndpoint/v1/editorial-driverlisting/listing',
+        '$endpoint/v1/editorial-driverlisting/listing',
       );
       var response = await http.get(
         url,
-        headers: {
-          "Accept": "application/json",
-          "apikey": apikey,
-          "locale": "en",
-        },
+        headers: endpoint == defaultEndpoint
+            ? {
+                "Accept": "application/json",
+                "apikey": apikey,
+                "locale": "en",
+              }
+            : {
+                "Accept": "application/json",
+              },
       );
       Map<String, dynamic> responseAsJson = jsonDecode(response.body);
       List<Driver> drivers = formatLastStandings(responseAsJson);
@@ -690,16 +736,22 @@ class Formula1 {
         teamsStandingsLastSavedFormat == 'f1') {
       return formatLastTeamsStandings(teamsStandings);
     } else {
-      var url = Uri.parse(
-        '$defaultEndpoint/v1/editorial-constructorlisting/listing',
+      String endpoint = Hive.box('settings')
+          .get('server', defaultValue: defaultEndpoint) as String;
+      Uri url = Uri.parse(
+        '$endpoint/v1/editorial-constructorlisting/listing',
       );
       var response = await http.get(
         url,
-        headers: {
-          "Accept": "application/json",
-          "apikey": apikey,
-          "locale": "en",
-        },
+        headers: endpoint == defaultEndpoint
+            ? {
+                "Accept": "application/json",
+                "apikey": apikey,
+                "locale": "en",
+              }
+            : {
+                "Accept": "application/json",
+              },
       );
       Map<String, dynamic> responseAsJson = jsonDecode(response.body);
       List<Team> teams = formatLastTeamsStandings(responseAsJson);
@@ -823,14 +875,22 @@ class Formula1 {
         scheduleLastSavedFormat == 'f1') {
       return formatLastSchedule(schedule, toCome);
     } else {
-      var url = Uri.parse('$defaultEndpoint/v1/editorial-eventlisting/events');
+      String endpoint = Hive.box('settings')
+          .get('server', defaultValue: defaultEndpoint) as String;
+      Uri url = Uri.parse(
+        '$endpoint/v1/editorial-eventlisting/events',
+      );
       var response = await http.get(
         url,
-        headers: {
-          "Accept": "application/json",
-          "apikey": apikey,
-          "locale": "en",
-        },
+        headers: endpoint == defaultEndpoint
+            ? {
+                "Accept": "application/json",
+                "apikey": apikey,
+                "locale": "en",
+              }
+            : {
+                "Accept": "application/json",
+              },
       );
       Map<String, dynamic> responseAsJson = json.decode(
         utf8.decode(response.bodyBytes),
@@ -844,16 +904,24 @@ class Formula1 {
   }
 
   Future<List> getStartingGrid(String meetingId) async {
-    var url = Uri.parse(
-      '$defaultEndpoint/v1/fom-results/starting-grid?meeting=$meetingId',
+    String endpoint = Hive.box('settings')
+        .get('server', defaultValue: defaultEndpoint) as String;
+    Uri url = Uri.parse(
+      endpoint != defaultEndpoint
+          ? '$endpoint/v1/fom-results/starting-grid/meeting=$meetingId'
+          : '$endpoint/v1/fom-results/starting-grid?meeting=$meetingId',
     );
     var response = await http.get(
       url,
-      headers: {
-        "Accept": "application/json",
-        "apikey": apikey,
-        "locale": "en",
-      },
+      headers: endpoint == defaultEndpoint
+          ? {
+              "Accept": "application/json",
+              "apikey": apikey,
+              "locale": "en",
+            }
+          : {
+              "Accept": "application/json",
+            },
     );
     Map<String, dynamic> responseAsJson = json.decode(
       utf8.decode(response.bodyBytes),
