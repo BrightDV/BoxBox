@@ -130,9 +130,13 @@ class EventTracker {
       if (raceId == '') {
         formatedResponse = {'event': {}, 'timetables': {}, 'isRunning': false};
       } else {
+        String endpoint = Hive.box('settings')
+            .get('server', defaultValue: defaultEndpoint) as String;
         Response res = await get(
           Uri.parse(
-            '$feEndpoint/formula-e/v1/races/$raceId',
+            endpoint != defaultEndpoint
+                ? '$endpoint/formula-e/v1/races/$raceId'
+                : '$feEndpoint/formula-e/v1/races/$raceId',
           ),
           headers: {
             'Accept': 'application/json',
