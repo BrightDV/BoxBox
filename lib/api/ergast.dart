@@ -23,11 +23,13 @@ import 'dart:convert';
 import 'package:boxbox/api/driver_components.dart';
 import 'package:boxbox/api/race_components.dart';
 import 'package:boxbox/api/team_components.dart';
+import 'package:boxbox/helpers/constants.dart';
 import 'package:boxbox/helpers/convert_ergast_and_formula_one.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
 
 class _ErgastApiCalls {
+  final String defaultEndpoint = Constants().ERGAST_API_URL;
   List<DriverResult> formatRaceStandings(Map raceStandings) {
     List<DriverResult> formatedRaceStandings = [];
     List jsonResponse =
@@ -94,7 +96,7 @@ class _ErgastApiCalls {
       return formatRaceStandings(results);
     } else {
       var url = Uri.parse(
-        'https://ergast.com/api/f1/${DateTime.now().year}/$round/results.json',
+        '$defaultEndpoint/f1/${DateTime.now().year}/$round/results.json',
       );
       var response = await http.get(url);
       Map<String, dynamic> responseAsJson = jsonDecode(response.body);
@@ -112,7 +114,7 @@ class _ErgastApiCalls {
 
   FutureOr<List<DriverResult>> getSprintStandings(String round) async {
     var url = Uri.parse(
-        'https://ergast.com/api/f1/${DateTime.now().year}/$round/sprint.json');
+        '$defaultEndpoint/f1/${DateTime.now().year}/$round/sprint.json');
     var response = await http.get(url);
     Map<String, dynamic> responseAsJson = jsonDecode(response.body);
     List<DriverResult> formatedRaceStandings = [];
@@ -173,7 +175,7 @@ class _ErgastApiCalls {
       String round) async {
     List<DriverQualificationResult> driversResults = [];
     var url = Uri.parse(
-      'https://ergast.com/api/f1/${DateTime.now().year}/$round/qualifying.json',
+      '$defaultEndpoint/f1/${DateTime.now().year}/$round/qualifying.json',
     );
     var response = await http.get(url);
     Map<String, dynamic> responseAsJson = jsonDecode(response.body);
@@ -247,7 +249,7 @@ class _ErgastApiCalls {
       return formatLastStandings(driversStandings);
     } else {
       var url = Uri.parse(
-        'https://ergast.com/api/f1/current/driverStandings.json',
+        '$defaultEndpoint/f1/current/driverStandings.json',
       );
       var response = await http.get(url);
       Map<String, dynamic> responseAsJson = jsonDecode(response.body);
@@ -261,7 +263,7 @@ class _ErgastApiCalls {
 
   Future<List<String>> getDriverList(String year) async {
     var url = Uri.parse(
-      'https://ergast.com/api/f1/$year/drivers.json',
+      '$defaultEndpoint/f1/$year/drivers.json',
     );
     var response = await http.get(url);
     Map<String, dynamic> responseAsJson = jsonDecode(response.body);
@@ -377,7 +379,7 @@ class _ErgastApiCalls {
 
   Future<List<DriverResult>> getDriverResults(String driverId) async {
     var url = Uri.parse(
-      'https://ergast.com/api/f1/${DateTime.now().year}/drivers/$driverId/results.json',
+      '$defaultEndpoint/f1/${DateTime.now().year}/drivers/$driverId/results.json',
     );
     var response = await http.get(url);
     Map<String, dynamic> responseAsJson = jsonDecode(response.body);
@@ -416,7 +418,7 @@ class _ErgastApiCalls {
 
   Future<List<List<DriverResult>>> getTeamResults(String team) async {
     var url = Uri.parse(
-      'https://ergast.com/api/f1/${DateTime.now().year}/constructors/$team/results.json',
+      '$defaultEndpoint/f1/${DateTime.now().year}/constructors/$team/results.json',
     );
     var response = await http.get(url);
     Map<String, dynamic> responseAsJson = jsonDecode(response.body);
@@ -499,8 +501,9 @@ class _ErgastApiCalls {
         scheduleLastSavedFormat == 'ergast') {
       return formatLastSchedule(schedule, toCome);
     } else {
-      var url =
-          Uri.parse('https://ergast.com/api/f1/${DateTime.now().year}.json');
+      var url = Uri.parse(
+        '$defaultEndpoint/f1/${DateTime.now().year}.json',
+      );
       var response = await http.get(url);
       Map<String, dynamic> responseAsJson = jsonDecode(response.body);
       List<Race> races = formatLastSchedule(responseAsJson, toCome);
@@ -513,7 +516,7 @@ class _ErgastApiCalls {
 
   Future<Race> getRaceDetails(String round) async {
     var url = Uri.parse(
-      'https://ergast.com/api/f1/${DateTime.now().year}/$round.json',
+      '$defaultEndpoint/f1/${DateTime.now().year}/$round.json',
     );
     var response = await http.get(url);
     Map<String, dynamic> responseAsJson =
@@ -596,7 +599,7 @@ class _ErgastApiCalls {
       return formatLastTeamsStandings(teamsStandings);
     } else {
       var url = Uri.parse(
-        'https://ergast.com/api/f1/current/constructorStandings.json',
+        '$defaultEndpoint/f1/current/constructorStandings.json',
       );
       var response = await http.get(url);
       Map<String, dynamic> responseAsJson = jsonDecode(response.body);

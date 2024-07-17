@@ -24,14 +24,15 @@ import 'dart:ui';
 import 'package:boxbox/api/driver_components.dart';
 import 'package:boxbox/api/race_components.dart';
 import 'package:boxbox/api/team_components.dart';
+import 'package:boxbox/helpers/constants.dart';
 import 'package:boxbox/helpers/convert_ergast_and_formula_one.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
 class Formula1 {
-  final String defaultEndpoint = "https://api.formula1.com";
-  final String apikey = "qPgPPRJyGCIPxFT3el4MF7thXHyJCzAP";
+  final String defaultEndpoint = Constants().F1_API_URL;
+  final String apikey = Constants().F1_API_KEY;
 
   List<News> formatResponse(Map responseAsJson) {
     bool useDataSaverMode = Hive.box('settings')

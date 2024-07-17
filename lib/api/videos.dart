@@ -20,12 +20,13 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:boxbox/helpers/constants.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
 
 class F1VideosFetcher {
-  final String defaultEndpoint = "https://api.formula1.com";
-  final String apikey = "qPgPPRJyGCIPxFT3el4MF7thXHyJCzAP";
+  final String defaultEndpoint = Constants().F1_API_URL;
+  final String apikey = Constants().F1_API_KEY;
 
   List<Video> formatResponse(Map responseAsJson) {
     List finalJson = responseAsJson['videos'];

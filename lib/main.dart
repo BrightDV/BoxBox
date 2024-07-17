@@ -25,6 +25,7 @@ import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:background_downloader/background_downloader.dart';
 // import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:boxbox/helpers/bottom_navigation_bar.dart';
+import 'package:boxbox/helpers/constants.dart';
 import 'package:boxbox/helpers/handle_native.dart';
 import 'package:boxbox/helpers/route_handler.dart';
 // import 'package:boxbox/Screens/article.dart';
@@ -352,9 +353,9 @@ class _MyAppState extends State<MyApp> {
     supportedLocales.removeAt(supportedLocales.indexOf(const Locale('en')));
     supportedLocales.insert(0, const Locale('en'));
 
-    const String boxboxServerDefaultInstance =
-        "https://boxbox-server.netlify.app/api";
-    const String officialFeed = "https://api.formula1.com";
+    final String boxboxServerDefaultInstance =
+        Constants().OFFICIAL_BBS_SERVER_URL;
+    final String officialFeed = Constants().F1_API_URL;
 
     if (Hive.box('settings').get(
           'server',

@@ -21,6 +21,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:boxbox/api/driver_components.dart';
+import 'package:boxbox/helpers/constants.dart';
 import 'package:boxbox/helpers/convert_ergast_and_formula_one.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -30,7 +31,7 @@ import 'package:html/parser.dart' as parser;
 import 'package:html/dom.dart' as dom;
 
 class FormulaOneScraper {
-  final String defaultEndpoint = "https://api.formula1.com";
+  final String defaultEndpoint = Constants().F1_API_URL;
 
   Future<List<DriverResult>> scrapeRaceResult(
     String originalCircuitId,

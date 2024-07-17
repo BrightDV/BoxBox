@@ -22,6 +22,7 @@
 import 'package:boxbox/Screens/MixedNews/rss_feed.dart';
 import 'package:boxbox/Screens/MixedNews/wordpress.dart';
 import 'package:boxbox/api/rss.dart';
+import 'package:boxbox/helpers/constants.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/news.dart';
 import 'package:boxbox/helpers/request_error.dart';
@@ -112,7 +113,7 @@ class NewsFeedWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const String officialFeed = "https://api.formula1.com";
+    final String officialFeed = Constants().F1_API_URL;
     List savedFeedUrl = Hive.box('settings')
         .get('homeFeed', defaultValue: [officialFeed, 'api']) as List;
     String savedServer = Hive.box('settings')

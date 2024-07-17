@@ -17,6 +17,7 @@
  * Copyright (c) 2022-2024, BrightDV
  */
 
+import 'package:boxbox/helpers/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -34,7 +35,7 @@ class _CustomeHomeFeedSettingsScreenState
     extends State<CustomeHomeFeedSettingsScreen> {
   @override
   Widget build(BuildContext context) {
-    const String officialFeed = "https://api.formula1.com";
+    final String officialFeed = Constants().F1_API_URL;
     List savedFeedUrl = Hive.box('settings')
         .get('homeFeed', defaultValue: [officialFeed, "api"]) as List;
     List customFeeds =

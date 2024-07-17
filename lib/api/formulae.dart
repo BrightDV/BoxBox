@@ -25,13 +25,14 @@ import 'package:boxbox/api/formula1.dart';
 import 'package:boxbox/api/race_components.dart';
 import 'package:boxbox/api/team_components.dart';
 import 'package:boxbox/api/videos.dart';
+import 'package:boxbox/helpers/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
 
 class FormulaE {
-  final String defaultEndpoint = "https://api.formula-e.pulselive.com";
-  final String defaultF1Endpoint = "https://api.formula1.com";
+  final String defaultEndpoint = Constants().FE_API_URL;
+  final String defaultF1Endpoint = Constants().F1_API_URL;
   late final String championshipId = Hive.box('settings').get(
     'feChampionshipId',
     defaultValue: '84467676-4d5d-4c97-ae07-0b7520bb95ea',

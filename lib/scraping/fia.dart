@@ -17,6 +17,7 @@
  * Copyright (c) 2022-2024, BrightDV
  */
 
+import 'package:boxbox/helpers/constants.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' as parser;
@@ -32,7 +33,7 @@ class SessionDocument {
 
 class FIAScraper {
   Future<List<SessionDocument>> scrapeSessionDocuments() async {
-    const String defaultEndpoint = "https://api.formula1.com";
+    final String defaultEndpoint = Constants().F1_API_URL;
     late Uri latestDocumentsUrl;
     String endpoint = Hive.box('settings')
         .get('server', defaultValue: defaultEndpoint) as String;

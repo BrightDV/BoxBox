@@ -21,6 +21,7 @@ import 'package:boxbox/Screens/circuit.dart';
 import 'package:boxbox/api/event_tracker.dart';
 import 'package:boxbox/api/race_components.dart';
 import 'package:boxbox/helpers/buttons.dart';
+import 'package:boxbox/helpers/constants.dart';
 import 'package:boxbox/helpers/hover.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/request_error.dart';
@@ -518,7 +519,7 @@ class PdfViewer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const String defaultServer = "https://api.formula1.com";
+    final String defaultServer = Constants().F1_API_URL;
     String server = Hive.box('settings')
         .get('server', defaultValue: defaultServer) as String;
     return Scaffold(

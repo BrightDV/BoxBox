@@ -19,6 +19,7 @@
 
 import 'dart:convert';
 
+import 'package:boxbox/helpers/constants.dart';
 import 'package:boxbox/helpers/download.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_cache_manager/file.dart';
@@ -43,13 +44,15 @@ class BrightCove {
     String championship = Hive.box('settings')
         .get('championship', defaultValue: 'Formula 1') as String;
     late Map responseAsJson;
+    final String f1BrightCovePlayerId = Constants().F1_BRIGHTCOVE_PLAYER_ID;
+    final String fEBrightCovePlayerId = Constants().FE_BRIGHTCOVE_PLAYER_ID;
     if (kIsWeb) {
       late Uri uri;
       if (articleChampionship != null) {
         uri = Uri.parse(
           articleChampionship == 'Formula 1'
-              ? 'https://edge.api.brightcove.com/playback/v1/accounts/6057949432001/videos/$videoId'
-              : 'https://edge.api.brightcove.com/playback/v1/accounts/6275361344001/videos/$videoId',
+              ? 'https://edge.api.brightcove.com/playback/v1/accounts/$f1BrightCovePlayerId/videos/$videoId'
+              : 'https://edge.api.brightcove.com/playback/v1/accounts/$fEBrightCovePlayerId/videos/$videoId',
         );
       } else if (player != null) {
         uri = Uri.parse(
@@ -58,8 +61,8 @@ class BrightCove {
       } else {
         uri = Uri.parse(
           championship == 'Formula 1'
-              ? 'https://edge.api.brightcove.com/playback/v1/accounts/6057949432001/videos/$videoId'
-              : 'https://edge.api.brightcove.com/playback/v1/accounts/6275361344001/videos/$videoId',
+              ? 'https://edge.api.brightcove.com/playback/v1/accounts/$f1BrightCovePlayerId/videos/$videoId'
+              : 'https://edge.api.brightcove.com/playback/v1/accounts/$fEBrightCovePlayerId/videos/$videoId',
         );
       }
       Response res = await get(
@@ -67,11 +70,11 @@ class BrightCove {
         headers: {
           'Accept': articleChampionship != null
               ? articleChampionship == 'Formula 1'
-                  ? ' application/json;pk=BCpkADawqM1hQVBuXkSlsl6hUsBZQMmrLbIfOjJQ3_n8zmPOhlNSwZhQBF6d5xggxm0t052lQjYyhqZR3FW2eP03YGOER9ihJkUnIhRZGBxuLhnL-QiFpvcDWIh_LvwN5j8zkjTtGKarhsdV'
-                  : ' application/json;pk=BCpkADawqM0CZElkVwfs62q-JTOc4CeZSNJRfxT923qzbMSqp6qn5VEgWV1iao1cEf2sXX9ce8achTuOfYKUvfchSis_rB5Sxz_ih70GYLYdf8bZgHi3Yq1VK_6v3mj29rxxcJjF3OX6Ri32'
+                  ? Constants().F1_BRIGHTCOVE_PLAYER_KEY
+                  : Constants().FE_BRIGHTCOVE_PLAYER_KEY
               : championship == 'Formula 1'
-                  ? ' application/json;pk=BCpkADawqM1hQVBuXkSlsl6hUsBZQMmrLbIfOjJQ3_n8zmPOhlNSwZhQBF6d5xggxm0t052lQjYyhqZR3FW2eP03YGOER9ihJkUnIhRZGBxuLhnL-QiFpvcDWIh_LvwN5j8zkjTtGKarhsdV'
-                  : ' application/json;pk=BCpkADawqM0CZElkVwfs62q-JTOc4CeZSNJRfxT923qzbMSqp6qn5VEgWV1iao1cEf2sXX9ce8achTuOfYKUvfchSis_rB5Sxz_ih70GYLYdf8bZgHi3Yq1VK_6v3mj29rxxcJjF3OX6Ri32',
+                  ? Constants().F1_BRIGHTCOVE_PLAYER_KEY
+                  : Constants().FE_BRIGHTCOVE_PLAYER_KEY
         },
       );
       responseAsJson = jsonDecode(res.body);
@@ -80,26 +83,26 @@ class BrightCove {
 
       if (articleChampionship != null) {
         url = articleChampionship == 'Formula 1'
-            ? 'https://edge.api.brightcove.com/playback/v1/accounts/6057949432001/videos/$videoId'
-            : 'https://edge.api.brightcove.com/playback/v1/accounts/6275361344001/videos/$videoId';
+            ? 'https://edge.api.brightcove.com/playback/v1/accounts/$f1BrightCovePlayerId/videos/$videoId'
+            : 'https://edge.api.brightcove.com/playback/v1/accounts/$fEBrightCovePlayerId/videos/$videoId';
       } else if (player != null) {
         url =
             'https://edge.api.brightcove.com/playback/v1/accounts/$player/videos/$videoId';
       } else {
         url = championship == 'Formula 1'
-            ? 'https://edge.api.brightcove.com/playback/v1/accounts/6057949432001/videos/$videoId'
-            : 'https://edge.api.brightcove.com/playback/v1/accounts/6275361344001/videos/$videoId';
+            ? 'https://edge.api.brightcove.com/playback/v1/accounts/$f1BrightCovePlayerId/videos/$videoId'
+            : 'https://edge.api.brightcove.com/playback/v1/accounts/$fEBrightCovePlayerId/videos/$videoId';
       }
       final Future<File> fileStream = videoCache.getSingleFile(
         url,
         headers: {
           'Accept': articleChampionship != null
               ? articleChampionship == 'Formula 1'
-                  ? ' application/json;pk=BCpkADawqM1hQVBuXkSlsl6hUsBZQMmrLbIfOjJQ3_n8zmPOhlNSwZhQBF6d5xggxm0t052lQjYyhqZR3FW2eP03YGOER9ihJkUnIhRZGBxuLhnL-QiFpvcDWIh_LvwN5j8zkjTtGKarhsdV'
-                  : ' application/json;pk=BCpkADawqM0CZElkVwfs62q-JTOc4CeZSNJRfxT923qzbMSqp6qn5VEgWV1iao1cEf2sXX9ce8achTuOfYKUvfchSis_rB5Sxz_ih70GYLYdf8bZgHi3Yq1VK_6v3mj29rxxcJjF3OX6Ri32'
+                  ? Constants().F1_BRIGHTCOVE_PLAYER_KEY
+                  : Constants().FE_BRIGHTCOVE_PLAYER_KEY
               : championship == 'Formula 1'
-                  ? ' application/json;pk=BCpkADawqM1hQVBuXkSlsl6hUsBZQMmrLbIfOjJQ3_n8zmPOhlNSwZhQBF6d5xggxm0t052lQjYyhqZR3FW2eP03YGOER9ihJkUnIhRZGBxuLhnL-QiFpvcDWIh_LvwN5j8zkjTtGKarhsdV'
-                  : ' application/json;pk=BCpkADawqM0CZElkVwfs62q-JTOc4CeZSNJRfxT923qzbMSqp6qn5VEgWV1iao1cEf2sXX9ce8achTuOfYKUvfchSis_rB5Sxz_ih70GYLYdf8bZgHi3Yq1VK_6v3mj29rxxcJjF3OX6Ri32',
+                  ? Constants().F1_BRIGHTCOVE_PLAYER_KEY
+                  : Constants().FE_BRIGHTCOVE_PLAYER_KEY
         },
       );
       final response = await fileStream;

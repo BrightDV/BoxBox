@@ -23,13 +23,14 @@ import 'dart:io';
 import 'package:background_downloader/background_downloader.dart';
 import 'package:boxbox/api/brightcove.dart';
 import 'package:boxbox/api/videos.dart';
+import 'package:boxbox/helpers/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class DownloadUtils {
-  final String f1Endpoint = 'https://api.formula1.com';
-  final String f1ApiKey = "qPgPPRJyGCIPxFT3el4MF7thXHyJCzAP";
+  final String f1Endpoint = Constants().F1_API_URL;
+  final String f1ApiKey = Constants().F1_API_KEY;
   Future<String?> videoDownloadQualitySelector(
     BuildContext context,
   ) async {

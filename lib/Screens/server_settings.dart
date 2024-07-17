@@ -17,6 +17,7 @@
  * Copyright (c) 2022-2024, BrightDV
  */
 
+import 'package:boxbox/helpers/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -32,7 +33,7 @@ class ServerSettingsScreen extends StatefulWidget {
 class _ServerSettingsScreenState extends State<ServerSettingsScreen> {
   @override
   Widget build(BuildContext context) {
-    const String officialServer = "https://api.formula1.com";
+    final String officialServer = Constants().F1_API_URL;
     List customServers =
         Hive.box('settings').get('customServers', defaultValue: []) as List;
     String savedServer = Hive.box('settings')
