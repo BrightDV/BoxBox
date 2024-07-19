@@ -39,7 +39,7 @@ class FIAScraper {
         .get('server', defaultValue: defaultEndpoint) as String;
     if (endpoint != defaultEndpoint) {
       latestDocumentsUrl = Uri.parse(
-        '$endpoint/documents',
+        '$endpoint/f1/documents',
       );
     } else {
       latestDocumentsUrl = Uri.parse(

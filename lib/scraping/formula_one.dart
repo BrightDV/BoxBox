@@ -70,7 +70,7 @@ class FormulaOneScraper {
       }
       if (endpoint != defaultEndpoint) {
         resultsUrl = Uri.parse(
-          '$endpoint/results/${DateTime.now().year}/races/$circuitId/$circuitName/$sessionName.html',
+          '$endpoint/f1/results/${DateTime.now().year}/races/$circuitId/$circuitName/$sessionName.html',
         );
       } else {
         resultsUrl = Uri.parse(
@@ -135,7 +135,7 @@ class FormulaOneScraper {
               'https://www.formula1.com',
               endpoint,
             ) ??
-            '$endpoint/en/results.html/${DateTime.now().year}/races/$circuitId/$circuitName/$sessionName.html',
+            '$endpoint/f1/en/results.html/${DateTime.now().year}/races/$circuitId/$circuitName/$sessionName.html',
       );
     } else if (qualifyingResultsUrl == null) {
       resultsUrl = Uri.parse(
@@ -239,7 +239,7 @@ class FormulaOneScraper {
 
       if (endpoint != defaultEndpoint) {
         resultsUrl = Uri.parse(
-          '$endpoint/en/results.html/${DateTime.now().year}/races/$circuitId/$circuitName/$sessionName.html',
+          '$endpoint/f1/en/results.html/${DateTime.now().year}/races/$circuitId/$circuitName/$sessionName.html',
         );
       } else {
         resultsUrl = Uri.parse(
@@ -347,7 +347,7 @@ class FormulaOneScraper {
     String endpoint = Hive.box('settings')
         .get('server', defaultValue: defaultEndpoint) as String;
     if (endpoint != defaultEndpoint) {
-      driverDetailsUrl = Uri.parse("$endpoint/en/drivers/${driverId}.html");
+      driverDetailsUrl = Uri.parse("$endpoint/f1/en/drivers/${driverId}.html");
     } else {
       driverDetailsUrl = Uri.parse(
         "https://www.formula1.com/en/drivers/$driverId",
@@ -423,7 +423,7 @@ class FormulaOneScraper {
     String endpoint = Hive.box('settings')
         .get('server', defaultValue: defaultEndpoint) as String;
     if (endpoint != defaultEndpoint) {
-      teamDetailsUrl = Uri.parse("$endpoint/en/teams/$teamId.html");
+      teamDetailsUrl = Uri.parse("$endpoint/f1/en/teams/$teamId.html");
     } else {
       teamDetailsUrl = Uri.parse(
         "https://www.formula1.com/en/teams/$teamId.html",
@@ -527,7 +527,7 @@ class FormulaOneScraper {
         .get('server', defaultValue: defaultEndpoint) as String;
     if (endpoint != defaultEndpoint) {
       resultsUrl = Uri.parse(
-        '$endpoint/en/results.html/${DateTime.now().year}/races/$circuitId/$circuitName.html',
+        '$endpoint/f1/en/results.html/${DateTime.now().year}/races/$circuitId/$circuitName.html',
       );
     } else {
       resultsUrl = Uri.parse(
@@ -640,7 +640,7 @@ class FormulaOneScraper {
         .get('server', defaultValue: defaultEndpoint) as String;
     if (endpoint != defaultEndpoint) {
       formulaOneCircuitPageUrl = Uri.parse(
-        '$endpoint/en/racing/${DateTime.now().year}/$formulaOneCircuitName/Circuit.html',
+        '$endpoint/f1/en/racing/${DateTime.now().year}/$formulaOneCircuitName/Circuit.html',
       );
     } else {
       formulaOneCircuitPageUrl = Uri.parse(

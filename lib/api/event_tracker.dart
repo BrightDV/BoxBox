@@ -94,7 +94,9 @@ class EventTracker {
 
     if (championship == 'Formula 1') {
       Uri uri = Uri.parse(
-        '$endpoint/v1/event-tracker',
+        endpoint != defaultEndpoint
+            ? '$endpoint/f1/v1/event-tracker'
+            : '$endpoint/v1/event-tracker',
       );
       Response res = await get(
         uri,
@@ -136,7 +138,7 @@ class EventTracker {
         Response res = await get(
           Uri.parse(
             endpoint != defaultEndpoint
-                ? '$endpoint/formula-e/v1/races/$raceId'
+                ? '$endpoint/fe/formula-e/v1/races/$raceId'
                 : '$feEndpoint/formula-e/v1/races/$raceId',
           ),
           headers: {
@@ -313,7 +315,9 @@ class EventTracker {
         .get('useOfficialDataSoure', defaultValue: false) as bool;
 
     Uri uri = Uri.parse(
-      '$endpoint/v1/event-tracker/meeting/$formulaOneCircuitId',
+      endpoint != defaultEndpoint
+          ? '$endpoint/f1/v1/event-tracker/meeting/$formulaOneCircuitId'
+          : '$endpoint/v1/event-tracker/meeting/$formulaOneCircuitId',
     );
 
     Response res = await get(

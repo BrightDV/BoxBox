@@ -201,7 +201,9 @@ class DownloadUtils {
 
       final task = DownloadTask(
         taskId: taskId,
-        url: '$endpoint/v1/editorial/articles/$articleId',
+        url: endpoint != f1Endpoint
+            ? '$endpoint/f1/v1/editorial/articles/$articleId'
+            : '$endpoint/v1/editorial/articles/$articleId',
         filename: '$taskId.json',
         displayName: articleTitle,
         headers: endpoint != f1Endpoint

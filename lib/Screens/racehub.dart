@@ -689,7 +689,8 @@ class SessionItem extends StatelessWidget {
                             children: [
                               Text(
                                 sessionsAbbreviations[
-                                    session.sessionsAbbreviation],
+                                        session.sessionsAbbreviation] ??
+                                    session.sessionsAbbreviation,
                                 style: TextStyle(
                                   fontSize: 20,
                                 ),
@@ -770,7 +771,8 @@ class SessionItem extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                   builder: (context) => SessionScreen(
-                    sessionsAbbreviations[session.sessionsAbbreviation],
+                    sessionsAbbreviations[session.sessionsAbbreviation] ??
+                        session.sessionsAbbreviation,
                     session,
                     meetingCountryName,
                     meetingOfficialName,

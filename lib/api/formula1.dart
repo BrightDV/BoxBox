@@ -85,13 +85,22 @@ class Formula1 {
         .get('server', defaultValue: defaultEndpoint) as String;
     if (tagId != null) {
       url = Uri.parse(
-          '$endpoint/v1/editorial/articles?limit=16&offset=$offset&tags=$tagId');
+        endpoint != defaultEndpoint
+            ? '$endpoint/f1/v1/editorial/articles?limit=16&offset=$offset&tags=$tagId'
+            : '$endpoint/v1/editorial/articles?limit=16&offset=$offset&tags=$tagId',
+      );
     } else if (articleType != null) {
       url = Uri.parse(
-          '$endpoint/v1/editorial/articles?limit=16&offset=$offset&articleTypes=$articleType');
+        endpoint != defaultEndpoint
+            ? '$endpoint/f1/v1/editorial/articles?limit=16&offset=$offset&articleTypes=$articleType'
+            : '$endpoint/v1/editorial/articles?limit=16&offset=$offset&articleTypes=$articleType',
+      );
     } else {
-      url =
-          Uri.parse('$endpoint/v1/editorial/articles?limit=16&offset=$offset');
+      url = Uri.parse(
+        endpoint != defaultEndpoint
+            ? '$endpoint/f1/v1/editorial/articles?limit=16&offset=$offset'
+            : '$endpoint/v1/editorial/articles?limit=16&offset=$offset',
+      );
     }
     var response = await http.get(
       url,
@@ -124,11 +133,16 @@ class Formula1 {
         .get('server', defaultValue: defaultEndpoint) as String;
     if (articleType != null) {
       url = Uri.parse(
-        '$endpoint/v1/editorial/articles?limit=16&tags=${tags.join(',')}&articleTypes=$articleType',
+        endpoint != defaultEndpoint
+            ? '$endpoint/f1/v1/editorial/articles?limit=16&tags=${tags.join(',')}&articleTypes=$articleType'
+            : '$endpoint/v1/editorial/articles?limit=16&tags=${tags.join(',')}&articleTypes=$articleType',
       );
     } else {
       url = Uri.parse(
-          '$endpoint/v1/editorial/articles?limit=16&tags=${tags.join(',')}');
+        endpoint != defaultEndpoint
+            ? '$endpoint/f1/v1/editorial/articles?limit=16&tags=${tags.join(',')}'
+            : '$endpoint/v1/editorial/articles?limit=16&tags=${tags.join(',')}',
+      );
     }
     var response = await http.get(
       url,
@@ -151,7 +165,11 @@ class Formula1 {
   Future<Article> getArticleData(String articleId) async {
     String endpoint = Hive.box('settings')
         .get('server', defaultValue: defaultEndpoint) as String;
-    Uri url = Uri.parse('$endpoint/v1/editorial/articles/$articleId');
+    Uri url = Uri.parse(
+      endpoint != defaultEndpoint
+          ? '$endpoint/f1/v1/editorial/articles/$articleId'
+          : '$endpoint/v1/editorial/articles/$articleId',
+    );
     var response = await http.get(
       url,
       headers: endpoint != defaultEndpoint
@@ -329,7 +347,7 @@ class Formula1 {
           .get('server', defaultValue: defaultEndpoint) as String;
       Uri url = Uri.parse(
         endpoint != defaultEndpoint
-            ? '$endpoint/v1/fom-results/race/meeting=$meetingId'
+            ? '$endpoint/f1/v1/fom-results/race/meeting=$meetingId'
             : '$endpoint/v1/fom-results/race?meeting=$meetingId',
       );
       var response = await http.get(
@@ -364,7 +382,7 @@ class Formula1 {
         .get('server', defaultValue: defaultEndpoint) as String;
     Uri url = Uri.parse(
       endpoint != defaultEndpoint
-          ? '$endpoint/v1/fom-results/qualifying/meeting=$meetingId'
+          ? '$endpoint/f1/v1/fom-results/qualifying/meeting=$meetingId'
           : '$endpoint/v1/fom-results/qualifying?meeting=$meetingId',
     );
     var response = await http.get(
@@ -422,7 +440,7 @@ class Formula1 {
         .get('server', defaultValue: defaultEndpoint) as String;
     Uri url = Uri.parse(
       endpoint != defaultEndpoint
-          ? '$endpoint/v1/fom-results/practice/meeting=$meetingId&session=$session'
+          ? '$endpoint/f1/v1/fom-results/practice/meeting=$meetingId&session=$session'
           : '$endpoint/v1/fom-results/practice?meeting=$meetingId&session=$session',
     );
     var response = await http.get(
@@ -484,7 +502,7 @@ class Formula1 {
         .get('server', defaultValue: defaultEndpoint) as String;
     Uri url = Uri.parse(
       endpoint != defaultEndpoint
-          ? '$endpoint/v1/fom-results/sprint-shootout/meeting=$meetingId'
+          ? '$endpoint/f1/v1/fom-results/sprint-shootout/meeting=$meetingId'
           : '$endpoint/v1/fom-results/sprint-shootout?meeting=$meetingId',
     );
     var response = await http.get(
@@ -543,7 +561,7 @@ class Formula1 {
         .get('server', defaultValue: defaultEndpoint) as String;
     Uri url = Uri.parse(
       endpoint != defaultEndpoint
-          ? '$endpoint/v1/fom-results/sprint/meeting=$meetingId'
+          ? '$endpoint/f1/v1/fom-results/sprint/meeting=$meetingId'
           : '$endpoint/v1/fom-results/sprint?meeting=$meetingId',
     );
     var response = await http.get(
@@ -667,7 +685,9 @@ class Formula1 {
       String endpoint = Hive.box('settings')
           .get('server', defaultValue: defaultEndpoint) as String;
       var url = Uri.parse(
-        '$endpoint/v1/editorial-driverlisting/listing',
+        endpoint != defaultEndpoint
+            ? '$endpoint/f1/v1/editorial-driverlisting/listing'
+            : '$endpoint/v1/editorial-driverlisting/listing',
       );
       var response = await http.get(
         url,
@@ -740,7 +760,9 @@ class Formula1 {
       String endpoint = Hive.box('settings')
           .get('server', defaultValue: defaultEndpoint) as String;
       Uri url = Uri.parse(
-        '$endpoint/v1/editorial-constructorlisting/listing',
+        endpoint != defaultEndpoint
+            ? '$endpoint/f1/v1/editorial-constructorlisting/listing'
+            : '$endpoint/v1/editorial-constructorlisting/listing',
       );
       var response = await http.get(
         url,
@@ -879,7 +901,9 @@ class Formula1 {
       String endpoint = Hive.box('settings')
           .get('server', defaultValue: defaultEndpoint) as String;
       Uri url = Uri.parse(
-        '$endpoint/v1/editorial-eventlisting/events',
+        endpoint != defaultEndpoint
+            ? '$endpoint/f1/v1/editorial-eventlisting/events'
+            : '$endpoint/v1/editorial-eventlisting/events',
       );
       var response = await http.get(
         url,
@@ -909,7 +933,7 @@ class Formula1 {
         .get('server', defaultValue: defaultEndpoint) as String;
     Uri url = Uri.parse(
       endpoint != defaultEndpoint
-          ? '$endpoint/v1/fom-results/starting-grid/meeting=$meetingId'
+          ? '$endpoint/f1/v1/fom-results/starting-grid/meeting=$meetingId'
           : '$endpoint/v1/fom-results/starting-grid?meeting=$meetingId',
     );
     var response = await http.get(

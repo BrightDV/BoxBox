@@ -43,7 +43,7 @@ class FormulaE {
         .get('server', defaultValue: defaultF1Endpoint) as String;
     Uri url = Uri.parse(
       endpoint != defaultF1Endpoint
-          ? '$endpoint/content/formula-e/text/EN/$articleId'
+          ? '$endpoint/fe/content/formula-e/text/EN/$articleId'
           : '$defaultEndpoint/content/formula-e/text/EN/$articleId',
     );
 
@@ -118,8 +118,8 @@ class FormulaE {
         .get('server', defaultValue: defaultF1Endpoint) as String;
     Uri url = Uri.parse(
       endpoint != defaultF1Endpoint
-          ? '$endpoint/content/formula-e/text/EN/page=$page&pageSize=16&tagNames=content-type%3Anews&tagExpression=&playlistTypeRestriction=&playlistId=&detail=&size=16&championshipId=&sort='
-          : '$defaultEndpoint/content/formula-e/text/EN/?page=$page&pageSize=16&tagNames=content-type%3Anews&tagExpression=&playlistTypeRestriction=&playlistId=&detail=&size=16&championshipId=&sort=',
+          ? '$endpoint/fe/content/formula-e/text/EN/page=$page&pageSize=16&tagNames=content-type:news&tagExpression=&playlistTypeRestriction=&playlistId=&detail=&size=16&championshipId=&sort='
+          : '$defaultEndpoint/content/formula-e/text/EN/?page=$page&pageSize=16&tagNames=content-type:news&tagExpression=&playlistTypeRestriction=&playlistId=&detail=&size=16&championshipId=&sort=',
     );
 
     var response = await http.get(
@@ -180,7 +180,7 @@ class FormulaE {
         .get('server', defaultValue: defaultF1Endpoint) as String;
     Uri url = Uri.parse(
       endpoint != defaultF1Endpoint
-          ? '$endpoint/content/formula-e/playlist/EN/15/page=$page&pageSize=$limit&detail=DETAILED&size=$limit'
+          ? '$endpoint/fe/content/formula-e/playlist/EN/15/page=$page&pageSize=$limit&detail=DETAILED&size=$limit'
           : '$defaultEndpoint/content/formula-e/playlist/EN/15?page=$page&pageSize=$limit&detail=DETAILED&size=$limit',
     );
 
@@ -239,7 +239,7 @@ class FormulaE {
           .get('server', defaultValue: defaultF1Endpoint) as String;
       Uri url = Uri.parse(
         endpoint != defaultF1Endpoint
-            ? '$endpoint/formula-e/v1/standings/drivers/championshipId=$championshipId'
+            ? '$endpoint/fe/formula-e/v1/standings/drivers/championshipId=$championshipId'
             : '$defaultEndpoint/formula-e/v1/standings/drivers?championshipId=$championshipId',
       );
       var response = await http.get(
@@ -297,7 +297,7 @@ class FormulaE {
           .get('server', defaultValue: defaultF1Endpoint) as String;
       Uri url = Uri.parse(
         endpoint != defaultF1Endpoint
-            ? '$endpoint/formula-e/v1/standings/teams/championshipId=$championshipId'
+            ? '$endpoint/fe/formula-e/v1/standings/teams/championshipId=$championshipId'
             : '$defaultEndpoint/formula-e/v1/standings/teams?championshipId=$championshipId',
       );
       var response = await http.get(
@@ -398,7 +398,7 @@ class FormulaE {
           .get('server', defaultValue: defaultF1Endpoint) as String;
       Uri url = Uri.parse(
         endpoint != defaultF1Endpoint
-            ? '$endpoint/formula-e/v1/races/championshipId=$championshipId'
+            ? '$endpoint/fe/formula-e/v1/races/championshipId=$championshipId'
             : '$defaultEndpoint/formula-e/v1/races?championshipId=$championshipId',
       );
       var response = await http.get(
@@ -425,7 +425,7 @@ class FormulaE {
           .get('server', defaultValue: defaultF1Endpoint) as String;
       Uri url = Uri.parse(
         endpoint != defaultF1Endpoint
-            ? '$endpoint/formula-e/v1/races/$raceId/sessions'
+            ? '$endpoint/fe/formula-e/v1/races/$raceId/sessions'
             : '$defaultEndpoint/formula-e/v1/races/$raceId/sessions',
       );
       var response = await http.get(
@@ -563,7 +563,7 @@ class FormulaE {
         .get('server', defaultValue: defaultF1Endpoint) as String;
     Uri url = Uri.parse(
       endpoint != defaultF1Endpoint
-          ? '$endpoint/content/formula-e/EN/contentTypes=video&contentTypes=news&page=0&pageSize=10&references=FORMULA_E_RACE:${race.meetingId}&onlyRestrictedContent=false&detail=DETAILED'
+          ? '$endpoint/fe/content/formula-e/EN/contentTypes=video&contentTypes=news&page=0&pageSize=10&references=FORMULA_E_RACE:${race.meetingId}&onlyRestrictedContent=false&detail=DETAILED'
           : '$defaultEndpoint/content/formula-e/EN?contentTypes=video&contentTypes=news&page=0&pageSize=10&references=FORMULA_E_RACE:${race.meetingId}&onlyRestrictedContent=false&detail=DETAILED',
     );
     http.Response response = await http.get(
@@ -648,7 +648,7 @@ class FormulaE {
         .get('server', defaultValue: defaultF1Endpoint) as String;
     Uri url = Uri.parse(
       endpoint != defaultF1Endpoint
-          ? '$endpoint/formula-e/v1/races/$raceId/sessions/$sessionId/results'
+          ? '$endpoint/fe/formula-e/v1/races/$raceId/sessions/$sessionId/results'
           : '$defaultEndpoint/formula-e/v1/races/$raceId/sessions/$sessionId/results',
     );
     var response = await http.get(
@@ -861,7 +861,7 @@ class FormulaE {
         .get('server', defaultValue: defaultF1Endpoint) as String;
     Uri url = Uri.parse(
       endpoint != defaultF1Endpoint
-          ? '$endpoint/content/formula-e/photo/en/references=FORMULA_E_RACE:$raceId&tagNames=race:bg-image'
+          ? '$endpoint/fe/content/formula-e/photo/en/references=FORMULA_E_RACE:$raceId&tagNames=race:bg-image'
           : '$defaultEndpoint/content/formula-e/photo/en/?references=FORMULA_E_RACE:$raceId&tagNames=race:bg-image',
     );
     var response = await http.get(
@@ -882,7 +882,7 @@ class FormulaE {
         .get('server', defaultValue: defaultF1Endpoint) as String;
     Uri url = Uri.parse(
       endpoint != defaultF1Endpoint
-          ? '$endpoint/formula-e/v1/championships/latest'
+          ? '$endpoint/fe/formula-e/v1/championships/latest'
           : '$defaultEndpoint/formula-e/v1/championships/latest',
     );
     var response = await http.get(

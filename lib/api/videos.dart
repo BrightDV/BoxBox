@@ -68,10 +68,16 @@ class F1VideosFetcher {
     Uri url;
     if (tag != '') {
       url = Uri.parse(
-          '$endpoint/v1/video-assets/videos?limit=$limit&tag=$tag&offset=$offset');
+        endpoint != defaultEndpoint
+            ? '$endpoint/f1/v1/video-assets/videos?limit=$limit&tag=$tag&offset=$offset'
+            : '$endpoint/v1/video-assets/videos?limit=$limit&tag=$tag&offset=$offset',
+      );
     } else {
       url = Uri.parse(
-          '$endpoint/v1/video-assets/videos?limit=$limit&offset=$offset');
+        endpoint != defaultEndpoint
+            ? '$endpoint/f1/v1/video-assets/videos?limit=$limit&offset=$offset'
+            : '$endpoint/v1/video-assets/videos?limit=$limit&offset=$offset',
+      );
     }
     var response = await http.get(
       url,
@@ -96,7 +102,9 @@ class F1VideosFetcher {
     String endpoint = Hive.box('settings')
         .get('server', defaultValue: defaultEndpoint) as String;
     Uri url = Uri.parse(
-      "$endpoint/v1/video-assets/videos/$videoId",
+      endpoint != defaultEndpoint
+          ? "$endpoint/f1/v1/video-assets/videos/$videoId"
+          : "$endpoint/v1/video-assets/videos/$videoId",
     );
     var response = await http.get(
       url,

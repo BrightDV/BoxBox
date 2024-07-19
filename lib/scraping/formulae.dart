@@ -21,6 +21,8 @@ import 'dart:convert';
 
 import 'package:boxbox/api/formula1.dart';
 import 'package:boxbox/api/formulae.dart';
+import 'package:boxbox/helpers/constants.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:html/parser.dart' as parser;
 import 'package:html/dom.dart' as dom;
 import 'package:html2md/html2md.dart' as html2md;
@@ -28,6 +30,7 @@ import 'package:http/http.dart' as http;
 
 class FormulaEScraper {
   final String defaultEndpoint = "https://www.fiaformulae.com";
+  final String defaultF1Endpoint = Constants().F1_API_URL;
 
   List<html2md.Rule> rules = [
     html2md.Rule(
@@ -47,8 +50,13 @@ class FormulaEScraper {
   ];
 
   Future<Article> getArticleData(News? item, String articleId) async {
+    String endpoint = Hive.box('settings')
+        .get('server', defaultValue: defaultF1Endpoint) as String;
+    Uri url = Uri.parse(endpoint != defaultF1Endpoint
+        ? '$endpoint/fe/en/news/$articleId'
+        : '$defaultEndpoint/en/news/$articleId');
     http.Response response = await http.get(
-      Uri.parse('$defaultEndpoint/en/news/$articleId'),
+      url,
       headers: {
         'Accept': 'application/json',
         'User-Agent':
