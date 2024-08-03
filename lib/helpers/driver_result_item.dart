@@ -98,7 +98,9 @@ class DriverResultItem extends StatelessWidget {
                 child: Text(
                   item.position == '666' || item.position == '0'
                       ? 'DNF'
-                      : item.position,
+                      : item.position == '66666'
+                          ? 'DSQ'
+                          : item.position,
                   style: const TextStyle(
                     fontWeight: FontWeight.w600,
                   ),
@@ -127,10 +129,12 @@ class DriverResultItem extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.only(left: 5, right: 5),
                   child: GestureDetector(
-                    onTap: () => item.time == 'DNF' || item.time == 'DNS'
+                    onTap: () => (item.time == 'DNF' ||
+                                item.time == 'DNS' ||
+                                item.time == 'DSQ') &&
+                            item.status != null
                         ? Fluttertoast.showToast(
-                            msg: item.status ??
-                                (item.time == 'DNF' ? 'DNF' : 'DNS'),
+                            msg: item.status!,
                             toastLength: Toast.LENGTH_SHORT,
                             gravity: ToastGravity.BOTTOM,
                             timeInSecForIosWeb: 2,
@@ -170,10 +174,15 @@ class DriverResultItem extends StatelessWidget {
                           style: TextStyle(
                             color: item.isFastest
                                 ? Colors.white
-                                : item.time == 'DNF' || item.time == 'DNS'
+                                : item.time == 'DNF' ||
+                                        item.time == 'DNS' ||
+                                        item.time == 'DSQ'
                                     ? Colors.yellow
                                     : const Color(0xff00ff00),
-                            decoration: item.time == 'DNF' || item.time == 'DNS'
+                            decoration: (item.time == 'DNF' ||
+                                        item.time == 'DNS' ||
+                                        item.time == 'DSQ') &&
+                                    item.status != null
                                 ? TextDecoration.underline
                                 : null,
                           ),
