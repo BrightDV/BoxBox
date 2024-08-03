@@ -1388,6 +1388,7 @@ class ImageRenderer extends StatelessWidget {
                     : MediaQuery.of(context).size.width / (16 / 9),
                 child: const LoadingIndicatorUtil(
                   replaceImage: true,
+                  fullBorderRadius: false,
                   borderRadius: false,
                 ),
               ),
