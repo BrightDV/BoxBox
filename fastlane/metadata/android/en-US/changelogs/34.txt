@@ -1,5 +1,4 @@
 Please read the development notice on GitHub.
-
 - Support downloading an article or a video.
 - Full support of Formula E!
 - Support custom feed URLs in the Mixed News.

@@ -531,7 +531,7 @@ class FormulaOneScraper {
       );
     } else {
       resultsUrl = Uri.parse(
-        'https://www.formula1.com/en/results.html/${DateTime.now().year}/races/$circuitId/$circuitName.html',
+        'https://www.formula1.com/en/results/${DateTime.now().year}/races/$circuitId/$circuitName/race-result',
       );
     }
     http.Response response = await http.get(resultsUrl);
@@ -539,8 +539,9 @@ class FormulaOneScraper {
     if (document.getElementsByClassName("no-results").isNotEmpty) {
       return 0;
     } else {
-      List<dom.Element>? tempResults =
-          document.getElementsByClassName('side-nav-item');
+      List<dom.Element>? tempResults = document
+          .getElementsByClassName('f1-grid')[0]
+          .getElementsByClassName('f1-menu-item');
       tempResults.removeAt(0);
       int maxSession = 0;
       for (dom.Element element in tempResults) {
