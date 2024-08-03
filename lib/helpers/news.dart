@@ -2131,10 +2131,27 @@ class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
         return _showPlaceholder
             ? Stack(
                 children: [
-                  widget.videoUrls['poster'] != null
-                      ? CachedNetworkImage(
-                          imageUrl: widget.videoUrls['poster'],
-                          placeholder: (context, url) => SizedBox(
+                  Align(
+                    alignment: Alignment.center,
+                    child: widget.videoUrls['poster'] != null
+                        ? CachedNetworkImage(
+                            imageUrl: widget.videoUrls['poster'],
+                            placeholder: (context, url) => SizedBox(
+                              height:
+                                  MediaQuery.of(context).size.width / (16 / 9),
+                              child: const LoadingIndicatorUtil(
+                                replaceImage: true,
+                                fullBorderRadius: false,
+                                borderRadius: false,
+                              ),
+                            ),
+                            errorWidget: (context, url, error) => Icon(
+                              Icons.error_outlined,
+                            ),
+                            fadeOutDuration: const Duration(milliseconds: 100),
+                            fadeInDuration: const Duration(seconds: 1),
+                          )
+                        : SizedBox(
                             height:
                                 MediaQuery.of(context).size.width / (16 / 9),
                             child: const LoadingIndicatorUtil(
@@ -2143,20 +2160,7 @@ class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
                               borderRadius: false,
                             ),
                           ),
-                          errorWidget: (context, url, error) => Icon(
-                            Icons.error_outlined,
-                          ),
-                          fadeOutDuration: const Duration(milliseconds: 100),
-                          fadeInDuration: const Duration(seconds: 1),
-                        )
-                      : SizedBox(
-                          height: MediaQuery.of(context).size.width / (16 / 9),
-                          child: const LoadingIndicatorUtil(
-                            replaceImage: true,
-                            fullBorderRadius: false,
-                            borderRadius: false,
-                          ),
-                        ),
+                  ),
                   const Align(
                     alignment: Alignment.center,
                     child: Icon(
