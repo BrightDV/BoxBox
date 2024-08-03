@@ -205,6 +205,7 @@ class DownloadsList extends StatelessWidget {
         separatedRecords[1].add(record);
       }
     }
+    separatedRecords[1] = separatedRecords[1].reversed.toList();
     return SingleChildScrollView(
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 5),
