@@ -506,7 +506,11 @@ class _FreePracticesResultsProviderState
                     race.meetingId,
                     DateTime.parse(race.date).year,
                     race.raceName,
-                    sessionId: widget.sessionsId?[index],
+                    sessionId: widget.sessionsId != null
+                        ? widget.sessionsId!.isNotEmpty
+                            ? widget.sessionsId![index]
+                            : null
+                        : null,
                   ),
                 ),
               ),
