@@ -258,11 +258,8 @@ class NewsItem extends StatelessWidget {
                                         ),
                                       ),
                                       errorWidget: (context, url, error) =>
-                                          SizedBox(
-                                        height: 50,
-                                        child: Icon(
-                                          Icons.error_outlined,
-                                        ),
+                                          ImageRequestErrorUtil(
+                                        width: 300,
                                       ),
                                       fadeOutDuration:
                                           const Duration(seconds: 1),
@@ -311,11 +308,8 @@ class NewsItem extends StatelessWidget {
                                     ),
                                   ),
                                   errorWidget: (context, url, error) =>
-                                      SizedBox(
-                                    height: 50,
-                                    child: Icon(
-                                      Icons.error_outlined,
-                                    ),
+                                      ImageRequestErrorUtil(
+                                    width: 300,
                                   ),
                                   fadeOutDuration: const Duration(seconds: 1),
                                   fadeInDuration: const Duration(seconds: 1),
@@ -425,11 +419,24 @@ class NewsItem extends StatelessWidget {
                                                 ),
                                                 errorWidget:
                                                     (context, url, error) =>
-                                                        SizedBox(
-                                                  height: 50,
-                                                  child: Icon(
-                                                    Icons.error_outlined,
-                                                  ),
+                                                        ImageRequestErrorUtil(
+                                                  height: (MediaQuery.of(
+                                                                  context)
+                                                              .size
+                                                              .width >
+                                                          500)
+                                                      ? (MediaQuery.of(context)
+                                                                      .size
+                                                                      .width /
+                                                                  itemPerRow -
+                                                              8 * itemPerRow) /
+                                                          (16 / 9)
+                                                      : (showSmallDescription ??
+                                                              false)
+                                                          ? height / (16 / 9) -
+                                                              58
+                                                          : width / (16 / 9) -
+                                                              10,
                                                 ),
                                                 fadeOutDuration: const Duration(
                                                   milliseconds: 400,
@@ -704,11 +711,21 @@ class NewsItem extends StatelessWidget {
                                             ),
                                             errorWidget:
                                                 (context, url, error) =>
-                                                    SizedBox(
-                                              height: 50,
-                                              child: Icon(
-                                                Icons.error_outlined,
-                                              ),
+                                                    ImageRequestErrorUtil(
+                                              height: (MediaQuery.of(context)
+                                                          .size
+                                                          .width >
+                                                      500)
+                                                  ? (MediaQuery.of(context)
+                                                                  .size
+                                                                  .width /
+                                                              itemPerRow -
+                                                          8 * itemPerRow) /
+                                                      (16 / 9)
+                                                  : (showSmallDescription ??
+                                                          false)
+                                                      ? height / (16 / 9) - 58
+                                                      : width / (16 / 9) - 5,
                                             ),
                                             fadeOutDuration: const Duration(
                                               milliseconds: 400,
@@ -1392,8 +1409,11 @@ class ImageRenderer extends StatelessWidget {
                   borderRadius: false,
                 ),
               ),
-              errorWidget: (context, url, error) =>
-                  const Icon(Icons.error_outlined),
+              errorWidget: (context, url, error) => ImageRequestErrorUtil(
+                height: MediaQuery.of(context).size.width > 1000
+                    ? 800
+                    : MediaQuery.of(context).size.width / (16 / 9),
+              ),
               fadeOutDuration: const Duration(seconds: 1),
               fadeInDuration: const Duration(seconds: 1),
               cacheManager: CacheManager(
@@ -1454,8 +1474,11 @@ class ImageRenderer extends StatelessWidget {
                                                 ),
                                                 errorWidget:
                                                     (context, url, error) =>
-                                                        const Icon(
-                                                  Icons.error_outlined,
+                                                        ImageRequestErrorUtil(
+                                                  height: MediaQuery.of(context)
+                                                          .size
+                                                          .width /
+                                                      (16 / 9),
                                                 ),
                                                 fadeOutDuration:
                                                     const Duration(seconds: 1),
@@ -1537,7 +1560,10 @@ class ImageRenderer extends StatelessWidget {
                                 ),
                               ),
                               errorWidget: (context, url, error) =>
-                                  const Icon(Icons.error_outlined),
+                                  ImageRequestErrorUtil(
+                                height: MediaQuery.of(context).size.width /
+                                    (16 / 9),
+                              ),
                               fadeOutDuration: const Duration(seconds: 1),
                               fadeInDuration: const Duration(seconds: 1),
                               cacheManager: CacheManager(
@@ -1640,8 +1666,11 @@ class ImageRenderer extends StatelessWidget {
                                               ),
                                               errorWidget:
                                                   (context, url, error) =>
-                                                      const Icon(
-                                                Icons.error_outlined,
+                                                      ImageRequestErrorUtil(
+                                                height: MediaQuery.of(context)
+                                                        .size
+                                                        .width /
+                                                    (16 / 9),
                                               ),
                                               fadeOutDuration: const Duration(
                                                 seconds: 1,
@@ -1697,7 +1726,10 @@ class ImageRenderer extends StatelessWidget {
                             ),
                           ),
                           errorWidget: (context, url, error) =>
-                              const Icon(Icons.error_outlined),
+                              ImageRequestErrorUtil(
+                            height:
+                                MediaQuery.of(context).size.width / (16 / 9),
+                          ),
                           fadeOutDuration: const Duration(milliseconds: 400),
                           fadeInDuration: const Duration(milliseconds: 400),
                           cacheManager: CacheManager(
@@ -2145,8 +2177,10 @@ class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
                                 borderRadius: false,
                               ),
                             ),
-                            errorWidget: (context, url, error) => Icon(
-                              Icons.error_outlined,
+                            errorWidget: (context, url, error) =>
+                                ImageRequestErrorUtil(
+                              height:
+                                  MediaQuery.of(context).size.width / (16 / 9),
                             ),
                             fadeOutDuration: const Duration(milliseconds: 100),
                             fadeInDuration: const Duration(seconds: 1),

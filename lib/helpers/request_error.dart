@@ -17,6 +17,7 @@
  * Copyright (c) 2022-2024, BrightDV
  */
 
+import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -139,6 +140,36 @@ class FirstPageExceptionIndicator extends StatelessWidget {
               ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class ImageRequestErrorUtil extends StatelessWidget {
+  final double? width;
+  final double? height;
+  const ImageRequestErrorUtil({super.key, this.width, this.height});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: width,
+      height: height,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          LoadingIndicatorUtil(
+            replaceImage: true,
+            fullBorderRadius: false,
+          ),
+          SizedBox(
+            height: 100,
+            child: Icon(
+              Icons.error_outlined,
+              size: 35,
+            ),
+          ),
+        ],
       ),
     );
   }
