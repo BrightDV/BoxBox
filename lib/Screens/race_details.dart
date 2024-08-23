@@ -565,27 +565,34 @@ class RaceResultsProvider extends StatefulWidget {
 }
 
 class _RaceResultsProviderState extends State<RaceResultsProvider> {
-  Future<List<DriverResult>> getRaceStandingsFromApi(Race race) async {
-    bool useOfficialDataSoure = Hive.box('settings')
-        .get('useOfficialDataSoure', defaultValue: false) as bool;
-    String championship = Hive.box('settings')
-        .get('championship', defaultValue: 'Formula 1') as String;
-    if (championship == 'Formula 1') {
-      if (useOfficialDataSoure && !widget.isFromRaceHub) {
-        return await Formula1().getRaceStandings(race.meetingId, race.round);
-      } else {
-        return await ErgastApi().getRaceStandings(race.round);
-      }
+  Future<List<DriverResult>> getRaceStandingsFromApi({
+    Race? race,
+    String? meetingId,
+  }) async {
+    if (meetingId != null) {
+      // starting to do like official api devs...
+      return await Formula1().getRaceStandings(meetingId, '66666');
     } else {
-      return await FormulaE().getRaceStandings(
-        race.meetingId,
-        widget.sessionId!,
-      );
+      bool useOfficialDataSoure = Hive.box('settings')
+          .get('useOfficialDataSoure', defaultValue: false) as bool;
+      String championship = Hive.box('settings')
+          .get('championship', defaultValue: 'Formula 1') as String;
+      if (championship == 'Formula 1') {
+        if (useOfficialDataSoure && !widget.isFromRaceHub) {
+          return await Formula1().getRaceStandings(race!.meetingId, race.round);
+        } else {
+          return await ErgastApi().getRaceStandings(race!.round);
+        }
+      } else {
+        return await FormulaE().getRaceStandings(
+          race!.meetingId,
+          widget.sessionId!,
+        );
+      }
     }
   }
 
   Future<List<DriverResult>> getRaceStandingsFromF1(String raceUrl) async {
-    // TODO: prefer api instead of scraping?
     return await FormulaOneScraper().scrapeRaceResult(
       '',
       0,
@@ -669,7 +676,7 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
       return raceUrl != ''
           ? FutureBuilder<List<DriverResult>>(
               future: championship == 'Formula 1'
-                  ? getRaceStandingsFromF1(raceUrl)
+                  ? getRaceStandingsFromApi(meetingId: raceUrl.split('/')[7])
                   : getRaceStandingsFromFE(widget.raceId!, raceUrl),
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
@@ -721,7 +728,7 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
                     : const LoadingIndicatorUtil();
               })
           : FutureBuilder<List<DriverResult>>(
-              future: getRaceStandingsFromApi(race),
+              future: getRaceStandingsFromApi(race: race),
               builder: (context, snapshot) => snapshot.hasError
                   ? savedData[championship == 'Formula 1'
                               ? raceResultsLastSavedFormat == 'ergast' ||
@@ -858,15 +865,21 @@ class SprintResultsProvider extends StatefulWidget {
 }
 
 class _SprintResultsProviderState extends State<SprintResultsProvider> {
-  Future<List<DriverResult>> getSprintStandings(
-    Race race,
-  ) async {
-    bool useOfficialDataSoure = Hive.box('settings')
-        .get('useOfficialDataSoure', defaultValue: false) as bool;
-    if (useOfficialDataSoure) {
-      return await Formula1().getSprintStandings(race.meetingId, race.round);
+  Future<List<DriverResult>> getSprintStandings({
+    Race? race,
+    String? meetingId,
+  }) async {
+    if (meetingId != null) {
+      // same as race results...
+      return await Formula1().getSprintStandings(meetingId, '66666');
     } else {
-      return await ErgastApi().getSprintStandings(race.round);
+      bool useOfficialDataSoure = Hive.box('settings')
+          .get('useOfficialDataSoure', defaultValue: false) as bool;
+      if (useOfficialDataSoure) {
+        return await Formula1().getSprintStandings(race!.meetingId, race.round);
+      } else {
+        return await ErgastApi().getSprintStandings(race!.round);
+      }
     }
   }
 
@@ -889,15 +902,11 @@ class _SprintResultsProviderState extends State<SprintResultsProvider> {
           )
         : FutureBuilder<List<DriverResult>>(
             future: widget.raceUrl != null
-                ? FormulaOneScraper().scrapeRaceResult(
-                    '',
-                    0,
-                    '',
-                    false,
-                    raceUrl: widget.raceUrl!,
+                ? getSprintStandings(
+                    meetingId: widget.raceUrl!.split('/')[7],
                   )
                 : getSprintStandings(
-                    widget.race!,
+                    race: widget.race!,
                   ),
             builder: (context, snapshot) => snapshot.hasError
                 ? Padding(
@@ -988,30 +997,39 @@ class QualificationResultsProvider extends StatefulWidget {
 
 class _QualificationResultsProviderState
     extends State<QualificationResultsProvider> {
-  Future<List> getQualificationStandings(
-    Race race,
-  ) async {
-    String championship = Hive.box('settings')
-        .get('championship', defaultValue: 'Formula 1') as String;
-    if (championship == 'Formula 1') {
-      bool useOfficialDataSoure = Hive.box('settings')
-          .get('useOfficialDataSoure', defaultValue: false) as bool;
-      if (widget.isSprintQualifying ?? false) {
-        return await Formula1().getSprintQualifyingStandings(race.meetingId);
+  Future<List> getQualificationStandings({
+    Race? race,
+    String? meetingId,
+  }) async {
+    if (meetingId != null) {
+      if (widget.hasSprint ?? false) {
+        return await Formula1().getSprintQualifyingStandings(meetingId);
       } else {
-        if (useOfficialDataSoure) {
-          return await Formula1().getQualificationStandings(race.meetingId);
+        return await Formula1().getQualificationStandings(meetingId);
+      }
+    } else {
+      String championship = Hive.box('settings')
+          .get('championship', defaultValue: 'Formula 1') as String;
+      if (championship == 'Formula 1') {
+        bool useOfficialDataSoure = Hive.box('settings')
+            .get('useOfficialDataSoure', defaultValue: false) as bool;
+        if (widget.isSprintQualifying ?? false) {
+          return await Formula1().getSprintQualifyingStandings(race!.meetingId);
         } else {
-          return await ErgastApi().getQualificationStandings(
-            race.round,
-          );
+          if (useOfficialDataSoure) {
+            return await Formula1().getQualificationStandings(race!.meetingId);
+          } else {
+            return await ErgastApi().getQualificationStandings(
+              race!.meetingId,
+            );
+          }
         }
       }
+      return await FormulaE().getQualificationStandings(
+        widget.race!.meetingId,
+        widget.sessionId!,
+      );
     }
-    return await FormulaE().getQualificationStandings(
-      widget.race!.meetingId,
-      widget.sessionId!,
-    );
   }
 
   void _setState() {
@@ -1035,16 +1053,11 @@ class _QualificationResultsProviderState
           )
         : FutureBuilder<List>(
             future: widget.raceUrl != null
-                ? FormulaOneScraper().scrapeQualifyingResults(
-                    '',
-                    0,
-                    '',
-                    false,
-                    qualifyingResultsUrl: widget.raceUrl!,
-                    hasSprint: widget.hasSprint,
+                ? getQualificationStandings(
+                    meetingId: widget.raceUrl!.split('/')[7],
                   )
                 : getQualificationStandings(
-                    widget.race!,
+                    race: widget.race!,
                   ),
             builder: (context, snapshot) => snapshot.hasError
                 ? (widget.race?.sessionDates.isNotEmpty ?? false) &&

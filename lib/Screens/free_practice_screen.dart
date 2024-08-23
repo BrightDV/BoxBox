@@ -24,7 +24,6 @@ import 'package:boxbox/helpers/divider.dart';
 import 'package:boxbox/helpers/request_error.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/team_background_color.dart';
-import 'package:boxbox/scraping/formula_one.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -102,15 +101,15 @@ class FreePracticeResultsProvider extends StatelessWidget {
         .get('championship', defaultValue: 'Formula 1') as String;
     return FutureBuilder<List<DriverResult>>(
       future: championship == 'Formula 1'
-          ? raceUrl != null
-              ? FormulaOneScraper().scrapeFreePracticeResult(
-                  '',
-                  0,
-                  '',
-                  false,
-                  raceUrl: raceUrl,
-                )
-              : Formula1().getFreePracticeStandings(meetingId, sessionIndex)
+          ? Formula1().getFreePracticeStandings(
+              raceUrl != null ? raceUrl!.split('/')[7] : meetingId,
+              raceUrl != null
+                  ? int.parse(raceUrl!
+                      .split('/')[9]
+                      .replaceAll('practice-', '')
+                      .replaceAll('.html', ''))
+                  : sessionIndex,
+            )
           : FormulaE().getFreePracticeStandings(
               meetingId,
               sessionId!,
