@@ -117,7 +117,7 @@ If you like the app, and you want to support its development:
 
 Address: `48Yi7F3jDoQc5BsBQBaHnY6Y9hgP6oHev3AMNwd8QySsP52ZWZLhM3Hi4nccyq7wh81UEoXZvBSVmJ5sCLd9LLcXQPxqtxf`
 
-### Github Sponsors may come soon ;)
+### [Github Sponsors](https://github.com/sponsors/BrightDV)
 
 ## License
 
