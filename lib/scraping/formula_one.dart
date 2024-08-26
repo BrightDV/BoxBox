@@ -527,7 +527,7 @@ class FormulaOneScraper {
         .get('server', defaultValue: defaultEndpoint) as String;
     if (endpoint != defaultEndpoint) {
       resultsUrl = Uri.parse(
-        '$endpoint/f1/en/results.html/${DateTime.now().year}/races/$circuitId/$circuitName.html',
+        '$endpoint/f1/en/results.html/${DateTime.now().year}/races/$circuitId/$circuitName/race-result.html',
       );
     } else {
       resultsUrl = Uri.parse(

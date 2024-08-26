@@ -422,7 +422,7 @@ class QualificationResultsItem extends StatelessWidget {
                     right: 7,
                   ),
                   child: Text(
-                    item.position == '666' ? 'DNF' : item.position,
+                    item.position.startsWith('666') ? 'DNF' : item.position,
                     style: const TextStyle(
                       fontWeight: FontWeight.w600,
                     ),
