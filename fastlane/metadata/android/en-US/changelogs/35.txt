@@ -1,0 +1,10 @@
+- Fix Download dialog on small screen
+- Fix wrong countdown
+- Fix Add to Calendar on API >= 30
+- Add new Box, Box! Server routes for Formula E and new Formula 1 routes
+- A lot of free practices fixes...
+- Small placeholder improvements to the fullscreen player and the schedule
+- Fix DSQ displays
+- Use official API for the event tracker (fix its results)
+- Update translations from Weblate
+- Revert order of the downloads (most recent on top)
