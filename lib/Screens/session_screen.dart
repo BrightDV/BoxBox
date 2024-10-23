@@ -351,26 +351,28 @@ class _SessionScreenState extends State<SessionScreen> {
                         ? RaceResultsProvider(
                             raceUrl: championship == 'Formula 1'
                                 ? widget.session.sessionsAbbreviation == 'r'
-                                    ? widget.session.baseUrl.replaceAll(
-                                        'session-type', 'race-result')
-                                    : widget.session.baseUrl.replaceAll(
-                                        'session-type',
-                                        'sprint-results',
-                                      )
+                                    ? 'race'
+                                    : 'sprint-results'
                                 : widget.session.baseUrl,
                             raceId: widget.meetingId,
                           )
                         : championship == 'Formula 1'
                             ? QualificationResultsProvider(
                                 raceUrl: championship == 'Formula 1'
-                                    ? widget.session.baseUrl.replaceAll(
-                                        'session-type',
-                                        widget.session.sessionsAbbreviation ==
-                                                'ss'
-                                            ? 'sprint-qualifying'
-                                            : 'qualifying',
-                                      )
+                                    ? widget.session.sessionsAbbreviation ==
+                                            'ss'
+                                        ? 'sprint-qualifying'
+                                        : 'qualifying'
                                     : widget.session.baseUrl,
+                                sessionId: widget.meetingId,
+                                hasSprint:
+                                    widget.session.sessionsAbbreviation == 'ss'
+                                        ? true
+                                        : false,
+                                isSprintQualifying:
+                                    widget.session.sessionsAbbreviation == 'ss'
+                                        ? true
+                                        : false,
                               )
                             : FreePracticeResultsProvider(
                                 widget.sessionFullName,

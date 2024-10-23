@@ -486,7 +486,7 @@ class QualificationResultsItem extends StatelessWidget {
                           color: winningTimeQOne == item.timeq1
                               ? Colors.white
                               : item.timeq1 != '--'
-                                  ? item.timeq1 == 'DNF'
+                                  ? item.timeq1 == 'DNF' || item.timeq1 == 'DNS'
                                       ? Colors.yellow
                                       : const Color(0xff00ff00)
                                   : Colors.white,
@@ -531,7 +531,7 @@ class QualificationResultsItem extends StatelessWidget {
                           color: winningTimeQTwo == item.timeq2
                               ? Colors.white
                               : item.timeq2 != '--'
-                                  ? item.timeq2 == 'DNF'
+                                  ? item.timeq2 == 'DNF' || item.timeq2 == 'DNS'
                                       ? Colors.yellow
                                       : const Color(0xff00ff00)
                                   : Colors.white,
@@ -575,7 +575,7 @@ class QualificationResultsItem extends StatelessWidget {
                           color: index == 0
                               ? Colors.white
                               : item.timeq3 != '--'
-                                  ? item.timeq3 == 'DNF'
+                                  ? item.timeq3 == 'DNF' || item.timeq3 == 'DNS'
                                       ? Colors.yellow
                                       : const Color(0xff00ff00)
                                   : Colors.white,

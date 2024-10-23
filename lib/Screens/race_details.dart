@@ -568,10 +568,15 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
   Future<List<DriverResult>> getRaceStandingsFromApi({
     Race? race,
     String? meetingId,
+    String? raceUrl,
   }) async {
-    if (meetingId != null) {
+    if (meetingId != null && raceUrl != null) {
       // starting to do like official api devs...
-      return await Formula1().getRaceStandings(meetingId, '66666');
+      if (raceUrl == 'race') {
+        return await Formula1().getRaceStandings(meetingId, '66666');
+      } else {
+        return await Formula1().getSprintStandings(meetingId);
+      }
     } else {
       bool useOfficialDataSoure = Hive.box('settings')
           .get('useOfficialDataSoure', defaultValue: false) as bool;
@@ -676,7 +681,12 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
       return raceUrl != ''
           ? FutureBuilder<List<DriverResult>>(
               future: championship == 'Formula 1'
-                  ? getRaceStandingsFromApi(meetingId: raceUrl.split('/')[7])
+                  ? getRaceStandingsFromApi(
+                      meetingId: raceUrl.startsWith('http')
+                          ? raceUrl.split('/')[7]
+                          : widget.raceId,
+                      raceUrl: raceUrl,
+                    )
                   : getRaceStandingsFromFE(widget.raceId!, raceUrl),
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
@@ -871,12 +881,12 @@ class _SprintResultsProviderState extends State<SprintResultsProvider> {
   }) async {
     if (meetingId != null) {
       // same as race results...
-      return await Formula1().getSprintStandings(meetingId, '66666');
+      return await Formula1().getSprintStandings(meetingId);
     } else {
       bool useOfficialDataSoure = Hive.box('settings')
           .get('useOfficialDataSoure', defaultValue: false) as bool;
       if (useOfficialDataSoure) {
-        return await Formula1().getSprintStandings(race!.meetingId, race.round);
+        return await Formula1().getSprintStandings(race!.meetingId);
       } else {
         return await ErgastApi().getSprintStandings(race!.round);
       }
@@ -1054,7 +1064,9 @@ class _QualificationResultsProviderState
         : FutureBuilder<List>(
             future: widget.raceUrl != null
                 ? getQualificationStandings(
-                    meetingId: widget.raceUrl!.split('/')[7],
+                    meetingId: widget.raceUrl!.startsWith('http')
+                        ? widget.raceUrl!.split('/')[7]
+                        : widget.sessionId,
                   )
                 : getQualificationStandings(
                     race: widget.race!,

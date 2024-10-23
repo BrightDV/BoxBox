@@ -553,8 +553,7 @@ class Formula1 {
     }
   }
 
-  FutureOr<List<DriverResult>> getSprintStandings(
-      String meetingId, String session) async {
+  FutureOr<List<DriverResult>> getSprintStandings(String meetingId) async {
     List<DriverResult> driversResults = [];
     String time;
     String endpoint = Hive.box('settings')
