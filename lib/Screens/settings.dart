@@ -560,7 +560,7 @@ class _OtherCardstate extends State<OtherCard> {
     bool useOfficialWebview = Hive.box('settings')
         .get('useOfficialWebview', defaultValue: true) as bool;
     bool useOfficialDataSoure = Hive.box('settings')
-        .get('useOfficialDataSoure', defaultValue: false) as bool;
+        .get('useOfficialDataSoure', defaultValue: true) as bool;
     bool shouldUse12HourClock = Hive.box('settings')
         .get('shouldUse12HourClock', defaultValue: false) as bool;
     bool enableExperimentalFeatures = Hive.box('settings')

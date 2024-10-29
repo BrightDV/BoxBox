@@ -312,7 +312,7 @@ class EventTracker {
     String endpoint = Hive.box('settings')
         .get('server', defaultValue: defaultEndpoint) as String;
     bool useOfficialDataSoure = Hive.box('settings')
-        .get('useOfficialDataSoure', defaultValue: false) as bool;
+        .get('useOfficialDataSoure', defaultValue: true) as bool;
 
     Uri uri = Uri.parse(
       endpoint != defaultEndpoint

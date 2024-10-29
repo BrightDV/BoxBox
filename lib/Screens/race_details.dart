@@ -579,7 +579,7 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
       }
     } else {
       bool useOfficialDataSoure = Hive.box('settings')
-          .get('useOfficialDataSoure', defaultValue: false) as bool;
+          .get('useOfficialDataSoure', defaultValue: true) as bool;
       String championship = Hive.box('settings')
           .get('championship', defaultValue: 'Formula 1') as String;
       if (championship == 'Formula 1') {
@@ -884,7 +884,7 @@ class _SprintResultsProviderState extends State<SprintResultsProvider> {
       return await Formula1().getSprintStandings(meetingId);
     } else {
       bool useOfficialDataSoure = Hive.box('settings')
-          .get('useOfficialDataSoure', defaultValue: false) as bool;
+          .get('useOfficialDataSoure', defaultValue: true) as bool;
       if (useOfficialDataSoure) {
         return await Formula1().getSprintStandings(race!.meetingId);
       } else {
@@ -1022,7 +1022,7 @@ class _QualificationResultsProviderState
           .get('championship', defaultValue: 'Formula 1') as String;
       if (championship == 'Formula 1') {
         bool useOfficialDataSoure = Hive.box('settings')
-            .get('useOfficialDataSoure', defaultValue: false) as bool;
+            .get('useOfficialDataSoure', defaultValue: true) as bool;
         if (widget.isSprintQualifying ?? false) {
           return await Formula1().getSprintQualifyingStandings(race!.meetingId);
         } else {

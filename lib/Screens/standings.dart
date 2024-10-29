@@ -94,7 +94,7 @@ class DriversStandingsWidget extends StatelessWidget {
         .get('championship', defaultValue: 'Formula 1') as String;
     if (championship == 'Formula 1') {
       bool useOfficialDataSoure = Hive.box('settings')
-          .get('useOfficialDataSoure', defaultValue: false) as bool;
+          .get('useOfficialDataSoure', defaultValue: true) as bool;
       if (useOfficialDataSoure) {
         return await Formula1().getLastStandings();
       } else {
@@ -185,7 +185,7 @@ class TeamsStandingsWidget extends StatelessWidget {
         .get('championship', defaultValue: 'Formula 1') as String;
     if (championship == 'Formula 1') {
       bool useOfficialDataSoure = Hive.box('settings')
-          .get('useOfficialDataSoure', defaultValue: false) as bool;
+          .get('useOfficialDataSoure', defaultValue: true) as bool;
       if (useOfficialDataSoure) {
         return await Formula1().getLastTeamsStandings();
       } else {
