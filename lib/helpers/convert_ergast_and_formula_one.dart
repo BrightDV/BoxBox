@@ -57,7 +57,7 @@ class Convert {
       'Aston Martin': 'aston_martin',
       'Williams': 'williams',
       'Kick Sauber': 'sauber',
-      'Haas F1 Team': 'haas',
+      'Haas Ferrari': 'haas',
     };
     return formulaOneToErgast[teamName] ?? 'none';
   }

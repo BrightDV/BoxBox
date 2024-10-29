@@ -1288,8 +1288,11 @@ class StartingGridProvider extends StatelessWidget {
 class StartingGridPositionItem extends StatelessWidget {
   final StartingGridPosition startingGridPosition;
   final int index;
-  const StartingGridPositionItem(this.startingGridPosition, this.index,
-      {super.key});
+  const StartingGridPositionItem(
+    this.startingGridPosition,
+    this.index, {
+    super.key,
+  });
 
   Color getTeamColors(String teamId) {
     Color tC = TeamBackgroundColor().getTeamColor(teamId);
@@ -1341,7 +1344,14 @@ class StartingGridPositionItem extends StatelessWidget {
             Expanded(
               flex: 1,
               child: BoxBoxVerticalDivider(
-                color: finalTeamColors,
+                color: startingGridPosition.teamColor != null
+                    ? Color(
+                        int.parse(
+                          'FF${startingGridPosition.teamColor}',
+                          radix: 16,
+                        ),
+                      )
+                    : finalTeamColors,
                 thickness: 8,
                 width: 25,
                 indent: 7,

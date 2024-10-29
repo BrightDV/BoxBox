@@ -318,6 +318,7 @@ class Formula1 {
           "", // data not available
           points: element['racePoints'].toString(),
           status: element['completionStatusCode'],
+          teamColor: element['teamColourCode'],
         ),
       );
     }
@@ -347,8 +348,8 @@ class Formula1 {
           .get('server', defaultValue: defaultEndpoint) as String;
       Uri url = Uri.parse(
         endpoint != defaultEndpoint
-            ? '$endpoint/f1/v1/fom-results/race/meeting=$meetingId'
-            : '$endpoint/v1/fom-results/race?meeting=$meetingId',
+            ? '$endpoint/f1/v2/fom-results/race/meeting=$meetingId'
+            : '$endpoint/v2/fom-results/race?meeting=$meetingId',
       );
       var response = await http.get(
         url,
@@ -382,8 +383,8 @@ class Formula1 {
         .get('server', defaultValue: defaultEndpoint) as String;
     Uri url = Uri.parse(
       endpoint != defaultEndpoint
-          ? '$endpoint/f1/v1/fom-results/qualifying/meeting=$meetingId'
-          : '$endpoint/v1/fom-results/qualifying?meeting=$meetingId',
+          ? '$endpoint/f1/v2/fom-results/qualifying/meeting=$meetingId'
+          : '$endpoint/v2/fom-results/qualifying?meeting=$meetingId',
     );
     var response = await http.get(
       url,
@@ -425,6 +426,7 @@ class Formula1 {
                 : element['q3']['completionStatusCode'] != 'OK'
                     ? element['q3']['completionStatusCode']
                     : element['q3']['classifiedTime'],
+            teamColor: element['teamColourCode'],
           ),
         );
       }
@@ -440,8 +442,8 @@ class Formula1 {
         .get('server', defaultValue: defaultEndpoint) as String;
     Uri url = Uri.parse(
       endpoint != defaultEndpoint
-          ? '$endpoint/f1/v1/fom-results/practice/meeting=$meetingId&session=$session'
-          : '$endpoint/v1/fom-results/practice?meeting=$meetingId&session=$session',
+          ? '$endpoint/f1/v2/fom-results/practice/meeting=$meetingId&session=$session'
+          : '$endpoint/v2/fom-results/practice?meeting=$meetingId&session=$session',
     );
     var response = await http.get(
       url,
@@ -487,6 +489,7 @@ class Formula1 {
             lapsDone: element['lapsCompleted'],
             points: element['racePoints'].toString(),
             status: element['completionStatusCode'],
+            teamColor: element['teamColourCode'],
           ),
         );
       }
@@ -502,8 +505,8 @@ class Formula1 {
         .get('server', defaultValue: defaultEndpoint) as String;
     Uri url = Uri.parse(
       endpoint != defaultEndpoint
-          ? '$endpoint/f1/v1/fom-results/sprint-shootout/meeting=$meetingId'
-          : '$endpoint/v1/fom-results/sprint-shootout?meeting=$meetingId',
+          ? '$endpoint/f1/v2/fom-results/sprint-shootout/meeting=$meetingId'
+          : '$endpoint/v2/fom-results/sprint-shootout?meeting=$meetingId',
     );
     var response = await http.get(
       url,
@@ -545,6 +548,7 @@ class Formula1 {
                 : element['q3']['completionStatusCode'] != 'OK'
                     ? element['q3']['completionStatusCode']
                     : element['q3']['classifiedTime'],
+            teamColor: element['teamColourCode'],
           ),
         );
       }
@@ -560,8 +564,8 @@ class Formula1 {
         .get('server', defaultValue: defaultEndpoint) as String;
     Uri url = Uri.parse(
       endpoint != defaultEndpoint
-          ? '$endpoint/f1/v1/fom-results/sprint/meeting=$meetingId'
-          : '$endpoint/v1/fom-results/sprint?meeting=$meetingId',
+          ? '$endpoint/f1/v2/fom-results/sprint/meeting=$meetingId'
+          : '$endpoint/v2/fom-results/sprint?meeting=$meetingId',
     );
     var response = await http.get(
       url,
@@ -624,6 +628,7 @@ class Formula1 {
             lapsDone: "NA",
             points: element['sprintQualifyingPoints'].toString(),
             status: element['completionStatusCode'],
+            teamColor: element['teamColourCode'],
           ),
         );
       }
@@ -932,8 +937,8 @@ class Formula1 {
         .get('server', defaultValue: defaultEndpoint) as String;
     Uri url = Uri.parse(
       endpoint != defaultEndpoint
-          ? '$endpoint/f1/v1/fom-results/starting-grid/meeting=$meetingId'
-          : '$endpoint/v1/fom-results/starting-grid?meeting=$meetingId',
+          ? '$endpoint/f1/v2/fom-results/starting-grid/meeting=$meetingId'
+          : '$endpoint/v2/fom-results/starting-grid?meeting=$meetingId',
     );
     var response = await http.get(
       url,
@@ -964,6 +969,7 @@ class Formula1 {
           ),
           result['teamName'],
           result['classifiedTime'] != null ? result['classifiedTime'] : '--',
+          teamColor: result['teamColourCode'],
         ),
       );
     }

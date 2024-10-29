@@ -110,7 +110,14 @@ class DriverResultItem extends StatelessWidget {
               Expanded(
                 flex: 2,
                 child: BoxBoxVerticalDivider(
-                  color: finalTeamColors,
+                  color: item.teamColor != null
+                      ? Color(
+                          int.parse(
+                            'FF${item.teamColor}',
+                            radix: 16,
+                          ),
+                        )
+                      : finalTeamColors,
                   thickness: 8,
                   width: 25,
                   indent: 7,
@@ -433,7 +440,14 @@ class QualificationResultsItem extends StatelessWidget {
               Expanded(
                 flex: 1,
                 child: BoxBoxVerticalDivider(
-                  color: finalTeamColors,
+                  color: item.teamColor != null
+                      ? Color(
+                          int.parse(
+                            'FF${item.teamColor}',
+                            radix: 16,
+                          ),
+                        )
+                      : finalTeamColors,
                   thickness: 8,
                   width: 25,
                   indent: 7,

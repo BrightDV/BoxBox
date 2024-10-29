@@ -73,6 +73,7 @@ class DriverResult {
   final String? raceId;
   final String? raceName;
   final String? status;
+  final String? teamColor;
 
   DriverResult(
     this.driverId,
@@ -91,6 +92,7 @@ class DriverResult {
     this.raceId,
     this.raceName,
     this.status,
+    this.teamColor,
   });
 }
 
@@ -105,6 +107,7 @@ class DriverQualificationResult {
   final String timeq1;
   final String timeq2;
   final String timeq3;
+  final String? teamColor;
 
   DriverQualificationResult(
     this.driverId,
@@ -116,8 +119,9 @@ class DriverQualificationResult {
     this.team,
     this.timeq1,
     this.timeq2,
-    this.timeq3,
-  );
+    this.timeq3, {
+    this.teamColor,
+  });
 }
 
 class StartingGridPosition {
@@ -127,6 +131,7 @@ class StartingGridPosition {
   final String team;
   final String teamFullName;
   final String time;
+  final String? teamColor;
 
   StartingGridPosition(
     this.position,
@@ -134,8 +139,9 @@ class StartingGridPosition {
     this.driver,
     this.team,
     this.teamFullName,
-    this.time,
-  );
+    this.time, {
+    this.teamColor,
+  });
 }
 
 class DriversList extends StatelessWidget {

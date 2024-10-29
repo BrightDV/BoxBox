@@ -309,9 +309,16 @@ class FreePracticeResultItem extends StatelessWidget {
               flex: 2,
               child: BoxBoxVerticalDivider(
                 color: championship == 'Formula 1'
-                    ? TeamBackgroundColor().getTeamColor(
-                        result.team,
-                      )
+                    ? result.teamColor != null
+                        ? Color(
+                            int.parse(
+                              'FF${result.teamColor}',
+                              radix: 16,
+                            ),
+                          )
+                        : TeamBackgroundColor().getTeamColor(
+                            result.team,
+                          )
                     : FormulaE().getTeamColor(result.team),
                 thickness: 8,
                 width: 25,

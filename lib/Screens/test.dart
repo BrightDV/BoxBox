@@ -26,8 +26,8 @@ class TestScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const ArticleScreen(
-      '5Os01IxD2YrAuFaAlEiTXf',
-      'tweet',
+      '6vBvcKe77Nh9Qjwfyh6wuT',
+      'starting grid',
       true,
     );
   }
