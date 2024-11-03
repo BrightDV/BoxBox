@@ -1,0 +1,4 @@
+- Migrate API to v2 (fix results)
+- Use official API by default on fresh install
+- Fix results with drivers without name
+- Update translations
