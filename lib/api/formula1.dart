@@ -69,6 +69,7 @@ class Formula1 {
           element['metaDescription'] ?? '',
           DateTime.parse(element['updatedAt']),
           imageUrl,
+          isBreaking: element['breaking'],
         ),
       );
     }
@@ -988,6 +989,7 @@ class News {
   final String imageUrl;
   final List? tags;
   final Map? author;
+  final bool? isBreaking;
 
   News(
     this.newsId,
@@ -999,6 +1001,7 @@ class News {
     this.imageUrl, {
     this.tags,
     this.author,
+    this.isBreaking,
   });
 }
 

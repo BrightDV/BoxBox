@@ -46,6 +46,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:loading_indicator/loading_indicator.dart';
 import 'package:river_player/river_player.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -74,6 +75,8 @@ class NewsItem extends StatelessWidget {
     String imageUrl = item.imageUrl;
     String newsLayout =
         Hive.box('settings').get('newsLayout', defaultValue: 'big') as String;
+    bool useDarkMode =
+        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     Offset tapPosition = Offset.zero;
@@ -460,27 +463,34 @@ class NewsItem extends StatelessWidget {
                                                       left: 8,
                                                     ),
                                                     child: Container(
-                                                      width: item.newsType == 'Podcast' ||
-                                                              item.newsType ==
-                                                                  'Feature' ||
-                                                              item.newsType ==
-                                                                  'Opinion' ||
-                                                              item.newsType ==
-                                                                  'Report' ||
-                                                              item.newsType ==
-                                                                  'Preview'
-                                                          ? 110
-                                                          : item.newsType ==
-                                                                      'Technical' ||
+                                                      width: item.isBreaking !=
+                                                                  null &&
+                                                              item.isBreaking ==
+                                                                  true
+                                                          ? 215
+                                                          : item
+                                                                          .newsType ==
+                                                                      'Podcast' ||
                                                                   item.newsType ==
-                                                                      'Live Blog' ||
+                                                                      'Feature' ||
                                                                   item.newsType ==
-                                                                      'Interview'
-                                                              ? 120
+                                                                      'Opinion' ||
+                                                                  item.newsType ==
+                                                                      'Report' ||
+                                                                  item.newsType ==
+                                                                      'Preview'
+                                                              ? 110
                                                               : item.newsType ==
-                                                                      'Image Gallery'
-                                                                  ? 150
-                                                                  : 90,
+                                                                          'Technical' ||
+                                                                      item.newsType ==
+                                                                          'Live Blog' ||
+                                                                      item.newsType ==
+                                                                          'Interview'
+                                                                  ? 120
+                                                                  : item.newsType ==
+                                                                          'Image Gallery'
+                                                                      ? 150
+                                                                      : 90,
                                                       height: 27,
                                                       alignment:
                                                           Alignment.bottomLeft,
@@ -498,9 +508,20 @@ class NewsItem extends StatelessWidget {
                                                               Radius.circular(
                                                                   3),
                                                         ),
-                                                        color: Theme.of(context)
-                                                            .colorScheme
-                                                            .onPrimary,
+                                                        color: item.isBreaking !=
+                                                                    null &&
+                                                                item.isBreaking ==
+                                                                    true
+                                                            ? useDarkMode
+                                                                ? Color(
+                                                                    0xFF998400,
+                                                                  )
+                                                                : Color(
+                                                                    0xFFffdd01,
+                                                                  )
+                                                            : Theme.of(context)
+                                                                .colorScheme
+                                                                .onPrimary,
                                                       ),
                                                       child: Row(
                                                         mainAxisSize:
@@ -512,40 +533,57 @@ class NewsItem extends StatelessWidget {
                                                                     .only(
                                                               left: 6,
                                                             ),
-                                                            child: Icon(
-                                                              item.newsType ==
-                                                                      'Video'
-                                                                  ? Icons
-                                                                      .play_arrow_outlined
-                                                                  : item.newsType ==
-                                                                          'Image Gallery'
-                                                                      ? Icons
-                                                                          .image_outlined
-                                                                      : item.newsType ==
-                                                                              'Podcast'
-                                                                          ? Icons
-                                                                              .podcasts_outlined
-                                                                          : item.newsType == 'Poll'
-                                                                              ? Icons.bar_chart
-                                                                              : item.newsType == 'News'
-                                                                                  ? Icons.feed_outlined
-                                                                                  : item.newsType == 'Report'
-                                                                                      ? Icons.report_outlined
-                                                                                      : item.newsType == 'Interview'
-                                                                                          ? Icons.mic_outlined
-                                                                                          : item.newsType == 'Feature'
-                                                                                              ? Icons.star_outline_outlined
-                                                                                              : item.newsType == 'Opinion'
-                                                                                                  ? Icons.chat_outlined
-                                                                                                  : item.newsType == 'Technical'
-                                                                                                      ? Icons.construction_outlined
-                                                                                                      : item.newsType == 'Live Blog'
-                                                                                                          ? Icons.live_tv_outlined
-                                                                                                          : item.newsType == 'Preview'
-                                                                                                              ? Icons.remove_red_eye_outlined
-                                                                                                              : Icons.info_outlined,
-                                                              size: 24,
-                                                            ),
+                                                            child: item.isBreaking !=
+                                                                        null &&
+                                                                    item.isBreaking ==
+                                                                        true
+                                                                ? SizedBox(
+                                                                    width: 24.0,
+                                                                    height:
+                                                                        24.0,
+                                                                    child:
+                                                                        LoadingIndicator(
+                                                                      indicatorType:
+                                                                          Indicator
+                                                                              .ballScaleMultiple,
+                                                                      colors: [
+                                                                        useDarkMode
+                                                                            ? Colors.white
+                                                                            : Colors.grey.shade700
+                                                                      ],
+                                                                    ),
+                                                                  )
+                                                                : Icon(
+                                                                    item.newsType ==
+                                                                            'Video'
+                                                                        ? Icons
+                                                                            .play_arrow_outlined
+                                                                        : item.newsType ==
+                                                                                'Image Gallery'
+                                                                            ? Icons.image_outlined
+                                                                            : item.newsType == 'Podcast'
+                                                                                ? Icons.podcasts_outlined
+                                                                                : item.newsType == 'Poll'
+                                                                                    ? Icons.bar_chart
+                                                                                    : item.newsType == 'News'
+                                                                                        ? Icons.feed_outlined
+                                                                                        : item.newsType == 'Report'
+                                                                                            ? Icons.report_outlined
+                                                                                            : item.newsType == 'Interview'
+                                                                                                ? Icons.mic_outlined
+                                                                                                : item.newsType == 'Feature'
+                                                                                                    ? Icons.star_outline_outlined
+                                                                                                    : item.newsType == 'Opinion'
+                                                                                                        ? Icons.chat_outlined
+                                                                                                        : item.newsType == 'Technical'
+                                                                                                            ? Icons.construction_outlined
+                                                                                                            : item.newsType == 'Live Blog'
+                                                                                                                ? Icons.live_tv_outlined
+                                                                                                                : item.newsType == 'Preview'
+                                                                                                                    ? Icons.remove_red_eye_outlined
+                                                                                                                    : Icons.info_outlined,
+                                                                    size: 24,
+                                                                  ),
                                                           ),
                                                           Padding(
                                                             padding:
@@ -554,12 +592,46 @@ class NewsItem extends StatelessWidget {
                                                               left: 5,
                                                             ),
                                                             child: Text(
-                                                              item.newsType,
+                                                              item.isBreaking !=
+                                                                          null &&
+                                                                      item.isBreaking ==
+                                                                          true
+                                                                  ? 'BREAKING NEWS'
+                                                                  : item
+                                                                      .newsType,
                                                               style:
                                                                   const TextStyle(
                                                                 fontSize: 14,
                                                               ),
                                                             ),
+                                                          ),
+                                                          Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .only(
+                                                              left: 6,
+                                                            ),
+                                                            child: item.isBreaking !=
+                                                                        null &&
+                                                                    item.isBreaking ==
+                                                                        true
+                                                                ? SizedBox(
+                                                                    width: 24.0,
+                                                                    height:
+                                                                        24.0,
+                                                                    child:
+                                                                        LoadingIndicator(
+                                                                      indicatorType:
+                                                                          Indicator
+                                                                              .ballScaleMultiple,
+                                                                      colors: [
+                                                                        useDarkMode
+                                                                            ? Colors.white
+                                                                            : Colors.grey.shade700
+                                                                      ],
+                                                                    ),
+                                                                  )
+                                                                : Container(),
                                                           ),
                                                         ],
                                                       ),
@@ -748,27 +820,32 @@ class NewsItem extends StatelessWidget {
                                                   left: 8,
                                                 ),
                                                 child: Container(
-                                                  width: item.newsType == 'Podcast' ||
-                                                          item.newsType ==
-                                                              'Feature' ||
-                                                          item.newsType ==
-                                                              'Opinion' ||
-                                                          item.newsType ==
-                                                              'Report' ||
-                                                          item.newsType ==
-                                                              'Preview'
-                                                      ? 110
+                                                  width: item.isBreaking != null &&
+                                                          item.isBreaking ==
+                                                              true
+                                                      ? 215
                                                       : item.newsType ==
-                                                                  'Technical' ||
+                                                                  'Podcast' ||
                                                               item.newsType ==
-                                                                  'Live Blog' ||
+                                                                  'Feature' ||
                                                               item.newsType ==
-                                                                  'Interview'
-                                                          ? 120
+                                                                  'Opinion' ||
+                                                              item.newsType ==
+                                                                  'Report' ||
+                                                              item.newsType ==
+                                                                  'Preview'
+                                                          ? 110
                                                           : item.newsType ==
-                                                                  'Image Gallery'
-                                                              ? 150
-                                                              : 90,
+                                                                      'Technical' ||
+                                                                  item.newsType ==
+                                                                      'Live Blog' ||
+                                                                  item.newsType ==
+                                                                      'Interview'
+                                                              ? 120
+                                                              : item.newsType ==
+                                                                      'Image Gallery'
+                                                                  ? 150
+                                                                  : 90,
                                                   height: 27,
                                                   alignment:
                                                       Alignment.bottomLeft,
@@ -782,9 +859,20 @@ class NewsItem extends StatelessWidget {
                                                       bottomRight:
                                                           Radius.circular(3),
                                                     ),
-                                                    color: Theme.of(context)
-                                                        .colorScheme
-                                                        .onPrimary,
+                                                    color: item.isBreaking !=
+                                                                null &&
+                                                            item.isBreaking ==
+                                                                true
+                                                        ? useDarkMode
+                                                            ? Color(
+                                                                0xFF998400,
+                                                              )
+                                                            : Color(
+                                                                0xFFffdd01,
+                                                              )
+                                                        : Theme.of(context)
+                                                            .colorScheme
+                                                            .onPrimary,
                                                   ),
                                                   child: Row(
                                                     mainAxisSize:
@@ -796,42 +884,61 @@ class NewsItem extends StatelessWidget {
                                                                 .only(
                                                           left: 6,
                                                         ),
-                                                        child: Icon(
-                                                          item.newsType ==
-                                                                  'Video'
-                                                              ? Icons
-                                                                  .play_arrow_outlined
-                                                              : item.newsType ==
-                                                                      'Image Gallery'
-                                                                  ? Icons
-                                                                      .image_outlined
-                                                                  : item.newsType ==
-                                                                          'Podcast'
-                                                                      ? Icons
-                                                                          .podcasts_outlined
-                                                                      : item.newsType ==
-                                                                              'Poll'
-                                                                          ? Icons
-                                                                              .bar_chart
-                                                                          : item.newsType == 'News'
-                                                                              ? Icons.feed_outlined
-                                                                              : item.newsType == 'Report'
-                                                                                  ? Icons.report_outlined
-                                                                                  : item.newsType == 'Interview'
-                                                                                      ? Icons.mic_outlined
-                                                                                      : item.newsType == 'Feature'
-                                                                                          ? Icons.star_outline_outlined
-                                                                                          : item.newsType == 'Opinion'
-                                                                                              ? Icons.chat_outlined
-                                                                                              : item.newsType == 'Technical'
-                                                                                                  ? Icons.construction_outlined
-                                                                                                  : item.newsType == 'Live Blog'
-                                                                                                      ? Icons.live_tv_outlined
-                                                                                                      : item.newsType == 'Preview'
-                                                                                                          ? Icons.remove_red_eye_outlined
-                                                                                                          : Icons.info_outlined,
-                                                          size: 24,
-                                                        ),
+                                                        child: item.isBreaking !=
+                                                                    null &&
+                                                                item.isBreaking ==
+                                                                    true
+                                                            ? SizedBox(
+                                                                width: 24.0,
+                                                                height: 24.0,
+                                                                child:
+                                                                    LoadingIndicator(
+                                                                  indicatorType:
+                                                                      Indicator
+                                                                          .ballScaleMultiple,
+                                                                  colors: [
+                                                                    useDarkMode
+                                                                        ? Colors
+                                                                            .white
+                                                                        : Colors
+                                                                            .grey
+                                                                            .shade700
+                                                                  ],
+                                                                ),
+                                                              )
+                                                            : Icon(
+                                                                item.newsType ==
+                                                                        'Video'
+                                                                    ? Icons
+                                                                        .play_arrow_outlined
+                                                                    : item.newsType ==
+                                                                            'Image Gallery'
+                                                                        ? Icons
+                                                                            .image_outlined
+                                                                        : item.newsType ==
+                                                                                'Podcast'
+                                                                            ? Icons.podcasts_outlined
+                                                                            : item.newsType == 'Poll'
+                                                                                ? Icons.bar_chart
+                                                                                : item.newsType == 'News'
+                                                                                    ? Icons.feed_outlined
+                                                                                    : item.newsType == 'Report'
+                                                                                        ? Icons.report_outlined
+                                                                                        : item.newsType == 'Interview'
+                                                                                            ? Icons.mic_outlined
+                                                                                            : item.newsType == 'Feature'
+                                                                                                ? Icons.star_outline_outlined
+                                                                                                : item.newsType == 'Opinion'
+                                                                                                    ? Icons.chat_outlined
+                                                                                                    : item.newsType == 'Technical'
+                                                                                                        ? Icons.construction_outlined
+                                                                                                        : item.newsType == 'Live Blog'
+                                                                                                            ? Icons.live_tv_outlined
+                                                                                                            : item.newsType == 'Preview'
+                                                                                                                ? Icons.remove_red_eye_outlined
+                                                                                                                : Icons.info_outlined,
+                                                                size: 24,
+                                                              ),
                                                       ),
                                                       Padding(
                                                         padding:
@@ -840,12 +947,47 @@ class NewsItem extends StatelessWidget {
                                                           left: 5,
                                                         ),
                                                         child: Text(
-                                                          item.newsType,
+                                                          item.isBreaking !=
+                                                                      null &&
+                                                                  item.isBreaking ==
+                                                                      true
+                                                              ? 'BREAKING NEWS'
+                                                              : item.newsType,
                                                           style:
                                                               const TextStyle(
                                                             fontSize: 14,
                                                           ),
                                                         ),
+                                                      ),
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .only(
+                                                          left: 6,
+                                                        ),
+                                                        child: item.isBreaking !=
+                                                                    null &&
+                                                                item.isBreaking ==
+                                                                    true
+                                                            ? SizedBox(
+                                                                width: 24.0,
+                                                                height: 24.0,
+                                                                child:
+                                                                    LoadingIndicator(
+                                                                  indicatorType:
+                                                                      Indicator
+                                                                          .ballScaleMultiple,
+                                                                  colors: [
+                                                                    useDarkMode
+                                                                        ? Colors
+                                                                            .white
+                                                                        : Colors
+                                                                            .grey
+                                                                            .shade700
+                                                                  ],
+                                                                ),
+                                                              )
+                                                            : Container(),
                                                       ),
                                                     ],
                                                   ),
