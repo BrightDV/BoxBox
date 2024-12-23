@@ -32,7 +32,7 @@ import 'package:intl/intl.dart';
 
 class Formula1 {
   final String defaultEndpoint = Constants().F1_API_URL;
-  final String apikey = Constants().F1_API_KEY;
+  final String apikey = Constants().getOfficialApiKey();
 
   List<News> formatResponse(Map responseAsJson) {
     bool useDataSaverMode = Hive.box('settings')

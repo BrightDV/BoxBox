@@ -17,17 +17,43 @@
  * Copyright (c) 2022-2024, BrightDV
  */
 
+import 'dart:convert';
+
+import 'package:hive_flutter/hive_flutter.dart';
+
 class Constants {
-  final String F1_API_URL = "https://api.formula1.com";
-  final String FE_API_URL = "https://api.formula-e.pulselive.com";
+  final String F1_API_URL = utf8.decode(
+    base64Decode("aHR0cHM6Ly9hcGkuZm9ybXVsYTEuY29t"),
+  );
+  final String FE_API_URL = utf8.decode(
+    base64Decode("aHR0cHM6Ly9hcGkuZm9ybXVsYS1lLnB1bHNlbGl2ZS5jb20="),
+  );
   final String ERGAST_API_URL = "https://ergast.com/api";
   final String OFFICIAL_BBS_SERVER_URL =
       "https://boxbox-server.netlify.app/api";
-  final String F1_API_KEY = "qPgPPRJyGCIPxFT3el4MF7thXHyJCzAP";
-  final String F1_BRIGHTCOVE_PLAYER_ID = "6057949432001";
-  final String FE_BRIGHTCOVE_PLAYER_ID = "6275361344001";
-  final String F1_BRIGHTCOVE_PLAYER_KEY =
-      " application/json;pk=BCpkADawqM1hQVBuXkSlsl6hUsBZQMmrLbIfOjJQ3_n8zmPOhlNSwZhQBF6d5xggxm0t052lQjYyhqZR3FW2eP03YGOER9ihJkUnIhRZGBxuLhnL-QiFpvcDWIh_LvwN5j8zkjTtGKarhsdV";
-  final String FE_BRIGHTCOVE_PLAYER_KEY =
-      " application/json;pk=BCpkADawqM0CZElkVwfs62q-JTOc4CeZSNJRfxT923qzbMSqp6qn5VEgWV1iao1cEf2sXX9ce8achTuOfYKUvfchSis_rB5Sxz_ih70GYLYdf8bZgHi3Yq1VK_6v3mj29rxxcJjF3OX6Ri32";
+  final String F1_API_KEY = utf8.decode(
+    base64Decode("eFo3QU9PRFNqaVFhZExzSVlXZWZRcnBDU1FWRGJIR0M="),
+  );
+  final String F1_BRIGHTCOVE_PLAYER_ID = utf8.decode(
+    base64Decode("NjA1Nzk0OTQzMjAwMQ=="),
+  );
+  final String FE_BRIGHTCOVE_PLAYER_ID = utf8.decode(
+    base64Decode("NjI3NTM2MTM0NDAwMQ=="),
+  );
+  final String F1_BRIGHTCOVE_PLAYER_KEY = utf8.decode(
+    base64Decode(
+      "IGFwcGxpY2F0aW9uL2pzb247cGs9QkNwa0FEYXdxTTFoUVZCdVhrU2xzbDZoVXNCWlFNbXJMYklmT2pKUTNfbjh6bVBPaGxOU3daaFFCRjZkNXhnZ3htMHQwNTJsUWpZeWhxWlIzRlcyZVAwM1lHT0VSOWloSmtVbkloUlpHQnh1TGhuTC1RaUZwdmNEV0loX0x2d041ajh6a2pUdEdLYXJoc2RW",
+    ),
+  );
+  final String FE_BRIGHTCOVE_PLAYER_KEY = utf8.decode(
+    base64Decode(
+      "IGFwcGxpY2F0aW9uL2pzb247cGs9QkNwa0FEYXdxTTBDWkVsa1Z3ZnM2MnEtSlRPYzRDZVpTTkpSZnhUOTIzcXpiTVNxcDZxbjVWRWdXVjFpYW8xY0VmMnNYWDljZThhY2hUdU9mWUtVdmZjaFNpc19yQjVTeHpfaWg3MEdZTFlkZjhiWmdIaTNZcTFWS182djNtajI5cnh4Y0pqRjNPWDZSaTMy",
+    ),
+  );
+
+  String getOfficialApiKey() {
+    String apiKey = Hive.box('settings')
+        .get('officialApiKey', defaultValue: F1_API_KEY) as String;
+    return apiKey;
+  }
 }

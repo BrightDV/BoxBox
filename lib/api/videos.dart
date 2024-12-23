@@ -26,7 +26,7 @@ import 'package:http/http.dart' as http;
 
 class F1VideosFetcher {
   final String defaultEndpoint = Constants().F1_API_URL;
-  final String apikey = Constants().F1_API_KEY;
+  final String apikey = Constants().getOfficialApiKey();
 
   List<Video> formatResponse(Map responseAsJson) {
     List finalJson = responseAsJson['videos'];

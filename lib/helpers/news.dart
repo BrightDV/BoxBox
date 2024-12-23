@@ -1041,7 +1041,7 @@ class _NewsListState extends State<NewsList> {
                 : FormulaE().formatResponse(latestNews),
             scrollController: widget.scrollController,
           )
-        : width < 500
+        : width < 576
             ? RefreshIndicator(
                 onRefresh: () => Future.sync(
                   () => _pagingController.refresh(),

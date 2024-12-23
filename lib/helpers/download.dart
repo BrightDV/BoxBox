@@ -30,7 +30,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 class DownloadUtils {
   final String f1Endpoint = Constants().F1_API_URL;
-  final String f1ApiKey = Constants().F1_API_KEY;
+  final String f1ApiKey = Constants().getOfficialApiKey();
   Future<String?> videoDownloadQualitySelector(
     BuildContext context,
   ) async {

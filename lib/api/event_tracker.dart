@@ -73,7 +73,7 @@ class Session {
 
 class EventTracker {
   final String defaultEndpoint = Constants().F1_API_URL;
-  final String apikey = Constants().F1_API_KEY;
+  final String apikey = Constants().getOfficialApiKey();
   final String feEndpoint = Constants().FE_API_URL;
 
   bool isEventRunning(DateTime meetingStartDate, DateTime meetingEndDate) {
