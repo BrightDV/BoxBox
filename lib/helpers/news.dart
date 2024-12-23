@@ -1866,6 +1866,7 @@ class ImageRenderer extends StatelessWidget {
                             child: const LoadingIndicatorUtil(
                               replaceImage: true,
                               borderRadius: false,
+                              fullBorderRadius: false,
                             ),
                           ),
                           errorWidget: (context, url, error) =>
