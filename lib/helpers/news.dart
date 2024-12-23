@@ -1062,6 +1062,7 @@ class _NewsListState extends State<NewsList> {
                       message:
                           AppLocalizations.of(context)!.errorOccurredDetails,
                       onTryAgain: () => _pagingController.refresh(),
+                      pagingController: _pagingController,
                     ),
                     newPageProgressIndicatorBuilder: (_) =>
                         const LoadingIndicatorUtil(),
@@ -1127,7 +1128,7 @@ class OfflineNewsList extends StatelessWidget {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
 
-    return width < 500
+    return width < 576
         ? ListView.builder(
             controller: scrollController,
             scrollDirection: Axis.vertical,

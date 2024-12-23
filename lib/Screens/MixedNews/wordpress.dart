@@ -344,6 +344,7 @@ class _WordpressNewsListState extends State<WordpressNewsList> {
             title: AppLocalizations.of(context)!.errorOccurred,
             message: AppLocalizations.of(context)!.errorOccurredDetails,
             onTryAgain: () => _pagingController.refresh(),
+            pagingController: _pagingController,
           ),
           newPageProgressIndicatorBuilder: (_) => const LoadingIndicatorUtil(),
         ),

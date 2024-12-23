@@ -88,7 +88,7 @@ class _VideosScreenState extends State<VideosScreen> {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     List<VideoItem> headerVideos = [];
-    return width < 500
+    return width < 576
         ? RefreshIndicator(
             onRefresh: () => Future.sync(
               () => _pagingController.refresh(),
@@ -100,7 +100,7 @@ class _VideosScreenState extends State<VideosScreen> {
               shrinkWrap: true,
               builderDelegate: PagedChildBuilderDelegate<Video>(
                 itemBuilder: (context, video, index) {
-                  if (index < 3) {
+                  if (index < 3 && headerVideos.length < 3) {
                     headerVideos.add(
                       VideoItem(
                         index,
@@ -108,7 +108,7 @@ class _VideosScreenState extends State<VideosScreen> {
                       ),
                     );
                     return Container();
-                  } else if (index == 3) {
+                  } else if (index == 3 && headerVideos.length == 3) {
                     headerVideos.add(
                       VideoItem(
                         index,
@@ -116,6 +116,11 @@ class _VideosScreenState extends State<VideosScreen> {
                       ),
                     );
                     return VideosHeader(headerVideos);
+                  } else if (index == 0 && headerVideos.length == 4) {
+                    return VideosHeader(headerVideos);
+                  } else if ((index == 1 || index == 2 || index == 3) &&
+                      headerVideos.length == 4) {
+                    return Container();
                   } else {
                     return VideoItem(
                       index,
@@ -130,6 +135,7 @@ class _VideosScreenState extends State<VideosScreen> {
                   title: AppLocalizations.of(context)!.errorOccurred,
                   message: AppLocalizations.of(context)!.errorOccurredDetails,
                   onTryAgain: () => _pagingController.refresh(),
+                  pagingController: _pagingController,
                 ),
                 newPageProgressIndicatorBuilder: (_) =>
                     const LoadingIndicatorUtil(),

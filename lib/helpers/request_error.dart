@@ -20,7 +20,6 @@
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 
 class RequestErrorWidget extends StatelessWidget {
   final String snapshotError;
@@ -71,21 +70,21 @@ class RequestErrorWidget extends StatelessWidget {
 }
 
 class FirstPageExceptionIndicator extends StatelessWidget {
+  final String title;
+  final String? message;
+  final VoidCallback? onTryAgain;
+  final dynamic pagingController;
+
   const FirstPageExceptionIndicator({
     required this.title,
     this.message,
     this.onTryAgain,
+    this.pagingController,
     Key? key,
   }) : super(key: key);
 
-  final String title;
-  final String? message;
-  final VoidCallback? onTryAgain;
-
   @override
   Widget build(BuildContext context) {
-    bool useDarkMode =
-        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     final message = this.message;
     return Center(
       child: Padding(
@@ -95,10 +94,6 @@ class FirstPageExceptionIndicator extends StatelessWidget {
             Text(
               title,
               textAlign: TextAlign.center,
-              style: TextStyle(
-                color: useDarkMode ? Colors.white : Colors.black,
-                // TODO: check if needed
-              ),
             ),
             if (message != null)
               const SizedBox(
@@ -108,9 +103,13 @@ class FirstPageExceptionIndicator extends StatelessWidget {
               Text(
                 message,
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: useDarkMode ? Colors.white : Colors.black,
-                  // same
+              ),
+            if (pagingController != null)
+              Padding(
+                padding: const EdgeInsets.only(top: 10),
+                child: Text(
+                  pagingController.error.toString(),
+                  textAlign: TextAlign.center,
                 ),
               ),
             if (onTryAgain != null)
@@ -125,15 +124,12 @@ class FirstPageExceptionIndicator extends StatelessWidget {
                   onPressed: onTryAgain,
                   icon: const Icon(
                     Icons.refresh,
-                    color: Colors.white,
                     // same
                   ),
                   label: Text(
                     AppLocalizations.of(context)!.tryAgain,
                     style: const TextStyle(
                       fontSize: 16,
-                      color: Colors.white,
-                      // same
                     ),
                   ),
                 ),
