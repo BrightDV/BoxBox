@@ -2273,6 +2273,7 @@ class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
                       ),
                     ]
                   : [],
+          title: widget.videoUrls['name'],
         ),
         placeholder: _buildVideoPlaceholder(),
         showPlaceholderUntilPlay: true,

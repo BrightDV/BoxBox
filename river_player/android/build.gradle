@@ -1,0 +1,73 @@
+group 'ir.r3r.river_player.better_player'
+version '1.0-SNAPSHOT'
+
+buildscript {
+    ext.exoPlayerVersion = "1.1.1"
+    ext.lifecycleVersion = "2.7.0"
+    ext.annotationVersion = "1.7.1"
+    ext.workVersion = "2.9.0"
+    ext.coreVersion = "1.12.0"
+    ext.gradleVersion = "7.4.2"
+    ext.kotlinVersion = "1.8.10"
+
+    repositories {
+        google()
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:7.4.2'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+    }
+}
+
+rootProject.allprojects {
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+
+android {
+    namespace 'ir.r3r.river_player'
+    compileSdk 34
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+    }
+
+    defaultConfig {
+        minSdkVersion 16
+    }
+
+    dependencies {
+        implementation "androidx.media3:media3-exoplayer:$exoPlayerVersion"
+        implementation "androidx.media3:media3-exoplayer-hls:$exoPlayerVersion"
+        implementation "androidx.media3:media3-exoplayer-dash:$exoPlayerVersion"
+        implementation "androidx.media3:media3-exoplayer-smoothstreaming:$exoPlayerVersion"
+        implementation "androidx.media3:media3-ui:$exoPlayerVersion"
+        implementation "androidx.media3:media3-session:$exoPlayerVersion"
+        implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion"
+        implementation "androidx.lifecycle:lifecycle-common:$lifecycleVersion"
+        implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycleVersion"
+        implementation "androidx.annotation:annotation:$annotationVersion"
+        implementation "androidx.work:work-runtime:$workVersion"
+        implementation "androidx.media:media:1.7.0"
+    }
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
+}

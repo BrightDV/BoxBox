@@ -1,0 +1,41 @@
+name: river_player
+description: Same good old Better Player but it will get updated and fixed.
+version: 0.1.4
+# Disabled because of warning from analyzer
+# authors:
+#  - Jakub Homlala <jhomlala@gmail.com>
+#  - Saeed Rev <revengine3r@gmail.com>
+homepage: https://github.com/RevEngine3r/river_player
+documentation: https://jhomlala.github.io/betterplayer/
+
+environment:
+  sdk: '>=3.2.0 <4.0.0'
+  flutter: ">=3.16.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.6
+  wakelock_plus: ^1.1.4
+  meta: ^1.7.0
+  flutter_widget_from_html_core: ^0.15.2
+  visibility_detector: ^0.4.0+2
+  path_provider: ^2.0.10
+  collection: ^1.16.0
+  xml: ^6.1.0
+
+dev_dependencies:
+  lint: ^2.3.0
+  flutter_test:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+flutter:
+  plugin:
+    platforms:
+      android:
+        package: ir.r3r.river_player
+        pluginClass: RiverPlayerPlugin
+      ios:
+        pluginClass: RiverPlayerPlugin
