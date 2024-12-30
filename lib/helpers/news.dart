@@ -27,6 +27,7 @@ import 'package:boxbox/api/brightcove.dart';
 import 'package:boxbox/api/formula1.dart';
 import 'package:boxbox/api/formulae.dart';
 import 'package:boxbox/api/race_components.dart';
+import 'package:boxbox/helpers/custom_player_controls.dart';
 import 'package:boxbox/helpers/download.dart';
 import 'package:boxbox/helpers/hover.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
@@ -2246,6 +2247,30 @@ class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
               'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36',
         },
       );
+      BetterPlayerControlsConfiguration controlsConfiguration =
+          BetterPlayerControlsConfiguration(
+        enableAudioTracks: false,
+        enableSubtitles: false,
+        overflowModalColor: widget.primaryColor,
+        overflowMenuIconsColor: useDarkMode ? Colors.white : Colors.black,
+        overflowModalTextColor: useDarkMode ? Colors.white : Colors.black,
+        showControlsOnInitialize: false,
+        overflowMenuCustomItems:
+            !widget.isFromYouTube && championship == 'Formula 1'
+                ? [
+                    BetterPlayerOverflowMenuItem(
+                      Icons.save_alt_outlined,
+                      'Download',
+                      () async => await downloadVideo(
+                        widget.videoId,
+                        widget.videoUrls['name'],
+                        widget.videoUrls['poster'],
+                      ),
+                    ),
+                  ]
+                : [],
+        title: widget.videoUrls['name'],
+      );
 
       BetterPlayerConfiguration betterPlayerConfiguration =
           BetterPlayerConfiguration(
@@ -2254,27 +2279,12 @@ class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
         autoDetectFullscreenDeviceOrientation: true,
         fit: BoxFit.contain,
         controlsConfiguration: BetterPlayerControlsConfiguration(
-          enableAudioTracks: false,
-          enableSubtitles: false,
-          overflowModalColor: widget.primaryColor,
-          overflowMenuIconsColor: useDarkMode ? Colors.white : Colors.black,
-          overflowModalTextColor: useDarkMode ? Colors.white : Colors.black,
-          showControlsOnInitialize: false,
-          overflowMenuCustomItems:
-              !widget.isFromYouTube && championship == 'Formula 1'
-                  ? [
-                      BetterPlayerOverflowMenuItem(
-                        Icons.save_alt_outlined,
-                        'Download',
-                        () async => await downloadVideo(
-                          widget.videoId,
-                          widget.videoUrls['name'],
-                          widget.videoUrls['poster'],
-                        ),
-                      ),
-                    ]
-                  : [],
-          title: widget.videoUrls['name'],
+          customControlsBuilder: (controller, onPlayerVisibilityChanged) =>
+              CustomControls(
+            onControlsVisibilityChanged: onPlayerVisibilityChanged,
+            controlsConfiguration: controlsConfiguration,
+          ),
+          playerTheme: BetterPlayerTheme.custom,
         ),
         placeholder: _buildVideoPlaceholder(),
         showPlaceholderUntilPlay: true,
