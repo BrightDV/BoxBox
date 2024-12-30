@@ -2187,6 +2187,17 @@ class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
         widget.videoUrls['file'],
       );
 
+      BetterPlayerControlsConfiguration controlsConfiguration =
+          BetterPlayerControlsConfiguration(
+        enableAudioTracks: false,
+        enableSubtitles: false,
+        overflowModalColor: widget.primaryColor,
+        overflowMenuIconsColor: useDarkMode ? Colors.white : Colors.black,
+        overflowModalTextColor: useDarkMode ? Colors.white : Colors.black,
+        showControlsOnInitialize: false,
+        enableQualities: false,
+      );
+
       BetterPlayerConfiguration betterPlayerConfiguration =
           BetterPlayerConfiguration(
         autoPlay: widget.autoplay,
@@ -2194,14 +2205,13 @@ class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
         autoDetectFullscreenDeviceOrientation: true,
         fit: BoxFit.contain,
         controlsConfiguration: BetterPlayerControlsConfiguration(
-          enableAudioTracks: false,
-          enableSubtitles: false,
-          overflowModalColor: widget.primaryColor,
-          overflowMenuIconsColor: useDarkMode ? Colors.white : Colors.black,
-          overflowModalTextColor: useDarkMode ? Colors.white : Colors.black,
-          showControlsOnInitialize: false,
-          enableQualities: false,
-          title: widget.videoUrls['name'],
+          customControlsBuilder: (controller, onPlayerVisibilityChanged) =>
+              CustomControls(
+            onControlsVisibilityChanged: onPlayerVisibilityChanged,
+            controlsConfiguration: controlsConfiguration,
+            title: widget.videoUrls['name'],
+          ),
+          playerTheme: BetterPlayerTheme.custom,
         ),
         placeholder: _buildVideoPlaceholder(),
         showPlaceholderUntilPlay: true,
@@ -2269,7 +2279,6 @@ class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
                     ),
                   ]
                 : [],
-        title: widget.videoUrls['name'],
       );
 
       BetterPlayerConfiguration betterPlayerConfiguration =
@@ -2283,6 +2292,7 @@ class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
               CustomControls(
             onControlsVisibilityChanged: onPlayerVisibilityChanged,
             controlsConfiguration: controlsConfiguration,
+            title: widget.videoUrls['name'],
           ),
           playerTheme: BetterPlayerTheme.custom,
         ),

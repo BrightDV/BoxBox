@@ -39,10 +39,14 @@ class CustomControls extends StatefulWidget {
   ///Controls config
   final BetterPlayerControlsConfiguration controlsConfiguration;
 
+  ///Video title
+  final String? title;
+
   const CustomControls({
     Key? key,
     required this.onControlsVisibilityChanged,
     required this.controlsConfiguration,
+    this.title,
   }) : super(key: key);
 
   @override
@@ -233,13 +237,13 @@ class _CustomControlsState extends BetterPlayerControlsState<CustomControls> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    if (_controlsConfiguration.title != null)
+                    if (widget.title != null)
                       Padding(
                         padding: const EdgeInsets.only(left: 8, right: 8),
                         child: SizedBox(
                           width: MediaQuery.of(context).size.width - 56,
                           child: Text(
-                            _controlsConfiguration.title!,
+                            widget.title!,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                               fontSize: 15,
