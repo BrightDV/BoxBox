@@ -118,13 +118,13 @@ class BrightCove {
 
   Future<Map<String, dynamic>> getVideoLinks(String videoId,
       {String? player, String? articleChampionship}) async {
-    String? filePath = kIsWeb
+    Map? fileData = kIsWeb
         ? null
         : await DownloadUtils()
-            .downloadedFilePathIfExists('video_f1_${videoId}');
+            .downloadedFilePathAndNameIfExists('video_f1_${videoId}');
 
-    if (filePath != null) {
-      return {'file': filePath};
+    if (fileData != null) {
+      return {'file': fileData['file'], 'name': fileData['name']};
     } else {
       int playerQuality =
           Hive.box('settings').get('playerQuality', defaultValue: 360) as int;

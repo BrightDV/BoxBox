@@ -345,4 +345,19 @@ class DownloadUtils {
       await File(filePath).delete();
     }
   }
+
+  Future<Map?> downloadedFilePathAndNameIfExists(String taskId) async {
+    final record = await FileDownloader().database.recordForId(taskId);
+    if (record != null) {
+      Map downloadsDescriptions = Hive.box('downloads').get(
+        'downloadsDescriptions',
+        defaultValue: {},
+      );
+      final String filePath = await record.task.filePath();
+      final String name = downloadsDescriptions[taskId]['title'];
+      return {'file': filePath, 'name': name};
+    } else {
+      return null;
+    }
+  }
 }

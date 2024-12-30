@@ -2200,6 +2200,7 @@ class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
           overflowModalTextColor: useDarkMode ? Colors.white : Colors.black,
           showControlsOnInitialize: false,
           enableQualities: false,
+          title: widget.videoUrls['name'],
         ),
         placeholder: _buildVideoPlaceholder(),
         showPlaceholderUntilPlay: true,
