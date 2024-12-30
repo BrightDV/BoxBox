@@ -201,13 +201,17 @@ class _BetterPlayerMaterialControlsState
                   children: [
                     if (_controlsConfiguration.title != null)
                       Padding(
-                        padding: const EdgeInsets.only(left: 8),
-                        child: Text(
-                          _controlsConfiguration.title!,
-                          overflow: TextOverflow.fade,
-                          style: TextStyle(
-                            fontSize: 15,
-                            color: _controlsConfiguration.iconsColor,
+                        padding: const EdgeInsets.only(left: 8, right: 8),
+                        child: SizedBox(
+                          width: MediaQuery.of(context).size.width - 56,
+                          child: Text(
+                            _controlsConfiguration.title!,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 15,
+                              color: _controlsConfiguration.iconsColor,
+                            ),
+                            maxLines: 1,
                           ),
                         ),
                       )
