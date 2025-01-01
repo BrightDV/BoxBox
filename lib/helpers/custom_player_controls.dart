@@ -111,12 +111,13 @@ class _CustomControlsState extends BetterPlayerControlsState<CustomControls> {
         final Offset localOffset = box.globalToLocal(details.globalPosition);
         final width = MediaQuery.of(context).size.width;
         int? position = (await _controller?.position)?.inSeconds;
-        if (localOffset.dx < width / 3 && position != null) {
+        double left = width / 2 - 50;
+        double right = width / 2 + 50;
+        if (localOffset.dx < left && position != null) {
           _betterPlayerController?.seekTo(Duration(seconds: position - 10));
-        } else if (localOffset.dx > width * (2 / 3) && position != null) {
+        } else if (localOffset.dx > right && position != null) {
           _betterPlayerController?.seekTo(Duration(seconds: position + 10));
-        } else if (localOffset.dx >= width / 3 &&
-            localOffset.dx <= width * (2 / 3)) {
+        } else if (localOffset.dx >= left && localOffset.dx <= right) {
           if (_betterPlayerController?.isPlaying() ?? false) {
             _betterPlayerController?.pause();
           } else {
