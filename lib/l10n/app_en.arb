@@ -141,6 +141,8 @@
   "@font": {},
   "fontDescription": "Font used in the articles.",
   "@fontDescription": {},
+  "fullScreenGestures": "Enter/exit fullscreen gestures",
+  "@fullScreenGestures": {},
   "gallery": "Gallery",
   "@gallery": {},
   "gap": "GAP",

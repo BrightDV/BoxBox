@@ -24,6 +24,7 @@ import 'dart:async';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:boxbox/helpers/custom_dropdown_button.dart';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:marquee/marquee.dart';
 import 'package:river_player/src/configuration/better_player_controls_configuration.dart';
 import 'package:river_player/src/controls/better_player_clickable_widget.dart';
@@ -97,6 +98,9 @@ class _CustomControlsState extends BetterPlayerControlsState<CustomControls> {
         child: _buildErrorWidget(),
       );
     }
+    bool swipeUpToEnterFullScreen = Hive.box('settings')
+        .get('swipeUpToEnterFullScreen', defaultValue: false) as bool;
+
     return GestureDetector(
       onTap: () {
         if (BetterPlayerMultipleGestureDetector.of(context) != null) {
@@ -133,6 +137,18 @@ class _CustomControlsState extends BetterPlayerControlsState<CustomControls> {
           BetterPlayerMultipleGestureDetector.of(context)!.onLongPress?.call();
         }
       },
+      onVerticalDragUpdate: swipeUpToEnterFullScreen
+          ? (details) {
+              int sensitivity = 8;
+              if (details.delta.dy > sensitivity &&
+                  betterPlayerController!.isFullScreen) {
+                betterPlayerController!.exitFullScreen();
+              } else if (details.delta.dy < -sensitivity &&
+                  !betterPlayerController!.isFullScreen) {
+                betterPlayerController!.enterFullScreen();
+              }
+            }
+          : null,
       child: AbsorbPointer(
         absorbing: controlsNotVisible,
         child: Stack(

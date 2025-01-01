@@ -433,6 +433,8 @@ class _PlayerCardState extends State<PlayerCard> {
         Hive.box('settings').get('playerQuality', defaultValue: 360) as int;
     String pipedApiUrl = Hive.box('settings')
         .get('pipedApiUrl', defaultValue: 'pipedapi.kavin.rocks') as String;
+    bool swipeUpToEnterFullScreen = Hive.box('settings')
+        .get('swipeUpToEnterFullScreen', defaultValue: false) as bool;
     return Card(
       elevation: 5,
       child: Column(
@@ -536,6 +538,20 @@ class _PlayerCardState extends State<PlayerCard> {
                 },
               ).toList(),
             ),
+          ),
+          SwitchListTile(
+            title: Text(
+              AppLocalizations.of(context)!.fullScreenGestures,
+            ),
+            value: swipeUpToEnterFullScreen,
+            onChanged: (bool value) {
+              setState(
+                () {
+                  swipeUpToEnterFullScreen = value;
+                  Hive.box('settings').put('swipeUpToEnterFullScreen', value);
+                },
+              );
+            },
           ),
         ],
       ),

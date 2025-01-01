@@ -141,6 +141,8 @@
   "@font": {},
   "fontDescription": "Police d'écriture utilisée dans les articles.",
   "@fontDescription": {},
+  "fullScreenGestures": "Commandes pour ouvrir/fermer le lecteur plein-écran",
+  "@fullScreenGestures": {},
   "gallery": "Galerie",
   "@gallery": {},
   "gap": "ÉCART",
