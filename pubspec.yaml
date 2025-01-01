@@ -25,6 +25,7 @@ dependencies:
   adaptive_theme: ^3.6.0
   add_2_calendar: ^3.0.1
   animations: ^2.0.8
+  auto_size_text: ^3.0.0
   # awesome_notifications: ^0.7.4+1
   background_downloader: ^7.11.0
   cached_network_image: ^3.3.0

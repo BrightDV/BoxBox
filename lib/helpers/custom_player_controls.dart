@@ -21,7 +21,10 @@
 
 import 'dart:async';
 
+import 'package:auto_size_text/auto_size_text.dart';
+import 'package:boxbox/helpers/custom_dropdown_button.dart';
 import 'package:flutter/material.dart';
+import 'package:marquee/marquee.dart';
 import 'package:river_player/src/configuration/better_player_controls_configuration.dart';
 import 'package:river_player/src/controls/better_player_clickable_widget.dart';
 import 'package:river_player/src/controls/better_player_controls_state.dart';
@@ -225,6 +228,17 @@ class _CustomControlsState extends BetterPlayerControlsState<CustomControls> {
       return const SizedBox();
     }
 
+    final Map? resolutions =
+        betterPlayerController!.betterPlayerDataSource!.resolutions;
+    String resolutionSelected = '';
+    resolutions?.forEach(
+      (key, value) {
+        if (value == betterPlayerController!.betterPlayerDataSource!.url) {
+          resolutionSelected = key;
+        }
+      },
+    );
+
     return Container(
       child: (_controlsConfiguration.enableOverflowMenu)
           ? AnimatedOpacity(
@@ -241,20 +255,54 @@ class _CustomControlsState extends BetterPlayerControlsState<CustomControls> {
                       Padding(
                         padding: const EdgeInsets.only(left: 8, right: 8),
                         child: SizedBox(
-                          width: MediaQuery.of(context).size.width - 56,
-                          child: Text(
+                          width: MediaQuery.of(context).size.width - 56 - 75,
+                          child: AutoSizeText(
                             widget.title!,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              fontSize: 15,
-                              color: _controlsConfiguration.iconsColor,
-                            ),
                             maxLines: 1,
+                            minFontSize: 15,
+                            maxFontSize: 15,
+                            overflowReplacement: Marquee(
+                              text: widget.title!,
+                              blankSpace: 50,
+                              pauseAfterRound: Duration(seconds: 2),
+                            ),
                           ),
                         ),
                       )
                     else
                       const SizedBox(),
+                    SizedBox(
+                      width: 62,
+                      child: CustomDropdownButton(
+                        value: resolutionSelected,
+                        underline: Container(),
+                        onChanged: (String? newValue) {
+                          if (newValue != null) {
+                            setState(
+                              () {
+                                betterPlayerController!
+                                    .setResolution(resolutions[newValue]);
+                              },
+                            );
+                          }
+                        },
+                        items: resolutions!.keys
+                            .toList()
+                            .map<DropdownMenuItem<String>>(
+                          (value) {
+                            return DropdownMenuItem<String>(
+                              value: value.toString(),
+                              child: Text(
+                                value,
+                                style: TextStyle(
+                                  fontSize: 12,
+                                ),
+                              ),
+                            );
+                          },
+                        ).toList(),
+                      ),
+                    ),
                     if (_controlsConfiguration.enablePip)
                       _buildPipButtonWrapperWidget(
                           controlsNotVisible, _onPlayerHide)
