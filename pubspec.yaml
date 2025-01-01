@@ -31,6 +31,7 @@ dependencies:
   cached_network_image: ^3.3.0
   carousel_slider: ^4.1.1
   connectivity_plus: ^6.0.3
+  dropdown_button2: ^2.3.9
   dotted_line: ^3.2.2
   filesize:
     git:

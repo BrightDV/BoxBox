@@ -22,7 +22,7 @@
 import 'dart:async';
 
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:boxbox/helpers/custom_dropdown_button.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:marquee/marquee.dart';
@@ -359,41 +359,48 @@ class _CustomControlsState extends BetterPlayerControlsState<CustomControls> {
       },
     );
 
-    return SizedBox(
-      width: 62,
-      child: Theme(
-        data: Theme.of(context).copyWith(
-          canvasColor: Theme.of(context).brightness == Brightness.light
-              ? Colors.grey.shade800
-              : null,
-        ),
-        child: CustomDropdownButton(
-          value: resolutionSelected,
-          underline: Container(),
-          onChanged: (String? newValue) {
-            if (newValue != null) {
-              setState(
-                () {
-                  betterPlayerController!.setResolution(resolutions[newValue]);
-                },
-              );
-            }
-          },
-          items: resolutions!.keys.toList().map<DropdownMenuItem<String>>(
-            (value) {
-              return DropdownMenuItem<String>(
-                value: value.toString(),
-                child: Text(
-                  value,
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: _controlsConfiguration.iconsColor,
-                  ),
+    return Theme(
+      data: Theme.of(context).copyWith(
+        canvasColor: Theme.of(context).brightness == Brightness.light
+            ? Colors.grey.shade800
+            : null,
+      ),
+      child: DropdownButton2(
+        value: resolutionSelected,
+        underline: Container(),
+        onChanged: (String? newValue) {
+          if (newValue != null) {
+            setState(
+              () {
+                betterPlayerController!.setResolution(resolutions[newValue]);
+              },
+            );
+          }
+        },
+        onMenuStateChange: (isOpen) {
+          if (isOpen) {
+            _hideTimer?.cancel();
+            changePlayerControlsNotVisible(false);
+            _displayTapped = true;
+          } else {
+            changePlayerControlsNotVisible(true);
+          }
+        },
+        dropdownStyleData: DropdownStyleData(width: 70),
+        items: resolutions!.keys.toList().map<DropdownMenuItem<String>>(
+          (value) {
+            return DropdownMenuItem<String>(
+              value: value.toString(),
+              child: Text(
+                value,
+                style: TextStyle(
+                  fontSize: 12,
+                  color: _controlsConfiguration.iconsColor,
                 ),
-              );
-            },
-          ).toList(),
-        ),
+              ),
+            );
+          },
+        ).toList(),
       ),
     );
   }
@@ -404,7 +411,7 @@ class _CustomControlsState extends BetterPlayerControlsState<CustomControls> {
         onShowMoreClicked();
       },
       child: Padding(
-        padding: const EdgeInsets.all(8),
+        padding: const EdgeInsets.only(right: 8, top: 8, bottom: 8),
         child: Icon(
           _controlsConfiguration.overflowMenuIcon,
           color: _controlsConfiguration.iconsColor,
