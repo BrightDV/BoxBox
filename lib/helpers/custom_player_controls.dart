@@ -228,17 +228,6 @@ class _CustomControlsState extends BetterPlayerControlsState<CustomControls> {
       return const SizedBox();
     }
 
-    final Map? resolutions =
-        betterPlayerController!.betterPlayerDataSource!.resolutions;
-    String resolutionSelected = '';
-    resolutions?.forEach(
-      (key, value) {
-        if (value == betterPlayerController!.betterPlayerDataSource!.url) {
-          resolutionSelected = key;
-        }
-      },
-    );
-
     return Container(
       child: (_controlsConfiguration.enableOverflowMenu)
           ? AnimatedOpacity(
@@ -252,57 +241,10 @@ class _CustomControlsState extends BetterPlayerControlsState<CustomControls> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     if (widget.title != null)
-                      Padding(
-                        padding: const EdgeInsets.only(left: 8, right: 8),
-                        child: SizedBox(
-                          width: MediaQuery.of(context).size.width - 56 - 75,
-                          child: AutoSizeText(
-                            widget.title!,
-                            maxLines: 1,
-                            minFontSize: 15,
-                            maxFontSize: 15,
-                            overflowReplacement: Marquee(
-                              text: widget.title!,
-                              blankSpace: 50,
-                              pauseAfterRound: Duration(seconds: 2),
-                            ),
-                          ),
-                        ),
-                      )
+                      _buildTitle()
                     else
                       const SizedBox(),
-                    SizedBox(
-                      width: 62,
-                      child: CustomDropdownButton(
-                        value: resolutionSelected,
-                        underline: Container(),
-                        onChanged: (String? newValue) {
-                          if (newValue != null) {
-                            setState(
-                              () {
-                                betterPlayerController!
-                                    .setResolution(resolutions[newValue]);
-                              },
-                            );
-                          }
-                        },
-                        items: resolutions!.keys
-                            .toList()
-                            .map<DropdownMenuItem<String>>(
-                          (value) {
-                            return DropdownMenuItem<String>(
-                              value: value.toString(),
-                              child: Text(
-                                value,
-                                style: TextStyle(
-                                  fontSize: 12,
-                                ),
-                              ),
-                            );
-                          },
-                        ).toList(),
-                      ),
-                    ),
+                    _buildQualitySelector(),
                     if (_controlsConfiguration.enablePip)
                       _buildPipButtonWrapperWidget(
                           controlsNotVisible, _onPlayerHide)
@@ -359,6 +301,83 @@ class _CustomControlsState extends BetterPlayerControlsState<CustomControls> {
           return const SizedBox();
         }
       },
+    );
+  }
+
+  Widget _buildTitle() {
+    return Padding(
+      padding: const EdgeInsets.only(left: 8, right: 8),
+      child: SizedBox(
+        width: MediaQuery.of(context).size.width - 56 - 75,
+        child: AutoSizeText(
+          widget.title!,
+          maxLines: 1,
+          minFontSize: 15,
+          maxFontSize: 15,
+          overflowReplacement: Marquee(
+            text: widget.title!,
+            blankSpace: 50,
+            pauseAfterRound: Duration(seconds: 2),
+            style: TextStyle(
+              color: _controlsConfiguration.iconsColor,
+            ),
+          ),
+          style: TextStyle(
+            color: _controlsConfiguration.iconsColor,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildQualitySelector() {
+    final Map? resolutions =
+        betterPlayerController!.betterPlayerDataSource!.resolutions;
+    String resolutionSelected = '';
+    resolutions?.forEach(
+      (key, value) {
+        if (value == betterPlayerController!.betterPlayerDataSource!.url) {
+          resolutionSelected = key;
+        }
+      },
+    );
+
+    return SizedBox(
+      width: 62,
+      child: Theme(
+        data: Theme.of(context).copyWith(
+          canvasColor: Theme.of(context).brightness == Brightness.light
+              ? Colors.grey.shade800
+              : null,
+        ),
+        child: CustomDropdownButton(
+          value: resolutionSelected,
+          underline: Container(),
+          onChanged: (String? newValue) {
+            if (newValue != null) {
+              setState(
+                () {
+                  betterPlayerController!.setResolution(resolutions[newValue]);
+                },
+              );
+            }
+          },
+          items: resolutions!.keys.toList().map<DropdownMenuItem<String>>(
+            (value) {
+              return DropdownMenuItem<String>(
+                value: value.toString(),
+                child: Text(
+                  value,
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: _controlsConfiguration.iconsColor,
+                  ),
+                ),
+              );
+            },
+          ).toList(),
+        ),
+      ),
     );
   }
 
