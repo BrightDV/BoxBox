@@ -357,7 +357,8 @@ class RaceImageProvider extends StatelessWidget {
       if (scheduleLastSavedFormat == 'ergast') {
         return RaceTracksUrls().getRaceTrackImageUrl(race.circuitId);
       } else {
-        String coverUrl = race.raceCoverUrl!;
+        String coverUrl =
+            'https://media.formula1.com/image/upload/f_auto,c_limit,w_1440,q_auto/f_auto/q_auto/content/dam/fom-website/2018-redesign-assets/Racehub%20header%20images%2016x9/${race.country.replaceAll(" ", "_")}.jpg';
         if (race.country == 'Great Britain') {
           coverUrl = race.raceCoverUrl!
               .replaceFirst('United_Kingdom', 'Great_Britain');
