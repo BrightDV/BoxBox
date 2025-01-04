@@ -106,7 +106,7 @@ class FreePracticeResultsProvider extends StatelessWidget {
               raceUrl != null
                   ? int.parse(raceUrl!
                       .split('/')[9]
-                      .replaceAll('practice-', '')
+                      .replaceAll('practice', '')
                       .replaceAll('.html', ''))
                   : sessionIndex,
             )

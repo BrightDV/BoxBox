@@ -953,12 +953,11 @@ class AtomSessionResults extends StatelessWidget {
                                         .substring(1),
                                   ),
                                   '',
-                                  '',
+                                  element['fields']['meetingKey'],
                                   int.parse(
                                     element['fields']['season'],
                                   ),
                                   element['fields']['meetingOfficialName'],
-                                  raceUrl: element['fields']['cta'],
                                 )
                               : Scaffold(
                                   appBar: AppBar(
@@ -1003,7 +1002,13 @@ class AtomSessionResults extends StatelessWidget {
                                           element['fields']['sessionType'] ==
                                               'Sprint'
                                       ? RaceResultsProvider(
-                                          raceUrl: element['fields']['cta'],
+                                          raceUrl: element['fields']
+                                                      ['sessionType'] ==
+                                                  'Race'
+                                              ? 'race'
+                                              : 'sprint',
+                                          raceId: element['fields']
+                                              ['meetingKey'],
                                         )
                                       : SingleChildScrollView(
                                           child: element['fields']
