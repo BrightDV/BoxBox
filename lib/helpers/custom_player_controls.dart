@@ -428,31 +428,36 @@ class _CustomControlsState extends BetterPlayerControlsState<CustomControls> {
       opacity: controlsNotVisible ? 0.0 : 1.0,
       duration: _controlsConfiguration.controlsHideTime,
       onEnd: _onPlayerHide,
-      child: Container(
-        height: _controlsConfiguration.controlBarHeight + 20.0,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Expanded(
-              flex: 75,
-              child: Row(
-                children: [
-                  if (_betterPlayerController!.isLiveStream())
-                    _buildLiveWidget(),
-                  const Spacer(),
-                ],
+      child: Padding(
+        padding: _betterPlayerController!.isFullScreen
+            ? EdgeInsets.only(left: 15, right: 15, bottom: 15)
+            : EdgeInsets.zero,
+        child: Container(
+          height: _controlsConfiguration.controlBarHeight + 20.0,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Expanded(
+                flex: 75,
+                child: Row(
+                  children: [
+                    if (_betterPlayerController!.isLiveStream())
+                      _buildLiveWidget(),
+                    const Spacer(),
+                  ],
+                ),
               ),
-            ),
-            if (_betterPlayerController!.isLiveStream())
-              const SizedBox()
-            else
-              _controlsConfiguration.enableProgressBar
-                  ? Padding(
-                      padding: EdgeInsets.only(top: 20),
-                      child: _buildProgressBar(),
-                    )
-                  : const SizedBox(),
-          ],
+              if (_betterPlayerController!.isLiveStream())
+                const SizedBox()
+              else
+                _controlsConfiguration.enableProgressBar
+                    ? Padding(
+                        padding: EdgeInsets.only(top: 20),
+                        child: _buildProgressBar(),
+                      )
+                    : const SizedBox(),
+            ],
+          ),
         ),
       ),
     );
@@ -769,7 +774,9 @@ class _CustomControlsState extends BetterPlayerControlsState<CustomControls> {
               ),
             ),
             SizedBox(
-              width: MediaQuery.of(context).size.width - 152,
+              width: _betterPlayerController!.isFullScreen
+                  ? MediaQuery.of(context).size.width - 182
+                  : MediaQuery.of(context).size.width - 152,
               child: BetterPlayerMaterialVideoProgressBar(
                 _controller,
                 _betterPlayerController,
