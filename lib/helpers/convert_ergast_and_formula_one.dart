@@ -257,7 +257,7 @@ class Convert {
       "sebastian-vettel": "vettel",
       "mick-schumacher": "mick_schumacher"
     };
-    return formulaOneToErgast[driverId] ?? 'none';
+    return formulaOneToErgast[driverId] ?? driverId;
   }
 
   String driverIdFromErgastForImages(String driverId) {
@@ -284,7 +284,7 @@ class Convert {
       "sargeant": "sargeant",
       "ricciardo": "ricciardo",
     };
-    return ergastToFormulaOne[driverId];
+    return ergastToFormulaOne[driverId] ?? driverId;
   }
 
   String driverCodeToTeam(String driverCode) {

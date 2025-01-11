@@ -82,8 +82,11 @@ class DriverResultsImage {
 class DriverStatsImage {
   String getDriverImage(String driverId) {
     String driverPath = Convert().driverIdFromErgastForImages(driverId);
+    if (driverId.contains('-')) {
+      driverPath = driverId.split('-').last;
+    }
     String driverImageUrl =
-        "https://media.formula1.com/content/dam/fom-website/drivers/2024Drivers/$driverPath.jpg.img.640.medium.jpg/1677069810695.jpg";
+        "https://media.formula1.com/content/dam/fom-website/drivers/2025Drivers/$driverPath.jpg.img.640.medium.jpg/1677069810695.jpg";
     return driverImageUrl;
   }
 }
