@@ -246,7 +246,6 @@ class _EditOrderScreenState extends State<EditOrderScreen> {
               onPressed: () => showDialog(
                 context: context,
                 builder: (context) {
-                  print(feedsNames[index]);
                   return AlertDialog(
                     shape: const RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(

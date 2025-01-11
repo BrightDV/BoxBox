@@ -1,0 +1,9 @@
+- Fix broken official API
+- Support manually updating API key
+- Show breaking articles
+- Lots of improvements to the video player (gestures, new UI...)
+- Fix results in articles
+- Fix some of the schedule's images
+- Fix new standings and add images to new drivers
+- Fix top videos list
+- Other UI improvements

@@ -766,7 +766,6 @@ class Formula1 {
         teamsStandingsLastSavedFormat == 'f1') {
       return formatLastTeamsStandings(teamsStandings);
     } else {
-      print("hellow olrd");
       String endpoint = Hive.box('settings')
           .get('server', defaultValue: defaultEndpoint) as String;
       Uri url = Uri.parse(
@@ -787,7 +786,6 @@ class Formula1 {
               },
       );
       Map<String, dynamic> responseAsJson = jsonDecode(response.body);
-      print(responseAsJson);
       List<Team> teams = formatLastTeamsStandings(responseAsJson);
       Hive.box('requests').put('f1TeamsStandings', responseAsJson);
       Hive.box('requests').put('f1TeamsStandingsLatestQuery', DateTime.now());
