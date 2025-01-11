@@ -316,5 +316,17 @@
   "customHomeFeed": "Feed inicial personalizada",
   "@customHomeFeed": {},
   "pipedApiUrlSub": "Utilizado para vídeos do YouTube.",
-  "@pipedApiUrlSub": {}
+  "@pipedApiUrlSub": {},
+  "copied": "Copiado",
+  "@copied": {},
+  "listen": "Ouvir",
+  "@listen": {},
+  "delete": "Apagar",
+  "@delete": {},
+  "apiKey": "Chave API",
+  "@apiKey": {},
+  "copyTitle": "Copiar título",
+  "@copyTitle": {},
+  "pleaseWait": "Espere, por favor...",
+  "@pleaseWait": {}
 }
