@@ -705,17 +705,20 @@ class _OtherCardstate extends State<OtherCard> {
                                 AppLocalizations.of(context)!.save,
                               ),
                             ),
-                            ElevatedButton(
-                              onPressed: () {
-                                Hive.box('settings').put(
-                                  'officialApiKey',
-                                  Constants().F1_API_KEY,
-                                );
-                                Navigator.of(context).pop();
-                                setState(() {});
-                              },
-                              child: Text(
-                                AppLocalizations.of(context)!.defaultValue,
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 5),
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  Hive.box('settings').put(
+                                    'officialApiKey',
+                                    Constants().F1_API_KEY,
+                                  );
+                                  Navigator.of(context).pop();
+                                  setState(() {});
+                                },
+                                child: Text(
+                                  AppLocalizations.of(context)!.defaultValue,
+                                ),
                               ),
                             ),
                             ElevatedButton(
