@@ -18,6 +18,7 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 
 class LoadingIndicatorUtil extends StatelessWidget {
@@ -35,6 +36,8 @@ class LoadingIndicatorUtil extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool useDarkMode =
+        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     return replaceImage
         ? ClipRRect(
             borderRadius: fullBorderRadius
@@ -53,9 +56,9 @@ class LoadingIndicatorUtil extends StatelessWidget {
                 height: 55.0,
                 child: LoadingIndicator(
                   indicatorType: Indicator.values[15],
-                  colors: [
-                    Theme.of(context).colorScheme.onPrimary, // TODO: HSL
-                  ],
+                  colors: useDarkMode
+                      ? [Theme.of(context).colorScheme.onPrimary]
+                      : null,
                   strokeWidth: 2.0,
                 ),
               ),
