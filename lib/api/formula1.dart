@@ -641,19 +641,20 @@ class Formula1 {
   List<Driver> formatLastStandings(Map responseAsJson) {
     List<Driver> drivers = [];
     List finalJson = responseAsJson['drivers'];
+    int c = 1;
     for (var element in finalJson) {
       String detailsPath =
           element['driverPageUrl'].split('/').last.split('.').first;
       drivers.add(
         Driver(
           Convert().driverIdFromFormula1(detailsPath),
-          element['positionNumber'],
+          element['positionNumber'] ?? c.toString(),
           element['racingNumber'],
           element['driverFirstName'],
           element['driverLastName'],
           element['driverTLA'],
           Convert().teamsFromFormulaOneApiToErgast(element['teamName']),
-          element['championshipPoints'].toString(),
+          (element['championshipPoints'] ?? 0).toString(),
           driverImage: element['driverImage'],
           detailsPath: detailsPath,
           teamColor: Color(
@@ -664,6 +665,7 @@ class Formula1 {
           ),
         ),
       );
+      c++;
     }
     return drivers;
   }
@@ -718,15 +720,16 @@ class Formula1 {
   List<Team> formatLastTeamsStandings(Map responseAsJson) {
     List<Team> drivers = [];
     List finalJson = responseAsJson['constructors'];
+    int c = 1;
     for (var element in finalJson) {
       String detailsPath =
           element['teamPageUrl'].split('/').last.split('.').first;
       drivers.add(
         Team(
           Convert().teamsFromFormulaOneApiToErgast(element['teamName']),
-          element['positionNumber'],
+          element['positionNumber'] ?? c.toString(),
           element['teamName'],
-          element['seasonPoints'].toString(),
+          (element['seasonPoints'] ?? '0').toString(),
           'NA',
           teamCarImage: element['teamImage'],
           teamCarImageCropped: element['teamCroppedImage'],
@@ -739,6 +742,7 @@ class Formula1 {
           ),
         ),
       );
+      c++;
     }
     return drivers;
   }
@@ -762,6 +766,7 @@ class Formula1 {
         teamsStandingsLastSavedFormat == 'f1') {
       return formatLastTeamsStandings(teamsStandings);
     } else {
+      print("hellow olrd");
       String endpoint = Hive.box('settings')
           .get('server', defaultValue: defaultEndpoint) as String;
       Uri url = Uri.parse(
@@ -782,6 +787,7 @@ class Formula1 {
               },
       );
       Map<String, dynamic> responseAsJson = jsonDecode(response.body);
+      print(responseAsJson);
       List<Team> teams = formatLastTeamsStandings(responseAsJson);
       Hive.box('requests').put('f1TeamsStandings', responseAsJson);
       Hive.box('requests').put('f1TeamsStandingsLatestQuery', DateTime.now());
