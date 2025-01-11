@@ -46,10 +46,14 @@ class CustomControls extends StatefulWidget {
   ///Video title
   final String? title;
 
+  ///If is offline, then don't show controls
+  final bool isOffline;
+
   const CustomControls({
     Key? key,
     required this.onControlsVisibilityChanged,
     required this.controlsConfiguration,
+    required this.isOffline,
     this.title,
   }) : super(key: key);
 
@@ -260,7 +264,10 @@ class _CustomControlsState extends BetterPlayerControlsState<CustomControls> {
                       _buildTitle()
                     else
                       const SizedBox(),
-                    _buildQualitySelector(),
+                    if (widget.isOffline)
+                      const SizedBox()
+                    else
+                      _buildQualitySelector(),
                     if (_controlsConfiguration.enablePip)
                       _buildPipButtonWrapperWidget(
                           controlsNotVisible, _onPlayerHide)
@@ -324,7 +331,9 @@ class _CustomControlsState extends BetterPlayerControlsState<CustomControls> {
     return Padding(
       padding: const EdgeInsets.only(left: 8, right: 8),
       child: SizedBox(
-        width: MediaQuery.of(context).size.width - 56 - 75,
+        width: widget.isOffline
+            ? MediaQuery.of(context).size.width - 56
+            : MediaQuery.of(context).size.width - 56 - 75,
         child: AutoSizeText(
           widget.title!,
           maxLines: 1,

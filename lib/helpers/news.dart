@@ -2209,6 +2209,7 @@ class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
               CustomControls(
             onControlsVisibilityChanged: onPlayerVisibilityChanged,
             controlsConfiguration: controlsConfiguration,
+            isOffline: true,
             title: widget.videoUrls['name'],
           ),
           playerTheme: BetterPlayerTheme.custom,
@@ -2292,6 +2293,7 @@ class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
               CustomControls(
             onControlsVisibilityChanged: onPlayerVisibilityChanged,
             controlsConfiguration: controlsConfiguration,
+            isOffline: false,
             title: widget.videoUrls['name'],
           ),
           playerTheme: BetterPlayerTheme.custom,
