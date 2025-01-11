@@ -750,73 +750,69 @@ class _CustomControlsState extends BetterPlayerControlsState<CustomControls> {
         ? _latestValue!.duration!
         : Duration.zero;
 
-    return Expanded(
-      flex: 40,
-      child: Container(
-        height: 40,
-        alignment: Alignment.bottomCenter,
-        padding: const EdgeInsets.symmetric(horizontal: 7),
-        child: Row(
-          children: [
-            Padding(
-              padding: EdgeInsets.only(right: 10),
-              child: SizedBox(
-                width: 45,
-                child: Text(
-                  BetterPlayerUtils.formatDuration(position),
-                  style: TextStyle(
-                    fontSize: 12.0,
-                    color: _controlsConfiguration.textColor,
-                    decoration: TextDecoration.none,
-                  ),
-                  textAlign: TextAlign.center,
+    return Container(
+      height: 40,
+      alignment: Alignment.bottomCenter,
+      padding: const EdgeInsets.symmetric(horizontal: 7),
+      child: Row(
+        children: [
+          Padding(
+            padding: EdgeInsets.only(right: 10),
+            child: SizedBox(
+              width: 45,
+              child: Text(
+                BetterPlayerUtils.formatDuration(position),
+                style: TextStyle(
+                  fontSize: 12.0,
+                  color: _controlsConfiguration.textColor,
+                  decoration: TextDecoration.none,
                 ),
+                textAlign: TextAlign.center,
               ),
             ),
-            SizedBox(
-              width: _betterPlayerController!.isFullScreen
-                  ? MediaQuery.of(context).size.width - 182
-                  : MediaQuery.of(context).size.width - 152,
-              child: BetterPlayerMaterialVideoProgressBar(
-                _controller,
-                _betterPlayerController,
-                onDragStart: () {
-                  _hideTimer?.cancel();
-                },
-                onDragEnd: () {
-                  _startHideTimer();
-                },
-                onTapDown: () {
-                  cancelAndRestartTimer();
-                },
-                colors: BetterPlayerProgressColors(
-                  playedColor: _controlsConfiguration.progressBarPlayedColor,
-                  handleColor: _controlsConfiguration.progressBarHandleColor,
-                  bufferedColor:
-                      _controlsConfiguration.progressBarBufferedColor,
-                  backgroundColor:
-                      _controlsConfiguration.progressBarBackgroundColor,
-                ),
+          ),
+          SizedBox(
+            width: _betterPlayerController!.isFullScreen
+                ? MediaQuery.of(context).size.width - 182
+                : MediaQuery.of(context).size.width - 152,
+            child: BetterPlayerMaterialVideoProgressBar(
+              _controller,
+              _betterPlayerController,
+              onDragStart: () {
+                _hideTimer?.cancel();
+              },
+              onDragEnd: () {
+                _startHideTimer();
+              },
+              onTapDown: () {
+                cancelAndRestartTimer();
+              },
+              colors: BetterPlayerProgressColors(
+                playedColor: _controlsConfiguration.progressBarPlayedColor,
+                handleColor: _controlsConfiguration.progressBarHandleColor,
+                bufferedColor: _controlsConfiguration.progressBarBufferedColor,
+                backgroundColor:
+                    _controlsConfiguration.progressBarBackgroundColor,
               ),
             ),
-            Padding(
-              padding: EdgeInsets.only(left: 10),
-              child: SizedBox(
-                width: 45,
-                child: Text(
-                  BetterPlayerUtils.formatDuration(duration),
-                  style: TextStyle(
-                    fontSize: 12.0,
-                    color: _controlsConfiguration.textColor,
-                    decoration: TextDecoration.none,
-                  ),
-                  textAlign: TextAlign.center,
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 10),
+            child: SizedBox(
+              width: 45,
+              child: Text(
+                BetterPlayerUtils.formatDuration(duration),
+                style: TextStyle(
+                  fontSize: 12.0,
+                  color: _controlsConfiguration.textColor,
+                  decoration: TextDecoration.none,
                 ),
+                textAlign: TextAlign.center,
               ),
             ),
-            _buildExpandButton(),
-          ],
-        ),
+          ),
+          _buildExpandButton(),
+        ],
       ),
     );
   }
