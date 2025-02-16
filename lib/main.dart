@@ -23,11 +23,10 @@ import 'dart:async';
 
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:background_downloader/background_downloader.dart';
+import 'package:boxbox/config/router.dart';
 // import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:boxbox/helpers/bottom_navigation_bar.dart';
 import 'package:boxbox/helpers/constants.dart';
 import 'package:boxbox/helpers/handle_native.dart';
-import 'package:boxbox/helpers/route_handler.dart';
 // import 'package:boxbox/Screens/article.dart';
 import 'package:boxbox/helpers/team_background_color.dart';
 import 'package:flutter/material.dart';
@@ -402,18 +401,14 @@ class _MyAppState extends State<MyApp> {
         fontFamily: 'Formula1',
       ),
       initial: useDarkMode ? AdaptiveThemeMode.dark : AdaptiveThemeMode.light,
-      builder: (theme, darkTheme) => MaterialApp(
+      builder: (theme, darkTheme) => MaterialApp.router(
         title: 'Box, Box!',
         theme: theme,
         darkTheme: darkTheme,
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: supportedLocales,
-        home: const MainBottomNavigationBar(),
         debugShowCheckedModeBanner: false,
-        navigatorKey: navigatorKey,
-        onGenerateRoute: (RouteSettings settings) {
-          return HandleRoute.handleRoute(settings.name);
-        },
+        routerConfig: RouterLocalConfig().router,
       ),
     );
   }

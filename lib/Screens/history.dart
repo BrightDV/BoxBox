@@ -17,10 +17,10 @@
  * Copyright (c) 2022-2024, BrightDV
  */
 
-import 'package:boxbox/Screens/article.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class HistoryScreen extends StatefulWidget {
@@ -68,18 +68,18 @@ class _HistoryScreenState extends State<HistoryScreen> {
               shrinkWrap: true,
               itemBuilder: (context, index) => GestureDetector(
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ArticleScreen(
-                        articlesHistory[index]['articleId'],
-                        articlesHistory[index]['articleTitle'],
-                        false,
-                        championshipOfArticle: articlesHistory[index]
-                                ['articleChampionship'] ??
-                            'Formula 1',
-                      ),
-                    ),
+                  context.pushNamed(
+                    'article',
+                    pathParameters: {'id': articlesHistory[index]['articleId']},
+                    queryParameters: {
+                      'articleName': articlesHistory[index]['articleTitle'],
+                      'championshipOfArticle': articlesHistory[index]
+                              ['articleChampionship'] ??
+                          'Formula 1',
+                    },
+                    extra: {
+                      'isFromLink': true,
+                    },
                   );
                 },
                 child: Card(

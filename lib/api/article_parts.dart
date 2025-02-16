@@ -17,7 +17,6 @@
  * Copyright (c) 2022-2024, BrightDV
  */
 
-import 'package:boxbox/Screens/article.dart';
 import 'package:boxbox/Screens/free_practice_screen.dart';
 import 'package:boxbox/Screens/race_details.dart';
 import 'package:boxbox/api/formula1.dart';
@@ -32,6 +31,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:loading_indicator/loading_indicator.dart';
@@ -1228,15 +1228,16 @@ class AtomLinkList extends StatelessWidget {
                   String articleId = articleUrl
                       .substring(43, articleUrl.length - 5)
                       .split('.')[1];
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ArticleScreen(
-                        articleId,
-                        element['fields']['items'][index - 1]['title'],
-                        true,
-                      ),
-                    ),
+                  context.pushNamed(
+                    'article',
+                    pathParameters: {'id': articleId},
+                    queryParameters: {
+                      'articleName': element['fields']['items'][index - 1]
+                          ['title'],
+                    },
+                    extra: {
+                      'isFromLink': true,
+                    },
                   );
                 },
                 child: Padding(

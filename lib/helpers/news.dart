@@ -32,7 +32,6 @@ import 'package:boxbox/helpers/download.dart';
 import 'package:boxbox/helpers/hover.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/request_error.dart';
-import 'package:boxbox/Screens/article.dart';
 import 'package:boxbox/Screens/standings.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -44,6 +43,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
@@ -218,17 +218,17 @@ class NewsItem extends StatelessWidget {
                   duration: const Duration(milliseconds: 200),
                   child: InkWell(
                     borderRadius: BorderRadius.circular(15.0),
-                    onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ArticleScreen(
-                          item.newsId,
-                          item.title,
-                          false,
-                          news: item,
-                          championshipOfArticle: articleChampionship ?? '',
-                        ),
-                      ),
+                    onTap: () => context.pushNamed(
+                      'article',
+                      pathParameters: {'id': item.newsId},
+                      queryParameters: {
+                        'articleName': item.title,
+                        'championshipOfArticle': articleChampionship ?? '',
+                      },
+                      extra: {
+                        'isFromLink': false,
+                        'news': item,
+                      },
                     ),
                     hoverColor: HSLColor.fromColor(
                       Theme.of(context).colorScheme.surface,
@@ -356,17 +356,17 @@ class NewsItem extends StatelessWidget {
                   duration: const Duration(milliseconds: 200),
                   child: InkWell(
                     borderRadius: BorderRadius.circular(15.0),
-                    onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ArticleScreen(
-                          item.newsId,
-                          item.title,
-                          false,
-                          news: item,
-                          championshipOfArticle: articleChampionship ?? '',
-                        ),
-                      ),
+                    onTap: () => context.pushNamed(
+                      'article',
+                      pathParameters: {'id': item.newsId},
+                      queryParameters: {
+                        'articleName': item.title,
+                        'championshipOfArticle': articleChampionship ?? '',
+                      },
+                      extra: {
+                        'isFromLink': false,
+                        'news': item,
+                      },
                     ),
                     hoverColor: HSLColor.fromColor(
                       Theme.of(context).colorScheme.surface,
@@ -1334,30 +1334,30 @@ class TextParagraphRenderer extends StatelessWidget {
         onTapLink: (text, url, title) {
           if (url!.startsWith('https://www.formula1.com/en/latest/article.')) {
             String articleId = url.substring(43, url.length - 5).split('.')[1];
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => ArticleScreen(
-                  articleId,
-                  text,
-                  true,
-                  championshipOfArticle: 'Formula 1',
-                ),
-              ),
+            context.pushNamed(
+              'article',
+              pathParameters: {'id': articleId},
+              queryParameters: {
+                'articleName': text,
+                'championshipOfArticle': 'Formula 1',
+              },
+              extra: {
+                'isFromLink': true,
+              },
             );
           } else if (url
               .startsWith('https://www.formula1.com/en/latest/article/')) {
             String articleId = url.split('.').last;
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => ArticleScreen(
-                  articleId,
-                  text,
-                  true,
-                  championshipOfArticle: 'Formula 1',
-                ),
-              ),
+            context.pushNamed(
+              'article',
+              pathParameters: {'id': articleId},
+              queryParameters: {
+                'articleName': text,
+                'championshipOfArticle': 'Formula 1',
+              },
+              extra: {
+                'isFromLink': true,
+              },
             );
           } else if (url.startsWith('https://www.formula1.com/en/results')) {
             String standingsType =
@@ -1462,16 +1462,16 @@ class TextParagraphRenderer extends StatelessWidget {
             );
           } else if (url.startsWith('https://www.fiaformulae.com/en/news/')) {
             String articleId = url.split('/').last;
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => ArticleScreen(
-                  articleId,
-                  text,
-                  true,
-                  championshipOfArticle: 'Formula E',
-                ),
-              ),
+            context.pushNamed(
+              'article',
+              pathParameters: {'id': articleId},
+              queryParameters: {
+                'articleName': text,
+                'championshipOfArticle': 'Formula E',
+              },
+              extra: {
+                'isFromLink': true,
+              },
             );
           } else {
             launchUrl(Uri.parse(url));
