@@ -71,13 +71,11 @@ class _HistoryScreenState extends State<HistoryScreen> {
                   context.pushNamed(
                     'article',
                     pathParameters: {'id': articlesHistory[index]['articleId']},
-                    queryParameters: {
+                    extra: {
                       'articleName': articlesHistory[index]['articleTitle'],
                       'championshipOfArticle': articlesHistory[index]
                               ['articleChampionship'] ??
                           'Formula 1',
-                    },
-                    extra: {
                       'isFromLink': true,
                     },
                   );

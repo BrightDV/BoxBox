@@ -221,11 +221,9 @@ class NewsItem extends StatelessWidget {
                     onTap: () => context.pushNamed(
                       'article',
                       pathParameters: {'id': item.newsId},
-                      queryParameters: {
+                      extra: {
                         'articleName': item.title,
                         'championshipOfArticle': articleChampionship ?? '',
-                      },
-                      extra: {
                         'isFromLink': false,
                         'news': item,
                       },
@@ -359,11 +357,9 @@ class NewsItem extends StatelessWidget {
                     onTap: () => context.pushNamed(
                       'article',
                       pathParameters: {'id': item.newsId},
-                      queryParameters: {
+                      extra: {
                         'articleName': item.title,
                         'championshipOfArticle': articleChampionship ?? '',
-                      },
-                      extra: {
                         'isFromLink': false,
                         'news': item,
                       },
@@ -1337,11 +1333,9 @@ class TextParagraphRenderer extends StatelessWidget {
             context.pushNamed(
               'article',
               pathParameters: {'id': articleId},
-              queryParameters: {
+              extra: {
                 'articleName': text,
                 'championshipOfArticle': 'Formula 1',
-              },
-              extra: {
                 'isFromLink': true,
               },
             );
@@ -1351,11 +1345,9 @@ class TextParagraphRenderer extends StatelessWidget {
             context.pushNamed(
               'article',
               pathParameters: {'id': articleId},
-              queryParameters: {
+              extra: {
                 'articleName': text,
                 'championshipOfArticle': 'Formula 1',
-              },
-              extra: {
                 'isFromLink': true,
               },
             );
@@ -1465,11 +1457,9 @@ class TextParagraphRenderer extends StatelessWidget {
             context.pushNamed(
               'article',
               pathParameters: {'id': articleId},
-              queryParameters: {
+              extra: {
                 'articleName': text,
                 'championshipOfArticle': 'Formula E',
-              },
-              extra: {
                 'isFromLink': true,
               },
             );

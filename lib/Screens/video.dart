@@ -22,7 +22,9 @@ import 'dart:convert';
 import 'package:background_downloader/background_downloader.dart';
 import 'package:boxbox/api/videos.dart';
 import 'package:boxbox/helpers/download.dart';
+import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/news.dart';
+import 'package:boxbox/helpers/request_error.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -286,6 +288,34 @@ class _VideoScreenState extends State<VideoScreen> {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class VideoScreenFromId extends StatefulWidget {
+  final String videoId;
+  const VideoScreenFromId(this.videoId, {super.key});
+
+  @override
+  State<VideoScreenFromId> createState() => _VideoScreenFromIdState();
+}
+
+class _VideoScreenFromIdState extends State<VideoScreenFromId> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: FutureBuilder<Video>(
+        future: F1VideosFetcher().getVideoDetails(widget.videoId),
+        builder: (context, snapshot) => snapshot.hasError
+            ? RequestErrorWidget(
+                snapshot.error.toString(),
+              )
+            : snapshot.hasData
+                ? VideoScreen(snapshot.data!)
+                : const Center(
+                    child: LoadingIndicatorUtil(),
+                  ),
       ),
     );
   }

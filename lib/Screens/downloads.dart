@@ -22,8 +22,6 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:background_downloader/background_downloader.dart';
-import 'package:boxbox/Screens/article.dart';
-import 'package:boxbox/Screens/video.dart';
 import 'package:boxbox/api/videos.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/request_error.dart';
@@ -31,6 +29,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:filesize/filesize.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class DownloadsScreen extends StatefulWidget {
@@ -252,60 +251,66 @@ class DownloadsList extends StatelessWidget {
                         ? Container()
                         : GestureDetector(
                             onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => downloadsDescriptions[
-                                              separatedRecords[1][index]
-                                                  .taskId]['type'] ==
-                                          'article'
-                                      ? ArticleScreen(
+                              downloadsDescriptions[separatedRecords[1][index]
+                                          .taskId]['type'] ==
+                                      'article'
+                                  ? context.pushNamed(
+                                      'article',
+                                      pathParameters: {
+                                        'id': downloadsDescriptions[
+                                            separatedRecords[1][index]
+                                                .taskId]['id']
+                                      },
+                                      extra: {
+                                        'articleName': downloadsDescriptions[
+                                            separatedRecords[1][index]
+                                                .taskId]['title'],
+                                        'championshipOfArticle':
+                                            downloadsDescriptions[
+                                                        separatedRecords[1]
+                                                                [index]
+                                                            .taskId]
+                                                    ['championship'] ??
+                                                'Formula 1',
+                                        'isFromLink': false,
+                                        'update': update,
+                                      },
+                                    )
+                                  : context.pushNamed(
+                                      'video',
+                                      pathParameters: {
+                                        'id': downloadsDescriptions[
+                                            separatedRecords[1][index]
+                                                .taskId]['id']
+                                      },
+                                      extra: {
+                                        'video': Video(
                                           downloadsDescriptions[
                                               separatedRecords[1][index]
                                                   .taskId]['id'],
                                           downloadsDescriptions[
                                               separatedRecords[1][index]
+                                                  .taskId]['url'],
+                                          downloadsDescriptions[
+                                              separatedRecords[1][index]
                                                   .taskId]['title'],
-                                          false,
-                                          update: update,
-                                          championshipOfArticle:
-                                              downloadsDescriptions[
-                                                          separatedRecords[1]
-                                                                  [index]
-                                                              .taskId]
-                                                      ['championship'] ??
-                                                  'Formula 1',
-                                        )
-                                      : VideoScreen(
-                                          Video(
+                                          downloadsDescriptions[
+                                              separatedRecords[1][index]
+                                                  .taskId]['description'],
+                                          downloadsDescriptions[
+                                              separatedRecords[1][index]
+                                                  .taskId]['videoDuration'],
+                                          downloadsDescriptions[
+                                              separatedRecords[1][index]
+                                                  .taskId]['thumbnail'],
+                                          DateTime.parse(
                                             downloadsDescriptions[
                                                 separatedRecords[1][index]
-                                                    .taskId]['id'],
-                                            downloadsDescriptions[
-                                                separatedRecords[1][index]
-                                                    .taskId]['url'],
-                                            downloadsDescriptions[
-                                                separatedRecords[1][index]
-                                                    .taskId]['title'],
-                                            downloadsDescriptions[
-                                                separatedRecords[1][index]
-                                                    .taskId]['description'],
-                                            downloadsDescriptions[
-                                                separatedRecords[1][index]
-                                                    .taskId]['videoDuration'],
-                                            downloadsDescriptions[
-                                                separatedRecords[1][index]
-                                                    .taskId]['thumbnail'],
-                                            DateTime.parse(
-                                              downloadsDescriptions[
-                                                  separatedRecords[1][index]
-                                                      .taskId]['datePosted'],
-                                            ),
+                                                    .taskId]['datePosted'],
                                           ),
-                                          update: update,
                                         ),
-                                ),
-                              );
+                                      },
+                                    );
                             },
                             child: Card(
                               elevation: 5.0,

@@ -143,10 +143,8 @@ class _SearchScreenState extends State<SearchScreen> {
                       pathParameters: {
                         'id': results[index]['url'].split('.').last
                       },
-                      queryParameters: {
-                        'articleName': '',
-                      },
                       extra: {
+                        'articleName': '',
                         'isFromLink': true,
                       },
                     ),

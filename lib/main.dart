@@ -32,6 +32,7 @@ import 'package:boxbox/helpers/team_background_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -87,6 +88,8 @@ void main() async {
     frequency: const Duration(hours: 2),
     initialDelay: const Duration(hours: 2),
   ); */
+
+  GoRouter.optionURLReflectsImperativeAPIs = true;
 
   runApp(const MyApp());
 }

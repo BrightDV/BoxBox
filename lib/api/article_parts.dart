@@ -1231,11 +1231,9 @@ class AtomLinkList extends StatelessWidget {
                   context.pushNamed(
                     'article',
                     pathParameters: {'id': articleId},
-                    queryParameters: {
+                    extra: {
                       'articleName': element['fields']['items'][index - 1]
                           ['title'],
-                    },
-                    extra: {
                       'isFromLink': true,
                     },
                   );
