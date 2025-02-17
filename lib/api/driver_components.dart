@@ -22,10 +22,10 @@ import 'package:boxbox/helpers/divider.dart';
 import 'package:boxbox/helpers/driver_image.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/team_background_color.dart';
-import 'package:boxbox/Screens/driver_details.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class Driver {
@@ -198,16 +198,16 @@ class DriverItem extends StatelessWidget {
         item.teamColor != null ? item.teamColor! : getTeamColors(item.team);
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => DriverDetailsScreen(
-              item.driverId,
-              item.givenName,
-              item.familyName,
-              detailsPath: item.detailsPath,
-            ),
-          ),
+        context.pushNamed(
+          'drivers',
+          pathParameters: {
+            'driverId': item.detailsPath ?? item.driverId,
+          },
+          extra: {
+            'givenName': item.givenName,
+            'familyName': item.familyName,
+            'detailsPath': item.detailsPath,
+          },
         );
       },
       child: Container(

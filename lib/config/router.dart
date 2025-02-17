@@ -22,9 +22,11 @@ import 'package:boxbox/Screens/MixedNews/mixed_news.dart';
 import 'package:boxbox/Screens/about.dart';
 import 'package:boxbox/Screens/article.dart';
 import 'package:boxbox/Screens/downloads.dart';
+import 'package:boxbox/Screens/driver_details.dart';
 import 'package:boxbox/Screens/hall_of_fame.dart';
 import 'package:boxbox/Screens/history.dart';
 import 'package:boxbox/Screens/settings.dart';
+import 'package:boxbox/Screens/team_details.dart';
 import 'package:boxbox/Screens/video.dart';
 import 'package:boxbox/helpers/bottom_navigation_bar.dart';
 import 'package:go_router/go_router.dart';
@@ -51,7 +53,7 @@ class RouterLocalConfig {
               return ArticleScreen(
                 state.pathParameters['id']!,
                 extras?['articleName'] ?? '',
-                extras == null ? false : extras['isFromLink'] ?? true,
+                extras == null ? true : extras['isFromLink'] ?? true,
                 update: extras?['update'] ?? null,
                 news: extras?['news'] ?? null,
                 championshipOfArticle: extras?['championshipOfArticle'] ?? '',
@@ -106,7 +108,15 @@ class RouterLocalConfig {
             name: 'settings',
             path: 'settings',
             builder: (context, state) {
-              Map? extras = state.extra as Map;
+              /* Map? extras;
+              if (state.extra != null) {
+                extras = state.extra as Map;
+                return SettingsScreen(extras['update']);
+              } else {
+                // TODO: settings without update
+                return SettingsScreen();
+              } */
+              Map extras = state.extra as Map;
               return SettingsScreen(extras['update']);
             },
           ),
@@ -114,6 +124,47 @@ class RouterLocalConfig {
             name: 'about',
             path: 'about',
             builder: (context, state) => const AboutScreen(),
+          ),
+
+          // drivers and teams
+          GoRoute(
+            name: 'drivers',
+            path: 'drivers/:driverId',
+            builder: (context, state) {
+              Map? extras;
+              if (state.extra != null) {
+                extras = state.extra as Map;
+                return DriverDetailsScreen(
+                  state.pathParameters['driverId']!,
+                  extras['givenName'],
+                  extras['familyName'],
+                  detailsPath: extras['detailsPath'],
+                );
+              } else {
+                return DriverDetailsFromIdScreen(
+                  state.pathParameters['driverId']!,
+                );
+              }
+            },
+          ),
+          GoRoute(
+            name: 'teams',
+            path: 'teams/:teamId',
+            builder: (context, state) {
+              Map? extras;
+              if (state.extra != null) {
+                extras = state.extra as Map;
+                return TeamDetailsScreen(
+                  state.pathParameters['teamId']!,
+                  extras['teamFullName'],
+                  detailsPath: extras['detailsPath'],
+                );
+              } else {
+                return TeamDetailsFromIdScreen(
+                  state.pathParameters['teamId']!,
+                );
+              }
+            },
           ),
         ],
       ),

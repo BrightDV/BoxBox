@@ -532,3 +532,37 @@ class TeamResults extends StatelessWidget {
     );
   }
 }
+
+class TeamDetailsFromIdScreen extends StatelessWidget {
+  final String detailsPath;
+  const TeamDetailsFromIdScreen(this.detailsPath, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: FutureBuilder(
+        future: FormulaOneScraper().scrapeTeamDetails('', detailsPath),
+        builder: (context, snapshot) => snapshot.hasError
+            ? RequestErrorWidget(
+                snapshot.error.toString(),
+              )
+            : snapshot.hasData
+                ? Scaffold(
+                    appBar: AppBar(
+                      title: Text(
+                        snapshot.data!["teamName"],
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      backgroundColor: Theme.of(context).colorScheme.onPrimary,
+                    ),
+                    body: TeamDetailsFragment(snapshot.data!),
+                  )
+                : const Center(
+                    child: LoadingIndicatorUtil(),
+                  ),
+      ),
+    );
+  }
+}
