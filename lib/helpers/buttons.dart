@@ -19,6 +19,7 @@
 
 import 'package:flutter/material.dart';
 
+// TODO: migrate to pushNamed (no need of a widget anymore!)
 class BoxBoxButton extends StatelessWidget {
   final String title;
   final Widget icon;

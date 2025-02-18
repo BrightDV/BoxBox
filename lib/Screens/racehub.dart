@@ -35,6 +35,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:marquee/marquee.dart';
@@ -301,28 +302,13 @@ class RaceHubContent extends StatelessWidget {
                                         ),
                                       ),
                                     ),
-                                    onTap: () => Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => CircuitScreen(
-                                          Race(
-                                            '0',
-                                            '',
-                                            '',
-                                            '',
-                                            '',
-                                            event.circuitImage
-                                                .split('/')
-                                                .last
-                                                .split('.')[0],
-                                            '',
-                                            '',
-                                            '',
-                                            [],
-                                          ),
-                                          isFetched: false,
-                                        ),
-                                      ),
+                                    // TODO: TESTEST
+                                    onTap: () => context.pushNamed(
+                                      'racing',
+                                      pathParameters: {
+                                        'meetingId': event.raceId
+                                      },
+                                      extra: {'isFetched': bool},
                                     ),
                                   ),
                                 ),

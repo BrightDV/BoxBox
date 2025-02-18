@@ -17,23 +17,31 @@
  * Copyright (c) 2022-2024, BrightDV
  */
 
+import 'package:boxbox/Screens/404.dart';
 import 'package:boxbox/Screens/FormulaYou/home.dart';
 import 'package:boxbox/Screens/MixedNews/mixed_news.dart';
 import 'package:boxbox/Screens/about.dart';
 import 'package:boxbox/Screens/article.dart';
+import 'package:boxbox/Screens/circuit.dart';
 import 'package:boxbox/Screens/downloads.dart';
 import 'package:boxbox/Screens/driver_details.dart';
+import 'package:boxbox/Screens/free_practice_screen.dart';
 import 'package:boxbox/Screens/hall_of_fame.dart';
 import 'package:boxbox/Screens/history.dart';
 import 'package:boxbox/Screens/settings.dart';
 import 'package:boxbox/Screens/team_details.dart';
 import 'package:boxbox/Screens/video.dart';
+import 'package:boxbox/api/race_components.dart';
 import 'package:boxbox/helpers/bottom_navigation_bar.dart';
 import 'package:go_router/go_router.dart';
 
 class RouterLocalConfig {
   // TODO: test shared links again
   final router = GoRouter(
+    errorBuilder: (context, state) => ErrorNotFoundScreen(
+      route: state.uri.toString(),
+    ),
+    debugLogDiagnostics: true,
     routes: [
       GoRoute(
         path: '/',
@@ -108,16 +116,8 @@ class RouterLocalConfig {
             name: 'settings',
             path: 'settings',
             builder: (context, state) {
-              /* Map? extras;
-              if (state.extra != null) {
-                extras = state.extra as Map;
-                return SettingsScreen(extras['update']);
-              } else {
-                // TODO: settings without update
-                return SettingsScreen();
-              } */
-              Map extras = state.extra as Map;
-              return SettingsScreen(extras['update']);
+              Map? extras = state.extra as Map?;
+              return SettingsScreen(update: extras?['update'] ?? null);
             },
           ),
           GoRoute(
@@ -165,6 +165,87 @@ class RouterLocalConfig {
                 );
               }
             },
+          ),
+
+          // schedule & results
+          GoRoute(
+            name: 'racing',
+            path: 'racing/:meetingId',
+            builder: (context, state) {
+              Map? extras;
+              if (state.extra != null) {
+                extras = state.extra as Map;
+                if (extras['isFetched'] ?? true) {
+                  return CircuitScreen(
+                    extras['race'],
+                    isFetched: extras['isFetched'],
+                  );
+                } else {
+                  return CircuitScreen(
+                    Race(
+                      '',
+                      state.pathParameters['meetingId']!,
+                      '',
+                      '',
+                      '',
+                      '',
+                      '',
+                      '',
+                      '',
+                      [],
+                    ),
+                    isFetched: false,
+                  );
+                }
+              } else {
+                return CircuitScreen(
+                  Race(
+                    '',
+                    state.pathParameters['meetingId']!,
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    [],
+                  ),
+                  isFetched: false,
+                );
+              }
+            },
+            routes: [
+              GoRoute(
+                name: 'practice',
+                path: 'results/practice/:sessionIndex',
+                builder: (context, state) {
+                  Map? extras;
+                  if (state.extra != null) {
+                    extras = state.extra as Map;
+                    return FreePracticeScreen(
+                      extras['sessionTitle'],
+                      extras['sessionIndex'],
+                      extras['circuitId'],
+                      extras['meetingId'],
+                      extras['raceYear'],
+                      extras['raceName'],
+                      raceUrl: extras['raceUrl'],
+                      sessionId: extras['sessionId'],
+                    );
+                  } else {
+                    return FreePracticeScreen(
+                      '',
+                      0,
+                      '',
+                      state.pathParameters['meetingId']!,
+                      0,
+                      '',
+                    );
+                  }
+                },
+              ),
+            ],
           ),
         ],
       ),

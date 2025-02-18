@@ -21,12 +21,10 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:background_downloader/background_downloader.dart' as bgdl;
-import 'package:boxbox/Screens/circuit.dart';
 import 'package:boxbox/Screens/schedule.dart';
 import 'package:boxbox/api/brightcove.dart';
 import 'package:boxbox/api/formula1.dart';
 import 'package:boxbox/api/formulae.dart';
-import 'package:boxbox/api/race_components.dart';
 import 'package:boxbox/helpers/custom_player_controls.dart';
 import 'package:boxbox/helpers/download.dart';
 import 'package:boxbox/helpers/hover.dart';
@@ -1420,25 +1418,11 @@ class TextParagraphRenderer extends StatelessWidget {
                   url.startsWith(
                       "https://www.formula1.com/content/fom-website/en/racing/202")) &&
               url.split('/').length > 5) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => CircuitScreen(
-                  Race(
-                    '0',
-                    '',
-                    '',
-                    '',
-                    '',
-                    url.split('/').last.split('.')[0],
-                    '',
-                    '',
-                    '',
-                    [],
-                  ),
-                  isFetched: false,
-                ),
-              ),
+            // TODO: converter or scraping?
+            context.pushNamed(
+              'racing',
+              pathParameters: {'meetingId': url.split('/').last.split('.')[0]},
+              extra: {'isFetched': false},
             );
           } else if (url == 'https://linktr.ee/F1raceprogramme') {
             Fluttertoast.showToast(

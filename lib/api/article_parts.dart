@@ -17,7 +17,6 @@
  * Copyright (c) 2022-2024, BrightDV
  */
 
-import 'package:boxbox/Screens/free_practice_screen.dart';
 import 'package:boxbox/Screens/race_details.dart';
 import 'package:boxbox/api/formula1.dart';
 import 'package:boxbox/helpers/buttons.dart';
@@ -926,40 +925,51 @@ class AtomSessionResults extends StatelessWidget {
                       ),
                     ),
                     child: ElevatedButton(
-                      onPressed: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => element['fields']['sessionType']
-                                  .startsWith('Practice')
-                              ? FreePracticeScreen(
-                                  element['fields'][
-                                                  'raceResults${element['fields']['sessionType']}']
-                                              ['description']
-                                          .endsWith('1')
-                                      ? AppLocalizations.of(context)!
-                                          .freePracticeOne
-                                      : element['fields'][
-                                                      'raceResults${element['fields']['sessionType']}']
-                                                  ['description']
-                                              .endsWith('2')
-                                          ? AppLocalizations.of(context)!
-                                              .freePracticeTwo
-                                          : AppLocalizations.of(context)!
-                                              .freePracticeThree,
-                                  int.parse(
-                                    element['fields'][
+                      onPressed: () => element['fields']['sessionType']
+                              .startsWith('Practice')
+                          ? context.pushNamed(
+                              'practice',
+                              pathParameters: {
+                                'sessionIndex': element['fields'][
+                                            'raceResults${element['fields']['sessionType']}']
+                                        ['session']
+                                    .substring(1),
+                                'meetingId': element['fields']['meetingKey'],
+                              },
+                              extra: {
+                                'sessionTitle': element['fields'][
                                                 'raceResults${element['fields']['sessionType']}']
-                                            ['session']
-                                        .substring(1),
-                                  ),
-                                  '',
-                                  element['fields']['meetingKey'],
-                                  int.parse(
-                                    element['fields']['season'],
-                                  ),
-                                  element['fields']['meetingOfficialName'],
-                                )
-                              : Scaffold(
+                                            ['description']
+                                        .endsWith('1')
+                                    ? AppLocalizations.of(context)!
+                                        .freePracticeOne
+                                    : element['fields'][
+                                                    'raceResults${element['fields']['sessionType']}']
+                                                ['description']
+                                            .endsWith('2')
+                                        ? AppLocalizations.of(context)!
+                                            .freePracticeTwo
+                                        : AppLocalizations.of(context)!
+                                            .freePracticeThree,
+                                'sessionIndex': int.parse(
+                                  element['fields'][
+                                              'raceResults${element['fields']['sessionType']}']
+                                          ['session']
+                                      .substring(1),
+                                ),
+                                'circuitId': '',
+                                'meetingId': element['fields']['meetingKey'],
+                                'raceYear': int.parse(
+                                  element['fields']['season'],
+                                ),
+                                'raceName': element['fields']
+                                    ['meetingOfficialName'],
+                              },
+                            )
+                          : Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => Scaffold(
                                   appBar: AppBar(
                                     title: Text(
                                       element['fields']['sessionType'] == 'Race'
@@ -1030,8 +1040,8 @@ class AtomSessionResults extends StatelessWidget {
                                                 ),
                                         ),
                                 ),
-                        ),
-                      ),
+                              ),
+                            ),
                       style: ElevatedButton.styleFrom(
                         shape: const ContinuousRectangleBorder(
                           borderRadius: BorderRadius.zero,
