@@ -232,21 +232,8 @@ class RouterLocalConfig {
                       sessions: extras['sessions'],
                     );
                   } else {
-                    return RaceDetailsScreen(
-                      Race(
-                        '',
-                        state.pathParameters['meetingId']!,
-                        '',
-                        '',
-                        '',
-                        '',
-                        '',
-                        '',
-                        '',
-                        [],
-                      ),
-                      false,
-                      isFromRaceHub: true,
+                    return RaceDetailsFromIdScreen(
+                      state.pathParameters['meetingId']!,
                     );
                   }
                 },

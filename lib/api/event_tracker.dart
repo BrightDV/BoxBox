@@ -374,7 +374,7 @@ class EventTracker {
         '',
         formatedResponse['meetingContext']['meetingKey'],
         formatedResponse['race']['meetingCountryName'],
-        formatedResponse['race']['meetingEndDate'] + gmtOffset,
+        formatedResponse['race']['meetingEndDate'].replaceAll('.000Z', ''),
         DateFormat.Hm().format(raceDate),
         '',
         '',
@@ -385,6 +385,7 @@ class EventTracker {
         raceCoverUrl: coverUrl,
         detailsPath: detailsPath,
         isPreSeasonTesting: formatedResponse['meetingContext']['isTestEvent'],
+        sessionStates: sessionStates,
       );
 
       formatedResponse['raceCustomBBParameter'] = raceWithSessions;

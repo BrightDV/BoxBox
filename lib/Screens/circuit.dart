@@ -290,7 +290,6 @@ class CircuitScreen extends StatelessWidget {
                                         snapshot.data!['meetingContext']
                                                 ['timetables'][2]['session'] ==
                                             's',
-                                    'isFromRaceHub': true,
                                   },
                                 ),
                                 snapshot.data!['links'] != null &&

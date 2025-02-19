@@ -19,9 +19,10 @@
 
 import 'dart:async';
 
-import 'package:add_2_calendar/add_2_calendar.dart';
+import 'package:add_2_calendar/add_2_calendar.dart' as a2c;
 import 'package:boxbox/api/driver_components.dart';
 import 'package:boxbox/api/ergast.dart';
+import 'package:boxbox/api/event_tracker.dart';
 import 'package:boxbox/api/formula1.dart';
 import 'package:boxbox/api/formulae.dart';
 import 'package:boxbox/api/race_components.dart';
@@ -50,7 +51,6 @@ class RaceDetailsScreen extends StatelessWidget {
   final bool hasSprint;
   final int? tab;
   final bool isFromRaceHub;
-  final bool isFetched;
   final List? sessions;
 
   const RaceDetailsScreen(
@@ -59,7 +59,6 @@ class RaceDetailsScreen extends StatelessWidget {
     Key? key,
     this.tab,
     this.isFromRaceHub = false,
-    this.isFetched = true,
     this.sessions,
   }) : super(key: key);
 
@@ -344,6 +343,33 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   }
 }
 
+class RaceDetailsFromIdScreen extends StatelessWidget {
+  final String meetingId;
+  const RaceDetailsFromIdScreen(this.meetingId, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: FutureBuilder(
+        future: EventTracker().getCircuitDetails(
+          meetingId,
+          isFromRaceHub: true,
+        ),
+        builder: (context, snapshot) => snapshot.hasError
+            ? RequestErrorWidget(snapshot.error.toString())
+            : snapshot.hasData
+                ? RaceDetailsScreen(
+                    snapshot.data!['raceCustomBBParameter'],
+                    snapshot.data!['meetingContext']['timetables'][2]
+                            ['session'] ==
+                        's',
+                  )
+                : LoadingIndicatorUtil(),
+      ),
+    );
+  }
+}
+
 class FreePracticesResultsProvider extends StatefulWidget {
   final Race race;
   final bool hasSprint;
@@ -470,7 +496,6 @@ class _FreePracticesResultsProviderState
                   : const LoadingIndicatorUtil(),
         );
       } else {
-        print("working...");
         for (var session in race.sessionStates!) {
           if (session == "completed") {
             maxSession++;
@@ -1450,7 +1475,6 @@ class SessionCountdownTimer extends StatefulWidget {
 class _SessionCountdownTimerState extends State<SessionCountdownTimer> {
   @override
   Widget build(BuildContext context) {
-    print("crashing...");
     bool shouldUseCountdown = Hive.box('settings')
         .get('shouldUseCountdown', defaultValue: true) as bool;
     bool shouldUse12HourClock = Hive.box('settings')
@@ -1584,7 +1608,7 @@ class _SessionCountdownTimerState extends State<SessionCountdownTimer> {
                     ),
                   ),
                   onPressed: () async {
-                    Event event = Event(
+                    a2c.Event event = a2c.Event(
                       title: '${widget.sessionName} - ${race.raceName}',
                       location: race.country,
                       startDate: DateTime(
@@ -1605,7 +1629,7 @@ class _SessionCountdownTimerState extends State<SessionCountdownTimer> {
                         raceFullDateParsed.toLocal().second,
                       ),
                     );
-                    await Add2Calendar.addEvent2Cal(event);
+                    await a2c.Add2Calendar.addEvent2Cal(event);
                   },
                 ),
               )
