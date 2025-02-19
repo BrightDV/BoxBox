@@ -35,6 +35,7 @@ import 'package:boxbox/Screens/settings.dart';
 import 'package:boxbox/Screens/standings.dart';
 import 'package:boxbox/Screens/team_details.dart';
 import 'package:boxbox/Screens/video.dart';
+import 'package:boxbox/Screens/videos.dart';
 import 'package:boxbox/api/race_components.dart';
 import 'package:boxbox/helpers/bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
@@ -440,6 +441,23 @@ class RouterLocalConfig {
               } else {
                 return RaceHubWithoutEventScreen();
               }
+            },
+          ),
+
+          // videos
+          GoRoute(
+            name: 'videos',
+            path: 'videos',
+            builder: (context, state) {
+              return Scaffold(
+                appBar: AppBar(
+                  title: Text(
+                    AppLocalizations.of(context)!.videos,
+                  ),
+                  backgroundColor: Theme.of(context).colorScheme.onPrimary,
+                ),
+                body: VideosScreen(ScrollController()),
+              );
             },
           ),
         ],
