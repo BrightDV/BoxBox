@@ -254,6 +254,9 @@ class CircuitScreen extends StatelessWidget {
                                 pinned: true,
                                 centerTitle: true,
                                 flexibleSpace: FlexibleSpaceBar(
+                                  background: RaceImageProvider(
+                                    snapshot.data!['raceCustomBBParameter'],
+                                  ),
                                   title: Text(
                                     snapshot.data!['raceCustomBBParameter']
                                         .raceName,
@@ -313,6 +316,30 @@ class CircuitScreen extends StatelessWidget {
                                                   .last,
                                         },
                                         extra: {'isFromLink': true},
+                                      )
+                                    : Container(),
+                                championship == 'Formula 1'
+                                    ? BoxBoxButton(
+                                        AppLocalizations.of(context)!
+                                            .grandPrixMap,
+                                        Icon(
+                                          Icons.map_outlined,
+                                        ),
+                                        widget: CircuitMapScreen(
+                                          scheduleLastSavedFormat == 'ergast'
+                                              ? snapshot
+                                                  .data![
+                                                      'raceCustomBBParameter']
+                                                  .circuitId
+                                              : Convert()
+                                                  .circuitNameFromFormulaOneToErgastForCircuitPoints(
+                                                  snapshot
+                                                      .data![
+                                                          'raceCustomBBParameter']
+                                                      .country,
+                                                ),
+                                        ),
+                                        isDialog: true,
                                       )
                                     : Container(),
                                 snapshot.data!['raceResults'] != null &&

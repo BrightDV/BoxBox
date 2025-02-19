@@ -367,6 +367,8 @@ class EventTracker {
           'Las Vegas') {
         detailsPath = 'Las_Vegas';
       }
+      String coverUrl =
+          'https://media.formula1.com/image/upload/f_auto,c_limit,w_1440,q_auto/f_auto/q_auto/content/dam/fom-website/2018-redesign-assets/Racehub%20header%20images%2016x9/${formatedResponse['race']['meetingCountryName'].replaceAll(" ", "_")}.jpg';
 
       Race raceWithSessions = Race(
         '',
@@ -380,7 +382,7 @@ class EventTracker {
         formatedResponse['race']['meetingCountryName'],
         sessionDates,
         isFirst: false,
-        raceCoverUrl: formatedResponse['circuitSmallImage']['url'],
+        raceCoverUrl: coverUrl,
         detailsPath: detailsPath,
         isPreSeasonTesting: formatedResponse['meetingContext']['isTestEvent'],
       );
