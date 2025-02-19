@@ -18,24 +18,39 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
-// TODO: migrate to pushNamed (no need of a widget anymore!)
+/// Class for common button used across the app.
+///
+/// For a route: `route` must not be null.
+/// For a widget: `isDialog=false`, `isRoute=false` and `widget` must not null.
+/// For a dialog: `isDialog=true` and `widget` must not null.
+/// For a function: `isDialog=false` and `toExecute` must not null.
 class BoxBoxButton extends StatelessWidget {
   final String title;
   final Widget icon;
-  final Widget destination;
   final bool isDialog;
+  final bool isRoute;
   final Function? toExecute;
   final double? verticalPadding;
   final double? horizontalPadding;
+  final Widget? widget;
+  final String? route;
+  final Map<String, String>? pathParameters;
+  final Map? extra;
+
   const BoxBoxButton(
     this.title,
-    this.icon,
-    this.destination, {
+    this.icon, {
     this.isDialog = false,
+    this.isRoute = true,
     this.toExecute,
     this.verticalPadding,
     this.horizontalPadding,
+    this.widget,
+    this.route,
+    this.pathParameters,
+    this.extra,
     super.key,
   });
 
@@ -72,16 +87,22 @@ class BoxBoxButton extends StatelessWidget {
         onTap: () async => isDialog
             ? showDialog(
                 context: context,
-                builder: (BuildContext context) => destination,
+                builder: (BuildContext context) => widget!,
               )
             : toExecute != null
                 ? await toExecute!()
-                : Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => destination,
-                    ),
-                  ),
+                : isRoute
+                    ? context.pushNamed(
+                        route!,
+                        pathParameters: pathParameters ?? {},
+                        extra: extra,
+                      )
+                    : Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => widget!,
+                        ),
+                      ),
       ),
     );
   }

@@ -17,9 +17,7 @@
  * Copyright (c) 2022-2024, BrightDV
  */
 
-import 'package:boxbox/Screens/circuit.dart';
 import 'package:boxbox/api/event_tracker.dart';
-import 'package:boxbox/api/race_components.dart';
 import 'package:boxbox/helpers/buttons.dart';
 import 'package:boxbox/helpers/constants.dart';
 import 'package:boxbox/helpers/hover.dart';
@@ -411,28 +409,15 @@ class RaceHubContent extends StatelessWidget {
                           Icon(
                             Icons.arrow_forward_rounded,
                           ),
-                          CircuitScreen(
-                            Race(
-                              '0',
-                              event.raceId,
-                              '',
-                              '',
-                              '',
-                              '',
-                              '',
-                              '',
-                              '',
-                              [],
-                            ),
-                            isFetched: false,
-                          ),
+                          isRoute: true,
+                          route: 'racing',
+                          pathParameters: {'meetingId': event.raceId},
                         )
                       : Container(),
                   championship == 'Formula 1'
                       ? BoxBoxButton(
                           'Race Programme',
                           Icon(Icons.open_in_new_outlined),
-                          Container(),
                           toExecute: openRaceProgramme,
                         )
                       : Container(),
@@ -449,7 +434,8 @@ class RaceHubContent extends StatelessWidget {
                               ],
                             ),
                           ),
-                          Scaffold(
+                          isRoute: false,
+                          widget: Scaffold(
                             appBar: AppBar(
                               title: SizedBox(
                                 height: AppBar().preferredSize.height,

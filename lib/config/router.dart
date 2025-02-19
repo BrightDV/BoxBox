@@ -28,6 +28,7 @@ import 'package:boxbox/Screens/driver_details.dart';
 import 'package:boxbox/Screens/free_practice_screen.dart';
 import 'package:boxbox/Screens/hall_of_fame.dart';
 import 'package:boxbox/Screens/history.dart';
+import 'package:boxbox/Screens/race_details.dart';
 import 'package:boxbox/Screens/settings.dart';
 import 'package:boxbox/Screens/team_details.dart';
 import 'package:boxbox/Screens/video.dart';
@@ -36,12 +37,12 @@ import 'package:boxbox/helpers/bottom_navigation_bar.dart';
 import 'package:go_router/go_router.dart';
 
 class RouterLocalConfig {
-  // TODO: test shared links again
+  // TODO: handle shared links here
   final router = GoRouter(
     errorBuilder: (context, state) => ErrorNotFoundScreen(
       route: state.uri.toString(),
     ),
-    debugLogDiagnostics: true,
+    //debugLogDiagnostics: true,
     routes: [
       GoRoute(
         path: '/',
@@ -217,33 +218,69 @@ class RouterLocalConfig {
             },
             routes: [
               GoRoute(
-                name: 'practice',
-                path: 'results/practice/:sessionIndex',
+                name: 'results',
+                path: 'results',
                 builder: (context, state) {
                   Map? extras;
                   if (state.extra != null) {
                     extras = state.extra as Map;
-                    return FreePracticeScreen(
-                      extras['sessionTitle'],
-                      extras['sessionIndex'],
-                      extras['circuitId'],
-                      extras['meetingId'],
-                      extras['raceYear'],
-                      extras['raceName'],
-                      raceUrl: extras['raceUrl'],
-                      sessionId: extras['sessionId'],
+                    return RaceDetailsScreen(
+                      extras['race'],
+                      extras['hasSprint'],
+                      tab: extras['tab'],
+                      isFromRaceHub: extras['isFromRaceHub'],
+                      sessions: extras['sessions'],
                     );
                   } else {
-                    return FreePracticeScreen(
-                      '',
-                      0,
-                      '',
-                      state.pathParameters['meetingId']!,
-                      0,
-                      '',
+                    return RaceDetailsScreen(
+                      Race(
+                        '',
+                        state.pathParameters['meetingId']!,
+                        '',
+                        '',
+                        '',
+                        '',
+                        '',
+                        '',
+                        '',
+                        [],
+                      ),
+                      false,
+                      isFromRaceHub: true,
                     );
                   }
                 },
+                routes: [
+                  GoRoute(
+                    name: 'practice',
+                    path: 'practice/:sessionIndex',
+                    builder: (context, state) {
+                      Map? extras;
+                      if (state.extra != null) {
+                        extras = state.extra as Map;
+                        return FreePracticeScreen(
+                          extras['sessionTitle'],
+                          extras['sessionIndex'],
+                          extras['circuitId'],
+                          extras['meetingId'],
+                          extras['raceYear'],
+                          extras['raceName'],
+                          raceUrl: extras['raceUrl'],
+                          sessionId: extras['sessionId'],
+                        );
+                      } else {
+                        return FreePracticeScreen(
+                          '',
+                          0,
+                          '',
+                          state.pathParameters['meetingId']!,
+                          0,
+                          '',
+                        );
+                      }
+                    },
+                  ),
+                ],
               ),
             ],
           ),

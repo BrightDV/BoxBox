@@ -411,7 +411,8 @@ class AtomQuiz extends StatelessWidget {
       Icon(
         Icons.bar_chart,
       ),
-      Scaffold(
+      isRoute: false,
+      widget: Scaffold(
         appBar: AppBar(
           title: Text(
             AppLocalizations.of(context)!.quiz,
@@ -514,7 +515,8 @@ class AtomScribbleLive extends StatelessWidget {
           ],
         ),
       ),
-      Scaffold(
+      isRoute: false,
+      widget: Scaffold(
         appBar: AppBar(
           title: Text(
             AppLocalizations.of(context)!.liveBlog,
@@ -560,7 +562,8 @@ class AtomInteractiveExperience extends StatelessWidget {
           ],
         ),
       ),
-      Scaffold(
+      isRoute: false,
+      widget: Scaffold(
         appBar: AppBar(
           title: Text(
             element['fields']['title'],
