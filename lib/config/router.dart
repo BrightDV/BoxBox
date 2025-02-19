@@ -29,6 +29,7 @@ import 'package:boxbox/Screens/free_practice_screen.dart';
 import 'package:boxbox/Screens/hall_of_fame.dart';
 import 'package:boxbox/Screens/history.dart';
 import 'package:boxbox/Screens/race_details.dart';
+import 'package:boxbox/Screens/racehub.dart';
 import 'package:boxbox/Screens/schedule.dart';
 import 'package:boxbox/Screens/settings.dart';
 import 'package:boxbox/Screens/standings.dart';
@@ -325,6 +326,23 @@ class RouterLocalConfig {
                 ),
                 body: const ScheduleScreen(),
               );
+            },
+          ),
+
+          // racehub
+          GoRoute(
+            name: 'race-hub',
+            path: 'race-hub',
+            builder: (context, state) {
+              Map? extras;
+              if (state.extra != null) {
+                extras = state.extra as Map;
+                return RaceHubScreen(
+                  extras['event'],
+                );
+              } else {
+                return RaceHubWithoutEventScreen();
+              }
             },
           ),
         ],

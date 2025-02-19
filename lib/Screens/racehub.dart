@@ -171,6 +171,24 @@ class RaceHubScreen extends StatelessWidget {
   }
 }
 
+class RaceHubWithoutEventScreen extends StatelessWidget {
+  const RaceHubWithoutEventScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: FutureBuilder(
+        future: EventTracker().parseEvent(),
+        builder: (context, snapshot) => snapshot.hasError
+            ? RequestErrorWidget(snapshot.error.toString())
+            : snapshot.hasData
+                ? RaceHubScreen(snapshot.data!)
+                : LoadingIndicatorUtil(),
+      ),
+    );
+  }
+}
+
 class RaceHubContent extends StatelessWidget {
   final Event event;
   const RaceHubContent(this.event, {super.key});

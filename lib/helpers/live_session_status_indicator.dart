@@ -20,9 +20,9 @@
  */
 
 import 'package:boxbox/api/event_tracker.dart';
-import 'package:boxbox/Screens/racehub.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:marquee/marquee.dart';
 
@@ -66,8 +66,8 @@ class LiveSessionStatusIndicator extends StatelessWidget {
   }
 
   Widget eventTrackerError(String snapshotError) {
-    print("Live Session Status Indicator Error");
-    print(snapshotError);
+    /* print("Live Session Status Indicator Error");
+    print(snapshotError); */
     return const SizedBox(
       height: 0.0,
       width: 0.0,
@@ -193,11 +193,9 @@ class EventTrackerItem extends StatelessWidget {
                   bottomRight: Radius.circular(5),
                 ),
                 child: ElevatedButton(
-                  onPressed: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => RaceHubScreen(event),
-                    ),
+                  onPressed: () => context.pushNamed(
+                    'race-hub',
+                    extra: {'event': event},
                   ),
                   style: ElevatedButton.styleFrom(
                     shape: const ContinuousRectangleBorder(
