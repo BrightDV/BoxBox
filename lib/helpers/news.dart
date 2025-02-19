@@ -21,7 +21,6 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:background_downloader/background_downloader.dart' as bgdl;
-import 'package:boxbox/Screens/schedule.dart';
 import 'package:boxbox/api/brightcove.dart';
 import 'package:boxbox/api/formula1.dart';
 import 'package:boxbox/api/formulae.dart';
@@ -30,7 +29,6 @@ import 'package:boxbox/helpers/download.dart';
 import 'package:boxbox/helpers/hover.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/request_error.dart';
-import 'package:boxbox/Screens/standings.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
@@ -1354,65 +1352,19 @@ class TextParagraphRenderer extends StatelessWidget {
                 url.substring(0, url.length - 5).split('/')[6];
             if (standingsType == "driver-standings" ||
                 standingsType == "drivers") {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => Scaffold(
-                    appBar: AppBar(
-                      centerTitle: true,
-                      title: Text(
-                        AppLocalizations.of(context)!.standings,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      backgroundColor: Theme.of(context).colorScheme.onPrimary,
-                    ),
-                    body: const StandingsScreen(),
-                  ),
-                ),
-              );
+              context.pushNamed("standings");
             } else if (standingsType == "constructor-standings" ||
                 standingsType == "team") {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => Scaffold(
-                    appBar: AppBar(
-                      centerTitle: true,
-                      title: Text(
-                        AppLocalizations.of(context)!.standings,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      backgroundColor: Theme.of(context).colorScheme.onPrimary,
-                    ),
-                    body: const StandingsScreen(
-                      switchToTeamStandings: true,
-                    ),
-                  ),
-                ),
+              context.pushNamed(
+                "standings",
+                extra: {"switchToTeamStandings": true},
               );
             } else {
               launchUrl(Uri.parse(url));
             }
           } else if (url ==
               "https://www.formula1.com/en/racing/${DateTime.now().year}.html") {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => Scaffold(
-                  appBar: AppBar(
-                    title: Text(
-                      AppLocalizations.of(context)!.schedule,
-                    ),
-                    backgroundColor: Theme.of(context).colorScheme.onPrimary,
-                  ),
-                  body: const ScheduleScreen(),
-                ),
-              ),
-            );
+            context.pushNamed("schedule");
           } else if ((url
                       .startsWith("https://www.formula1.com/en/racing/202") ||
                   url.startsWith(

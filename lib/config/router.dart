@@ -29,11 +29,15 @@ import 'package:boxbox/Screens/free_practice_screen.dart';
 import 'package:boxbox/Screens/hall_of_fame.dart';
 import 'package:boxbox/Screens/history.dart';
 import 'package:boxbox/Screens/race_details.dart';
+import 'package:boxbox/Screens/schedule.dart';
 import 'package:boxbox/Screens/settings.dart';
+import 'package:boxbox/Screens/standings.dart';
 import 'package:boxbox/Screens/team_details.dart';
 import 'package:boxbox/Screens/video.dart';
 import 'package:boxbox/api/race_components.dart';
 import 'package:boxbox/helpers/bottom_navigation_bar.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 
 class RouterLocalConfig {
@@ -270,6 +274,58 @@ class RouterLocalConfig {
                 ],
               ),
             ],
+          ),
+
+          // standings
+          GoRoute(
+            name: 'standings',
+            path: 'standings',
+            builder: (context, state) {
+              Map? extras;
+              if (state.extra != null) {
+                extras = state.extra as Map;
+                return Scaffold(
+                  appBar: AppBar(
+                    centerTitle: true,
+                    title: Text(
+                      AppLocalizations.of(context)!.standings,
+                    ),
+                    backgroundColor: Theme.of(context).colorScheme.onPrimary,
+                  ),
+                  body: StandingsScreen(
+                    switchToTeamStandings: extras['switchToTeamStandings'],
+                  ),
+                );
+              } else {
+                return Scaffold(
+                  appBar: AppBar(
+                    centerTitle: true,
+                    title: Text(
+                      AppLocalizations.of(context)!.standings,
+                    ),
+                    backgroundColor: Theme.of(context).colorScheme.onPrimary,
+                  ),
+                  body: const StandingsScreen(),
+                );
+              }
+            },
+          ),
+
+          // schedule
+          GoRoute(
+            name: 'schedule',
+            path: 'schedule',
+            builder: (context, state) {
+              return Scaffold(
+                appBar: AppBar(
+                  title: Text(
+                    AppLocalizations.of(context)!.schedule,
+                  ),
+                  backgroundColor: Theme.of(context).colorScheme.onPrimary,
+                ),
+                body: const ScheduleScreen(),
+              );
+            },
           ),
         ],
       ),
