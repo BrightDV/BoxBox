@@ -228,7 +228,7 @@ class RouterLocalConfig {
                       extras['race'],
                       extras['hasSprint'],
                       tab: extras['tab'],
-                      isFromRaceHub: extras['isFromRaceHub'],
+                      isFromRaceHub: extras['isFromRaceHub'] ?? false,
                       sessions: extras['sessions'],
                     );
                   } else {
