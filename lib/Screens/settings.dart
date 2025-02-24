@@ -26,6 +26,7 @@ import 'package:boxbox/Screens/server_settings.dart';
 import 'package:boxbox/api/formulae.dart';
 import 'package:boxbox/helpers/constants.dart';
 import 'package:boxbox/helpers/team_background_color.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -541,20 +542,21 @@ class _PlayerCardState extends State<PlayerCard> {
               ).toList(),
             ),
           ),
-          SwitchListTile(
-            title: Text(
-              AppLocalizations.of(context)!.fullScreenGestures,
+          if (!kIsWeb)
+            SwitchListTile(
+              title: Text(
+                AppLocalizations.of(context)!.fullScreenGestures,
+              ),
+              value: swipeUpToEnterFullScreen,
+              onChanged: (bool value) {
+                setState(
+                  () {
+                    swipeUpToEnterFullScreen = value;
+                    Hive.box('settings').put('swipeUpToEnterFullScreen', value);
+                  },
+                );
+              },
             ),
-            value: swipeUpToEnterFullScreen,
-            onChanged: (bool value) {
-              setState(
-                () {
-                  swipeUpToEnterFullScreen = value;
-                  Hive.box('settings').put('swipeUpToEnterFullScreen', value);
-                },
-              );
-            },
-          ),
         ],
       ),
     );
@@ -641,140 +643,141 @@ class _OtherCardstate extends State<OtherCard> {
               ).toList(),
             ),
           ),
-          ListTile(
-            title: Text(
-              AppLocalizations.of(context)!.apiKey,
-            ),
-            onTap: () => showDialog(
-              context: context,
-              builder: (context) {
-                final TextEditingController controller =
-                    TextEditingController();
-                return StatefulBuilder(
-                  builder: (context, setState) => AlertDialog(
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(
-                          20.0,
-                        ),
-                      ),
-                    ),
-                    contentPadding: const EdgeInsets.all(
-                      25.0,
-                    ),
-                    title: Text(
-                      AppLocalizations.of(context)!.updateApiKey,
-                      style: TextStyle(
-                        fontSize: 24.0,
-                      ), // here
-                      textAlign: TextAlign.center,
-                    ),
-                    content: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        Text(
-                          AppLocalizations.of(context)!.updateApiKeySub,
-                          textAlign: TextAlign.justify,
-                        ),
-                        TextField(
-                          controller: controller,
-                          decoration: InputDecoration(
-                            hintText: AppLocalizations.of(context)!.apiKey,
-                            hintStyle: TextStyle(
-                              fontWeight: FontWeight.w100,
-                            ),
+          if (championship == 'Formula 1')
+            ListTile(
+              title: Text(
+                AppLocalizations.of(context)!.apiKey,
+              ),
+              onTap: () => showDialog(
+                context: context,
+                builder: (context) {
+                  final TextEditingController controller =
+                      TextEditingController();
+                  return StatefulBuilder(
+                    builder: (context, setState) => AlertDialog(
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(
+                            20.0,
                           ),
                         ),
-                      ],
-                    ),
-                    actions: <Widget>[
-                      SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          children: [
-                            ElevatedButton(
-                              onPressed: () {
-                                Hive.box('settings').put(
-                                  'officialApiKey',
-                                  controller.text,
-                                );
-                                Navigator.of(context).pop();
-                                setState(() {});
-                              },
-                              child: Text(
-                                AppLocalizations.of(context)!.save,
+                      ),
+                      contentPadding: const EdgeInsets.all(
+                        25.0,
+                      ),
+                      title: Text(
+                        AppLocalizations.of(context)!.updateApiKey,
+                        style: TextStyle(
+                          fontSize: 24.0,
+                        ), // here
+                        textAlign: TextAlign.center,
+                      ),
+                      content: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Text(
+                            AppLocalizations.of(context)!.updateApiKeySub,
+                            textAlign: TextAlign.justify,
+                          ),
+                          TextField(
+                            controller: controller,
+                            decoration: InputDecoration(
+                              hintText: AppLocalizations.of(context)!.apiKey,
+                              hintStyle: TextStyle(
+                                fontWeight: FontWeight.w100,
                               ),
                             ),
-                            Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 5),
-                              child: ElevatedButton(
+                          ),
+                        ],
+                      ),
+                      actions: <Widget>[
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: [
+                              ElevatedButton(
                                 onPressed: () {
                                   Hive.box('settings').put(
                                     'officialApiKey',
-                                    Constants().F1_API_KEY,
+                                    controller.text,
                                   );
                                   Navigator.of(context).pop();
                                   setState(() {});
                                 },
                                 child: Text(
-                                  AppLocalizations.of(context)!.defaultValue,
+                                  AppLocalizations.of(context)!.save,
                                 ),
                               ),
-                            ),
-                            ElevatedButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: Text(
-                                AppLocalizations.of(context)!.close,
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 5),
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    Hive.box('settings').put(
+                                      'officialApiKey',
+                                      Constants().F1_API_KEY,
+                                    );
+                                    Navigator.of(context).pop();
+                                    setState(() {});
+                                  },
+                                  child: Text(
+                                    AppLocalizations.of(context)!.defaultValue,
+                                  ),
+                                ),
                               ),
-                            ),
-                          ],
+                              ElevatedButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text(
+                                  AppLocalizations.of(context)!.close,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                );
-              },
-            ),
-            trailing: Icon(
-              Icons.key_outlined,
-            ),
-          ),
-          championship == 'Formula 1'
-              ? ListTile(
-                  title: Text(
-                    AppLocalizations.of(context)!.formulaYouSettings,
-                  ),
-                  trailing: Icon(
-                    Icons.arrow_forward_rounded,
-                  ),
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const FormulaYouSettingsScreen(),
+                      ],
                     ),
-                  ),
-                )
-              : Container(),
-          ListTile(
-            title: Text(
-              AppLocalizations.of(context)!.news,
+                  );
+                },
+              ),
+              trailing: Icon(
+                Icons.key_outlined,
+              ),
             ),
-            onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => CustomeHomeFeedSettingsScreen(
-                  widget.update,
+          if (championship == 'Formula 1')
+            ListTile(
+              title: Text(
+                AppLocalizations.of(context)!.formulaYouSettings,
+              ),
+              trailing: Icon(
+                Icons.arrow_forward_rounded,
+              ),
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const FormulaYouSettingsScreen(),
                 ),
               ),
             ),
-            trailing: Icon(
-              Icons.arrow_forward_rounded,
+          if (championship == 'Formula 1')
+            ListTile(
+              title: Text(
+                AppLocalizations.of(context)!.news,
+              ),
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => CustomeHomeFeedSettingsScreen(
+                    widget.update,
+                  ),
+                ),
+              ),
+              trailing: Icon(
+                Icons.arrow_forward_rounded,
+              ),
             ),
-          ),
           ListTile(
             title: Text(
               AppLocalizations.of(context)!.server,
@@ -791,47 +794,45 @@ class _OtherCardstate extends State<OtherCard> {
               Icons.arrow_forward_rounded,
             ),
           ),
-          championship == 'Formula 1'
-              ? SwitchListTile(
-                  title: Text(
-                    AppLocalizations.of(context)!.dataSaverMode,
-                  ),
-                  subtitle: Text(
-                    AppLocalizations.of(context)!.dataSaverModeSub,
-                    style: TextStyle(
-                      fontSize: 12,
-                    ),
-                  ),
-                  value: useDataSaverMode,
-                  onChanged: (bool value) {
-                    setState(() {
-                      useDataSaverMode = value;
-                      Hive.box('settings').put('useDataSaverMode', value);
-                      if (value) {
-                        Hive.box('settings').put('playerQuality', 180);
-                      } else {
-                        Hive.box('settings').put('playerQuality', 720);
-                      }
-                    });
+          if (championship == 'Formula 1')
+            SwitchListTile(
+              title: Text(
+                AppLocalizations.of(context)!.dataSaverMode,
+              ),
+              subtitle: Text(
+                AppLocalizations.of(context)!.dataSaverModeSub,
+                style: TextStyle(
+                  fontSize: 12,
+                ),
+              ),
+              value: useDataSaverMode,
+              onChanged: (bool value) {
+                setState(() {
+                  useDataSaverMode = value;
+                  Hive.box('settings').put('useDataSaverMode', value);
+                  if (value) {
+                    Hive.box('settings').put('playerQuality', 180);
+                  } else {
+                    Hive.box('settings').put('playerQuality', 720);
+                  }
+                });
+              },
+            ),
+          if (championship == 'Formula 1')
+            SwitchListTile(
+              title: Text(
+                AppLocalizations.of(context)!.useOfficialWebview,
+              ),
+              value: useOfficialWebview,
+              onChanged: (bool value) {
+                setState(
+                  () {
+                    useOfficialWebview = value;
+                    Hive.box('settings').put('useOfficialWebview', value);
                   },
-                )
-              : Container(),
-          championship == 'Formula 1'
-              ? SwitchListTile(
-                  title: Text(
-                    AppLocalizations.of(context)!.useOfficialWebview,
-                  ),
-                  value: useOfficialWebview,
-                  onChanged: (bool value) {
-                    setState(
-                      () {
-                        useOfficialWebview = value;
-                        Hive.box('settings').put('useOfficialWebview', value);
-                      },
-                    );
-                  },
-                )
-              : Container(),
+                );
+              },
+            ),
           SwitchListTile(
             title: Text(
               AppLocalizations.of(context)!.twelveHourClock,
@@ -846,78 +847,75 @@ class _OtherCardstate extends State<OtherCard> {
               );
             },
           ),
-          championship == 'Formula E'
-              ? ListTile(
-                  title: Text(
-                    AppLocalizations.of(context)!.refreshChampionshipData,
-                  ),
-                  subtitle: Text(
-                    AppLocalizations.of(context)!.refreshChampionshipDataSub,
-                    style: TextStyle(
-                      fontSize: 12,
-                    ),
-                  ),
-                  onTap: () async {
-                    setState(
-                      () {
-                        isRefreshing = true;
-                      },
-                    );
-                    await FormulaE().updateChampionshipId();
-                    Fluttertoast.showToast(
-                      msg: AppLocalizations.of(context)!.done,
-                      toastLength: Toast.LENGTH_SHORT,
-                      gravity: ToastGravity.BOTTOM,
-                      timeInSecForIosWeb: 2,
-                      backgroundColor: Colors.grey.shade500,
-                      fontSize: 16.0,
-                    );
-
-                    setState(
-                      () {
-                        isRefreshing = false;
-                      },
-                    );
+          if (championship == 'Formula E')
+            ListTile(
+              title: Text(
+                AppLocalizations.of(context)!.refreshChampionshipData,
+              ),
+              subtitle: Text(
+                AppLocalizations.of(context)!.refreshChampionshipDataSub,
+                style: TextStyle(
+                  fontSize: 12,
+                ),
+              ),
+              onTap: () async {
+                setState(
+                  () {
+                    isRefreshing = true;
                   },
-                  trailing: isRefreshing
-                      ? LoadingIcon()
-                      : Transform(
-                          alignment: Alignment.center,
-                          transform: Matrix4.rotationY(math.pi),
-                          child: Icon(Icons.sync_outlined),
-                        ),
-                )
-              : Container(),
-          championship == 'Formula 1'
-              ? GestureDetector(
-                  onLongPress: () async => await launchUrl(
-                    Uri.parse(
-                      'https://github.com/BrightDV/BoxBox/wiki/Ergast-API-vs-Official-API',
+                );
+                await FormulaE().updateChampionshipId();
+                Fluttertoast.showToast(
+                  msg: AppLocalizations.of(context)!.done,
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.BOTTOM,
+                  timeInSecForIosWeb: 2,
+                  backgroundColor: Colors.grey.shade500,
+                  fontSize: 16.0,
+                );
+
+                setState(
+                  () {
+                    isRefreshing = false;
+                  },
+                );
+              },
+              trailing: isRefreshing
+                  ? LoadingIcon()
+                  : Transform(
+                      alignment: Alignment.center,
+                      transform: Matrix4.rotationY(math.pi),
+                      child: Icon(Icons.sync_outlined),
                     ),
+            ),
+          if (championship == 'Formula 1')
+            GestureDetector(
+              onLongPress: () async => await launchUrl(
+                Uri.parse(
+                  'https://github.com/BrightDV/BoxBox/wiki/Ergast-API-vs-Official-API',
+                ),
+              ),
+              child: SwitchListTile(
+                title: Text(
+                  AppLocalizations.of(context)!.useOfficialDataSource,
+                ),
+                subtitle: Text(
+                  AppLocalizations.of(context)!.useOfficialDataSourceSub,
+                  style: TextStyle(
+                    fontSize: 12,
                   ),
-                  child: SwitchListTile(
-                    title: Text(
-                      AppLocalizations.of(context)!.useOfficialDataSource,
-                    ),
-                    subtitle: Text(
-                      AppLocalizations.of(context)!.useOfficialDataSourceSub,
-                      style: TextStyle(
-                        fontSize: 12,
-                      ),
-                    ),
-                    value: useOfficialDataSoure,
-                    onChanged: (bool value) {
-                      setState(
-                        () {
-                          useOfficialDataSoure = value;
-                          Hive.box('settings')
-                              .put('useOfficialDataSoure', value);
-                        },
-                      );
+                ),
+                value: useOfficialDataSoure,
+                onChanged: (bool value) {
+                  setState(
+                    () {
+                      useOfficialDataSoure = value;
+                      Hive.box('settings').put('useOfficialDataSoure', value);
                     },
-                  ),
-                )
-              : Container(),
+                  );
+                },
+              ),
+            ),
           SwitchListTile(
             title: Text(
               AppLocalizations.of(context)!.experimentalFeatures,
