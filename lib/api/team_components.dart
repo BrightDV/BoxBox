@@ -17,7 +17,6 @@
  * Copyright (c) 2022-2024, BrightDV
  */
 
-import 'package:boxbox/Screens/team_details.dart';
 import 'package:boxbox/api/formulae.dart';
 import 'package:boxbox/helpers/divider.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
@@ -27,6 +26,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class Team {
@@ -86,15 +86,13 @@ class TeamItem extends StatelessWidget {
         : getTeamColors(item.constructorId, item.name);
 
     return GestureDetector(
-      onTap: () => Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => TeamDetailsScreen(
-            item.constructorId,
-            item.name,
-            detailsPath: item.detailsPath,
-          ),
-        ),
+      onTap: () => context.pushNamed(
+        'teams',
+        pathParameters: {'teamId': item.detailsPath ?? item.constructorId},
+        extra: {
+          'teamFullName': item.name,
+          'detailsPath': item.detailsPath,
+        },
       ),
       child: Container(
         height: item.teamCarImageCropped != null ? 113 : 120,

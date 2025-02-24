@@ -17,19 +17,13 @@
  * Copyright (c) 2022-2024, BrightDV
  */
 
-import 'package:boxbox/Screens/FormulaYou/home.dart';
 import 'package:boxbox/Screens/LivetimingArchive/races_list.dart';
-import 'package:boxbox/Screens/about.dart';
 import 'package:boxbox/Screens/Compare/compare_home.dart';
-import 'package:boxbox/Screens/downloads.dart';
-import 'package:boxbox/Screens/hall_of_fame.dart';
-import 'package:boxbox/Screens/history.dart';
-import 'package:boxbox/Screens/MixedNews/mixed_news.dart';
-import 'package:boxbox/Screens/settings.dart';
 import 'package:boxbox/Screens/test.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
@@ -71,13 +65,8 @@ class MainDrawer extends StatelessWidget {
                     Icons.account_circle_outlined,
                   ),
                   onTap: () {
-                    Navigator.of(context).pop();
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const PersonalizedHomeScreen(),
-                      ),
-                    );
+                    context.pop();
+                    context.pushNamed('formula-you');
                   },
                 )
               : Container(),
@@ -89,13 +78,8 @@ class MainDrawer extends StatelessWidget {
               Icons.dynamic_feed_outlined,
             ),
             onTap: () {
-              Navigator.of(context).pop();
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const MixedNewsScreen(),
-                ),
-              );
+              context.pop();
+              context.pushNamed('mixed-news');
             },
           ),
           championship == 'Formula 1'
@@ -107,13 +91,8 @@ class MainDrawer extends StatelessWidget {
                     Icons.emoji_events_outlined,
                   ),
                   onTap: () {
-                    Navigator.of(context).pop();
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const HallOfFameScreen(),
-                      ),
-                    );
+                    context.pop();
+                    context.pushNamed('hall-of-fame');
                   },
                 )
               : Container(),
@@ -125,13 +104,8 @@ class MainDrawer extends StatelessWidget {
               Icons.history_outlined,
             ),
             onTap: () {
-              Navigator.of(context).pop();
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const HistoryScreen(),
-                ),
-              );
+              context.pop();
+              context.pushNamed('history');
             },
           ),
           !kIsWeb
@@ -143,13 +117,8 @@ class MainDrawer extends StatelessWidget {
                     Icons.save_alt_rounded,
                   ),
                   onTap: () {
-                    Navigator.of(context).pop();
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const DownloadsScreen(),
-                      ),
-                    );
+                    context.pop();
+                    context.pushNamed('downloads');
                   },
                 )
               : Container(),
@@ -165,14 +134,12 @@ class MainDrawer extends StatelessWidget {
               Icons.settings_outlined,
             ),
             onTap: () {
-              Navigator.of(context).pop();
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => SettingsScreen(
-                    homeSetState,
-                  ),
-                ),
+              context.pop();
+              context.pushNamed(
+                'settings',
+                extra: {
+                  'update': homeSetState,
+                },
               );
             },
           ),
@@ -184,13 +151,8 @@ class MainDrawer extends StatelessWidget {
               Icons.info_outlined,
             ),
             onTap: () {
-              Navigator.of(context).pop();
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const AboutScreen(),
-                ),
-              );
+              context.pop();
+              context.pushNamed('about');
             },
           ),
           enableExperimentalFeatures

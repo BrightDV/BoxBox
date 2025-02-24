@@ -491,3 +491,56 @@ class DriverDetailsFragment extends StatelessWidget {
     );
   }
 }
+
+class DriverDetailsFromIdScreen extends StatelessWidget {
+  final String detailsPath;
+  const DriverDetailsFromIdScreen(this.detailsPath, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: FutureBuilder(
+        future: FormulaOneScraper().scrapeDriversDetails('', detailsPath),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return RequestErrorWidget(
+              snapshot.error.toString(),
+            );
+          } else if (snapshot.hasData) {
+            List driverName = snapshot.data![4][0].split(' ');
+            driverName.last = driverName.last.toString().toUpperCase();
+            return Scaffold(
+              appBar: AppBar(
+                title: Text(
+                  driverName.join(' '),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                backgroundColor: Theme.of(context).colorScheme.onPrimary,
+              ),
+              body: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Center(
+                      child: DriverImageProvider(detailsPath, 'driver'),
+                    ),
+                    DriverDetailsFragment(
+                      snapshot.data!,
+                    )
+                  ],
+                ),
+              ),
+            );
+          } else {
+            return const Center(
+              child: LoadingIndicatorUtil(),
+            );
+          }
+        },
+      ),
+    );
+  }
+}

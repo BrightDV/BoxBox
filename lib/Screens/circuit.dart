@@ -17,8 +17,6 @@
  * Copyright (c) 2022-2024, BrightDV
  */
 
-import 'package:boxbox/Screens/article.dart';
-import 'package:boxbox/Screens/race_details.dart';
 import 'package:boxbox/api/event_tracker.dart';
 import 'package:boxbox/api/formula1.dart';
 import 'package:boxbox/api/formulae.dart';
@@ -36,6 +34,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -107,10 +106,12 @@ class CircuitScreen extends StatelessWidget {
                           Icon(
                             Icons.arrow_forward_rounded,
                           ),
-                          RaceDetailsScreen(
-                            race,
-                            false, // offline
-                          ),
+                          route: 'results',
+                          pathParameters: {'meetingId': race.meetingId},
+                          extra: {
+                            'race': race,
+                            'hasSprint': false, // offline
+                          },
                         )
                       : snapshot.hasData
                           ? Column(
@@ -123,21 +124,23 @@ class CircuitScreen extends StatelessWidget {
                                   Icon(
                                     Icons.arrow_forward_rounded,
                                   ),
-                                  RaceDetailsScreen(
-                                    scheduleLastSavedFormat == 'ergast'
+                                  route: 'results',
+                                  pathParameters: {'meetingId': race.meetingId},
+                                  extra: {
+                                    'race': scheduleLastSavedFormat == 'ergast'
                                         ? race
                                         : snapshot
                                             .data!['raceCustomBBParameter'],
-                                    championship == 'Formula E'
+                                    'hasSprint': championship == 'Formula E'
                                         ? false
                                         : snapshot.data!['meetingContext']
                                                 ['timetables'][2]['session'] ==
                                             's',
-                                    sessions: championship == 'Formula E'
+                                    'sessions': championship == 'Formula E'
                                         ? snapshot.data![
                                             'sessionsIdsCustomBBParameter']
                                         : null,
-                                  ),
+                                  },
                                 ),
                                 snapshot.data!['links'] != null &&
                                         snapshot.data!['links'].isNotEmpty &&
@@ -148,8 +151,10 @@ class CircuitScreen extends StatelessWidget {
                                         Icon(
                                           Icons.arrow_forward_rounded,
                                         ),
-                                        ArticleScreen(
-                                          snapshot.data!['links'].last['url']
+                                        route: 'article',
+                                        pathParameters: {
+                                          'id': snapshot
+                                                  .data!['links'].last['url']
                                                   .endsWith('.html')
                                               ? snapshot
                                                   .data!['links'].last['url']
@@ -158,9 +163,8 @@ class CircuitScreen extends StatelessWidget {
                                                   .data!['links'].last['url']
                                                   .split('.')
                                                   .last,
-                                          '',
-                                          true,
-                                        ),
+                                        },
+                                        extra: {'isFromLink': true},
                                       )
                                     : Container(),
                                 championship == 'Formula 1'
@@ -170,7 +174,7 @@ class CircuitScreen extends StatelessWidget {
                                         Icon(
                                           Icons.map_outlined,
                                         ),
-                                        CircuitMapScreen(
+                                        widget: CircuitMapScreen(
                                           scheduleLastSavedFormat == 'ergast'
                                               ? race.circuitId
                                               : Convert()
@@ -220,10 +224,12 @@ class CircuitScreen extends StatelessWidget {
                               Icon(
                                 Icons.arrow_forward_rounded,
                               ),
-                              RaceDetailsScreen(
-                                race,
-                                false, // offline
-                              ),
+                              route: 'results',
+                              pathParameters: {'meetingId': race.meetingId},
+                              extra: {
+                                'race': race,
+                                'hasSprint': false, //offline
+                              },
                             ),
                 ),
               ),
@@ -248,6 +254,9 @@ class CircuitScreen extends StatelessWidget {
                                 pinned: true,
                                 centerTitle: true,
                                 flexibleSpace: FlexibleSpaceBar(
+                                  background: RaceImageProvider(
+                                    snapshot.data!['raceCustomBBParameter'],
+                                  ),
                                   title: Text(
                                     snapshot.data!['raceCustomBBParameter']
                                         .raceName,
@@ -269,13 +278,19 @@ class CircuitScreen extends StatelessWidget {
                                   Icon(
                                     Icons.arrow_forward_rounded,
                                   ),
-                                  RaceDetailsScreen(
-                                    snapshot.data!['raceCustomBBParameter'],
-                                    snapshot.data!['meetingContext']
-                                            ['timetables'][2]['session'] ==
-                                        's',
-                                    isFromRaceHub: true,
-                                  ),
+                                  route: 'results',
+                                  pathParameters: {
+                                    'meetingId': snapshot
+                                        .data!['meetingContext']['meetingKey']
+                                  },
+                                  extra: {
+                                    'race':
+                                        snapshot.data!['raceCustomBBParameter'],
+                                    'hasSprint':
+                                        snapshot.data!['meetingContext']
+                                                ['timetables'][2]['session'] ==
+                                            's',
+                                  },
                                 ),
                                 snapshot.data!['links'] != null &&
                                         snapshot.data!['links'].isNotEmpty &&
@@ -286,8 +301,10 @@ class CircuitScreen extends StatelessWidget {
                                         Icon(
                                           Icons.arrow_forward_rounded,
                                         ),
-                                        ArticleScreen(
-                                          snapshot.data!['links'][1]['url']
+                                        route: 'article',
+                                        pathParameters: {
+                                          'id': snapshot.data!['links'][1]
+                                                      ['url']
                                                   .endsWith('.html')
                                               ? snapshot.data!['links'][1]
                                                       ['url']
@@ -296,9 +313,32 @@ class CircuitScreen extends StatelessWidget {
                                                       ['url']
                                                   .split('.')
                                                   .last,
-                                          '',
-                                          true,
+                                        },
+                                        extra: {'isFromLink': true},
+                                      )
+                                    : Container(),
+                                championship == 'Formula 1'
+                                    ? BoxBoxButton(
+                                        AppLocalizations.of(context)!
+                                            .grandPrixMap,
+                                        Icon(
+                                          Icons.map_outlined,
                                         ),
+                                        widget: CircuitMapScreen(
+                                          scheduleLastSavedFormat == 'ergast'
+                                              ? snapshot
+                                                  .data![
+                                                      'raceCustomBBParameter']
+                                                  .circuitId
+                                              : Convert()
+                                                  .circuitNameFromFormulaOneToErgastForCircuitPoints(
+                                                  snapshot
+                                                      .data![
+                                                          'raceCustomBBParameter']
+                                                      .country,
+                                                ),
+                                        ),
+                                        isDialog: true,
                                       )
                                     : Container(),
                                 snapshot.data!['raceResults'] != null &&
@@ -688,17 +728,19 @@ class RaceResults extends StatelessWidget {
                       bottomRight: Radius.circular(15),
                     ),
                     child: ElevatedButton(
-                      onPressed: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => RaceDetailsScreen(
-                            race,
-                            snapshot.data!['meetingContext']['timetables'][2]
-                                    ['session'] ==
-                                's',
-                            tab: 10,
-                          ),
-                        ),
+                      onPressed: () => context.pushNamed(
+                        'results',
+                        pathParameters: {
+                          'meetingId': snapshot.data!['meetingContext']
+                              ['meetingKey'],
+                        },
+                        extra: {
+                          'race': race,
+                          'hasSprint': snapshot.data!['meetingContext']
+                                  ['timetables'][2]['session'] ==
+                              's',
+                          'tab': 10,
+                        },
                       ),
                       style: ElevatedButton.styleFrom(
                         shape: const ContinuousRectangleBorder(
