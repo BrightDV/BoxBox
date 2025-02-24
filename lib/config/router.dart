@@ -43,12 +43,10 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 
 class RouterLocalConfig {
-  // TODO: handle shared links here
   final router = GoRouter(
     errorBuilder: (context, state) => ErrorNotFoundScreen(
       route: state.uri.toString(),
     ),
-    //debugLogDiagnostics: true,
     routes: [
       GoRoute(
         path: '/',

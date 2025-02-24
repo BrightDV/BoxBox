@@ -21,13 +21,9 @@ import 'package:boxbox/Screens/article.dart';
 import 'package:boxbox/Screens/schedule.dart';
 import 'package:boxbox/Screens/standings.dart';
 import 'package:boxbox/Screens/video.dart';
-import 'package:boxbox/api/videos.dart';
-import 'package:boxbox/helpers/loading_indicator_util.dart';
-import 'package:boxbox/helpers/request_error.dart';
+import 'package:boxbox/Screens/videos.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
-// TODO: open *only* formula1.com links
 
 class HandleRoute {
   static Route? handleRoute(String? url) {
@@ -35,14 +31,14 @@ class HandleRoute {
 
     return PageRouteBuilder(
       opaque: false,
-      pageBuilder: (_, __, ___) => ArticleUrlHandler(url),
+      pageBuilder: (_, __, ___) => SharedLinkHandler(url),
     );
   }
 }
 
-class ArticleUrlHandler extends StatelessWidget {
+class SharedLinkHandler extends StatelessWidget {
   final String sharedUrl;
-  const ArticleUrlHandler(
+  const SharedLinkHandler(
     this.sharedUrl, {
     Key? key,
   }) : super(key: key);
@@ -56,28 +52,31 @@ class ArticleUrlHandler extends StatelessWidget {
         .replaceAll('.html', '');
     if (url.endsWith('/en') || url == '/en/latest/all') {
       return Container();
-    } else if (url.startsWith('/en/latest/article/')) {
+    } else if (url == '/en/video') {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text(
+            AppLocalizations.of(context)!.videos,
+          ),
+          backgroundColor: Theme.of(context).colorScheme.onPrimary,
+        ),
+        body: VideosScreen(ScrollController()),
+      );
+    } else if (url.startsWith('/en/latest/article.')) {
       return ArticleScreen(
         url.split('.').last,
         '',
         true,
       );
+    } else if (url.startsWith('/en/latest/article/')) {
+      return ArticleScreen(
+        url.split('/').last,
+        '',
+        true,
+      );
     } else if (url.startsWith('/en/latest/video.')) {
       String videoId = url.split('.')[2];
-      return Scaffold(
-        body: FutureBuilder<Video>(
-          future: F1VideosFetcher().getVideoDetails(videoId),
-          builder: (context, snapshot) => snapshot.hasError
-              ? RequestErrorWidget(
-                  snapshot.error.toString(),
-                )
-              : snapshot.hasData
-                  ? VideoScreen(snapshot.data!)
-                  : const Center(
-                      child: LoadingIndicatorUtil(),
-                    ),
-        ),
-      );
+      return VideoScreenFromId(videoId);
     } else if (url.startsWith('/en/racing/$year')) {
       return Scaffold(
         appBar: AppBar(
@@ -88,21 +87,21 @@ class ArticleUrlHandler extends StatelessWidget {
         ),
         body: const ScheduleScreen(),
       );
-    } else if (url == '/en/results.html/$year/drivers') {
+    } else if (url == '/en/results/$year/drivers') {
       return Scaffold(
         appBar: AppBar(
           title: Text(
-            AppLocalizations.of(context)!.schedule,
+            AppLocalizations.of(context)!.standings,
           ),
           backgroundColor: Theme.of(context).colorScheme.onPrimary,
         ),
         body: const StandingsScreen(),
       );
-    } else if (url == '/en/results.html/$year/teams') {
+    } else if (url == '/en/results/$year/teams') {
       return Scaffold(
         appBar: AppBar(
           title: Text(
-            AppLocalizations.of(context)!.schedule,
+            AppLocalizations.of(context)!.standings,
           ),
           backgroundColor: Theme.of(context).colorScheme.onPrimary,
         ),
