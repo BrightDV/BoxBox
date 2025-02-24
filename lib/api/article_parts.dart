@@ -17,9 +17,6 @@
  * Copyright (c) 2022-2024, BrightDV
  */
 
-import 'package:boxbox/Screens/article.dart';
-import 'package:boxbox/Screens/free_practice_screen.dart';
-import 'package:boxbox/Screens/race_details.dart';
 import 'package:boxbox/api/formula1.dart';
 import 'package:boxbox/helpers/buttons.dart';
 import 'package:boxbox/helpers/custom_physics.dart';
@@ -32,6 +29,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:loading_indicator/loading_indicator.dart';
@@ -412,7 +410,8 @@ class AtomQuiz extends StatelessWidget {
       Icon(
         Icons.bar_chart,
       ),
-      Scaffold(
+      isRoute: false,
+      widget: Scaffold(
         appBar: AppBar(
           title: Text(
             AppLocalizations.of(context)!.quiz,
@@ -515,7 +514,8 @@ class AtomScribbleLive extends StatelessWidget {
           ],
         ),
       ),
-      Scaffold(
+      isRoute: false,
+      widget: Scaffold(
         appBar: AppBar(
           title: Text(
             AppLocalizations.of(context)!.liveBlog,
@@ -561,7 +561,8 @@ class AtomInteractiveExperience extends StatelessWidget {
           ],
         ),
       ),
-      Scaffold(
+      isRoute: false,
+      widget: Scaffold(
         appBar: AppBar(
           title: Text(
             element['fields']['title'],
@@ -926,112 +927,67 @@ class AtomSessionResults extends StatelessWidget {
                       ),
                     ),
                     child: ElevatedButton(
-                      onPressed: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => element['fields']['sessionType']
-                                  .startsWith('Practice')
-                              ? FreePracticeScreen(
-                                  element['fields'][
-                                                  'raceResults${element['fields']['sessionType']}']
-                                              ['description']
-                                          .endsWith('1')
-                                      ? AppLocalizations.of(context)!
-                                          .freePracticeOne
-                                      : element['fields'][
-                                                      'raceResults${element['fields']['sessionType']}']
-                                                  ['description']
-                                              .endsWith('2')
-                                          ? AppLocalizations.of(context)!
-                                              .freePracticeTwo
-                                          : AppLocalizations.of(context)!
-                                              .freePracticeThree,
-                                  int.parse(
-                                    element['fields'][
+                      onPressed: () => element['fields']['sessionType']
+                              .startsWith('Practice')
+                          ? context.pushNamed(
+                              'practice',
+                              pathParameters: {
+                                'sessionIndex': element['fields'][
+                                            'raceResults${element['fields']['sessionType']}']
+                                        ['session']
+                                    .substring(1),
+                                'meetingId': element['fields']['meetingKey'],
+                              },
+                              extra: {
+                                'sessionTitle': element['fields'][
                                                 'raceResults${element['fields']['sessionType']}']
-                                            ['session']
-                                        .substring(1),
-                                  ),
-                                  '',
-                                  element['fields']['meetingKey'],
-                                  int.parse(
-                                    element['fields']['season'],
-                                  ),
-                                  element['fields']['meetingOfficialName'],
-                                )
-                              : Scaffold(
-                                  appBar: AppBar(
-                                    title: Text(
-                                      element['fields']['sessionType'] == 'Race'
-                                          ? AppLocalizations.of(context)!.race
-                                          : element['fields']['sessionType'] ==
-                                                  'Sprint'
-                                              ? AppLocalizations.of(context)!
-                                                  .sprint
-                                              : element['fields']
-                                                          ['sessionType'] ==
-                                                      'Sprint Shootout'
-                                                  ? element['fields']
-                                                                  [
-                                                                  'raceResultsSprintShootout']
-                                                              ['description'] ==
-                                                          'Sprint Qualifying'
-                                                      ? 'Sprint Qualifying'
-                                                      : 'Sprint Shootout'
-                                                  : element['fields']
-                                                              ['sessionType']
-                                                          .contains(
-                                                              'Starting Grid')
-                                                      ? AppLocalizations.of(
-                                                              context)!
-                                                          .startingGrid
-                                                      : AppLocalizations.of(
-                                                              context)!
-                                                          .qualifyings,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                    backgroundColor:
-                                        Theme.of(context).colorScheme.onPrimary,
-                                  ),
-                                  backgroundColor:
-                                      Theme.of(context).colorScheme.surface,
-                                  body: element['fields']['sessionType'] ==
-                                              'Race' ||
-                                          element['fields']['sessionType'] ==
-                                              'Sprint'
-                                      ? RaceResultsProvider(
-                                          raceUrl: element['fields']
-                                                      ['sessionType'] ==
-                                                  'Race'
-                                              ? 'race'
-                                              : 'sprint',
-                                          raceId: element['fields']
-                                              ['meetingKey'],
-                                        )
-                                      : SingleChildScrollView(
-                                          child: element['fields']
-                                                      ['sessionType']
-                                                  .contains('Starting Grid')
-                                              ? StartingGridProvider(
-                                                  element['fields']
-                                                      ['meetingKey'],
-                                                )
-                                              : QualificationResultsProvider(
-                                                  raceUrl: element['fields']
-                                                      ['cta'],
-                                                  isSprintQualifying: element[
-                                                                  'fields']
-                                                              ['sessionType'] ==
-                                                          'Sprint Shootout'
-                                                      ? true
-                                                      : false,
-                                                ),
-                                        ),
+                                            ['description']
+                                        .endsWith('1')
+                                    ? AppLocalizations.of(context)!
+                                        .freePracticeOne
+                                    : element['fields'][
+                                                    'raceResults${element['fields']['sessionType']}']
+                                                ['description']
+                                            .endsWith('2')
+                                        ? AppLocalizations.of(context)!
+                                            .freePracticeTwo
+                                        : AppLocalizations.of(context)!
+                                            .freePracticeThree,
+                                'sessionIndex': int.parse(
+                                  element['fields'][
+                                              'raceResults${element['fields']['sessionType']}']
+                                          ['session']
+                                      .substring(1),
                                 ),
-                        ),
-                      ),
+                                'circuitId': '',
+                                'meetingId': element['fields']['meetingKey'],
+                                'raceYear': int.parse(
+                                  element['fields']['season'],
+                                ),
+                                'raceName': element['fields']
+                                    ['meetingOfficialName'],
+                              },
+                            )
+                          : element['fields']['sessionType'] == 'Race'
+                              ? context.pushNamed('race', pathParameters: {
+                                  'meetingId': element['fields']['meetingKey']
+                                })
+                              : element['fields']['sessionType'] == 'Sprint'
+                                  ? context.pushNamed('sprint',
+                                      pathParameters: {'meetingId': element['fields']['meetingKey']})
+                                  : element['fields']['sessionType'] ==
+                                          'Sprint Shootout'
+                                      ? context.pushNamed('sprint-shootout',
+                                          pathParameters: {'meetingId': element['fields']['meetingKey']})
+                                      : element['fields']['sessionType'] ==
+                                              'Starting Grid'
+                                          ? context.pushNamed('starting-grid',
+                                              pathParameters: {'meetingId': element['fields']['meetingKey']})
+                                          : context.pushNamed('qualifyings',
+                                              pathParameters: {
+                                                  'meetingId': element['fields']
+                                                      ['meetingKey']
+                                                }),
                       style: ElevatedButton.styleFrom(
                         shape: const ContinuousRectangleBorder(
                           borderRadius: BorderRadius.zero,
@@ -1228,15 +1184,14 @@ class AtomLinkList extends StatelessWidget {
                   String articleId = articleUrl
                       .substring(43, articleUrl.length - 5)
                       .split('.')[1];
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ArticleScreen(
-                        articleId,
-                        element['fields']['items'][index - 1]['title'],
-                        true,
-                      ),
-                    ),
+                  context.pushNamed(
+                    'article',
+                    pathParameters: {'id': articleId},
+                    extra: {
+                      'articleName': element['fields']['items'][index - 1]
+                          ['title'],
+                      'isFromLink': true,
+                    },
                   );
                 },
                 child: Padding(

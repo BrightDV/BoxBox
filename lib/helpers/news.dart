@@ -21,19 +21,14 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:background_downloader/background_downloader.dart' as bgdl;
-import 'package:boxbox/Screens/circuit.dart';
-import 'package:boxbox/Screens/schedule.dart';
 import 'package:boxbox/api/brightcove.dart';
 import 'package:boxbox/api/formula1.dart';
 import 'package:boxbox/api/formulae.dart';
-import 'package:boxbox/api/race_components.dart';
 import 'package:boxbox/helpers/custom_player_controls.dart';
 import 'package:boxbox/helpers/download.dart';
 import 'package:boxbox/helpers/hover.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/request_error.dart';
-import 'package:boxbox/Screens/article.dart';
-import 'package:boxbox/Screens/standings.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
@@ -44,6 +39,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
@@ -218,17 +214,15 @@ class NewsItem extends StatelessWidget {
                   duration: const Duration(milliseconds: 200),
                   child: InkWell(
                     borderRadius: BorderRadius.circular(15.0),
-                    onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ArticleScreen(
-                          item.newsId,
-                          item.title,
-                          false,
-                          news: item,
-                          championshipOfArticle: articleChampionship ?? '',
-                        ),
-                      ),
+                    onTap: () => context.pushNamed(
+                      'article',
+                      pathParameters: {'id': item.newsId},
+                      extra: {
+                        'articleName': item.title,
+                        'championshipOfArticle': articleChampionship ?? '',
+                        'isFromLink': false,
+                        'news': item,
+                      },
                     ),
                     hoverColor: HSLColor.fromColor(
                       Theme.of(context).colorScheme.surface,
@@ -356,17 +350,15 @@ class NewsItem extends StatelessWidget {
                   duration: const Duration(milliseconds: 200),
                   child: InkWell(
                     borderRadius: BorderRadius.circular(15.0),
-                    onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ArticleScreen(
-                          item.newsId,
-                          item.title,
-                          false,
-                          news: item,
-                          championshipOfArticle: articleChampionship ?? '',
-                        ),
-                      ),
+                    onTap: () => context.pushNamed(
+                      'article',
+                      pathParameters: {'id': item.newsId},
+                      extra: {
+                        'articleName': item.title,
+                        'championshipOfArticle': articleChampionship ?? '',
+                        'isFromLink': false,
+                        'news': item,
+                      },
                     ),
                     hoverColor: HSLColor.fromColor(
                       Theme.of(context).colorScheme.surface,
@@ -1334,119 +1326,55 @@ class TextParagraphRenderer extends StatelessWidget {
         onTapLink: (text, url, title) {
           if (url!.startsWith('https://www.formula1.com/en/latest/article.')) {
             String articleId = url.substring(43, url.length - 5).split('.')[1];
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => ArticleScreen(
-                  articleId,
-                  text,
-                  true,
-                  championshipOfArticle: 'Formula 1',
-                ),
-              ),
+            context.pushNamed(
+              'article',
+              pathParameters: {'id': articleId},
+              extra: {
+                'articleName': text,
+                'championshipOfArticle': 'Formula 1',
+                'isFromLink': true,
+              },
             );
           } else if (url
               .startsWith('https://www.formula1.com/en/latest/article/')) {
             String articleId = url.split('.').last;
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => ArticleScreen(
-                  articleId,
-                  text,
-                  true,
-                  championshipOfArticle: 'Formula 1',
-                ),
-              ),
+            context.pushNamed(
+              'article',
+              pathParameters: {'id': articleId},
+              extra: {
+                'articleName': text,
+                'championshipOfArticle': 'Formula 1',
+                'isFromLink': true,
+              },
             );
           } else if (url.startsWith('https://www.formula1.com/en/results')) {
             String standingsType =
                 url.substring(0, url.length - 5).split('/')[6];
             if (standingsType == "driver-standings" ||
                 standingsType == "drivers") {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => Scaffold(
-                    appBar: AppBar(
-                      centerTitle: true,
-                      title: Text(
-                        AppLocalizations.of(context)!.standings,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      backgroundColor: Theme.of(context).colorScheme.onPrimary,
-                    ),
-                    body: const StandingsScreen(),
-                  ),
-                ),
-              );
+              context.pushNamed("standings");
             } else if (standingsType == "constructor-standings" ||
                 standingsType == "team") {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => Scaffold(
-                    appBar: AppBar(
-                      centerTitle: true,
-                      title: Text(
-                        AppLocalizations.of(context)!.standings,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      backgroundColor: Theme.of(context).colorScheme.onPrimary,
-                    ),
-                    body: const StandingsScreen(
-                      switchToTeamStandings: true,
-                    ),
-                  ),
-                ),
+              context.pushNamed(
+                "standings",
+                extra: {"switchToTeamStandings": true},
               );
             } else {
               launchUrl(Uri.parse(url));
             }
           } else if (url ==
               "https://www.formula1.com/en/racing/${DateTime.now().year}.html") {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => Scaffold(
-                  appBar: AppBar(
-                    title: Text(
-                      AppLocalizations.of(context)!.schedule,
-                    ),
-                    backgroundColor: Theme.of(context).colorScheme.onPrimary,
-                  ),
-                  body: const ScheduleScreen(),
-                ),
-              ),
-            );
+            context.pushNamed("schedule");
           } else if ((url
                       .startsWith("https://www.formula1.com/en/racing/202") ||
                   url.startsWith(
                       "https://www.formula1.com/content/fom-website/en/racing/202")) &&
               url.split('/').length > 5) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => CircuitScreen(
-                  Race(
-                    '0',
-                    '',
-                    '',
-                    '',
-                    '',
-                    url.split('/').last.split('.')[0],
-                    '',
-                    '',
-                    '',
-                    [],
-                  ),
-                  isFetched: false,
-                ),
-              ),
+            // TODO: converter or scraping?
+            context.pushNamed(
+              'racing',
+              pathParameters: {'meetingId': url.split('/').last.split('.')[0]},
+              extra: {'isFetched': false},
             );
           } else if (url == 'https://linktr.ee/F1raceprogramme') {
             Fluttertoast.showToast(
@@ -1462,16 +1390,14 @@ class TextParagraphRenderer extends StatelessWidget {
             );
           } else if (url.startsWith('https://www.fiaformulae.com/en/news/')) {
             String articleId = url.split('/').last;
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => ArticleScreen(
-                  articleId,
-                  text,
-                  true,
-                  championshipOfArticle: 'Formula E',
-                ),
-              ),
+            context.pushNamed(
+              'article',
+              pathParameters: {'id': articleId},
+              extra: {
+                'articleName': text,
+                'championshipOfArticle': 'Formula E',
+                'isFromLink': true,
+              },
             );
           } else {
             launchUrl(Uri.parse(url));

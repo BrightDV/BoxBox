@@ -19,9 +19,10 @@
 
 import 'dart:async';
 
-import 'package:add_2_calendar/add_2_calendar.dart';
+import 'package:add_2_calendar/add_2_calendar.dart' as a2c;
 import 'package:boxbox/api/driver_components.dart';
 import 'package:boxbox/api/ergast.dart';
+import 'package:boxbox/api/event_tracker.dart';
 import 'package:boxbox/api/formula1.dart';
 import 'package:boxbox/api/formulae.dart';
 import 'package:boxbox/api/race_components.dart';
@@ -39,6 +40,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_timer_countdown/flutter_timer_countdown.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -63,257 +65,256 @@ class RaceDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: race.isPreSeasonTesting ?? false // only f1
-            ? NestedScrollView(
-                headerSliverBuilder:
-                    (BuildContext context, bool innerBoxIsScrolled) {
-                  return <Widget>[
-                    SliverAppBar(
-                      expandedHeight: 200.0,
-                      floating: false,
-                      pinned: true,
-                      centerTitle: true,
-                      flexibleSpace: FlexibleSpaceBar(
-                        background: RaceImageProvider(
-                          race,
-                        ),
-                        title: Text(
-                          race.country,
-                        ),
+      body: race.isPreSeasonTesting ?? false // only f1
+          ? NestedScrollView(
+              headerSliverBuilder:
+                  (BuildContext context, bool innerBoxIsScrolled) {
+                return <Widget>[
+                  SliverAppBar(
+                    expandedHeight: 200.0,
+                    floating: false,
+                    pinned: true,
+                    centerTitle: true,
+                    flexibleSpace: FlexibleSpaceBar(
+                      background: RaceImageProvider(
+                        race,
                       ),
-                      backgroundColor: Theme.of(context).colorScheme.onPrimary,
+                      title: Text(
+                        race.country,
+                      ),
                     ),
-                  ];
-                },
-                body: FreePracticesResultsProvider(
-                  race,
-                  false,
-                  isFromRaceHub: isFromRaceHub,
-                ),
-              )
-            : DefaultTabController(
-                length: 3,
-                initialIndex: tab != null
-                    ? tab == 10
-                        ? 2
-                        : tab!
-                    : 0,
-                child: Builder(
-                  builder: (BuildContext context) {
-                    return NestedScrollView(
-                      headerSliverBuilder:
-                          (BuildContext context, bool innerBoxIsScrolled) {
-                        return <Widget>[
-                          SliverAppBar(
-                            expandedHeight: 200.0,
-                            floating: false,
-                            pinned: true,
-                            centerTitle: true,
-                            flexibleSpace: FlexibleSpaceBar(
-                              background: RaceImageProvider(
-                                race,
-                              ),
-                              title: Text(
-                                race.country,
-                              ),
+                    backgroundColor: Theme.of(context).colorScheme.onPrimary,
+                  ),
+                ];
+              },
+              body: FreePracticesResultsProvider(
+                race,
+                false,
+                isFromRaceHub: isFromRaceHub,
+              ),
+            )
+          : DefaultTabController(
+              length: 3,
+              initialIndex: tab != null
+                  ? tab == 10
+                      ? 2
+                      : tab!
+                  : 0,
+              child: Builder(
+                builder: (BuildContext context) {
+                  return NestedScrollView(
+                    headerSliverBuilder:
+                        (BuildContext context, bool innerBoxIsScrolled) {
+                      return <Widget>[
+                        SliverAppBar(
+                          expandedHeight: 200.0,
+                          floating: false,
+                          pinned: true,
+                          centerTitle: true,
+                          flexibleSpace: FlexibleSpaceBar(
+                            background: RaceImageProvider(
+                              race,
                             ),
-                            backgroundColor:
-                                Theme.of(context).colorScheme.onPrimary,
+                            title: Text(
+                              race.country,
+                            ),
                           ),
-                          SliverPersistentHeader(
-                            delegate: _SliverAppBarDelegate(
-                              TabBar(
-                                dividerColor: Colors.transparent,
-                                tabs: hasSprint
-                                    ? <Widget>[
+                          backgroundColor:
+                              Theme.of(context).colorScheme.onPrimary,
+                        ),
+                        SliverPersistentHeader(
+                          delegate: _SliverAppBarDelegate(
+                            TabBar(
+                              dividerColor: Colors.transparent,
+                              tabs: hasSprint
+                                  ? <Widget>[
+                                      Tab(
+                                        text: AppLocalizations.of(context)!
+                                            .freePracticeShort,
+                                      ),
+                                      Tab(
+                                        text: AppLocalizations.of(context)!
+                                            .sprint
+                                            .toUpperCase(),
+                                      ),
+                                      Tab(
+                                        text: AppLocalizations.of(context)!
+                                            .race
+                                            .toUpperCase(),
+                                      ),
+                                    ]
+                                  : <Widget>[
+                                      Tab(
+                                        text: AppLocalizations.of(context)!
+                                            .freePracticeShort,
+                                      ),
+                                      Tab(
+                                        text: AppLocalizations.of(context)!
+                                            .qualifyingsShort,
+                                      ),
+                                      Tab(
+                                        text: AppLocalizations.of(context)!
+                                            .race
+                                            .toUpperCase(),
+                                      ),
+                                    ],
+                            ),
+                          ),
+                          pinned: true,
+                        ),
+                      ];
+                    },
+                    body: hasSprint // only f1
+                        ? TabBarView(
+                            children: [
+                              FreePracticesResultsProvider(
+                                race,
+                                hasSprint,
+                                isFromRaceHub: isFromRaceHub,
+                              ),
+                              DefaultTabController(
+                                length: 2,
+                                initialIndex: tab == 10 ? 1 : 0,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    TabBar(
+                                      tabs: <Widget>[
                                         Tab(
                                           text: AppLocalizations.of(context)!
-                                              .freePracticeShort,
-                                        ),
-                                        Tab(
-                                          text: AppLocalizations.of(context)!
-                                              .sprint
+                                              .qualifyings
                                               .toUpperCase(),
                                         ),
                                         Tab(
                                           text: AppLocalizations.of(context)!
-                                              .race
-                                              .toUpperCase(),
-                                        ),
-                                      ]
-                                    : <Widget>[
-                                        Tab(
-                                          text: AppLocalizations.of(context)!
-                                              .freePracticeShort,
-                                        ),
-                                        Tab(
-                                          text: AppLocalizations.of(context)!
-                                              .qualifyingsShort,
-                                        ),
-                                        Tab(
-                                          text: AppLocalizations.of(context)!
-                                              .race
+                                              .results
                                               .toUpperCase(),
                                         ),
                                       ],
-                              ),
-                            ),
-                            pinned: true,
-                          ),
-                        ];
-                      },
-                      body: hasSprint // only f1
-                          ? TabBarView(
-                              children: [
-                                FreePracticesResultsProvider(
-                                  race,
-                                  hasSprint,
-                                  isFromRaceHub: isFromRaceHub,
-                                ),
-                                DefaultTabController(
-                                  length: 2,
-                                  initialIndex: tab == 10 ? 1 : 0,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      TabBar(
-                                        tabs: <Widget>[
-                                          Tab(
-                                            text: AppLocalizations.of(context)!
-                                                .qualifyings
-                                                .toUpperCase(),
-                                          ),
-                                          Tab(
-                                            text: AppLocalizations.of(context)!
-                                                .results
-                                                .toUpperCase(),
-                                          ),
-                                        ],
-                                      ),
-                                      Expanded(
-                                        child: TabBarView(
-                                          children: [
-                                            MediaQuery.removePadding(
-                                              context: context,
-                                              removeTop: true,
-                                              child: SafeArea(
-                                                child:
-                                                    QualificationResultsProvider(
-                                                  race: race,
-                                                  hasSprint: hasSprint,
-                                                  isSprintQualifying: true,
-                                                ),
-                                              ),
-                                            ),
-                                            MediaQuery.removePadding(
-                                              context: context,
-                                              removeTop: true,
-                                              child: SafeArea(
-                                                child: SprintResultsProvider(
-                                                  race: race,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                                DefaultTabController(
-                                  length: 2,
-                                  initialIndex: tab == 10 ? 1 : 0,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      TabBar(
-                                        tabs: <Widget>[
-                                          Tab(
-                                            text: AppLocalizations.of(context)!
-                                                .qualifyings
-                                                .toUpperCase(),
-                                          ),
-                                          Tab(
-                                            text: AppLocalizations.of(context)!
-                                                .results
-                                                .toUpperCase(),
-                                          ),
-                                        ],
-                                      ),
-                                      Expanded(
-                                        child: TabBarView(
-                                          children: [
-                                            MediaQuery.removePadding(
-                                              context: context,
-                                              removeTop: true,
-                                              child: SafeArea(
-                                                child:
-                                                    QualificationResultsProvider(
-                                                  race: race,
-                                                  hasSprint: hasSprint,
-                                                ),
-                                              ),
-                                            ),
-                                            MediaQuery.removePadding(
-                                              context: context,
-                                              removeTop: true,
-                                              child: SafeArea(
-                                                child: RaceResultsProvider(
-                                                  race: race,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            )
-                          : TabBarView(
-                              children: [
-                                FreePracticesResultsProvider(
-                                  race,
-                                  hasSprint,
-                                  isFromRaceHub: isFromRaceHub,
-                                  sessionsId: sessions != null
-                                      ? sessions!.length == 4
-                                          ? sessions!.sublist(0, 2)
-                                          : sessions!.sublist(0, 1)
-                                      : [],
-                                ),
-                                MediaQuery.removePadding(
-                                  context: context,
-                                  removeTop: true,
-                                  child: SafeArea(
-                                    child: QualificationResultsProvider(
-                                      race: race,
-                                      hasSprint: hasSprint,
-                                      sessionId: sessions != null
-                                          ? sessions!.length == 3
-                                              ? sessions![1]
-                                              : sessions![2]
-                                          : null,
                                     ),
-                                  ),
+                                    Expanded(
+                                      child: TabBarView(
+                                        children: [
+                                          MediaQuery.removePadding(
+                                            context: context,
+                                            removeTop: true,
+                                            child: SafeArea(
+                                              child:
+                                                  QualificationResultsProvider(
+                                                race: race,
+                                                hasSprint: hasSprint,
+                                                isSprintQualifying: true,
+                                              ),
+                                            ),
+                                          ),
+                                          MediaQuery.removePadding(
+                                            context: context,
+                                            removeTop: true,
+                                            child: SafeArea(
+                                              child: SprintResultsProvider(
+                                                race: race,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                  ],
                                 ),
-                                MediaQuery.removePadding(
-                                  context: context,
-                                  removeTop: true,
-                                  child: RaceResultsProvider(
+                              ),
+                              DefaultTabController(
+                                length: 2,
+                                initialIndex: tab == 10 ? 1 : 0,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    TabBar(
+                                      tabs: <Widget>[
+                                        Tab(
+                                          text: AppLocalizations.of(context)!
+                                              .qualifyings
+                                              .toUpperCase(),
+                                        ),
+                                        Tab(
+                                          text: AppLocalizations.of(context)!
+                                              .results
+                                              .toUpperCase(),
+                                        ),
+                                      ],
+                                    ),
+                                    Expanded(
+                                      child: TabBarView(
+                                        children: [
+                                          MediaQuery.removePadding(
+                                            context: context,
+                                            removeTop: true,
+                                            child: SafeArea(
+                                              child:
+                                                  QualificationResultsProvider(
+                                                race: race,
+                                                hasSprint: hasSprint,
+                                              ),
+                                            ),
+                                          ),
+                                          MediaQuery.removePadding(
+                                            context: context,
+                                            removeTop: true,
+                                            child: SafeArea(
+                                              child: RaceResultsProvider(
+                                                race: race,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          )
+                        : TabBarView(
+                            children: [
+                              FreePracticesResultsProvider(
+                                race,
+                                hasSprint,
+                                isFromRaceHub: isFromRaceHub,
+                                sessionsId: sessions != null
+                                    ? sessions!.length == 4
+                                        ? sessions!.sublist(0, 2)
+                                        : sessions!.sublist(0, 1)
+                                    : [],
+                              ),
+                              MediaQuery.removePadding(
+                                context: context,
+                                removeTop: true,
+                                child: SafeArea(
+                                  child: QualificationResultsProvider(
                                     race: race,
-                                    sessionId: sessions?.last,
+                                    hasSprint: hasSprint,
+                                    sessionId: sessions != null
+                                        ? sessions!.length == 3
+                                            ? sessions![1]
+                                            : sessions![2]
+                                        : null,
                                   ),
                                 ),
-                              ],
-                            ),
-                    );
-                  },
-                ),
-              ));
+                              ),
+                              MediaQuery.removePadding(
+                                context: context,
+                                removeTop: true,
+                                child: RaceResultsProvider(
+                                  race: race,
+                                  sessionId: sessions?.last,
+                                ),
+                              ),
+                            ],
+                          ),
+                  );
+                },
+              ),
+            ),
+    );
   }
 }
 
@@ -339,6 +340,33 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   @override
   bool shouldRebuild(_SliverAppBarDelegate oldDelegate) {
     return false;
+  }
+}
+
+class RaceDetailsFromIdScreen extends StatelessWidget {
+  final String meetingId;
+  const RaceDetailsFromIdScreen(this.meetingId, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: FutureBuilder(
+        future: EventTracker().getCircuitDetails(
+          meetingId,
+          isFromRaceHub: true,
+        ),
+        builder: (context, snapshot) => snapshot.hasError
+            ? RequestErrorWidget(snapshot.error.toString())
+            : snapshot.hasData
+                ? RaceDetailsScreen(
+                    snapshot.data!['raceCustomBBParameter'],
+                    snapshot.data!['meetingContext']['timetables'][2]
+                            ['session'] ==
+                        's',
+                  )
+                : LoadingIndicatorUtil(),
+      ),
+    );
   }
 }
 
@@ -411,56 +439,59 @@ class _FreePracticesResultsProviderState
                         )
                       : ListView.builder(
                           itemCount: hasSprint ? 1 : 3,
-                          itemBuilder: (context, index) => snapshot.data! >
-                                  index
-                              ? ListTile(
-                                  title: Text(
-                                    sessionsTitle[index],
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  onTap: () => Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => FreePracticeScreen(
+                          itemBuilder: (context, index) =>
+                              snapshot.data! > index
+                                  ? ListTile(
+                                      title: Text(
                                         sessionsTitle[index],
-                                        index + 1,
-                                        race.circuitId,
-                                        race.meetingId,
-                                        int.parse(
-                                          race.date.split('-')[2],
-                                        ),
-                                        race.raceName,
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      onTap: () => context.pushNamed(
+                                        'practice',
+                                        pathParameters: {
+                                          'sessionIndex':
+                                              (index + 1).toString(),
+                                          'meetingId': race.meetingId,
+                                        },
+                                        extra: {
+                                          'sessionTitle': sessionsTitle[index],
+                                          'sessionIndex': index + 1,
+                                          'circuitId': race.circuitId,
+                                          'meetingId': race.meetingId,
+                                          'raceYear': int.parse(
+                                            race.date.split('-')[2],
+                                          ),
+                                          'raceName': race.raceName,
+                                        },
+                                      ),
+                                    )
+                                  : Padding(
+                                      padding: const EdgeInsets.only(top: 25),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Text(
+                                            sessionsTitle[index],
+                                            style: TextStyle(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                          SessionCountdownTimer(
+                                            race,
+                                            index,
+                                            sessionsTitle[index],
+                                            update: update,
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                              top: 25,
+                                            ),
+                                            child: Divider(),
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                  ),
-                                )
-                              : Padding(
-                                  padding: const EdgeInsets.only(top: 25),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Text(
-                                        sessionsTitle[index],
-                                        style: TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                      SessionCountdownTimer(
-                                        race,
-                                        index,
-                                        sessionsTitle[index],
-                                        update: update,
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                          top: 25,
-                                        ),
-                                        child: Divider(),
-                                      ),
-                                    ],
-                                  ),
-                                ),
                         )
                   : const LoadingIndicatorUtil(),
         );
@@ -493,26 +524,28 @@ class _FreePracticesResultsProviderState
                     : sessionsTitle[index],
                 textAlign: TextAlign.center,
               ),
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => FreePracticeScreen(
-                    championship == 'Formula E' &&
-                            (widget.sessionsId?.length ?? 0) == 1
-                        ? sessionsTitle[2]
-                        : sessionsTitle[index],
-                    index + 1,
-                    race.circuitId,
-                    race.meetingId,
-                    DateTime.parse(race.date).year,
-                    race.raceName,
-                    sessionId: widget.sessionsId != null
-                        ? widget.sessionsId!.isNotEmpty
-                            ? widget.sessionsId![index]
-                            : null
-                        : null,
-                  ),
-                ),
+              onTap: () => context.pushNamed(
+                'practice',
+                pathParameters: {
+                  'sessionIndex': (index + 1).toString(),
+                  'meetingId': race.meetingId,
+                },
+                extra: {
+                  'sessionTitle': championship == 'Formula E' &&
+                          (widget.sessionsId?.length ?? 0) == 1
+                      ? sessionsTitle[2]
+                      : sessionsTitle[index],
+                  'sessionIndex': index + 1,
+                  'circuitId': race.circuitId,
+                  'meetingId': race.meetingId,
+                  'raceYear': DateTime.parse(race.date).year,
+                  'raceName': race.raceName,
+                  'sessionId': widget.sessionsId != null
+                      ? widget.sessionsId!.isNotEmpty
+                          ? widget.sessionsId![index]
+                          : null
+                      : null,
+                },
               ),
             )
           : Padding(
@@ -1575,7 +1608,7 @@ class _SessionCountdownTimerState extends State<SessionCountdownTimer> {
                     ),
                   ),
                   onPressed: () async {
-                    Event event = Event(
+                    a2c.Event event = a2c.Event(
                       title: '${widget.sessionName} - ${race.raceName}',
                       location: race.country,
                       startDate: DateTime(
@@ -1596,7 +1629,7 @@ class _SessionCountdownTimerState extends State<SessionCountdownTimer> {
                         raceFullDateParsed.toLocal().second,
                       ),
                     );
-                    await Add2Calendar.addEvent2Cal(event);
+                    await a2c.Add2Calendar.addEvent2Cal(event);
                   },
                 ),
               )

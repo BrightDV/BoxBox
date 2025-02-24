@@ -20,9 +20,9 @@
 // import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:boxbox/helpers/news.dart';
 import 'package:boxbox/helpers/racetracks_url.dart';
-import 'package:boxbox/Screens/circuit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
 
@@ -75,13 +75,10 @@ class RaceItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => CircuitScreen(
-            item,
-          ),
-        ),
+      onTap: () => context.pushNamed(
+        'racing',
+        pathParameters: {'meetingId': item.meetingId},
+        extra: {'race': item},
       ),
       child: index == 0 && isUpNext && (item.raceCoverUrl ?? '') != 'none'
           ? Column(

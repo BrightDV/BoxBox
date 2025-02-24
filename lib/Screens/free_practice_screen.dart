@@ -18,6 +18,7 @@
  */
 
 import 'package:boxbox/api/driver_components.dart';
+import 'package:boxbox/api/event_tracker.dart';
 import 'package:boxbox/api/formula1.dart';
 import 'package:boxbox/api/formulae.dart';
 import 'package:boxbox/helpers/divider.dart';
@@ -445,6 +446,43 @@ class FreePracticeResultItem extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class FreePracticeFromMeetingKeyScreen extends StatelessWidget {
+  final String meetingKey;
+  final int sessionIndex;
+  const FreePracticeFromMeetingKeyScreen(this.meetingKey, this.sessionIndex,
+      {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final List<String> sessionsTitle = [
+      AppLocalizations.of(context)!.freePracticeOne,
+      AppLocalizations.of(context)!.freePracticeTwo,
+      AppLocalizations.of(context)!.freePracticeThree,
+    ];
+
+    return Scaffold(
+      body: FutureBuilder(
+        future: EventTracker().getCircuitDetails(
+          meetingKey,
+          isFromRaceHub: true,
+        ),
+        builder: (context, snapshot) => snapshot.hasError
+            ? RequestErrorWidget(snapshot.error.toString())
+            : snapshot.hasData
+                ? FreePracticeScreen(
+                    sessionsTitle[sessionIndex - 1],
+                    sessionIndex,
+                    '',
+                    meetingKey,
+                    int.parse(snapshot.data!['meetingContext']['season']),
+                    snapshot.data!['race']['meetingOfficialName'],
+                  )
+                : LoadingIndicatorUtil(),
       ),
     );
   }

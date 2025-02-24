@@ -17,9 +17,7 @@
  * Copyright (c) 2022-2024, BrightDV
  */
 
-import 'package:boxbox/Screens/circuit.dart';
 import 'package:boxbox/api/event_tracker.dart';
-import 'package:boxbox/api/race_components.dart';
 import 'package:boxbox/helpers/buttons.dart';
 import 'package:boxbox/helpers/constants.dart';
 import 'package:boxbox/helpers/hover.dart';
@@ -35,6 +33,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:marquee/marquee.dart';
@@ -172,6 +171,24 @@ class RaceHubScreen extends StatelessWidget {
   }
 }
 
+class RaceHubWithoutEventScreen extends StatelessWidget {
+  const RaceHubWithoutEventScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: FutureBuilder(
+        future: EventTracker().parseEvent(),
+        builder: (context, snapshot) => snapshot.hasError
+            ? RequestErrorWidget(snapshot.error.toString())
+            : snapshot.hasData
+                ? RaceHubScreen(snapshot.data!)
+                : LoadingIndicatorUtil(),
+      ),
+    );
+  }
+}
+
 class RaceHubContent extends StatelessWidget {
   final Event event;
   const RaceHubContent(this.event, {super.key});
@@ -301,28 +318,12 @@ class RaceHubContent extends StatelessWidget {
                                         ),
                                       ),
                                     ),
-                                    onTap: () => Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => CircuitScreen(
-                                          Race(
-                                            '0',
-                                            '',
-                                            '',
-                                            '',
-                                            '',
-                                            event.circuitImage
-                                                .split('/')
-                                                .last
-                                                .split('.')[0],
-                                            '',
-                                            '',
-                                            '',
-                                            [],
-                                          ),
-                                          isFetched: false,
-                                        ),
-                                      ),
+                                    onTap: () => context.pushNamed(
+                                      'racing',
+                                      pathParameters: {
+                                        'meetingId': event.raceId
+                                      },
+                                      extra: {'isFetched': false},
                                     ),
                                   ),
                                 ),
@@ -425,28 +426,15 @@ class RaceHubContent extends StatelessWidget {
                           Icon(
                             Icons.arrow_forward_rounded,
                           ),
-                          CircuitScreen(
-                            Race(
-                              '0',
-                              event.raceId,
-                              '',
-                              '',
-                              '',
-                              '',
-                              '',
-                              '',
-                              '',
-                              [],
-                            ),
-                            isFetched: false,
-                          ),
+                          isRoute: true,
+                          route: 'racing',
+                          pathParameters: {'meetingId': event.raceId},
                         )
                       : Container(),
                   championship == 'Formula 1'
                       ? BoxBoxButton(
                           'Race Programme',
                           Icon(Icons.open_in_new_outlined),
-                          Container(),
                           toExecute: openRaceProgramme,
                         )
                       : Container(),
@@ -463,7 +451,8 @@ class RaceHubContent extends StatelessWidget {
                               ],
                             ),
                           ),
-                          Scaffold(
+                          isRoute: false,
+                          widget: Scaffold(
                             appBar: AppBar(
                               title: SizedBox(
                                 height: AppBar().preferredSize.height,

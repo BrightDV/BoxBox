@@ -23,16 +23,16 @@ import 'dart:async';
 
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:background_downloader/background_downloader.dart';
+import 'package:boxbox/config/router.dart';
 // import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:boxbox/helpers/bottom_navigation_bar.dart';
 import 'package:boxbox/helpers/constants.dart';
 import 'package:boxbox/helpers/handle_native.dart';
-import 'package:boxbox/helpers/route_handler.dart';
 // import 'package:boxbox/Screens/article.dart';
 import 'package:boxbox/helpers/team_background_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -88,6 +88,8 @@ void main() async {
     frequency: const Duration(hours: 2),
     initialDelay: const Duration(hours: 2),
   ); */
+
+  GoRouter.optionURLReflectsImperativeAPIs = true;
 
   runApp(const MyApp());
 }
@@ -402,18 +404,14 @@ class _MyAppState extends State<MyApp> {
         fontFamily: 'Formula1',
       ),
       initial: useDarkMode ? AdaptiveThemeMode.dark : AdaptiveThemeMode.light,
-      builder: (theme, darkTheme) => MaterialApp(
+      builder: (theme, darkTheme) => MaterialApp.router(
         title: 'Box, Box!',
         theme: theme,
         darkTheme: darkTheme,
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: supportedLocales,
-        home: const MainBottomNavigationBar(),
         debugShowCheckedModeBanner: false,
-        navigatorKey: navigatorKey,
-        onGenerateRoute: (RouteSettings settings) {
-          return HandleRoute.handleRoute(settings.name);
-        },
+        routerConfig: RouterLocalConfig().router,
       ),
     );
   }

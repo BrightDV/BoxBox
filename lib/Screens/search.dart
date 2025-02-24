@@ -17,11 +17,11 @@
  * Copyright (c) 2022-2024, BrightDV
  */
 
-import 'package:boxbox/Screens/article.dart';
 import 'package:boxbox/api/searx.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:go_router/go_router.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({Key? key}) : super(key: key);
@@ -121,36 +121,34 @@ class _SearchScreenState extends State<SearchScreen> {
                 return Card(
                   elevation: 10.0,
                   child: ListTile(
-                      title: Text(
-                        results[index]['title'],
-                      ),
-                      subtitle: MarkdownBody(
-                        data: results[index]['content'],
-                        styleSheet: MarkdownStyleSheet(
-                          strong: TextStyle(
-                            color: Theme.of(context).colorScheme.primary,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                          ),
-                          p: TextStyle(
-                            color:
-                                Theme.of(context).textTheme.bodyMedium!.color,
-                          ),
-                          textAlign: WrapAlignment.spaceBetween,
+                    title: Text(
+                      results[index]['title'],
+                    ),
+                    subtitle: MarkdownBody(
+                      data: results[index]['content'],
+                      styleSheet: MarkdownStyleSheet(
+                        strong: TextStyle(
+                          color: Theme.of(context).colorScheme.primary,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
                         ),
+                        p: TextStyle(
+                          color: Theme.of(context).textTheme.bodyMedium!.color,
+                        ),
+                        textAlign: WrapAlignment.spaceBetween,
                       ),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ArticleScreen(
-                              results[index]['url'].split('.').last,
-                              ' ',
-                              true,
-                            ),
-                          ),
-                        );
-                      }),
+                    ),
+                    onTap: () => context.pushNamed(
+                      'article',
+                      pathParameters: {
+                        'id': results[index]['url'].split('/').last
+                      },
+                      extra: {
+                        'articleName': '',
+                        'isFromLink': true,
+                      },
+                    ),
+                  ),
                 );
               },
             )

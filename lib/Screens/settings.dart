@@ -33,8 +33,8 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SettingsScreen extends StatefulWidget {
-  final Function update;
-  const SettingsScreen(this.update, {Key? key}) : super(key: key);
+  final Function? update;
+  const SettingsScreen({Key? key, this.update}) : super(key: key);
 
   @override
   State<SettingsScreen> createState() => _SettingsScreenState();
@@ -43,7 +43,9 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   void _settingsSetState() {
     setState(() {});
-    widget.update();
+    if (widget.update != null) {
+      widget.update!();
+    }
   }
 
   @override

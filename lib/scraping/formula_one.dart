@@ -362,6 +362,7 @@ class FormulaOneScraper {
         [],
         [],
       ],
+      [],
     ];
     dom.Document document = parser.parse(
       utf8.decode(response.bodyBytes),
@@ -411,6 +412,10 @@ class FormulaOneScraper {
       results[3][1].add(element.text);
     }
 
+    results[4].add(
+      document.getElementsByClassName('f1-heading')[1].text,
+    );
+
     return results;
   }
 
@@ -446,6 +451,7 @@ class FormulaOneScraper {
     results["information"] = [];
     results["medias"] = [];
     results["articles"] = [];
+    results["teamName"] = "";
 
     List<dom.Element> tempDetails =
         document.getElementsByClassName('f1-grid grid-cols-2')[0].children;
@@ -514,6 +520,8 @@ class FormulaOneScraper {
         );
       }
     }
+
+    results["teamName"] = document.getElementsByClassName('f1-heading')[0].text;
 
     return results;
   }
