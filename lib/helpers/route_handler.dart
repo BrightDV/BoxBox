@@ -17,6 +17,7 @@
  * Copyright (c) 2022-2024, BrightDV
  */
 
+import 'package:boxbox/Screens/404.dart';
 import 'package:boxbox/Screens/article.dart';
 import 'package:boxbox/Screens/schedule.dart';
 import 'package:boxbox/Screens/standings.dart';
@@ -110,20 +111,7 @@ class SharedLinkHandler extends StatelessWidget {
         ),
       );
     } else {
-      return Scaffold(
-        appBar: AppBar(
-          title: const Text('Intent'),
-          backgroundColor: Theme.of(context).colorScheme.onPrimary,
-        ),
-        body: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(15),
-            child: SelectableText(
-              'Url shared: $url\nYou can make an issue on github to ask that the application can open this link.',
-            ),
-          ),
-        ),
-      );
+      return ErrorNotFoundScreen();
     }
   }
 }

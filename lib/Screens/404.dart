@@ -18,9 +18,9 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 
-//TODO: localize
 class ErrorNotFoundScreen extends StatelessWidget {
   final String? route;
   const ErrorNotFoundScreen({super.key, this.route});
@@ -45,7 +45,7 @@ class ErrorNotFoundScreen extends StatelessWidget {
             Padding(
               padding: EdgeInsets.only(bottom: 5),
               child: Text(
-                'You went off-track!',
+                AppLocalizations.of(context)!.offtrack,
                 style: TextStyle(fontSize: 24),
               ),
             ),
@@ -58,7 +58,7 @@ class ErrorNotFoundScreen extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () => context.go("/"),
-              child: const Text("Come back on track"),
+              child: Text(AppLocalizations.of(context)!.offtrackSub),
             ),
           ],
         ),
