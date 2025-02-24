@@ -141,7 +141,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     onTap: () => context.pushNamed(
                       'article',
                       pathParameters: {
-                        'id': results[index]['url'].split('.').last
+                        'id': results[index]['url'].split('/').last
                       },
                       extra: {
                         'articleName': '',

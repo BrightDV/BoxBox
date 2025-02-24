@@ -17,7 +17,6 @@
  * Copyright (c) 2022-2024, BrightDV
  */
 
-import 'package:boxbox/Screens/race_details.dart';
 import 'package:boxbox/api/formula1.dart';
 import 'package:boxbox/helpers/buttons.dart';
 import 'package:boxbox/helpers/custom_physics.dart';
@@ -969,82 +968,26 @@ class AtomSessionResults extends StatelessWidget {
                                     ['meetingOfficialName'],
                               },
                             )
-                          : Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => Scaffold(
-                                  appBar: AppBar(
-                                    title: Text(
-                                      element['fields']['sessionType'] == 'Race'
-                                          ? AppLocalizations.of(context)!.race
-                                          : element['fields']['sessionType'] ==
-                                                  'Sprint'
-                                              ? AppLocalizations.of(context)!
-                                                  .sprint
-                                              : element['fields']
-                                                          ['sessionType'] ==
-                                                      'Sprint Shootout'
-                                                  ? element['fields']
-                                                                  [
-                                                                  'raceResultsSprintShootout']
-                                                              ['description'] ==
-                                                          'Sprint Qualifying'
-                                                      ? 'Sprint Qualifying'
-                                                      : 'Sprint Shootout'
-                                                  : element['fields']
-                                                              ['sessionType']
-                                                          .contains(
-                                                              'Starting Grid')
-                                                      ? AppLocalizations.of(
-                                                              context)!
-                                                          .startingGrid
-                                                      : AppLocalizations.of(
-                                                              context)!
-                                                          .qualifyings,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                    backgroundColor:
-                                        Theme.of(context).colorScheme.onPrimary,
-                                  ),
-                                  backgroundColor:
-                                      Theme.of(context).colorScheme.surface,
-                                  body: element['fields']['sessionType'] ==
-                                              'Race' ||
-                                          element['fields']['sessionType'] ==
-                                              'Sprint'
-                                      ? RaceResultsProvider(
-                                          raceUrl: element['fields']
-                                                      ['sessionType'] ==
-                                                  'Race'
-                                              ? 'race'
-                                              : 'sprint',
-                                          raceId: element['fields']
-                                              ['meetingKey'],
-                                        )
-                                      : SingleChildScrollView(
-                                          child: element['fields']
-                                                      ['sessionType']
-                                                  .contains('Starting Grid')
-                                              ? StartingGridProvider(
-                                                  element['fields']
-                                                      ['meetingKey'],
-                                                )
-                                              : QualificationResultsProvider(
-                                                  raceUrl: element['fields']
-                                                      ['cta'],
-                                                  isSprintQualifying: element[
-                                                                  'fields']
-                                                              ['sessionType'] ==
-                                                          'Sprint Shootout'
-                                                      ? true
-                                                      : false,
-                                                ),
-                                        ),
-                                ),
-                              ),
-                            ),
+                          : element['fields']['sessionType'] == 'Race'
+                              ? context.pushNamed('race', pathParameters: {
+                                  'meetingId': element['fields']['meetingKey']
+                                })
+                              : element['fields']['sessionType'] == 'Sprint'
+                                  ? context.pushNamed('sprint',
+                                      pathParameters: {'meetingId': element['fields']['meetingKey']})
+                                  : element['fields']['sessionType'] ==
+                                          'Sprint Shootout'
+                                      ? context.pushNamed('sprint-shootout',
+                                          pathParameters: {'meetingId': element['fields']['meetingKey']})
+                                      : element['fields']['sessionType'] ==
+                                              'Starting Grid'
+                                          ? context.pushNamed('starting-grid',
+                                              pathParameters: {'meetingId': element['fields']['meetingKey']})
+                                          : context.pushNamed('qualifyings',
+                                              pathParameters: {
+                                                  'meetingId': element['fields']
+                                                      ['meetingKey']
+                                                }),
                       style: ElevatedButton.styleFrom(
                         shape: const ContinuousRectangleBorder(
                           borderRadius: BorderRadius.zero,

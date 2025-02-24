@@ -318,13 +318,12 @@ class RaceHubContent extends StatelessWidget {
                                         ),
                                       ),
                                     ),
-                                    // TODO: TESTEST
                                     onTap: () => context.pushNamed(
                                       'racing',
                                       pathParameters: {
                                         'meetingId': event.raceId
                                       },
-                                      extra: {'isFetched': bool},
+                                      extra: {'isFetched': false},
                                     ),
                                   ),
                                 ),

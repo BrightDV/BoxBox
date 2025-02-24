@@ -172,7 +172,7 @@ class RouterLocalConfig {
             },
           ),
 
-          // schedule & results
+          // circuits & results
           GoRoute(
             name: 'racing',
             path: 'racing/:meetingId',
