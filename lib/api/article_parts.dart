@@ -1355,6 +1355,12 @@ class AuthorDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    width = width > 1400
+        ? 800
+        : width > 1000
+            ? 500
+            : width;
     return Card(
       child: Padding(
         padding: const EdgeInsets.fromLTRB(
@@ -1389,7 +1395,7 @@ class AuthorDetails extends StatelessWidget {
                     textAlign: TextAlign.start,
                   ),
                   SizedBox(
-                    width: MediaQuery.of(context).size.width - 138,
+                    width: width - 138,
                     child: Text(
                       article.authorDetails["shortDescription"] ?? '',
                       style: TextStyle(

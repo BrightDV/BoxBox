@@ -490,7 +490,7 @@ class NewsItem extends StatelessWidget {
                                                                   ? 120
                                                                   : item.newsType ==
                                                                           'Image Gallery'
-                                                                      ? 150
+                                                                      ? 155
                                                                       : 90,
                                                       height: 27,
                                                       alignment:
@@ -845,7 +845,7 @@ class NewsItem extends StatelessWidget {
                                                               ? 120
                                                               : item.newsType ==
                                                                       'Image Gallery'
-                                                                  ? 150
+                                                                  ? 155
                                                                   : 90,
                                                   height: 27,
                                                   alignment:
