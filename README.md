@@ -101,17 +101,23 @@ The app is currently available in:
 - 🌐 Arabic, thanks to [@Music47ell](https://github.com/Music47ell)
 - 🇧🇩 Bengali, thanks to [@Rafee-M](https://github.com/Rafee-M)
 - 🇨🇳 Simplified Chinese, thanks to Ahoo Ng (五号电)
-- 🇩🇪 German, thanks to [@RekZix](https://github.com/RekZix)
+- 🇳🇱 Dutch, thanks to [@ltguillaume](https://github.com/ltguillaume)
+- 🇫🇮 Finnish, thanks to Kieli Puoli, [@Ricky-Tigg](https://github.com/Ricky-Tigg)
+- 🇩🇪 German, thanks to [@RekZix](https://github.com/RekZix), [@Atalanttore](https://github.com/Atalanttore)
+- 🇬🇷 Greek, thanks to [@TamilNeram](https://github.com/TamilNeram)
 - 🇭🇺 Hungarian, thanks to [@d4f5409d](https://github.com/d4f5409d)
 - 🇮🇹 Italian, thanks to [@atilluF](https://github.com/atilluF)
+- 🇰🇷 Korean, thanks to [@simmon-nplob](https://github.com/simmon-nplob)
+- 🇮🇳 Malayalam, thanks to [@akhi07rx](https://github.com/akhi07rx), [@sabeelash](https://github.com/sabeelash)
 - 🇳🇴 Norwegian, thanks to [@comradekingu](https://github.com/comradekingu)
 - 🇵🇹 Portuguese, thanks to [@Alexthegib](https://github.com/Alexthegib)
-- 🇮🇳 Punjabi & Hindi, thanks to [@ShareASmile](https://github.com/ShareASmile)
-- 🇪🇸 Spanish, thanks to [@inigochoa](https://github.com/inigochoa)
+- 🇮🇳 Punjabi & Hindi, thanks to [@ShareASmile](https://github.com/ShareASmile), Scrambled777
+- 🇪🇸 Spanish, thanks to [@inigochoa](https://github.com/inigochoa), gallegonovato
 - 🌐 Swahili, thanks to [@leonardsangoroh](https://github.com/leonardsangoroh)
-- 🇹🇷 Turkish, thanks to [@metezd](https://github.com/metezd)
+- 🇮🇳 Tamil, thanks to [@TamilNeram](https://github.com/TamilNeram)
+- 🇹🇷 Turkish, thanks to [@metezd](https://github.com/metezd), [@symbuzzer](https://github.com/symbuzzer), [@oersen](https://github.com/oersen)
 
-and thanks to the other translators!
+and thanks to the many other translators!
 
 ## Donation
 If you like the app, and you want to support its development:
