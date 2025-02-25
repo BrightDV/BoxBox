@@ -17,7 +17,7 @@ publish_to: none
 version: 0.8.3+37
 
 environment:
-  sdk: ">=2.19.0 <=3.6.0"
+  sdk: ">=2.19.0 <=3.7.0"
 
 dependencies:
   flutter:
@@ -29,7 +29,7 @@ dependencies:
   # awesome_notifications: ^0.7.4+1
   background_downloader: ^7.11.0
   cached_network_image: ^3.3.0
-  carousel_slider: ^4.1.1
+  carousel_slider: ^5.0.0
   connectivity_plus: ^6.0.3
   dropdown_button2: ^2.3.9
   dotted_line: ^3.2.2
@@ -69,7 +69,7 @@ dependencies:
     git:
       url: https://github.com/Nahrawene-ben-hmida/receive_sharing_intent.git
       ref: "6ad8f582d7bc7e2fd5a258399e7dbe8c39245d32"
-  river_player: 0.1.3
+  river_player: ^0.1.4
   share_plus: ^9.0.0
   # signalr_flutter: ^0.2.0 # uses (non-foss?) .jar
   sliding_up_panel: ^2.0.0+1
