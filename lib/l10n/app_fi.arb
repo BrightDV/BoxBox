@@ -366,5 +366,27 @@
   "teamBase": "Tukikohta",
   "@teamBase": {},
   "technicalChief": "Tekninen päällikkö",
-  "@technicalChief": {}
+  "@technicalChief": {},
+  "updateApiKeySub": "Päivitä virallisen verkkosivuston API-avain.\nPäivitä tämä vain, jos olet nyt tekemässä.",
+  "@updateApiKeySub": {},
+  "updateApiKey": "Päivitä API-avain",
+  "@updateApiKey": {},
+  "apiKey": "API-avain",
+  "@apiKey": {},
+  "formulaYouSettings": "Formula You -asetukset",
+  "@formulaYouSettings": {
+    "description": "Keep 'Formula You' untranslated as it is the name of the service."
+  },
+  "freePracticeOne": "Ilmainen harjoitus IH1",
+  "@freePracticeOne": {},
+  "freePracticeTwo": "Ilmainen harjoitus IH2",
+  "@freePracticeTwo": {},
+  "freePracticeThree": "Ilmainen harjoitus IH3",
+  "@freePracticeThree": {},
+  "firstTeamEntry": "Ensimmäinen joukkueen merkintä",
+  "@firstTeamEntry": {},
+  "minuteAbbreviation": "MIN",
+  "@minuteAbbreviation": {},
+  "fullScreenGestures": "Siirry/poistu koko näytön eleihin/eleistä",
+  "@fullScreenGestures": {}
 }
