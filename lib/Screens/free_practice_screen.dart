@@ -176,7 +176,7 @@ class FreePracticeResultsList extends StatelessWidget {
                 FontAwesomeIcons.youtube,
               ),
               title: Text(
-                AppLocalizations.of(context)!.watchOnYoutube,
+                AppLocalizations.of(context)!.watchHighlightsOnYoutube,
                 textAlign: TextAlign.center,
               ),
               onTap: () async {

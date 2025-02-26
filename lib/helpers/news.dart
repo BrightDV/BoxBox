@@ -41,7 +41,6 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:http/http.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:river_player/river_player.dart';
@@ -1839,6 +1838,7 @@ class VideoRenderer extends StatelessWidget {
   final String videoId;
   final bool? autoplay;
   final String? youtubeId;
+  final String? youtubeThumbnail;
   final String? heroTag;
   final String? caption;
   final Function? update;
@@ -1850,6 +1850,7 @@ class VideoRenderer extends StatelessWidget {
     Key? key,
     this.autoplay,
     this.youtubeId,
+    this.youtubeThumbnail,
     this.heroTag,
     this.caption,
     this.update,
@@ -1857,7 +1858,7 @@ class VideoRenderer extends StatelessWidget {
     this.articleChampionship,
   }) : super(key: key);
 
-  Future<Map<String, dynamic>> getYouTubeVideoLinks(String videoId) async {
+  /*  Future<Map<String, dynamic>> getYouTubeVideoLinks(String videoId) async {
     String playerQuality =
         "${Hive.box('settings').get('playerQuality', defaultValue: 360) as int}p";
     String pipedApiUrl = Hive.box('settings')
@@ -1898,6 +1899,7 @@ class VideoRenderer extends StatelessWidget {
     urls['videos'].insert(0, defaultUrl);
     return urls;
   }
+ */
 
   @override
   Widget build(BuildContext context) {
@@ -1907,68 +1909,12 @@ class VideoRenderer extends StatelessWidget {
         : width > 1000
             ? 500
             : 400;
-    return FutureBuilder<Map<String, dynamic>>(
-      future: (youtubeId ?? '') != ''
-          ? getYouTubeVideoLinks(youtubeId!)
-          : BrightCove().getVideoLinks(
-              videoId,
-              player: player,
-              articleChampionship: articleChampionship,
-            ),
-      builder: (context, snapshot) => snapshot.hasError
-          ? RequestErrorWidget(
-              snapshot.error.toString(),
-            )
-          : snapshot.hasData
-              ? Column(
-                  children: [
-                    kIsWeb
-                        ? SizedBox(
-                            height: width / (16 / 9),
-                            child: InAppWebView(
-                              initialUrlRequest: URLRequest(
-                                url: WebUri(
-                                  snapshot.data!['videos'][0],
-                                ),
-                              ),
-                              initialSettings: InAppWebViewSettings(
-                                preferredContentMode:
-                                    UserPreferredContentMode.DESKTOP,
-                                transparentBackground: true,
-                                iframeAllowFullscreen: true,
-                                mediaPlaybackRequiresUserGesture:
-                                    !(autoplay ?? false),
-                              ),
-                            ),
-                          )
-                        : BetterPlayerVideoPlayer(
-                            snapshot.data!,
-                            videoId,
-                            autoplay == null ? false : autoplay!,
-                            heroTag ?? '',
-                            Theme.of(context).colorScheme.surface,
-                            (youtubeId ?? '') != '',
-                            update: update,
-                          ),
-                    if (caption != null)
-                      Padding(
-                        padding: const EdgeInsets.only(
-                          top: 7,
-                          left: 10,
-                          right: 10,
-                        ),
-                        child: Text(
-                          caption!,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color:
-                                Theme.of(context).textTheme.labelSmall!.color,
-                          ),
-                        ),
-                      ),
-                  ],
-                )
-              : SizedBox(
+    return (youtubeId ?? '') != ''
+        ? Stack(
+            children: [
+              CachedNetworkImage(
+                imageUrl: youtubeThumbnail!,
+                placeholder: (context, url) => SizedBox(
                   height: MediaQuery.of(context).size.width / (16 / 9),
                   child: const LoadingIndicatorUtil(
                     replaceImage: true,
@@ -1976,7 +1922,105 @@ class VideoRenderer extends StatelessWidget {
                     borderRadius: false,
                   ),
                 ),
-    );
+                errorWidget: (context, url, error) => ImageRequestErrorUtil(
+                  height: MediaQuery.of(context).size.width / (16 / 9),
+                ),
+                fadeOutDuration: const Duration(milliseconds: 100),
+                fadeInDuration: const Duration(seconds: 1),
+                colorBlendMode: BlendMode.darken,
+                color: Colors.black.withOpacity(0.5),
+              ),
+              Center(
+                child: ElevatedButton.icon(
+                  onPressed: () async => await launchUrl(
+                    Uri.parse('https://youtube.com/watch?v=$youtubeId!'),
+                    mode: LaunchMode.externalApplication,
+                  ),
+                  label: Padding(
+                    padding: EdgeInsets.only(top: 15, right: 10, bottom: 15),
+                    child: Text(AppLocalizations.of(context)!.watchOnYouTube),
+                  ),
+                  icon: Padding(
+                    padding: EdgeInsets.only(top: 15, left: 10, bottom: 15),
+                    child: Icon(
+                      Icons.play_arrow_outlined,
+                      size: 28,
+                    ),
+                  ),
+                ),
+              )
+            ],
+          )
+        : FutureBuilder<Map<String, dynamic>>(
+            future: BrightCove().getVideoLinks(
+              videoId,
+              player: player,
+              articleChampionship: articleChampionship,
+            ),
+            builder: (context, snapshot) => snapshot.hasError
+                ? RequestErrorWidget(
+                    snapshot.error.toString(),
+                  )
+                : snapshot.hasData
+                    ? Column(
+                        children: [
+                          kIsWeb
+                              ? SizedBox(
+                                  height: width / (16 / 9),
+                                  child: InAppWebView(
+                                    initialUrlRequest: URLRequest(
+                                      url: WebUri(
+                                        snapshot.data!['videos'][0],
+                                      ),
+                                    ),
+                                    initialSettings: InAppWebViewSettings(
+                                      preferredContentMode:
+                                          UserPreferredContentMode.DESKTOP,
+                                      transparentBackground: true,
+                                      iframeAllowFullscreen: true,
+                                      mediaPlaybackRequiresUserGesture:
+                                          !(autoplay ?? false),
+                                    ),
+                                  ),
+                                )
+                              : BetterPlayerVideoPlayer(
+                                  snapshot.data!,
+                                  videoId,
+                                  autoplay == null ? false : autoplay!,
+                                  heroTag ?? '',
+                                  Theme.of(context).colorScheme.surface,
+                                  (youtubeId ?? '') != '',
+                                  update: update,
+                                ),
+                          if (caption != null)
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                top: 7,
+                                left: 10,
+                                right: 10,
+                              ),
+                              child: Text(
+                                caption!,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .labelSmall!
+                                      .color,
+                                ),
+                              ),
+                            ),
+                        ],
+                      )
+                    : SizedBox(
+                        height: MediaQuery.of(context).size.width / (16 / 9),
+                        child: const LoadingIndicatorUtil(
+                          replaceImage: true,
+                          fullBorderRadius: false,
+                          borderRadius: false,
+                        ),
+                      ),
+          );
   }
 }
 

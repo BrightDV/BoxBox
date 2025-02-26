@@ -742,7 +742,8 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
                                 FontAwesomeIcons.youtube,
                               ),
                               title: Text(
-                                AppLocalizations.of(context)!.watchOnYoutube,
+                                AppLocalizations.of(context)!
+                                    .watchHighlightsOnYoutube,
                                 textAlign: TextAlign.center,
                               ),
                               onTap: () async {
@@ -826,7 +827,8 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
                                   FontAwesomeIcons.youtube,
                                 ),
                                 title: Text(
-                                  AppLocalizations.of(context)!.watchOnYoutube,
+                                  AppLocalizations.of(context)!
+                                      .watchHighlightsOnYoutube,
                                   textAlign: TextAlign.center,
                                 ),
                                 onTap: () async {
@@ -983,7 +985,7 @@ class _SprintResultsProviderState extends State<SprintResultsProvider> {
                                     ),
                                     title: Text(
                                       AppLocalizations.of(context)!
-                                          .watchOnYoutube,
+                                          .watchHighlightsOnYoutube,
                                       textAlign: TextAlign.center,
                                     ),
                                     onTap: () async {
