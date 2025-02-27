@@ -1346,6 +1346,18 @@ class TextParagraphRenderer extends StatelessWidget {
                 'isFromLink': true,
               },
             );
+          } else if (url.startsWith('https://www.formula1.com/en/drivers/')) {
+            String driverId = url.split('/')[5];
+            context.pushNamed(
+              'drivers',
+              pathParameters: {'driverId': driverId},
+            );
+          } else if (url.startsWith('https://www.formula1.com/en/teams/')) {
+            String teamId = url.split('/')[5];
+            context.pushNamed(
+              'teams',
+              pathParameters: {'teamId': teamId},
+            );
           } else if (url.startsWith('https://www.formula1.com/en/results')) {
             String standingsType =
                 url.substring(0, url.length - 5).split('/')[6];
