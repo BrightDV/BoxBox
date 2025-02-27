@@ -176,15 +176,23 @@ class RaceHubWithoutEventScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: FutureBuilder(
-        future: EventTracker().parseEvent(),
-        builder: (context, snapshot) => snapshot.hasError
-            ? RequestErrorWidget(snapshot.error.toString())
-            : snapshot.hasData
-                ? RaceHubScreen(snapshot.data!)
-                : LoadingIndicatorUtil(),
-      ),
+    return FutureBuilder(
+      future: EventTracker().parseEvent(),
+      builder: (context, snapshot) => snapshot.hasError
+          ? Scaffold(
+              appBar: AppBar(
+                backgroundColor: Theme.of(context).colorScheme.onPrimary,
+              ),
+              body: RequestErrorWidget(snapshot.error.toString()),
+            )
+          : snapshot.hasData
+              ? RaceHubScreen(snapshot.data!)
+              : Scaffold(
+                  appBar: AppBar(
+                    backgroundColor: Theme.of(context).colorScheme.onPrimary,
+                  ),
+                  body: LoadingIndicatorUtil(),
+                ),
     );
   }
 }

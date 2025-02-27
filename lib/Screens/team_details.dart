@@ -539,30 +539,38 @@ class TeamDetailsFromIdScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: FutureBuilder(
-        future: FormulaOneScraper().scrapeTeamDetails('', detailsPath),
-        builder: (context, snapshot) => snapshot.hasError
-            ? RequestErrorWidget(
+    return FutureBuilder(
+      future: FormulaOneScraper().scrapeTeamDetails('', detailsPath),
+      builder: (context, snapshot) => snapshot.hasError
+          ? Scaffold(
+              appBar: AppBar(
+                backgroundColor: Theme.of(context).colorScheme.onPrimary,
+              ),
+              body: RequestErrorWidget(
                 snapshot.error.toString(),
-              )
-            : snapshot.hasData
-                ? Scaffold(
-                    appBar: AppBar(
-                      title: Text(
-                        snapshot.data!["teamName"],
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w600,
-                        ),
+              ),
+            )
+          : snapshot.hasData
+              ? Scaffold(
+                  appBar: AppBar(
+                    title: Text(
+                      snapshot.data!["teamName"],
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w600,
                       ),
-                      backgroundColor: Theme.of(context).colorScheme.onPrimary,
                     ),
-                    body: TeamDetailsFragment(snapshot.data!),
-                  )
-                : const Center(
+                    backgroundColor: Theme.of(context).colorScheme.onPrimary,
+                  ),
+                  body: TeamDetailsFragment(snapshot.data!),
+                )
+              : Scaffold(
+                  appBar: AppBar(
+                    backgroundColor: Theme.of(context).colorScheme.onPrimary,
+                  ),
+                  body: Center(
                     child: LoadingIndicatorUtil(),
                   ),
-      ),
+                ),
     );
   }
 }

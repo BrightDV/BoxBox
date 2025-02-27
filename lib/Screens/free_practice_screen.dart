@@ -465,25 +465,33 @@ class FreePracticeFromMeetingKeyScreen extends StatelessWidget {
       AppLocalizations.of(context)!.freePracticeThree,
     ];
 
-    return Scaffold(
-      body: FutureBuilder(
-        future: EventTracker().getCircuitDetails(
-          meetingKey,
-          isFromRaceHub: true,
-        ),
-        builder: (context, snapshot) => snapshot.hasError
-            ? RequestErrorWidget(snapshot.error.toString())
-            : snapshot.hasData
-                ? FreePracticeScreen(
-                    sessionsTitle[sessionIndex - 1],
-                    sessionIndex,
-                    '',
-                    meetingKey,
-                    int.parse(snapshot.data!['meetingContext']['season']),
-                    snapshot.data!['race']['meetingOfficialName'],
-                  )
-                : LoadingIndicatorUtil(),
+    return FutureBuilder(
+      future: EventTracker().getCircuitDetails(
+        meetingKey,
+        isFromRaceHub: true,
       ),
+      builder: (context, snapshot) => snapshot.hasError
+          ? Scaffold(
+              appBar: AppBar(
+                backgroundColor: Theme.of(context).colorScheme.onPrimary,
+              ),
+              body: RequestErrorWidget(snapshot.error.toString()),
+            )
+          : snapshot.hasData
+              ? FreePracticeScreen(
+                  sessionsTitle[sessionIndex - 1],
+                  sessionIndex,
+                  '',
+                  meetingKey,
+                  int.parse(snapshot.data!['meetingContext']['season']),
+                  snapshot.data!['race']['meetingOfficialName'],
+                )
+              : Scaffold(
+                  appBar: AppBar(
+                    backgroundColor: Theme.of(context).colorScheme.onPrimary,
+                  ),
+                  body: LoadingIndicatorUtil(),
+                ),
     );
   }
 }

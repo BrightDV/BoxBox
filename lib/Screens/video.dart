@@ -304,19 +304,29 @@ class VideoScreenFromId extends StatefulWidget {
 class _VideoScreenFromIdState extends State<VideoScreenFromId> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: FutureBuilder<Video>(
-        future: F1VideosFetcher().getVideoDetails(widget.videoId),
-        builder: (context, snapshot) => snapshot.hasError
-            ? RequestErrorWidget(
-                snapshot.error.toString(),
-              )
-            : snapshot.hasData
-                ? VideoScreen(snapshot.data!)
-                : const Center(
+    return FutureBuilder<Video>(
+      future: F1VideosFetcher().getVideoDetails(widget.videoId),
+      builder: (context, snapshot) => snapshot.hasError
+          ? Scaffold(
+              appBar: AppBar(
+                backgroundColor: Theme.of(context).colorScheme.onPrimary,
+              ),
+              body: Center(
+                child: RequestErrorWidget(
+                  snapshot.error.toString(),
+                ),
+              ),
+            )
+          : snapshot.hasData
+              ? VideoScreen(snapshot.data!)
+              : Scaffold(
+                  appBar: AppBar(
+                    backgroundColor: Theme.of(context).colorScheme.onPrimary,
+                  ),
+                  body: Center(
                     child: LoadingIndicatorUtil(),
                   ),
-      ),
+                ),
     );
   }
 }
