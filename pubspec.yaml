@@ -45,7 +45,7 @@ dependencies:
   flutter_markdown: ^0.7.1
   flutter_swiper_view: ^1.1.8
   flutter_timer_countdown: ^1.0.3
-  fluttertoast: ^8.2.2
+  fluttertoast: ^8.2.12
   font_awesome_flutter: ^10.2.1
   geojson_vi: ^2.0.7
   go_router: ^14.8.0

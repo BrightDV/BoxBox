@@ -43,7 +43,7 @@ class FIAScraper {
       );
     } else {
       latestDocumentsUrl = Uri.parse(
-        'https://www.fia.com/documents/championships/fia-formula-one-world-championship-14/season/season-2024-2043',
+        'https://www.fia.com/documents/championships/fia-formula-one-world-championship-14/season/season-2025-2071',
       );
     }
     http.Response response = await http.get(latestDocumentsUrl);
