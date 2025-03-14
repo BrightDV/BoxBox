@@ -31,39 +31,41 @@ class RequestErrorWidget extends StatelessWidget {
       padding: const EdgeInsets.all(
         10,
       ),
-      child: Column(
-        children: [
-          Center(
-            child: Text(
-              AppLocalizations.of(context)!.requestError,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 16,
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 20),
-            child: Center(
-              child: SelectableText(
-                AppLocalizations.of(context)!.crashError,
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            Center(
+              child: Text(
+                AppLocalizations.of(context)!.requestError,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 16,
                 ),
               ),
             ),
-          ),
-          Center(
-            child: SelectableText(
-              snapshotError,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 16,
+            Padding(
+              padding: const EdgeInsets.only(top: 20),
+              child: Center(
+                child: SelectableText(
+                  AppLocalizations.of(context)!.crashError,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
+                ),
               ),
             ),
-          ),
-        ],
+            Center(
+              child: SelectableText(
+                snapshotError,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 16,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

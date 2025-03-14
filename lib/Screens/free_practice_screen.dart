@@ -108,7 +108,8 @@ class FreePracticeResultsProvider extends StatelessWidget {
                   ? int.parse(raceUrl!
                       .split('/')[9]
                       .replaceAll('practice', '')
-                      .replaceAll('.html', ''))
+                      .replaceAll('.html', '')
+                      .replaceAll('-', ''))
                   : sessionIndex,
             )
           : FormulaE().getFreePracticeStandings(
