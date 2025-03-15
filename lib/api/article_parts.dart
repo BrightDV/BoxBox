@@ -75,8 +75,9 @@ class ArticleParts extends StatelessWidget {
                         youtubeId: article.articleHero['fields']
                                 ['youTubeVideoId'] ??
                             '',
-                        youtubeThumbnail:
-                            article.articleHero['fields']['image']['url'] ?? '',
+                        youtubeThumbnail: article.articleHero['fields']['image']
+                                ?['url'] ??
+                            '',
                         player: article.articleHero['fields']['player'],
                         articleChampionship: articleChampionship,
                       ),

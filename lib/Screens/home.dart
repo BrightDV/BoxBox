@@ -27,7 +27,6 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
     return SingleChildScrollView(
       physics: const NeverScrollableScrollPhysics(),
       child: Column(
@@ -35,15 +34,6 @@ class HomeScreen extends StatelessWidget {
           const LiveSessionStatusIndicator(),
           SizedBox(
             height: MediaQuery.of(context).size.height - 60,
-            width: width > 1360
-                ? 1320
-                : width > 1024
-                    ? 986
-                    : width > 768
-                        ? 750
-                        : width > 576
-                            ? 576
-                            : width,
             child: NewsFeed(scrollController: _scrollController),
           ),
         ],

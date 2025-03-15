@@ -394,12 +394,7 @@ class NewsItem extends StatelessWidget {
                                                               .size
                                                               .width >
                                                           500)
-                                                      ? (MediaQuery.of(context)
-                                                                      .size
-                                                                      .width /
-                                                                  itemPerRow -
-                                                              8 * itemPerRow) /
-                                                          (16 / 9)
+                                                      ? null
                                                       : (showSmallDescription ??
                                                               false)
                                                           ? height / (16 / 9) -
@@ -660,7 +655,7 @@ class NewsItem extends StatelessWidget {
                                         : Text(
                                             item.subtitle,
                                             textAlign: TextAlign.justify,
-                                            maxLines: width > 1360 ? 4 : 5,
+                                            maxLines: width > 1360 ? 3 : 5,
                                             overflow: TextOverflow.ellipsis,
                                           ),
                                     mouseCursor: SystemMouseCursors.click,
@@ -1203,40 +1198,58 @@ class _NewsListState extends State<NewsList> {
                   ),
                 ),
               )
-            : Padding(
-                padding: const EdgeInsets.only(top: 15),
-                child: PagedGridView<int, News>(
-                  pagingController: _pagingController,
-                  scrollController: widget.scrollController,
-                  scrollDirection: Axis.vertical,
-                  shrinkWrap: true,
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: width < 850 ? 2 : 3,
-                    crossAxisSpacing: 5.0,
-                    mainAxisSpacing: 5.0,
-                  ),
-                  builderDelegate: PagedChildBuilderDelegate<News>(
-                    itemBuilder: (context, item, index) {
-                      return NewsItem(
-                        item,
-                        false,
-                        showSmallDescription: true,
-                        itemPerRow: width < 750 ? 2 : 3,
-                      );
-                    },
-                    firstPageProgressIndicatorBuilder: (_) =>
-                        const LoadingIndicatorUtil(),
-                    firstPageErrorIndicatorBuilder: (_) {
-                      return FirstPageExceptionIndicator(
-                        title: AppLocalizations.of(context)!.errorOccurred,
-                        message:
-                            AppLocalizations.of(context)!.errorOccurredDetails,
-                        onTryAgain: () => _pagingController.refresh(),
-                      );
-                    },
-                    newPageProgressIndicatorBuilder: (_) =>
-                        const LoadingIndicatorUtil(),
-                  ),
+            : PagedGridView<int, News>(
+                padding: EdgeInsets.only(
+                  left: width > 1360
+                      ? (width - 1320) / 2.5
+                      : width > 1024
+                          ? (width - 986) / 2.5
+                          : width > 768
+                              ? (width - 750) / 2.5
+                              : width > 576
+                                  ? (width - 576) / 2.5
+                                  : width,
+                  right: width > 1360
+                      ? (width - 1320) / 2.5
+                      : width > 1024
+                          ? (width - 986) / 2.5
+                          : width > 768
+                              ? (width - 750) / 2.5
+                              : width > 576
+                                  ? (width - 576) / 2.5
+                                  : width,
+                  top: 15,
+                ),
+                pagingController: _pagingController,
+                scrollController: widget.scrollController,
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: width < 850 ? 2 : 3,
+                  crossAxisSpacing: 5.0,
+                  mainAxisSpacing: 5.0,
+                ),
+                builderDelegate: PagedChildBuilderDelegate<News>(
+                  itemBuilder: (context, item, index) {
+                    return NewsItem(
+                      item,
+                      false,
+                      showSmallDescription: true,
+                      itemPerRow: width < 850 ? 2 : 3,
+                    );
+                  },
+                  firstPageProgressIndicatorBuilder: (_) =>
+                      const LoadingIndicatorUtil(),
+                  firstPageErrorIndicatorBuilder: (_) {
+                    return FirstPageExceptionIndicator(
+                      title: AppLocalizations.of(context)!.errorOccurred,
+                      message:
+                          AppLocalizations.of(context)!.errorOccurredDetails,
+                      onTryAgain: () => _pagingController.refresh(),
+                    );
+                  },
+                  newPageProgressIndicatorBuilder: (_) =>
+                      const LoadingIndicatorUtil(),
                 ),
               );
   }
@@ -1473,6 +1486,12 @@ class ImageRenderer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    width = width > 1400
+        ? 450
+        : width > 1000
+            ? 500
+            : width;
     return Padding(
       padding: EdgeInsets.only(
         bottom: inSchedule != null ? 0 : 10,
@@ -1633,18 +1652,14 @@ class ImageRenderer extends StatelessWidget {
                           ? CachedNetworkImage(
                               imageUrl: imageUrl,
                               placeholder: (context, url) => SizedBox(
-                                height: MediaQuery.of(context).size.width /
-                                    (16 / 9),
+                                height: width,
                                 child: const LoadingIndicatorUtil(
                                   replaceImage: true,
                                   borderRadius: false,
                                 ),
                               ),
                               errorWidget: (context, url, error) =>
-                                  ImageRequestErrorUtil(
-                                height: MediaQuery.of(context).size.width /
-                                    (16 / 9),
-                              ),
+                                  ImageRequestErrorUtil(),
                               fadeOutDuration: const Duration(seconds: 1),
                               fadeInDuration: const Duration(seconds: 1),
                               cacheManager: CacheManager(
@@ -1661,10 +1676,7 @@ class ImageRenderer extends StatelessWidget {
                                       loadingProgress == null
                                           ? child
                                           : SizedBox(
-                                              height: MediaQuery.of(context)
-                                                      .size
-                                                      .width /
-                                                  (16 / 9),
+                                              height: width / (16 / 9),
                                               child: const LoadingIndicatorUtil(
                                                 replaceImage: true,
                                                 borderRadius: false,
