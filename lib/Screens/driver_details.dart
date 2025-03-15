@@ -498,49 +498,57 @@ class DriverDetailsFromIdScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: FutureBuilder(
-        future: FormulaOneScraper().scrapeDriversDetails('', detailsPath),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return RequestErrorWidget(
+    return FutureBuilder(
+      future: FormulaOneScraper().scrapeDriversDetails('', detailsPath),
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return Scaffold(
+            appBar: AppBar(
+              backgroundColor: Theme.of(context).colorScheme.onPrimary,
+            ),
+            body: RequestErrorWidget(
               snapshot.error.toString(),
-            );
-          } else if (snapshot.hasData) {
-            List driverName = snapshot.data![4][0].split(' ');
-            driverName.last = driverName.last.toString().toUpperCase();
-            return Scaffold(
-              appBar: AppBar(
-                title: Text(
-                  driverName.join(' '),
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w600,
+            ),
+          );
+        } else if (snapshot.hasData) {
+          List driverName = snapshot.data![4][0].split(' ');
+          driverName.last = driverName.last.toString().toUpperCase();
+          return Scaffold(
+            appBar: AppBar(
+              title: Text(
+                driverName.join(' '),
+                style: const TextStyle(
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              backgroundColor: Theme.of(context).colorScheme.onPrimary,
+            ),
+            body: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Center(
+                    child: DriverImageProvider(detailsPath, 'driver'),
                   ),
-                ),
-                backgroundColor: Theme.of(context).colorScheme.onPrimary,
+                  DriverDetailsFragment(
+                    snapshot.data!,
+                  )
+                ],
               ),
-              body: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Center(
-                      child: DriverImageProvider(detailsPath, 'driver'),
-                    ),
-                    DriverDetailsFragment(
-                      snapshot.data!,
-                    )
-                  ],
-                ),
-              ),
-            );
-          } else {
-            return const Center(
+            ),
+          );
+        } else {
+          return Scaffold(
+            appBar: AppBar(
+              backgroundColor: Theme.of(context).colorScheme.onPrimary,
+            ),
+            body: Center(
               child: LoadingIndicatorUtil(),
-            );
-          }
-        },
-      ),
+            ),
+          );
+        }
+      },
     );
   }
 }

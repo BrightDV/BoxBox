@@ -75,6 +75,8 @@ class ArticleParts extends StatelessWidget {
                         youtubeId: article.articleHero['fields']
                                 ['youTubeVideoId'] ??
                             '',
+                        youtubeThumbnail:
+                            article.articleHero['fields']['image']['url'] ?? '',
                         player: article.articleHero['fields']['player'],
                         articleChampionship: articleChampionship,
                       ),
@@ -266,6 +268,9 @@ class WidgetsList extends StatelessWidget {
                       ? VideoRenderer(
                           '',
                           youtubeId: element['fields']['youTubeVideoId'],
+                          youtubeThumbnail: article.articleHero['fields']
+                                  ['image']['url'] ??
+                              '',
                         )
                       : element['contentType'] == 'atomImage'
                           ? ImageRenderer(

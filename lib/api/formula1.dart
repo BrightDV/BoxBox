@@ -315,7 +315,7 @@ class Formula1 {
           Convert().teamsFromFormulaOneApiToErgast(element['teamName']),
           time,
           fastestLapRank != '0' ? true : false,
-          fastestLapRank != '0' ? fastestLapTime : "",
+          fastestLapRank != '0' ? fastestLapTime.replaceAll('00:', "") : "",
           "", // data not available
           points: element['racePoints'].toString(),
           status: element['completionStatusCode'],
@@ -472,6 +472,10 @@ class Formula1 {
           }
           time += 's';
         }
+        String classifiedTime = element['classifiedTime'] ?? '';
+        if (classifiedTime.startsWith('00:')) {
+          classifiedTime = classifiedTime.replaceFirst('00:', '');
+        }
 
         driversResults.add(
           DriverResult(
@@ -483,7 +487,7 @@ class Formula1 {
             element['driverLastName'] ?? '',
             element['driverTLA'],
             Convert().teamsFromFormulaOneApiToErgast(element['teamName']),
-            element['classifiedTime'] ?? '',
+            classifiedTime.replaceFirst('0000', ''),
             false,
             "",
             time,

@@ -349,23 +349,31 @@ class RaceDetailsFromIdScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: FutureBuilder(
-        future: EventTracker().getCircuitDetails(
-          meetingId,
-          isFromRaceHub: true,
-        ),
-        builder: (context, snapshot) => snapshot.hasError
-            ? RequestErrorWidget(snapshot.error.toString())
-            : snapshot.hasData
-                ? RaceDetailsScreen(
-                    snapshot.data!['raceCustomBBParameter'],
-                    snapshot.data!['meetingContext']['timetables'][2]
-                            ['session'] ==
-                        's',
-                  )
-                : LoadingIndicatorUtil(),
+    return FutureBuilder(
+      future: EventTracker().getCircuitDetails(
+        meetingId,
+        isFromRaceHub: true,
       ),
+      builder: (context, snapshot) => snapshot.hasError
+          ? Scaffold(
+              appBar: AppBar(
+                backgroundColor: Theme.of(context).colorScheme.onPrimary,
+              ),
+              body: RequestErrorWidget(snapshot.error.toString()),
+            )
+          : snapshot.hasData
+              ? RaceDetailsScreen(
+                  snapshot.data!['raceCustomBBParameter'],
+                  snapshot.data!['meetingContext']['timetables'][2]
+                          ['session'] ==
+                      's',
+                )
+              : Scaffold(
+                  appBar: AppBar(
+                    backgroundColor: Theme.of(context).colorScheme.onPrimary,
+                  ),
+                  body: LoadingIndicatorUtil(),
+                ),
     );
   }
 }
@@ -742,7 +750,8 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
                                 FontAwesomeIcons.youtube,
                               ),
                               title: Text(
-                                AppLocalizations.of(context)!.watchOnYoutube,
+                                AppLocalizations.of(context)!
+                                    .watchHighlightsOnYoutube,
                                 textAlign: TextAlign.center,
                               ),
                               onTap: () async {
@@ -826,7 +835,8 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
                                   FontAwesomeIcons.youtube,
                                 ),
                                 title: Text(
-                                  AppLocalizations.of(context)!.watchOnYoutube,
+                                  AppLocalizations.of(context)!
+                                      .watchHighlightsOnYoutube,
                                   textAlign: TextAlign.center,
                                 ),
                                 onTap: () async {
@@ -983,7 +993,7 @@ class _SprintResultsProviderState extends State<SprintResultsProvider> {
                                     ),
                                     title: Text(
                                       AppLocalizations.of(context)!
-                                          .watchOnYoutube,
+                                          .watchHighlightsOnYoutube,
                                       textAlign: TextAlign.center,
                                     ),
                                     onTap: () async {

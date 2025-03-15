@@ -240,8 +240,14 @@ class CircuitScreen extends StatelessWidget {
                 isFromRaceHub: true,
               ),
               builder: (context, snapshot) => snapshot.hasError
-                  ? RequestErrorWidget(
-                      snapshot.error.toString(),
+                  ? Scaffold(
+                      appBar: AppBar(
+                        backgroundColor:
+                            Theme.of(context).colorScheme.onPrimary,
+                      ),
+                      body: RequestErrorWidget(
+                        snapshot.error.toString(),
+                      ),
                     )
                   : snapshot.hasData
                       ? NestedScrollView(
@@ -372,7 +378,13 @@ class CircuitScreen extends StatelessWidget {
                             ),
                           ),
                         )
-                      : LoadingIndicatorUtil(),
+                      : Scaffold(
+                          appBar: AppBar(
+                            backgroundColor:
+                                Theme.of(context).colorScheme.onPrimary,
+                          ),
+                          body: LoadingIndicatorUtil(),
+                        ),
             ),
     );
   }
