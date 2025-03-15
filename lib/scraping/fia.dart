@@ -53,13 +53,16 @@ class FIAScraper {
         .getElementsByClassName('event-wrapper')[0]
         .getElementsByClassName('document-row');
     for (dom.Element document in tempResult) {
-      documents.add(
-        SessionDocument(
-          document.getElementsByClassName('title').first.text.trim(),
-          document.getElementsByClassName('published').first.text.trim(),
-          'https://www.fia.com${document.getElementsByTagName('a').first.attributes['href']}',
-        ),
-      );
+      List<dom.Element> a = document.getElementsByTagName('a');
+      if (a.isNotEmpty) {
+        documents.add(
+          SessionDocument(
+            document.getElementsByClassName('title').first.text.trim(),
+            document.getElementsByClassName('published').first.text.trim(),
+            'https://www.fia.com${a.first.attributes['href']}',
+          ),
+        );
+      }
     }
     return documents;
   }

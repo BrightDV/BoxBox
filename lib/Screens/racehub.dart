@@ -602,8 +602,6 @@ class SessionItem extends StatelessWidget {
       AppLocalizations.of(context)!.monthAbbreviationNovember,
       AppLocalizations.of(context)!.monthAbbreviationDecember,
     ];
-    bool useDarkMode =
-        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     String startTimeHour = session.startTime.hour.toString();
     String startTimeMinute = session.startTime.minute.toString();
     String endTimeHour = session.endTime.hour.toString();
@@ -632,133 +630,135 @@ class SessionItem extends StatelessWidget {
                   color: Colors.transparent,
                   elevation: isHovered ? 16 : 0,
                   child: Container(
-                    height: 70,
+                    height: 72,
                     decoration: BoxDecoration(
                       color: isHovered
-                          ? useDarkMode
-                              ? const Color(0xff1d1d28)
-                              : Colors.grey.shade400
+                          ? Theme.of(context).colorScheme.onSecondary
                           : Colors.transparent,
                       borderRadius: BorderRadius.circular(10),
                       border: Border.all(
-                        width: 3.0,
+                        width: 1.0,
+                        color: Theme.of(context).colorScheme.onSecondary,
                       ),
                     ),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Expanded(
-                          flex: 3,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                session.startTime.day.toString(),
-                                style: TextStyle(
-                                  fontSize: 18,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 5),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            flex: 3,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  session.startTime.day.toString(),
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                  ),
                                 ),
-                              ),
-                              Text(
-                                months[session.startTime.month - 1],
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
+                                Text(
+                                  months[session.startTime.month - 1],
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                        Expanded(
-                          flex: 1,
-                          child: DottedLine(
-                            direction: Axis.vertical,
-                            dashLength: 3,
-                            dashGapLength: 3,
-                            lineThickness: 3,
-                            dashRadius: 8,
-                            dashColor: Theme.of(context).dividerColor,
+                          Expanded(
+                            flex: 1,
+                            child: DottedLine(
+                              direction: Axis.vertical,
+                              dashLength: 3,
+                              dashGapLength: 3,
+                              lineThickness: 3,
+                              dashRadius: 8,
+                              dashColor: Theme.of(context).dividerColor,
+                            ),
                           ),
-                        ),
-                        Expanded(
-                          flex: 8,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                sessionsAbbreviations[
-                                        session.sessionsAbbreviation] ??
-                                    session.sessionsAbbreviation,
-                                style: TextStyle(
-                                  fontSize: 20,
+                          Expanded(
+                            flex: 8,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  sessionsAbbreviations[
+                                          session.sessionsAbbreviation] ??
+                                      session.sessionsAbbreviation,
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                  ),
                                 ),
-                              ),
-                              session.endTime.isBefore(DateTime.now())
-                                  ? Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                            right: 10,
-                                            top: 5,
-                                          ),
-                                          child: SizedBox(
-                                            height: 25,
-                                            width: 25,
-                                            child: FaIcon(
-                                              FontAwesomeIcons.flagCheckered,
+                                session.endTime.isBefore(DateTime.now())
+                                    ? Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                              right: 10,
+                                              top: 5,
+                                            ),
+                                            child: SizedBox(
+                                              height: 25,
+                                              width: 25,
+                                              child: FaIcon(
+                                                FontAwesomeIcons.flagCheckered,
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                        Text(
-                                          AppLocalizations.of(context)!
-                                              .sessionCompletedShort,
-                                          style: TextStyle(),
-                                        ),
-                                      ],
-                                    )
-                                  : session.startTime.isBefore(DateTime.now())
-                                      ? Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                right: 5,
-                                              ),
-                                              child: SizedBox(
-                                                height: 20,
-                                                width: 20,
-                                                child: LoadingIndicator(
-                                                  indicatorType:
-                                                      Indicator.values[17],
-                                                  colors: [
-                                                    useDarkMode
-                                                        ? Colors.white
-                                                        : Colors.grey,
-                                                  ],
-                                                  strokeWidth: 2.0,
+                                          Text(
+                                            AppLocalizations.of(context)!
+                                                .sessionCompletedShort,
+                                            style: TextStyle(),
+                                          ),
+                                        ],
+                                      )
+                                    : session.startTime.isBefore(DateTime.now())
+                                        ? Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                  right: 5,
+                                                ),
+                                                child: SizedBox(
+                                                  height: 20,
+                                                  width: 20,
+                                                  child: LoadingIndicator(
+                                                    indicatorType:
+                                                        Indicator.values[17],
+                                                    colors: [
+                                                      Theme.of(context)
+                                                          .colorScheme
+                                                          .onSecondary,
+                                                    ],
+                                                    strokeWidth: 2.0,
+                                                  ),
                                                 ),
                                               ),
+                                              Text(
+                                                AppLocalizations.of(context)!
+                                                    .sessionRunning,
+                                              ),
+                                            ],
+                                          )
+                                        : Text(
+                                            '$startTime - $endTime',
+                                            style: TextStyle(
+                                              fontSize: 17,
                                             ),
-                                            Text(
-                                              AppLocalizations.of(context)!
-                                                  .sessionRunning,
-                                            ),
-                                          ],
-                                        )
-                                      : Text(
-                                          '$startTime - $endTime',
-                                          style: TextStyle(
-                                            fontSize: 17,
                                           ),
-                                        ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -875,9 +875,9 @@ class SessionItem extends StatelessWidget {
                                             indicatorType: Indicator.values[17],
                                             strokeWidth: 2.0,
                                             colors: [
-                                              useDarkMode
-                                                  ? Colors.white
-                                                  : Colors.grey,
+                                              Theme.of(context)
+                                                  .colorScheme
+                                                  .onSecondary,
                                             ],
                                           ),
                                         ),
