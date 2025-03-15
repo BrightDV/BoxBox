@@ -17,6 +17,8 @@
  * Copyright (c) 2022-2025, BrightDV
  */
 
+import 'package:boxbox/helpers/hover.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -61,49 +63,105 @@ class BoxBoxButton extends StatelessWidget {
         vertical: verticalPadding ?? 3,
         horizontal: horizontalPadding ?? 10,
       ),
-      child: GestureDetector(
-        child: Container(
-          width: double.infinity,
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.onSecondary,
-            borderRadius: BorderRadius.circular(5),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(
-              20,
-              10,
-              20,
-              10,
-            ),
-            child: Row(
-              children: [
-                Text(title),
-                const Spacer(),
-                icon,
-              ],
-            ),
-          ),
-        ),
-        onTap: () async => isDialog
-            ? showDialog(
-                context: context,
-                builder: (BuildContext context) => widget!,
-              )
-            : toExecute != null
-                ? await toExecute!()
-                : isRoute
-                    ? context.pushNamed(
-                        route!,
-                        pathParameters: pathParameters ?? {},
-                        extra: extra,
-                      )
-                    : Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => widget!,
-                        ),
+      child: kIsWeb
+          ? Hover(
+              isRaceHubSession: true,
+              builder: (isHovered) => PhysicalModel(
+                color: Colors.transparent,
+                elevation: isHovered ? 16 : 0,
+                child: GestureDetector(
+                  child: Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: isHovered
+                          ? HSLColor.fromColor(
+                                  Theme.of(context).colorScheme.secondary)
+                              .withLightness(0.6)
+                              .toColor()
+                          : Theme.of(context).colorScheme.onSecondary,
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(
+                        20,
+                        10,
+                        20,
+                        10,
                       ),
-      ),
+                      child: Row(
+                        children: [
+                          Text(title),
+                          const Spacer(),
+                          icon,
+                        ],
+                      ),
+                    ),
+                  ),
+                  onTap: () async => isDialog
+                      ? showDialog(
+                          context: context,
+                          builder: (BuildContext context) => widget!,
+                        )
+                      : toExecute != null
+                          ? await toExecute!()
+                          : isRoute
+                              ? context.pushNamed(
+                                  route!,
+                                  pathParameters: pathParameters ?? {},
+                                  extra: extra,
+                                )
+                              : Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => widget!,
+                                  ),
+                                ),
+                ),
+              ),
+            )
+          : GestureDetector(
+              child: Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.onSecondary,
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(
+                    20,
+                    10,
+                    20,
+                    10,
+                  ),
+                  child: Row(
+                    children: [
+                      Text(title),
+                      const Spacer(),
+                      icon,
+                    ],
+                  ),
+                ),
+              ),
+              onTap: () async => isDialog
+                  ? showDialog(
+                      context: context,
+                      builder: (BuildContext context) => widget!,
+                    )
+                  : toExecute != null
+                      ? await toExecute!()
+                      : isRoute
+                          ? context.pushNamed(
+                              route!,
+                              pathParameters: pathParameters ?? {},
+                              extra: extra,
+                            )
+                          : Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => widget!,
+                              ),
+                            ),
+            ),
     );
   }
 }

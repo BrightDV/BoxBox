@@ -33,7 +33,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:marquee/marquee.dart';
@@ -259,6 +258,7 @@ class RaceHubContent extends StatelessWidget {
                         style: const TextStyle(
                           fontSize: 70,
                           fontWeight: FontWeight.w500,
+                          color: Colors.white,
                         ),
                       ),
                     ],
@@ -297,76 +297,25 @@ class RaceHubContent extends StatelessWidget {
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(5),
-                                  child: GestureDetector(
-                                    child: Container(
-                                      width: double.infinity,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(5),
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.fromLTRB(
-                                          20,
-                                          10,
-                                          20,
-                                          10,
-                                        ),
-                                        child: Row(
-                                          children: [
-                                            Text(
-                                              AppLocalizations.of(context)!
-                                                  .information,
-                                            ),
-                                            const Spacer(),
-                                            Icon(
-                                              Icons.arrow_forward_rounded,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    onTap: () => context.pushNamed(
-                                      'racing',
-                                      pathParameters: {
-                                        'meetingId': event.raceId
-                                      },
-                                      extra: {'isFetched': false},
-                                    ),
+                                BoxBoxButton(
+                                  AppLocalizations.of(context)!.information,
+                                  Icon(
+                                    Icons.arrow_forward_rounded,
                                   ),
+                                  isRoute: true,
+                                  route: 'racing',
+                                  pathParameters: {'meetingId': event.raceId},
+                                  extra: {'isFetched': false},
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.all(5),
-                                  child: GestureDetector(
-                                    child: Container(
-                                      width: double.infinity,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(5),
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.fromLTRB(
-                                          20,
-                                          10,
-                                          20,
-                                          10,
-                                        ),
-                                        child: Row(
-                                          children: [
-                                            Text(
-                                              'Race Programme',
-                                            ),
-                                            const Spacer(),
-                                            Icon(
-                                              Icons.open_in_new_outlined,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    onTap: () => launchUrl(
-                                      Uri.parse(
-                                        "https://raceprogramme.formula1.com/#/catalogue",
-                                      ),
+                                BoxBoxButton(
+                                  'Race Programme',
+                                  Icon(
+                                    Icons.open_in_new_outlined,
+                                  ),
+                                  isRoute: false,
+                                  toExecute: () => launchUrl(
+                                    Uri.parse(
+                                      "https://raceprogramme.formula1.com/#/catalogue",
                                     ),
                                   ),
                                 ),
