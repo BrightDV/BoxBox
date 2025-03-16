@@ -17,7 +17,7 @@ publish_to: none
 version: 0.8.3+37
 
 environment:
-  sdk: ">=2.19.0 <=3.7.0"
+  sdk: ">=2.19.0 <=3.8.0"
 
 dependencies:
   flutter:
@@ -61,10 +61,7 @@ dependencies:
   loading_indicator: ^3.0.3
   marquee: ^2.2.3
   package_info_plus: ^8.3.0
-  receive_sharing_intent: # bumped Gradle to 7.4.2
-    git:
-      url: https://github.com/Nahrawene-ben-hmida/receive_sharing_intent.git
-      ref: "6ad8f582d7bc7e2fd5a258399e7dbe8c39245d32"
+  receive_sharing_intent: 1.6.6
   river_player: ^0.1.4
   share_plus: ^10.1.4
   # signalr_flutter: ^0.2.0 # uses (non-foss?) .jar

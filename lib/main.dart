@@ -305,9 +305,13 @@ class _MyAppState extends State<MyApp> {
 
       // For sharing or opening urls/text coming from outside the app while the app is in the memory
       _intentDataStreamSubscription =
-          ReceiveSharingIntent.getTextStream().listen(
-        (String value) {
-          handleSharedText(value, navigatorKey);
+          ReceiveSharingIntent.getMediaStream().listen(
+        (List<SharedMediaFile>? value) {
+          if (value?.isNotEmpty ?? false) {
+            if (value![0].type == SharedMediaType.url) {
+              handleSharedText(value[0].path, navigatorKey);
+            }
+          }
         },
         onError: (err) {
           // print("ERROR in getTextStream: $err");
@@ -315,9 +319,13 @@ class _MyAppState extends State<MyApp> {
       );
 
       // For sharing or opening urls/text coming from outside the app while the app is closed
-      ReceiveSharingIntent.getInitialText().then(
-        (String? value) {
-          if (value != null) handleSharedText(value, navigatorKey);
+      ReceiveSharingIntent.getInitialMedia().then(
+        (List<SharedMediaFile>? value) {
+          if (value?.isNotEmpty ?? false) {
+            if (value![0].type == SharedMediaType.url) {
+              handleSharedText(value[0].path, navigatorKey);
+            }
+          }
         },
       );
     }
