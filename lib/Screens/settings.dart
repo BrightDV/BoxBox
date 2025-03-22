@@ -533,7 +533,7 @@ class _OtherCardstate extends State<OtherCard> {
     bool useDataSaverMode = Hive.box('settings')
         .get('useDataSaverMode', defaultValue: false) as bool;
     bool useOfficialWebview = Hive.box('settings')
-        .get('useOfficialWebview', defaultValue: true) as bool;
+        .get('useOfficialWebview', defaultValue: false) as bool;
     bool useOfficialDataSoure = Hive.box('settings')
         .get('useOfficialDataSoure', defaultValue: true) as bool;
     bool shouldUse12HourClock = Hive.box('settings')

@@ -52,7 +52,7 @@ class _SessionScreenState extends State<SessionScreen> {
   @override
   Widget build(BuildContext context) {
     bool useOfficialWebview = Hive.box('settings')
-        .get('useOfficialWebview', defaultValue: true) as bool;
+        .get('useOfficialWebview', defaultValue: false) as bool;
     String championship = Hive.box('settings')
         .get('championship', defaultValue: 'Formula 1') as String;
 
