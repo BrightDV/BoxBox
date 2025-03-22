@@ -83,7 +83,7 @@ class RouterLocalConfig {
                 return VideoScreen(
                   extras['video'],
                   update: extras['update'] ?? null,
-                  videoChampionship: extras['videoChampionship'] ?? '',
+                  videoChampionship: extras['videoChampionship'] ?? null,
                 );
               } else {
                 return VideoScreenFromId(state.pathParameters['id']!);

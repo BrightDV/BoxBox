@@ -28,6 +28,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import "package:story_view/story_view.dart";
 import 'package:flutter_swiper_view/flutter_swiper_view.dart';
@@ -257,100 +258,82 @@ class VideoItem extends StatelessWidget {
               builder: (isHovered) => PhysicalModel(
                 color: Colors.transparent,
                 elevation: isHovered ? 16 : 0,
-                child: Card(
-                  elevation: 5.0,
-                  color: Colors.transparent,
-                  child: OpenContainer(
-                    closedColor: Colors.transparent,
-                    openColor: Colors.transparent,
-                    transitionDuration: const Duration(milliseconds: 500),
-                    openBuilder: (context, action) => Swiper(
-                      itemBuilder: (context, index) {
-                        return VideoScreen(videos[index]);
-                      },
-                      itemCount: videos.length,
-                      scrollDirection: Axis.vertical,
-                      control: SwiperControl(
-                        disableColor: Theme.of(context).primaryColor,
+                child: GestureDetector(
+                  onTap: () => context.pushNamed(
+                    'video',
+                    pathParameters: {'id': videos[index].videoId},
+                    extra: {'video': videos[index]},
+                  ),
+                  child: Stack(
+                    alignment: Alignment.bottomLeft,
+                    children: [
+                      ClipRRect(
+                        borderRadius: const BorderRadius.all(
+                          Radius.circular(10),
+                        ),
+                        child: CachedNetworkImage(
+                          imageUrl: videos[index].thumbnailUrl,
+                          placeholder: (context, url) =>
+                              const LoadingIndicatorUtil(
+                            replaceImage: true,
+                          ),
+                          errorWidget: (context, url, error) => Icon(
+                            Icons.error_outlined,
+                          ),
+                          fadeOutDuration: const Duration(seconds: 1),
+                          fadeInDuration: const Duration(seconds: 1),
+                          colorBlendMode: BlendMode.darken,
+                          color: Colors.black.withOpacity(0.5),
+                        ),
                       ),
-                      index: index,
-                      loop: false,
-                    ),
-                    closedBuilder: (context, action) => Stack(
-                      alignment: Alignment.bottomLeft,
-                      children: [
-                        ClipRRect(
-                          borderRadius: const BorderRadius.all(
-                            Radius.circular(10),
-                          ),
-                          child: CachedNetworkImage(
-                            imageUrl: videos[index].thumbnailUrl,
-                            placeholder: (context, url) => SizedBox(
-                              height:
-                                  MediaQuery.of(context).size.width / (16 / 9) -
-                                      7,
-                              child: const LoadingIndicatorUtil(
-                                replaceImage: true,
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(15, 0, 20, 15),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Padding(
+                              padding: EdgeInsets.only(
+                                bottom: 8,
+                              ),
+                              child: Icon(
+                                Icons.play_circle_fill_rounded,
+                                color: Colors.white,
+                                size: 40,
                               ),
                             ),
-                            errorWidget: (context, url, error) => Icon(
-                              Icons.error_outlined,
-                            ),
-                            fadeOutDuration: const Duration(seconds: 1),
-                            fadeInDuration: const Duration(seconds: 1),
-                            colorBlendMode: BlendMode.darken,
-                            color: Colors.black.withOpacity(0.5),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(15, 0, 20, 15),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Padding(
-                                padding: EdgeInsets.only(
-                                  bottom: 8,
-                                ),
-                                child: Icon(
-                                  Icons.play_circle_fill_rounded,
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                left: 5,
+                                bottom: 2,
+                              ),
+                              child: Text(
+                                videos[index].videoDuration,
+                                style: const TextStyle(
                                   color: Colors.white,
-                                  size: 40,
                                 ),
                               ),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                  left: 5,
-                                  bottom: 2,
-                                ),
-                                child: Text(
-                                  videos[index].videoDuration,
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                  ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                left: 5,
+                              ),
+                              child: Text(
+                                videos[index].caption,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 22,
                                 ),
                               ),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                  left: 5,
-                                ),
-                                child: Text(
-                                  videos[index].caption,
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 22,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
               ),
