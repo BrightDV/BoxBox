@@ -1982,8 +1982,15 @@ class VideoRenderer extends StatelessWidget {
               articleChampionship: articleChampionship,
             ),
             builder: (context, snapshot) => snapshot.hasError
-                ? RequestErrorWidget(
-                    snapshot.error.toString(),
+                ? SizedBox(
+                    height: kIsWeb
+                        ? width / (16 / 9)
+                        : MediaQuery.of(context).size.width / (16 / 9),
+                    child: Center(
+                      child: RequestErrorWidget(
+                        snapshot.error.toString(),
+                      ),
+                    ),
                   )
                 : snapshot.hasData
                     ? Column(
@@ -2037,11 +2044,15 @@ class VideoRenderer extends StatelessWidget {
                         ],
                       )
                     : SizedBox(
-                        height: MediaQuery.of(context).size.width / (16 / 9),
-                        child: const LoadingIndicatorUtil(
-                          replaceImage: true,
-                          fullBorderRadius: false,
-                          borderRadius: false,
+                        height: kIsWeb
+                            ? width / (16 / 9)
+                            : MediaQuery.of(context).size.width / (16 / 9),
+                        child: const Center(
+                          child: LoadingIndicatorUtil(
+                            replaceImage: true,
+                            fullBorderRadius: false,
+                            borderRadius: false,
+                          ),
                         ),
                       ),
           );
