@@ -1262,7 +1262,7 @@ abstract class AppLocalizations {
   /// No description provided for @useOfficialWebview.
   ///
   /// In en, this message translates to:
-  /// **'Use official Webview for live sessions'**
+  /// **'Use official Webview for live sessions instead of f1-dash.com'**
   String get useOfficialWebview;
 
   /// No description provided for @victory.

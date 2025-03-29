@@ -570,7 +570,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get useOfficialDataSourceSub => 'Use the data source of the official mobile app. This gives faster results, but not all the details are available. Long-press for more details.';
 
   @override
-  String get useOfficialWebview => 'Use official Webview for live sessions';
+  String get useOfficialWebview => 'Use official Webview for live sessions instead of f1-dash.com';
 
   @override
   String get victory => 'Victory';
