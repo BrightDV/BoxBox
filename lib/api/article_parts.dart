@@ -1095,6 +1095,8 @@ class AtomAudioBoom extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    double padding = width > 600 ? 30 : 0;
     String url = 'https:' + element['fields']['audioPodcast']['iFrameSrc'];
     url = url.replaceAll(
       element['fields']['audioPodcast']['slug'],
@@ -1103,56 +1105,179 @@ class AtomAudioBoom extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 5),
       child: Card(
-        elevation: 5,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ImageRenderer(
-              element['fields']['audioPodcast']['logoImage'],
-            ),
-            ListTile(
-              title: Text(
-                element['fields']['audioPodcast']['postTitle'],
-                textAlign: TextAlign.justify,
-              ),
-              subtitle: Text(element['fields']['audioPodcast']['channelTitle']),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                TextButton.icon(
-                  onPressed: () async => await launchUrl(
-                    Uri.parse(url),
-                    mode: LaunchMode.externalApplication,
-                  ),
-                  label: Text(
-                    AppLocalizations.of(context)!.listen,
-                    style: TextStyle(fontSize: 15),
-                  ),
-                  icon: Icon(
-                    Icons.headphones_outlined,
-                    size: 25,
-                  ),
-                ),
-                TextButton.icon(
-                  onPressed: () async => await launchUrl(
-                    Uri.parse(element['fields']['audioPodcast']['mp3Link']),
-                    mode: LaunchMode.externalApplication,
-                  ),
-                  label: Text(
-                    'MP3',
-                    style: TextStyle(fontSize: 15),
-                  ),
-                  icon: Icon(
-                    Icons.music_note_outlined,
-                    size: 25,
-                  ),
-                ),
-              ],
-            ),
-          ],
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15.0),
         ),
+        elevation: 5,
+        child: padding != 0
+            ? Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Expanded(
+                    flex: 2,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(15.0),
+                        bottomLeft: Radius.circular(15.0),
+                      ),
+                      child: ImageRenderer(
+                        element['fields']['audioPodcast']['postImage'],
+                        isPodcastPreview: true,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 5,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 15),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            element['fields']['audioPodcast']['postTitle'],
+                            textAlign: TextAlign.start,
+                            style: Theme.of(context).textTheme.titleMedium,
+                          ),
+                          Text(
+                            element['fields']['audioPodcast']['channelTitle'],
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(top: padding),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                TextButton.icon(
+                                  onPressed: () async => await launchUrl(
+                                    Uri.parse(url),
+                                    mode: LaunchMode.externalApplication,
+                                  ),
+                                  label: Padding(
+                                    padding: EdgeInsets.symmetric(vertical: 13),
+                                    child: Text(
+                                      AppLocalizations.of(context)!.listen,
+                                      style: TextStyle(fontSize: 15),
+                                    ),
+                                  ),
+                                  icon: Icon(
+                                    Icons.headphones_outlined,
+                                    size: 25,
+                                  ),
+                                ),
+                                TextButton.icon(
+                                  onPressed: () async => await launchUrl(
+                                    Uri.parse(element['fields']['audioPodcast']
+                                        ['mp3Link']),
+                                    mode: LaunchMode.externalApplication,
+                                  ),
+                                  label: Padding(
+                                    padding: EdgeInsets.symmetric(vertical: 13),
+                                    child: Text(
+                                      'MP3',
+                                      style: TextStyle(fontSize: 15),
+                                    ),
+                                  ),
+                                  icon: Icon(
+                                    Icons.music_note_outlined,
+                                    size: 25,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              )
+            : Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      ConstrainedBox(
+                        constraints: BoxConstraints(maxHeight: 120),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(15.0),
+                          ),
+                          child: ImageRenderer(
+                            element['fields']['audioPodcast']['postImage'],
+                            isPodcastPreview: true,
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 2,
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 15),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                element['fields']['audioPodcast']['postTitle'],
+                                textAlign: TextAlign.start,
+                                style: Theme.of(context).textTheme.titleMedium,
+                                maxLines: padding != 0 ? null : 3,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              Text(
+                                element['fields']['audioPodcast']
+                                    ['channelTitle'],
+                                style: Theme.of(context).textTheme.bodyMedium,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      TextButton.icon(
+                        onPressed: () async => await launchUrl(
+                          Uri.parse(url),
+                          mode: LaunchMode.externalApplication,
+                        ),
+                        label: Padding(
+                          padding: EdgeInsets.symmetric(vertical: 13),
+                          child: Text(
+                            AppLocalizations.of(context)!.listen,
+                            style: TextStyle(fontSize: 15),
+                          ),
+                        ),
+                        icon: Icon(
+                          Icons.headphones_outlined,
+                          size: 25,
+                        ),
+                      ),
+                      TextButton.icon(
+                        onPressed: () async => await launchUrl(
+                          Uri.parse(
+                              element['fields']['audioPodcast']['mp3Link']),
+                          mode: LaunchMode.externalApplication,
+                        ),
+                        label: Padding(
+                          padding: EdgeInsets.symmetric(vertical: 13),
+                          child: Text(
+                            'MP3',
+                            style: TextStyle(fontSize: 15),
+                          ),
+                        ),
+                        icon: Icon(
+                          Icons.music_note_outlined,
+                          size: 25,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
       ),
     );
   }

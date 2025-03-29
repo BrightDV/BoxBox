@@ -419,7 +419,7 @@ class _MyAppState extends State<MyApp> {
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: supportedLocales,
         debugShowCheckedModeBanner: false,
-        routerConfig: RouterLocalConfig().router,
+        routerConfig: RouterLocalConfig.router,
       ),
     );
   }

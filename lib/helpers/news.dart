@@ -1475,6 +1475,7 @@ class ImageRenderer extends StatelessWidget {
   final String? caption;
   final bool? inSchedule;
   final bool? isHero;
+  final bool? isPodcastPreview;
 
   const ImageRenderer(
     this.imageUrl, {
@@ -1482,6 +1483,7 @@ class ImageRenderer extends StatelessWidget {
     this.caption,
     this.inSchedule,
     this.isHero,
+    this.isPodcastPreview,
   }) : super(key: key);
 
   @override
@@ -1494,7 +1496,7 @@ class ImageRenderer extends StatelessWidget {
             : width;
     return Padding(
       padding: EdgeInsets.only(
-        bottom: inSchedule != null ? 0 : 10,
+        bottom: inSchedule != null || isPodcastPreview != null ? 0 : 10,
       ),
       child: inSchedule != null
           ? CachedNetworkImage(
