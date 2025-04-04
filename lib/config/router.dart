@@ -38,15 +38,24 @@ import 'package:boxbox/Screens/video.dart';
 import 'package:boxbox/Screens/videos.dart';
 import 'package:boxbox/api/race_components.dart';
 import 'package:boxbox/helpers/bottom_navigation_bar.dart';
+import 'package:boxbox/helpers/route_handler.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 
 class RouterLocalConfig {
   static final router = GoRouter(
-    errorBuilder: (context, state) => ErrorNotFoundScreen(
-      route: state.uri.toString(),
-    ),
+    errorBuilder: (context, state) {
+      String url = state.uri.toString().replaceFirst('/', '');
+      if (url.startsWith('https://www.formula1.com') ||
+          url.startsWith('https://formula1.com')) {
+        return SharedLinkHandler(url);
+      } else {
+        return ErrorNotFoundScreen(
+          route: state.uri.toString(),
+        );
+      }
+    },
     routes: [
       GoRoute(
         path: '/',

@@ -18,13 +18,12 @@
  */
 
 import 'package:boxbox/Screens/404.dart';
-import 'package:boxbox/Screens/article.dart';
 import 'package:boxbox/Screens/schedule.dart';
 import 'package:boxbox/Screens/standings.dart';
-import 'package:boxbox/Screens/video.dart';
 import 'package:boxbox/Screens/videos.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:go_router/go_router.dart';
 
 class HandleRoute {
   static Route? handleRoute(String? url) {
@@ -63,21 +62,14 @@ class SharedLinkHandler extends StatelessWidget {
         ),
         body: VideosScreen(ScrollController()),
       );
-    } else if (url.startsWith('/en/latest/article.')) {
-      return ArticleScreen(
-        url.split('.').last,
-        '',
-        true,
-      );
-    } else if (url.startsWith('/en/latest/article/')) {
-      return ArticleScreen(
-        url.split('/').last,
-        '',
-        true,
-      );
-    } else if (url.startsWith('/en/latest/video.')) {
-      String videoId = url.split('.')[2];
-      return VideoScreenFromId(videoId);
+    } else if (url.startsWith('/en/latest/article/') ||
+        url.startsWith('/en/latest/article.')) {
+      context.goNamed('article', pathParameters: {'id': url.split('.').last});
+      return Container();
+    } else if (url.startsWith('/en/video/') ||
+        url.startsWith('/en/latest/video.')) {
+      context.goNamed('video', pathParameters: {'id': url.split('.').last});
+      return Container();
     } else if (url.startsWith('/en/racing/$year')) {
       return Scaffold(
         appBar: AppBar(
@@ -111,7 +103,9 @@ class SharedLinkHandler extends StatelessWidget {
         ),
       );
     } else {
-      return ErrorNotFoundScreen();
+      return ErrorNotFoundScreen(
+        route: sharedUrl,
+      );
     }
   }
 }
