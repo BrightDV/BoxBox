@@ -130,21 +130,29 @@ class RaceHubScreen extends StatelessWidget {
                                                 ),
                                               ),
                                             ),
-                                      child: Card(
-                                        elevation: 5,
-                                        child: ListTile(
-                                          title: Text(
-                                            snapshot.data![index - 1].name,
-                                          ),
-                                          subtitle: Text(
-                                            snapshot
-                                                .data![index - 1].postedDate,
-                                            style: TextStyle(
-                                              fontSize: 12,
+                                      child: Hover(
+                                        isRaceHubSession: true,
+                                        builder: (isHovered) => Card(
+                                          elevation: 5,
+                                          color: isHovered
+                                              ? Theme.of(context)
+                                                  .colorScheme
+                                                  .onSecondary
+                                              : null,
+                                          child: ListTile(
+                                            title: Text(
+                                              snapshot.data![index - 1].name,
                                             ),
-                                          ),
-                                          leading: Icon(
-                                            Icons.picture_as_pdf_outlined,
+                                            subtitle: Text(
+                                              snapshot
+                                                  .data![index - 1].postedDate,
+                                              style: TextStyle(
+                                                fontSize: 12,
+                                              ),
+                                            ),
+                                            leading: Icon(
+                                              Icons.picture_as_pdf_outlined,
+                                            ),
                                           ),
                                         ),
                                       ),
@@ -244,13 +252,13 @@ class RaceHubContent extends StatelessWidget {
                               errorWidget: (context, url, error) => const Icon(
                                 Icons.error_outlined,
                               ),
-                              fadeOutDuration: const Duration(seconds: 1),
-                              fadeInDuration: const Duration(seconds: 1),
+                              fadeOutDuration:
+                                  const Duration(milliseconds: 300),
+                              fadeInDuration: const Duration(milliseconds: 300),
                               fit: BoxFit.cover,
                               colorBlendMode: BlendMode.darken,
                               color: Colors.black.withOpacity(0.5),
                               width: double.infinity,
-                              alignment: Alignment.bottomCenter,
                             )
                           : Container(),
                       Text(
@@ -293,32 +301,103 @@ class RaceHubContent extends StatelessWidget {
                         Expanded(
                           flex: 1,
                           child: Padding(
-                            padding: const EdgeInsets.only(top: 10),
+                            padding: const EdgeInsets.only(top: 2),
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                BoxBoxButton(
-                                  AppLocalizations.of(context)!.information,
-                                  Icon(
-                                    Icons.arrow_forward_rounded,
-                                  ),
-                                  isRoute: true,
-                                  route: 'racing',
-                                  pathParameters: {'meetingId': event.raceId},
-                                  extra: {'isFetched': false},
-                                ),
-                                BoxBoxButton(
-                                  'Race Programme',
-                                  Icon(
-                                    Icons.open_in_new_outlined,
-                                  ),
-                                  isRoute: false,
-                                  toExecute: () => launchUrl(
-                                    Uri.parse(
-                                      "https://raceprogramme.formula1.com/#/catalogue",
-                                    ),
-                                  ),
-                                ),
+                                championship == 'Formula 1'
+                                    ? BoxBoxButton(
+                                        AppLocalizations.of(context)!
+                                            .information,
+                                        Icon(
+                                          Icons.arrow_forward_rounded,
+                                        ),
+                                        isRoute: true,
+                                        route: 'racing',
+                                        pathParameters: {
+                                          'meetingId': event.raceId
+                                        },
+                                        extra: {'isFetched': false},
+                                      )
+                                    : Container(),
+                                championship == 'Formula 1'
+                                    ? BoxBoxButton(
+                                        'Race Programme',
+                                        Icon(
+                                          Icons.open_in_new_outlined,
+                                        ),
+                                        isRoute: false,
+                                        toExecute: () => launchUrl(
+                                          Uri.parse(
+                                            "https://raceprogramme.formula1.com/#/catalogue",
+                                          ),
+                                        ),
+                                      )
+                                    : Container(),
+                                championship == 'Formula 1' &&
+                                        event.liveBlog != null
+                                    ? BoxBoxButton(
+                                        AppLocalizations.of(context)!
+                                            .openLiveBlog,
+                                        SizedBox(
+                                          width: 24.0,
+                                          height: 24.0,
+                                          child: LoadingIndicator(
+                                            indicatorType:
+                                                Indicator.ballScaleMultiple,
+                                            colors: [
+                                              Theme.of(context)
+                                                  .colorScheme
+                                                  .onPrimary,
+                                            ],
+                                          ),
+                                        ),
+                                        isRoute: false,
+                                        widget: Scaffold(
+                                          appBar: AppBar(
+                                            title: SizedBox(
+                                              height:
+                                                  AppBar().preferredSize.height,
+                                              width:
+                                                  AppBar().preferredSize.width,
+                                              child: Marquee(
+                                                text: event.liveBlog!['title'],
+                                                style: const TextStyle(
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                                pauseAfterRound:
+                                                    const Duration(seconds: 1),
+                                                startAfter:
+                                                    const Duration(seconds: 1),
+                                                velocity: 85,
+                                                blankSpace: 100,
+                                              ),
+                                            ),
+                                            backgroundColor: Theme.of(context)
+                                                .colorScheme
+                                                .onPrimary,
+                                          ),
+                                          body: InAppWebView(
+                                            initialUrlRequest: URLRequest(
+                                              url: WebUri(
+                                                event.liveBlog!['eventUrl'],
+                                              ),
+                                            ),
+                                            gestureRecognizers: {
+                                              Factory<VerticalDragGestureRecognizer>(
+                                                  () =>
+                                                      VerticalDragGestureRecognizer()),
+                                              Factory<HorizontalDragGestureRecognizer>(
+                                                  () =>
+                                                      HorizontalDragGestureRecognizer()),
+                                              Factory<ScaleGestureRecognizer>(
+                                                  () =>
+                                                      ScaleGestureRecognizer()),
+                                            },
+                                          ),
+                                        ),
+                                      )
+                                    : Container(),
                               ],
                             ),
                           ),
@@ -350,8 +429,8 @@ class RaceHubContent extends StatelessWidget {
                             errorWidget: (context, url, error) => const Icon(
                               Icons.error_outlined,
                             ),
-                            fadeOutDuration: const Duration(seconds: 1),
-                            fadeInDuration: const Duration(seconds: 1),
+                            fadeOutDuration: const Duration(milliseconds: 300),
+                            fadeInDuration: const Duration(milliseconds: 300),
                             fit: BoxFit.scaleDown,
                           ),
                         )
