@@ -26,7 +26,7 @@ import 'package:background_downloader/background_downloader.dart';
 import 'package:boxbox/config/router.dart';
 // import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:boxbox/helpers/constants.dart';
-import 'package:boxbox/helpers/handle_native.dart';
+import 'package:boxbox/helpers/route_handler.dart';
 // import 'package:boxbox/Screens/article.dart';
 import 'package:boxbox/helpers/team_background_color.dart';
 import 'package:flutter/material.dart';
@@ -294,7 +294,6 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   late StreamSubscription _intentDataStreamSubscription;
-  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
   @override
   void initState() {
@@ -308,8 +307,8 @@ class _MyAppState extends State<MyApp> {
           ReceiveSharingIntent.getMediaStream().listen(
         (List<SharedMediaFile>? value) {
           if (value?.isNotEmpty ?? false) {
-            if (value![0].type == SharedMediaType.url) {
-              handleSharedText(value[0].path, navigatorKey);
+            if (value?[0] != null) {
+              HandleRoute().handleRoute(value![0].path, context);
             }
           }
         },
@@ -322,8 +321,8 @@ class _MyAppState extends State<MyApp> {
       ReceiveSharingIntent.getInitialMedia().then(
         (List<SharedMediaFile>? value) {
           if (value?.isNotEmpty ?? false) {
-            if (value![0].type == SharedMediaType.url) {
-              handleSharedText(value[0].path, navigatorKey);
+            if (value?[0] != null) {
+              HandleRoute().handleRoute(value![0].path, context);
             }
           }
         },

@@ -14,3 +14,4 @@ ios/Flutter/flutter_export_environment.sh
 ios/Flutter/Generated.xcconfig
 lib/Screens/LivetimingArchive/livetiming.md
 /android/app/.cxx
+adb_test_commands.md

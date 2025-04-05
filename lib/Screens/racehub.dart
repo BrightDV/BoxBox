@@ -130,32 +130,54 @@ class RaceHubScreen extends StatelessWidget {
                                                 ),
                                               ),
                                             ),
-                                      child: Hover(
-                                        isRaceHubSession: true,
-                                        builder: (isHovered) => Card(
-                                          elevation: 5,
-                                          color: isHovered
-                                              ? Theme.of(context)
-                                                  .colorScheme
-                                                  .onSecondary
-                                              : null,
-                                          child: ListTile(
-                                            title: Text(
-                                              snapshot.data![index - 1].name,
-                                            ),
-                                            subtitle: Text(
-                                              snapshot
-                                                  .data![index - 1].postedDate,
-                                              style: TextStyle(
-                                                fontSize: 12,
+                                      child: kIsWeb
+                                          ? Hover(
+                                              isRaceHubSession: true,
+                                              builder: (isHovered) => Card(
+                                                elevation: 5,
+                                                color: isHovered
+                                                    ? Theme.of(context)
+                                                        .colorScheme
+                                                        .onSecondary
+                                                    : null,
+                                                child: ListTile(
+                                                  title: Text(
+                                                    snapshot
+                                                        .data![index - 1].name,
+                                                  ),
+                                                  subtitle: Text(
+                                                    snapshot.data![index - 1]
+                                                        .postedDate,
+                                                    style: TextStyle(
+                                                      fontSize: 12,
+                                                    ),
+                                                  ),
+                                                  leading: Icon(
+                                                    Icons
+                                                        .picture_as_pdf_outlined,
+                                                  ),
+                                                ),
+                                              ),
+                                            )
+                                          : Card(
+                                              elevation: 5,
+                                              child: ListTile(
+                                                title: Text(
+                                                  snapshot
+                                                      .data![index - 1].name,
+                                                ),
+                                                subtitle: Text(
+                                                  snapshot.data![index - 1]
+                                                      .postedDate,
+                                                  style: TextStyle(
+                                                    fontSize: 12,
+                                                  ),
+                                                ),
+                                                leading: Icon(
+                                                  Icons.picture_as_pdf_outlined,
+                                                ),
                                               ),
                                             ),
-                                            leading: Icon(
-                                              Icons.picture_as_pdf_outlined,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
                                     ),
                             )
                           : Padding(

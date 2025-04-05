@@ -45,8 +45,32 @@ import 'package:go_router/go_router.dart';
 
 class RouterLocalConfig {
   static final router = GoRouter(
+    redirect: (context, state) {
+      String url = state.uri.toString();
+      if (url.startsWith('/')) {
+        url = url.replaceFirst('/', '');
+      }
+      if (url.startsWith('https://www.formula1.com') ||
+          url.startsWith('https://formula1.com')) {
+        url = url
+            .replaceAll('https://www.formula1.com', '')
+            .replaceAll('https://formula1.com', '')
+            .replaceAll('.html', '');
+        if (url.startsWith('/en/latest/article/') ||
+            url.startsWith('/en/latest/article.')) {
+          return '/article/${url.split('.').last}';
+        } else if (url.startsWith('/en/video/') ||
+            url.startsWith('/en/latest/video.')) {
+          return '/video/${url.split('.').last}';
+        }
+      }
+      return null;
+    },
     errorBuilder: (context, state) {
-      String url = state.uri.toString().replaceFirst('/', '');
+      String url = state.uri.toString();
+      if (url.startsWith('/')) {
+        url = url.replaceFirst('/', '');
+      }
       if (url.startsWith('https://www.formula1.com') ||
           url.startsWith('https://formula1.com')) {
         return SharedLinkHandler(url);

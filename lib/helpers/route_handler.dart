@@ -21,18 +21,101 @@ import 'package:boxbox/Screens/404.dart';
 import 'package:boxbox/Screens/schedule.dart';
 import 'package:boxbox/Screens/standings.dart';
 import 'package:boxbox/Screens/videos.dart';
+import 'package:boxbox/config/router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 
 class HandleRoute {
-  static Route? handleRoute(String? url) {
-    if (url == null) return null;
-
-    return PageRouteBuilder(
-      opaque: false,
-      pageBuilder: (_, __, ___) => SharedLinkHandler(url),
-    );
+  void handleRoute(String? sharedUrl, BuildContext context) {
+    if (sharedUrl == null) return null;
+    int year = DateTime.now().year;
+    String url = sharedUrl
+        .replaceAll('https://www.formula1.com', '')
+        .replaceAll('https://formula1.com', '')
+        .replaceAll('.html', '');
+    if (url.endsWith('/en') || url == '/en/latest/all') {
+      return null;
+    } else if (url == '/en/video') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Scaffold(
+            appBar: AppBar(
+              title: Text(
+                AppLocalizations.of(context)!.videos,
+              ),
+              backgroundColor: Theme.of(context).colorScheme.onPrimary,
+            ),
+            body: VideosScreen(ScrollController()),
+          ),
+        ),
+      );
+    } else if (url.startsWith('/en/latest/article/') ||
+        url.startsWith('/en/latest/article.')) {
+      RouterLocalConfig.router
+          .goNamed('article', pathParameters: {'id': url.split('.').last});
+    } else if (url.startsWith('/en/video/') ||
+        url.startsWith('/en/latest/video.')) {
+      RouterLocalConfig.router
+          .goNamed('video', pathParameters: {'id': url.split('.').last});
+    } else if (url.startsWith('/en/racing/$year')) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Scaffold(
+            appBar: AppBar(
+              title: Text(
+                AppLocalizations.of(context)!.schedule,
+              ),
+              backgroundColor: Theme.of(context).colorScheme.onPrimary,
+            ),
+            body: const ScheduleScreen(),
+          ),
+        ),
+      );
+    } else if (url == '/en/results/$year/drivers') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Scaffold(
+            appBar: AppBar(
+              title: Text(
+                AppLocalizations.of(context)!.standings,
+              ),
+              backgroundColor: Theme.of(context).colorScheme.onPrimary,
+            ),
+            body: const StandingsScreen(),
+          ),
+        ),
+      );
+    } else if (url == '/en/results/$year/teams') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Scaffold(
+            appBar: AppBar(
+              title: Text(
+                AppLocalizations.of(context)!.standings,
+              ),
+              backgroundColor: Theme.of(context).colorScheme.onPrimary,
+            ),
+            body: const StandingsScreen(
+              switchToTeamStandings: true,
+            ),
+          ),
+        ),
+      );
+    } else {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ErrorNotFoundScreen(
+            route: url,
+          ),
+        ),
+      );
+    }
   }
 }
 
