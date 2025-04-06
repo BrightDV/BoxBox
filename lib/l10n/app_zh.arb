@@ -323,7 +323,7 @@
   "@search": {},
   "listen": "听着",
   "@listen": {},
-  "useOfficialWebview": "使用官网版本现场直播",
+  "useOfficialWebview": "使用官网版本替代fi-dash.com进行现场直播",
   "@useOfficialWebview": {},
   "refresh": "刷新",
   "@refresh": {},
