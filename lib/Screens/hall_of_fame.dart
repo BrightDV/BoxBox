@@ -21,7 +21,7 @@ import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/request_error.dart';
 import 'package:boxbox/scraping/formula_one.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:boxbox/l10n/app_localizations.dart';
 
 class HallOfFameScreen extends StatelessWidget {
   const HallOfFameScreen({Key? key}) : super(key: key);

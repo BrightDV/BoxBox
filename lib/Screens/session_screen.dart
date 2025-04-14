@@ -25,7 +25,7 @@ import 'package:boxbox/Screens/race_details.dart';
 import 'package:boxbox/api/event_tracker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:boxbox/l10n/app_localizations.dart';
 import 'package:flutter_timer_countdown/flutter_timer_countdown.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 

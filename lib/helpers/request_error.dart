@@ -19,7 +19,7 @@
 
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:boxbox/l10n/app_localizations.dart';
 
 class RequestErrorWidget extends StatelessWidget {
   final String snapshotError;

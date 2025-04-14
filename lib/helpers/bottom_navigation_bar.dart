@@ -28,7 +28,7 @@ import 'package:boxbox/helpers/news_feed_widget.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:boxbox/l10n/app_localizations.dart';
 import 'package:hidable/hidable.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 

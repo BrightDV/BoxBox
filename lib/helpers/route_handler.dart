@@ -23,7 +23,7 @@ import 'package:boxbox/Screens/standings.dart';
 import 'package:boxbox/Screens/videos.dart';
 import 'package:boxbox/config/router.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:boxbox/l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 
 class HandleRoute {

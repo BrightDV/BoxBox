@@ -28,7 +28,7 @@ import 'package:boxbox/helpers/news.dart';
 import 'package:boxbox/scraping/formula_one.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:boxbox/l10n/app_localizations.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
