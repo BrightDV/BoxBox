@@ -57,7 +57,7 @@ class _NewsFeedState extends State<NewsFeed> {
 
   void showOfflineSnackBar() async {
     var connectivityResult = await (Connectivity().checkConnectivity());
-    if (connectivityResult == ConnectivityResult.none) {
+    if (connectivityResult.contains(ConnectivityResult.none)) {
       SnackBar offlineSnackBar = SnackBar(
         content: Row(
           children: [

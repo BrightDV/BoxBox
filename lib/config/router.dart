@@ -50,6 +50,7 @@ class RouterLocalConfig {
       if (url.startsWith('/')) {
         url = url.replaceFirst('/', '');
       }
+      // handle urls (web only)
       if (url.startsWith('https://www.formula1.com') ||
           url.startsWith('https://formula1.com')) {
         url = url

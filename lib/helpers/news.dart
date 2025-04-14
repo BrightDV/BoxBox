@@ -1160,7 +1160,8 @@ class _NewsListState extends State<NewsList> {
     return (_pagingController.error.toString() == 'XMLHttpRequest error.' ||
                 _pagingController.error
                     .toString()
-                    .startsWith('Failed host lookup')) &&
+                    .toLowerCase()
+                    .contains('failed host lookup')) &&
             (latestNews['items'] != null || latestNews['content'] != null) &&
             widget.tagId == null &&
             widget.articleType == null
@@ -1281,7 +1282,6 @@ class OfflineNewsList extends StatelessWidget {
             scrollDirection: Axis.vertical,
             shrinkWrap: true,
             itemCount: items.length,
-            physics: const BouncingScrollPhysics(),
             itemBuilder: (context, index) => index == items.length - 1
                 ? const Padding(
                     padding: EdgeInsets.all(15),
