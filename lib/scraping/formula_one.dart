@@ -570,36 +570,27 @@ class FormulaOneScraper {
 
     String endpoint = Hive.box('settings')
         .get('server', defaultValue: defaultEndpoint) as String;
-    String f1Endpoint =
-        endpoint != defaultEndpoint ? endpoint : 'https://www.formula1.com';
-    Uri driverDetailsUrl =
-        Uri.parse('$f1Endpoint/en/drivers/hall-of-fame.html');
+    String f1Endpoint = endpoint != defaultEndpoint
+        ? endpoint + '/f1'
+        : Constants().F1_WEBSITE_URL;
+    Uri driverDetailsUrl = Uri.parse('$f1Endpoint/en/drivers/hall-of-fame');
 
     http.Response response = await http.get(driverDetailsUrl);
     if (response.statusCode == HttpStatus.ok) {
       dom.Document document = parser.parse(response.body);
-      List<dom.Element> elements = document.querySelectorAll(
-          'a.column.column-4[href*="/en/drivers/hall-of-fame/"][href\$=".html"]');
+      List<dom.Element> elements = document
+          .querySelectorAll('a[href*="/en/information/drivers-hall-of-fame"]');
 
       for (dom.Element element in elements) {
-        List<String> driverInfo = element
-            .getElementsByClassName('teaser-info-title')
-            .first
-            .text
-            .trim()
-            .split(' - ');
-        String driverName = driverInfo[0];
-        String driverYears = driverInfo[1];
+        String driverName =
+            element.getElementsByClassName('f1-heading')[0].text.trim();
 
-        dom.Element imageElement = element
-            .getElementsByTagName('img')
-            .firstWhere((e) => e.classes.contains('hidden'));
+        dom.Element imageElement = element.getElementsByTagName('img')[0];
         String driverImage = imageElement.attributes['src'] ?? '';
 
         String driverUrl = f1Endpoint + element.attributes['href']!;
 
-        results.add(
-            HallOfFameDriver(driverName, driverYears, driverUrl, driverImage));
+        results.add(HallOfFameDriver(driverName, driverUrl, driverImage));
       }
     }
 
@@ -611,34 +602,21 @@ class FormulaOneScraper {
     final Uri driverDetailsUrl = Uri.parse(pageUrl);
     http.Response response = await http.get(driverDetailsUrl);
     dom.Document document = parser.parse(utf8.decode(response.bodyBytes));
-    if (pageUrl.endsWith('Max_Verstappen.html')) {
-      dom.Element tempResult =
-          document.getElementsByClassName('f1-article--content')[1];
-      results['metaDescription'] = tempResult
-          .getElementsByClassName('f1-article--rich-text')[0]
-          .getElementsByTagName("strong")[0]
-          .text;
-      List parts = [];
-      tempResult.getElementsByClassName('f1-article--rich-text').forEach(
-            (paragraph) => paragraph.getElementsByTagName('p').forEach(
-                  (element) => parts.add(element.text),
-                ),
-          );
-      results['parts'] = parts.sublist(1);
-      return results;
-    } else {
-      dom.Element tempResult = document.getElementsByTagName('main')[0];
-      results['metaDescription'] =
-          tempResult.getElementsByClassName('strapline')[0].text;
-      List parts = [];
-      tempResult.getElementsByClassName('text parbase').forEach(
-            (paragraph) => paragraph.getElementsByTagName('p').forEach(
-                  (element) => parts.add(element.text),
-                ),
-          );
-      results['parts'] = parts;
-      return results;
-    }
+    dom.Element tempResult = document.getElementById('maincontent')!;
+    dom.Element content = tempResult.getElementsByTagName('article')[1];
+
+    results['metaDescription'] = content
+        .getElementsByTagName('p')[0]
+        .getElementsByTagName('strong')[0]
+        .text;
+    List parts = [];
+    tempResult.getElementsByClassName('prose').forEach(
+          (paragraph) => paragraph.getElementsByTagName('p').forEach(
+                (element) => parts.add(element.text),
+              ),
+        );
+    results['parts'] = parts.sublist(1);
+    return results;
   }
 
   Future<Map> scrapeCircuitFactsAndHistory(
@@ -719,13 +697,13 @@ class FormulaOneScraper {
 
 class HallOfFameDriver {
   String driverName;
-  String years;
+/*   String years; */
   String detailsPageUrl;
   String imageUrl;
 
   HallOfFameDriver(
     this.driverName,
-    this.years,
+/*     this.years, */
     this.detailsPageUrl,
     this.imageUrl,
   );

@@ -22,6 +22,9 @@ import 'dart:convert';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class Constants {
+  final String F1_WEBSITE_URL = utf8.decode(
+    base64Decode("aHR0cHM6Ly93d3cuZm9ybXVsYTEuY29t"),
+  );
   final String F1_API_URL = utf8.decode(
     base64Decode("aHR0cHM6Ly9hcGkuZm9ybXVsYTEuY29t"),
   );

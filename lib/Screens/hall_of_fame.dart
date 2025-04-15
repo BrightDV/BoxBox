@@ -74,9 +74,6 @@ class HallOfFameScreen extends StatelessWidget {
                               title: Text(
                                 snapshot.data![index].driverName,
                               ),
-                              subtitle: Text(
-                                snapshot.data![index].years,
-                              ),
                             ),
                           ],
                         ),
