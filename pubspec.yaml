@@ -42,6 +42,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   flutter_map: ^8.1.0
+  flutter_map_cancellable_tile_provider: ^3.1.0
   flutter_markdown: ^0.7.1
   flutter_native_splash: ^2.4.5
   flutter_swiper_view: ^1.1.8
