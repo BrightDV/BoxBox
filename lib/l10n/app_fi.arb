@@ -388,5 +388,15 @@
   "minuteAbbreviation": "MIN",
   "@minuteAbbreviation": {},
   "fullScreenGestures": "Siirry/poistu koko näytön eleihin/eleistä",
-  "@fullScreenGestures": {}
+  "@fullScreenGestures": {},
+  "offtrackSub": "Takaisin radalle",
+  "@offtrackSub": {},
+  "offtrack": "Poistuit radalta!",
+  "@offtrack": {},
+  "watchOnYouTube": "Katso YouTubessa",
+  "@watchOnYouTube": {},
+  "grandsPrix": "Grands Prix mukana",
+  "@grandsPrix": {},
+  "highestRaceFinish": "Korkein ajokilpailun maali",
+  "@highestRaceFinish": {}
 }
