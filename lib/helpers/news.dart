@@ -258,10 +258,12 @@ class NewsItem extends StatelessWidget {
                                           ImageRequestErrorUtil(
                                         width: 300,
                                       ),
-                                      fadeOutDuration:
-                                          const Duration(seconds: 1),
-                                      fadeInDuration:
-                                          const Duration(seconds: 1),
+                                      fadeOutDuration: const Duration(
+                                        milliseconds: 300,
+                                      ),
+                                      fadeInDuration: const Duration(
+                                        milliseconds: 300,
+                                      ),
                                       cacheManager: CacheManager(
                                         Config(
                                           "newsImages",
@@ -308,8 +310,12 @@ class NewsItem extends StatelessWidget {
                                       ImageRequestErrorUtil(
                                     width: 300,
                                   ),
-                                  fadeOutDuration: const Duration(seconds: 1),
-                                  fadeInDuration: const Duration(seconds: 1),
+                                  fadeOutDuration: const Duration(
+                                    milliseconds: 300,
+                                  ),
+                                  fadeInDuration: const Duration(
+                                    milliseconds: 300,
+                                  ),
                                   cacheManager: CacheManager(
                                     Config(
                                       "newsImages",
@@ -429,10 +435,10 @@ class NewsItem extends StatelessWidget {
                                                               10,
                                                 ),
                                                 fadeOutDuration: const Duration(
-                                                  milliseconds: 400,
+                                                  milliseconds: 300,
                                                 ),
                                                 fadeInDuration: const Duration(
-                                                  milliseconds: 400,
+                                                  milliseconds: 300,
                                                 ),
                                                 cacheManager: CacheManager(
                                                   Config(
@@ -787,10 +793,10 @@ class NewsItem extends StatelessWidget {
                                                       : width / (16 / 9) - 5,
                                             ),
                                             fadeOutDuration: const Duration(
-                                              milliseconds: 400,
+                                              milliseconds: 300,
                                             ),
                                             fadeInDuration: const Duration(
-                                              milliseconds: 400,
+                                              milliseconds: 300,
                                             ),
                                             cacheManager: CacheManager(
                                               Config(
@@ -1516,8 +1522,8 @@ class ImageRenderer extends StatelessWidget {
                     ? 800
                     : MediaQuery.of(context).size.width / (16 / 9),
               ),
-              fadeOutDuration: const Duration(seconds: 1),
-              fadeInDuration: const Duration(seconds: 1),
+              fadeOutDuration: const Duration(milliseconds: 300),
+              fadeInDuration: const Duration(milliseconds: 300),
               cacheManager: CacheManager(
                 Config(
                   "newsImages",
@@ -1662,8 +1668,10 @@ class ImageRenderer extends StatelessWidget {
                               ),
                               errorWidget: (context, url, error) =>
                                   ImageRequestErrorUtil(),
-                              fadeOutDuration: const Duration(seconds: 1),
-                              fadeInDuration: const Duration(seconds: 1),
+                              fadeOutDuration: const Duration(
+                                milliseconds: 300,
+                              ),
+                              fadeInDuration: const Duration(milliseconds: 300),
                               cacheManager: CacheManager(
                                 Config(
                                   "newsImages",
@@ -1768,15 +1776,11 @@ class ImageRenderer extends StatelessWidget {
                                                     (16 / 9),
                                               ),
                                               fadeOutDuration: const Duration(
-                                                seconds: 1,
+                                                milliseconds: 300,
                                               ),
-                                              fadeInDuration: isHero ?? false
-                                                  ? const Duration(
-                                                      milliseconds: 300,
-                                                    )
-                                                  : const Duration(
-                                                      milliseconds: 400,
-                                                    ),
+                                              fadeInDuration: const Duration(
+                                                milliseconds: 300,
+                                              ),
                                               cacheManager: CacheManager(
                                                 Config(
                                                   "newsImages",
@@ -1826,8 +1830,8 @@ class ImageRenderer extends StatelessWidget {
                             height:
                                 MediaQuery.of(context).size.width / (16 / 9),
                           ),
-                          fadeOutDuration: const Duration(milliseconds: 400),
-                          fadeInDuration: const Duration(milliseconds: 400),
+                          fadeOutDuration: const Duration(milliseconds: 300),
+                          fadeInDuration: const Duration(milliseconds: 300),
                           cacheManager: CacheManager(
                             Config(
                               "newsImages",
@@ -1952,7 +1956,7 @@ class VideoRenderer extends StatelessWidget {
                   height: MediaQuery.of(context).size.width / (16 / 9),
                 ),
                 fadeOutDuration: const Duration(milliseconds: 100),
-                fadeInDuration: const Duration(seconds: 1),
+                fadeInDuration: const Duration(milliseconds: 100),
                 colorBlendMode: BlendMode.darken,
                 color: Colors.black.withOpacity(0.5),
               ),
@@ -2358,7 +2362,7 @@ class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
                                   MediaQuery.of(context).size.width / (16 / 9),
                             ),
                             fadeOutDuration: const Duration(milliseconds: 100),
-                            fadeInDuration: const Duration(seconds: 1),
+                            fadeInDuration: const Duration(milliseconds: 100),
                           )
                         : SizedBox(
                             height:

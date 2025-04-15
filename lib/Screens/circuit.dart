@@ -442,8 +442,8 @@ class RaceImageProvider extends StatelessWidget {
               ? CachedNetworkImage(
                   errorWidget: (context, url, error) =>
                       const Icon(Icons.error_outlined),
-                  fadeOutDuration: const Duration(seconds: 1),
-                  fadeInDuration: const Duration(seconds: 1),
+                  fadeOutDuration: const Duration(milliseconds: 300),
+                  fadeInDuration: const Duration(milliseconds: 300),
                   fit: BoxFit.cover,
                   imageUrl: snapshot.data!,
                   placeholder: (context, url) => const LoadingIndicatorUtil(),

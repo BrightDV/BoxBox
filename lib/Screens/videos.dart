@@ -280,8 +280,8 @@ class VideoItem extends StatelessWidget {
                           errorWidget: (context, url, error) => Icon(
                             Icons.error_outlined,
                           ),
-                          fadeOutDuration: const Duration(seconds: 1),
-                          fadeInDuration: const Duration(seconds: 1),
+                          fadeOutDuration: const Duration(milliseconds: 300),
+                          fadeInDuration: const Duration(milliseconds: 300),
                           colorBlendMode: BlendMode.darken,
                           color: Colors.black.withOpacity(0.5),
                         ),
@@ -377,8 +377,8 @@ class VideoItem extends StatelessWidget {
                         errorWidget: (context, url, error) => Icon(
                           Icons.error_outlined,
                         ),
-                        fadeOutDuration: const Duration(seconds: 1),
-                        fadeInDuration: const Duration(seconds: 1),
+                        fadeInDuration: const Duration(milliseconds: 300),
+                        fadeOutDuration: const Duration(milliseconds: 300),
                         colorBlendMode: BlendMode.darken,
                         color: Colors.black.withOpacity(0.5),
                       ),

@@ -36,7 +36,7 @@ class LiveSessionStatusIndicator extends StatelessWidget {
     Map eventTrackerSavedRequestAsMap = championship == 'Formula 1'
         ? Hive.box('requests').get('f1-event-tracker', defaultValue: {}) as Map
         : Hive.box('requests').get('fe-event-tracker', defaultValue: {}) as Map;
-    if (eventTrackerSavedRequestAsMap != {}) {
+    if (eventTrackerSavedRequestAsMap.isNotEmpty) {
       eventTrackerSavedRequest = championship == 'Formula 1'
           ? EventTracker().plainF1EventParser(
               eventTrackerSavedRequestAsMap,

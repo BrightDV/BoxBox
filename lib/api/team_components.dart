@@ -266,8 +266,8 @@ class TeamCarImageProvider extends StatelessWidget {
               ),
               errorWidget: (context, url, error) =>
                   const Icon(Icons.error_outlined),
-              fadeOutDuration: const Duration(milliseconds: 500),
-              fadeInDuration: const Duration(milliseconds: 500),
+              fadeOutDuration: const Duration(milliseconds: 300),
+              fadeInDuration: const Duration(milliseconds: 300),
               cacheManager: CacheManager(
                 Config(
                   "teamCarImages",

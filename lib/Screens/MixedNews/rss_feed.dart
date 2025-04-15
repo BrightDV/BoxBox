@@ -221,8 +221,12 @@ class RssFeedItemsList extends StatelessWidget {
                                   color:
                                       useDarkMode ? Colors.white : Colors.black,
                                 ),
-                                fadeOutDuration: const Duration(seconds: 1),
-                                fadeInDuration: const Duration(seconds: 1),
+                                fadeOutDuration: const Duration(
+                                  milliseconds: 300,
+                                ),
+                                fadeInDuration: const Duration(
+                                  milliseconds: 300,
+                                ),
                                 cacheManager: CacheManager(
                                   Config(
                                     "newsImages",
