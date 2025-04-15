@@ -12,7 +12,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get about => '关于';
 
   @override
-  String get aboutDescription => 'Box,Box！是自由软件，履行GPLv3+授权。目标是在没有广告或追踪器之下获得F1最新资讯。';
+  String get aboutDescription => 'Box,Box！是自由软件，履行GPLv3+授权。目标是在没有广告或追踪器之下获得F1和FE最新资讯。';
 
   @override
   String get aboutBottomLine => '点赞 BrightDV。';
@@ -27,13 +27,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get addToCalendar => '新增到日历';
 
   @override
-  String get alreadyDownloadedArticle => 'This article has already been downloaded.';
+  String get alreadyDownloadedArticle => '该文章已经下载完毕。';
 
   @override
-  String get alreadyDownloading => 'Already downloading';
+  String get alreadyDownloading => '正在下载中';
 
   @override
-  String get apiKey => 'API Key';
+  String get apiKey => 'API密钥';
 
   @override
   String get appearance => '外观';
@@ -60,10 +60,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get cancel => '取消';
 
   @override
-  String get championship => 'Championship';
+  String get championship => '冠军头衔';
 
   @override
-  String get chassis => 'Chassis';
+  String get chassis => '底盘';
 
   @override
   String get checkUpdates => '检查更新';
@@ -75,10 +75,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get close => '关闭';
 
   @override
-  String get copyTitle => 'Copy title';
+  String get copyTitle => '复制标题';
 
   @override
-  String get copied => 'Copied';
+  String get copied => '已复制';
 
   @override
   String get countdown => '倒计时';
@@ -120,7 +120,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get defaultValue => '默认';
 
   @override
-  String get delete => 'Delete';
+  String get delete => '删除';
 
   @override
   String get deleteCustomFeed => '删除订阅';
@@ -129,28 +129,28 @@ class AppLocalizationsZh extends AppLocalizations {
   String get deleteUrl => '你想删除该地址？';
 
   @override
-  String get done => 'Done';
+  String get done => '完成';
 
   @override
-  String get download => 'Download';
+  String get download => '下载';
 
   @override
-  String get downloading => 'Downloading';
+  String get downloading => '下载中';
 
   @override
-  String get downloads => 'Downloads';
+  String get downloads => '下载数量';
 
   @override
-  String get downloadComplete => 'Download complete';
+  String get downloadComplete => '下载完成';
 
   @override
-  String get downloadFailed => 'Download failed';
+  String get downloadFailed => '下载失败';
 
   @override
-  String get downloadPaused => 'Download paused';
+  String get downloadPaused => '暂停下载';
 
   @override
-  String get downloadRunning => 'Download running';
+  String get downloadRunning => '下载进行中';
 
   @override
   String get driverAbbreviation => '车手';
@@ -174,7 +174,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get experimentalFeatures => '实验功能';
 
   @override
-  String get fastestLaps => 'Fastest Laps';
+  String get fastestLaps => '最快圈';
 
   @override
   String get fiaRegulations => 'FIA 规则';
@@ -186,7 +186,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get firstGrandPrix => '第一场大奖赛';
 
   @override
-  String get firstTeamEntry => 'First Team Entry';
+  String get firstTeamEntry => '车队第一次参赛';
 
   @override
   String get formulaYouSettings => '你的专属设定';
@@ -219,7 +219,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get fontDescription => '文章字体。';
 
   @override
-  String get fullScreenGestures => 'Enter/exit fullscreen gestures';
+  String get fullScreenGestures => '进入/退出全屏手势';
 
   @override
   String get gallery => '图片库';
@@ -354,10 +354,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get offline => '离线。数据可能不是最新。';
 
   @override
-  String get offtrack => 'You went off-track!';
+  String get offtrack => '你已偏离路径！';
 
   @override
-  String get offtrackSub => 'Back on track';
+  String get offtrackSub => '回归路径';
 
   @override
   String get openInBrowser => '在浏览器打开';
@@ -402,13 +402,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get pointsAbbreviation => '积分';
 
   @override
-  String get polePositions => 'Pole Positions';
+  String get polePositions => '杆位位置';
 
   @override
   String get positionAbbreviation => '名次';
 
   @override
-  String get powerUnit => 'Power Unit';
+  String get powerUnit => '动力单元';
 
   @override
   String get previous => '上一个';
@@ -423,7 +423,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get qualifyingsShort => '排位赛';
 
   @override
-  String get qualityToDownload => 'Select which quality to download.';
+  String get qualityToDownload => '选择质量下载。';
 
   @override
   String get quiz => '测试';
@@ -444,13 +444,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get raceStartsOn => '正赛日：';
 
   @override
-  String get refresh => 'Refresh';
+  String get refresh => '刷新';
 
   @override
-  String get refreshChampionshipData => 'Refresh championship data';
+  String get refreshChampionshipData => '刷新冠军头衔数据';
 
   @override
-  String get refreshChampionshipDataSub => 'Refresh championship data before a new season.';
+  String get refreshChampionshipDataSub => '刷新新赛季之前的冠军头衔数据。';
 
   @override
   String get requestError => '无法获取数据。';
@@ -459,7 +459,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get results => '赛季成绩';
 
   @override
-  String get running => 'Running';
+  String get running => '进行中';
 
   @override
   String get save => '保存';
@@ -522,10 +522,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get team => '车队';
 
   @override
-  String get teamBase => 'Base';
+  String get teamBase => '车队总部';
 
   @override
-  String get teamChief => 'Team Chief';
+  String get teamChief => '车队领队';
 
   @override
   String get teamColors => '车队颜色';
@@ -534,7 +534,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get teams => '车队';
 
   @override
-  String get technicalChief => 'Technical Chief';
+  String get technicalChief => '技术总监';
 
   @override
   String get theme => '主题';
@@ -549,28 +549,28 @@ class AppLocalizationsZh extends AppLocalizations {
   String get tryAgain => '重试';
 
   @override
-  String get twelveHourClock => 'Use a 12-hour clock';
+  String get twelveHourClock => '12小时制';
 
   @override
   String get unavailableOffline => '离线';
 
   @override
-  String get updateApiKey => 'Update API Key';
+  String get updateApiKey => '更新api密钥';
 
   @override
-  String get updateApiKeySub => 'Update the API key of the official website.\nUpdate this only if you now what you are doing.';
+  String get updateApiKeySub => '更新官方网站API密钥。\n更新时请你确认清楚自己为什么这样做。';
 
   @override
   String get updates => '新版本';
 
   @override
-  String get useOfficialDataSource => 'Use the official data source';
+  String get useOfficialDataSource => '使用官方数据源';
 
   @override
-  String get useOfficialDataSourceSub => 'Use the data source of the official mobile app. This gives faster results, but not all the details are available. Long-press for more details.';
+  String get useOfficialDataSourceSub => '使用官方应用的数据源。该数据源更新快，但不详细。长按可获得更多细节。';
 
   @override
-  String get useOfficialWebview => '使用官网版本现场直播';
+  String get useOfficialWebview => '使用官网版本替代fi-dash.com进行现场直播';
 
   @override
   String get victory => '胜场';
@@ -594,7 +594,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get watchHighlightsOnYoutube => '在油管看集锦';
 
   @override
-  String get watchOnYouTube => 'Watch on YouTube';
+  String get watchOnYouTube => '油管上观看';
 
   @override
   String get worldChampionships => '世界冠军';

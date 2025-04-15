@@ -60,10 +60,10 @@ class AppLocalizationsPt extends AppLocalizations {
   String get cancel => 'Cancelar';
 
   @override
-  String get championship => 'Championship';
+  String get championship => 'Campeonato';
 
   @override
-  String get chassis => 'Chassis';
+  String get chassis => 'Chassis de carro';
 
   @override
   String get checkUpdates => 'Procurar por novas atualizações';
@@ -129,28 +129,28 @@ class AppLocalizationsPt extends AppLocalizations {
   String get deleteUrl => 'Deseja apagar este URL?';
 
   @override
-  String get done => 'Done';
+  String get done => 'Feito';
 
   @override
-  String get download => 'Download';
+  String get download => 'Baixar';
 
   @override
-  String get downloading => 'Downloading';
+  String get downloading => 'Baixando';
 
   @override
   String get downloads => 'Downloads';
 
   @override
-  String get downloadComplete => 'Download complete';
+  String get downloadComplete => 'Download completo';
 
   @override
-  String get downloadFailed => 'Download failed';
+  String get downloadFailed => 'Baixar falhou';
 
   @override
-  String get downloadPaused => 'Download paused';
+  String get downloadPaused => 'Download pausado';
 
   @override
-  String get downloadRunning => 'Download running';
+  String get downloadRunning => 'Download esta sendo executando';
 
   @override
   String get driverAbbreviation => 'DRI';

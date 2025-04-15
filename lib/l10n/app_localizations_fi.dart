@@ -228,7 +228,7 @@ class AppLocalizationsFi extends AppLocalizations {
   String get gap => 'GAP';
 
   @override
-  String get grandsPrix => 'Grands Prix entered';
+  String get grandsPrix => 'Grands Prix mukana';
 
   @override
   String get grandPrixMap => 'Grand Prix -kartta';
@@ -237,7 +237,7 @@ class AppLocalizationsFi extends AppLocalizations {
   String get hallOfFame => 'Kunniagalleria';
 
   @override
-  String get highestRaceFinish => 'Highest race finish';
+  String get highestRaceFinish => 'Korkein ajokilpailun maali';
 
   @override
   String get highestGridPosition => 'Korkein sija lähtöruudukossa';
@@ -354,10 +354,10 @@ class AppLocalizationsFi extends AppLocalizations {
   String get offline => 'Offline-tilassa. Tiedot eivät ehkä ole ajan tasalla.';
 
   @override
-  String get offtrack => 'You went off-track!';
+  String get offtrack => 'Poistuit radalta!';
 
   @override
-  String get offtrackSub => 'Back on track';
+  String get offtrackSub => 'Takaisin radalle';
 
   @override
   String get openInBrowser => 'Avaa selaimessa';
@@ -594,7 +594,7 @@ class AppLocalizationsFi extends AppLocalizations {
   String get watchHighlightsOnYoutube => 'Katso kohokohdat YouTubessa';
 
   @override
-  String get watchOnYouTube => 'Watch on YouTube';
+  String get watchOnYouTube => 'Katso YouTubessa';
 
   @override
   String get worldChampionships => 'Maailmanmestaruuskilpailut';

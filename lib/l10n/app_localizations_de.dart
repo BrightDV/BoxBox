@@ -21,7 +21,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get addCustomFeed => 'Add a custom feed';
 
   @override
-  String get addCustomServer => 'Add a custom server';
+  String get addCustomServer => 'Benutzerdefinierten Server hinzufügen';
 
   @override
   String get addToCalendar => 'Zum Kalender hinzufügen';
@@ -33,7 +33,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get alreadyDownloading => 'Wird bereits heruntergeladen';
 
   @override
-  String get apiKey => 'API Key';
+  String get apiKey => 'API-Schlüssel';
 
   @override
   String get appearance => 'Aussehen';
@@ -63,10 +63,10 @@ class AppLocalizationsDe extends AppLocalizations {
   String get championship => 'Meisterschaft';
 
   @override
-  String get chassis => 'Chassis';
+  String get chassis => 'Fahrgestell';
 
   @override
-  String get checkUpdates => 'Auf neues Update prüfen';
+  String get checkUpdates => 'Auf neue Aktualisierung prüfen';
 
   @override
   String get circuitLength => 'Streckenlänge';
@@ -96,7 +96,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get customHomeFeed => 'Custom home feed';
 
   @override
-  String get customServer => 'Custom server';
+  String get customServer => 'Benutzerdefinierter Server';
 
   @override
   String get darkMode => 'Dunkel';
@@ -174,7 +174,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get experimentalFeatures => 'Experimentelle Funktionen';
 
   @override
-  String get fastestLaps => 'Fastest Laps';
+  String get fastestLaps => 'Schnellste Runden';
 
   @override
   String get fiaRegulations => 'FIA Reglement';
@@ -357,7 +357,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get offtrack => 'You went off-track!';
 
   @override
-  String get offtrackSub => 'Back on track';
+  String get offtrackSub => 'Zurück auf der Strecke';
 
   @override
   String get openInBrowser => 'Im Webbrowser öffnen';
@@ -408,7 +408,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get positionAbbreviation => 'POS';
 
   @override
-  String get powerUnit => 'Power Unit';
+  String get powerUnit => 'Triebwerk';
 
   @override
   String get previous => 'VORHERIGE';
@@ -423,7 +423,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get qualifyingsShort => 'QUALIFI';
 
   @override
-  String get qualityToDownload => 'Select which quality to download.';
+  String get qualityToDownload => 'Auswahl der Qualität zum Herunterladen.';
 
   @override
   String get quiz => 'Quiz';
@@ -522,7 +522,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get team => 'Team';
 
   @override
-  String get teamBase => 'Base';
+  String get teamBase => 'Basis';
 
   @override
   String get teamChief => 'Teamchef';
@@ -555,7 +555,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get unavailableOffline => 'Nicht verfügbar, wenn offline';
 
   @override
-  String get updateApiKey => 'Update API Key';
+  String get updateApiKey => 'API-Schlüssel aktualisieren';
 
   @override
   String get updateApiKeySub => 'Update the API key of the official website.\nUpdate this only if you now what you are doing.';
@@ -594,10 +594,10 @@ class AppLocalizationsDe extends AppLocalizations {
   String get watchHighlightsOnYoutube => 'Highlights auf Youtube anzeigen';
 
   @override
-  String get watchOnYouTube => 'Watch on YouTube';
+  String get watchOnYouTube => 'Auf YouTube ansehen';
 
   @override
-  String get worldChampionships => 'Weltmeisterschaft';
+  String get worldChampionships => 'Weltmeisterschaften';
 
   @override
   String get yes => 'Ja';

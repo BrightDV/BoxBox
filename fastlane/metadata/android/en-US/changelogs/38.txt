@@ -1,0 +1,9 @@
+- Use a router for navigation
+- Removed YouTube player
+- Fix results with useless 0 and free practices results
+- Support opening drivers & teams link from an article
+- Fix documents URL
+- Add a splash screen
+- Improve podcast item
+- Fix offline home news and even tracker
+- Fix Hall of Fame
