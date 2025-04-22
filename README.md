@@ -129,6 +129,8 @@ Address: `48Yi7F3jDoQc5BsBQBaHnY6Y9hgP6oHev3AMNwd8QySsP52ZWZLhM3Hi4nccyq7wh81UEo
 
 ### [Github Sponsors](https://github.com/sponsors/BrightDV)
 
+A huge thanks to the donators!
+
 ## License
 
 [![GNU GPLv3 Image](https://www.gnu.org/graphics/gplv3-127x51.png)](https://www.gnu.org/licenses/gpl-3.0.en.html)
