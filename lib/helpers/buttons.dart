@@ -119,26 +119,32 @@ class BoxBoxButton extends StatelessWidget {
                 ),
               ),
             )
-          : GestureDetector(
-              child: Container(
-                width: double.infinity,
+          : InkWell(
+              borderRadius: BorderRadius.circular(5),
+              child: Ink(
                 decoration: BoxDecoration(
                   color: Theme.of(context).colorScheme.onSecondary,
                   borderRadius: BorderRadius.circular(5),
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(
-                    20,
-                    10,
-                    20,
-                    10,
+                child: Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: Colors.transparent,
                   ),
-                  child: Row(
-                    children: [
-                      Text(title),
-                      const Spacer(),
-                      icon,
-                    ],
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(
+                      20,
+                      10,
+                      20,
+                      10,
+                    ),
+                    child: Row(
+                      children: [
+                        Text(title),
+                        const Spacer(),
+                        icon,
+                      ],
+                    ),
                   ),
                 ),
               ),

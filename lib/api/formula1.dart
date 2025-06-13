@@ -997,6 +997,105 @@ class Formula1 {
 
     return [results, responseAsJson['startingGridFootnote'] ?? ''];
   }
+
+  Future<Map> getCircuitDetails(
+    String formulaOneCircuitId,
+  ) async {
+    Map details = Hive.box('requests')
+        .get('f1CircuitDetails-$formulaOneCircuitId', defaultValue: {});
+    DateTime latestQuery = Hive.box('requests').get(
+      'f1CircuitDetails-$formulaOneCircuitId-LatestQuery',
+      defaultValue: DateTime.now().subtract(
+        const Duration(hours: 1),
+      ),
+    ) as DateTime;
+    Map formatedResponse;
+    if (latestQuery
+            .add(
+              const Duration(minutes: 30),
+            )
+            .isAfter(DateTime.now()) &&
+        details.isNotEmpty) {
+      formatedResponse = details;
+    } else {
+      String endpoint = Hive.box('settings')
+          .get('server', defaultValue: defaultEndpoint) as String;
+
+      Uri uri = Uri.parse(
+        endpoint != defaultEndpoint
+            ? '$endpoint/f1/v1/editorial-assemblies/races/meeting=$formulaOneCircuitId'
+            : '$endpoint/v1/editorial-assemblies/races?meeting=$formulaOneCircuitId',
+      );
+
+      http.Response res = await http.get(
+        uri,
+        headers: endpoint != defaultEndpoint
+            ? {
+                "Accept": "application/json",
+              }
+            : {
+                "Accept": "application/json",
+                "apikey": apikey,
+                "locale": "en",
+              },
+      );
+      formatedResponse = jsonDecode(
+        utf8.decode(res.bodyBytes),
+      );
+      Hive.box('requests')
+          .put('f1CircuitDetails-$formulaOneCircuitId', formatedResponse);
+      Hive.box('requests').put(
+        'f1CircuitDetails-$formulaOneCircuitId-LatestQuery',
+        DateTime.now(),
+      );
+    }
+
+    List<DateTime> sessionDates = [];
+    List sessionStates = [];
+    for (var session in formatedResponse['race']['meetingSessions']) {
+      sessionDates.add(
+        DateTime.parse(
+          session['startTime'] + session['gmtOffset'],
+        ),
+      );
+      sessionStates.add(session['state']);
+    }
+    String gmtOffset =
+        formatedResponse['race']['meetingSessions'][0]?['gmtOffset'] ?? '';
+    DateTime raceDate = DateTime.parse(
+      formatedResponse['race']['meetingEndDate']
+              .replaceAll('.000Z', '')
+              .replaceAll('.999Z', '') +
+          gmtOffset,
+    ).toLocal().subtract(Duration(hours: 3));
+
+    String detailsPath =
+        formatedResponse['race']['url'].split('/').last.split('.').first;
+
+    Race raceWithSessions = Race(
+      formatedResponse['race']['meetingNumber'],
+      formatedResponse['race']['meetingKey'],
+      formatedResponse['race']['meetingCountryName'],
+      formatedResponse['race']['meetingEndDate']
+          .replaceAll('.000Z', '')
+          .replaceAll('.999Z', ''),
+      DateFormat.Hm().format(raceDate),
+      '',
+      formatedResponse['race']['circuitOfficialName'],
+      '',
+      formatedResponse['race']['meetingCountryName'],
+      sessionDates,
+      isFirst: false,
+      raceCoverUrl: formatedResponse['raceImage']['url'],
+      detailsPath: detailsPath,
+      isPreSeasonTesting: formatedResponse['race']['isTestEvent'],
+      sessionStates: sessionStates,
+    );
+
+    formatedResponse['raceCustomBBParameter'] = raceWithSessions;
+
+    return formatedResponse;
+  }
 }
 
 class News {

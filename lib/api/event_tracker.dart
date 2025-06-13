@@ -60,7 +60,8 @@ class Session {
   final String sessionsAbbreviation;
   final DateTime endTime;
   final DateTime startTime;
-  final String baseUrl;
+  final String? baseUrl;
+  final bool isRunning;
 
   const Session(
     this.state,
@@ -68,6 +69,7 @@ class Session {
     this.endTime,
     this.startTime,
     this.baseUrl,
+    this.isRunning,
   );
 }
 
@@ -230,6 +232,12 @@ class EventTracker {
             session['startTime'] + gmtOffset,
           ).toLocal(),
           baseUrl,
+          DateTime.now().isBefore(DateTime.parse(
+                session['endTime'] + gmtOffset,
+              ).toLocal()) &&
+              DateTime.now().isAfter(DateTime.parse(
+                session['startTime'] + gmtOffset,
+              ).toLocal()),
         ),
       );
     }
@@ -271,9 +279,13 @@ class EventTracker {
           Session(
             eventAsJson['timetables']['sessionStates'][c],
             eventAsJson['timetables']['sessionNames'][c],
-            eventAsJson['timetables']['sessionEndDates'][c],
-            eventAsJson['timetables']['sessionDates'][c],
+            DateTime.parse(eventAsJson['timetables']['sessionEndDates'][c]),
+            DateTime.parse(eventAsJson['timetables']['sessionDates'][c]),
             eventAsJson['timetables']['sessionIds'][c],
+            DateTime.now().isBefore(DateTime.parse(
+                    eventAsJson['timetables']['sessionEndDates'][c])) &&
+                DateTime.now().isAfter(DateTime.parse(
+                    eventAsJson['timetables']['sessionDates'][c])),
           ),
         );
       }

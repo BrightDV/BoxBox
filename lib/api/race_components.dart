@@ -78,7 +78,6 @@ class RaceItem extends StatelessWidget {
       onTap: () => context.pushNamed(
         'racing',
         pathParameters: {'meetingId': item.meetingId},
-        extra: {'race': item},
       ),
       child: index == 0 && isUpNext && (item.raceCoverUrl ?? '') != 'none'
           ? Column(

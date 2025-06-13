@@ -1404,7 +1404,6 @@ class TextParagraphRenderer extends StatelessWidget {
             context.pushNamed(
               'racing',
               pathParameters: {'meetingId': url.split('/').last.split('.')[0]},
-              extra: {'isFetched': false},
             );
           } else if (url == 'https://linktr.ee/F1raceprogramme') {
             Fluttertoast.showToast(

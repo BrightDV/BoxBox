@@ -22,7 +22,7 @@ import 'package:boxbox/Screens/FormulaYou/home.dart';
 import 'package:boxbox/Screens/MixedNews/mixed_news.dart';
 import 'package:boxbox/Screens/about.dart';
 import 'package:boxbox/Screens/article.dart';
-import 'package:boxbox/Screens/circuit.dart';
+import 'package:boxbox/Screens/Racing/circuit.dart';
 import 'package:boxbox/Screens/downloads.dart';
 import 'package:boxbox/Screens/driver_details.dart';
 import 'package:boxbox/Screens/free_practice_screen.dart';
@@ -36,7 +36,6 @@ import 'package:boxbox/Screens/standings.dart';
 import 'package:boxbox/Screens/team_details.dart';
 import 'package:boxbox/Screens/video.dart';
 import 'package:boxbox/Screens/videos.dart';
-import 'package:boxbox/api/race_components.dart';
 import 'package:boxbox/helpers/bottom_navigation_bar.dart';
 import 'package:boxbox/helpers/route_handler.dart';
 import 'package:flutter/material.dart';
@@ -211,198 +210,131 @@ class RouterLocalConfig {
             name: 'racing',
             path: 'racing/:meetingId',
             builder: (context, state) {
-              Map? extras;
-              if (state.extra != null) {
-                extras = state.extra as Map;
-                if (extras['isFetched'] ?? true) {
-                  return CircuitScreen(
-                    extras['race'],
-                    isFetched: extras['isFetched'],
-                  );
-                } else {
-                  return CircuitScreen(
-                    Race(
-                      '',
-                      state.pathParameters['meetingId']!,
-                      '',
-                      '',
-                      '',
-                      '',
-                      '',
-                      '',
-                      '',
-                      [],
-                    ),
-                    isFetched: false,
-                  );
-                }
-              } else {
-                return CircuitScreen(
-                  Race(
-                    '',
-                    state.pathParameters['meetingId']!,
-                    '',
-                    '',
-                    '',
-                    '',
-                    '',
-                    '',
-                    '',
-                    [],
-                  ),
-                  isFetched: false,
-                );
-              }
+              return CircuitScreen(
+                state.pathParameters['meetingId']!,
+              );
             },
             routes: [
               GoRoute(
-                name: 'results',
-                path: 'results',
+                name: 'starting-grid',
+                path: 'starting-grid',
+                builder: (context, state) {
+                  return Scaffold(
+                    appBar: AppBar(
+                      title: Text(
+                        AppLocalizations.of(context)!.startingGrid,
+                      ),
+                      backgroundColor: Theme.of(context).colorScheme.onPrimary,
+                    ),
+                    body: StartingGridProvider(
+                      state.pathParameters['meetingId']!,
+                    ),
+                  );
+                },
+              ),
+              GoRoute(
+                name: 'practice',
+                path: 'practice/:sessionIndex',
                 builder: (context, state) {
                   Map? extras;
                   if (state.extra != null) {
                     extras = state.extra as Map;
-                    return RaceDetailsScreen(
-                      extras['race'],
-                      extras['hasSprint'],
-                      tab: extras['tab'],
-                      isFromRaceHub: extras['isFromRaceHub'] ?? false,
-                      sessions: extras['sessions'],
+                    return FreePracticeScreen(
+                      extras['sessionTitle'],
+                      extras['sessionIndex'],
+                      extras['circuitId'],
+                      extras['meetingId'],
+                      extras['raceYear'],
+                      extras['raceName'],
+                      raceUrl: extras['raceUrl'],
+                      sessionId: extras['sessionId'],
                     );
                   } else {
-                    return RaceDetailsFromIdScreen(
+                    return FreePracticeFromMeetingKeyScreen(
                       state.pathParameters['meetingId']!,
+                      int.parse(state.pathParameters['sessionIndex']!),
                     );
                   }
                 },
-                routes: [
-                  GoRoute(
-                    name: 'starting-grid',
-                    path: 'starting-grid',
-                    builder: (context, state) {
-                      return Scaffold(
-                        appBar: AppBar(
-                          title: Text(
-                            AppLocalizations.of(context)!.startingGrid,
-                          ),
-                          backgroundColor:
-                              Theme.of(context).colorScheme.onPrimary,
-                        ),
-                        body: StartingGridProvider(
-                          state.pathParameters['meetingId']!,
-                        ),
-                      );
-                    },
-                  ),
-                  GoRoute(
-                    name: 'practice',
-                    path: 'practice/:sessionIndex',
-                    builder: (context, state) {
-                      Map? extras;
-                      if (state.extra != null) {
-                        extras = state.extra as Map;
-                        return FreePracticeScreen(
-                          extras['sessionTitle'],
-                          extras['sessionIndex'],
-                          extras['circuitId'],
-                          extras['meetingId'],
-                          extras['raceYear'],
-                          extras['raceName'],
-                          raceUrl: extras['raceUrl'],
-                          sessionId: extras['sessionId'],
-                        );
-                      } else {
-                        return FreePracticeFromMeetingKeyScreen(
-                          state.pathParameters['meetingId']!,
-                          int.parse(state.pathParameters['sessionIndex']!),
-                        );
-                      }
-                    },
-                  ),
-                  GoRoute(
-                    name: 'sprint-shootout',
-                    path: 'sprint-shootout',
-                    builder: (context, state) {
-                      return Scaffold(
-                        appBar: AppBar(
-                          title: Text(
-                            'Sprint Shootout',
-                          ),
-                          backgroundColor:
-                              Theme.of(context).colorScheme.onPrimary,
-                        ),
-                        body: SingleChildScrollView(
-                          child: QualificationResultsProvider(
-                            raceUrl: '',
-                            sessionId: state.pathParameters['meetingId']!,
-                            hasSprint: true,
-                            isSprintQualifying: true,
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                  GoRoute(
-                    name: 'sprint',
-                    path: 'sprint',
-                    builder: (context, state) {
-                      return Scaffold(
-                        appBar: AppBar(
-                          title: Text(
-                            AppLocalizations.of(context)!.sprint,
-                          ),
-                          backgroundColor:
-                              Theme.of(context).colorScheme.onPrimary,
-                        ),
-                        body: RaceResultsProvider(
-                          raceUrl: 'sprint',
-                          raceId: state.pathParameters['meetingId']!,
-                        ),
-                      );
-                    },
-                  ),
-                  GoRoute(
-                    name: 'qualifyings',
-                    path: 'qualifyings',
-                    builder: (context, state) {
-                      return Scaffold(
-                        appBar: AppBar(
-                          title: Text(
-                            AppLocalizations.of(context)!.qualifyings,
-                          ),
-                          backgroundColor:
-                              Theme.of(context).colorScheme.onPrimary,
-                        ),
-                        body: SingleChildScrollView(
-                          child: QualificationResultsProvider(
-                            raceUrl: '',
-                            sessionId: state.pathParameters['meetingId']!,
-                            isSprintQualifying: false,
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                  GoRoute(
-                    name: 'race',
-                    path: 'race',
-                    builder: (context, state) {
-                      return Scaffold(
-                        appBar: AppBar(
-                          title: Text(
-                            AppLocalizations.of(context)!.race,
-                          ),
-                          backgroundColor:
-                              Theme.of(context).colorScheme.onPrimary,
-                        ),
-                        body: RaceResultsProvider(
-                          raceUrl: 'race',
-                          raceId: state.pathParameters['meetingId']!,
-                        ),
-                      );
-                    },
-                  ),
-                ],
+              ),
+              GoRoute(
+                name: 'sprint-shootout',
+                path: 'sprint-shootout',
+                builder: (context, state) {
+                  return Scaffold(
+                    appBar: AppBar(
+                      title: Text(
+                        'Sprint Shootout',
+                      ),
+                      backgroundColor: Theme.of(context).colorScheme.onPrimary,
+                    ),
+                    body: SingleChildScrollView(
+                      child: QualificationResultsProvider(
+                        raceUrl: '',
+                        sessionId: state.pathParameters['meetingId']!,
+                        hasSprint: true,
+                        isSprintQualifying: true,
+                      ),
+                    ),
+                  );
+                },
+              ),
+              GoRoute(
+                name: 'sprint',
+                path: 'sprint',
+                builder: (context, state) {
+                  return Scaffold(
+                    appBar: AppBar(
+                      title: Text(
+                        AppLocalizations.of(context)!.sprint,
+                      ),
+                      backgroundColor: Theme.of(context).colorScheme.onPrimary,
+                    ),
+                    body: RaceResultsProvider(
+                      raceUrl: 'sprint',
+                      raceId: state.pathParameters['meetingId']!,
+                    ),
+                  );
+                },
+              ),
+              GoRoute(
+                name: 'qualifyings',
+                path: 'qualifyings',
+                builder: (context, state) {
+                  return Scaffold(
+                    appBar: AppBar(
+                      title: Text(
+                        AppLocalizations.of(context)!.qualifyings,
+                      ),
+                      backgroundColor: Theme.of(context).colorScheme.onPrimary,
+                    ),
+                    body: SingleChildScrollView(
+                      child: QualificationResultsProvider(
+                        raceUrl: '',
+                        sessionId: state.pathParameters['meetingId']!,
+                        isSprintQualifying: false,
+                      ),
+                    ),
+                  );
+                },
+              ),
+              GoRoute(
+                name: 'race',
+                path: 'race',
+                builder: (context, state) {
+                  return Scaffold(
+                    appBar: AppBar(
+                      title: Text(
+                        AppLocalizations.of(context)!.race,
+                      ),
+                      backgroundColor: Theme.of(context).colorScheme.onPrimary,
+                    ),
+                    body: RaceResultsProvider(
+                      raceUrl: 'race',
+                      raceId: state.pathParameters['meetingId']!,
+                    ),
+                  );
+                },
               ),
             ],
           ),

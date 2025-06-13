@@ -139,6 +139,13 @@ class _MarkersPageState extends State<MarkersPage> {
             initialZoom: 14.0,
           ),
           children: [
+            TileLayer(
+              urlTemplate: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+              tileProvider: CancellableNetworkTileProvider(),
+            ),
+            PolylineLayer<Object>(
+              polylines: snapshot.hasData ? snapshot.data! : [],
+            ),
             RichAttributionWidget(
               animationConfig: const ScaleRAWA(),
               attributions: [
@@ -148,13 +155,6 @@ class _MarkersPageState extends State<MarkersPage> {
                       Uri.parse('https://openstreetmap.org/copyright')),
                 ),
               ],
-            ),
-            TileLayer(
-              urlTemplate: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
-              tileProvider: CancellableNetworkTileProvider(),
-            ),
-            PolylineLayer<Object>(
-              polylines: snapshot.hasData ? snapshot.data! : [],
             ),
           ],
         );

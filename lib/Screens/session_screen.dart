@@ -218,14 +218,15 @@ class _SessionScreenState extends State<SessionScreen> {
                           : widget.session.sessionsAbbreviation.split(' ').last,
                     ),
                     '',
-                    championship == 'Formula 1' ? '' : widget.meetingId,
+                    widget.meetingId,
                     0,
                     '',
                     raceUrl: championship == 'Formula 1'
-                        ? widget.session.baseUrl.replaceAll(
-                            'session-type',
-                            'practice-${widget.session.sessionsAbbreviation.substring(1)}',
-                          )
+                        ? widget.session.baseUrl?.replaceAll(
+                              'session-type',
+                              'practice-${widget.session.sessionsAbbreviation.substring(1)}',
+                            ) ??
+                            null
                         : widget.session.baseUrl,
                     sessionId: championship == 'Formula 1'
                         ? null
