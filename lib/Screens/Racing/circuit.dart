@@ -341,18 +341,56 @@ class SessionItemForCircuit extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 5),
       child: InkWell(
-        onTap: () => Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => SessionScreen(
-              sessionFullName,
-              session,
-              meetingCountryName,
-              meetingOfficialName,
-              meetingId,
-            ),
-          ),
-        ),
+        onTap: () =>
+            session.endTime.isAfter(DateTime.now()) || session.isRunning
+                ? Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SessionScreen(
+                        sessionFullName,
+                        session,
+                        meetingCountryName,
+                        meetingOfficialName,
+                        meetingId,
+                      ),
+                    ),
+                  )
+                : session.sessionsAbbreviation.startsWith('p')
+                    ? context.pushNamed(
+                        'practice',
+                        pathParameters: {
+                          'meetingId': meetingId,
+                          'sessionIndex':
+                              session.sessionsAbbreviation.substring(1)
+                        },
+                      )
+                    : session.sessionsAbbreviation == 'ss'
+                        ? context.pushNamed(
+                            'sprint-shootout',
+                            pathParameters: {
+                              'meetingId': meetingId,
+                            },
+                          )
+                        : session.sessionsAbbreviation == 's'
+                            ? context.pushNamed(
+                                'sprint',
+                                pathParameters: {
+                                  'meetingId': meetingId,
+                                },
+                              )
+                            : session.sessionsAbbreviation == 'q'
+                                ? context.pushNamed(
+                                    'qualifyings',
+                                    pathParameters: {
+                                      'meetingId': meetingId,
+                                    },
+                                  )
+                                : context.pushNamed(
+                                    'race',
+                                    pathParameters: {
+                                      'meetingId': meetingId,
+                                    },
+                                  ),
         borderRadius: BorderRadius.circular(6),
         child: Ink(
           height: 80,
