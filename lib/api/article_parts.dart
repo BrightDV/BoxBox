@@ -322,10 +322,16 @@ class WidgetsList extends StatelessWidget {
                                                                   : element['contentType'] ==
                                                                           'atomPromotion'
                                                                       ? Container()
-                                                                      : UnsupportedWidget(
-                                                                          element,
-                                                                          article,
-                                                                        ),
+                                                                      : element['contentType'] ==
+                                                                              'linkItem'
+                                                                          ? Padding(
+                                                                              padding: EdgeInsets.only(bottom: 15),
+                                                                              child: TextParagraphRenderer("[__${element['fields']['title']}__](${element['fields']['webUrl']})"),
+                                                                            )
+                                                                          : UnsupportedWidget(
+                                                                              element,
+                                                                              article,
+                                                                            ),
 
         // author
         if (article.authorDetails.isNotEmpty) AuthorDetails(article),

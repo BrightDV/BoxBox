@@ -653,7 +653,7 @@ class Formula1 {
         Driver(
           Convert().driverIdFromFormula1(detailsPath),
           element['positionNumber'] ?? c.toString(),
-          element['racingNumber'],
+          element['racingNumber'] ?? '',
           element['driverFirstName'],
           element['driverLastName'],
           element['driverTLA'],
