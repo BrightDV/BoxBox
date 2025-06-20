@@ -182,7 +182,7 @@ class CircuitScreenContent extends StatelessWidget {
                   extra: {'isFromLink': true},
                 )
               : Container(),
-          details['meetingSessionResults'].last['sessionResults']
+          details['meetingSessionResults']?.last['sessionResults']
                           ?['raceResultsRace']?['results'] !=
                       null &&
                   details['meetingSessionResults']
