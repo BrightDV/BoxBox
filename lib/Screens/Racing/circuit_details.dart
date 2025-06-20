@@ -111,6 +111,11 @@ class CircuitDetailsScreen extends StatelessWidget {
                     fontWeight: FontWeight.normal,
                   ),
                   textAlign: WrapAlignment.spaceBetween,
+                  h2: TextStyle(
+                    fontFamily: 'Northwell',
+                    fontSize: 70,
+                  ),
+                  h2Padding: EdgeInsets.only(left: 10, bottom: 3),
                 ),
               ),
             ),

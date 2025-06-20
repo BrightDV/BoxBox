@@ -128,12 +128,12 @@ class CircuitScreenContent extends StatelessWidget {
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.only(left: 10),
+                          padding: EdgeInsets.only(left: 15, bottom: 3),
                           child: Text(
                             details['race']['meetingCountryName'],
                             style: TextStyle(
-                              fontWeight: FontWeight.w700,
-                              fontSize: 30,
+                              fontFamily: 'Northwell',
+                              fontSize: 70,
                             ),
                           ),
                         ),

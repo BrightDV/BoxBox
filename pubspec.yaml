@@ -112,6 +112,10 @@ flutter:
         - asset: assets/fonts/TitilliumWeb-Regular.ttf
         - asset: assets/fonts/TitilliumWeb-Bold.ttf
           weight: 500
+    
+    - family: Northwell
+      fonts:
+        - asset: assets/fonts/Northwell-Alt.ttf
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
