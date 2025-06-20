@@ -231,15 +231,13 @@ class CircuitScreenContent extends StatelessWidget {
                         Session(
                           session['state'],
                           session['session'],
-                          DateTime.parse(
-                              session['endTime'] + session['gmtOffset']),
-                          DateTime.parse(
-                              session['startTime'] + session['gmtOffset']),
+                          DateTime.parse(session['endTime']),
+                          DateTime.parse(session['startTime']),
                           null,
-                          DateTime.now().isBefore(DateTime.parse(
-                                  session['endTime'] + session['gmtOffset'])) &&
-                              DateTime.now().isAfter(DateTime.parse(
-                                  session['startTime'] + session['gmtOffset'])),
+                          DateTime.now().isBefore(
+                                  DateTime.parse(session['endTime'])) &&
+                              DateTime.now().isAfter(
+                                  DateTime.parse(session['startTime'])),
                         ),
                         details['race']['meetingCountryName'],
                         details['race']['meetingOfficialName'],

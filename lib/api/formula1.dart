@@ -1052,16 +1052,17 @@ class Formula1 {
 
     List<DateTime> sessionDates = [];
     List sessionStates = [];
+    String gmtOffset =
+        formatedResponse['race']['meetingSessions'][0]?['gmtOffset'] ?? '';
+
     for (var session in formatedResponse['race']['meetingSessions']) {
       sessionDates.add(
         DateTime.parse(
-          session['startTime'] + session['gmtOffset'],
-        ),
+          session['startTime'] + gmtOffset,
+        ).toLocal(),
       );
       sessionStates.add(session['state']);
     }
-    String gmtOffset =
-        formatedResponse['race']['meetingSessions'][0]?['gmtOffset'] ?? '';
     DateTime raceDate = DateTime.parse(
       formatedResponse['race']['meetingEndDate']
               .replaceAll('.000Z', '')
