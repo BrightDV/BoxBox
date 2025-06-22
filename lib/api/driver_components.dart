@@ -224,13 +224,12 @@ class DriverItem extends StatelessWidget {
                 children: <Widget>[
                   Expanded(
                     child: Container(
-                      height: 92,
+                      height: 99,
                       decoration: const BoxDecoration(
                         borderRadius: BorderRadius.all(
                           Radius.circular(5.0),
                         ),
                       ),
-                      padding: const EdgeInsets.all(5),
                       child: Row(
                         children: <Widget>[
                           Expanded(
@@ -246,11 +245,14 @@ class DriverItem extends StatelessWidget {
                           ),
                           Expanded(
                             flex: 1,
-                            child: BoxBoxVerticalDivider(
-                              width: 30,
-                              thickness: 9,
-                              color: finalTeamColor,
-                              border: BorderRadius.circular(3.25),
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(vertical: 5),
+                              child: BoxBoxVerticalDivider(
+                                width: 30,
+                                thickness: 9,
+                                color: finalTeamColor,
+                                border: BorderRadius.circular(3.25),
+                              ),
                             ),
                           ),
                           Expanded(
@@ -263,18 +265,26 @@ class DriverItem extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
-                                    item.givenName,
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                    ),
-                                  ),
-                                  Text(
-                                    item.familyName,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 19,
-                                    ),
+                                  Stack(
+                                    children: [
+                                      Text(
+                                        item.givenName,
+                                        style: TextStyle(
+                                          fontSize: 35,
+                                          fontFamily: 'Northwell',
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(top: 43),
+                                        child: Text(
+                                          item.familyName,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 19,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                   int.parse(item.points) == 1
                                       ? Text(
