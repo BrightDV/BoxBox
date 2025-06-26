@@ -40,6 +40,13 @@ class CircuitDetailsScreen extends StatelessWidget {
     super.key,
   });
 
+  String fixMarkdownError(String text) {
+    int i = text.indexOf("##");
+    String tmp = text.substring(i + 1);
+    tmp = tmp.replaceAll("## ", "### ");
+    return "${text.substring(0, i + 1)}$tmp";
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -88,7 +95,7 @@ class CircuitDetailsScreen extends StatelessWidget {
                 right: 10,
               ),
               child: MarkdownBody(
-                data: trackDetailsText,
+                data: fixMarkdownError(trackDetailsText),
                 selectable: true,
                 fitContent: false,
                 styleSheet: MarkdownStyleSheet(

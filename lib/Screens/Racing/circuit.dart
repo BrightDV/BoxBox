@@ -85,7 +85,12 @@ class CircuitScreenContent extends StatelessWidget {
                 shaderCallback: (rect) {
                   return LinearGradient(
                     begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
+                    end: MediaQuery.of(context).size.width > 780
+                        ? Alignment(
+                            Alignment.bottomCenter.x,
+                            Alignment.bottomCenter.y * 0.97,
+                          )
+                        : Alignment.bottomCenter,
                     colors: [Colors.black, Colors.transparent],
                   ).createShader(
                     Rect.fromLTRB(0, 0, rect.width, rect.height),
@@ -101,13 +106,17 @@ class CircuitScreenContent extends StatelessWidget {
                   imageUrl: details['raceImage']['url'],
                   placeholder: (context, url) => const LoadingIndicatorUtil(),
                   colorBlendMode: BlendMode.darken,
-                  height: MediaQuery.of(context).size.height * (4 / 9),
+                  height: MediaQuery.of(context).size.width > 780
+                      ? MediaQuery.of(context).size.height
+                      : MediaQuery.of(context).size.height * (4 / 9),
                 ),
               ),
               Padding(
                 padding: EdgeInsets.only(
-                    top: MediaQuery.of(context).size.height * (4 / 9) - 110),
+                  top: MediaQuery.of(context).size.height * (4 / 9) - 110,
+                ),
                 child: Column(
+                  mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Row(
@@ -123,17 +132,30 @@ class CircuitScreenContent extends StatelessWidget {
                             placeholder: (context, url) => SizedBox(width: 53),
                             fit: BoxFit.cover,
                             imageUrl: details['raceCountryFlag']['url'],
-                            height: 30,
-                            width: 53,
+                            height: MediaQuery.of(context).size.width > 780
+                                ? 60
+                                : 30,
+                            width: MediaQuery.of(context).size.width > 780
+                                ? 106
+                                : 53,
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.only(left: 15, bottom: 3),
+                          padding: EdgeInsets.only(
+                            left: MediaQuery.of(context).size.width > 780
+                                ? 20
+                                : 15,
+                            bottom: MediaQuery.of(context).size.width > 780
+                                ? 10
+                                : 3,
+                          ),
                           child: Text(
                             details['race']['meetingCountryName'],
                             style: TextStyle(
                               fontFamily: 'Northwell',
-                              fontSize: 70,
+                              fontSize: MediaQuery.of(context).size.width > 780
+                                  ? 120
+                                  : 70,
                             ),
                           ),
                         ),
