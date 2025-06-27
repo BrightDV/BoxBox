@@ -25,6 +25,7 @@ import 'package:boxbox/helpers/constants.dart';
 import 'package:boxbox/helpers/convert_ergast_and_formula_one.dart';
 import 'package:flutter/material.dart';
 import 'package:boxbox/l10n/app_localizations.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' as parser;
@@ -692,6 +693,31 @@ class FormulaOneScraper {
     results["history"] = circuitHistory;
 
     return results;
+  }
+
+  Future<String> getMeetingIdFromTrack(
+      String track, BuildContext context) async {
+    late Uri url;
+    String endpoint = Hive.box('settings')
+        .get('server', defaultValue: defaultEndpoint) as String;
+    if (endpoint != defaultEndpoint) {
+      url = Uri.parse(
+        '$endpoint/f1/en/racing/${DateTime.now().year}/$track/Circuit.html',
+      );
+    } else {
+      url = Uri.parse(
+        'https://www.formula1.com/en/racing/${DateTime.now().year}/$track/Circuit.html',
+      );
+    }
+    http.Response response = await http.get(url);
+    dom.Document document = parser.parse(utf8.decode(response.bodyBytes));
+    int index = document.body!.innerHtml.indexOf('practice?meeting=') + 17;
+    String meetingId = document.body!.innerHtml.substring(index, index + 4);
+    context.pushReplacementNamed(
+      'racing',
+      pathParameters: {'meetingId': meetingId},
+    );
+    return meetingId;
   }
 }
 

@@ -27,6 +27,7 @@ import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/news.dart';
 import 'package:boxbox/helpers/request_error.dart';
 import 'package:boxbox/l10n/app_localizations.dart';
+import 'package:boxbox/scraping/formula_one.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -807,6 +808,31 @@ class CuratedSection extends StatelessWidget {
               ),
             SizedBox(width: 5),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class CircuitScreenFromMeetingName extends StatelessWidget {
+  final String meetingName;
+  CircuitScreenFromMeetingName(this.meetingName, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+      ),
+      body: Center(
+        child: FutureBuilder(
+          future:
+              FormulaOneScraper().getMeetingIdFromTrack(meetingName, context),
+          builder: (context, snapshot) => snapshot.hasError
+              ? RequestErrorWidget(snapshot.error.toString())
+              : snapshot.hasData
+                  ? Container()
+                  : LoadingIndicatorUtil(),
         ),
       ),
     );

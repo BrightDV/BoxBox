@@ -210,6 +210,13 @@ class RouterLocalConfig {
             name: 'racing',
             path: 'racing/:meetingId',
             builder: (context, state) {
+              try {
+                int.parse(state.pathParameters['meetingId']!);
+              } catch (_) {
+                return CircuitScreenFromMeetingName(
+                  state.pathParameters['meetingId']!,
+                );
+              }
               return CircuitScreen(
                 state.pathParameters['meetingId']!,
               );
