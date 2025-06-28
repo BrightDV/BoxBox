@@ -17,13 +17,8 @@
  * Copyright (c) 2022-2025, BrightDV
  */
 
-import 'package:boxbox/Screens/race_details.dart';
-import 'package:boxbox/api/driver_components.dart';
-import 'package:boxbox/api/ergast.dart';
 import 'package:boxbox/api/formula1.dart';
-import 'package:boxbox/helpers/convert_ergast_and_formula_one.dart';
 import 'package:boxbox/helpers/custom_physics.dart';
-import 'package:boxbox/helpers/driver_result_item.dart';
 import 'package:boxbox/helpers/news.dart';
 import 'package:boxbox/scraping/formula_one.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -49,46 +44,17 @@ class DriverDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            '${givenName} ${familyName.toUpperCase()}',
-            style: const TextStyle(
-              fontWeight: FontWeight.w600,
-            ),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          '${givenName} ${familyName.toUpperCase()}',
+          style: const TextStyle(
+            fontWeight: FontWeight.w600,
           ),
-          bottom: TabBar(
-            dividerColor: Colors.transparent,
-            tabs: [
-              Tab(
-                child: Text(
-                  AppLocalizations.of(context)!.information.toUpperCase(),
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-              Tab(
-                child: Text(
-                  AppLocalizations.of(context)!.results.toUpperCase(),
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          backgroundColor: Theme.of(context).colorScheme.onPrimary,
         ),
-        body: TabBarView(
-          children: [
-            DriverInfo(driverId, detailsPath: detailsPath),
-            DriverResults(driverId),
-          ],
-        ),
+        backgroundColor: Theme.of(context).colorScheme.onPrimary,
       ),
+      body: DriverInfo(driverId, detailsPath: detailsPath),
     );
   }
 }
@@ -129,139 +95,6 @@ class DriverInfo extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-}
-
-class DriverResults extends StatelessWidget {
-  final String driverId;
-  const DriverResults(this.driverId, {super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder<List<DriverResult>>(
-      future: ErgastApi().getDriverResults(driverId),
-      builder: (context, snapshot) => snapshot.hasError
-          ? RequestErrorWidget(
-              snapshot.error.toString(),
-            )
-          : snapshot.hasData
-              ? ListView.builder(
-                  itemCount: snapshot.data!.length + 1,
-                  itemBuilder: (context, index) => index == 0
-                      ? Container(
-                          color: Theme.of(context).colorScheme.onPrimary,
-                          height: 45,
-                          child: Padding(
-                            padding: const EdgeInsets.all(5),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  flex: 2,
-                                  child: Text(
-                                    AppLocalizations.of(context)
-                                            ?.positionAbbreviation ??
-                                        ' POS',
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ),
-                                const Expanded(
-                                  flex: 2,
-                                  child: Text(''),
-                                ),
-                                Expanded(
-                                  flex: 3,
-                                  child: Text(
-                                    AppLocalizations.of(context)
-                                            ?.driverAbbreviation ??
-                                        'DRI',
-                                  ),
-                                ),
-                                Expanded(
-                                  flex: 6,
-                                  child: Text(
-                                    AppLocalizations.of(context)?.time ??
-                                        'TIME',
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ),
-                                Expanded(
-                                  flex: 3,
-                                  child: Text(
-                                    AppLocalizations.of(context)?.laps ??
-                                        'Laps',
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ),
-                                Expanded(
-                                  flex: 3,
-                                  child: Text(
-                                    AppLocalizations.of(context)
-                                            ?.pointsAbbreviation ??
-                                        'PTS',
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        )
-                      : Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(10, 10, 0, 5),
-                              child: GestureDetector(
-                                onTap: () {
-                                  String circuitId =
-                                      Convert().circuitIdFromErgastToFormulaOne(
-                                    snapshot.data![index - 1].raceId!,
-                                  );
-                                  String circuitName = Convert()
-                                      .circuitNameFromErgastToFormulaOne(
-                                    snapshot.data![index - 1].raceId!,
-                                  );
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => Scaffold(
-                                        appBar: AppBar(
-                                          backgroundColor: Theme.of(context)
-                                              .colorScheme
-                                              .onPrimary,
-                                          title: Text(
-                                            AppLocalizations.of(context)!.race,
-                                            style: const TextStyle(
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                          ),
-                                        ),
-                                        body: RaceResultsProvider(
-                                          raceUrl:
-                                              'https://www.formula1.com/en/results.html/${DateTime.now().year}/races/$circuitId/$circuitName/race-result.html',
-                                        ),
-                                      ),
-                                    ),
-                                  );
-                                },
-                                child: Text(
-                                  '${snapshot.data![index - 1].raceName!} >',
-                                  style: TextStyle(
-                                    decoration: TextDecoration.underline,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            DriverResultItem(
-                              snapshot.data![index - 1],
-                              5,
-                            ),
-                          ],
-                        ),
-                )
-              : const LoadingIndicatorUtil(),
     );
   }
 }
@@ -316,16 +149,18 @@ class DriverDetailsFragment extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<String> driverInfosLabels = [
-      AppLocalizations.of(context)!.team,
-      AppLocalizations.of(context)!.country,
-      AppLocalizations.of(context)!.podiums,
-      AppLocalizations.of(context)!.points,
       AppLocalizations.of(context)!.grandsPrix,
-      AppLocalizations.of(context)!.worldChampionships,
+      AppLocalizations.of(context)!.points,
       AppLocalizations.of(context)!.highestRaceFinish,
+      AppLocalizations.of(context)!.podiums,
       AppLocalizations.of(context)!.highestGridPosition,
-      AppLocalizations.of(context)!.dateOfBirth,
-      AppLocalizations.of(context)!.placeOfBirth,
+      'Pole positions',
+      AppLocalizations.of(context)!.worldChampionships,
+      'DNF',
+      //AppLocalizations.of(context)!.team,
+      //AppLocalizations.of(context)!.country,
+      //AppLocalizations.of(context)!.dateOfBirth,
+      //AppLocalizations.of(context)!.placeOfBirth,
     ];
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -377,44 +212,17 @@ class DriverDetailsFragment extends StatelessWidget {
                   itemDimension: 300,
                 ),
                 itemCount: driverDetails[1].length,
-                itemBuilder: (context, index) => FutureBuilder<Article>(
-                  future: Formula1().getArticleData(
+                itemBuilder: (context, index) => NewsItem(
+                  News(
                     driverDetails[1][index][0],
+                    'News',
+                    '',
+                    driverDetails[1][index][2],
+                    '',
+                    DateTime.now(),
+                    driverDetails[1][index][1],
                   ),
-                  builder: (context, snapshot) {
-                    return snapshot.hasError
-                        ? RequestErrorWidget(
-                            snapshot.error.toString(),
-                          )
-                        : snapshot.hasData
-                            ? NewsItem(
-                                News(
-                                  snapshot.data!.articleId,
-                                  'News',
-                                  snapshot.data!.articleSlug,
-                                  snapshot.data!.articleName,
-                                  '',
-                                  snapshot.data!.publishedDate,
-                                  snapshot.data!.articleHero['contentType'] ==
-                                          'atomVideo'
-                                      ? snapshot.data!.articleHero['fields']
-                                          ['thumbnail']['url']
-                                      : snapshot.data!
-                                                  .articleHero['contentType'] ==
-                                              'atomImageGallery'
-                                          ? snapshot.data!.articleHero['fields']
-                                              ['imageGallery'][0]['url']
-                                          : snapshot.data!.articleHero['fields']
-                                              ['image']['url'],
-                                ),
-                                true,
-                              )
-                            : const SizedBox(
-                                height: 200,
-                                width: 300,
-                                child: LoadingIndicatorUtil(),
-                              );
-                  },
+                  true,
                 ),
               ),
             ),
@@ -455,25 +263,6 @@ class DriverDetailsFragment extends StatelessWidget {
                 items: [
                   for (int i = 0; i < driverDetails[3][0].length; i++)
                     Image.network(driverDetails[3][0][i]),
-                  /* removed on website
-                    Column(
-                      children: [
-                        Image.network(driverDetails[3][0][i]),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                            top: 10,
-                          ),
-                          child: Text(
-                            driverDetails[3][1][i].toString(),
-                            style: TextStyle(
-                              color: useDarkMode ? Colors.white : Colors.black,
-                              fontSize: 12,
-                            ),
-                            textAlign: TextAlign.justify,
-                          ),
-                        ),
-                      ],
-                    ), */
                 ],
                 options: CarouselOptions(
                   height: kIsWeb ? 350 : 250,

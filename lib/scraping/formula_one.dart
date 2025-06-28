@@ -369,52 +369,50 @@ class FormulaOneScraper {
       utf8.decode(response.bodyBytes),
     );
 
-    List<dom.Element> tempDetails = document.getElementsByTagName('dd');
-    for (int i = 0; i < 10; i++) {
+    List<dom.Element> tempDetails = document
+        .getElementsByClassName('order-3')[0]
+        .getElementsByTagName('dd');
+    for (int i = 0; i < tempDetails.length; i++) {
       results[0].add(tempDetails[i].text);
     }
 
-    List<dom.Element> tempDriverArticles =
-        document.getElementsByClassName('f1-driver-article-card');
+    List<dom.Element> tempDriverArticles = document
+        .getElementsByClassName('ArticleListCard-module_articlecard__T-Ylh');
     for (dom.Element element in tempDriverArticles) {
-      if (element.attributes['href'] != null) {
-        results[1].add(
-          [
-            element.attributes['href']!.split('.').last,
-            element.getElementsByTagName("img").first.attributes['src']!,
-            element.children[0].children[1].children[1].text,
-            element.children[0].children[1].children[0].text,
-          ],
-        );
-      }
+      results[1].add(
+        [
+          element
+              .getElementsByTagName('a')[0]
+              .attributes['href']!
+              .split('.')
+              .last,
+          element.getElementsByTagName("img").first.attributes['src']!,
+          element
+              .getElementsByClassName('ArticleListCard-module_title__-4ovb')[0]
+              .text,
+        ],
+      );
     }
 
-    List<dom.Element> tempBiography = document
-        .getElementsByClassName('f1-driver-bio')[0]
-        .children[document
-                .getElementsByClassName('f1-driver-bio')[0]
-                .children
-                .length -
-            1]
-        .children;
-    for (var element in tempBiography) {
+    dom.Element tempBiography = document.getElementById('biography')!;
+    for (var element in tempBiography.getElementsByTagName('p')) {
       results[2].add(element.text);
     }
+    results[2].removeLast();
 
-    List<dom.Element> tempDriverMedias =
-        document.getElementsByClassName('f1-carousel__slide');
+    List<dom.Element> tempDriverMedias = document
+        .getElementsByTagName('dialog')[0]
+        .getElementsByClassName('rounded-s overflow-clip transition-all');
     for (var element in tempDriverMedias) {
-      String imageUrl = element.firstChild!.firstChild!.attributes['src'] ?? '';
+      String imageUrl = element.firstChild!.attributes['src']!
+          .replaceFirst('c_fill,w_128,h_128', 'c_lfill,w_2000');
       results[3][0].add(imageUrl);
     }
 
-    tempDriverMedias = document.getElementsByClassName('gallery-description');
-    for (var element in tempDriverMedias) {
-      results[3][1].add(element.text);
-    }
-
     results[4].add(
-      document.getElementsByClassName('f1-heading')[1].text,
+      document
+          .getElementsByClassName('flex flex-col items-center text-center')[0]
+          .text,
     );
 
     return results;
