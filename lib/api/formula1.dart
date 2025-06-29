@@ -76,7 +76,7 @@ class Formula1 {
     return newsList;
   }
 
-  FutureOr<List<News>> getMoreNews(
+  FutureOr<Map> getRawNews(
     int offset, {
     String? tagId,
     String? articleType,
@@ -122,6 +122,19 @@ class Formula1 {
       Hive.box('requests').put('news', responseAsJson);
       Hive.box('requests').put('newsLastSavedFormat', 'f1');
     }
+    return responseAsJson;
+  }
+
+  FutureOr<List<News>> getMoreNews(
+    int offset, {
+    String? tagId,
+    String? articleType,
+  }) async {
+    Map responseAsJson = await getRawNews(
+      offset,
+      tagId: tagId,
+      articleType: articleType,
+    );
     return formatResponse(responseAsJson);
   }
 

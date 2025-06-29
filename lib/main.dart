@@ -23,11 +23,11 @@ import 'dart:async';
 
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:background_downloader/background_downloader.dart';
+import 'package:boxbox/api/formula1.dart';
 import 'package:boxbox/config/router.dart';
-// import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:boxbox/helpers/constants.dart';
 import 'package:boxbox/helpers/route_handler.dart';
-// import 'package:boxbox/Screens/article.dart';
 import 'package:boxbox/helpers/team_background_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
@@ -36,6 +36,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:timeago/timeago.dart' as timeago;
+import 'package:workmanager/workmanager.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -50,10 +51,8 @@ void main() async {
 
   if (!kIsWeb) {
     await FileDownloader().trackTasks();
-  }
 
-  /* if (!kIsWeb) {
-    AwesomeNotifications().initialize(
+    await AwesomeNotifications().initialize(
       'resource://drawable/notification_icon',
       [
         NotificationChannel(
@@ -75,29 +74,29 @@ void main() async {
         ),
       ],
     );
-  } */
+  }
 
-  /* Workmanager().initialize(
+  await Workmanager().initialize(
     callbackDispatcher,
-    isInDebugMode: false,
   );
-  Workmanager().registerPeriodicTask(
+  await Workmanager().registerPeriodicTask(
     'newsLoader',
     "Load news in background",
     existingWorkPolicy: ExistingWorkPolicy.replace,
-    frequency: const Duration(hours: 2),
+    frequency: const Duration(seconds: 30),
     initialDelay: const Duration(hours: 2),
-  ); */
+  );
 
   GoRouter.optionURLReflectsImperativeAPIs = true;
 
   runApp(const MyApp());
 }
 
-/* int createUniqueId() {
+int createUniqueId() {
   return DateTime.now().millisecondsSinceEpoch.remainder(100000);
 }
 
+@pragma('vm:entry-point')
 void callbackDispatcher() {
   Workmanager().executeTask(
     (task, inputData) async {
@@ -108,7 +107,7 @@ void callbackDispatcher() {
       bool useDataSaverMode =
           settingsBox.get('useDataSaverMode', defaultValue: false) as bool;
       try {
-        Map<String, dynamic> fetchedData = await F1NewsFetcher().getRawNews();
+        Map fetchedData = await Formula1().getRawNews(0);
         if (cachedNews.isNotEmpty &&
             fetchedData['items'][0]['id'] != cachedNews['items'][0]['id']) {
           String imageUrl =
@@ -167,7 +166,7 @@ void callbackDispatcher() {
       }
     },
   );
-} */
+}
 
 void setTimeagoLocaleMessages() {
   timeago.setLocaleMessages('ar', timeago.ArMessages());
@@ -248,43 +247,24 @@ void setTimeagoLocaleMessages() {
   timeago.setLocaleMessages('zh', timeago.ZhMessages());
 }
 
-/* class NotificationController {
-  static Future<void> startListeningNotificationEvents(
-      BuildContext context) async {
-    AwesomeNotifications().setListeners(
-      onActionReceivedMethod: (receivedAction) async =>
-          receivedAction.payload?['id'] == null
-              ? Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => Scaffold(
-                      appBar: AppBar(
-                        title: const Text('wrong payload'),
-                        backgroundColor:
-                            Theme.of(context).colorScheme.onPrimary,
-                      ),
-                      body: Center(
-                        child: Text(
-                          receivedAction.payload.toString(),
-                        ),
-                      ),
-                    ),
-                  ),
-                )
-              : Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ArticleScreen(
-                      receivedAction.payload!['id']!,
-                      receivedAction.payload!['title']!,
-                      false,
-                    ),
-                  ),
-                ),
+class NotificationController {
+  @pragma("vm:entry-point")
+  static Future<void> onActionReceivedMethod(
+      ReceivedAction receivedAction) async {
+    RouterLocalConfig.router.pushNamed(
+      'article',
+      pathParameters: receivedAction.payload?['title'] != null
+          ? {
+              'id': receivedAction.payload?['id'] ?? '',
+              'articleName': receivedAction.payload!['title']!,
+            }
+          : {
+              'id': receivedAction.payload?['id'] ?? '',
+            },
     );
   }
 }
- */
+
 class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
 
@@ -300,11 +280,13 @@ class _MyAppState extends State<MyApp> {
     super.initState();
     if (!kIsWeb) {
       // notifications service
-      // NotificationController.startListeningNotificationEvents(context);
+      AwesomeNotifications().setListeners(
+        onActionReceivedMethod: NotificationController.onActionReceivedMethod,
+      );
 
       // For sharing or opening urls/text coming from outside the app while the app is in the memory
       _intentDataStreamSubscription =
-          ReceiveSharingIntent.getMediaStream().listen(
+          ReceiveSharingIntent.instance.getMediaStream().listen(
         (List<SharedMediaFile>? value) {
           if (value?.isNotEmpty ?? false) {
             if (value?[0] != null) {
@@ -318,7 +300,7 @@ class _MyAppState extends State<MyApp> {
       );
 
       // For sharing or opening urls/text coming from outside the app while the app is closed
-      ReceiveSharingIntent.getInitialMedia().then(
+      ReceiveSharingIntent.instance.getInitialMedia().then(
         (List<SharedMediaFile>? value) {
           if (value?.isNotEmpty ?? false) {
             if (value?[0] != null) {

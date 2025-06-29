@@ -23,7 +23,9 @@ if (flutterVersionName == null) {
 }
 
 android {
-    compileSdkVersion 34
+    compileSdkVersion 35
+
+    namespace "org.brightdv.boxbox"
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17

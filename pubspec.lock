@@ -65,6 +65,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.0"
+  awesome_notifications:
+    dependency: "direct main"
+    description:
+      name: awesome_notifications
+      sha256: "0d5fa4457f2ba4e536adc3ef6af709cdcecf4a05a1f3035981e9afa2f899b2a8"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.10.1"
   background_downloader:
     dependency: "direct main"
     description:
@@ -849,11 +857,12 @@ packages:
   receive_sharing_intent:
     dependency: "direct main"
     description:
-      name: receive_sharing_intent
-      sha256: "2b2d5c6ff9098820447d217eae4f9f671e2d894a0d2ec33099a2fdd946a44996"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.6.6"
+      path: "."
+      ref: master
+      resolved-ref: "2cea396843cd3ab1b5ec4334be4233864637874e"
+      url: "https://github.com/KasemJaffer/receive_sharing_intent"
+    source: git
+    version: "1.8.1"
   river_player:
     dependency: "direct main"
     description:
@@ -1363,6 +1372,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.0"
+  workmanager:
+    dependency: "direct main"
+    description:
+      name: workmanager
+      sha256: "746a50c535af15b6dc225abbd9b52ab272bcd292c535a104c54b5bc02609c38a"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.7.0"
   xdg_directories:
     dependency: transitive
     description:

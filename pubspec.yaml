@@ -26,7 +26,7 @@ dependencies:
   add_2_calendar: ^3.0.1
   animations: ^2.0.8
   auto_size_text: ^3.0.0
-  # awesome_notifications: ^0.7.4+1
+  awesome_notifications: ^0.10.1
   background_downloader: ^7.11.0
   cached_network_image: ^3.3.0
   carousel_slider: ^5.0.0
@@ -63,7 +63,10 @@ dependencies:
   loading_indicator: ^3.0.3
   marquee: ^2.2.3
   package_info_plus: ^8.3.0
-  receive_sharing_intent: 1.6.6
+  receive_sharing_intent:
+    git: 
+      url: https://github.com/KasemJaffer/receive_sharing_intent
+      ref: master
   river_player: ^0.1.4
   share_plus: ^10.1.4
   # signalr_flutter: ^0.2.0 # uses (non-foss?) .jar
@@ -78,7 +81,7 @@ dependencies:
     git:
       url: https://github.com/marcjoha/webfeed.git
       ref: master
-  #workmanager: ^0.5.1
+  workmanager: ^0.7.0
   youtube_explode_dart: ^2.3.9
 
 dev_dependencies:
