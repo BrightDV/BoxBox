@@ -220,11 +220,17 @@ class CircuitScreenContent extends StatelessWidget {
                 )
               : Container(),
           details['raceReview'] != null &&
-                  details['raceReview']['curatedSection']['items'].isNotEmpty
-              ? CuratedSection(
-                  details['raceReview']['curatedSection']['items'],
-                )
-              : Container(),
+                  details['raceReview']['curatedSection'] != null
+              ? details['raceReview']['curatedSection']['items'].isNotEmpty
+                  ? CuratedSection(
+                      details['raceReview']['curatedSection']['items'],
+                    )
+                  : Container()
+              : details['raceCuratedArticles'] != null
+                  ? CuratedSection(
+                      details['raceCuratedArticles']['items'],
+                    )
+                  : Container(),
           Padding(
             padding: EdgeInsets.only(top: 5),
             child: Card(
