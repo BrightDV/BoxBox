@@ -344,7 +344,6 @@ class RacesList extends StatelessWidget {
             Duration(minutes: 5),
           );
 
-      sessionDate = DateTime.now().add(Duration(seconds: 15));
       await AwesomeNotifications().createNotification(
         content: NotificationContent(
           id: createUniqueId(),

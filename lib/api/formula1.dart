@@ -270,7 +270,7 @@ class Formula1 {
     String time;
     String fastestLapDriverName = "";
     String fastestLapTime = "";
-    for (var award in raceStandings["raceResultsRace"]["awards"]) {
+    for (var award in (raceStandings["raceResultsRace"]["awards"] ?? [])) {
       // find fastest_lap award, as its index may not be static
       if (award['type'].toLowerCase() == 'fastest_lap') {
         fastestLapDriverName = award['winnerName'];
