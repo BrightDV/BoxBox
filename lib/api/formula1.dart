@@ -1063,7 +1063,7 @@ class Formula1 {
       );
     }
 
-    List<DateTime> sessionDates = [];
+    /* List<DateTime> sessionDates = [];
     List sessionStates = [];
     String gmtOffset =
         formatedResponse['race']['meetingSessions'][0]?['gmtOffset'] ?? '';
@@ -1106,7 +1106,7 @@ class Formula1 {
       sessionStates: sessionStates,
     );
 
-    formatedResponse['raceCustomBBParameter'] = raceWithSessions;
+    formatedResponse['raceCustomBBParameter'] = raceWithSessions; */
 
     return formatedResponse;
   }

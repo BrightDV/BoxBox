@@ -141,6 +141,7 @@ class ScheduleWidget extends StatelessWidget {
                           : Formula1().formatLastSchedule(schedule, toCome),
                       toCome,
                       scrollController: scrollController,
+                      isCache: true,
                     )
                   : RequestErrorWidget(snapshot.error.toString())
               : schedule['races'] != null
@@ -148,6 +149,7 @@ class ScheduleWidget extends StatelessWidget {
                       FormulaE().formatLastSchedule(schedule, toCome),
                       toCome,
                       scrollController: scrollController,
+                      isCache: true,
                     )
                   : RequestErrorWidget(snapshot.error.toString())
           : snapshot.hasData
@@ -182,6 +184,7 @@ class ScheduleWidget extends StatelessWidget {
                                       .formatLastSchedule(schedule, toCome),
                               toCome,
                               scrollController: scrollController,
+                              isCache: true,
                             )
                       : const LoadingIndicatorUtil()
                   : schedule['races'] != null
@@ -191,6 +194,7 @@ class ScheduleWidget extends StatelessWidget {
                               FormulaE().formatLastSchedule(schedule, toCome),
                               toCome,
                               scrollController: scrollController,
+                              isCache: true,
                             )
                       : const LoadingIndicatorUtil(),
     );

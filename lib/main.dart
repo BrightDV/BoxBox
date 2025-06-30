@@ -59,7 +59,6 @@ void main() async {
           channelKey: 'eventTracker',
           channelName: 'New Grand Prix notifications',
           channelDescription: 'Show a notification before each GP.',
-          defaultColor: Colors.white,
           importance: NotificationImportance.High,
           channelShowBadge: true,
         ),
@@ -68,7 +67,6 @@ void main() async {
           channelName: 'New article',
           channelDescription:
               'Show a notification when a new article is published.',
-          defaultColor: Colors.white,
           importance: NotificationImportance.High,
           channelShowBadge: true,
         ),

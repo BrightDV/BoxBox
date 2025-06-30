@@ -17,7 +17,8 @@
  * Copyright (c) 2022-2025, BrightDV
  */
 
-// import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:boxbox/api/formula1.dart';
 import 'package:boxbox/helpers/news.dart';
 import 'package:boxbox/helpers/racetracks_url.dart';
 import 'package:flutter/material.dart';
@@ -313,47 +314,64 @@ class RacesList extends StatelessWidget {
   final List<Race> items;
   final bool isUpNext;
   final ScrollController? scrollController;
+  final bool isCache;
 
   const RacesList(
     this.items,
     this.isUpNext, {
     Key? key,
     this.scrollController,
+    this.isCache = false,
   }) : super(key: key);
 
-  //int createUniqueId() {
-  //  return DateTime.now().millisecondsSinceEpoch.remainder(100000);
-  //}
-  //
-  //Future<void> scheduledNotification(Race race) async {
-  //  DateTime date = DateTime.parse(race.date);
-  //  date.subtract(
-  //    Duration(
-  //      days: 3,
-  //    ),
-  //  );
-  //  await AwesomeNotifications().createNotification(
-  //    content: NotificationContent(
-  //      id: createUniqueId(),
-  //      channelKey: 'eventTracker',
-  //      title: "A Grand-Prix is starting soon.",
-  //      body: "Be ready for the Free Practices!",
-  //    ),
-  //    schedule: NotificationCalendar(
-  //      allowWhileIdle: true,
-  //      repeats: false,
-  //      millisecond: 0,
-  //     second: date.second,
-  //      minute: date.minute,
-  //      hour: date.hour,
-  //      day: date.day,
-  //      month: date.month,
-  //    ),
-  //  );
-  //}
+  int createUniqueId() {
+    return DateTime.now().millisecondsSinceEpoch.remainder(100000);
+  }
+
+  Future<void> scheduledNotification(String meetingId) async {
+    List<NotificationModel> notifications =
+        await AwesomeNotifications().listScheduledNotifications();
+    if (notifications.isNotEmpty &&
+        notifications[0].content?.payload?['meetingId'] == meetingId) {
+      return;
+    }
+
+    Map race = await Formula1().getCircuitDetails(meetingId);
+    for (var session in race['race']['meetingSessions']) {
+      DateTime sessionDate = DateTime.parse(
+        session['startTime'] + session['gmtOffset'],
+      ).toLocal().subtract(
+            Duration(minutes: 5),
+          );
+
+      sessionDate = DateTime.now().add(Duration(seconds: 15));
+      await AwesomeNotifications().createNotification(
+        content: NotificationContent(
+          id: createUniqueId(),
+          channelKey: 'eventTracker',
+          title: race['race']['meetingName'],
+          body: "Be ready! ${session['description']} is starting soon!",
+          payload: {'meetingId': meetingId, 'session': session['session']},
+        ),
+        schedule: NotificationCalendar(
+          allowWhileIdle: true,
+          repeats: false,
+          millisecond: 0,
+          second: sessionDate.second,
+          minute: sessionDate.minute,
+          hour: sessionDate.hour,
+          day: sessionDate.day,
+          month: sessionDate.month,
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    if (items.isNotEmpty && isUpNext && !isCache) {
+      scheduledNotification(items[0].meetingId);
+    }
     return isUpNext
         ? //FutureBuilder(
         //  future: scheduledNotification(items[0]),
