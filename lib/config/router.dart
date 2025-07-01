@@ -24,6 +24,7 @@ import 'package:boxbox/Screens/MixedNews/mixed_news.dart';
 import 'package:boxbox/Screens/Settings/appearance.dart';
 import 'package:boxbox/Screens/Settings/custom_home_feed.dart';
 import 'package:boxbox/Screens/Settings/mixed_news.dart';
+import 'package:boxbox/Screens/Settings/notifications.dart';
 import 'package:boxbox/Screens/Settings/other.dart';
 import 'package:boxbox/Screens/Settings/player.dart';
 import 'package:boxbox/Screens/Settings/server.dart';
@@ -174,6 +175,12 @@ class RouterLocalConfig {
                 name: 'player-settings',
                 path: 'player',
                 builder: (context, state) => const PlayerSettingsScreen(),
+              ),
+              GoRoute(
+                name: 'notifications-settings',
+                path: 'notifications',
+                builder: (context, state) =>
+                    const NotificationsSettingsScreen(),
               ),
               GoRoute(
                 name: 'other-settings',
