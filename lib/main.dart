@@ -94,6 +94,33 @@ int createUniqueId() {
   return DateTime.now().millisecondsSinceEpoch.remainder(100000);
 }
 
+Future<void> showArticleNotification(Map article, bool useDataSaverMode) async {
+  String imageUrl = article['thumbnail']['image']['url'];
+  if (useDataSaverMode) {
+    if (article['thumbnail']['image']['renditions'] != null) {
+      imageUrl = article['thumbnail']['image']['renditions']['2col-retina'];
+    } else {
+      imageUrl += '.transform/2col-retina/image.jpg';
+    }
+  }
+  await AwesomeNotifications().createNotification(
+    content: NotificationContent(
+      id: createUniqueId(),
+      channelKey: 'newArticle',
+      title: article['title'],
+      body: article['metaDescription'],
+      largeIcon: imageUrl,
+      bigPicture: imageUrl,
+      hideLargeIconOnExpand: true,
+      notificationLayout: NotificationLayout.BigPicture,
+      payload: {
+        'id': article['id'],
+        'title': article['title'],
+      },
+    ),
+  );
+}
+
 @pragma('vm:entry-point')
 void callbackDispatcher() {
   Workmanager().executeTask(
@@ -108,58 +135,23 @@ void callbackDispatcher() {
         Map fetchedData = await Formula1().getRawNews(0);
         if (cachedNews.isNotEmpty &&
             fetchedData['items'][0]['id'] != cachedNews['items'][0]['id']) {
-          String imageUrl =
-              fetchedData['items'][0]['thumbnail']['image']['url'];
-          if (useDataSaverMode) {
-            if (fetchedData['items'][0]['thumbnail']['image']['renditions'] !=
-                null) {
-              imageUrl = fetchedData['items'][0]['thumbnail']['image']
-                  ['renditions']['2col-retina'];
-            } else {
-              imageUrl += '.transform/2col-retina/image.jpg';
+          bool hasBreaking = false;
+          for (var article in fetchedData['items']) {
+            if (article['id'] == cachedNews['items'][0]['id']) {
+              break;
+            } else if (article['breaking'] != null && article['breaking']) {
+              showArticleNotification(article, useDataSaverMode);
+              hasBreaking = true;
             }
           }
-          await AwesomeNotifications().createNotification(
-            content: NotificationContent(
-              id: createUniqueId(),
-              channelKey: 'newArticle',
-              title: fetchedData['items'][0]['title'],
-              body: fetchedData['items'][0]['metaDescription'],
-              largeIcon: imageUrl,
-              bigPicture: imageUrl,
-              hideLargeIconOnExpand: true,
-              notificationLayout: NotificationLayout.BigPicture,
-              payload: {
-                'id': fetchedData['items'][0]['id'],
-                'title': fetchedData['items'][0]['title'],
-              },
-              color: Colors.white,
-            ),
-          );
+          if (!hasBreaking) {
+            showArticleNotification(fetchedData['items'][0], useDataSaverMode);
+          }
+
           hiveBox.put('news', fetchedData);
-        } /* else {
-          await AwesomeNotifications().createNotification(
-            content: NotificationContent(
-              id: createUniqueId(),
-              channelKey: 'newArticle',
-              title: 'No new article published.',
-              body: 'Nothing to show...',
-            ),
-          )
-        }; */
+        }
         return Future.value(true);
-      } catch (error, stacktrace) {
-        print(error.toString());
-        print("Notification error. Stacktrace:");
-        print(stacktrace.toString());
-        /* await AwesomeNotifications().createNotification(
-          content: NotificationContent(
-            id: createUniqueId(),
-            channelKey: 'newArticle',
-            title: 'An error occured.',
-            body: stacktrace.toString(),
-          ),
-        ); */
+      } catch (error, _) {
         return Future.value(false);
       }
     },
