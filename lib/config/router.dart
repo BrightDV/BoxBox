@@ -19,7 +19,14 @@
 
 import 'package:boxbox/Screens/404.dart';
 import 'package:boxbox/Screens/FormulaYou/home.dart';
+import 'package:boxbox/Screens/Settings/formula_you.dart';
 import 'package:boxbox/Screens/MixedNews/mixed_news.dart';
+import 'package:boxbox/Screens/Settings/appearance.dart';
+import 'package:boxbox/Screens/Settings/custom_home_feed.dart';
+import 'package:boxbox/Screens/Settings/mixed_news.dart';
+import 'package:boxbox/Screens/Settings/other.dart';
+import 'package:boxbox/Screens/Settings/player.dart';
+import 'package:boxbox/Screens/Settings/server.dart';
 import 'package:boxbox/Screens/about.dart';
 import 'package:boxbox/Screens/article.dart';
 import 'package:boxbox/Screens/Racing/circuit.dart';
@@ -31,7 +38,7 @@ import 'package:boxbox/Screens/history.dart';
 import 'package:boxbox/Screens/race_details.dart';
 import 'package:boxbox/Screens/racehub.dart';
 import 'package:boxbox/Screens/schedule.dart';
-import 'package:boxbox/Screens/settings.dart';
+import 'package:boxbox/Screens/Settings/settings.dart';
 import 'package:boxbox/Screens/standings.dart';
 import 'package:boxbox/Screens/team_details.dart';
 import 'package:boxbox/Screens/video.dart';
@@ -155,8 +162,66 @@ class RouterLocalConfig {
             path: 'settings',
             builder: (context, state) {
               Map? extras = state.extra as Map?;
-              return SettingsScreen(update: extras?['update'] ?? null);
+              return SettingsScreen(update: extras?['update']);
             },
+            routes: [
+              GoRoute(
+                name: 'appearance-settings',
+                path: 'appearance',
+                builder: (context, state) => const AppearanceSettingsScreen(),
+              ),
+              GoRoute(
+                name: 'player-settings',
+                path: 'player',
+                builder: (context, state) => const PlayerSettingsScreen(),
+              ),
+              GoRoute(
+                name: 'other-settings',
+                path: 'other',
+                builder: (context, state) {
+                  Map? extras = state.extra as Map?;
+                  return OtherSettingsScreen(extras?['update']);
+                },
+              ),
+              GoRoute(
+                name: 'custom-home-feed-settings',
+                path: 'custom-home-feed',
+                builder: (context, state) {
+                  Map? extras = state.extra as Map?;
+                  return CustomeHomeFeedSettingsScreen(
+                    extras?['update'],
+                  );
+                },
+              ),
+              GoRoute(
+                name: 'server-settings',
+                path: 'server',
+                builder: (context, state) {
+                  Map? extras = state.extra as Map?;
+                  return ServerSettingsScreen(extras?['update']);
+                },
+              ),
+              GoRoute(
+                name: 'formula-you-settings',
+                path: 'formula-you',
+                builder: (context, state) {
+                  Map? extras = state.extra as Map?;
+                  return FormulaYouSettingsScreen(
+                    update: extras?['update'],
+                  );
+                },
+              ),
+              GoRoute(
+                name: 'mixed-news-settings',
+                path: 'mixed-news',
+                builder: (context, state) {
+                  Map? extras = state.extra as Map?;
+                  return EditOrderScreen(
+                    extras?['update'],
+                  );
+                },
+              ),
+            ],
           ),
           GoRoute(
             name: 'about',

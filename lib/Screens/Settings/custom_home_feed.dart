@@ -23,7 +23,7 @@ import 'package:boxbox/l10n/app_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class CustomeHomeFeedSettingsScreen extends StatefulWidget {
-  final Function updateParent;
+  final Function? updateParent;
   const CustomeHomeFeedSettingsScreen(this.updateParent, {super.key});
 
   @override
@@ -100,7 +100,9 @@ class _CustomeHomeFeedSettingsScreenState
                 () {
                   savedFeedUrl = [value, "api"];
                   Hive.box('settings').put('homeFeed', savedFeedUrl);
-                  widget.updateParent();
+                  if (widget.updateParent != null) {
+                    widget.updateParent!();
+                  }
                 },
               ),
             ),
@@ -120,7 +122,9 @@ class _CustomeHomeFeedSettingsScreenState
                       () {
                         savedFeedUrl = [feed.value, "rss"];
                         Hive.box('settings').put('homeFeed', savedFeedUrl);
-                        widget.updateParent();
+                        if (widget.updateParent != null) {
+                          widget.updateParent!();
+                        }
                       },
                     ),
                   ),
@@ -184,7 +188,9 @@ class _CustomeHomeFeedSettingsScreenState
                             }
                             Navigator.of(context).pop();
                             _setState();
-                            widget.updateParent();
+                            if (widget.updateParent != null) {
+                              widget.updateParent!();
+                            }
                           },
                           child: Text(
                             AppLocalizations.of(context)!.yes,
@@ -204,7 +210,9 @@ class _CustomeHomeFeedSettingsScreenState
                     onChanged: (value) => setState(
                       () {
                         Hive.box('settings').put('homeFeed', feed);
-                        widget.updateParent();
+                        if (widget.updateParent != null) {
+                          widget.updateParent!();
+                        }
                       },
                     ),
                   ),
@@ -300,7 +308,9 @@ class _CustomeHomeFeedSettingsScreenState
                             );
                             Navigator.of(context).pop();
                             _setState();
-                            widget.updateParent();
+                            if (widget.updateParent != null) {
+                              widget.updateParent!();
+                            }
                           },
                           child: Text(
                             AppLocalizations.of(context)!.save,

@@ -77,9 +77,7 @@ class _FormulaYouSettingsScreenState extends State<FormulaYouSettingsScreen> {
                       }
                       setState(() {});
                     },
-                    title: Text(
-                      key,
-                    ),
+                    title: Text(key),
                   ),
               ],
             ),

@@ -22,7 +22,7 @@ import 'package:boxbox/l10n/app_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class EditOrderScreen extends StatefulWidget {
-  final Function updateParent;
+  final Function? updateParent;
   const EditOrderScreen(this.updateParent, {Key? key}) : super(key: key);
 
   @override
@@ -193,7 +193,9 @@ class _EditOrderScreenState extends State<EditOrderScreen> {
                           Hive.box('feeds').put('feedsDetails', feedsDetails);
                           Navigator.of(context).pop();
                           update();
-                          widget.updateParent();
+                          if (widget.updateParent != null) {
+                            widget.updateParent!();
+                          }
                         },
                         child: Text(
                           AppLocalizations.of(context)!.save,
@@ -243,6 +245,7 @@ class _EditOrderScreenState extends State<EditOrderScreen> {
             ),
             trailing: IconButton(
               icon: Icon(Icons.delete_outline),
+              padding: EdgeInsets.only(right: 15),
               onPressed: () => showDialog(
                 context: context,
                 builder: (context) {
@@ -291,7 +294,9 @@ class _EditOrderScreenState extends State<EditOrderScreen> {
                           Hive.box('feeds').put('feedsNames', feedsNames);
                           Navigator.of(context).pop();
                           setState(() {});
-                          widget.updateParent();
+                          if (widget.updateParent != null) {
+                            widget.updateParent!();
+                          }
                         },
                         child: Text(
                           AppLocalizations.of(context)!.yes,
@@ -313,7 +318,9 @@ class _EditOrderScreenState extends State<EditOrderScreen> {
                 final String item = feedsNames.removeAt(oldIndex);
                 feedsNames.insert(newIndex, item);
                 Hive.box('feeds').put('feedsNames', feedsNames);
-                widget.updateParent();
+                if (widget.updateParent != null) {
+                  widget.updateParent!();
+                }
               },
             );
           },

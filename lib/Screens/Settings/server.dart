@@ -23,7 +23,7 @@ import 'package:boxbox/l10n/app_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class ServerSettingsScreen extends StatefulWidget {
-  final Function updateParent;
+  final Function? updateParent;
   const ServerSettingsScreen(this.updateParent, {super.key});
 
   @override
@@ -63,7 +63,9 @@ class _ServerSettingsScreenState extends State<ServerSettingsScreen> {
                 () {
                   savedServer = value!;
                   Hive.box('settings').put('server', savedServer);
-                  widget.updateParent();
+                  if (widget.updateParent != null) {
+                    widget.updateParent!();
+                  }
                 },
               ),
             ),
@@ -124,7 +126,9 @@ class _ServerSettingsScreenState extends State<ServerSettingsScreen> {
                               }
                               Navigator.of(context).pop();
                               _setState();
-                              widget.updateParent();
+                              if (widget.updateParent != null) {
+                                widget.updateParent!();
+                              }
                             },
                             child: Text(
                               AppLocalizations.of(context)!.yes,
@@ -143,7 +147,9 @@ class _ServerSettingsScreenState extends State<ServerSettingsScreen> {
                     onChanged: (value) => setState(
                       () {
                         Hive.box('settings').put('server', server);
-                        widget.updateParent();
+                        if (widget.updateParent != null) {
+                          widget.updateParent!();
+                        }
                       },
                     ),
                   ),
@@ -210,7 +216,9 @@ class _ServerSettingsScreenState extends State<ServerSettingsScreen> {
                             );
                             Navigator.of(context).pop();
                             _setState();
-                            widget.updateParent();
+                            if (widget.updateParent != null) {
+                              widget.updateParent!();
+                            }
                           },
                           child: Text(
                             AppLocalizations.of(context)!.save,

@@ -17,10 +17,10 @@
  * Copyright (c) 2022-2025, BrightDV
  */
 
-import 'package:boxbox/Screens/FormulaYou/settings.dart';
 import 'package:boxbox/Screens/FormulaYou/tags.dart';
 import 'package:boxbox/helpers/news_feed_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class PersonalizedHomeScreen extends StatefulWidget {
@@ -60,13 +60,9 @@ class _PersonalizedHomeScreenState extends State<PersonalizedHomeScreen> {
             icon: const Icon(
               Icons.settings_outlined,
             ),
-            onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => FormulaYouSettingsScreen(
-                  update: updateState,
-                ),
-              ),
+            onPressed: () => context.pushNamed(
+              'formula-you-settings',
+              extra: {'update': updateState},
             ),
           ),
         ],

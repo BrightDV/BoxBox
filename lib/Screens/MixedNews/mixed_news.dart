@@ -17,7 +17,6 @@
  * Copyright (c) 2022-2025, BrightDV
  */
 
-import 'package:boxbox/Screens/MixedNews/edit_order.dart';
 import 'package:boxbox/Screens/MixedNews/rss_feed.dart';
 import 'package:boxbox/Screens/MixedNews/rss_feed_article.dart';
 import 'package:boxbox/Screens/MixedNews/wordpress.dart';
@@ -28,6 +27,7 @@ import 'package:boxbox/helpers/request_error.dart';
 import 'package:flutter/material.dart';
 import 'package:boxbox/l10n/app_localizations.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -127,13 +127,9 @@ class _MixedNewsScreenState extends State<MixedNewsScreen> {
             ),
           ),
           IconButton(
-            onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => EditOrderScreen(
-                  updateParent,
-                ),
-              ),
+            onPressed: () => context.pushNamed(
+              'mixed-news-settings',
+              extra: {'update': updateParent},
             ),
             icon: const Icon(
               Icons.edit_outlined,

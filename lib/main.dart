@@ -72,18 +72,18 @@ void main() async {
         ),
       ],
     );
-  }
 
-  await Workmanager().initialize(
-    callbackDispatcher,
-  );
-  await Workmanager().registerPeriodicTask(
-    'newsLoader',
-    "Load news in background",
-    existingWorkPolicy: ExistingWorkPolicy.replace,
-    frequency: const Duration(seconds: 30),
-    initialDelay: const Duration(hours: 2),
-  );
+    await Workmanager().initialize(
+      callbackDispatcher,
+    );
+    await Workmanager().registerPeriodicTask(
+      'newsLoader',
+      "Load news in background",
+      existingWorkPolicy: ExistingWorkPolicy.replace,
+      frequency: const Duration(seconds: 30),
+      initialDelay: const Duration(hours: 2),
+    );
+  }
 
   GoRouter.optionURLReflectsImperativeAPIs = true;
 
