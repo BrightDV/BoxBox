@@ -45,6 +45,9 @@ class AppLocalizationsHi extends AppLocalizations {
   String get articleFull => 'पूर्ण';
 
   @override
+  String get articleNotifications => 'New articles notifications';
+
+  @override
   String get articleTitleAndImage => 'शीर्षक और छवि';
 
   @override
@@ -165,6 +168,9 @@ class AppLocalizationsHi extends AppLocalizations {
   String get editOrderDescription => 'किसी वस्तु को लंबे समय तक दबाकर क्रम बदलें।';
 
   @override
+  String get enableNotifications => 'Enable notifications';
+
+  @override
   String get errorOccurred => 'कुछ त्रुटि हुई है';
 
   @override
@@ -232,6 +238,12 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get grandPrixMap => 'ग्रां प्री मानचित्र';
+
+  @override
+  String get grandPrixNotifications => 'Grand-Prix sessions notifications';
+
+  @override
+  String get grandPrixNotificationsSub => 'You need to go to the schedule screen in order to initialize notifications of the next Grand-Prix.';
 
   @override
   String get hallOfFame => 'हॉल ऑफ फेम';
@@ -345,6 +357,21 @@ class AppLocalizationsHi extends AppLocalizations {
   String get nothingHere => 'यहां दिखाने के लिए\nकुछ नहीं है।';
 
   @override
+  String get notifications => 'Notifications';
+
+  @override
+  String get notifications2hours => '2 hours';
+
+  @override
+  String get notifications6hours => '6 hours';
+
+  @override
+  String get notifications12hours => '12 hours';
+
+  @override
+  String get notifications24hours => '24 hours';
+
+  @override
   String get numberOfLaps => 'लैप्स की संख्या';
 
   @override
@@ -451,6 +478,9 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get refreshChampionshipDataSub => 'नये सत्र से पहले चैम्पियनशिप डेटा को ताज़ा करें।';
+
+  @override
+  String get refreshInterval => 'Refresh interval';
 
   @override
   String get requestError => 'डेटा लाने में असफल।';

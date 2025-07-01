@@ -45,6 +45,9 @@ class AppLocalizationsSw extends AppLocalizations {
   String get articleFull => 'Kamili';
 
   @override
+  String get articleNotifications => 'New articles notifications';
+
+  @override
   String get articleTitleAndImage => 'Kichwa na Picha';
 
   @override
@@ -165,6 +168,9 @@ class AppLocalizationsSw extends AppLocalizations {
   String get editOrderDescription => 'Badilisha mpangilio kwa kubofya kipengee kwa muda mrefu.';
 
   @override
+  String get enableNotifications => 'Enable notifications';
+
+  @override
   String get errorOccurred => 'Hitilafu fulani imetokea';
 
   @override
@@ -232,6 +238,12 @@ class AppLocalizationsSw extends AppLocalizations {
 
   @override
   String get grandPrixMap => 'Ramani ya Grand Prix';
+
+  @override
+  String get grandPrixNotifications => 'Grand-Prix sessions notifications';
+
+  @override
+  String get grandPrixNotificationsSub => 'You need to go to the schedule screen in order to initialize notifications of the next Grand-Prix.';
 
   @override
   String get hallOfFame => 'Ukumbi wa Umaarufu';
@@ -345,6 +357,21 @@ class AppLocalizationsSw extends AppLocalizations {
   String get nothingHere => 'Hakuna cha kuonyesha\nhapa.';
 
   @override
+  String get notifications => 'Notifications';
+
+  @override
+  String get notifications2hours => '2 hours';
+
+  @override
+  String get notifications6hours => '6 hours';
+
+  @override
+  String get notifications12hours => '12 hours';
+
+  @override
+  String get notifications24hours => '24 hours';
+
+  @override
   String get numberOfLaps => 'Idadi ya Lapu';
 
   @override
@@ -451,6 +478,9 @@ class AppLocalizationsSw extends AppLocalizations {
 
   @override
   String get refreshChampionshipDataSub => 'Refresh championship data before a new season.';
+
+  @override
+  String get refreshInterval => 'Refresh interval';
 
   @override
   String get requestError => 'Hakuna uwezo wa kupata data';

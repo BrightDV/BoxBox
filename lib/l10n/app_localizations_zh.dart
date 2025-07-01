@@ -45,6 +45,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get articleFull => '全文';
 
   @override
+  String get articleNotifications => 'New articles notifications';
+
+  @override
   String get articleTitleAndImage => '标题与图片';
 
   @override
@@ -165,6 +168,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get editOrderDescription => '长按以改变顺序。';
 
   @override
+  String get enableNotifications => 'Enable notifications';
+
+  @override
   String get errorOccurred => '有问题';
 
   @override
@@ -232,6 +238,12 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get grandPrixMap => '赛道地图';
+
+  @override
+  String get grandPrixNotifications => 'Grand-Prix sessions notifications';
+
+  @override
+  String get grandPrixNotificationsSub => 'You need to go to the schedule screen in order to initialize notifications of the next Grand-Prix.';
 
   @override
   String get hallOfFame => '名人堂';
@@ -345,6 +357,21 @@ class AppLocalizationsZh extends AppLocalizations {
   String get nothingHere => '这里\n没有内容显示。';
 
   @override
+  String get notifications => 'Notifications';
+
+  @override
+  String get notifications2hours => '2 hours';
+
+  @override
+  String get notifications6hours => '6 hours';
+
+  @override
+  String get notifications12hours => '12 hours';
+
+  @override
+  String get notifications24hours => '24 hours';
+
+  @override
   String get numberOfLaps => '圈数';
 
   @override
@@ -451,6 +478,9 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get refreshChampionshipDataSub => '刷新新赛季之前的冠军头衔数据。';
+
+  @override
+  String get refreshInterval => 'Refresh interval';
 
   @override
   String get requestError => '无法获取数据。';

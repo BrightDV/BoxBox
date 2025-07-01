@@ -60,7 +60,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               onTap: () => context.pushNamed('player-settings'),
             ),
             ListTile(
-              title: Text('Notifications'),
+              title: Text(AppLocalizations.of(context)!.notifications),
               leading: Icon(Icons.notifications_outlined),
               onTap: () => context.pushNamed('notifications-settings'),
             ),

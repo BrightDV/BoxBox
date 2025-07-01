@@ -18,6 +18,7 @@
  */
 
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:boxbox/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:workmanager/workmanager.dart';
@@ -43,22 +44,22 @@ class _NotificationsSettingsScreenState
     int refreshInterval =
         Hive.box('settings').get('refreshInterval', defaultValue: 6) as int;
     Map durations = {
-      2: '2 hours',
-      6: '6 hours',
-      12: '12 hours',
-      24: '24 hours',
+      2: AppLocalizations.of(context)!.notifications2hours,
+      6: AppLocalizations.of(context)!.notifications6hours,
+      12: AppLocalizations.of(context)!.notifications12hours,
+      24: AppLocalizations.of(context)!.notifications24hours,
     };
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Notifications'),
+        title: Text(AppLocalizations.of(context)!.notifications),
         backgroundColor: Theme.of(context).colorScheme.onPrimary,
       ),
       body: Column(
         children: [
           SwitchListTile(
             title: Text(
-              'Enable notifications',
+              AppLocalizations.of(context)!.enableNotifications,
             ),
             value: notificationsEnabled,
             onChanged: (bool value) async {
@@ -87,7 +88,7 @@ class _NotificationsSettingsScreenState
           ),
           SwitchListTile(
             title: Text(
-              'Articles notifications',
+              AppLocalizations.of(context)!.articleNotifications,
             ),
             value: newsNotificationsEnabled,
             onChanged: notificationsEnabled
@@ -115,7 +116,7 @@ class _NotificationsSettingsScreenState
           ),
           ListTile(
             title: Text(
-              'Refresh interval',
+              AppLocalizations.of(context)!.refreshInterval,
               style: TextStyle(),
             ),
             enabled: notificationsEnabled && newsNotificationsEnabled,
@@ -157,10 +158,10 @@ class _NotificationsSettingsScreenState
           ),
           SwitchListTile(
             title: Text(
-              'Sessions notifications',
+              AppLocalizations.of(context)!.grandPrixNotifications,
             ),
             subtitle: Text(
-              'You need to go to the schedule screen in order to initialize notifications for the next Grand-Prix.',
+              AppLocalizations.of(context)!.grandPrixNotificationsSub,
             ),
             value: sessionNotificationsEnabled,
             onChanged: notificationsEnabled

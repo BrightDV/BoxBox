@@ -45,6 +45,9 @@ class AppLocalizationsHu extends AppLocalizations {
   String get articleFull => 'Teljes';
 
   @override
+  String get articleNotifications => 'New articles notifications';
+
+  @override
   String get articleTitleAndImage => 'Cím és kép';
 
   @override
@@ -165,6 +168,9 @@ class AppLocalizationsHu extends AppLocalizations {
   String get editOrderDescription => 'Sorrend megváltoztatása egy elem hosszas megnyomásával.';
 
   @override
+  String get enableNotifications => 'Enable notifications';
+
+  @override
   String get errorOccurred => 'Hiba történt';
 
   @override
@@ -232,6 +238,12 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get grandPrixMap => 'Nagydíj térkép';
+
+  @override
+  String get grandPrixNotifications => 'Grand-Prix sessions notifications';
+
+  @override
+  String get grandPrixNotificationsSub => 'You need to go to the schedule screen in order to initialize notifications of the next Grand-Prix.';
 
   @override
   String get hallOfFame => 'Hírességek csarnoka';
@@ -345,6 +357,21 @@ class AppLocalizationsHu extends AppLocalizations {
   String get nothingHere => 'Itt nincs \nsemmi.';
 
   @override
+  String get notifications => 'Notifications';
+
+  @override
+  String get notifications2hours => '2 hours';
+
+  @override
+  String get notifications6hours => '6 hours';
+
+  @override
+  String get notifications12hours => '12 hours';
+
+  @override
+  String get notifications24hours => '24 hours';
+
+  @override
   String get numberOfLaps => 'Körök száma';
 
   @override
@@ -451,6 +478,9 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get refreshChampionshipDataSub => 'Refresh championship data before a new season.';
+
+  @override
+  String get refreshInterval => 'Refresh interval';
 
   @override
   String get requestError => 'Nem sikerült az adatok lekérése.';

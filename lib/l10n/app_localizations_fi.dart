@@ -45,6 +45,9 @@ class AppLocalizationsFi extends AppLocalizations {
   String get articleFull => 'Täynnä';
 
   @override
+  String get articleNotifications => 'New articles notifications';
+
+  @override
   String get articleTitleAndImage => 'Otsikko ja kuva';
 
   @override
@@ -165,6 +168,9 @@ class AppLocalizationsFi extends AppLocalizations {
   String get editOrderDescription => 'Muuta järjestystä painamalla kohdetta pitkään.';
 
   @override
+  String get enableNotifications => 'Enable notifications';
+
+  @override
   String get errorOccurred => 'Jokin meni pieleen';
 
   @override
@@ -232,6 +238,12 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get grandPrixMap => 'Grand Prix -kartta';
+
+  @override
+  String get grandPrixNotifications => 'Grand-Prix sessions notifications';
+
+  @override
+  String get grandPrixNotificationsSub => 'You need to go to the schedule screen in order to initialize notifications of the next Grand-Prix.';
 
   @override
   String get hallOfFame => 'Kunniagalleria';
@@ -345,6 +357,21 @@ class AppLocalizationsFi extends AppLocalizations {
   String get nothingHere => 'Täällä ei ole mitään\nnähtävää.';
 
   @override
+  String get notifications => 'Notifications';
+
+  @override
+  String get notifications2hours => '2 hours';
+
+  @override
+  String get notifications6hours => '6 hours';
+
+  @override
+  String get notifications12hours => '12 hours';
+
+  @override
+  String get notifications24hours => '24 hours';
+
+  @override
   String get numberOfLaps => 'Kierrosmäärä';
 
   @override
@@ -451,6 +478,9 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get refreshChampionshipDataSub => 'Päivitä mestaruustiedot ennen uutta kautta.';
+
+  @override
+  String get refreshInterval => 'Refresh interval';
 
   @override
   String get requestError => 'Tietoja ei voitu noutaa.';

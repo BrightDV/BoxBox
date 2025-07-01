@@ -45,6 +45,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get articleFull => 'Tam';
 
   @override
+  String get articleNotifications => 'New articles notifications';
+
+  @override
   String get articleTitleAndImage => 'Başlık ve Resim';
 
   @override
@@ -165,6 +168,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get editOrderDescription => 'Bir öğeye uzun basarak sırayı değiştirin.';
 
   @override
+  String get enableNotifications => 'Enable notifications';
+
+  @override
   String get errorOccurred => 'Bir şeyler ters gitti';
 
   @override
@@ -232,6 +238,12 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get grandPrixMap => 'Grand Prix Haritası';
+
+  @override
+  String get grandPrixNotifications => 'Grand-Prix sessions notifications';
+
+  @override
+  String get grandPrixNotificationsSub => 'You need to go to the schedule screen in order to initialize notifications of the next Grand-Prix.';
 
   @override
   String get hallOfFame => 'Şöhretler Salonu';
@@ -345,6 +357,21 @@ class AppLocalizationsTr extends AppLocalizations {
   String get nothingHere => 'Burada gösterilecek\nbir şey yok.';
 
   @override
+  String get notifications => 'Notifications';
+
+  @override
+  String get notifications2hours => '2 hours';
+
+  @override
+  String get notifications6hours => '6 hours';
+
+  @override
+  String get notifications12hours => '12 hours';
+
+  @override
+  String get notifications24hours => '24 hours';
+
+  @override
   String get numberOfLaps => 'Tur Sayısı';
 
   @override
@@ -451,6 +478,9 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get refreshChampionshipDataSub => 'Yeni sezondan önce şampiyonluk verilerini yenile.';
+
+  @override
+  String get refreshInterval => 'Refresh interval';
 
   @override
   String get requestError => 'Veri alınamadı.';

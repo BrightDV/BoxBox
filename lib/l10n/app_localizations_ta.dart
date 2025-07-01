@@ -45,6 +45,9 @@ class AppLocalizationsTa extends AppLocalizations {
   String get articleFull => 'முழு';
 
   @override
+  String get articleNotifications => 'New articles notifications';
+
+  @override
   String get articleTitleAndImage => 'தலைப்பு மற்றும் படம்';
 
   @override
@@ -165,6 +168,9 @@ class AppLocalizationsTa extends AppLocalizations {
   String get editOrderDescription => 'ஒரு பொருளை நீண்ட நேரம் அழுத்துவதன் மூலம் வரிசையை மாற்றவும்.';
 
   @override
+  String get enableNotifications => 'Enable notifications';
+
+  @override
   String get errorOccurred => 'ஏதோ தவறு நடந்தது';
 
   @override
@@ -232,6 +238,12 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String get grandPrixMap => 'கிராண்ட் பிரிக்ச் வரைபடம்';
+
+  @override
+  String get grandPrixNotifications => 'Grand-Prix sessions notifications';
+
+  @override
+  String get grandPrixNotificationsSub => 'You need to go to the schedule screen in order to initialize notifications of the next Grand-Prix.';
 
   @override
   String get hallOfFame => 'ஆல் ஆஃப் ஃபேம்';
@@ -345,6 +357,21 @@ class AppLocalizationsTa extends AppLocalizations {
   String get nothingHere => 'காட்ட எதுவும் இல்லை\n இங்கே.';
 
   @override
+  String get notifications => 'Notifications';
+
+  @override
+  String get notifications2hours => '2 hours';
+
+  @override
+  String get notifications6hours => '6 hours';
+
+  @override
+  String get notifications12hours => '12 hours';
+
+  @override
+  String get notifications24hours => '24 hours';
+
+  @override
   String get numberOfLaps => 'மடியில் எண்ணிக்கை';
 
   @override
@@ -451,6 +478,9 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String get refreshChampionshipDataSub => 'புதிய பருவத்திற்கு முன் சாம்பியன்சிப் தரவைப் புதுப்பிக்கவும்.';
+
+  @override
+  String get refreshInterval => 'Refresh interval';
 
   @override
   String get requestError => 'தரவைப் பெற முடியவில்லை.';

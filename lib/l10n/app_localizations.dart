@@ -209,6 +209,12 @@ abstract class AppLocalizations {
   /// **'Full'**
   String get articleFull;
 
+  /// No description provided for @articleNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'New articles notifications'**
+  String get articleNotifications;
+
   /// No description provided for @articleTitleAndImage.
   ///
   /// In en, this message translates to:
@@ -449,6 +455,12 @@ abstract class AppLocalizations {
   /// **'Change order by long-pressing an item.'**
   String get editOrderDescription;
 
+  /// No description provided for @enableNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable notifications'**
+  String get enableNotifications;
+
   /// No description provided for @errorOccurred.
   ///
   /// In en, this message translates to:
@@ -586,6 +598,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Grand Prix Map'**
   String get grandPrixMap;
+
+  /// No description provided for @grandPrixNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Grand-Prix sessions notifications'**
+  String get grandPrixNotifications;
+
+  /// No description provided for @grandPrixNotificationsSub.
+  ///
+  /// In en, this message translates to:
+  /// **'You need to go to the schedule screen in order to initialize notifications of the next Grand-Prix.'**
+  String get grandPrixNotificationsSub;
 
   /// No description provided for @hallOfFame.
   ///
@@ -809,6 +833,36 @@ abstract class AppLocalizations {
   /// **'Nothing to show\nhere.'**
   String get nothingHere;
 
+  /// No description provided for @notifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get notifications;
+
+  /// No description provided for @notifications2hours.
+  ///
+  /// In en, this message translates to:
+  /// **'2 hours'**
+  String get notifications2hours;
+
+  /// No description provided for @notifications6hours.
+  ///
+  /// In en, this message translates to:
+  /// **'6 hours'**
+  String get notifications6hours;
+
+  /// No description provided for @notifications12hours.
+  ///
+  /// In en, this message translates to:
+  /// **'12 hours'**
+  String get notifications12hours;
+
+  /// No description provided for @notifications24hours.
+  ///
+  /// In en, this message translates to:
+  /// **'24 hours'**
+  String get notifications24hours;
+
   /// No description provided for @numberOfLaps.
   ///
   /// In en, this message translates to:
@@ -1024,6 +1078,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Refresh championship data before a new season.'**
   String get refreshChampionshipDataSub;
+
+  /// No description provided for @refreshInterval.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh interval'**
+  String get refreshInterval;
 
   /// No description provided for @requestError.
   ///

@@ -45,6 +45,9 @@ class AppLocalizationsNb extends AppLocalizations {
   String get articleFull => 'Fullstendig';
 
   @override
+  String get articleNotifications => 'New articles notifications';
+
+  @override
   String get articleTitleAndImage => 'Navn og bilde';
 
   @override
@@ -165,6 +168,9 @@ class AppLocalizationsNb extends AppLocalizations {
   String get editOrderDescription => 'Endre rekkefølgen ved å trykke lenge på et element.';
 
   @override
+  String get enableNotifications => 'Enable notifications';
+
+  @override
   String get errorOccurred => 'Noe gikk galt';
 
   @override
@@ -232,6 +238,12 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get grandPrixMap => 'Enkeltløp-kart';
+
+  @override
+  String get grandPrixNotifications => 'Grand-Prix sessions notifications';
+
+  @override
+  String get grandPrixNotificationsSub => 'You need to go to the schedule screen in order to initialize notifications of the next Grand-Prix.';
 
   @override
   String get hallOfFame => 'Æresgalleri';
@@ -345,6 +357,21 @@ class AppLocalizationsNb extends AppLocalizations {
   String get nothingHere => 'Ingenting å vise\nher.';
 
   @override
+  String get notifications => 'Notifications';
+
+  @override
+  String get notifications2hours => '2 hours';
+
+  @override
+  String get notifications6hours => '6 hours';
+
+  @override
+  String get notifications12hours => '12 hours';
+
+  @override
+  String get notifications24hours => '24 hours';
+
+  @override
   String get numberOfLaps => 'Antall runder';
 
   @override
@@ -451,6 +478,9 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get refreshChampionshipDataSub => 'Refresh championship data before a new season.';
+
+  @override
+  String get refreshInterval => 'Refresh interval';
 
   @override
   String get requestError => 'Kunne ikke hente data.';
