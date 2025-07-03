@@ -18,6 +18,7 @@
  */
 
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:boxbox/config/notifications.dart';
 import 'package:boxbox/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -70,10 +71,12 @@ class _NotificationsSettingsScreenState
                   bool isAllowedAfterRequest = await AwesomeNotifications()
                       .requestPermissionToSendNotifications();
                   if (isAllowedAfterRequest) {
+                    await Notifications().initializeNotifications();
                     notificationsEnabled = value;
                     Hive.box('settings').put('notificationsEnabled', value);
                   }
                 } else {
+                  await Notifications().initializeNotifications();
                   notificationsEnabled = value;
                   Hive.box('settings').put('notificationsEnabled', value);
                 }
@@ -94,12 +97,14 @@ class _NotificationsSettingsScreenState
             onChanged: notificationsEnabled
                 ? (bool value) async {
                     if (value) {
+                      int refreshInterval = Hive.box('settings')
+                          .get('refreshInterval', defaultValue: 6) as int;
                       await Workmanager().registerPeriodicTask(
                         'newsLoader',
                         "Load news in background",
                         existingWorkPolicy: ExistingWorkPolicy.replace,
-                        frequency: const Duration(seconds: 30),
-                        initialDelay: const Duration(hours: 2),
+                        frequency: Duration(hours: refreshInterval),
+                        initialDelay: Duration(hours: refreshInterval),
                       );
                     } else {
                       Workmanager().cancelAll();

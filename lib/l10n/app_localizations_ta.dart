@@ -15,7 +15,7 @@ class AppLocalizationsTa extends AppLocalizations {
   String get aboutDescription => 'பெட்டி, பெட்டி! gplv3+இன் கீழ் உரிமம் பெற்ற நகல் லிப்ரே மென்பொருள். விளம்பரங்கள் அல்லது டிராக்கர்கள் இல்லாமல் ஃபார்முலா 1 மற்றும் ஃபார்முலா ஈ ஆகியவற்றைப் பின்பற்ற பயனர்களை அனுமதிப்பதே இதன் நோக்கம்.';
 
   @override
-  String get aboutBottomLine => '❤ ❤ by by by by.';
+  String get aboutBottomLine => '❤ உடன் ஒளிமிக்கடிவி.';
 
   @override
   String get addCustomFeed => 'தனிப்பயன் ஊட்டத்தைச் சேர்க்கவும்';
@@ -33,7 +33,7 @@ class AppLocalizationsTa extends AppLocalizations {
   String get alreadyDownloading => 'ஏற்கனவே பதிவிறக்குகிறது';
 
   @override
-  String get apiKey => 'API Key';
+  String get apiKey => 'பநிஇ விசை';
 
   @override
   String get appearance => 'தோற்றம்';
@@ -225,7 +225,7 @@ class AppLocalizationsTa extends AppLocalizations {
   String get fontDescription => 'கட்டுரைகளில் பயன்படுத்தப்படும் எழுத்துரு.';
 
   @override
-  String get fullScreenGestures => 'Enter/exit fullscreen gestures';
+  String get fullScreenGestures => 'முழுத்திரை சைகைகளை உள்ளிடவும்/வெளியேறவும்';
 
   @override
   String get gallery => 'கேலரி';
@@ -381,10 +381,10 @@ class AppLocalizationsTa extends AppLocalizations {
   String get offline => 'இணைப்பில்லாத. தரவு புதுப்பித்த நிலையில் இருக்காது.';
 
   @override
-  String get offtrack => 'You went off-track!';
+  String get offtrack => 'நீங்கள் பாதையை விட்டுச் சென்றீர்கள்!';
 
   @override
-  String get offtrackSub => 'Back on track';
+  String get offtrackSub => 'மீண்டும் பாதையில்';
 
   @override
   String get openInBrowser => 'வலை உலாவியில் திறக்கவும்';
@@ -465,10 +465,10 @@ class AppLocalizationsTa extends AppLocalizations {
   String get raceFirstLetter => 'R';
 
   @override
-  String get raceStartsIn => 'இனம் தொடங்குகிறது:';
+  String get raceStartsIn => 'போட்டி தொடங்குகிறது:';
 
   @override
-  String get raceStartsOn => 'இனம் தொடங்குகிறது:';
+  String get raceStartsOn => 'அன்று போட்டி தொடங்குகிறது:';
 
   @override
   String get refresh => 'புதுப்பிப்பு';
@@ -516,10 +516,10 @@ class AppLocalizationsTa extends AppLocalizations {
   String get sessionRunning => 'அமர்வு இயங்கும்';
 
   @override
-  String get sessionStartsIn => 'அமர்வு தொடங்குகிறது:';
+  String get sessionStartsIn => 'இல் அமர்வு தொடங்குகிறது:';
 
   @override
-  String get sessionStartsOn => 'அமர்வு தொடங்குகிறது:';
+  String get sessionStartsOn => 'அன்று அமர்வு தொடங்குகிறது:';
 
   @override
   String get settings => 'அமைப்புகள்';
@@ -585,10 +585,10 @@ class AppLocalizationsTa extends AppLocalizations {
   String get unavailableOffline => 'ஆஃப்லைனில் கிடைக்கவில்லை';
 
   @override
-  String get updateApiKey => 'Update API Key';
+  String get updateApiKey => 'பநிஇ விசையைப் புதுப்பி';
 
   @override
-  String get updateApiKeySub => 'Update the API key of the official website.\nUpdate this only if you now what you are doing.';
+  String get updateApiKeySub => 'அதிகாரப்பூர்வ வலைத்தளத்தின் API விசையைப் புதுப்பி.\nநீங்கள் இப்போது என்ன செய்கிறீர்கள் என்றால் மட்டுமே இதைப் புதுப்பி.';
 
   @override
   String get updates => 'புதிய பதிப்புகள்';
@@ -600,13 +600,13 @@ class AppLocalizationsTa extends AppLocalizations {
   String get useOfficialDataSourceSub => 'அதிகாரப்பூர்வ மொபைல் பயன்பாட்டின் தரவு மூலத்தைப் பயன்படுத்தவும். இது விரைவான முடிவுகளைத் தருகிறது, ஆனால் எல்லா விவரங்களும் கிடைக்கவில்லை. மேலும் விவரங்களுக்கு நீண்ட அழுத்தம்.';
 
   @override
-  String get useOfficialWebview => 'நேரடி அமர்வுகளுக்கு அதிகாரப்பூர்வ வெப்வியூவைப் பயன்படுத்தவும்';
+  String get useOfficialWebview => 'ஃ1-டேசு.காம் க்கு பதிலாக நேரடி அமர்வுகளுக்கு அதிகாரப்பூர்வ வெப்வியூவைப் பயன்படுத்தவும்';
 
   @override
-  String get victory => 'செய்';
+  String get victory => 'வெற்றி';
 
   @override
-  String get victories => 'செய்';
+  String get victories => 'வெற்றிகள்';
 
   @override
   String get videos => 'வீடியோக்கள்';
@@ -624,7 +624,7 @@ class AppLocalizationsTa extends AppLocalizations {
   String get watchHighlightsOnYoutube => 'YouTube இல் சிறப்பம்சங்களைப் பாருங்கள்';
 
   @override
-  String get watchOnYouTube => 'Watch on YouTube';
+  String get watchOnYouTube => 'வலைகுழாயில் பாருங்கள்';
 
   @override
   String get worldChampionships => 'உலக சாம்பியன்சிப்புகள்';
