@@ -185,6 +185,12 @@ abstract class AppLocalizations {
   /// **'Already downloading'**
   String get alreadyDownloading;
 
+  /// No description provided for @anyNetwork.
+  ///
+  /// In en, this message translates to:
+  /// **'Any network'**
+  String get anyNetwork;
+
   /// No description provided for @apiKey.
   ///
   /// In en, this message translates to:
@@ -1091,6 +1097,12 @@ abstract class AppLocalizations {
   /// **'Could not fetch data.'**
   String get requestError;
 
+  /// No description provided for @requiredNetworkConnection.
+  ///
+  /// In en, this message translates to:
+  /// **'Required network connection'**
+  String get requiredNetworkConnection;
+
   /// No description provided for @results.
   ///
   /// In en, this message translates to:
@@ -1372,6 +1384,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Watch on YouTube'**
   String get watchOnYouTube;
+
+  /// No description provided for @wifi.
+  ///
+  /// In en, this message translates to:
+  /// **'Wi-Fi'**
+  String get wifi;
 
   /// No description provided for @worldChampionships.
   ///

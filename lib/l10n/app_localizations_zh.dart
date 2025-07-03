@@ -33,6 +33,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get alreadyDownloading => '正在下载中';
 
   @override
+  String get anyNetwork => 'Any network';
+
+  @override
   String get apiKey => 'API密钥';
 
   @override
@@ -486,6 +489,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get requestError => '无法获取数据。';
 
   @override
+  String get requiredNetworkConnection => 'Required network connection';
+
+  @override
   String get results => '赛季成绩';
 
   @override
@@ -625,6 +631,9 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get watchOnYouTube => '油管上观看';
+
+  @override
+  String get wifi => 'Wi-Fi';
 
   @override
   String get worldChampionships => '世界冠军';

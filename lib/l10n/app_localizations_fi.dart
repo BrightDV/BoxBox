@@ -33,6 +33,9 @@ class AppLocalizationsFi extends AppLocalizations {
   String get alreadyDownloading => 'Ladataan jo';
 
   @override
+  String get anyNetwork => 'Any network';
+
+  @override
   String get apiKey => 'API-avain';
 
   @override
@@ -486,6 +489,9 @@ class AppLocalizationsFi extends AppLocalizations {
   String get requestError => 'Tietoja ei voitu noutaa.';
 
   @override
+  String get requiredNetworkConnection => 'Required network connection';
+
+  @override
   String get results => 'Tulokset';
 
   @override
@@ -625,6 +631,9 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get watchOnYouTube => 'Katso YouTubessa';
+
+  @override
+  String get wifi => 'Wi-Fi';
 
   @override
   String get worldChampionships => 'Maailmanmestaruuskilpailut';

@@ -44,11 +44,18 @@ class _NotificationsSettingsScreenState
         .get('newsNotificationsEnabled', defaultValue: false) as bool;
     int refreshInterval =
         Hive.box('settings').get('refreshInterval', defaultValue: 6) as int;
+    String networkConnectionType = Hive.box('settings')
+        .get('networkConnectionType', defaultValue: 'Wi-Fi') as String;
+
     Map durations = {
       2: AppLocalizations.of(context)!.notifications2hours,
       6: AppLocalizations.of(context)!.notifications6hours,
       12: AppLocalizations.of(context)!.notifications12hours,
       24: AppLocalizations.of(context)!.notifications24hours,
+    };
+    Map connections = {
+      'Wi-Fi': AppLocalizations.of(context)!.wifi,
+      'Any': AppLocalizations.of(context)!.anyNetwork,
     };
 
     return Scaffold(
@@ -97,15 +104,7 @@ class _NotificationsSettingsScreenState
             onChanged: notificationsEnabled
                 ? (bool value) async {
                     if (value) {
-                      int refreshInterval = Hive.box('settings')
-                          .get('refreshInterval', defaultValue: 6) as int;
-                      await Workmanager().registerPeriodicTask(
-                        'newsLoader',
-                        "Load news in background",
-                        existingWorkPolicy: ExistingWorkPolicy.replace,
-                        frequency: Duration(hours: refreshInterval),
-                        initialDelay: Duration(hours: refreshInterval),
-                      );
+                      await Notifications().registerPeriodicTask();
                     } else {
                       Workmanager().cancelAll();
                     }
@@ -121,11 +120,46 @@ class _NotificationsSettingsScreenState
           ),
           ListTile(
             title: Text(
-              AppLocalizations.of(context)!.refreshInterval,
-              style: TextStyle(),
+              AppLocalizations.of(context)!.requiredNetworkConnection,
             ),
             enabled: notificationsEnabled && newsNotificationsEnabled,
-            //onTap: () {},
+            trailing: DropdownButton(
+              value: networkConnectionType,
+              onChanged: notificationsEnabled && newsNotificationsEnabled
+                  ? (String? newValue) async {
+                      if (newValue != null) {
+                        networkConnectionType = newValue;
+                        Hive.box('settings')
+                            .put('networkConnectionType', newValue);
+                        await Notifications().registerPeriodicTask();
+
+                        setState(() {});
+                      }
+                    }
+                  : null,
+              items: <String>[
+                'Wi-Fi',
+                'Any',
+              ].map<DropdownMenuItem<String>>(
+                (String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(
+                      connections[value],
+                      style: TextStyle(
+                        fontSize: 12,
+                      ),
+                    ),
+                  );
+                },
+              ).toList(),
+            ),
+          ),
+          ListTile(
+            title: Text(
+              AppLocalizations.of(context)!.refreshInterval,
+            ),
+            enabled: notificationsEnabled && newsNotificationsEnabled,
             trailing: DropdownButton(
               value: refreshInterval,
               onChanged: notificationsEnabled && newsNotificationsEnabled

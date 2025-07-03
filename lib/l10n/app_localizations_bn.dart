@@ -33,6 +33,9 @@ class AppLocalizationsBn extends AppLocalizations {
   String get alreadyDownloading => 'ইতিমধ্যেই ডাউনলোড হচ্ছে';
 
   @override
+  String get anyNetwork => 'Any network';
+
+  @override
   String get apiKey => 'API Key';
 
   @override
@@ -486,6 +489,9 @@ class AppLocalizationsBn extends AppLocalizations {
   String get requestError => 'ডেটা আনা যায়নি।';
 
   @override
+  String get requiredNetworkConnection => 'Required network connection';
+
+  @override
   String get results => 'ফলাফল';
 
   @override
@@ -625,6 +631,9 @@ class AppLocalizationsBn extends AppLocalizations {
 
   @override
   String get watchOnYouTube => 'Watch on YouTube';
+
+  @override
+  String get wifi => 'Wi-Fi';
 
   @override
   String get worldChampionships => 'বিশ্ব চ্যাম্পিয়নশিপ';

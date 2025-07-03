@@ -33,6 +33,9 @@ class AppLocalizationsNl extends AppLocalizations {
   String get alreadyDownloading => 'Wordt al gedownload';
 
   @override
+  String get anyNetwork => 'Any network';
+
+  @override
   String get apiKey => 'API Key';
 
   @override
@@ -486,6 +489,9 @@ class AppLocalizationsNl extends AppLocalizations {
   String get requestError => 'Kon geen gegevens ophalen.';
 
   @override
+  String get requiredNetworkConnection => 'Required network connection';
+
+  @override
   String get results => 'Resultaten';
 
   @override
@@ -625,6 +631,9 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get watchOnYouTube => 'Watch on YouTube';
+
+  @override
+  String get wifi => 'Wi-Fi';
 
   @override
   String get worldChampionships => 'Wereldkampioenschappen';

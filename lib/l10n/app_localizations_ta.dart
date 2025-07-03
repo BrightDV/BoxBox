@@ -33,6 +33,9 @@ class AppLocalizationsTa extends AppLocalizations {
   String get alreadyDownloading => 'ஏற்கனவே பதிவிறக்குகிறது';
 
   @override
+  String get anyNetwork => 'Any network';
+
+  @override
   String get apiKey => 'பநிஇ விசை';
 
   @override
@@ -486,6 +489,9 @@ class AppLocalizationsTa extends AppLocalizations {
   String get requestError => 'தரவைப் பெற முடியவில்லை.';
 
   @override
+  String get requiredNetworkConnection => 'Required network connection';
+
+  @override
   String get results => 'முடிவுகள்';
 
   @override
@@ -625,6 +631,9 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String get watchOnYouTube => 'வலைகுழாயில் பாருங்கள்';
+
+  @override
+  String get wifi => 'Wi-Fi';
 
   @override
   String get worldChampionships => 'உலக சாம்பியன்சிப்புகள்';

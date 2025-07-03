@@ -23,13 +23,34 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:workmanager/workmanager.dart';
 
 class Notifications {
+  Constraints getConstraints() {
+    String networkConnectionType = Hive.box('settings')
+        .get('networkConnectionType', defaultValue: 'Wi-Fi') as String;
+    if (networkConnectionType == 'Wi-Fi') {
+      return Constraints(networkType: NetworkType.unmetered);
+    } else {
+      return Constraints(networkType: NetworkType.connected);
+    }
+  }
+
+  Future<void> registerPeriodicTask() async {
+    int refreshInterval =
+        Hive.box('settings').get('refreshInterval', defaultValue: 6) as int;
+    await Workmanager().registerPeriodicTask(
+      'newsLoader',
+      "Load news in background",
+      existingWorkPolicy: ExistingWorkPolicy.replace,
+      frequency: Duration(hours: refreshInterval),
+      initialDelay: Duration(hours: refreshInterval),
+      constraints: Notifications().getConstraints(),
+    );
+  }
+
   Future<void> initializeNotifications() async {
     bool notificationsEnabled = Hive.box('settings')
         .get('notificationsEnabled', defaultValue: false) as bool;
     bool newsNotificationsEnabled = Hive.box('settings')
         .get('newsNotificationsEnabled', defaultValue: false) as bool;
-    int refreshInterval =
-        Hive.box('settings').get('refreshInterval', defaultValue: 6) as int;
 
     if (notificationsEnabled) {
       await AwesomeNotifications().initialize(
@@ -58,13 +79,7 @@ class Notifications {
       await Workmanager().initialize(
         callbackDispatcher,
       );
-      await Workmanager().registerPeriodicTask(
-        'newsLoader',
-        "Load news in background",
-        existingWorkPolicy: ExistingWorkPolicy.replace,
-        frequency: Duration(hours: refreshInterval),
-        initialDelay: Duration(hours: refreshInterval),
-      );
+      await registerPeriodicTask();
     }
   }
 

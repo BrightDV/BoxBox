@@ -33,6 +33,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get alreadyDownloading => 'Already downloading';
 
   @override
+  String get anyNetwork => 'Any network';
+
+  @override
   String get apiKey => 'API Key';
 
   @override
@@ -486,6 +489,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get requestError => 'تعذر جلب البيانات.';
 
   @override
+  String get requiredNetworkConnection => 'Required network connection';
+
+  @override
   String get results => 'نتائج';
 
   @override
@@ -625,6 +631,9 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get watchOnYouTube => 'Watch on YouTube';
+
+  @override
+  String get wifi => 'Wi-Fi';
 
   @override
   String get worldChampionships => 'بطولات العالم';
