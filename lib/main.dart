@@ -182,17 +182,21 @@ class NotificationController {
   @pragma("vm:entry-point")
   static Future<void> onActionReceivedMethod(
       ReceivedAction receivedAction) async {
-    RouterLocalConfig.router.pushNamed(
-      'article',
-      pathParameters: receivedAction.payload?['title'] != null
-          ? {
-              'id': receivedAction.payload?['id'] ?? '',
-              'articleName': receivedAction.payload!['title']!,
-            }
-          : {
-              'id': receivedAction.payload?['id'] ?? '',
-            },
-    );
+    if ((receivedAction.channelKey ?? '') == 'newArticle') {
+      RouterLocalConfig.router.pushNamed(
+        'article',
+        pathParameters: receivedAction.payload?['title'] != null
+            ? {
+                'id': receivedAction.payload?['id'] ?? '',
+                'articleName': receivedAction.payload!['title']!,
+              }
+            : {
+                'id': receivedAction.payload?['id'] ?? '',
+              },
+      );
+    } else {
+      RouterLocalConfig.router.pushNamed('race-hub');
+    }
   }
 }
 

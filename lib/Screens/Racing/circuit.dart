@@ -256,13 +256,20 @@ class CircuitScreenContent extends StatelessWidget {
                         Session(
                           session['state'],
                           session['session'],
-                          DateTime.parse(session['endTime']),
-                          DateTime.parse(session['startTime']),
+                          DateTime.parse(
+                                  session['endTime'] + session['gmtOffset'])
+                              .toLocal(),
+                          DateTime.parse(
+                                  session['startTime'] + session['gmtOffset'])
+                              .toLocal(),
                           null,
-                          DateTime.now().isBefore(
-                                  DateTime.parse(session['endTime'])) &&
-                              DateTime.now().isAfter(
-                                  DateTime.parse(session['startTime'])),
+                          DateTime.now().isBefore(DateTime.parse(
+                                      session['endTime'] + session['gmtOffset'])
+                                  .toLocal()) &&
+                              DateTime.now().isAfter(DateTime.parse(
+                                      session['startTime'] +
+                                          session['gmtOffset'])
+                                  .toLocal()),
                         ),
                         details['race']['meetingCountryName'],
                         details['race']['meetingOfficialName'],
