@@ -18,7 +18,7 @@
  */
 
 import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:boxbox/api/formula1.dart';
+import 'package:boxbox/main.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:workmanager/workmanager.dart';
 
@@ -36,6 +36,10 @@ class Notifications {
   Future<void> registerPeriodicTask() async {
     int refreshInterval =
         Hive.box('settings').get('refreshInterval', defaultValue: 6) as int;
+
+    await Workmanager().initialize(
+      callbackDispatcher,
+    );
     await Workmanager().registerPeriodicTask(
       'newsLoader',
       "Load news in background",
@@ -76,9 +80,6 @@ class Notifications {
     }
 
     if (notificationsEnabled && newsNotificationsEnabled) {
-      await Workmanager().initialize(
-        callbackDispatcher,
-      );
       await registerPeriodicTask();
     }
   }
@@ -112,44 +113,6 @@ class Notifications {
           'title': article['title'],
         },
       ),
-    );
-  }
-
-  @pragma('vm:entry-point')
-  void callbackDispatcher() {
-    Workmanager().executeTask(
-      (task, inputData) async {
-        await Hive.initFlutter();
-        Box hiveBox = await Hive.openBox("requests");
-        Box settingsBox = await Hive.openBox("settings");
-        Map cachedNews = hiveBox.get('news', defaultValue: {}) as Map;
-        bool useDataSaverMode =
-            settingsBox.get('useDataSaverMode', defaultValue: false) as bool;
-        try {
-          Map fetchedData = await Formula1().getRawNews(0);
-          if (cachedNews.isNotEmpty &&
-              fetchedData['items'][0]['id'] != cachedNews['items'][0]['id']) {
-            bool hasBreaking = false;
-            for (var article in fetchedData['items']) {
-              if (article['id'] == cachedNews['items'][0]['id']) {
-                break;
-              } else if (article['breaking'] != null && article['breaking']) {
-                showArticleNotification(article, useDataSaverMode);
-                hasBreaking = true;
-              }
-            }
-            if (!hasBreaking) {
-              showArticleNotification(
-                  fetchedData['items'][0], useDataSaverMode);
-            }
-
-            hiveBox.put('news', fetchedData);
-          }
-          return Future.value(true);
-        } catch (error, _) {
-          return Future.value(false);
-        }
-      },
     );
   }
 }

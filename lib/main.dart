@@ -23,6 +23,7 @@ import 'dart:async';
 
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:background_downloader/background_downloader.dart';
+import 'package:boxbox/api/formula1.dart';
 import 'package:boxbox/config/notifications.dart';
 import 'package:boxbox/config/router.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
@@ -36,6 +37,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:timeago/timeago.dart' as timeago;
+import 'package:workmanager/workmanager.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -56,6 +58,45 @@ void main() async {
   GoRouter.optionURLReflectsImperativeAPIs = true;
 
   runApp(const MyApp());
+}
+
+@pragma('vm:entry-point')
+void callbackDispatcher() {
+  Workmanager().executeTask(
+    (task, inputData) async {
+      await Hive.initFlutter();
+      Box hiveBox = await Hive.openBox("requests");
+      Box settingsBox = await Hive.openBox("settings");
+      Map cachedNews = hiveBox.get('news', defaultValue: {}) as Map;
+      bool useDataSaverMode =
+          settingsBox.get('useDataSaverMode', defaultValue: false) as bool;
+      try {
+        Map fetchedData = await Formula1().getRawNews(0);
+        if (cachedNews.isNotEmpty &&
+            fetchedData['items'][0]['id'] != cachedNews['items'][0]['id']) {
+          bool hasBreaking = false;
+          for (var article in fetchedData['items']) {
+            if (article['id'] == cachedNews['items'][0]['id']) {
+              break;
+            } else if (article['breaking'] != null && article['breaking']) {
+              Notifications()
+                  .showArticleNotification(article, useDataSaverMode);
+              hasBreaking = true;
+            }
+          }
+          if (!hasBreaking) {
+            Notifications().showArticleNotification(
+                fetchedData['items'][0], useDataSaverMode);
+          }
+
+          hiveBox.put('news', fetchedData);
+        }
+        return Future.value(true);
+      } catch (error, _) {
+        return Future.value(false);
+      }
+    },
+  );
 }
 
 void setTimeagoLocaleMessages() {

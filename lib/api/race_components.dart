@@ -344,25 +344,29 @@ class RacesList extends StatelessWidget {
             Duration(minutes: 5),
           );
 
-      await AwesomeNotifications().createNotification(
-        content: NotificationContent(
-          id: createUniqueId(),
-          channelKey: 'eventTracker',
-          title: race['race']['meetingName'],
-          body: "Be ready! ${session['description']} is starting soon!",
-          payload: {'meetingId': meetingId, 'session': session['session']},
-        ),
-        schedule: NotificationCalendar(
-          allowWhileIdle: true,
-          repeats: false,
-          millisecond: 0,
-          second: sessionDate.second,
-          minute: sessionDate.minute,
-          hour: sessionDate.hour,
-          day: sessionDate.day,
-          month: sessionDate.month,
-        ),
-      );
+      if (sessionDate.isAfter(DateTime.now())) {
+        await AwesomeNotifications().createNotification(
+          content: NotificationContent(
+            id: createUniqueId(),
+            channelKey: 'eventTracker',
+            title: race['race']['meetingName'],
+            body: "Be ready! ${session['description']} is starting soon!",
+            payload: {'meetingId': meetingId, 'session': session['session']},
+          ),
+          schedule: NotificationCalendar(
+            allowWhileIdle: true,
+            repeats: false,
+            millisecond: 0,
+            preciseAlarm: true,
+            second: sessionDate.second,
+            minute: sessionDate.minute,
+            hour: sessionDate.hour,
+            day: sessionDate.day,
+            month: sessionDate.month,
+            timeZone: 'GMT${session['gmtOffset']}',
+          ),
+        );
+      }
     }
   }
 
@@ -372,10 +376,7 @@ class RacesList extends StatelessWidget {
       scheduledNotification(items[0].meetingId);
     }
     return isUpNext
-        ? //FutureBuilder(
-        //  future: scheduledNotification(items[0]),
-        //  builder: (context, snapshot) =>
-        ListView.builder(
+        ? ListView.builder(
             scrollDirection: Axis.vertical,
             shrinkWrap: true,
             itemCount: items.length,
