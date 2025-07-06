@@ -1,0 +1,6 @@
+- Notifications: new article pubslihed and when a session is about to start
+- Brand new circuit screen with more details and easier navigation
+- New font for some texts across the app
+- New translations from Weblate
+- Many fixes to the standings and results
+- Fixes and improvements to article parts
