@@ -363,7 +363,7 @@ class RacesList extends StatelessWidget {
             hour: sessionDate.hour,
             day: sessionDate.day,
             month: sessionDate.month,
-            timeZone: 'GMT+00:00',
+            timeZone: 'GMT${session['gmtOffset']}',
           ),
         );
       }
