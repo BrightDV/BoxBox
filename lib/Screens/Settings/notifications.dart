@@ -106,7 +106,7 @@ class _NotificationsSettingsScreenState
                     if (value) {
                       await Notifications().registerPeriodicTask();
                     } else {
-                      Workmanager().cancelAll();
+                      await Workmanager().cancelAll();
                     }
                     setState(
                       () {
@@ -163,14 +163,13 @@ class _NotificationsSettingsScreenState
             trailing: DropdownButton(
               value: refreshInterval,
               onChanged: notificationsEnabled && newsNotificationsEnabled
-                  ? (int? newValue) {
+                  ? (int? newValue) async {
                       if (newValue != null) {
+                        refreshInterval = newValue;
+                        Hive.box('settings').put('refreshInterval', newValue);
+                        await Notifications().registerPeriodicTask();
                         setState(
-                          () {
-                            refreshInterval = newValue;
-                            Hive.box('settings')
-                                .put('refreshInterval', newValue);
-                          },
+                          () {},
                         );
                       }
                     }
