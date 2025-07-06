@@ -328,6 +328,20 @@ class RacesList extends StatelessWidget {
     return DateTime.now().millisecondsSinceEpoch.remainder(100000);
   }
 
+  // From https://stackoverflow.com/a/58711821
+  String formattedTimeZoneOffset(DateTime time) {
+    String twoDigits(int n) {
+      if (n >= 10) return '$n';
+      return '0$n';
+    }
+
+    final duration = time.timeZoneOffset,
+        hours = duration.inHours,
+        minutes = duration.inMinutes.remainder(60).abs().toInt();
+
+    return '${hours > 0 ? '+' : '-'}${twoDigits(hours.abs())}:${twoDigits(minutes)}';
+  }
+
   Future<void> scheduledNotification(String meetingId) async {
     List<NotificationModel> notifications =
         await AwesomeNotifications().listScheduledNotifications();
@@ -363,7 +377,7 @@ class RacesList extends StatelessWidget {
             hour: sessionDate.hour,
             day: sessionDate.day,
             month: sessionDate.month,
-            timeZone: 'GMT${session['gmtOffset']}',
+            timeZone: 'GMT${formattedTimeZoneOffset(DateTime.now())}',
           ),
         );
       }
