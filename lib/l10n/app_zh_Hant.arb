@@ -1,1 +1,8 @@
-{}
+{
+  "about": "關於",
+  "@about": {},
+  "aboutDescription": "Box, Box! 是一款有著作權自由軟體，遵循 GPLv3+ 授權。其目標是讓用戶在不受廣告或追蹤器幹擾的情況下專注於一級方程式賽車和電動方程式賽車。",
+  "@aboutDescription": {},
+  "aboutBottomLine": "BrightDV 以 ❤ 為您製作",
+  "@aboutBottomLine": {}
+}
