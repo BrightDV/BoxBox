@@ -127,12 +127,22 @@
   "@formulaYouSettings": {
     "description": "Keep 'Formula You' untranslated as it is the name of the service."
   },
-  "freePracticeFirstLetter": "自由練習賽",
+  "freePracticeFirstLetter": "FP",
   "@freePracticeFirstLetter": {},
   "freePracticeOne": "一 練",
   "@freePracticeOne": {},
   "freePracticeTwo": "二練",
   "@freePracticeTwo": {},
   "freePracticeThree": "三練",
-  "@freePracticeThree": {}
+  "@freePracticeThree": {},
+  "freePracticeShort": "練習",
+  "@freePracticeShort": {},
+  "from": "來自· ",
+  "@from": {},
+  "followSystem": "跟隨系統",
+  "@followSystem": {},
+  "font": "字體",
+  "@font": {},
+  "fontDescription": "文章內的字體",
+  "@fontDescription": {}
 }
