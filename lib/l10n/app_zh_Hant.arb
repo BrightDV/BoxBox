@@ -127,7 +127,7 @@
   "@formulaYouSettings": {
     "description": "Keep 'Formula You' untranslated as it is the name of the service."
   },
-  "freePracticeFirstLetter": "FP",
+  "freePracticeFirstLetter": "自由練習賽",
   "@freePracticeFirstLetter": {},
   "freePracticeOne": "一 練",
   "@freePracticeOne": {},
