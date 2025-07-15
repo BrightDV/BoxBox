@@ -296,5 +296,17 @@
   "race": "正賽",
   "@race": {},
   "raceDistance": "比賽距離",
-  "@raceDistance": {}
+  "@raceDistance": {},
+  "raceFirstLetter": "R",
+  "@raceFirstLetter": {},
+  "raceStartsIn": "比賽開始於：",
+  "@raceStartsIn": {},
+  "raceStartsOn": "正賽日：",
+  "@raceStartsOn": {},
+  "refresh": "刷新",
+  "@refresh": {},
+  "refreshChampionshipData": "刷新錦標賽數據",
+  "@refreshChampionshipData": {},
+  "refreshChampionshipDataSub": "在下一季前刷新錦標賽數據",
+  "@refreshChampionshipDataSub": {}
 }
