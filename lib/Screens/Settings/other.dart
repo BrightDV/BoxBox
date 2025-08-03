@@ -67,36 +67,8 @@ class _OtherSettingsScreenState extends State<OtherSettingsScreen> {
                 fontSize: 12,
               ),
             ),
-            onTap: () {},
-            trailing: DropdownButton(
-              value: championship,
-              onChanged: (String? newValue) {
-                if (newValue != null) {
-                  setState(
-                    () {
-                      championship = newValue;
-                      Hive.box('settings').put('championship', newValue);
-                    },
-                  );
-                }
-              },
-              items: <String>[
-                'Formula 1',
-                'Formula E',
-              ].map<DropdownMenuItem<String>>(
-                (String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(
-                      value,
-                      style: TextStyle(
-                        fontSize: 12,
-                      ),
-                    ),
-                  );
-                },
-              ).toList(),
-            ),
+            onTap: () => context.pushNamed('championship-settings'),
+            trailing: Icon(Icons.arrow_forward),
           ),
           if (championship == 'Formula 1')
             ListTile(

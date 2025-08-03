@@ -19,6 +19,7 @@
 
 import 'package:boxbox/Screens/404.dart';
 import 'package:boxbox/Screens/FormulaYou/home.dart';
+import 'package:boxbox/Screens/Settings/championship.dart';
 import 'package:boxbox/Screens/Settings/formula_you.dart';
 import 'package:boxbox/Screens/MixedNews/mixed_news.dart';
 import 'package:boxbox/Screens/Settings/appearance.dart';
@@ -226,6 +227,13 @@ class RouterLocalConfig {
                   return EditOrderScreen(
                     extras?['update'],
                   );
+                },
+              ),
+              GoRoute(
+                name: 'championship-settings',
+                path: 'championship',
+                builder: (context, state) {
+                  return ChampionshipScreen();
                 },
               ),
             ],

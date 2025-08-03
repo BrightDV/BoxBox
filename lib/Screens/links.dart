@@ -19,7 +19,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:boxbox/l10n/app_localizations.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class LinksScreen extends StatelessWidget {
