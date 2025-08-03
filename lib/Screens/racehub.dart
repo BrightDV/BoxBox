@@ -18,27 +18,23 @@
  */
 
 import 'package:boxbox/api/event_tracker.dart';
-import 'package:boxbox/helpers/buttons.dart';
 import 'package:boxbox/helpers/constants.dart';
 import 'package:boxbox/helpers/hover.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/request_error.dart';
-import 'package:boxbox/scraping/fia.dart';
+import 'package:boxbox/providers/event_tracker/format.dart';
+import 'package:boxbox/providers/event_tracker/requests.dart';
+import 'package:boxbox/providers/event_tracker/ui.dart';
 import 'package:boxbox/Screens/session_screen.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:boxbox/l10n/app_localizations.dart';
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:marquee/marquee.dart';
-import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class RaceHubScreen extends StatelessWidget {
   final Event event;
@@ -49,8 +45,6 @@ class RaceHubScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String championship = Hive.box('settings')
-        .get('championship', defaultValue: 'Formula 1') as String;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.onPrimary,
@@ -71,131 +65,7 @@ class RaceHubScreen extends StatelessWidget {
                 ),
         ),
       ),
-      body: championship == 'Formula 1'
-          ? SlidingUpPanel(
-              backdropEnabled: true,
-              color: Theme.of(context).colorScheme.surface,
-              collapsed: GestureDetector(
-                behavior: HitTestBehavior.deferToChild,
-                child: Container(
-                  color: Theme.of(context).colorScheme.surface,
-                  child: Padding(
-                    padding: const EdgeInsets.all(40),
-                    child: Center(
-                      child: Text(
-                        "Grand-Prix documents",
-                        style: TextStyle(
-                          fontSize: 16,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              panel: Center(
-                child: FutureBuilder<List<SessionDocument>>(
-                  future: FIAScraper().scrapeSessionDocuments(),
-                  builder: (context, snapshot) => snapshot.hasError
-                      ? RequestErrorWidget(snapshot.error.toString())
-                      : snapshot.hasData
-                          ? ListView.builder(
-                              shrinkWrap: true,
-                              itemCount: snapshot.data!.length + 1,
-                              itemBuilder: (context, index) => index == 0
-                                  ? Container(
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(40),
-                                        child: Center(
-                                          child: Text(
-                                            "Grand-Prix documents",
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    )
-                                  : GestureDetector(
-                                      onTap: () => !snapshot
-                                              .data![index - 1].src
-                                              .endsWith('pdf')
-                                          ? {}
-                                          : Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) => PdfViewer(
-                                                  snapshot.data![index - 1].src,
-                                                  snapshot
-                                                      .data![index - 1].name,
-                                                ),
-                                              ),
-                                            ),
-                                      child: kIsWeb
-                                          ? Hover(
-                                              isRaceHubSession: true,
-                                              builder: (isHovered) => Card(
-                                                elevation: 5,
-                                                color: isHovered
-                                                    ? Theme.of(context)
-                                                        .colorScheme
-                                                        .onSecondary
-                                                    : null,
-                                                child: ListTile(
-                                                  title: Text(
-                                                    snapshot
-                                                        .data![index - 1].name,
-                                                  ),
-                                                  subtitle: Text(
-                                                    snapshot.data![index - 1]
-                                                        .postedDate,
-                                                    style: TextStyle(
-                                                      fontSize: 12,
-                                                    ),
-                                                  ),
-                                                  leading: Icon(
-                                                    Icons
-                                                        .picture_as_pdf_outlined,
-                                                  ),
-                                                ),
-                                              ),
-                                            )
-                                          : Card(
-                                              elevation: 5,
-                                              child: ListTile(
-                                                title: Text(
-                                                  snapshot
-                                                      .data![index - 1].name,
-                                                ),
-                                                subtitle: Text(
-                                                  snapshot.data![index - 1]
-                                                      .postedDate,
-                                                  style: TextStyle(
-                                                    fontSize: 12,
-                                                  ),
-                                                ),
-                                                leading: Icon(
-                                                  Icons.picture_as_pdf_outlined,
-                                                ),
-                                              ),
-                                            ),
-                                    ),
-                            )
-                          : Padding(
-                              padding: const EdgeInsets.all(15),
-                              child: Center(
-                                child: Text(
-                                  "Grand-Prix documents",
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                  ),
-                                ),
-                              ),
-                            ),
-                ),
-              ),
-              body: RaceHubContent(event),
-            )
-          : RaceHubContent(event),
+      body: EventTrackerUIProvider().getRaceHubScreen(context, event),
     );
   }
 }
@@ -206,7 +76,7 @@ class RaceHubWithoutEventScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: EventTracker().parseEvent(),
+      future: EventTrackerRequestsProvider().parseEvent(),
       builder: (context, snapshot) => snapshot.hasError
           ? Scaffold(
               appBar: AppBar(
@@ -237,13 +107,6 @@ class RaceHubContent extends StatefulWidget {
 class _RaceHubContentState extends State<RaceHubContent> {
   bool isRefreshed = false;
   late Event event;
-  Future openRaceProgramme() async {
-    launchUrl(
-      Uri.parse(
-        "https://web.formula1rp.com/",
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -251,22 +114,11 @@ class _RaceHubContentState extends State<RaceHubContent> {
       isRefreshed = true;
       event = widget.event;
     }
-    String championship = Hive.box('settings')
-        .get('championship', defaultValue: 'Formula 1') as String;
-    late String meetingName;
-    if (championship == 'Formula 1') {
-      event.meetingName == 'United States'
-          ? meetingName = 'USA'
-          : meetingName = event.meetingName;
-      if (meetingName != 'Great Britain') {
-        meetingName = meetingName.replaceAll(' ', '_');
-      } else {
-        meetingName = event.meetingName;
-      }
-    }
+    String meetingName = EventTrackerFormatProvider().formatMeetingName(event);
+
     return RefreshIndicator(
       onRefresh: () async {
-        event = await EventTracker().parseEvent();
+        event = await EventTrackerRequestsProvider().parseEvent();
       },
       child: MediaQuery.of(context).size.width > 1000
           ? SingleChildScrollView(
@@ -278,28 +130,10 @@ class _RaceHubContentState extends State<RaceHubContent> {
                     child: Stack(
                       alignment: Alignment.center,
                       children: [
-                        championship == 'Formula 1'
-                            ? CachedNetworkImage(
-                                imageUrl:
-                                    'https://media.formula1.com/image/upload/content/dam/fom-website/2018-redesign-assets/Racehub%20header%20images%2016x9/$meetingName.jpg.transform/fullbleed/image.jpg',
-                                placeholder: (context, url) => const SizedBox(
-                                  height: 400,
-                                  child: LoadingIndicatorUtil(),
-                                ),
-                                errorWidget: (context, url, error) =>
-                                    const Icon(
-                                  Icons.error_outlined,
-                                ),
-                                fadeOutDuration:
-                                    const Duration(milliseconds: 300),
-                                fadeInDuration:
-                                    const Duration(milliseconds: 300),
-                                fit: BoxFit.cover,
-                                colorBlendMode: BlendMode.darken,
-                                color: Colors.black.withOpacity(0.5),
-                                width: double.infinity,
-                              )
-                            : Container(),
+                        EventTrackerUIProvider().getRaceHubLargeImage(
+                          context,
+                          meetingName,
+                        ),
                         Text(
                           event.meetingName.toUpperCase(),
                           style: const TextStyle(
@@ -344,103 +178,17 @@ class _RaceHubContentState extends State<RaceHubContent> {
                               child: Column(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  championship == 'Formula 1'
-                                      ? BoxBoxButton(
-                                          AppLocalizations.of(context)!
-                                              .information,
-                                          Icon(
-                                            Icons.arrow_forward_rounded,
-                                          ),
-                                          isRoute: true,
-                                          route: 'racing',
-                                          pathParameters: {
-                                            'meetingId': event.raceId
-                                          },
-                                          extra: {'isFetched': false},
-                                        )
-                                      : Container(),
-                                  championship == 'Formula 1'
-                                      ? BoxBoxButton(
-                                          'Race Programme',
-                                          Icon(
-                                            Icons.open_in_new_outlined,
-                                          ),
-                                          isRoute: false,
-                                          toExecute: () => launchUrl(
-                                            Uri.parse(
-                                              "https://raceprogramme.formula1.com/#/catalogue",
-                                            ),
-                                          ),
-                                        )
-                                      : Container(),
-                                  championship == 'Formula 1' &&
-                                          event.liveBlog != null
-                                      ? BoxBoxButton(
-                                          AppLocalizations.of(context)!
-                                              .openLiveBlog,
-                                          SizedBox(
-                                            width: 24.0,
-                                            height: 24.0,
-                                            child: LoadingIndicator(
-                                              indicatorType:
-                                                  Indicator.ballScaleMultiple,
-                                              colors: [
-                                                Theme.of(context)
-                                                    .colorScheme
-                                                    .onPrimary,
-                                              ],
-                                            ),
-                                          ),
-                                          isRoute: false,
-                                          widget: Scaffold(
-                                            appBar: AppBar(
-                                              title: SizedBox(
-                                                height: AppBar()
-                                                    .preferredSize
-                                                    .height,
-                                                width: AppBar()
-                                                    .preferredSize
-                                                    .width,
-                                                child: Marquee(
-                                                  text:
-                                                      event.liveBlog!['title'],
-                                                  style: const TextStyle(
-                                                    fontWeight: FontWeight.w500,
-                                                  ),
-                                                  pauseAfterRound:
-                                                      const Duration(
-                                                          seconds: 1),
-                                                  startAfter: const Duration(
-                                                      seconds: 1),
-                                                  velocity: 85,
-                                                  blankSpace: 100,
-                                                ),
-                                              ),
-                                              backgroundColor: Theme.of(context)
-                                                  .colorScheme
-                                                  .onPrimary,
-                                            ),
-                                            body: InAppWebView(
-                                              initialUrlRequest: URLRequest(
-                                                url: WebUri(
-                                                  event.liveBlog!['eventUrl'],
-                                                ),
-                                              ),
-                                              gestureRecognizers: {
-                                                Factory<VerticalDragGestureRecognizer>(
-                                                    () =>
-                                                        VerticalDragGestureRecognizer()),
-                                                Factory<HorizontalDragGestureRecognizer>(
-                                                    () =>
-                                                        HorizontalDragGestureRecognizer()),
-                                                Factory<ScaleGestureRecognizer>(
-                                                    () =>
-                                                        ScaleGestureRecognizer()),
-                                              },
-                                            ),
-                                          ),
-                                        )
-                                      : Container(),
+                                  EventTrackerUIProvider()
+                                      .getRaceHubInformation(
+                                    context,
+                                    event,
+                                  ),
+                                  EventTrackerUIProvider()
+                                      .getRaceHubRaceProgramme(),
+                                  EventTrackerUIProvider().getRaceHubLiveBlog(
+                                    context,
+                                    event,
+                                  ),
                                 ],
                               ),
                             ),
@@ -461,25 +209,8 @@ class _RaceHubContentState extends State<RaceHubContent> {
                 ),
                 child: ListView(
                   children: [
-                    championship == 'Formula 1'
-                        ? SizedBox(
-                            height:
-                                MediaQuery.of(context).size.width / (16 / 9),
-                            child: CachedNetworkImage(
-                              imageUrl:
-                                  'https://media.formula1.com/image/upload/content/dam/fom-website/2018-redesign-assets/Racehub%20header%20images%2016x9/$meetingName.jpg.transform/fullbleed/image.jpg',
-                              placeholder: (context, url) =>
-                                  const LoadingIndicatorUtil(),
-                              errorWidget: (context, url, error) => const Icon(
-                                Icons.error_outlined,
-                              ),
-                              fadeOutDuration:
-                                  const Duration(milliseconds: 300),
-                              fadeInDuration: const Duration(milliseconds: 300),
-                              fit: BoxFit.scaleDown,
-                            ),
-                          )
-                        : Container(),
+                    EventTrackerUIProvider()
+                        .getRaceHubImage(context, meetingName),
                     for (var session in event.sessions)
                       Padding(
                         padding: const EdgeInsets.symmetric(
@@ -492,87 +223,12 @@ class _RaceHubContentState extends State<RaceHubContent> {
                           event.meetingOfficialName,
                         ),
                       ),
-                    championship == 'Formula 1'
-                        ? Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 30,
-                              vertical: 10,
-                            ),
-                            child: Divider(),
-                          )
-                        : Container(),
-                    championship == 'Formula 1'
-                        ? BoxBoxButton(
-                            AppLocalizations.of(context)!.information,
-                            Icon(
-                              Icons.arrow_forward_rounded,
-                            ),
-                            isRoute: true,
-                            route: 'racing',
-                            pathParameters: {'meetingId': event.raceId},
-                          )
-                        : Container(),
-                    championship == 'Formula 1'
-                        ? BoxBoxButton(
-                            'Race Programme',
-                            Icon(Icons.open_in_new_outlined),
-                            toExecute: openRaceProgramme,
-                          )
-                        : Container(),
-                    championship == 'Formula 1' && event.liveBlog != null
-                        ? BoxBoxButton(
-                            AppLocalizations.of(context)!.openLiveBlog,
-                            SizedBox(
-                              width: 24.0,
-                              height: 24.0,
-                              child: LoadingIndicator(
-                                indicatorType: Indicator.ballScaleMultiple,
-                                colors: [
-                                  Theme.of(context).colorScheme.onPrimary,
-                                ],
-                              ),
-                            ),
-                            isRoute: false,
-                            widget: Scaffold(
-                              appBar: AppBar(
-                                title: SizedBox(
-                                  height: AppBar().preferredSize.height,
-                                  width: AppBar().preferredSize.width,
-                                  child: Marquee(
-                                    text: event.liveBlog!['title'],
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                    pauseAfterRound: const Duration(seconds: 1),
-                                    startAfter: const Duration(seconds: 1),
-                                    velocity: 85,
-                                    blankSpace: 100,
-                                  ),
-                                ),
-                                backgroundColor:
-                                    Theme.of(context).colorScheme.onPrimary,
-                              ),
-                              body: InAppWebView(
-                                initialUrlRequest: URLRequest(
-                                  url: WebUri(
-                                    event.liveBlog!['eventUrl'],
-                                  ),
-                                ),
-                                gestureRecognizers: {
-                                  Factory<VerticalDragGestureRecognizer>(
-                                      () => VerticalDragGestureRecognizer()),
-                                  Factory<HorizontalDragGestureRecognizer>(
-                                      () => HorizontalDragGestureRecognizer()),
-                                  Factory<ScaleGestureRecognizer>(
-                                      () => ScaleGestureRecognizer()),
-                                },
-                              ),
-                            ),
-                          )
-                        : Container(),
-                    championship == 'Formula 1'
-                        ? const SizedBox(height: 200)
-                        : Container(),
+                    EventTrackerUIProvider().getRaceHubDivider(),
+                    EventTrackerUIProvider()
+                        .getRaceHubInformation(context, event),
+                    EventTrackerUIProvider().getRaceHubRaceProgramme(),
+                    EventTrackerUIProvider().getRaceHubLiveBlog(context, event),
+                    EventTrackerUIProvider().getRaceHubBottomSpace(),
                   ],
                 ),
               ),

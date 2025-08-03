@@ -18,16 +18,15 @@
  */
 
 import 'package:add_2_calendar/add_2_calendar.dart' as calendar;
-import 'package:boxbox/Screens/SessionWebView/unofficial_webview.dart';
-import 'package:boxbox/Screens/SessionWebView/webview_manager.dart';
 import 'package:boxbox/Screens/free_practice_screen.dart';
 import 'package:boxbox/Screens/race_details.dart';
 import 'package:boxbox/api/event_tracker.dart';
+import 'package:boxbox/providers/event_tracker/format.dart';
+import 'package:boxbox/providers/event_tracker/ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:boxbox/l10n/app_localizations.dart';
 import 'package:flutter_timer_countdown/flutter_timer_countdown.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 
 class SessionScreen extends StatefulWidget {
   final String sessionFullName;
@@ -51,11 +50,6 @@ class SessionScreen extends StatefulWidget {
 class _SessionScreenState extends State<SessionScreen> {
   @override
   Widget build(BuildContext context) {
-    bool useOfficialWebview = Hive.box('settings')
-        .get('useOfficialWebview', defaultValue: false) as bool;
-    String championship = Hive.box('settings')
-        .get('championship', defaultValue: 'Formula 1') as String;
-
     int timeBetween(DateTime from, DateTime to) {
       return to.difference(from).inSeconds;
     }
@@ -74,8 +68,7 @@ class _SessionScreenState extends State<SessionScreen> {
 
     return widget.session.sessionsAbbreviation.startsWith('p') ||
             widget.session.sessionsAbbreviation.startsWith('Free Practice')
-        ? widget.session.state == 'upcoming' ||
-                widget.session.startTime.isAfter(DateTime.now())
+        ? widget.session.startTime.isAfter(DateTime.now())
             ? Scaffold(
                 appBar: AppBar(
                   backgroundColor: Theme.of(context).colorScheme.onPrimary,
@@ -188,50 +181,27 @@ class _SessionScreenState extends State<SessionScreen> {
             : widget.session.startTime.isBefore(DateTime.now()) &&
                         widget.session.endTime.isAfter(DateTime.now()) ||
                     widget.session.isRunning
-                ? championship == 'Formula 1'
-                    ? useOfficialWebview
-                        ? WebViewManagerScreen(widget.sessionFullName)
-                        : Scaffold(
-                            appBar: AppBar(
-                              backgroundColor:
-                                  Theme.of(context).colorScheme.onPrimary,
-                              title: Text(
-                                widget.sessionFullName,
-                              ),
-                            ),
-                            body: UnofficialWebviewScreen(),
-                          )
-                    : Scaffold(
-                        appBar: AppBar(
-                          backgroundColor:
-                              Theme.of(context).colorScheme.onPrimary,
-                          title: Text(
-                            widget.sessionFullName,
-                          ),
-                        ),
-                        body: UnofficialWebviewScreen(),
-                      )
+                ? EventTrackerUIProvider().getRaceHubFreePracticesWebview(
+                    context,
+                    widget.sessionFullName,
+                  )
                 : FreePracticeScreen(
                     widget.sessionFullName,
-                    int.parse(
-                      championship == 'Formula 1'
-                          ? widget.session.sessionsAbbreviation.substring(1)
-                          : widget.session.sessionsAbbreviation.split(' ').last,
+                    EventTrackerFormatProvider().formatFreePracticeSessionIndex(
+                      widget.session,
                     ),
                     '',
                     widget.meetingId,
                     0,
                     '',
-                    raceUrl: championship == 'Formula 1'
-                        ? widget.session.baseUrl?.replaceAll(
-                              'session-type',
-                              'practice-${widget.session.sessionsAbbreviation.substring(1)}',
-                            ) ??
-                            null
-                        : widget.session.baseUrl,
-                    sessionId: championship == 'Formula 1'
-                        ? null
-                        : widget.session.baseUrl,
+                    raceUrl: EventTrackerFormatProvider()
+                        .formatFreePracticeSessionUrl(
+                      widget.session,
+                    ),
+                    sessionId: EventTrackerFormatProvider()
+                        .formatFreePracticeSessionId(
+                      widget.session,
+                    ),
                   )
         : Scaffold(
             appBar: AppBar(
@@ -240,9 +210,7 @@ class _SessionScreenState extends State<SessionScreen> {
                 widget.sessionFullName,
               ),
             ),
-            body: (widget.session.state == 'upcoming' ||
-                        widget.session.startTime.isAfter(DateTime.now())) &&
-                    !widget.session.isRunning
+            body: widget.session.startTime.isAfter(DateTime.now())
                 ? Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -352,43 +320,21 @@ class _SessionScreenState extends State<SessionScreen> {
                             widget.session.sessionsAbbreviation == 's' ||
                             widget.session.sessionsAbbreviation == 'Race'
                         ? RaceResultsProvider(
-                            raceUrl: championship == 'Formula 1'
-                                ? widget.session.sessionsAbbreviation == 'r'
-                                    ? 'race'
-                                    : 'sprint-results'
-                                : widget.session.baseUrl,
+                            raceUrl: EventTrackerFormatProvider()
+                                .formatRaceSessionUrl(
+                              widget.session,
+                            ),
                             raceId: widget.meetingId,
                           )
-                        : championship == 'Formula 1'
-                            ? QualificationResultsProvider(
-                                raceUrl: championship == 'Formula 1'
-                                    ? widget.session.sessionsAbbreviation ==
-                                            'ss'
-                                        ? 'sprint-qualifying'
-                                        : 'qualifying'
-                                    : widget.session.baseUrl,
-                                sessionId: widget.meetingId,
-                                hasSprint:
-                                    widget.session.sessionsAbbreviation == 'ss'
-                                        ? true
-                                        : false,
-                                isSprintQualifying:
-                                    widget.session.sessionsAbbreviation == 'ss'
-                                        ? true
-                                        : false,
-                              )
-                            : FreePracticeResultsProvider(
-                                widget.sessionFullName,
-                                10,
-                                '',
-                                widget.meetingId,
-                                DateTime.now().year,
-                                widget.meetingOfficialName,
-                                sessionId: widget.session.baseUrl,
-                              )
-                    : useOfficialWebview && championship == 'Formula 1'
-                        ? WebViewManagerScreen(widget.sessionFullName)
-                        : UnofficialWebviewScreen(),
+                        : EventTrackerUIProvider().getRaceHubResultsProvider(
+                            widget.session,
+                            widget.meetingId,
+                            widget.sessionFullName,
+                            widget.meetingOfficialName,
+                          )
+                    : EventTrackerUIProvider().getRaceHubWebview(
+                        widget.sessionFullName,
+                      ),
           );
   }
 }

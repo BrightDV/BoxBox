@@ -19,12 +19,11 @@
 
 import 'package:boxbox/api/driver_components.dart';
 import 'package:boxbox/api/event_tracker.dart';
-import 'package:boxbox/api/formula1.dart';
-import 'package:boxbox/api/formulae.dart';
 import 'package:boxbox/helpers/divider.dart';
 import 'package:boxbox/helpers/request_error.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
-import 'package:boxbox/helpers/team_background_color.dart';
+import 'package:boxbox/providers/results/format.dart';
+import 'package:boxbox/providers/results/requests.dart';
 import 'package:flutter/material.dart';
 import 'package:boxbox/l10n/app_localizations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -98,24 +97,13 @@ class FreePracticeResultsProvider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String championship = Hive.box('settings')
-        .get('championship', defaultValue: 'Formula 1') as String;
     return FutureBuilder<List<DriverResult>>(
-      future: championship == 'Formula 1'
-          ? Formula1().getFreePracticeStandings(
-              raceUrl != null ? raceUrl!.split('/')[7] : meetingId,
-              raceUrl != null
-                  ? int.parse(raceUrl!
-                      .split('/')[9]
-                      .replaceAll('practice', '')
-                      .replaceAll('.html', '')
-                      .replaceAll('-', ''))
-                  : sessionIndex,
-            )
-          : FormulaE().getFreePracticeStandings(
-              meetingId,
-              sessionId!,
-            ),
+      future: ResultsRequestsProvider().getFreePracticeResults(
+        raceUrl,
+        meetingId,
+        sessionIndex,
+        sessionId,
+      ),
       // disable scraping for the moment
       /* FormulaOneScraper().scrapeFreePracticeResult(
                 circuitId,
@@ -269,8 +257,6 @@ class FreePracticeResultItem extends StatelessWidget {
   Widget build(BuildContext context) {
     bool useDarkMode =
         Hive.box('settings').get('darkMode', defaultValue: true) as bool;
-    String championship = Hive.box('settings')
-        .get('championship', defaultValue: 'Formula 1') as String;
     return Container(
       color: index % 2 == 1
           ? useDarkMode
@@ -310,18 +296,7 @@ class FreePracticeResultItem extends StatelessWidget {
             Expanded(
               flex: 2,
               child: BoxBoxVerticalDivider(
-                color: championship == 'Formula 1'
-                    ? result.teamColor != null
-                        ? Color(
-                            int.parse(
-                              'FF${result.teamColor}',
-                              radix: 16,
-                            ),
-                          )
-                        : TeamBackgroundColor().getTeamColor(
-                            result.team,
-                          )
-                    : FormulaE().getTeamColor(result.team),
+                color: ResultsFormatProvider().getTeamColor(result),
                 thickness: 8,
                 width: 25,
                 indent: 7,

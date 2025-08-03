@@ -165,16 +165,19 @@ class EventTracker {
     return formatedResponse;
   }
 
-  Future<Event> parseEvent() async {
+  Future<Event> parseF1Event() async {
     Map eventAsJson = await fetchEvent();
     if (eventAsJson['event'] != null) {
-      String championship = Hive.box('settings')
-          .get('championship', defaultValue: 'Formula 1') as String;
-      if (championship == 'Formula 1') {
-        return plainF1EventParser(eventAsJson, 'event', 'event');
-      } else {
-        return plainFEEventParser(eventAsJson);
-      }
+      return plainF1EventParser(eventAsJson, 'event', 'event');
+    } else {
+      return plainF1EventParser(eventAsJson, 'seasonContext', 'race');
+    }
+  }
+
+  Future<Event> parseFEEvent() async {
+    Map eventAsJson = await fetchEvent();
+    if (eventAsJson['event'] != null) {
+      return plainFEEventParser(eventAsJson);
     } else {
       return plainF1EventParser(eventAsJson, 'seasonContext', 'race');
     }

@@ -27,9 +27,6 @@ class LinksScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool useDarkMode =
-        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
-
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -54,11 +51,22 @@ class LinksScreen extends StatelessWidget {
                 ),
                 subtitle: Text(
                   'https://www.formula1.com/',
-                  style: TextStyle(
-                    color: useDarkMode
-                        ? Colors.grey.shade500
-                        : Colors.grey.shade600,
-                  ),
+                ),
+                trailing: Icon(
+                  Icons.open_in_new_outlined,
+                ),
+              ),
+            ),
+            GestureDetector(
+              onTap: () async => await launchUrl(
+                Uri.parse('https://www.fiaformulae.com/'),
+              ),
+              child: ListTile(
+                title: Text(
+                  'Formula E',
+                ),
+                subtitle: Text(
+                  'https://www.fiaformulae.com/',
                 ),
                 trailing: Icon(
                   Icons.open_in_new_outlined,
@@ -75,11 +83,6 @@ class LinksScreen extends StatelessWidget {
                 ),
                 subtitle: Text(
                   'https://www.fia.com/regulation/category/110',
-                  style: TextStyle(
-                    color: useDarkMode
-                        ? Colors.grey.shade500
-                        : Colors.grey.shade600,
-                  ),
                 ),
                 trailing: Icon(
                   Icons.open_in_new_outlined,
@@ -96,11 +99,6 @@ class LinksScreen extends StatelessWidget {
                 ),
                 subtitle: Text(
                   'https://www.statsf1.com/',
-                  style: TextStyle(
-                    color: useDarkMode
-                        ? Colors.grey.shade500
-                        : Colors.grey.shade600,
-                  ),
                 ),
                 trailing: Icon(
                   Icons.open_in_new_outlined,

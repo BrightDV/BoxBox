@@ -20,35 +20,20 @@
  */
 
 import 'package:boxbox/api/event_tracker.dart';
+import 'package:boxbox/providers/event_tracker/requests.dart';
+import 'package:boxbox/providers/event_tracker/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:boxbox/l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
-import 'package:hive_flutter/hive_flutter.dart';
-import 'package:marquee/marquee.dart';
 
 class LiveSessionStatusIndicator extends StatelessWidget {
   const LiveSessionStatusIndicator({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    Event? eventTrackerSavedRequest;
-    String championship = Hive.box('settings')
-        .get('championship', defaultValue: 'Formula 1') as String;
-    Map eventTrackerSavedRequestAsMap = championship == 'Formula 1'
-        ? Hive.box('requests').get('f1-event-tracker', defaultValue: {}) as Map
-        : Hive.box('requests').get('fe-event-tracker', defaultValue: {}) as Map;
-    if (eventTrackerSavedRequestAsMap.isNotEmpty) {
-      eventTrackerSavedRequest = championship == 'Formula 1'
-          ? EventTracker().plainF1EventParser(
-              eventTrackerSavedRequestAsMap,
-              eventTrackerSavedRequestAsMap['event'] != null
-                  ? 'event'
-                  : 'seasonContext',
-              eventTrackerSavedRequestAsMap['event'] != null ? 'event' : 'race',
-            )
-          : EventTracker().plainFEEventParser(eventTrackerSavedRequestAsMap);
-    }
+    Event? eventTrackerSavedRequest =
+        EventTrackerRequestsProvider().getSavedEventTrackerRequest();
     return FutureBuilder<Event>(
-      future: EventTracker().parseEvent(),
+      future: EventTrackerRequestsProvider().parseEvent(),
       builder: (context, snapshot) {
         return snapshot.hasError
             ? eventTrackerSavedRequest != null
@@ -81,8 +66,6 @@ class EventTrackerItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String championship = Hive.box('settings')
-        .get('championship', defaultValue: 'Formula 1') as String;
     bool haveRunningSession = false;
     DateTime date = DateTime.now();
     int c = 0;
@@ -99,7 +82,7 @@ class EventTrackerItem extends StatelessWidget {
       elevation: 10.0,
       margin: EdgeInsets.fromLTRB(4, 3, 4, 0.9),
       child: Container(
-        height: championship == 'Formula 1' ? 143 : 115,
+        height: EventTrackerUIProvider().getEventTrackerContainerHeight(),
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.only(
             bottomLeft: Radius.circular(5),
@@ -113,23 +96,8 @@ class EventTrackerItem extends StatelessWidget {
           children: [
             Row(
               children: [
-                championship == 'Formula 1'
-                    ? Padding(
-                        padding: const EdgeInsets.only(
-                          top: 3,
-                          left: 10,
-                          right: 10,
-                          bottom: 5,
-                        ),
-                        child: SizedBox(
-                          width: 120,
-                          height: 90,
-                          child: Image.network(
-                            event.circuitImage,
-                          ),
-                        ),
-                      )
-                    : Container(),
+                EventTrackerUIProvider()
+                    .getEventTrackerContainerCircuitImageWidget(event),
                 Padding(
                   padding: const EdgeInsets.all(5),
                   child: Column(
@@ -147,38 +115,11 @@ class EventTrackerItem extends StatelessWidget {
                               AppLocalizations.of(context)!.sessionRunning,
                             )
                           : Container(),
-                      championship == 'Formula 1'
-                          ? SizedBox(
-                              width: MediaQuery.of(context).size.width - 160,
-                              height: 20,
-                              child: MediaQuery.of(context).size.width >= 768
-                                  ? Text(
-                                      event.meetingOfficialName,
-                                      style: const TextStyle(
-                                        fontSize: 12,
-                                      ),
-                                    )
-                                  : Marquee(
-                                      text: event.meetingOfficialName,
-                                      style: const TextStyle(
-                                        fontSize: 12,
-                                      ),
-                                      pauseAfterRound:
-                                          const Duration(seconds: 1),
-                                      startAfter: const Duration(seconds: 1),
-                                      velocity: 85,
-                                      blankSpace: 100,
-                                    ),
-                            )
-                          : SizedBox(
-                              height: 20,
-                              child: Text(
-                                event.meetingOfficialName,
-                                style: const TextStyle(
-                                  fontSize: 12,
-                                ),
-                              ),
-                            ),
+                      EventTrackerUIProvider()
+                          .getEventTrackerContainerEventDetails(
+                        event,
+                        context,
+                      ),
                     ],
                   ),
                 ),

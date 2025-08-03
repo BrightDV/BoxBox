@@ -25,13 +25,10 @@ import 'package:boxbox/helpers/download.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/news.dart';
 import 'package:boxbox/helpers/request_error.dart';
-import 'package:flutter/foundation.dart';
+import 'package:boxbox/providers/videos/ui.dart';
 import 'package:flutter/material.dart';
-import 'package:boxbox/l10n/app_localizations.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:marquee/marquee.dart';
-import 'package:share_plus/share_plus.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 class VideoScreen extends StatefulWidget {
@@ -114,8 +111,6 @@ class _VideoScreenState extends State<VideoScreen> {
       'downloadsList',
       defaultValue: [],
     );
-    String championship = Hive.box('settings')
-        .get('championship', defaultValue: 'Formula 1') as String;
 
     final Video video = widget.video;
     return Scaffold(
@@ -136,95 +131,15 @@ class _VideoScreenState extends State<VideoScreen> {
                   blankSpace: 100,
                 ),
         ),
-        actions: [
-          championship == 'Formula 1' && !kIsWeb
-              ? IconButton(
-                  onPressed: () async {
-                    if (downloads
-                        .contains('video_f1_${widget.video.videoId}')) {
-                      await DownloadUtils()
-                          .deleteFile('video_f1_${widget.video.videoId}');
-                      if (widget.update != null) {
-                        Future.delayed(
-                          Duration(milliseconds: 100),
-                        ).then(
-                          (_) => update(),
-                        );
-                      } else {
-                        update();
-                      }
-                    } else {
-                      String? quality =
-                          await DownloadUtils().videoDownloadQualitySelector(
-                        context,
-                      );
-                      if (quality != null) {
-                        String downloadingState =
-                            await DownloadUtils().downloadVideo(
-                          widget.video.videoId,
-                          quality,
-                          video: widget.video,
-                          callback: updateVideoWithType,
-                        );
-                        if (downloadingState == "downloading") {
-                          if (widget.update != null) {
-                            widget.update!();
-                          }
-                          await Fluttertoast.showToast(
-                            msg: AppLocalizations.of(context)!.downloading,
-                            toastLength: Toast.LENGTH_SHORT,
-                            gravity: ToastGravity.BOTTOM,
-                            timeInSecForIosWeb: 1,
-                            textColor: Colors.white,
-                            fontSize: 16.0,
-                          );
-                        } else {
-                          if (downloadingState == "downloading") {
-                            await Fluttertoast.showToast(
-                              msg: AppLocalizations.of(context)!
-                                  .alreadyDownloading,
-                              toastLength: Toast.LENGTH_SHORT,
-                              gravity: ToastGravity.BOTTOM,
-                              timeInSecForIosWeb: 1,
-                              textColor: Colors.white,
-                              fontSize: 16.0,
-                            );
-                          } else {
-                            await Fluttertoast.showToast(
-                              msg: AppLocalizations.of(context)!.errorOccurred,
-                              toastLength: Toast.LENGTH_SHORT,
-                              gravity: ToastGravity.BOTTOM,
-                              timeInSecForIosWeb: 1,
-                              textColor: Colors.white,
-                              fontSize: 16.0,
-                            );
-                          }
-                        }
-                      }
-                    }
-                  },
-                  icon: Icon(
-                    downloads.contains('video_f1_${widget.video.videoId}')
-                        ? Icons.delete_outline
-                        : Icons.save_alt_rounded,
-                  ),
-                )
-              : Container(),
-          Padding(
-            padding: const EdgeInsets.only(
-              left: 3,
-              right: 6,
-            ),
-            child: IconButton(
-              onPressed: () => Share.share(
-                video.videoUrl,
-              ),
-              icon: const Icon(
-                Icons.share,
-              ),
-            ),
-          ),
-        ],
+        actions: VideosUIProvider().getVideoActions(
+          downloads,
+          video,
+          update,
+          widget.update,
+          context,
+          updateVideoWithType,
+          shouldRefresh,
+        ),
         backgroundColor: Theme.of(context).colorScheme.onPrimary,
       ),
       body: Column(

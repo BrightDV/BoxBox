@@ -19,17 +19,16 @@
 
 import 'package:animations/animations.dart';
 import 'package:boxbox/Screens/video.dart';
-import 'package:boxbox/api/formulae.dart';
 import 'package:boxbox/api/videos.dart';
 import 'package:boxbox/helpers/hover.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/request_error.dart';
+import 'package:boxbox/providers/videos/requests.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:boxbox/l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import "package:story_view/story_view.dart";
 import 'package:flutter_swiper_view/flutter_swiper_view.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
@@ -59,20 +58,8 @@ class _VideosScreenState extends State<VideosScreen> {
 
   Future<void> _fetchPage(int offset) async {
     try {
-      String championship = Hive.box('settings')
-          .get('championship', defaultValue: 'Formula 1') as String;
       List<Video> newItems;
-      if (championship == 'Formula 1') {
-        newItems = await F1VideosFetcher().getLatestVideos(
-          24,
-          offset,
-        );
-      } else {
-        newItems = await FormulaE().getLatestVideos(
-          24,
-          offset,
-        );
-      }
+      newItems = await VideosRequestProvider().getLatestVideos(offset);
       final isLastPage = newItems.length < _pageSize;
       if (isLastPage) {
         _pagingController.appendLastPage(newItems);
