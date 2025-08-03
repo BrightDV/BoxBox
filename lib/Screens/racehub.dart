@@ -226,10 +226,17 @@ class RaceHubWithoutEventScreen extends StatelessWidget {
   }
 }
 
-class RaceHubContent extends StatelessWidget {
+class RaceHubContent extends StatefulWidget {
   final Event event;
   const RaceHubContent(this.event, {super.key});
 
+  @override
+  State<RaceHubContent> createState() => _RaceHubContentState();
+}
+
+class _RaceHubContentState extends State<RaceHubContent> {
+  bool isRefreshed = false;
+  late Event event;
   Future openRaceProgramme() async {
     launchUrl(
       Uri.parse(
@@ -240,6 +247,10 @@ class RaceHubContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (!isRefreshed) {
+      isRefreshed = true;
+      event = widget.event;
+    }
     String championship = Hive.box('settings')
         .get('championship', defaultValue: 'Formula 1') as String;
     late String meetingName;
@@ -253,307 +264,320 @@ class RaceHubContent extends StatelessWidget {
         meetingName = event.meetingName;
       }
     }
-    return MediaQuery.of(context).size.width > 1000
-        ? SingleChildScrollView(
-            child: Column(
-              children: [
-                SizedBox(
-                  height: 400,
-                  width: MediaQuery.of(context).size.width,
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      championship == 'Formula 1'
-                          ? CachedNetworkImage(
+    return RefreshIndicator(
+      onRefresh: () async {
+        event = await EventTracker().parseEvent();
+      },
+      child: MediaQuery.of(context).size.width > 1000
+          ? SingleChildScrollView(
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 400,
+                    width: MediaQuery.of(context).size.width,
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        championship == 'Formula 1'
+                            ? CachedNetworkImage(
+                                imageUrl:
+                                    'https://media.formula1.com/image/upload/content/dam/fom-website/2018-redesign-assets/Racehub%20header%20images%2016x9/$meetingName.jpg.transform/fullbleed/image.jpg',
+                                placeholder: (context, url) => const SizedBox(
+                                  height: 400,
+                                  child: LoadingIndicatorUtil(),
+                                ),
+                                errorWidget: (context, url, error) =>
+                                    const Icon(
+                                  Icons.error_outlined,
+                                ),
+                                fadeOutDuration:
+                                    const Duration(milliseconds: 300),
+                                fadeInDuration:
+                                    const Duration(milliseconds: 300),
+                                fit: BoxFit.cover,
+                                colorBlendMode: BlendMode.darken,
+                                color: Colors.black.withOpacity(0.5),
+                                width: double.infinity,
+                              )
+                            : Container(),
+                        Text(
+                          event.meetingName.toUpperCase(),
+                          style: const TextStyle(
+                            fontSize: 70,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  ConstrainedBox(
+                    constraints: const BoxConstraints(
+                      minWidth: 1000,
+                      maxWidth: 1200,
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 12),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Expanded(
+                            flex: 2,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                for (var session in event.sessions)
+                                  SessionItem(
+                                    session,
+                                    event.raceId,
+                                    event.meetingCountryName,
+                                    event.meetingOfficialName,
+                                  ),
+                              ],
+                            ),
+                          ),
+                          Expanded(
+                            flex: 1,
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 2),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  championship == 'Formula 1'
+                                      ? BoxBoxButton(
+                                          AppLocalizations.of(context)!
+                                              .information,
+                                          Icon(
+                                            Icons.arrow_forward_rounded,
+                                          ),
+                                          isRoute: true,
+                                          route: 'racing',
+                                          pathParameters: {
+                                            'meetingId': event.raceId
+                                          },
+                                          extra: {'isFetched': false},
+                                        )
+                                      : Container(),
+                                  championship == 'Formula 1'
+                                      ? BoxBoxButton(
+                                          'Race Programme',
+                                          Icon(
+                                            Icons.open_in_new_outlined,
+                                          ),
+                                          isRoute: false,
+                                          toExecute: () => launchUrl(
+                                            Uri.parse(
+                                              "https://raceprogramme.formula1.com/#/catalogue",
+                                            ),
+                                          ),
+                                        )
+                                      : Container(),
+                                  championship == 'Formula 1' &&
+                                          event.liveBlog != null
+                                      ? BoxBoxButton(
+                                          AppLocalizations.of(context)!
+                                              .openLiveBlog,
+                                          SizedBox(
+                                            width: 24.0,
+                                            height: 24.0,
+                                            child: LoadingIndicator(
+                                              indicatorType:
+                                                  Indicator.ballScaleMultiple,
+                                              colors: [
+                                                Theme.of(context)
+                                                    .colorScheme
+                                                    .onPrimary,
+                                              ],
+                                            ),
+                                          ),
+                                          isRoute: false,
+                                          widget: Scaffold(
+                                            appBar: AppBar(
+                                              title: SizedBox(
+                                                height: AppBar()
+                                                    .preferredSize
+                                                    .height,
+                                                width: AppBar()
+                                                    .preferredSize
+                                                    .width,
+                                                child: Marquee(
+                                                  text:
+                                                      event.liveBlog!['title'],
+                                                  style: const TextStyle(
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
+                                                  pauseAfterRound:
+                                                      const Duration(
+                                                          seconds: 1),
+                                                  startAfter: const Duration(
+                                                      seconds: 1),
+                                                  velocity: 85,
+                                                  blankSpace: 100,
+                                                ),
+                                              ),
+                                              backgroundColor: Theme.of(context)
+                                                  .colorScheme
+                                                  .onPrimary,
+                                            ),
+                                            body: InAppWebView(
+                                              initialUrlRequest: URLRequest(
+                                                url: WebUri(
+                                                  event.liveBlog!['eventUrl'],
+                                                ),
+                                              ),
+                                              gestureRecognizers: {
+                                                Factory<VerticalDragGestureRecognizer>(
+                                                    () =>
+                                                        VerticalDragGestureRecognizer()),
+                                                Factory<HorizontalDragGestureRecognizer>(
+                                                    () =>
+                                                        HorizontalDragGestureRecognizer()),
+                                                Factory<ScaleGestureRecognizer>(
+                                                    () =>
+                                                        ScaleGestureRecognizer()),
+                                              },
+                                            ),
+                                          ),
+                                        )
+                                      : Container(),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 160),
+                ],
+              ),
+            )
+          : Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(
+                  minWidth: 300,
+                  maxWidth: 800,
+                ),
+                child: ListView(
+                  children: [
+                    championship == 'Formula 1'
+                        ? SizedBox(
+                            height:
+                                MediaQuery.of(context).size.width / (16 / 9),
+                            child: CachedNetworkImage(
                               imageUrl:
                                   'https://media.formula1.com/image/upload/content/dam/fom-website/2018-redesign-assets/Racehub%20header%20images%2016x9/$meetingName.jpg.transform/fullbleed/image.jpg',
-                              placeholder: (context, url) => const SizedBox(
-                                height: 400,
-                                child: LoadingIndicatorUtil(),
-                              ),
+                              placeholder: (context, url) =>
+                                  const LoadingIndicatorUtil(),
                               errorWidget: (context, url, error) => const Icon(
                                 Icons.error_outlined,
                               ),
                               fadeOutDuration:
                                   const Duration(milliseconds: 300),
                               fadeInDuration: const Duration(milliseconds: 300),
-                              fit: BoxFit.cover,
-                              colorBlendMode: BlendMode.darken,
-                              color: Colors.black.withOpacity(0.5),
-                              width: double.infinity,
-                            )
-                          : Container(),
-                      Text(
-                        event.meetingName.toUpperCase(),
-                        style: const TextStyle(
-                          fontSize: 70,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.white,
+                              fit: BoxFit.scaleDown,
+                            ),
+                          )
+                        : Container(),
+                    for (var session in event.sessions)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 5,
+                        ),
+                        child: SessionItem(
+                          session,
+                          event.raceId,
+                          event.meetingCountryName,
+                          event.meetingOfficialName,
                         ),
                       ),
-                    ],
-                  ),
-                ),
-                ConstrainedBox(
-                  constraints: const BoxConstraints(
-                    minWidth: 1000,
-                    maxWidth: 1200,
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 12),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Expanded(
-                          flex: 2,
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              for (var session in event.sessions)
-                                SessionItem(
-                                  session,
-                                  event.raceId,
-                                  event.meetingCountryName,
-                                  event.meetingOfficialName,
-                                ),
-                            ],
-                          ),
-                        ),
-                        Expanded(
-                          flex: 1,
-                          child: Padding(
-                            padding: const EdgeInsets.only(top: 2),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                championship == 'Formula 1'
-                                    ? BoxBoxButton(
-                                        AppLocalizations.of(context)!
-                                            .information,
-                                        Icon(
-                                          Icons.arrow_forward_rounded,
-                                        ),
-                                        isRoute: true,
-                                        route: 'racing',
-                                        pathParameters: {
-                                          'meetingId': event.raceId
-                                        },
-                                        extra: {'isFetched': false},
-                                      )
-                                    : Container(),
-                                championship == 'Formula 1'
-                                    ? BoxBoxButton(
-                                        'Race Programme',
-                                        Icon(
-                                          Icons.open_in_new_outlined,
-                                        ),
-                                        isRoute: false,
-                                        toExecute: () => launchUrl(
-                                          Uri.parse(
-                                            "https://raceprogramme.formula1.com/#/catalogue",
-                                          ),
-                                        ),
-                                      )
-                                    : Container(),
-                                championship == 'Formula 1' &&
-                                        event.liveBlog != null
-                                    ? BoxBoxButton(
-                                        AppLocalizations.of(context)!
-                                            .openLiveBlog,
-                                        SizedBox(
-                                          width: 24.0,
-                                          height: 24.0,
-                                          child: LoadingIndicator(
-                                            indicatorType:
-                                                Indicator.ballScaleMultiple,
-                                            colors: [
-                                              Theme.of(context)
-                                                  .colorScheme
-                                                  .onPrimary,
-                                            ],
-                                          ),
-                                        ),
-                                        isRoute: false,
-                                        widget: Scaffold(
-                                          appBar: AppBar(
-                                            title: SizedBox(
-                                              height:
-                                                  AppBar().preferredSize.height,
-                                              width:
-                                                  AppBar().preferredSize.width,
-                                              child: Marquee(
-                                                text: event.liveBlog!['title'],
-                                                style: const TextStyle(
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                                pauseAfterRound:
-                                                    const Duration(seconds: 1),
-                                                startAfter:
-                                                    const Duration(seconds: 1),
-                                                velocity: 85,
-                                                blankSpace: 100,
-                                              ),
-                                            ),
-                                            backgroundColor: Theme.of(context)
-                                                .colorScheme
-                                                .onPrimary,
-                                          ),
-                                          body: InAppWebView(
-                                            initialUrlRequest: URLRequest(
-                                              url: WebUri(
-                                                event.liveBlog!['eventUrl'],
-                                              ),
-                                            ),
-                                            gestureRecognizers: {
-                                              Factory<VerticalDragGestureRecognizer>(
-                                                  () =>
-                                                      VerticalDragGestureRecognizer()),
-                                              Factory<HorizontalDragGestureRecognizer>(
-                                                  () =>
-                                                      HorizontalDragGestureRecognizer()),
-                                              Factory<ScaleGestureRecognizer>(
-                                                  () =>
-                                                      ScaleGestureRecognizer()),
-                                            },
-                                          ),
-                                        ),
-                                      )
-                                    : Container(),
-                              ],
+                    championship == 'Formula 1'
+                        ? Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 30,
+                              vertical: 10,
                             ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 160),
-              ],
-            ),
-          )
-        : Center(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(
-                minWidth: 300,
-                maxWidth: 800,
-              ),
-              child: ListView(
-                children: [
-                  championship == 'Formula 1'
-                      ? SizedBox(
-                          height: MediaQuery.of(context).size.width / (16 / 9),
-                          child: CachedNetworkImage(
-                            imageUrl:
-                                'https://media.formula1.com/image/upload/content/dam/fom-website/2018-redesign-assets/Racehub%20header%20images%2016x9/$meetingName.jpg.transform/fullbleed/image.jpg',
-                            placeholder: (context, url) =>
-                                const LoadingIndicatorUtil(),
-                            errorWidget: (context, url, error) => const Icon(
-                              Icons.error_outlined,
+                            child: Divider(),
+                          )
+                        : Container(),
+                    championship == 'Formula 1'
+                        ? BoxBoxButton(
+                            AppLocalizations.of(context)!.information,
+                            Icon(
+                              Icons.arrow_forward_rounded,
                             ),
-                            fadeOutDuration: const Duration(milliseconds: 300),
-                            fadeInDuration: const Duration(milliseconds: 300),
-                            fit: BoxFit.scaleDown,
-                          ),
-                        )
-                      : Container(),
-                  for (var session in event.sessions)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 5,
-                      ),
-                      child: SessionItem(
-                        session,
-                        event.raceId,
-                        event.meetingCountryName,
-                        event.meetingOfficialName,
-                      ),
-                    ),
-                  championship == 'Formula 1'
-                      ? Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 30,
-                            vertical: 10,
-                          ),
-                          child: Divider(),
-                        )
-                      : Container(),
-                  championship == 'Formula 1'
-                      ? BoxBoxButton(
-                          AppLocalizations.of(context)!.information,
-                          Icon(
-                            Icons.arrow_forward_rounded,
-                          ),
-                          isRoute: true,
-                          route: 'racing',
-                          pathParameters: {'meetingId': event.raceId},
-                        )
-                      : Container(),
-                  championship == 'Formula 1'
-                      ? BoxBoxButton(
-                          'Race Programme',
-                          Icon(Icons.open_in_new_outlined),
-                          toExecute: openRaceProgramme,
-                        )
-                      : Container(),
-                  championship == 'Formula 1' && event.liveBlog != null
-                      ? BoxBoxButton(
-                          AppLocalizations.of(context)!.openLiveBlog,
-                          SizedBox(
-                            width: 24.0,
-                            height: 24.0,
-                            child: LoadingIndicator(
-                              indicatorType: Indicator.ballScaleMultiple,
-                              colors: [
-                                Theme.of(context).colorScheme.onPrimary,
-                              ],
-                            ),
-                          ),
-                          isRoute: false,
-                          widget: Scaffold(
-                            appBar: AppBar(
-                              title: SizedBox(
-                                height: AppBar().preferredSize.height,
-                                width: AppBar().preferredSize.width,
-                                child: Marquee(
-                                  text: event.liveBlog!['title'],
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                  pauseAfterRound: const Duration(seconds: 1),
-                                  startAfter: const Duration(seconds: 1),
-                                  velocity: 85,
-                                  blankSpace: 100,
-                                ),
-                              ),
-                              backgroundColor:
+                            isRoute: true,
+                            route: 'racing',
+                            pathParameters: {'meetingId': event.raceId},
+                          )
+                        : Container(),
+                    championship == 'Formula 1'
+                        ? BoxBoxButton(
+                            'Race Programme',
+                            Icon(Icons.open_in_new_outlined),
+                            toExecute: openRaceProgramme,
+                          )
+                        : Container(),
+                    championship == 'Formula 1' && event.liveBlog != null
+                        ? BoxBoxButton(
+                            AppLocalizations.of(context)!.openLiveBlog,
+                            SizedBox(
+                              width: 24.0,
+                              height: 24.0,
+                              child: LoadingIndicator(
+                                indicatorType: Indicator.ballScaleMultiple,
+                                colors: [
                                   Theme.of(context).colorScheme.onPrimary,
-                            ),
-                            body: InAppWebView(
-                              initialUrlRequest: URLRequest(
-                                url: WebUri(
-                                  event.liveBlog!['eventUrl'],
-                                ),
+                                ],
                               ),
-                              gestureRecognizers: {
-                                Factory<VerticalDragGestureRecognizer>(
-                                    () => VerticalDragGestureRecognizer()),
-                                Factory<HorizontalDragGestureRecognizer>(
-                                    () => HorizontalDragGestureRecognizer()),
-                                Factory<ScaleGestureRecognizer>(
-                                    () => ScaleGestureRecognizer()),
-                              },
                             ),
-                          ),
-                        )
-                      : Container(),
-                  championship == 'Formula 1'
-                      ? const SizedBox(height: 200)
-                      : Container(),
-                ],
+                            isRoute: false,
+                            widget: Scaffold(
+                              appBar: AppBar(
+                                title: SizedBox(
+                                  height: AppBar().preferredSize.height,
+                                  width: AppBar().preferredSize.width,
+                                  child: Marquee(
+                                    text: event.liveBlog!['title'],
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                    pauseAfterRound: const Duration(seconds: 1),
+                                    startAfter: const Duration(seconds: 1),
+                                    velocity: 85,
+                                    blankSpace: 100,
+                                  ),
+                                ),
+                                backgroundColor:
+                                    Theme.of(context).colorScheme.onPrimary,
+                              ),
+                              body: InAppWebView(
+                                initialUrlRequest: URLRequest(
+                                  url: WebUri(
+                                    event.liveBlog!['eventUrl'],
+                                  ),
+                                ),
+                                gestureRecognizers: {
+                                  Factory<VerticalDragGestureRecognizer>(
+                                      () => VerticalDragGestureRecognizer()),
+                                  Factory<HorizontalDragGestureRecognizer>(
+                                      () => HorizontalDragGestureRecognizer()),
+                                  Factory<ScaleGestureRecognizer>(
+                                      () => ScaleGestureRecognizer()),
+                                },
+                              ),
+                            ),
+                          )
+                        : Container(),
+                    championship == 'Formula 1'
+                        ? const SizedBox(height: 200)
+                        : Container(),
+                  ],
+                ),
               ),
             ),
-          );
+    );
   }
 }
 
@@ -741,7 +765,8 @@ class SessionItem extends StatelessWidget {
                                     fontSize: 20,
                                   ),
                                 ),
-                                session.endTime.isBefore(DateTime.now())
+                                session.endTime.isBefore(DateTime.now()) &&
+                                        !session.isRunning
                                     ? Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
@@ -766,7 +791,9 @@ class SessionItem extends StatelessWidget {
                                           ),
                                         ],
                                       )
-                                    : session.startTime.isBefore(DateTime.now())
+                                    : session.startTime
+                                                .isBefore(DateTime.now()) ||
+                                            session.isRunning
                                         ? Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.center,

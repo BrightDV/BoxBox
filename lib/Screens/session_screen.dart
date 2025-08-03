@@ -186,7 +186,8 @@ class _SessionScreenState extends State<SessionScreen> {
                 ),
               )
             : widget.session.startTime.isBefore(DateTime.now()) &&
-                    widget.session.endTime.isAfter(DateTime.now())
+                        widget.session.endTime.isAfter(DateTime.now()) ||
+                    widget.session.isRunning
                 ? championship == 'Formula 1'
                     ? useOfficialWebview
                         ? WebViewManagerScreen(widget.sessionFullName)
@@ -239,8 +240,9 @@ class _SessionScreenState extends State<SessionScreen> {
                 widget.sessionFullName,
               ),
             ),
-            body: widget.session.state == 'upcoming' ||
-                    widget.session.startTime.isAfter(DateTime.now())
+            body: (widget.session.state == 'upcoming' ||
+                        widget.session.startTime.isAfter(DateTime.now())) &&
+                    !widget.session.isRunning
                 ? Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
