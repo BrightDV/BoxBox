@@ -70,6 +70,46 @@ class _OtherSettingsScreenState extends State<OtherSettingsScreen> {
             onTap: () => context.pushNamed('championship-settings'),
             trailing: Icon(Icons.arrow_forward),
           ),
+          SwitchListTile(
+            title: Text(
+              AppLocalizations.of(context)!.twelveHourClock,
+            ),
+            value: shouldUse12HourClock,
+            onChanged: (bool value) {
+              setState(
+                () {
+                  shouldUse12HourClock = value;
+                  Hive.box('settings').put('shouldUse12HourClock', value);
+                },
+              );
+            },
+          ),
+          ListTile(
+            title: Text(
+              AppLocalizations.of(context)!.server,
+            ),
+            onTap: () => context.pushNamed(
+              'server-settings',
+              extra: {'update': widget.update},
+            ),
+            trailing: Icon(
+              Icons.arrow_forward_rounded,
+            ),
+          ),
+          SwitchListTile(
+            title: Text(
+              AppLocalizations.of(context)!.experimentalFeatures,
+            ),
+            value: enableExperimentalFeatures,
+            onChanged: (bool value) {
+              setState(
+                () {
+                  enableExperimentalFeatures = value;
+                  Hive.box('settings').put('enableExperimentalFeatures', value);
+                },
+              );
+            },
+          ),
           if (championship == 'Formula 1')
             ListTile(
               title: Text(
@@ -193,18 +233,6 @@ class _OtherSettingsScreenState extends State<OtherSettingsScreen> {
                 Icons.arrow_forward_rounded,
               ),
             ),
-          ListTile(
-            title: Text(
-              AppLocalizations.of(context)!.server,
-            ),
-            onTap: () => context.pushNamed(
-              'server-settings',
-              extra: {'update': widget.update},
-            ),
-            trailing: Icon(
-              Icons.arrow_forward_rounded,
-            ),
-          ),
           if (championship == 'Formula 1')
             SwitchListTile(
               title: Text(
@@ -244,20 +272,34 @@ class _OtherSettingsScreenState extends State<OtherSettingsScreen> {
                 );
               },
             ),
-          SwitchListTile(
-            title: Text(
-              AppLocalizations.of(context)!.twelveHourClock,
-            ),
-            value: shouldUse12HourClock,
-            onChanged: (bool value) {
-              setState(
-                () {
-                  shouldUse12HourClock = value;
-                  Hive.box('settings').put('shouldUse12HourClock', value);
+          if (championship == 'Formula 1')
+            GestureDetector(
+              onLongPress: () async => await launchUrl(
+                Uri.parse(
+                  'https://github.com/BrightDV/BoxBox/wiki/Ergast-API-vs-Official-API',
+                ),
+              ),
+              child: SwitchListTile(
+                title: Text(
+                  AppLocalizations.of(context)!.useOfficialDataSource,
+                ),
+                subtitle: Text(
+                  AppLocalizations.of(context)!.useOfficialDataSourceSub,
+                  style: TextStyle(
+                    fontSize: 12,
+                  ),
+                ),
+                value: useOfficialDataSoure,
+                onChanged: (bool value) {
+                  setState(
+                    () {
+                      useOfficialDataSoure = value;
+                      Hive.box('settings').put('useOfficialDataSoure', value);
+                    },
+                  );
                 },
-              );
-            },
-          ),
+              ),
+            ),
           if (championship == 'Formula E')
             ListTile(
               title: Text(
@@ -299,48 +341,6 @@ class _OtherSettingsScreenState extends State<OtherSettingsScreen> {
                       child: Icon(Icons.sync_outlined),
                     ),
             ),
-          if (championship == 'Formula 1')
-            GestureDetector(
-              onLongPress: () async => await launchUrl(
-                Uri.parse(
-                  'https://github.com/BrightDV/BoxBox/wiki/Ergast-API-vs-Official-API',
-                ),
-              ),
-              child: SwitchListTile(
-                title: Text(
-                  AppLocalizations.of(context)!.useOfficialDataSource,
-                ),
-                subtitle: Text(
-                  AppLocalizations.of(context)!.useOfficialDataSourceSub,
-                  style: TextStyle(
-                    fontSize: 12,
-                  ),
-                ),
-                value: useOfficialDataSoure,
-                onChanged: (bool value) {
-                  setState(
-                    () {
-                      useOfficialDataSoure = value;
-                      Hive.box('settings').put('useOfficialDataSoure', value);
-                    },
-                  );
-                },
-              ),
-            ),
-          SwitchListTile(
-            title: Text(
-              AppLocalizations.of(context)!.experimentalFeatures,
-            ),
-            value: enableExperimentalFeatures,
-            onChanged: (bool value) {
-              setState(
-                () {
-                  enableExperimentalFeatures = value;
-                  Hive.box('settings').put('enableExperimentalFeatures', value);
-                },
-              );
-            },
-          ),
         ],
       ),
     );

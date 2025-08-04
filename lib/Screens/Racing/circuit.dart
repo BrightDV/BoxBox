@@ -17,16 +17,16 @@
  * Copyright (c) 2022-2025, BrightDV
  */
 
-import 'package:boxbox/Screens/Racing/circuit_details.dart';
 import 'package:boxbox/Screens/session_screen.dart';
 import 'package:boxbox/api/event_tracker.dart';
 import 'package:boxbox/api/formula1.dart';
-import 'package:boxbox/helpers/buttons.dart';
 import 'package:boxbox/helpers/divider.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/news.dart';
 import 'package:boxbox/helpers/request_error.dart';
 import 'package:boxbox/l10n/app_localizations.dart';
+import 'package:boxbox/providers/circuit/requests.dart';
+import 'package:boxbox/providers/circuit/ui.dart';
 import 'package:boxbox/scraping/formula_one.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -42,12 +42,11 @@ class CircuitScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Map details = Hive.box('requests')
-        .get('f1CircuitDetails-$meetingId', defaultValue: {});
+    Map details = CircuitRequestsProvider().getSavedDetails(meetingId);
     return Scaffold(
       extendBodyBehindAppBar: true,
       body: FutureBuilder(
-        future: Formula1().getCircuitDetails(meetingId),
+        future: CircuitRequestsProvider().getCircuitDetails(meetingId),
         builder: (context, snapshot) => snapshot.hasError
             ? details.isNotEmpty
                 ? CircuitScreenContent(details)
@@ -182,120 +181,12 @@ class CircuitScreenContent extends StatelessWidget {
               ),
             ],
           ),
-          details['raceReview']?['headline'] != null
-              ? Headline(details['raceReview']['headline'])
-              : Container(),
-          details['raceReview']?['links'] != null &&
-                  details['raceReview']['links'].isNotEmpty &&
-                  details['raceReview']['links'].length > 0
-              ? BoxBoxButton(
-                  AppLocalizations.of(context)!.viewHighlights,
-                  Icon(
-                    Icons.play_arrow_outlined,
-                  ),
-                  route: 'article',
-                  pathParameters: {
-                    'id': details['raceReview']['links'][1]['url']
-                            .endsWith('.html')
-                        ? details['raceReview']['links'][1]['url'].split('.')[4]
-                        : details['raceReview']['links'][1]['url']
-                            .split('.')
-                            .last,
-                  },
-                  extra: {'isFromLink': true},
-                )
-              : Container(),
-          details['meetingSessionResults']?.last['sessionResults']
-                          ?['raceResultsRace']?['results'] !=
-                      null &&
-                  details['meetingSessionResults']
-                      .last['sessionResults']?['raceResultsRace']?['results']
-                      .isNotEmpty
-              ? RaceResults(
-                  details['race']['meetingCountryName'],
-                  details['race']['meetingKey'],
-                  details['meetingSessionResults']
-                      .last['sessionResults']['raceResultsRace']['results']
-                      .sublist(0, 5),
-                )
-              : Container(),
-          details['raceReview'] != null &&
-                  details['raceReview']['curatedSection'] != null
-              ? details['raceReview']['curatedSection']['items'].isNotEmpty
-                  ? CuratedSection(
-                      details['raceReview']['curatedSection']['items'],
-                    )
-                  : Container()
-              : Container(),
-          Padding(
-            padding: EdgeInsets.only(top: 5),
-            child: Card(
-              elevation: 10,
-              child: Padding(
-                padding: EdgeInsets.symmetric(
-                  vertical: 10,
-                  horizontal: 10,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(left: 4, bottom: 5),
-                      child: Text(
-                        'Sessions',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w700,
-                          fontSize: 25,
-                        ),
-                      ),
-                    ),
-                    for (var session
-                        in details['race']['meetingSessions'].reversed.toList())
-                      SessionItemForCircuit(
-                        session['description'],
-                        Session(
-                          session['state'],
-                          session['session'],
-                          DateTime.parse(
-                                  session['endTime'] + session['gmtOffset'])
-                              .toLocal(),
-                          DateTime.parse(
-                                  session['startTime'] + session['gmtOffset'])
-                              .toLocal(),
-                          null,
-                          DateTime.now().isBefore(DateTime.parse(
-                                      session['endTime'] + session['gmtOffset'])
-                                  .toLocal()) &&
-                              DateTime.now().isAfter(DateTime.parse(
-                                      session['startTime'] +
-                                          session['gmtOffset'])
-                                  .toLocal()),
-                        ),
-                        details['race']['meetingCountryName'],
-                        details['race']['meetingOfficialName'],
-                        details['race']['meetingKey'],
-                        links: details['sessionLinkSets'][session['session']]
-                            ['links'],
-                      ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          BoxBoxButton(
-            'Circuit facts',
-            Icon(
-              Icons.info_outline,
-            ),
-            isRoute: false,
-            widget: CircuitDetailsScreen(
-              details['race']['meetingCountryName'],
-              details['race']['circuitOfficialName'],
-              details['circuitMapImage']['url'],
-              details['circuitDescriptionText'],
-              details['circuitMap']['links'],
-            ),
-          ),
+          CircuitUIProvider().getHeadline(details),
+          CircuitUIProvider().getHighlightsButton(details, context),
+          CircuitUIProvider().getSessionResults(details),
+          CircuitUIProvider().getCuratedSection(details),
+          CircuitUIProvider().getSessions(details),
+          CircuitUIProvider().getCircuitFacts(details),
           SizedBox(height: 50),
         ],
       ),
@@ -842,6 +733,67 @@ class CircuitScreenFromMeetingName extends StatelessWidget {
               : snapshot.hasData
                   ? Container()
                   : LoadingIndicatorUtil(),
+        ),
+      ),
+    );
+  }
+}
+
+class Sessions extends StatelessWidget {
+  final Map details;
+  const Sessions(this.details, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(top: 5),
+      child: Card(
+        elevation: 10,
+        child: Padding(
+          padding: EdgeInsets.symmetric(
+            vertical: 10,
+            horizontal: 10,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(left: 4, bottom: 5),
+                child: Text(
+                  'Sessions',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 25,
+                  ),
+                ),
+              ),
+              for (var session
+                  in details['race']['meetingSessions'].reversed.toList())
+                SessionItemForCircuit(
+                  session['description'],
+                  Session(
+                    session['state'],
+                    session['session'],
+                    DateTime.parse(session['endTime'] + session['gmtOffset'])
+                        .toLocal(),
+                    DateTime.parse(session['startTime'] + session['gmtOffset'])
+                        .toLocal(),
+                    null,
+                    DateTime.now().isBefore(DateTime.parse(
+                                session['endTime'] + session['gmtOffset'])
+                            .toLocal()) &&
+                        DateTime.now().isAfter(DateTime.parse(
+                                session['startTime'] + session['gmtOffset'])
+                            .toLocal()),
+                  ),
+                  details['race']['meetingCountryName'],
+                  details['race']['meetingOfficialName'],
+                  details['race']['meetingKey'],
+                  links: details['sessionLinkSets'][session['session']]
+                      ['links'],
+                ),
+            ],
+          ),
         ),
       ),
     );

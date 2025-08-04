@@ -17,17 +17,11 @@
  * Copyright (c) 2022-2025, BrightDV
  */
 
-import 'dart:async';
-
-import 'package:boxbox/api/formula1.dart';
-import 'package:boxbox/api/formulae.dart';
-import 'package:boxbox/helpers/loading_indicator_util.dart';
-import 'package:boxbox/helpers/request_error.dart';
-import 'package:boxbox/api/ergast.dart';
 import 'package:boxbox/api/race_components.dart';
+import 'package:boxbox/providers/schedule/requests.dart';
+import 'package:boxbox/providers/schedule/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:boxbox/l10n/app_localizations.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 
 class ScheduleScreen extends StatelessWidget {
   final ScrollController? scrollController;
@@ -92,66 +86,23 @@ class ScheduleWidget extends StatelessWidget {
     this.scrollController,
   }) : super(key: key);
 
-  Future<List<Race>> getRacesList(bool toCome) async {
-    String championship = Hive.box('settings')
-        .get('championship', defaultValue: 'Formula 1') as String;
-    if (championship == 'Formula 1') {
-      bool useOfficialDataSoure = Hive.box('settings')
-          .get('useOfficialDataSoure', defaultValue: true) as bool;
-      if (useOfficialDataSoure) {
-        return await Formula1().getLastSchedule(toCome);
-      } else {
-        return await ErgastApi().getLastSchedule(toCome);
-      }
-    } else {
-      return await FormulaE().getLastSchedule(toCome);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    String championship = Hive.box('settings')
-        .get('championship', defaultValue: 'Formula 1') as String;
-    Map schedule = {};
-    String scheduleLastSavedFormat = '';
-    if (championship == 'Formula 1') {
-      schedule =
-          Hive.box('requests').get('f1Schedule', defaultValue: {}) as Map;
-      scheduleLastSavedFormat = Hive.box('requests')
-          .get('f1ScheduleLastSavedFormat', defaultValue: 'ergast');
-    } else {
-      schedule =
-          Hive.box('requests').get('feSchedule', defaultValue: {}) as Map;
-    }
+    Map result = ScheduleRequestsProvider().getSavedSchedule();
+    Map schedule = result['schedule'];
+    String scheduleLastSavedFormat = result['schedule'] ?? '';
 
     return FutureBuilder<List<Race>>(
-      future: getRacesList(toCome),
+      future: ScheduleRequestsProvider().getRacesList(toCome),
       builder: (context, snapshot) => snapshot.hasError
-          ? championship == 'Formula 1'
-              ? schedule[scheduleLastSavedFormat == 'ergast'
-                          ? 'MRData'
-                          : 'events'] !=
-                      null
-                  ? RacesList(
-                      scheduleLastSavedFormat == 'ergast'
-                          ? ErgastApi().formatLastSchedule(
-                              schedule,
-                              toCome,
-                            )
-                          : Formula1().formatLastSchedule(schedule, toCome),
-                      toCome,
-                      scrollController: scrollController,
-                      isCache: true,
-                    )
-                  : RequestErrorWidget(snapshot.error.toString())
-              : schedule['races'] != null
-                  ? RacesList(
-                      FormulaE().formatLastSchedule(schedule, toCome),
-                      toCome,
-                      scrollController: scrollController,
-                      isCache: true,
-                    )
-                  : RequestErrorWidget(snapshot.error.toString())
+          ? ScheduleUIProvider().getScheduleWidget(
+              snapshot,
+              scheduleLastSavedFormat,
+              schedule,
+              toCome,
+              scrollController,
+              true,
+            )
           : snapshot.hasData
               ? snapshot.data!.isEmpty
                   ? const EmptySchedule()
@@ -160,43 +111,14 @@ class ScheduleWidget extends StatelessWidget {
                       toCome,
                       scrollController: scrollController,
                     )
-              : championship == 'Formula 1'
-                  ? schedule[scheduleLastSavedFormat == 'ergast'
-                              ? 'MRData'
-                              : 'events'] !=
-                          null
-                      ? (scheduleLastSavedFormat == 'ergast'
-                                  ? ErgastApi().formatLastSchedule(
-                                      schedule,
-                                      toCome,
-                                    )
-                                  : Formula1()
-                                      .formatLastSchedule(schedule, toCome))
-                              .isEmpty
-                          ? const EmptySchedule()
-                          : RacesList(
-                              scheduleLastSavedFormat == 'ergast'
-                                  ? ErgastApi().formatLastSchedule(
-                                      schedule,
-                                      toCome,
-                                    )
-                                  : Formula1()
-                                      .formatLastSchedule(schedule, toCome),
-                              toCome,
-                              scrollController: scrollController,
-                              isCache: true,
-                            )
-                      : const LoadingIndicatorUtil()
-                  : schedule['races'] != null
-                      ? FormulaE().formatLastSchedule(schedule, toCome).isEmpty
-                          ? const EmptySchedule()
-                          : RacesList(
-                              FormulaE().formatLastSchedule(schedule, toCome),
-                              toCome,
-                              scrollController: scrollController,
-                              isCache: true,
-                            )
-                      : const LoadingIndicatorUtil(),
+              : ScheduleUIProvider().getScheduleWidget(
+                  snapshot,
+                  scheduleLastSavedFormat,
+                  schedule,
+                  toCome,
+                  scrollController,
+                  false,
+                ),
     );
   }
 }

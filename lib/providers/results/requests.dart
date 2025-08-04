@@ -22,9 +22,6 @@ import 'package:boxbox/api/formula1.dart';
 import 'package:boxbox/api/formulae.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
-String championship = Hive.box('settings')
-    .get('championship', defaultValue: 'Formula 1') as String;
-
 class ResultsRequestsProvider {
   Future<List<DriverResult>> getFreePracticeResults(
     String? raceUrl,

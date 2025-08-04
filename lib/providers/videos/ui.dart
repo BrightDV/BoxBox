@@ -27,9 +27,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:share_plus/share_plus.dart';
 
-String championship = Hive.box('settings')
-    .get('championship', defaultValue: 'Formula 1') as String;
-
 class VideosUIProvider {
   List<Widget> getVideoActions(
     List downloads,

@@ -17,24 +17,28 @@
  * Copyright (c) 2022-2025, BrightDV
  */
 
-import 'package:boxbox/api/formulae.dart';
-import 'package:boxbox/api/videos.dart';
+import 'package:boxbox/api/formula1.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
-class VideosRequestProvider {
-  Future<List<Video>> getLatestVideos(int offset, {String tag = ''}) {
+class CircuitRequestsProvider {
+  Map getSavedDetails(String meetingId) {
     String championship = Hive.box('settings')
         .get('championship', defaultValue: 'Formula 1') as String;
     if (championship == 'Formula 1') {
-      return F1VideosFetcher().getLatestVideos(
-        24,
-        offset,
-      );
+      return Hive.box('requests')
+          .get('f1CircuitDetails-$meetingId', defaultValue: {});
     } else {
-      return FormulaE().getLatestVideos(
-        24,
-        offset,
-      );
+      return {};
+    }
+  }
+
+  Future<Map> getCircuitDetails(String meetingId) async {
+    String championship = Hive.box('settings')
+        .get('championship', defaultValue: 'Formula 1') as String;
+    if (championship == 'Formula 1') {
+      return Formula1().getCircuitDetails(meetingId);
+    } else {
+      return {};
     }
   }
 }

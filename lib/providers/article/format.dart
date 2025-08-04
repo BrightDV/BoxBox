@@ -17,24 +17,25 @@
  * Copyright (c) 2022-2025, BrightDV
  */
 
-import 'package:boxbox/api/formulae.dart';
-import 'package:boxbox/api/videos.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
-class VideosRequestProvider {
-  Future<List<Video>> getLatestVideos(int offset, {String tag = ''}) {
+class ArticleFormatProvider {
+  String formatHeroUrl(Map savedArticle) {
     String championship = Hive.box('settings')
         .get('championship', defaultValue: 'Formula 1') as String;
     if (championship == 'Formula 1') {
-      return F1VideosFetcher().getLatestVideos(
-        24,
-        offset,
-      );
-    } else {
-      return FormulaE().getLatestVideos(
-        24,
-        offset,
-      );
+      if (savedArticle['hero'].isNotEmpty) {
+        if (savedArticle['hero']['contentType'] == 'atomVideo') {
+          return savedArticle['hero']['fields']['thumbnail']['url'];
+        } else if (savedArticle['hero']['contentType'] == 'atomVideoYouTube') {
+          return savedArticle['hero']['fields']['image']['url'];
+        } else if (savedArticle['hero']['contentType'] == 'atomImageGallery') {
+          return savedArticle['hero']['fields']['imageGallery'][0]['url'];
+        } else {
+          return savedArticle['hero']['fields']['image']['url'];
+        }
+      }
     }
+    return "";
   }
 }

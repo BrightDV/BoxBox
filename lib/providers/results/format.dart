@@ -24,9 +24,6 @@ import 'package:boxbox/api/formulae.dart';
 import 'package:boxbox/helpers/team_background_color.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
-String championship = Hive.box('settings')
-    .get('championship', defaultValue: 'Formula 1') as String;
-
 class ResultsFormatProvider {
   Color getTeamColor(DriverResult result) {
     String championship = Hive.box('settings')

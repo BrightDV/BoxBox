@@ -26,7 +26,8 @@ import 'package:boxbox/api/formula1.dart';
 import 'package:boxbox/helpers/download.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/request_error.dart';
-import 'package:boxbox/scraping/formulae.dart';
+import 'package:boxbox/providers/article/format.dart';
+import 'package:boxbox/providers/article/requests.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -87,24 +88,8 @@ class _ArticleScreenState extends State<ArticleScreen> {
               .get('championship', defaultValue: 'Formula 1') as String;
           File file = File(path!);
           Map savedArticle = json.decode(await file.readAsString());
-          String heroImageUrl = "";
-          if (championship == 'Formula 1') {
-            if (savedArticle['hero'].isNotEmpty) {
-              if (savedArticle['hero']['contentType'] == 'atomVideo') {
-                heroImageUrl =
-                    savedArticle['hero']['fields']['thumbnail']['url'];
-              } else if (savedArticle['hero']['contentType'] ==
-                  'atomVideoYouTube') {
-                heroImageUrl = savedArticle['hero']['fields']['image']['url'];
-              } else if (savedArticle['hero']['contentType'] ==
-                  'atomImageGallery') {
-                heroImageUrl =
-                    savedArticle['hero']['fields']['imageGallery'][0]['url'];
-              } else {
-                heroImageUrl = savedArticle['hero']['fields']['image']['url'];
-              }
-            }
-          }
+          String heroImageUrl =
+              ArticleFormatProvider().formatHeroUrl(savedArticle);
 
           String taskId = 'article_f1_${savedArticle['id']}';
 
@@ -284,65 +269,15 @@ class ArticleProvider extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
-  Future<Article> getArticleFromFormula1(
-      String articleId, Function updateArticleTitle) async {
-    String? filePath = kIsWeb
-        ? null
-        : await DownloadUtils()
-            .downloadedFilePathIfExists('article_f1_${articleId}');
-    if (filePath != null) {
-      File file = File(filePath);
-      Map savedArticle = await json.decode(await file.readAsString());
-      Article article = Article(
-        savedArticle['id'],
-        savedArticle['slug'],
-        savedArticle['title'],
-        DateTime.parse(savedArticle['createdAt']),
-        savedArticle['articleTags'],
-        savedArticle['hero'] ?? {},
-        savedArticle['body'],
-        savedArticle['relatedArticles'],
-        savedArticle['author'] ?? {},
-      );
-      updateArticleTitle(article.articleName);
-      return article;
-    } else {
-      Article article = await Formula1().getArticleData(articleId);
-      updateArticleTitle(article.articleName);
-      return article;
-    }
-  }
-
-  Future<Article> getArticleFromFormulaE(String articleId) async {
-    Article article = await FormulaEScraper().getArticleData(
-      news,
-      articleId,
-    );
-    updateArticleTitle(article.articleName);
-    return article;
-  }
-
-  Future<Article> getArticleData(
-      String articleId, Function updateArticleTitle) async {
-    String championship = Hive.box('settings')
-        .get('championship', defaultValue: 'Formula 1') as String;
-    if (championshipOfArticle != '') {
-      if (championshipOfArticle == 'Formula 1') {
-        return await getArticleFromFormula1(articleId, updateArticleTitle);
-      } else {
-        return await getArticleFromFormulaE(articleId);
-      }
-    } else if (championship == 'Formula 1') {
-      return await getArticleFromFormula1(articleId, updateArticleTitle);
-    } else {
-      return await getArticleFromFormulaE(articleId);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<Article>(
-      future: getArticleData(articleId, updateArticleTitle),
+      future: ArticleRequestsProvider().getArticleData(
+        articleId,
+        updateArticleTitle,
+        championshipOfArticle,
+        news,
+      ),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return RequestErrorWidget(snapshot.error.toString());
