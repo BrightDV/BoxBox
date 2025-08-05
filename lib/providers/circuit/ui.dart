@@ -19,8 +19,11 @@
 
 import 'package:boxbox/Screens/Racing/circuit.dart';
 import 'package:boxbox/Screens/Racing/circuit_details.dart';
+import 'package:boxbox/api/formulae.dart';
 import 'package:boxbox/helpers/buttons.dart';
+import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/l10n/app_localizations.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
@@ -140,6 +143,67 @@ class CircuitUIProvider {
           details['circuitDescriptionText'],
           details['circuitMap']['links'],
         ),
+      );
+    } else {
+      return Container();
+    }
+  }
+
+  Widget getRaceImage(String meetingId, Map details, BuildContext context) {
+    String championship = Hive.box('settings')
+        .get('championship', defaultValue: 'Formula 1') as String;
+    if (championship == 'Formula 1') {
+      return CachedNetworkImage(
+        errorWidget: (context, url, error) => const Icon(Icons.error_outlined),
+        fadeOutDuration: const Duration(milliseconds: 300),
+        fadeInDuration: const Duration(milliseconds: 300),
+        fit: BoxFit.cover,
+        imageUrl: details['raceImage']['url'],
+        placeholder: (context, url) => const LoadingIndicatorUtil(),
+        colorBlendMode: BlendMode.darken,
+        height: MediaQuery.of(context).size.width > 780
+            ? MediaQuery.of(context).size.height
+            : MediaQuery.of(context).size.height * (4 / 9),
+      );
+    } else if (championship == 'Formula E') {
+      return FutureBuilder(
+        future: FormulaE().getCircuitImageUrl(meetingId),
+        builder: (context, snapshot) => snapshot.hasError
+            ? Container()
+            : snapshot.hasData
+                ? CachedNetworkImage(
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error_outlined),
+                    fadeOutDuration: const Duration(milliseconds: 300),
+                    fadeInDuration: const Duration(milliseconds: 300),
+                    fit: BoxFit.cover,
+                    imageUrl: snapshot.data!,
+                    placeholder: (context, url) => Container(),
+                    colorBlendMode: BlendMode.darken,
+                    height: MediaQuery.of(context).size.width > 780
+                        ? MediaQuery.of(context).size.height
+                        : MediaQuery.of(context).size.height * (4 / 9),
+                  )
+                : Container(),
+      );
+    } else {
+      return Container();
+    }
+  }
+
+  Widget getRaceFlag(Map details, BuildContext context) {
+    String championship = Hive.box('settings')
+        .get('championship', defaultValue: 'Formula 1') as String;
+    if (championship == 'Formula 1') {
+      return CachedNetworkImage(
+        errorWidget: (context, url, error) => SizedBox(width: 53),
+        fadeOutDuration: const Duration(milliseconds: 300),
+        fadeInDuration: const Duration(milliseconds: 300),
+        placeholder: (context, url) => SizedBox(width: 53),
+        fit: BoxFit.cover,
+        imageUrl: details['raceCountryFlag']['url'],
+        height: MediaQuery.of(context).size.width > 780 ? 60 : 30,
+        width: MediaQuery.of(context).size.width > 780 ? 106 : 53,
       );
     } else {
       return Container();

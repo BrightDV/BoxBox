@@ -542,30 +542,39 @@ class FormulaE {
     }
   }
 
-  Future<Map> getSessionsAndRaceDetails(Race race) async {
-    Map sessions = await getSessions(race.meetingId);
-
-    Race raceWithSessions = Race(
-      race.round,
-      race.meetingId,
-      race.raceName,
-      race.date,
-      sessions['original']['sessions'].last['startTime'],
-      race.circuitId,
-      race.circuitName,
-      race.circuitUrl,
-      race.country,
-      sessions['sessionDates'],
-      raceCoverUrl: race.raceCoverUrl,
-      sessionStates: sessions['sessionStates'],
+  Future<Map> getRaceDetails(String raceId) async {
+    //String endpoint = Hive.box('settings')
+    //    .get('server', defaultValue: defaultF1Endpoint) as String;
+    Uri url = Uri.parse(
+      //endpoint != defaultF1Endpoint
+      //? '$endpoint/fe/formula-e/v1/races/championshipId=$championshipId'
+      '$defaultEndpoint/formula-e/v1/races/$raceId',
     );
+    var response = await http.get(
+      url,
+      headers: {
+        'Accept': 'application/json',
+        'User-Agent':
+            'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:124.0) Gecko/20100101 Firefox/124.0',
+      },
+    );
+    Map<String, dynamic> responseAsJson = json.decode(
+      utf8.decode(response.bodyBytes),
+    );
+
+    return responseAsJson;
+  }
+
+  Future<Map> getSessionsAndRaceDetails(String meetingId) async {
+    Map sessions = await getSessions(meetingId);
+    Map race = await getRaceDetails(meetingId);
 
     String endpoint = Hive.box('settings')
         .get('server', defaultValue: defaultF1Endpoint) as String;
     Uri url = Uri.parse(
       endpoint != defaultF1Endpoint
-          ? '$endpoint/fe/content/formula-e/EN/contentTypes=video&contentTypes=news&page=0&pageSize=10&references=FORMULA_E_RACE:${race.meetingId}&onlyRestrictedContent=false&detail=DETAILED'
-          : '$defaultEndpoint/content/formula-e/EN?contentTypes=video&contentTypes=news&page=0&pageSize=10&references=FORMULA_E_RACE:${race.meetingId}&onlyRestrictedContent=false&detail=DETAILED',
+          ? '$endpoint/fe/content/formula-e/EN/contentTypes=video&contentTypes=news&page=0&pageSize=10&references=FORMULA_E_RACE:${meetingId}&onlyRestrictedContent=false&detail=DETAILED'
+          : '$defaultEndpoint/content/formula-e/EN?contentTypes=video&contentTypes=news&page=0&pageSize=10&references=FORMULA_E_RACE:${meetingId}&onlyRestrictedContent=false&detail=DETAILED',
     );
     http.Response response = await http.get(
       url,
@@ -580,10 +589,12 @@ class FormulaE {
     );
 
     Map formatedMap = {
-      'raceCustomBBParameter': raceWithSessions,
-      'sessionsIdsCustomBBParameter': sessions['sessionIds'],
-      'contentsCustomBBParameter': responseAsJson['content'],
+      'sessionsIds': sessions['sessionIds'],
+      'content': responseAsJson['content'],
+      'race': race,
+      'meetingId': meetingId,
     };
+    Hive.box('requests').put('feCircuitDetails-$meetingId', formatedMap);
     return formatedMap;
   }
 

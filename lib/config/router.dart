@@ -50,6 +50,7 @@ import 'package:boxbox/helpers/route_handler.dart';
 import 'package:flutter/material.dart';
 import 'package:boxbox/l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 class RouterLocalConfig {
   static final router = GoRouter(
@@ -290,16 +291,26 @@ class RouterLocalConfig {
             name: 'racing',
             path: 'racing/:meetingId',
             builder: (context, state) {
-              try {
-                int.parse(state.pathParameters['meetingId']!);
-              } catch (_) {
-                return CircuitScreenFromMeetingName(
+              // will be updated with Rewrite Part 2 (championship-specific routes)
+              // it ensures compatibility in the meantime
+              String championship = Hive.box('settings')
+                  .get('championship', defaultValue: 'Formula 1') as String;
+              if (championship == 'Formula 1') {
+                try {
+                  int.parse(state.pathParameters['meetingId']!);
+                } catch (_) {
+                  return CircuitScreenFromMeetingName(
+                    state.pathParameters['meetingId']!,
+                  );
+                }
+                return CircuitScreen(
+                  state.pathParameters['meetingId']!,
+                );
+              } else {
+                return CircuitScreen(
                   state.pathParameters['meetingId']!,
                 );
               }
-              return CircuitScreen(
-                state.pathParameters['meetingId']!,
-              );
             },
             routes: [
               GoRoute(

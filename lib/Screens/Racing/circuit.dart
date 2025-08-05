@@ -28,7 +28,6 @@ import 'package:boxbox/l10n/app_localizations.dart';
 import 'package:boxbox/providers/circuit/requests.dart';
 import 'package:boxbox/providers/circuit/ui.dart';
 import 'package:boxbox/scraping/formula_one.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
@@ -97,18 +96,10 @@ class CircuitScreenContent extends StatelessWidget {
                   );
                 },
                 blendMode: BlendMode.dstIn,
-                child: CachedNetworkImage(
-                  errorWidget: (context, url, error) =>
-                      const Icon(Icons.error_outlined),
-                  fadeOutDuration: const Duration(milliseconds: 300),
-                  fadeInDuration: const Duration(milliseconds: 300),
-                  fit: BoxFit.cover,
-                  imageUrl: details['raceImage']['url'],
-                  placeholder: (context, url) => const LoadingIndicatorUtil(),
-                  colorBlendMode: BlendMode.darken,
-                  height: MediaQuery.of(context).size.width > 780
-                      ? MediaQuery.of(context).size.height
-                      : MediaQuery.of(context).size.height * (4 / 9),
+                child: CircuitUIProvider().getRaceImage(
+                  details['meetingId'] ?? '',
+                  details,
+                  context,
                 ),
               ),
               Padding(
@@ -124,20 +115,9 @@ class CircuitScreenContent extends StatelessWidget {
                       children: [
                         ClipRRect(
                           borderRadius: BorderRadius.circular(6.0),
-                          child: CachedNetworkImage(
-                            errorWidget: (context, url, error) =>
-                                SizedBox(width: 53),
-                            fadeOutDuration: const Duration(milliseconds: 300),
-                            fadeInDuration: const Duration(milliseconds: 300),
-                            placeholder: (context, url) => SizedBox(width: 53),
-                            fit: BoxFit.cover,
-                            imageUrl: details['raceCountryFlag']['url'],
-                            height: MediaQuery.of(context).size.width > 780
-                                ? 60
-                                : 30,
-                            width: MediaQuery.of(context).size.width > 780
-                                ? 106
-                                : 53,
+                          child: CircuitUIProvider().getRaceFlag(
+                            details,
+                            context,
                           ),
                         ),
                         Padding(
@@ -150,7 +130,8 @@ class CircuitScreenContent extends StatelessWidget {
                                 : 3,
                           ),
                           child: Text(
-                            details['race']['meetingCountryName'],
+                            CircuitRequestsProvider()
+                                .getCircuitCountryName(details),
                             style: TextStyle(
                               fontFamily: 'Northwell',
                               fontSize: MediaQuery.of(context).size.width > 780
@@ -164,7 +145,8 @@ class CircuitScreenContent extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 20),
                       child: Text(
-                        details['race']['meetingOfficialName'],
+                        CircuitRequestsProvider()
+                            .getCircuitOfficialName(details),
                         style: TextStyle(
                           fontWeight: FontWeight.w400,
                           fontSize: 16,

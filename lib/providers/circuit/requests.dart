@@ -18,6 +18,7 @@
  */
 
 import 'package:boxbox/api/formula1.dart';
+import 'package:boxbox/api/formulae.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class CircuitRequestsProvider {
@@ -27,6 +28,9 @@ class CircuitRequestsProvider {
     if (championship == 'Formula 1') {
       return Hive.box('requests')
           .get('f1CircuitDetails-$meetingId', defaultValue: {});
+    } else if (championship == 'Formula E') {
+      return Hive.box('requests')
+          .get('feCircuitDetails-$meetingId', defaultValue: {});
     } else {
       return {};
     }
@@ -37,8 +41,34 @@ class CircuitRequestsProvider {
         .get('championship', defaultValue: 'Formula 1') as String;
     if (championship == 'Formula 1') {
       return Formula1().getCircuitDetails(meetingId);
+    } else if (championship == 'Formula E') {
+      return FormulaE().getSessionsAndRaceDetails(meetingId);
     } else {
       return {};
+    }
+  }
+
+  String getCircuitCountryName(Map details) {
+    String championship = Hive.box('settings')
+        .get('championship', defaultValue: 'Formula 1') as String;
+    if (championship == 'Formula 1') {
+      return details['race']['meetingCountryName'];
+    } else if (championship == 'Formula E') {
+      return details['race']['city'];
+    } else {
+      return '';
+    }
+  }
+
+  String getCircuitOfficialName(Map details) {
+    String championship = Hive.box('settings')
+        .get('championship', defaultValue: 'Formula 1') as String;
+    if (championship == 'Formula 1') {
+      return details['race']['meetingOfficialName'];
+    } else if (championship == 'Formula E') {
+      return details['race']['name'];
+    } else {
+      return '';
     }
   }
 }
