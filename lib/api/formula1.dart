@@ -657,14 +657,14 @@ class Formula1 {
 
   List<Driver> formatLastStandings(Map responseAsJson) {
     List<Driver> drivers = [];
-    List finalJson = responseAsJson['drivers'];
+    List finalJson = responseAsJson['driverstandings'];
     int c = 1;
     for (var element in finalJson) {
       String detailsPath =
           element['driverPageUrl'].split('/').last.split('.').first;
       drivers.add(
         Driver(
-          Convert().driverIdFromFormula1(detailsPath),
+          element['driverReference'],
           element['positionNumber'] ?? c.toString(),
           element['racingNumber'] ?? '',
           element['driverFirstName'],
@@ -699,7 +699,7 @@ class Formula1 {
 
     if (latestQuery
             .add(
-              const Duration(minutes: 30),
+              const Duration(minutes: 10),
             )
             .isAfter(DateTime.now()) &&
         driversStandings.isNotEmpty &&
@@ -710,8 +710,8 @@ class Formula1 {
           .get('server', defaultValue: defaultEndpoint) as String;
       var url = Uri.parse(
         endpoint != defaultEndpoint
-            ? '$endpoint/f1/v1/editorial-driverlisting/listing'
-            : '$endpoint/v1/editorial-driverlisting/listing',
+            ? '$endpoint/f1/v2/fom-results/driverstandings/season=${DateTime.now().year}'
+            : '$endpoint/v2/fom-results/driverstandings?season=${DateTime.now().year}',
       );
       var response = await http.get(
         url,
