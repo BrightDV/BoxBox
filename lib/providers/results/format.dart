@@ -17,18 +17,37 @@
  * Copyright (c) 2022-2025, BrightDV
  */
 
-import 'dart:ui';
-
 import 'package:boxbox/api/driver_components.dart';
 import 'package:boxbox/api/formulae.dart';
+import 'package:boxbox/api/race_components.dart';
 import 'package:boxbox/helpers/team_background_color.dart';
+import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class ResultsFormatProvider {
-  Color getTeamColor(DriverResult result) {
+  DateTime formatRaceDate(Race race, String scheduleLastSavedFormat) {
     String championship = Hive.box('settings')
         .get('championship', defaultValue: 'Formula 1') as String;
+    if (championship == 'Formula 1') {
+      if (scheduleLastSavedFormat == 'ergast') {
+        return DateTime.parse("${race.date} ${race.raceHour}");
+      } else {
+        return DateTime.parse(race.date);
+      }
+    } else if (championship == 'Formula E') {
+      if (race.raceHour != '') {
+        return DateTime.parse("${race.date} ${race.raceHour}");
+      } else {
+        return DateTime.parse(race.date);
+      }
+    } else {
+      return DateTime.now();
+    }
+  }
 
+  Color formatTeamColor(DriverResult result) {
+    String championship = Hive.box('settings')
+        .get('championship', defaultValue: 'Formula 1') as String;
     if (championship == 'Formula 1') {
       if (result.teamColor != null) {
         return Color(
@@ -42,8 +61,10 @@ class ResultsFormatProvider {
           result.team,
         );
       }
-    } else {
+    } else if (championship == 'Formula E') {
       return FormulaE().getTeamColor(result.team);
+    } else {
+      return Colors.transparent;
     }
   }
 }

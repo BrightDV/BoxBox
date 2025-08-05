@@ -18,6 +18,7 @@
  */
 
 import 'package:boxbox/Screens/FormulaYou/tags.dart';
+import 'package:boxbox/utils/string.dart';
 import 'package:flutter/material.dart';
 import 'package:boxbox/l10n/app_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -84,11 +85,5 @@ class _FormulaYouSettingsScreenState extends State<FormulaYouSettingsScreen> {
         ],
       ),
     );
-  }
-}
-
-extension StringExtension on String {
-  String capitalize() {
-    return "${this[0].toUpperCase()}${substring(1).toLowerCase()}";
   }
 }

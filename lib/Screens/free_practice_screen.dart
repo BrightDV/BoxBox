@@ -296,7 +296,7 @@ class FreePracticeResultItem extends StatelessWidget {
             Expanded(
               flex: 2,
               child: BoxBoxVerticalDivider(
-                color: ResultsFormatProvider().getTeamColor(result),
+                color: ResultsFormatProvider().formatTeamColor(result),
                 thickness: 8,
                 width: 25,
                 indent: 7,

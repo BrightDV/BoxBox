@@ -47,7 +47,7 @@ class EventTrackerUIProvider {
         .get('championship', defaultValue: 'Formula 1') as String;
     if (championship == 'Formula 1') {
       return 143;
-    } else if (championship == 'Formula 1') {
+    } else if (championship == 'Formula E') {
       return 115;
     } else {
       return 100;
@@ -490,7 +490,7 @@ class EventTrackerUIProvider {
         hasSprint: session.sessionsAbbreviation == 'ss' ? true : false,
         isSprintQualifying: session.sessionsAbbreviation == 'ss' ? true : false,
       );
-    } else {
+    } else if (championship == 'Formula E') {
       return FreePracticeResultsProvider(
         sessionFullName,
         10,
@@ -500,6 +500,8 @@ class EventTrackerUIProvider {
         meetingOfficialName,
         sessionId: session.baseUrl,
       );
+    } else {
+      return Container();
     }
   }
 }

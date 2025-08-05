@@ -193,8 +193,6 @@ class UIProvider {
           },
         ),
       ];
-    } else if (championship == 'Formula E') {
-      return [];
     } else {
       return [];
     }

@@ -8,7 +8,7 @@ import 'package:flutter/foundation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class ArticleRequestsProvider {
-  Future<Article> getArticleFromFormula1(
+  Future<Article> _getArticleFromFormula1(
     String articleId,
     Function updateArticleTitle,
   ) async {
@@ -39,7 +39,7 @@ class ArticleRequestsProvider {
     }
   }
 
-  Future<Article> getArticleFromFormulaE(
+  Future<Article> _getArticleFromFormulaE(
     String articleId,
     Function updateArticleTitle,
     News news,
@@ -62,18 +62,18 @@ class ArticleRequestsProvider {
         .get('championship', defaultValue: 'Formula 1') as String;
     if (championshipOfArticle != '') {
       if (championshipOfArticle == 'Formula 1') {
-        return await getArticleFromFormula1(articleId, updateArticleTitle);
+        return await _getArticleFromFormula1(articleId, updateArticleTitle);
       } else {
-        return await getArticleFromFormulaE(
+        return await _getArticleFromFormulaE(
           articleId,
           updateArticleTitle,
           news!,
         );
       }
     } else if (championship == 'Formula 1') {
-      return await getArticleFromFormula1(articleId, updateArticleTitle);
+      return await _getArticleFromFormula1(articleId, updateArticleTitle);
     } else {
-      return await getArticleFromFormulaE(
+      return await _getArticleFromFormulaE(
         articleId,
         updateArticleTitle,
         news!,

@@ -26,6 +26,7 @@ import 'package:boxbox/api/race_components.dart';
 import 'package:boxbox/api/team_components.dart';
 import 'package:boxbox/api/videos.dart';
 import 'package:boxbox/helpers/constants.dart';
+import 'package:boxbox/utils/string.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
@@ -904,11 +905,5 @@ class FormulaE {
   Future<void> updateChampionshipId() async {
     Map latestData = await getLatestChampionship();
     Hive.box('settings').put('feChampionshipId', latestData['id']);
-  }
-}
-
-extension StringExtension on String {
-  String capitalize() {
-    return "${this[0].toUpperCase()}${substring(1).toLowerCase()}";
   }
 }

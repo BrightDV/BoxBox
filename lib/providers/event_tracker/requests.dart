@@ -51,8 +51,21 @@ class EventTrackerRequestsProvider {
         .get('championship', defaultValue: 'Formula 1') as String;
     if (championship == 'Formula 1') {
       return await EventTracker().parseF1Event();
-    } else {
+    } else if (championship == 'Formula E') {
       return await EventTracker().parseFEEvent();
+    } else {
+      return Event(
+        '',
+        '',
+        '',
+        '',
+        DateTime.now(),
+        DateTime.now(),
+        '',
+        [],
+        false,
+        [],
+      );
     }
   }
 }
