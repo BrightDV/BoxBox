@@ -600,12 +600,6 @@ class AppLocalizationsFi extends AppLocalizations {
   String get updates => 'Uudet versiot';
 
   @override
-  String get useOfficialDataSource => 'Käytä virallista tietolähdettä';
-
-  @override
-  String get useOfficialDataSourceSub => 'Käytä virallisen mobiilisovelluksen tietolähdettä. Näin tulokset tulevat nopeammin, mutta kaikki tiedot eivät ole saatavilla. Saat lisätietoja painamalla tätä pitkään.';
-
-  @override
   String get useOfficialWebview => 'Käytä virallista sivustoa live-istunnoissa';
 
   @override

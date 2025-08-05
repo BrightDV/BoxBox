@@ -600,12 +600,6 @@ class AppLocalizationsBn extends AppLocalizations {
   String get updates => 'নতুন ভার্সন';
 
   @override
-  String get useOfficialDataSource => 'অফিসিয়াল তথ্য উৎস ব্যবহার করুন';
-
-  @override
-  String get useOfficialDataSourceSub => 'অফিসিয়াল মোবাইল অ্যাপের ডেটা সোর্স ব্যবহার করুন। এটি দ্রুত ফলাফল দেয়, তবে সমস্ত তথ্য পাওয়া যায় না। আরও বিস্তারিত জানার জন্য দীর্ঘক্ষণ প্রেস করুন।';
-
-  @override
   String get useOfficialWebview => 'লাইভ সেশনের জন্য অফিসিয়াল ওয়েবভিউ ব্যবহার করুন';
 
   @override

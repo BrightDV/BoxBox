@@ -600,12 +600,6 @@ class AppLocalizationsNl extends AppLocalizations {
   String get updates => 'Nieuwe versies';
 
   @override
-  String get useOfficialDataSource => 'Officiële gegevensbron gebruiken';
-
-  @override
-  String get useOfficialDataSourceSub => 'Gebruik de gegevensbron van de officiële mobiele app. Dit geeft snellere resultaten, maar niet alle details zijn beschikbaar. Druk lang voor meer details.';
-
-  @override
   String get useOfficialWebview => 'Gebruik onaangepaste WebView voor live-sessies';
 
   @override

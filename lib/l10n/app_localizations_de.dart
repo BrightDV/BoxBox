@@ -600,12 +600,6 @@ class AppLocalizationsDe extends AppLocalizations {
   String get updates => 'Neue Versionen';
 
   @override
-  String get useOfficialDataSource => 'Offizielle Datenquelle verwenden';
-
-  @override
-  String get useOfficialDataSourceSub => 'Die Datenquelle der offiziellen mobilen App verwenden. Dies liefert schnellere Ergebnisse, aber es sind nicht alle Details verfügbar. Drücken Sie lange, um mehr Details zu erhalten.';
-
-  @override
   String get useOfficialWebview => 'Offizielle Webansicht für Live-Sitzungen verwenden';
 
   @override

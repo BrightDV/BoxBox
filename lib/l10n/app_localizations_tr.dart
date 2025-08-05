@@ -600,12 +600,6 @@ class AppLocalizationsTr extends AppLocalizations {
   String get updates => 'Yeni versiyonlar';
 
   @override
-  String get useOfficialDataSource => 'Resmi veri kaynağını kullan';
-
-  @override
-  String get useOfficialDataSourceSub => 'Resmi mobil uygulamanın veri kaynağını kullanın. Bu daha hızlı sonuç verir, ancak tüm ayrıntılar yoktur. Daha fazla ayrıntı için uzun basın.';
-
-  @override
   String get useOfficialWebview => 'Canlı oturumlar için resmi web görünümünü kullan';
 
   @override

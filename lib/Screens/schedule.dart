@@ -90,7 +90,7 @@ class ScheduleWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     Map result = ScheduleRequestsProvider().getSavedSchedule();
     Map schedule = result['schedule'];
-    String scheduleLastSavedFormat = result['schedule'] ?? '';
+    String scheduleLastSavedFormat = result['scheduleLastSavedFormat'] ?? '';
 
     return FutureBuilder<List<Race>>(
       future: ScheduleRequestsProvider().getRacesList(toCome),

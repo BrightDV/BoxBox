@@ -600,12 +600,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get updates => '新版本';
 
   @override
-  String get useOfficialDataSource => '使用官方数据源';
-
-  @override
-  String get useOfficialDataSourceSub => '使用官方应用的数据源。该数据源更新快，但不详细。长按可获得更多细节。';
-
-  @override
   String get useOfficialWebview => '使用官网版本替代fi-dash.com进行现场直播';
 
   @override

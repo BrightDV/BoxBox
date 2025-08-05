@@ -600,12 +600,6 @@ class AppLocalizationsTa extends AppLocalizations {
   String get updates => 'புதிய பதிப்புகள்';
 
   @override
-  String get useOfficialDataSource => 'அதிகாரப்பூர்வ தரவு மூலத்தைப் பயன்படுத்தவும்';
-
-  @override
-  String get useOfficialDataSourceSub => 'அதிகாரப்பூர்வ மொபைல் பயன்பாட்டின் தரவு மூலத்தைப் பயன்படுத்தவும். இது விரைவான முடிவுகளைத் தருகிறது, ஆனால் எல்லா விவரங்களும் கிடைக்கவில்லை. மேலும் விவரங்களுக்கு நீண்ட அழுத்தம்.';
-
-  @override
   String get useOfficialWebview => 'ஃ1-டேசு.காம் க்கு பதிலாக நேரடி அமர்வுகளுக்கு அதிகாரப்பூர்வ வெப்வியூவைப் பயன்படுத்தவும்';
 
   @override

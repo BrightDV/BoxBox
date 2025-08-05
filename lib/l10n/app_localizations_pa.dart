@@ -600,12 +600,6 @@ class AppLocalizationsPa extends AppLocalizations {
   String get updates => 'ਨਵੇਂ ਸੰਸਕਰਣ';
 
   @override
-  String get useOfficialDataSource => 'ਅਧਿਕਾਰਤ ਡਾਟਾ ਸਰੋਤ ਵਰਤੋ';
-
-  @override
-  String get useOfficialDataSourceSub => 'ਅਧਿਕਾਰਤ ਮੋਬਾਈਲ ਐਪ ਦੇ ਡੇਟਾ ਸਰੋਤ ਦੀ ਵਰਤੋਂ ਕਰੋ। ਇਹ ਤੇਜ਼ ਨਤੀਜੇ ਦਿੰਦਾ ਹੈ, ਪਰ ਸਾਰੇ ਵੇਰਵੇ ਉਪਲਬਧ ਨਹੀਂ ਹਨ। ਹੋਰ ਵੇਰਵਿਆਂ ਲਈ ਲੰਬੇ ਸਮੇਂ ਲਈ ਦਬਾਓ।';
-
-  @override
   String get useOfficialWebview => 'ਲਾਈਵ ਸੈਸ਼ਨਾਂ ਲਈ ਅਧਿਕਾਰਤ ਵੈਬਵਿਊ ਦੀ ਵਰਤੋਂ ਕਰੋ';
 
   @override

@@ -600,12 +600,6 @@ class AppLocalizationsFr extends AppLocalizations {
   String get updates => 'Mises à jour';
 
   @override
-  String get useOfficialDataSource => 'Utiliser la source de données officielle';
-
-  @override
-  String get useOfficialDataSourceSub => 'Utiliser la source de données de l\'application officielle. Cela donne des résultats plus rapides mais tous les détails ne sont pas disponibles. Appuyez longtemps pour plus de détails.';
-
-  @override
   String get useOfficialWebview => 'Utiliser la Webview officielle pour les sessions en direct au lieu de f1-dash.com';
 
   @override

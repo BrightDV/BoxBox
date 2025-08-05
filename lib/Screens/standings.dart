@@ -88,7 +88,7 @@ class DriversStandingsWidget extends StatelessWidget {
     Map standings = StandingsRequestsProvider().getSavedDriversStandings();
     Map driversStandings = standings['driversStandings'];
     String driversStandingsLastSavedFormat =
-        standings['driversStandings'] ?? '';
+        standings['driversStandingsLastSavedFormat'] ?? '';
 
     return FutureBuilder<List<Driver>>(
         future: StandingsRequestsProvider().getDriversStandings(),

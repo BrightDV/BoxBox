@@ -26,7 +26,6 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class OtherSettingsScreen extends StatefulWidget {
   final Function? update;
@@ -46,8 +45,6 @@ class _OtherSettingsScreenState extends State<OtherSettingsScreen> {
         .get('useDataSaverMode', defaultValue: false) as bool;
     bool useOfficialWebview = Hive.box('settings')
         .get('useOfficialWebview', defaultValue: false) as bool;
-    bool useOfficialDataSoure = Hive.box('settings')
-        .get('useOfficialDataSoure', defaultValue: true) as bool;
     bool shouldUse12HourClock = Hive.box('settings')
         .get('shouldUse12HourClock', defaultValue: false) as bool;
     bool enableExperimentalFeatures = Hive.box('settings')
@@ -271,34 +268,6 @@ class _OtherSettingsScreenState extends State<OtherSettingsScreen> {
                   },
                 );
               },
-            ),
-          if (championship == 'Formula 1')
-            GestureDetector(
-              onLongPress: () async => await launchUrl(
-                Uri.parse(
-                  'https://github.com/BrightDV/BoxBox/wiki/Ergast-API-vs-Official-API',
-                ),
-              ),
-              child: SwitchListTile(
-                title: Text(
-                  AppLocalizations.of(context)!.useOfficialDataSource,
-                ),
-                subtitle: Text(
-                  AppLocalizations.of(context)!.useOfficialDataSourceSub,
-                  style: TextStyle(
-                    fontSize: 12,
-                  ),
-                ),
-                value: useOfficialDataSoure,
-                onChanged: (bool value) {
-                  setState(
-                    () {
-                      useOfficialDataSoure = value;
-                      Hive.box('settings').put('useOfficialDataSoure', value);
-                    },
-                  );
-                },
-              ),
             ),
           if (championship == 'Formula E')
             ListTile(

@@ -600,12 +600,6 @@ class AppLocalizationsEl extends AppLocalizations {
   String get updates => 'New versions';
 
   @override
-  String get useOfficialDataSource => 'Use the official data source';
-
-  @override
-  String get useOfficialDataSourceSub => 'Use the data source of the official mobile app. This gives faster results, but not all the details are available. Long-press for more details.';
-
-  @override
   String get useOfficialWebview => 'Use official Webview for live sessions instead of f1-dash.com';
 
   @override

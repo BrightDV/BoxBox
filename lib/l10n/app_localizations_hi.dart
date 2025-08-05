@@ -600,12 +600,6 @@ class AppLocalizationsHi extends AppLocalizations {
   String get updates => 'नए संस्करण';
 
   @override
-  String get useOfficialDataSource => 'आधिकारिक डेटा स्रोत का प्रयोग करें';
-
-  @override
-  String get useOfficialDataSourceSub => 'आधिकारिक मोबाइल ऐप के डेटा स्रोत का उपयोग करें। यह तेजी से परिणाम देता है, लेकिन सभी विवरण उपलब्ध नहीं हैं। अधिक विवरण के लिए देर तक दबाएं।';
-
-  @override
   String get useOfficialWebview => 'लाइव सत्रों के लिए आधिकारिक वेबव्यू का उपयोग करें';
 
   @override

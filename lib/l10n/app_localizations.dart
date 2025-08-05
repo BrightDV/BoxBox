@@ -1319,18 +1319,6 @@ abstract class AppLocalizations {
   /// **'New versions'**
   String get updates;
 
-  /// No description provided for @useOfficialDataSource.
-  ///
-  /// In en, this message translates to:
-  /// **'Use the official data source'**
-  String get useOfficialDataSource;
-
-  /// No description provided for @useOfficialDataSourceSub.
-  ///
-  /// In en, this message translates to:
-  /// **'Use the data source of the official mobile app. This gives faster results, but not all the details are available. Long-press for more details.'**
-  String get useOfficialDataSourceSub;
-
   /// No description provided for @useOfficialWebview.
   ///
   /// In en, this message translates to:

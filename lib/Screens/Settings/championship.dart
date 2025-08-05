@@ -64,10 +64,13 @@ class _ChampionshipScreenState extends State<ChampionshipScreen> {
         shrinkWrap: true,
         children: [
           ListTile(
-            leading: CachedNetworkImage(
-              imageUrl:
-                  'https://www.formula1.com/assets/home/_next/static/media/f1-logo-180.1db9e85b.png',
-              height: 32,
+            leading: SizedBox(
+              width: 32,
+              child: CachedNetworkImage(
+                imageUrl:
+                    'https://www.formula1.com/assets/home/_next/static/media/f1-logo-180.1db9e85b.png',
+                height: 32,
+              ),
             ),
             trailing: Radio(
               value: 'Formula 1',
@@ -188,20 +191,20 @@ class _ChampionshipScreenState extends State<ChampionshipScreen> {
                 )
               : Container(),
           ListTile(
-            leading: CachedNetworkImage(
-              imageUrl:
-                  'https://www.fiaformulae.com/resources/v4.32.1/i/elements/favicon-160x160.png',
-              height: 24,
+            leading: SizedBox(
+              width: 32,
+              child: CachedNetworkImage(
+                imageUrl:
+                    'https://www.fiaformulae.com/resources/v4.32.1/i/elements/favicon-160x160.png',
+                height: 24,
+              ),
             ),
             trailing: Radio(
               value: 'Formula E',
               groupValue: championship,
               onChanged: (value) => onChanged(value),
             ),
-            title: Padding(
-              padding: EdgeInsets.only(left: 6),
-              child: Text('Formula E'),
-            ),
+            title: Text('Formula E'),
           ),
         ],
       ),
