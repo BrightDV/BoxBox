@@ -28,22 +28,23 @@ class CircuitRequestsProvider {
     String championship = Hive.box('settings')
         .get('championship', defaultValue: 'Formula 1') as String;
     if (championship == 'Formula 1') {
-      return CircuitFormatProvider().formatCircuitData(
-        Hive.box('requests').get(
-          'f1CircuitDetails-$meetingId',
-          defaultValue: {},
-        ),
+      Map details = Hive.box('requests').get(
+        'f1CircuitDetails-$meetingId',
+        defaultValue: {},
       );
+      if (details.isNotEmpty) {
+        return CircuitFormatProvider().formatCircuitData(details);
+      }
     } else if (championship == 'Formula E') {
-      return CircuitFormatProvider().formatCircuitData(
-        Hive.box('requests').get(
-          'feCircuitDetails-$meetingId',
-          defaultValue: {},
-        ),
+      Map details = Hive.box('requests').get(
+        'feCircuitDetails-$meetingId',
+        defaultValue: {},
       );
-    } else {
-      return null;
+      if (details.isNotEmpty) {
+        return CircuitFormatProvider().formatCircuitData(details);
+      }
     }
+    return null;
   }
 
   Future<RaceDetails> getCircuitDetails(String meetingId) async {

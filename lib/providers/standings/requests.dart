@@ -69,6 +69,7 @@ class StandingsRequestsProvider {
     } else {
       standings['driversStandings'] = Hive.box('requests')
           .get('feDriversStandings', defaultValue: {}) as Map;
+      standings['driversStandingsLastSavedFormat'] = '';
     }
     return standings;
   }
@@ -85,6 +86,7 @@ class StandingsRequestsProvider {
     } else {
       standings['teamsStandings'] =
           Hive.box('requests').get('feTeamsStandings', defaultValue: {}) as Map;
+      standings['teamsStandingsLastSavedFormat'] = '';
     }
     return standings;
   }

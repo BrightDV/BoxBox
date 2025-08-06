@@ -1160,7 +1160,7 @@ class _NewsListState extends State<NewsList> {
                     .toString()
                     .toLowerCase()
                     .contains('failed host lookup')) &&
-            (latestNews['items'] != null || latestNews['content'] != null) &&
+            (latestNews.isNotEmpty) &&
             widget.tagId == null &&
             widget.articleType == null
         ? OfflineNewsList(
@@ -1239,7 +1239,8 @@ class _NewsListState extends State<NewsList> {
                       const LoadingIndicatorUtil(),
                   firstPageErrorIndicatorBuilder: (_) {
                     return FirstPageExceptionIndicator(
-                      title: AppLocalizations.of(context)!.errorOccurred,
+                      title: AppLocalizations.of(context)!
+                          .errorOccurred, //AppLocalizations.of(context)!.errorOccurred,
                       message:
                           AppLocalizations.of(context)!.errorOccurredDetails,
                       onTryAgain: () => _pagingController.refresh(),

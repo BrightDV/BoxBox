@@ -63,7 +63,9 @@ class CircuitScreen extends StatelessWidget {
                 : Column(
                     children: [
                       AppBar(),
-                      LoadingIndicatorUtil(),
+                      Center(
+                        child: LoadingIndicatorUtil(),
+                      ),
                     ],
                   ),
       ),
@@ -101,12 +103,10 @@ class CircuitScreenContent extends StatelessWidget {
                   },
                   blendMode: BlendMode.dstIn,
                   child: CachedNetworkImage(
-                    errorWidget: (context, url, error) => Container(),
                     fadeOutDuration: const Duration(milliseconds: 300),
                     fadeInDuration: const Duration(milliseconds: 300),
                     fit: BoxFit.cover,
                     imageUrl: details.raceImageUrl!,
-                    placeholder: (context, url) => const LoadingIndicatorUtil(),
                     colorBlendMode: BlendMode.darken,
                     height: MediaQuery.of(context).size.width > 780
                         ? MediaQuery.of(context).size.height
