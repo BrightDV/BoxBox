@@ -23,12 +23,14 @@ import 'dart:convert';
 import 'package:background_downloader/background_downloader.dart' as bgdl;
 import 'package:boxbox/api/brightcove.dart';
 import 'package:boxbox/api/formula1.dart';
-import 'package:boxbox/api/formulae.dart';
 import 'package:boxbox/helpers/custom_player_controls.dart';
 import 'package:boxbox/helpers/download.dart';
 import 'package:boxbox/helpers/hover.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/request_error.dart';
+import 'package:boxbox/providers/article/format.dart';
+import 'package:boxbox/providers/article/requests.dart';
+import 'package:boxbox/providers/videos/ui.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
@@ -82,8 +84,6 @@ class NewsItem extends StatelessWidget {
     }
 
     void showDetailsMenu() {
-      String championship = Hive.box('settings')
-          .get('championship', defaultValue: 'Formula 1') as String;
       final RenderObject overlay =
           Overlay.of(context).context.findRenderObject()!;
 
@@ -163,17 +163,19 @@ class NewsItem extends StatelessWidget {
           if (delta == 0)
             launchUrl(
               Uri.parse(
-                championship == 'Formula 1'
-                    ? "https://www.formula1.com/en/latest/article/${item.slug}.${item.newsId}"
-                    : "https://www.fiaformulae.com/en/news/${item.newsId}",
+                ArticleFormatProvider().formatShareUrl(
+                  item.newsId,
+                  item.slug,
+                ),
               ),
               mode: LaunchMode.externalApplication,
             );
           else if (delta == 1)
             Share.share(
-              championship == 'Formula 1'
-                  ? "https://www.formula1.com/en/latest/article/${item.slug}.${item.newsId}"
-                  : "https://www.fiaformulae.com/en/news/${item.newsId}",
+              ArticleFormatProvider().formatShareUrl(
+                item.newsId,
+                item.slug,
+              ),
             );
           else {
             Clipboard.setData(ClipboardData(text: item.title));
@@ -1130,19 +1132,11 @@ class _NewsListState extends State<NewsList> {
 
   Future<void> _fetchPage(int offset) async {
     try {
-      String championship = Hive.box('settings')
-          .get('championship', defaultValue: 'Formula 1') as String;
-      List<News> newItems = championship == 'Formula 1'
-          ? await Formula1().getMoreNews(
-              offset,
-              tagId: widget.tagId,
-              articleType: widget.articleType,
-            )
-          : await FormulaE().getMoreNews(
-              offset,
-              tagId: widget.tagId,
-              articleType: widget.articleType,
-            );
+      List<News> newItems = await ArticleRequestsProvider().getPageArticles(
+        offset,
+        tagId: widget.tagId,
+        articleType: widget.articleType,
+      );
       final isLastPage = newItems.length < _pageSize;
       if (isLastPage) {
         _pagingController.appendLastPage(newItems);
@@ -1159,9 +1153,7 @@ class _NewsListState extends State<NewsList> {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    Map latestNews = Hive.box('requests').get('news', defaultValue: {}) as Map;
-    String newsLastSavedFormat =
-        Hive.box('requests').get('newsLastSavedFormat', defaultValue: 'f1');
+    Map latestNews = ArticleRequestsProvider().getSavedArticles();
 
     return (_pagingController.error.toString() == 'XMLHttpRequest error.' ||
                 _pagingController.error
@@ -1172,9 +1164,7 @@ class _NewsListState extends State<NewsList> {
             widget.tagId == null &&
             widget.articleType == null
         ? OfflineNewsList(
-            items: newsLastSavedFormat == 'f1'
-                ? Formula1().formatResponse(latestNews)
-                : FormulaE().formatResponse(latestNews),
+            items: ArticleFormatProvider().formatNewsItems(latestNews),
             scrollController: widget.scrollController,
           )
         : width < 576
@@ -1400,7 +1390,6 @@ class TextParagraphRenderer extends StatelessWidget {
                   url.startsWith(
                       "https://www.formula1.com/content/fom-website/en/racing/202")) &&
               url.split('/').length > 5) {
-            // TODO: converter or scraping?
             context.pushNamed(
               'racing',
               pathParameters: {'meetingId': url.split('/').last.split('.')[0]},
@@ -2243,8 +2232,6 @@ class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
         },
       );
     } else {
-      String championship = Hive.box('settings')
-          .get('championship', defaultValue: 'Formula 1') as String;
       Map<String, String>? qualities = {};
       int c = 0;
       for (c; c < widget.videoUrls['qualities'].length; c++) {
@@ -2276,20 +2263,12 @@ class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
         overflowMenuIconsColor: useDarkMode ? Colors.white : Colors.black,
         overflowModalTextColor: useDarkMode ? Colors.white : Colors.black,
         showControlsOnInitialize: false,
-        overflowMenuCustomItems:
-            !widget.isFromYouTube && championship == 'Formula 1'
-                ? [
-                    BetterPlayerOverflowMenuItem(
-                      Icons.save_alt_outlined,
-                      'Download',
-                      () async => await downloadVideo(
-                        widget.videoId,
-                        widget.videoUrls['name'],
-                        widget.videoUrls['poster'],
-                      ),
-                    ),
-                  ]
-                : [],
+        overflowMenuCustomItems: VideosUIProvider().getPlayerTopBarActions(
+          downloadVideo,
+          widget.videoId,
+          widget.videoUrls['name'],
+          widget.videoUrls['poster'],
+        ),
       );
 
       BetterPlayerConfiguration betterPlayerConfiguration =

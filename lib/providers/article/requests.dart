@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:boxbox/api/formula1.dart';
+import 'package:boxbox/api/formulae.dart';
 import 'package:boxbox/helpers/download.dart';
 import 'package:boxbox/scraping/formulae.dart';
 import 'package:flutter/foundation.dart';
@@ -78,6 +79,42 @@ class ArticleRequestsProvider {
         updateArticleTitle,
         news!,
       );
+    }
+  }
+
+  Future<List<News>> getPageArticles(
+    int offset, {
+    String? tagId,
+    String? articleType,
+  }) async {
+    String championship = Hive.box('settings')
+        .get('championship', defaultValue: 'Formula 1') as String;
+    if (championship == 'Formula 1') {
+      return await Formula1().getMoreNews(
+        offset,
+        tagId: tagId,
+        articleType: articleType,
+      );
+    } else if (championship == 'Formula E') {
+      return await FormulaE().getMoreNews(
+        offset,
+        tagId: tagId,
+        articleType: articleType,
+      );
+    } else {
+      return [];
+    }
+  }
+
+  Map getSavedArticles() {
+    String championship = Hive.box('settings')
+        .get('championship', defaultValue: 'Formula 1') as String;
+    if (championship == 'Formula 1') {
+      return Hive.box('requests').get('f1News', defaultValue: {}) as Map;
+    } else if (championship == 'Formula E') {
+      return Hive.box('requests').get('feNews', defaultValue: {}) as Map;
+    } else {
+      return {};
     }
   }
 }

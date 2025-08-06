@@ -24,8 +24,10 @@ import 'dart:ui';
 import 'package:boxbox/api/driver_components.dart';
 import 'package:boxbox/api/race_components.dart';
 import 'package:boxbox/api/team_components.dart';
+import 'package:boxbox/classes/circuit.dart';
 import 'package:boxbox/helpers/constants.dart';
 import 'package:boxbox/helpers/convert_ergast_and_formula_one.dart';
+import 'package:boxbox/providers/circuit/format.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -69,6 +71,7 @@ class Formula1 {
           element['metaDescription'] ?? '',
           DateTime.parse(element['updatedAt']),
           imageUrl,
+          'https://www.formula1.com/en/latest/article/${element['slug']}.${element['id']}',
           isBreaking: element['breaking'],
         ),
       );
@@ -1011,7 +1014,7 @@ class Formula1 {
     return [results, responseAsJson['startingGridFootnote'] ?? ''];
   }
 
-  Future<Map> getCircuitDetails(
+  Future<RaceDetails> getCircuitDetails(
     String formulaOneCircuitId,
   ) async {
     Map details = Hive.box('requests')
@@ -1108,7 +1111,7 @@ class Formula1 {
 
     formatedResponse['raceCustomBBParameter'] = raceWithSessions; */
 
-    return formatedResponse;
+    return CircuitFormatProvider().formatCircuitData(formatedResponse);
   }
 }
 
@@ -1120,6 +1123,7 @@ class News {
   final String subtitle;
   final DateTime datePosted;
   final String imageUrl;
+  final String url;
   final List? tags;
   final Map? author;
   final bool? isBreaking;
@@ -1131,7 +1135,8 @@ class News {
     this.title,
     this.subtitle,
     this.datePosted,
-    this.imageUrl, {
+    this.imageUrl,
+    this.url, {
     this.tags,
     this.author,
     this.isBreaking,

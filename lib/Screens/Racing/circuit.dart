@@ -17,21 +17,24 @@
  * Copyright (c) 2022-2025, BrightDV
  */
 
+import 'package:boxbox/Screens/Racing/circuit_details.dart';
 import 'package:boxbox/Screens/session_screen.dart';
+import 'package:boxbox/api/driver_components.dart';
 import 'package:boxbox/api/event_tracker.dart';
 import 'package:boxbox/api/formula1.dart';
+import 'package:boxbox/classes/circuit.dart';
+import 'package:boxbox/helpers/buttons.dart';
 import 'package:boxbox/helpers/divider.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/news.dart';
 import 'package:boxbox/helpers/request_error.dart';
 import 'package:boxbox/l10n/app_localizations.dart';
 import 'package:boxbox/providers/circuit/requests.dart';
-import 'package:boxbox/providers/circuit/ui.dart';
 import 'package:boxbox/scraping/formula_one.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 
@@ -41,13 +44,13 @@ class CircuitScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Map details = CircuitRequestsProvider().getSavedDetails(meetingId);
+    RaceDetails? details = CircuitRequestsProvider().getSavedDetails(meetingId);
     return Scaffold(
       extendBodyBehindAppBar: true,
-      body: FutureBuilder(
+      body: FutureBuilder<RaceDetails>(
         future: CircuitRequestsProvider().getCircuitDetails(meetingId),
         builder: (context, snapshot) => snapshot.hasError
-            ? details.isNotEmpty
+            ? details != null
                 ? CircuitScreenContent(details)
                 : Column(
                     children: [
@@ -69,7 +72,7 @@ class CircuitScreen extends StatelessWidget {
 }
 
 class CircuitScreenContent extends StatelessWidget {
-  final Map details;
+  final RaceDetails details;
   const CircuitScreenContent(this.details, {super.key});
 
   @override
@@ -80,28 +83,36 @@ class CircuitScreenContent extends StatelessWidget {
         children: [
           Stack(
             children: [
-              ShaderMask(
-                shaderCallback: (rect) {
-                  return LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: MediaQuery.of(context).size.width > 780
-                        ? Alignment(
-                            Alignment.bottomCenter.x,
-                            Alignment.bottomCenter.y * 0.97,
-                          )
-                        : Alignment.bottomCenter,
-                    colors: [Colors.black, Colors.transparent],
-                  ).createShader(
-                    Rect.fromLTRB(0, 0, rect.width, rect.height),
-                  );
-                },
-                blendMode: BlendMode.dstIn,
-                child: CircuitUIProvider().getRaceImage(
-                  details['meetingId'] ?? '',
-                  details,
-                  context,
+              if (details.raceImageUrl != null)
+                ShaderMask(
+                  shaderCallback: (rect) {
+                    return LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: MediaQuery.of(context).size.width > 780
+                          ? Alignment(
+                              Alignment.bottomCenter.x,
+                              Alignment.bottomCenter.y * 0.97,
+                            )
+                          : Alignment.bottomCenter,
+                      colors: [Colors.black, Colors.transparent],
+                    ).createShader(
+                      Rect.fromLTRB(0, 0, rect.width, rect.height),
+                    );
+                  },
+                  blendMode: BlendMode.dstIn,
+                  child: CachedNetworkImage(
+                    errorWidget: (context, url, error) => Container(),
+                    fadeOutDuration: const Duration(milliseconds: 300),
+                    fadeInDuration: const Duration(milliseconds: 300),
+                    fit: BoxFit.cover,
+                    imageUrl: details.raceImageUrl!,
+                    placeholder: (context, url) => const LoadingIndicatorUtil(),
+                    colorBlendMode: BlendMode.darken,
+                    height: MediaQuery.of(context).size.width > 780
+                        ? MediaQuery.of(context).size.height
+                        : MediaQuery.of(context).size.height * (4 / 9),
+                  ),
                 ),
-              ),
               Padding(
                 padding: EdgeInsets.only(
                   top: MediaQuery.of(context).size.height * (4 / 9) - 110,
@@ -113,25 +124,40 @@ class CircuitScreenContent extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(6.0),
-                          child: CircuitUIProvider().getRaceFlag(
-                            details,
-                            context,
+                        if (details.flagImageUrl != null)
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(6.0),
+                            child: CachedNetworkImage(
+                              errorWidget: (context, url, error) =>
+                                  SizedBox(width: 53),
+                              fadeOutDuration:
+                                  const Duration(milliseconds: 300),
+                              fadeInDuration: const Duration(milliseconds: 300),
+                              placeholder: (context, url) =>
+                                  SizedBox(width: 53),
+                              fit: BoxFit.cover,
+                              imageUrl: details.flagImageUrl!,
+                              height: MediaQuery.of(context).size.width > 780
+                                  ? 60
+                                  : 30,
+                              width: MediaQuery.of(context).size.width > 780
+                                  ? 106
+                                  : 53,
+                            ),
                           ),
-                        ),
                         Padding(
                           padding: EdgeInsets.only(
-                            left: MediaQuery.of(context).size.width > 780
-                                ? 20
-                                : 15,
+                            left: details.flagImageUrl != null
+                                ? MediaQuery.of(context).size.width > 780
+                                    ? 20
+                                    : 15
+                                : 0,
                             bottom: MediaQuery.of(context).size.width > 780
                                 ? 10
                                 : 3,
                           ),
                           child: Text(
-                            CircuitRequestsProvider()
-                                .getCircuitCountryName(details),
+                            details.meetingDisplayName,
                             style: TextStyle(
                               fontFamily: 'Northwell',
                               fontSize: MediaQuery.of(context).size.width > 780
@@ -145,8 +171,7 @@ class CircuitScreenContent extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 20),
                       child: Text(
-                        CircuitRequestsProvider()
-                            .getCircuitOfficialName(details),
+                        details.meetingCompleteName,
                         style: TextStyle(
                           fontWeight: FontWeight.w400,
                           fontSize: 16,
@@ -163,12 +188,43 @@ class CircuitScreenContent extends StatelessWidget {
               ),
             ],
           ),
-          CircuitUIProvider().getHeadline(details),
-          CircuitUIProvider().getHighlightsButton(details, context),
-          CircuitUIProvider().getSessionResults(details),
-          CircuitUIProvider().getCuratedSection(details),
-          CircuitUIProvider().getSessions(details),
-          CircuitUIProvider().getCircuitFacts(details),
+          if (details.headline != null) Headline(details.headline!),
+          if (details.highlightsArticleId != null)
+            BoxBoxButton(
+              AppLocalizations.of(context)!.viewHighlights,
+              Icon(
+                Icons.play_arrow_outlined,
+              ),
+              route: 'article',
+              pathParameters: {
+                'id': details.highlightsArticleId!,
+              },
+              extra: {'isFromLink': true},
+            ),
+          if (details.results?.isNotEmpty ?? false)
+            RaceResults(
+              details.meetingDisplayName,
+              details.meetingId,
+              details.results!,
+            ),
+          if (details.articles?.isNotEmpty ?? false)
+            CuratedSection(details.articles!),
+          Sessions(details),
+          if (details.hasFacts)
+            BoxBoxButton(
+              'Circuit facts',
+              Icon(
+                Icons.info_outline,
+              ),
+              isRoute: false,
+              widget: CircuitDetailsScreen(
+                details.meetingDisplayName,
+                details.circuitOfficialName!,
+                details.circuitMapImageUrl!,
+                details.circuitDescriptionText!,
+                details.circuitMapLinks!,
+              ),
+            ),
           SizedBox(height: 50),
         ],
       ),
@@ -177,14 +233,12 @@ class CircuitScreenContent extends StatelessWidget {
 }
 
 class SessionItemForCircuit extends StatelessWidget {
-  final String sessionFullName;
   final Session session;
   final String meetingCountryName;
   final String meetingOfficialName;
   final String meetingId;
-  final List? links;
+  final List<Link>? links;
   const SessionItemForCircuit(
-    this.sessionFullName,
     this.session,
     this.meetingCountryName,
     this.meetingOfficialName,
@@ -192,16 +246,6 @@ class SessionItemForCircuit extends StatelessWidget {
     this.links,
     super.key,
   });
-
-  List getUsefulLinks(List links) {
-    List l = [];
-    for (var link in links) {
-      if (link['linkType'] != 'Replay' && link['linkType'] != 'Results') {
-        l.add(link);
-      }
-    }
-    return l;
-  }
 
   void tapAction(String linkType, String url, BuildContext context) {
     if (linkType == 'Article' || linkType == 'LiveBlog') {
@@ -250,7 +294,7 @@ class SessionItemForCircuit extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                       builder: (context) => SessionScreen(
-                        sessionFullName,
+                        session.sessionFullName!,
                         session,
                         meetingCountryName,
                         meetingOfficialName,
@@ -350,7 +394,7 @@ class SessionItemForCircuit extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      sessionFullName,
+                      session.sessionFullName!,
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w500,
@@ -363,7 +407,7 @@ class SessionItemForCircuit extends StatelessWidget {
                   ],
                 ),
                 Spacer(),
-                links != null && links?.length != 1
+                (links?.length ?? 0) > 1
                     ? IconButton(
                         icon: Icon(Icons.link_outlined),
                         iconSize: 25,
@@ -376,11 +420,10 @@ class SessionItemForCircuit extends StatelessWidget {
                             ),
                             onClosing: () {},
                             builder: (context) {
-                              List modalLinks = getUsefulLinks(links!);
                               return SizedBox(
                                 child: ListView.builder(
                                   shrinkWrap: true,
-                                  itemCount: modalLinks.length + 1,
+                                  itemCount: links!.length + 1,
                                   itemBuilder: (context, index) => index == 0
                                       ? Padding(
                                           padding: EdgeInsets.only(top: 5),
@@ -396,41 +439,39 @@ class SessionItemForCircuit extends StatelessWidget {
                                         )
                                       : ListTile(
                                           title: Text(
-                                            modalLinks[index - 1]['text'] ==
-                                                    'report'
+                                            links![index - 1].text == 'report'
                                                 ? 'Report'
-                                                : modalLinks[index - 1]
-                                                            ['text'] ==
+                                                : links![index - 1].text ==
                                                         'highlights'
                                                     ? 'Highlights'
-                                                    : modalLinks[index - 1]
-                                                                ['text'] ==
+                                                    : links![index - 1].text ==
                                                             'lapByLap'
                                                         ? 'Lap-by-lap'
-                                                        : modalLinks[index - 1]
-                                                                    ['text']
+                                                        : links![index - 1]
+                                                                .text
                                                                 .contains(
                                                                     'Grid')
                                                             ? AppLocalizations
                                                                     .of(
                                                                         context)!
                                                                 .startingGrid
-                                                            : modalLinks[index -
-                                                                1]['text'],
+                                                            : links![index - 1]
+                                                                .text,
                                           ),
-                                          leading: modalLinks[index - 1]
-                                                      ['text'] ==
+                                          leading: links![index - 1].text ==
                                                   'report'
                                               ? Icon(Icons.analytics_outlined)
-                                              : modalLinks[index - 1]['text'] ==
+                                              : links![index - 1].text ==
                                                       'highlights'
                                                   ? Icon(
-                                                      Icons.play_arrow_outlined)
+                                                      Icons.play_arrow_outlined,
+                                                    )
                                                   : Icon(
-                                                      Icons.article_outlined),
+                                                      Icons.article_outlined,
+                                                    ),
                                           onTap: () => tapAction(
-                                            modalLinks[index - 1]['linkType'],
-                                            modalLinks[index - 1]['url'],
+                                            links![index - 1].type,
+                                            links![index - 1].url,
                                             context,
                                           ),
                                         ),
@@ -473,7 +514,7 @@ class Headline extends StatelessWidget {
 class RaceResults extends StatelessWidget {
   final String meetingCountryName;
   final String meetingKey;
-  final List results;
+  final List<DriverResult> results;
   const RaceResults(
     this.meetingCountryName,
     this.meetingKey,
@@ -538,7 +579,7 @@ class RaceResults extends StatelessWidget {
                 ],
               ),
             ),
-            for (Map driverResults in results)
+            for (DriverResult result in results)
               Padding(
                 padding: const EdgeInsets.only(
                   top: 7,
@@ -548,9 +589,7 @@ class RaceResults extends StatelessWidget {
                     Expanded(
                       flex: 2,
                       child: Text(
-                        driverResults['positionNumber'] == '66666'
-                            ? 'DQ'
-                            : driverResults['positionNumber'],
+                        result.position,
                         style: TextStyle(
                           fontWeight: FontWeight.w500,
                         ),
@@ -564,7 +603,7 @@ class RaceResults extends StatelessWidget {
                         child: BoxBoxVerticalDivider(
                           color: Color(
                             int.parse(
-                              'FF${driverResults['teamColourCode']}',
+                              'FF${result.teamColor}',
                               radix: 16,
                             ),
                           ),
@@ -576,20 +615,12 @@ class RaceResults extends StatelessWidget {
                     ),
                     Expanded(
                       flex: 3,
-                      child: Text(
-                        driverResults['driverTLA'].toString(),
-                      ),
+                      child: Text(result.code),
                     ),
                     const Spacer(),
                     Expanded(
                       flex: 6,
-                      child: Text(
-                        driverResults['gapToLeader'] != "0.0" &&
-                                driverResults['gapToLeader'] != "0"
-                            ? '+${driverResults['gapToLeader']}'
-                            : driverResults['raceTime'] ??
-                                driverResults['positionValue'],
-                      ),
+                      child: Text(result.time),
                     ),
                   ],
                 ),
@@ -636,16 +667,11 @@ class RaceResults extends StatelessWidget {
 }
 
 class CuratedSection extends StatelessWidget {
-  final List items;
+  final List<News> items;
   const CuratedSection(this.items, {super.key});
 
   @override
   Widget build(BuildContext context) {
-    bool useDataSaverMode = Hive.box('settings')
-        .get('useDataSaverMode', defaultValue: false) as bool;
-    String championship = Hive.box('settings')
-        .get('championship', defaultValue: 'Formula 1') as String;
-
     return Padding(
       padding: EdgeInsets.only(left: 10),
       child: SingleChildScrollView(
@@ -653,41 +679,7 @@ class CuratedSection extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            for (Map article in items)
-              NewsItem(
-                championship == 'Formula 1'
-                    ? News(
-                        article['id'],
-                        article['articleType'],
-                        article['slug'],
-                        article['title'],
-                        article['metaDescription'] ?? ' ',
-                        DateTime.parse(article['updatedAt']),
-                        useDataSaverMode
-                            ? article['thumbnail']['image']['renditions'] !=
-                                    null
-                                ? article['thumbnail']['image']['renditions']
-                                    ['2col']
-                                : article['thumbnail']['image']['url'] +
-                                    '.transform/2col-retina/image.jpg'
-                            : article['thumbnail']['image']['url'],
-                      )
-                    : News(
-                        article['id'].toString(),
-                        '',
-                        '',
-                        article['title'],
-                        article['description'] ?? ' ',
-                        DateTime.fromMillisecondsSinceEpoch(
-                          article['publishFrom'],
-                        ),
-                        article['imageUrl'],
-                        author: article['author'] != null
-                            ? {'fullName': article['author']}
-                            : null,
-                      ),
-                true,
-              ),
+            for (News article in items) NewsItem(article, true),
             SizedBox(width: 5),
           ],
         ),
@@ -722,7 +714,7 @@ class CircuitScreenFromMeetingName extends StatelessWidget {
 }
 
 class Sessions extends StatelessWidget {
-  final Map details;
+  final RaceDetails details;
   const Sessions(this.details, {super.key});
 
   @override
@@ -749,30 +741,13 @@ class Sessions extends StatelessWidget {
                   ),
                 ),
               ),
-              for (var session
-                  in details['race']['meetingSessions'].reversed.toList())
+              for (Session session in details.sessions)
                 SessionItemForCircuit(
-                  session['description'],
-                  Session(
-                    session['state'],
-                    session['session'],
-                    DateTime.parse(session['endTime'] + session['gmtOffset'])
-                        .toLocal(),
-                    DateTime.parse(session['startTime'] + session['gmtOffset'])
-                        .toLocal(),
-                    null,
-                    DateTime.now().isBefore(DateTime.parse(
-                                session['endTime'] + session['gmtOffset'])
-                            .toLocal()) &&
-                        DateTime.now().isAfter(DateTime.parse(
-                                session['startTime'] + session['gmtOffset'])
-                            .toLocal()),
-                  ),
-                  details['race']['meetingCountryName'],
-                  details['race']['meetingOfficialName'],
-                  details['race']['meetingKey'],
-                  links: details['sessionLinkSets'][session['session']]
-                      ['links'],
+                  session,
+                  details.meetingDisplayName,
+                  details.meetingCompleteName,
+                  details.meetingId,
+                  links: details.sessionsLinks![session.sessionsAbbreviation],
                 ),
             ],
           ),

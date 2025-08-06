@@ -221,6 +221,9 @@ class DriverDetailsFragment extends StatelessWidget {
                     '',
                     DateTime.now(),
                     driverDetails[1][index][1],
+                    '',
+                    // TODO: fix when using API
+                    // yet: articles can't be shared
                   ),
                   true,
                 ),

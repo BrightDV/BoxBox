@@ -17,6 +17,8 @@
  * Copyright (c) 2022-2025, BrightDV
  */
 
+import 'package:boxbox/api/formula1.dart';
+import 'package:boxbox/api/formulae.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class ArticleFormatProvider {
@@ -37,5 +39,29 @@ class ArticleFormatProvider {
       }
     }
     return "";
+  }
+
+  String formatShareUrl(String articleId, String slug) {
+    String championship = Hive.box('settings')
+        .get('championship', defaultValue: 'Formula 1') as String;
+    if (championship == 'Formula 1') {
+      return 'https://www.formula1.com/en/latest/article/$slug.$articleId';
+    } else if (championship == 'Formula E') {
+      return 'https://www.fiaformulae.com/en/news/$articleId';
+    } else {
+      return '';
+    }
+  }
+
+  List<News> formatNewsItems(Map latestNews) {
+    String championship = Hive.box('settings')
+        .get('championship', defaultValue: 'Formula 1') as String;
+    if (championship == 'Formula 1') {
+      return Formula1().formatResponse(latestNews);
+    } else if (championship == 'Formula E') {
+      return FormulaE().formatResponse(latestNews);
+    } else {
+      return [];
+    }
   }
 }

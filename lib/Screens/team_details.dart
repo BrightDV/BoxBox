@@ -320,6 +320,7 @@ class TeamDetailsFragment extends StatelessWidget {
                                             : snapshot
                                                     .data!.articleHero['fields']
                                                 ['image']['url'],
+                                    'https://www.formula1.com/en/latest/article/${snapshot.data!.articleSlug}.${snapshot.data!.articleId}',
                                   ),
                                   true,
                                 )

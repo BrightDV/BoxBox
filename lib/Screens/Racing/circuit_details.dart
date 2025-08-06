@@ -191,9 +191,11 @@ class TrackLayoutImage extends StatelessWidget {
                                               (16 / 9),
                                           child: const LoadingIndicatorUtil(),
                                         ),
-                              errorBuilder: (context, url, error) => Icon(
-                                Icons.error_outlined,
-                                size: 30,
+                              errorBuilder: (context, url, error) => Center(
+                                child: Icon(
+                                  Icons.error_outlined,
+                                  size: 30,
+                                ),
                               ),
                             ),
                           ),
@@ -231,9 +233,11 @@ class TrackLayoutImage extends StatelessWidget {
                           height: MediaQuery.of(context).size.width / (16 / 9),
                           child: const LoadingIndicatorUtil(),
                         ),
-              errorBuilder: (context, url, error) => Icon(
-                Icons.error_outlined,
-                size: 30,
+              errorBuilder: (context, url, error) => Center(
+                child: Icon(
+                  Icons.error_outlined,
+                  size: 30,
+                ),
               ),
             ),
           ],

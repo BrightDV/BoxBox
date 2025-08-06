@@ -583,6 +583,7 @@ class RelatedArticles extends StatelessWidget {
                                           '.transform/2col-retina/image.jpg'
                                   : article['thumbnail']['image']['url']
                               : '',
+                          'https://www.formula1.com/en/latest/article/${article['slug']}.${article['id']}',
                         ),
                         true,
                         articleChampionship: articleChampionship,
@@ -658,26 +659,27 @@ class RelatedArticles extends StatelessWidget {
               itemBuilder: (context, index) => Center(
                 child: NewsItem(
                   News(
-                    article.relatedArticles[index]['id'],
-                    article.relatedArticles[index]['articleType'],
-                    article.relatedArticles[index]['slug'],
-                    article.relatedArticles[index]['title'],
-                    article.relatedArticles[index]['metaDescription'] ?? ' ',
-                    DateTime.parse(article.relatedArticles[index]['updatedAt']),
-                    article.relatedArticles[index]['thumbnail'] != null
-                        ? useDataSaverMode
-                            ? article.relatedArticles[index]['thumbnail']
-                                        ['image']['renditions'] !=
-                                    null
-                                ? article.relatedArticles[index]['thumbnail']
-                                    ['image']['renditions']['2col']
-                                : article.relatedArticles[index]['thumbnail']
-                                        ['image']['url'] +
-                                    '.transform/2col-retina/image.jpg'
-                            : article.relatedArticles[index]['thumbnail']
-                                ['image']['url']
-                        : '',
-                  ),
+                      article.relatedArticles[index]['id'],
+                      article.relatedArticles[index]['articleType'],
+                      article.relatedArticles[index]['slug'],
+                      article.relatedArticles[index]['title'],
+                      article.relatedArticles[index]['metaDescription'] ?? ' ',
+                      DateTime.parse(
+                          article.relatedArticles[index]['updatedAt']),
+                      article.relatedArticles[index]['thumbnail'] != null
+                          ? useDataSaverMode
+                              ? article.relatedArticles[index]['thumbnail']
+                                          ['image']['renditions'] !=
+                                      null
+                                  ? article.relatedArticles[index]['thumbnail']
+                                      ['image']['renditions']['2col']
+                                  : article.relatedArticles[index]['thumbnail']
+                                          ['image']['url'] +
+                                      '.transform/2col-retina/image.jpg'
+                              : article.relatedArticles[index]['thumbnail']
+                                  ['image']['url']
+                          : '',
+                      'https://www.formula1.com/en/latest/article/${article.relatedArticles[index]['slug']}.${article.relatedArticles[index]['id']}'),
                   true,
                   width: 300,
                   articleChampionship: articleChampionship,

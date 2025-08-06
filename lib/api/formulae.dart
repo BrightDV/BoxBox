@@ -24,8 +24,10 @@ import 'package:boxbox/api/driver_components.dart';
 import 'package:boxbox/api/formula1.dart';
 import 'package:boxbox/api/race_components.dart';
 import 'package:boxbox/api/team_components.dart';
+import 'package:boxbox/classes/circuit.dart';
 import 'package:boxbox/api/videos.dart';
 import 'package:boxbox/helpers/constants.dart';
+import 'package:boxbox/providers/circuit/format.dart';
 import 'package:boxbox/utils/string.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -68,6 +70,7 @@ class FormulaE {
       responseAsJson['description'] ?? '',
       DateTime.fromMillisecondsSinceEpoch(responseAsJson['publishFrom']),
       responseAsJson['imageUrl'],
+      'https://www.fiaformulae.com/en/news/${responseAsJson['id']}',
       author: responseAsJson['author'] != null
           ? {'fullName': responseAsJson['author']}
           : null,
@@ -99,6 +102,7 @@ class FormulaE {
           element['description'] ?? '',
           DateTime.fromMillisecondsSinceEpoch(element['publishFrom']),
           element['imageUrl'],
+          'https://www.fiaformulae.com/en/news/${element['id']}',
           author: element['author'] != null
               ? {'fullName': element['author']}
               : null,
@@ -565,9 +569,10 @@ class FormulaE {
     return responseAsJson;
   }
 
-  Future<Map> getSessionsAndRaceDetails(String meetingId) async {
+  Future<RaceDetails> getCircuitDetails(String meetingId) async {
     Map sessions = await getSessions(meetingId);
     Map race = await getRaceDetails(meetingId);
+    String raceImageUrl = await FormulaE().getCircuitImageUrl(meetingId);
 
     String endpoint = Hive.box('settings')
         .get('server', defaultValue: defaultF1Endpoint) as String;
@@ -593,9 +598,10 @@ class FormulaE {
       'content': responseAsJson['content'],
       'race': race,
       'meetingId': meetingId,
+      'raceImageUrl': raceImageUrl,
     };
     Hive.box('requests').put('feCircuitDetails-$meetingId', formatedMap);
-    return formatedMap;
+    return CircuitFormatProvider().formatCircuitData(formatedMap);
   }
 
   List<DriverResult> formatRaceStandings(Map raceStandings) {

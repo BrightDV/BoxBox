@@ -62,6 +62,7 @@ class Session {
   final DateTime startTime;
   final String? baseUrl;
   final bool isRunning;
+  final String? sessionFullName;
 
   const Session(
     this.state,
@@ -69,8 +70,9 @@ class Session {
     this.endTime,
     this.startTime,
     this.baseUrl,
-    this.isRunning,
-  );
+    this.isRunning, {
+    this.sessionFullName,
+  });
 }
 
 class EventTracker {

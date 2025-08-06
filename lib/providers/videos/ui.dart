@@ -25,6 +25,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:river_player/river_player.dart';
 import 'package:share_plus/share_plus.dart';
 
 class VideosUIProvider {
@@ -144,6 +145,31 @@ class VideosUIProvider {
           ),
         ),
       ];
+    }
+  }
+
+  List<BetterPlayerOverflowMenuItem> getPlayerTopBarActions(
+    Function downloadVideo,
+    String videoId,
+    String name,
+    String poster,
+  ) {
+    String championship = Hive.box('settings')
+        .get('championship', defaultValue: 'Formula 1') as String;
+    if (championship == 'Formula 1') {
+      return [
+        BetterPlayerOverflowMenuItem(
+          Icons.save_alt_outlined,
+          'Download',
+          () async => await downloadVideo(
+            videoId,
+            name,
+            poster,
+          ),
+        ),
+      ];
+    } else {
+      return [];
     }
   }
 }

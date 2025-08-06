@@ -19,32 +19,48 @@
 
 import 'package:boxbox/api/formula1.dart';
 import 'package:boxbox/api/formulae.dart';
+import 'package:boxbox/classes/circuit.dart';
+import 'package:boxbox/providers/circuit/format.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class CircuitRequestsProvider {
-  Map getSavedDetails(String meetingId) {
+  RaceDetails? getSavedDetails(String meetingId) {
     String championship = Hive.box('settings')
         .get('championship', defaultValue: 'Formula 1') as String;
     if (championship == 'Formula 1') {
-      return Hive.box('requests')
-          .get('f1CircuitDetails-$meetingId', defaultValue: {});
+      return CircuitFormatProvider().formatCircuitData(
+        Hive.box('requests').get(
+          'f1CircuitDetails-$meetingId',
+          defaultValue: {},
+        ),
+      );
     } else if (championship == 'Formula E') {
-      return Hive.box('requests')
-          .get('feCircuitDetails-$meetingId', defaultValue: {});
+      return CircuitFormatProvider().formatCircuitData(
+        Hive.box('requests').get(
+          'feCircuitDetails-$meetingId',
+          defaultValue: {},
+        ),
+      );
     } else {
-      return {};
+      return null;
     }
   }
 
-  Future<Map> getCircuitDetails(String meetingId) async {
+  Future<RaceDetails> getCircuitDetails(String meetingId) async {
     String championship = Hive.box('settings')
         .get('championship', defaultValue: 'Formula 1') as String;
     if (championship == 'Formula 1') {
       return Formula1().getCircuitDetails(meetingId);
     } else if (championship == 'Formula E') {
-      return FormulaE().getSessionsAndRaceDetails(meetingId);
+      return FormulaE().getCircuitDetails(meetingId);
     } else {
-      return {};
+      return RaceDetails(
+        '',
+        '',
+        '',
+        [],
+        false,
+      );
     }
   }
 

@@ -19,6 +19,7 @@
 
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:boxbox/api/formula1.dart';
+import 'package:boxbox/classes/circuit.dart';
 import 'package:boxbox/helpers/news.dart';
 import 'package:boxbox/helpers/racetracks_url.dart';
 import 'package:flutter/material.dart';
@@ -350,33 +351,30 @@ class RacesList extends StatelessWidget {
       return;
     }
 
-    Map race = await Formula1().getCircuitDetails(meetingId);
-    for (var session in race['race']['meetingSessions']) {
-      DateTime sessionDate = DateTime.parse(
-        session['startTime'] + session['gmtOffset'],
-      ).toLocal().subtract(
-            Duration(minutes: 5),
-          );
-
-      if (sessionDate.isAfter(DateTime.now())) {
+    RaceDetails race = await Formula1().getCircuitDetails(meetingId);
+    for (var session in race.sessions) {
+      if (session.startTime.isAfter(DateTime.now())) {
         await AwesomeNotifications().createNotification(
           content: NotificationContent(
             id: createUniqueId(),
             channelKey: 'eventTracker',
-            title: race['race']['meetingName'],
-            body: "Be ready! ${session['description']} is starting soon!",
-            payload: {'meetingId': meetingId, 'session': session['session']},
+            title: race.meetingCompleteName,
+            body: "Be ready! ${session.sessionFullName} is starting soon!",
+            payload: {
+              'meetingId': meetingId,
+              'session': session.sessionsAbbreviation,
+            },
           ),
           schedule: NotificationCalendar(
             allowWhileIdle: true,
             repeats: false,
             millisecond: 0,
             preciseAlarm: true,
-            second: sessionDate.second,
-            minute: sessionDate.minute,
-            hour: sessionDate.hour,
-            day: sessionDate.day,
-            month: sessionDate.month,
+            second: session.startTime.second,
+            minute: session.startTime.minute,
+            hour: session.startTime.hour,
+            day: session.startTime.day,
+            month: session.startTime.month,
             timeZone: 'GMT${formattedTimeZoneOffset(DateTime.now())}',
           ),
         );
