@@ -1706,7 +1706,9 @@ class ImageRenderer extends StatelessWidget {
                   ),
                 )
               : SizedBox(
-                  height: MediaQuery.of(context).size.width / (16 / 9),
+                  height: (isPodcastPreview ?? false)
+                      ? null
+                      : MediaQuery.of(context).size.width / (16 / 9),
                   child: GestureDetector(
                     onTap: () {
                       showDialog(
@@ -1799,38 +1801,40 @@ class ImageRenderer extends StatelessWidget {
                         },
                       );
                     },
-                    child: Stack(
-                      alignment: Alignment.bottomCenter,
-                      children: [
-                        CachedNetworkImage(
-                          imageUrl: imageUrl,
-                          placeholder: (context, url) => SizedBox(
-                            height:
-                                MediaQuery.of(context).size.width / (16 / 9),
-                            child: const LoadingIndicatorUtil(
-                              replaceImage: true,
-                              borderRadius: false,
-                              fullBorderRadius: false,
-                            ),
-                          ),
-                          errorWidget: (context, url, error) =>
-                              ImageRequestErrorUtil(
-                            height:
-                                MediaQuery.of(context).size.width / (16 / 9),
-                          ),
-                          fadeOutDuration: const Duration(milliseconds: 300),
-                          fadeInDuration: const Duration(milliseconds: 300),
-                          cacheManager: CacheManager(
-                            Config(
-                              "newsImages",
-                              stalePeriod: const Duration(days: 1),
-                            ),
-                          ),
-                        ),
-                        Container(
-                          alignment: Alignment.bottomCenter,
-                          child: caption != null && caption != ''
-                              ? Container(
+                    child: caption != null && caption != ''
+                        ? Stack(
+                            alignment: Alignment.bottomCenter,
+                            children: [
+                              CachedNetworkImage(
+                                imageUrl: imageUrl,
+                                placeholder: (context, url) => SizedBox(
+                                  height: MediaQuery.of(context).size.width /
+                                      (16 / 9),
+                                  child: const LoadingIndicatorUtil(
+                                    replaceImage: true,
+                                    borderRadius: false,
+                                    fullBorderRadius: false,
+                                  ),
+                                ),
+                                errorWidget: (context, url, error) =>
+                                    ImageRequestErrorUtil(
+                                  height: MediaQuery.of(context).size.width /
+                                      (16 / 9),
+                                ),
+                                fadeOutDuration:
+                                    const Duration(milliseconds: 300),
+                                fadeInDuration:
+                                    const Duration(milliseconds: 300),
+                                cacheManager: CacheManager(
+                                  Config(
+                                    "newsImages",
+                                    stalePeriod: const Duration(days: 1),
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                alignment: Alignment.bottomCenter,
+                                child: Container(
                                   width: double.infinity,
                                   padding: const EdgeInsets.all(4),
                                   color: Colors.black.withOpacity(0.7),
@@ -1841,11 +1845,30 @@ class ImageRenderer extends StatelessWidget {
                                     ),
                                     textAlign: TextAlign.center,
                                   ),
-                                )
-                              : Container(),
-                        ),
-                      ],
-                    ),
+                                ),
+                              ),
+                            ],
+                          )
+                        : CachedNetworkImage(
+                            imageUrl: imageUrl,
+                            placeholder: (context, url) => SizedBox(
+                              child: const LoadingIndicatorUtil(
+                                replaceImage: true,
+                                borderRadius: false,
+                                fullBorderRadius: false,
+                              ),
+                            ),
+                            errorWidget: (context, url, error) =>
+                                ImageRequestErrorUtil(),
+                            fadeOutDuration: const Duration(milliseconds: 300),
+                            fadeInDuration: const Duration(milliseconds: 300),
+                            cacheManager: CacheManager(
+                              Config(
+                                "newsImages",
+                                stalePeriod: const Duration(days: 1),
+                              ),
+                            ),
+                          ),
                   ),
                 ),
     );
