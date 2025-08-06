@@ -22,6 +22,7 @@ import 'package:boxbox/Screens/MixedNews/rss_feed_article.dart';
 import 'package:boxbox/Screens/MixedNews/wordpress.dart';
 import 'package:boxbox/api/mixed_news.dart';
 import 'package:boxbox/api/rss.dart';
+import 'package:boxbox/classes/article.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/request_error.dart';
 import 'package:flutter/material.dart';

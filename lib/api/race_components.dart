@@ -19,7 +19,7 @@
 
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:boxbox/api/formula1.dart';
-import 'package:boxbox/classes/circuit.dart';
+import 'package:boxbox/classes/race.dart';
 import 'package:boxbox/helpers/news.dart';
 import 'package:boxbox/helpers/racetracks_url.dart';
 import 'package:flutter/material.dart';
@@ -27,44 +27,6 @@ import 'package:boxbox/l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
-
-class Race {
-  final String round;
-  final String meetingId;
-  final String raceName;
-  final String date;
-  final String raceHour;
-  final String circuitId;
-  final String circuitName;
-  final String circuitUrl;
-  final String country;
-  final List<DateTime> sessionDates;
-  final bool? isFirst;
-  final String? raceCoverUrl;
-  final String? detailsPath;
-  final List? sessionStates;
-  final bool? isPreSeasonTesting;
-  final bool? hasRaceHour;
-
-  Race(
-    this.round,
-    this.meetingId,
-    this.raceName,
-    this.date,
-    this.raceHour,
-    this.circuitId,
-    this.circuitName,
-    this.circuitUrl,
-    this.country,
-    this.sessionDates, {
-    this.isFirst,
-    this.raceCoverUrl,
-    this.detailsPath,
-    this.sessionStates,
-    this.isPreSeasonTesting,
-    this.hasRaceHour,
-  });
-}
 
 class RaceItem extends StatelessWidget {
   final Race item;

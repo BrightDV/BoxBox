@@ -18,9 +18,9 @@
  */
 
 import 'package:boxbox/Screens/driver_details.dart';
-import 'package:boxbox/api/driver_components.dart';
 import 'package:boxbox/api/formulae.dart';
-import 'package:boxbox/api/race_components.dart';
+import 'package:boxbox/classes/driver.dart';
+import 'package:boxbox/classes/race.dart';
 import 'package:boxbox/helpers/divider.dart';
 import 'package:boxbox/helpers/team_background_color.dart';
 import 'package:flutter/material.dart';

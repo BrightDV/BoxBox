@@ -21,7 +21,7 @@ import 'package:boxbox/Screens/free_practice_screen.dart';
 import 'package:boxbox/api/ergast.dart';
 import 'package:boxbox/api/formula1.dart';
 import 'package:boxbox/api/formulae.dart';
-import 'package:boxbox/api/race_components.dart';
+import 'package:boxbox/classes/race.dart';
 import 'package:boxbox/helpers/driver_result_item.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/request_error.dart';

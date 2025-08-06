@@ -20,7 +20,7 @@
 import 'package:boxbox/Screens/LivetimingArchive/live_timing.dart';
 import 'package:boxbox/Screens/schedule.dart';
 import 'package:boxbox/api/ergast.dart';
-import 'package:boxbox/api/race_components.dart';
+import 'package:boxbox/classes/race.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/request_error.dart';
 import 'package:flutter/material.dart';

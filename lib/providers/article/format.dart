@@ -19,6 +19,7 @@
 
 import 'package:boxbox/api/formula1.dart';
 import 'package:boxbox/api/formulae.dart';
+import 'package:boxbox/classes/article.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class ArticleFormatProvider {

@@ -22,7 +22,7 @@ import 'dart:io';
 
 import 'package:background_downloader/background_downloader.dart';
 import 'package:boxbox/api/article_widgets.dart';
-import 'package:boxbox/api/formula1.dart';
+import 'package:boxbox/classes/article.dart';
 import 'package:boxbox/helpers/download.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/request_error.dart';

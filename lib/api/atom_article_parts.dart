@@ -17,7 +17,7 @@
  * Copyright (c) 2022-2025, BrightDV
  */
 
-import 'package:boxbox/api/formula1.dart';
+import 'package:boxbox/classes/article.dart';
 import 'package:boxbox/helpers/buttons.dart';
 import 'package:boxbox/helpers/divider.dart';
 import 'package:boxbox/helpers/news.dart';

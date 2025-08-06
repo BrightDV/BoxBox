@@ -21,10 +21,10 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:ui';
 
-import 'package:boxbox/api/driver_components.dart';
-import 'package:boxbox/api/race_components.dart';
-import 'package:boxbox/api/team_components.dart';
-import 'package:boxbox/classes/circuit.dart';
+import 'package:boxbox/classes/article.dart';
+import 'package:boxbox/classes/driver.dart';
+import 'package:boxbox/classes/race.dart';
+import 'package:boxbox/classes/team.dart';
 import 'package:boxbox/helpers/constants.dart';
 import 'package:boxbox/helpers/convert_ergast_and_formula_one.dart';
 import 'package:boxbox/providers/circuit/format.dart';
@@ -1113,56 +1113,4 @@ class Formula1 {
 
     return CircuitFormatProvider().formatCircuitData(formatedResponse);
   }
-}
-
-class News {
-  final String newsId;
-  final String newsType;
-  final String slug;
-  final String title;
-  final String subtitle;
-  final DateTime datePosted;
-  final String imageUrl;
-  final String url;
-  final List? tags;
-  final Map? author;
-  final bool? isBreaking;
-
-  News(
-    this.newsId,
-    this.newsType,
-    this.slug,
-    this.title,
-    this.subtitle,
-    this.datePosted,
-    this.imageUrl,
-    this.url, {
-    this.tags,
-    this.author,
-    this.isBreaking,
-  });
-}
-
-class Article {
-  final String articleId;
-  final String articleSlug;
-  final String articleName;
-  final DateTime publishedDate;
-  final List articleTags;
-  final Map articleHero;
-  final List articleContent;
-  final List relatedArticles;
-  final Map authorDetails;
-
-  Article(
-    this.articleId,
-    this.articleSlug,
-    this.articleName,
-    this.publishedDate,
-    this.articleTags,
-    this.articleHero,
-    this.articleContent,
-    this.relatedArticles,
-    this.authorDetails,
-  );
 }

@@ -19,7 +19,7 @@
 
 import 'package:animations/animations.dart';
 import 'package:boxbox/Screens/video.dart';
-import 'package:boxbox/api/videos.dart';
+import 'package:boxbox/classes/video.dart';
 import 'package:boxbox/helpers/hover.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/request_error.dart';

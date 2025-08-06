@@ -22,7 +22,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:background_downloader/background_downloader.dart';
-import 'package:boxbox/api/videos.dart';
+import 'package:boxbox/classes/video.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/request_error.dart';
 import 'package:cached_network_image/cached_network_image.dart';

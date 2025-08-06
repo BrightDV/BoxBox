@@ -20,12 +20,11 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:boxbox/api/driver_components.dart';
-import 'package:boxbox/api/formula1.dart';
-import 'package:boxbox/api/race_components.dart';
-import 'package:boxbox/api/team_components.dart';
-import 'package:boxbox/classes/circuit.dart';
-import 'package:boxbox/api/videos.dart';
+import 'package:boxbox/classes/article.dart';
+import 'package:boxbox/classes/driver.dart';
+import 'package:boxbox/classes/race.dart';
+import 'package:boxbox/classes/team.dart';
+import 'package:boxbox/classes/video.dart';
 import 'package:boxbox/helpers/constants.dart';
 import 'package:boxbox/providers/circuit/format.dart';
 import 'package:boxbox/utils/string.dart';

@@ -17,7 +17,7 @@
  * Copyright (c) 2022-2025, BrightDV
  */
 
-import 'package:boxbox/api/event_tracker.dart';
+import 'package:boxbox/classes/event_tracker.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class EventTrackerFormatProvider {

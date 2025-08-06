@@ -18,6 +18,7 @@
  */
 
 import 'package:boxbox/api/formulae.dart';
+import 'package:boxbox/classes/team.dart';
 import 'package:boxbox/helpers/divider.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/team_background_color.dart';
@@ -28,38 +29,6 @@ import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:boxbox/l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-
-class Team {
-  final String constructorId;
-  final String position;
-  final String name;
-  final String points;
-  final String wins;
-  final String? teamCarImage;
-  final String? teamCarImageCropped;
-  final String? detailsPath;
-  final Color? teamColor;
-
-  Team(
-    this.constructorId,
-    this.position,
-    this.name,
-    this.points,
-    this.wins, {
-    this.teamCarImage,
-    this.teamCarImageCropped,
-    this.detailsPath,
-    this.teamColor,
-  });
-  factory Team.fromMap(Map<String, dynamic> json) {
-    return Team(json['constructorId'], json['position'], json['name'],
-        json['points'], json['wins']);
-  }
-  factory Team.fromJson(Map<String, dynamic> json) {
-    return Team(json['constructorId'], json['position'], json['name'],
-        json['points'], json['wins']);
-  }
-}
 
 class TeamItem extends StatelessWidget {
   final Team item;

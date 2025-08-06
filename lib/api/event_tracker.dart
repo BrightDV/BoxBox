@@ -21,59 +21,12 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:boxbox/api/formulae.dart';
-import 'package:boxbox/api/race_components.dart';
+import 'package:boxbox/classes/event_tracker.dart';
+import 'package:boxbox/classes/race.dart';
 import 'package:boxbox/helpers/constants.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
-
-class Event {
-  final String raceId;
-  late final String meetingName;
-  final String meetingOfficialName;
-  final String meetingCountryName;
-  final DateTime meetingStartDate;
-  final DateTime meetingEndDate;
-  final String circuitImage;
-  final List raceResults;
-  final bool isRunning;
-  final List<Session> sessions;
-  final Map? liveBlog;
-
-  Event(
-    this.raceId,
-    this.meetingName,
-    this.meetingOfficialName,
-    this.meetingCountryName,
-    this.meetingStartDate,
-    this.meetingEndDate,
-    this.circuitImage,
-    this.raceResults,
-    this.isRunning,
-    this.sessions, {
-    this.liveBlog,
-  });
-}
-
-class Session {
-  final String state;
-  final String sessionsAbbreviation;
-  final DateTime endTime;
-  final DateTime startTime;
-  final String? baseUrl;
-  final bool isRunning;
-  final String? sessionFullName;
-
-  const Session(
-    this.state,
-    this.sessionsAbbreviation,
-    this.endTime,
-    this.startTime,
-    this.baseUrl,
-    this.isRunning, {
-    this.sessionFullName,
-  });
-}
 
 class EventTracker {
   final String defaultEndpoint = Constants().F1_API_URL;

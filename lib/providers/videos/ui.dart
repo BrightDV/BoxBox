@@ -18,7 +18,7 @@
  */
 
 import 'package:background_downloader/background_downloader.dart';
-import 'package:boxbox/api/videos.dart';
+import 'package:boxbox/classes/video.dart';
 import 'package:boxbox/helpers/download.dart';
 import 'package:boxbox/l10n/app_localizations.dart';
 import 'package:flutter/foundation.dart';

@@ -22,7 +22,7 @@ import 'dart:convert';
 
 import 'package:background_downloader/background_downloader.dart' as bgdl;
 import 'package:boxbox/api/brightcove.dart';
-import 'package:boxbox/api/formula1.dart';
+import 'package:boxbox/classes/article.dart';
 import 'package:boxbox/helpers/custom_player_controls.dart';
 import 'package:boxbox/helpers/download.dart';
 import 'package:boxbox/helpers/hover.dart';

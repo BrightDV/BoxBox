@@ -18,6 +18,7 @@
  */
 
 import 'package:boxbox/api/race_components.dart';
+import 'package:boxbox/classes/race.dart';
 import 'package:boxbox/providers/schedule/requests.dart';
 import 'package:boxbox/providers/schedule/ui.dart';
 import 'package:flutter/material.dart';

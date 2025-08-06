@@ -17,7 +17,7 @@
  * Copyright (c) 2022-2025, BrightDV
  */
 
-import 'package:boxbox/api/event_tracker.dart';
+import 'package:boxbox/classes/event_tracker.dart';
 import 'package:boxbox/helpers/constants.dart';
 import 'package:boxbox/helpers/hover.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';

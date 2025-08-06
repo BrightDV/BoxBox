@@ -20,6 +20,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:boxbox/classes/video.dart';
 import 'package:boxbox/helpers/constants.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
@@ -142,24 +143,4 @@ class F1VideosFetcher {
       DateTime.parse(responseAsJson['publishedAt']),
     );
   }
-}
-
-class Video {
-  final String videoId;
-  final String videoUrl;
-  final String caption;
-  final String description;
-  final String videoDuration;
-  final String thumbnailUrl;
-  final DateTime datePosted;
-
-  Video(
-    this.videoId,
-    this.videoUrl,
-    this.caption,
-    this.description,
-    this.videoDuration,
-    this.thumbnailUrl,
-    this.datePosted,
-  );
 }

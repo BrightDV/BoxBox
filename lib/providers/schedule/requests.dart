@@ -20,7 +20,7 @@
 import 'package:boxbox/api/ergast.dart';
 import 'package:boxbox/api/formula1.dart';
 import 'package:boxbox/api/formulae.dart';
-import 'package:boxbox/api/race_components.dart';
+import 'package:boxbox/classes/race.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class ScheduleRequestsProvider {

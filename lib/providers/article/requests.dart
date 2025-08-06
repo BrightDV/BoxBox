@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:boxbox/api/formula1.dart';
 import 'package:boxbox/api/formulae.dart';
+import 'package:boxbox/classes/article.dart';
 import 'package:boxbox/helpers/download.dart';
 import 'package:boxbox/scraping/formulae.dart';
 import 'package:flutter/foundation.dart';

@@ -17,19 +17,12 @@
  * Copyright (c) 2022-2025, BrightDV
  */
 
+import 'package:boxbox/classes/misc.dart';
 import 'package:boxbox/helpers/constants.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' as parser;
 import 'package:html/dom.dart' as dom;
-
-class SessionDocument {
-  final String name;
-  final String postedDate;
-  final String src;
-
-  SessionDocument(this.name, this.postedDate, this.src);
-}
 
 class FIAScraper {
   Future<List<SessionDocument>> scrapeSessionDocuments() async {

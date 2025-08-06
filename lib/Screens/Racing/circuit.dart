@@ -19,10 +19,10 @@
 
 import 'package:boxbox/Screens/Racing/circuit_details.dart';
 import 'package:boxbox/Screens/session_screen.dart';
-import 'package:boxbox/api/driver_components.dart';
-import 'package:boxbox/api/event_tracker.dart';
-import 'package:boxbox/api/formula1.dart';
-import 'package:boxbox/classes/circuit.dart';
+import 'package:boxbox/classes/article.dart';
+import 'package:boxbox/classes/driver.dart';
+import 'package:boxbox/classes/event_tracker.dart';
+import 'package:boxbox/classes/race.dart';
 import 'package:boxbox/helpers/buttons.dart';
 import 'package:boxbox/helpers/divider.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';

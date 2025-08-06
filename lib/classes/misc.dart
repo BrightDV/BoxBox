@@ -17,25 +17,24 @@
  * Copyright (c) 2022-2025, BrightDV
  */
 
-import 'package:boxbox/api/formulae.dart';
-import 'package:boxbox/api/videos.dart';
-import 'package:boxbox/classes/video.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+class HallOfFameDriver {
+  String driverName;
+/*   String years; */
+  String detailsPageUrl;
+  String imageUrl;
 
-class VideosRequestProvider {
-  Future<List<Video>> getLatestVideos(int offset, {String tag = ''}) {
-    String championship = Hive.box('settings')
-        .get('championship', defaultValue: 'Formula 1') as String;
-    if (championship == 'Formula 1') {
-      return F1VideosFetcher().getLatestVideos(
-        24,
-        offset,
-      );
-    } else {
-      return FormulaE().getLatestVideos(
-        24,
-        offset,
-      );
-    }
-  }
+  HallOfFameDriver(
+    this.driverName,
+/*     this.years, */
+    this.detailsPageUrl,
+    this.imageUrl,
+  );
+}
+
+class SessionDocument {
+  final String name;
+  final String postedDate;
+  final String src;
+
+  SessionDocument(this.name, this.postedDate, this.src);
 }

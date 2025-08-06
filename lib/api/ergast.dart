@@ -20,9 +20,9 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:boxbox/api/driver_components.dart';
-import 'package:boxbox/api/race_components.dart';
-import 'package:boxbox/api/team_components.dart';
+import 'package:boxbox/classes/driver.dart';
+import 'package:boxbox/classes/race.dart';
+import 'package:boxbox/classes/team.dart';
 import 'package:boxbox/helpers/constants.dart';
 import 'package:boxbox/helpers/convert_ergast_and_formula_one.dart';
 import 'package:hive_flutter/hive_flutter.dart';

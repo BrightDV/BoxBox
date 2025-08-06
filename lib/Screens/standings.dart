@@ -19,6 +19,8 @@
 
 import 'package:boxbox/api/driver_components.dart';
 import 'package:boxbox/api/team_components.dart';
+import 'package:boxbox/classes/driver.dart';
+import 'package:boxbox/classes/team.dart';
 import 'package:boxbox/providers/standings/requests.dart';
 import 'package:boxbox/providers/standings/ui.dart';
 import 'package:flutter/material.dart';

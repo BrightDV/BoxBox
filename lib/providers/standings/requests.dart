@@ -17,11 +17,11 @@
  * Copyright (c) 2022-2025, BrightDV
  */
 
-import 'package:boxbox/api/driver_components.dart';
 import 'package:boxbox/api/ergast.dart';
 import 'package:boxbox/api/formula1.dart';
 import 'package:boxbox/api/formulae.dart';
-import 'package:boxbox/api/team_components.dart';
+import 'package:boxbox/classes/driver.dart';
+import 'package:boxbox/classes/team.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class StandingsRequestsProvider {

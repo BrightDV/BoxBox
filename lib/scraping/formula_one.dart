@@ -20,7 +20,8 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:boxbox/api/driver_components.dart';
+import 'package:boxbox/classes/driver.dart';
+import 'package:boxbox/classes/misc.dart';
 import 'package:boxbox/helpers/constants.dart';
 import 'package:boxbox/helpers/convert_ergast_and_formula_one.dart';
 import 'package:flutter/material.dart';
@@ -717,18 +718,4 @@ class FormulaOneScraper {
     );
     return meetingId;
   }
-}
-
-class HallOfFameDriver {
-  String driverName;
-/*   String years; */
-  String detailsPageUrl;
-  String imageUrl;
-
-  HallOfFameDriver(
-    this.driverName,
-/*     this.years, */
-    this.detailsPageUrl,
-    this.imageUrl,
-  );
 }

@@ -20,6 +20,7 @@
 import 'dart:convert';
 
 import 'package:boxbox/api/rss.dart';
+import 'package:boxbox/classes/article.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
 
@@ -167,25 +168,4 @@ class MergedFeeds {
     );
     return feeds;
   }
-}
-
-class MergedNewsItemDefinition {
-  final String source;
-  final String title;
-
-  final String link;
-  final String date;
-  final String? description;
-  final String? thumbnailUrl;
-  final String? thumbnailIntermediateUrl;
-
-  MergedNewsItemDefinition(
-    this.source,
-    this.title,
-    this.link,
-    this.date, {
-    this.description,
-    this.thumbnailUrl,
-    this.thumbnailIntermediateUrl,
-  });
 }

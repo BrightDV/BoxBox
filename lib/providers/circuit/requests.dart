@@ -19,7 +19,7 @@
 
 import 'package:boxbox/api/formula1.dart';
 import 'package:boxbox/api/formulae.dart';
-import 'package:boxbox/classes/circuit.dart';
+import 'package:boxbox/classes/race.dart';
 import 'package:boxbox/providers/circuit/format.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 

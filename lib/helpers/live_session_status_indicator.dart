@@ -19,7 +19,7 @@
  * Copyright (c) 2022-2025, BrightDV
  */
 
-import 'package:boxbox/api/event_tracker.dart';
+import 'package:boxbox/classes/event_tracker.dart';
 import 'package:boxbox/providers/event_tracker/requests.dart';
 import 'package:boxbox/providers/event_tracker/ui.dart';
 import 'package:flutter/material.dart';

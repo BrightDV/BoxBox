@@ -19,8 +19,8 @@
 
 import 'dart:convert';
 
-import 'package:boxbox/api/formula1.dart';
 import 'package:boxbox/api/formulae.dart';
+import 'package:boxbox/classes/article.dart';
 import 'package:boxbox/helpers/constants.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:html/parser.dart' as parser;

@@ -20,7 +20,7 @@
 import 'package:add_2_calendar/add_2_calendar.dart' as calendar;
 import 'package:boxbox/Screens/free_practice_screen.dart';
 import 'package:boxbox/Screens/race_details.dart';
-import 'package:boxbox/api/event_tracker.dart';
+import 'package:boxbox/classes/event_tracker.dart';
 import 'package:boxbox/providers/event_tracker/format.dart';
 import 'package:boxbox/providers/event_tracker/ui.dart';
 import 'package:flutter/foundation.dart';

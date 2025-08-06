@@ -17,8 +17,8 @@
  * Copyright (c) 2022-2025, BrightDV
  */
 
-import 'package:boxbox/api/driver_components.dart';
 import 'package:boxbox/api/event_tracker.dart';
+import 'package:boxbox/classes/driver.dart';
 import 'package:boxbox/helpers/divider.dart';
 import 'package:boxbox/helpers/request_error.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';

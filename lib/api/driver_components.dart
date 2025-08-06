@@ -18,6 +18,7 @@
  */
 
 import 'package:boxbox/api/formulae.dart';
+import 'package:boxbox/classes/driver.dart';
 import 'package:boxbox/helpers/divider.dart';
 import 'package:boxbox/helpers/driver_image.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
@@ -27,122 +28,6 @@ import 'package:flutter/material.dart';
 import 'package:boxbox/l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-
-class Driver {
-  final String driverId;
-  final String position;
-  final String permanentNumber;
-  final String givenName;
-  final String familyName;
-  final String code;
-  final String team;
-  final String points;
-  final String? driverImage;
-  final String? detailsPath;
-  final Color? teamColor;
-
-  Driver(
-    this.driverId,
-    this.position,
-    this.permanentNumber,
-    this.givenName,
-    this.familyName,
-    this.code,
-    this.team,
-    this.points, {
-    this.driverImage,
-    this.detailsPath,
-    this.teamColor,
-  });
-}
-
-class DriverResult {
-  final String driverId;
-  final String position;
-  final String permanentNumber;
-  final String givenName;
-  final String familyName;
-  final String code;
-  final String team;
-  final String time;
-  final bool isFastest;
-  final String fastestLapTime;
-  final String fastestLap;
-  final String? lapsDone;
-  final String? points;
-  final String? raceId;
-  final String? raceName;
-  final String? status;
-  final String? teamColor;
-
-  DriverResult(
-    this.driverId,
-    this.position,
-    this.permanentNumber,
-    this.givenName,
-    this.familyName,
-    this.code,
-    this.team,
-    this.time,
-    this.isFastest,
-    this.fastestLapTime,
-    this.fastestLap, {
-    this.lapsDone,
-    this.points,
-    this.raceId,
-    this.raceName,
-    this.status,
-    this.teamColor,
-  });
-}
-
-class DriverQualificationResult {
-  final String driverId;
-  final String position;
-  final String permanentNumber;
-  final String givenName;
-  final String familyName;
-  final String code;
-  final String team;
-  final String timeq1;
-  final String timeq2;
-  final String timeq3;
-  final String? teamColor;
-
-  DriverQualificationResult(
-    this.driverId,
-    this.position,
-    this.permanentNumber,
-    this.givenName,
-    this.familyName,
-    this.code,
-    this.team,
-    this.timeq1,
-    this.timeq2,
-    this.timeq3, {
-    this.teamColor,
-  });
-}
-
-class StartingGridPosition {
-  final String position;
-  final String number;
-  final String driver;
-  final String team;
-  final String teamFullName;
-  final String time;
-  final String? teamColor;
-
-  StartingGridPosition(
-    this.position,
-    this.number,
-    this.driver,
-    this.team,
-    this.teamFullName,
-    this.time, {
-    this.teamColor,
-  });
-}
 
 class DriversList extends StatelessWidget {
   final List<Driver> items;

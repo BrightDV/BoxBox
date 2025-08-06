@@ -17,7 +17,7 @@
  * Copyright (c) 2022-2025, BrightDV
  */
 
-import 'package:boxbox/api/formula1.dart';
+import 'package:boxbox/classes/article.dart';
 import 'package:boxbox/helpers/custom_physics.dart';
 import 'package:boxbox/helpers/news.dart';
 import 'package:boxbox/scraping/formula_one.dart';

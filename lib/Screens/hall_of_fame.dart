@@ -17,6 +17,7 @@
  * Copyright (c) 2022-2025, BrightDV
  */
 
+import 'package:boxbox/classes/misc.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/request_error.dart';
 import 'package:boxbox/scraping/formula_one.dart';

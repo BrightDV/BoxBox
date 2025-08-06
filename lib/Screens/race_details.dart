@@ -18,8 +18,8 @@
  */
 
 import 'package:add_2_calendar/add_2_calendar.dart' as a2c;
-import 'package:boxbox/api/driver_components.dart';
-import 'package:boxbox/api/race_components.dart';
+import 'package:boxbox/classes/driver.dart';
+import 'package:boxbox/classes/race.dart';
 import 'package:boxbox/helpers/divider.dart';
 import 'package:boxbox/helpers/driver_result_item.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';

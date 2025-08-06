@@ -23,6 +23,7 @@ import 'dart:io';
 import 'package:background_downloader/background_downloader.dart';
 import 'package:boxbox/api/brightcove.dart';
 import 'package:boxbox/api/videos.dart';
+import 'package:boxbox/classes/video.dart';
 import 'package:boxbox/helpers/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:boxbox/l10n/app_localizations.dart';

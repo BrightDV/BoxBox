@@ -18,7 +18,7 @@
  */
 
 import 'package:boxbox/api/atom_article_parts.dart';
-import 'package:boxbox/api/formula1.dart';
+import 'package:boxbox/classes/article.dart';
 import 'package:boxbox/helpers/custom_physics.dart';
 import 'package:boxbox/helpers/news.dart';
 import 'package:boxbox/helpers/news_feed_widget.dart';

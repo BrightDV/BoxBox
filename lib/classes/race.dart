@@ -17,9 +17,9 @@
  * Copyright (c) 2022-2025, BrightDV
  */
 
-import 'package:boxbox/api/driver_components.dart';
-import 'package:boxbox/api/event_tracker.dart';
-import 'package:boxbox/api/formula1.dart';
+import 'package:boxbox/classes/article.dart';
+import 'package:boxbox/classes/driver.dart';
+import 'package:boxbox/classes/event_tracker.dart';
 
 class RaceDetails {
   final String meetingId;
@@ -65,4 +65,42 @@ class Link {
   final String url;
 
   const Link(this.text, this.type, this.url);
+}
+
+class Race {
+  final String round;
+  final String meetingId;
+  final String raceName;
+  final String date;
+  final String raceHour;
+  final String circuitId;
+  final String circuitName;
+  final String circuitUrl;
+  final String country;
+  final List<DateTime> sessionDates;
+  final bool? isFirst;
+  final String? raceCoverUrl;
+  final String? detailsPath;
+  final List? sessionStates;
+  final bool? isPreSeasonTesting;
+  final bool? hasRaceHour;
+
+  Race(
+    this.round,
+    this.meetingId,
+    this.raceName,
+    this.date,
+    this.raceHour,
+    this.circuitId,
+    this.circuitName,
+    this.circuitUrl,
+    this.country,
+    this.sessionDates, {
+    this.isFirst,
+    this.raceCoverUrl,
+    this.detailsPath,
+    this.sessionStates,
+    this.isPreSeasonTesting,
+    this.hasRaceHour,
+  });
 }

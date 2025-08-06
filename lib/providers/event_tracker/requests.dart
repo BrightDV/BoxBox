@@ -18,6 +18,7 @@
  */
 
 import 'package:boxbox/api/event_tracker.dart';
+import 'package:boxbox/classes/event_tracker.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class EventTrackerRequestsProvider {
