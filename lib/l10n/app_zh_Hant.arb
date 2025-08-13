@@ -179,7 +179,7 @@
     "@lightMode": {},
     "links": "連結",
     "@links": {},
-    "listen": "聽",
+    "listen": "聽著",
     "@listen": {},
     "loading": "載入中",
     "@loading": {},
@@ -418,5 +418,9 @@
     "unavailableOffline": "無法離線使用",
     "@unavailableOffline": {},
     "viewMore": "VIEW MORE",
-    "@viewMore": {}
+    "@viewMore": {},
+    "liveBlog": "日誌",
+    "@liveBlog": {},
+    "openLiveBlog": "打開日誌",
+    "@openLiveBlog": {}
 }
