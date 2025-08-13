@@ -20,7 +20,7 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:boxbox/api/formulae.dart';
+import 'package:boxbox/api/services/formulae.dart';
 import 'package:boxbox/classes/event_tracker.dart';
 import 'package:boxbox/classes/race.dart';
 import 'package:boxbox/helpers/constants.dart';

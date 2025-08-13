@@ -194,7 +194,7 @@ class _ChampionshipScreenState extends State<ChampionshipScreen> {
             leading: SizedBox(
               width: 32,
               child: ClipRRect(
-                borderRadius: const BorderRadius.all(Radius.circular(5)),
+                borderRadius: const BorderRadius.all(Radius.circular(7)),
                 child: CachedNetworkImage(
                   imageUrl:
                       'https://www.fiaformulae.com/resources/v4.32.1/i/elements/favicon-160x160.png',

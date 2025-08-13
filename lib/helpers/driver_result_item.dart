@@ -18,7 +18,7 @@
  */
 
 import 'package:boxbox/Screens/driver_details.dart';
-import 'package:boxbox/api/formulae.dart';
+import 'package:boxbox/api/services/formulae.dart';
 import 'package:boxbox/classes/driver.dart';
 import 'package:boxbox/classes/race.dart';
 import 'package:boxbox/helpers/divider.dart';

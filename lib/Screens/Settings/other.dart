@@ -19,7 +19,7 @@
 
 import 'dart:math' as math;
 
-import 'package:boxbox/api/formulae.dart';
+import 'package:boxbox/api/services/formulae.dart';
 import 'package:boxbox/helpers/constants.dart';
 import 'package:boxbox/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';

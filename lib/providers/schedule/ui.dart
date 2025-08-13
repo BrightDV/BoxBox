@@ -18,8 +18,8 @@
  */
 
 import 'package:boxbox/api/ergast.dart';
-import 'package:boxbox/api/formula1.dart';
-import 'package:boxbox/api/formulae.dart';
+import 'package:boxbox/api/services/formula1.dart';
+import 'package:boxbox/api/services/formulae.dart';
 import 'package:boxbox/api/race_components.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/request_error.dart';

@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:boxbox/api/formula1.dart';
-import 'package:boxbox/api/formulae.dart';
+import 'package:boxbox/api/services/formula1.dart';
+import 'package:boxbox/api/services/formulae.dart';
 import 'package:boxbox/classes/article.dart';
 import 'package:boxbox/helpers/download.dart';
 import 'package:boxbox/scraping/formulae.dart';

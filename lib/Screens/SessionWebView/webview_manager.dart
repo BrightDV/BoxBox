@@ -19,7 +19,7 @@
 
 import 'package:boxbox/Screens/SessionWebView/cookie_generator_webview.dart';
 import 'package:boxbox/Screens/SessionWebView/session_webview.dart';
-import 'package:boxbox/api/formula1.dart';
+import 'package:boxbox/api/services/formula1.dart';
 import 'package:boxbox/helpers/request_error.dart';
 import 'package:boxbox/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';

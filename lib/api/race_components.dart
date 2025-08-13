@@ -18,7 +18,7 @@
  */
 
 import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:boxbox/api/formula1.dart';
+import 'package:boxbox/api/services/formula1.dart';
 import 'package:boxbox/classes/race.dart';
 import 'package:boxbox/helpers/news.dart';
 import 'package:boxbox/helpers/racetracks_url.dart';
