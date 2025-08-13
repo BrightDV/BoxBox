@@ -121,7 +121,7 @@ class ResultsRequestsProvider {
       }
     } else if (championship == 'Formula E') {
       return await FormulaE().getRaceStandings(
-        race!.meetingId,
+        meetingId!,
         sessionId!,
       );
     } else {

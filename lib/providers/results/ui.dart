@@ -17,7 +17,7 @@
  * Copyright (c) 2022-2025, BrightDV
  */
 
-import 'package:boxbox/Screens/free_practice_screen.dart';
+import 'package:boxbox/Screens/free_practice.dart';
 import 'package:boxbox/api/ergast.dart';
 import 'package:boxbox/api/formula1.dart';
 import 'package:boxbox/api/formulae.dart';

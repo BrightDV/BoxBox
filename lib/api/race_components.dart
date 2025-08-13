@@ -324,7 +324,7 @@ class RacesList extends StatelessWidget {
             body: "Be ready! ${session.sessionFullName} is starting soon!",
             payload: {
               'meetingId': meetingId,
-              'session': session.sessionsAbbreviation,
+              'session': session.sessionAbbreviation,
             },
           ),
           schedule: NotificationCalendar(

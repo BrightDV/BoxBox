@@ -18,7 +18,7 @@
  */
 
 import 'package:add_2_calendar/add_2_calendar.dart' as calendar;
-import 'package:boxbox/Screens/free_practice_screen.dart';
+import 'package:boxbox/Screens/free_practice.dart';
 import 'package:boxbox/Screens/race_details.dart';
 import 'package:boxbox/classes/event_tracker.dart';
 import 'package:boxbox/providers/event_tracker/format.dart';
@@ -66,8 +66,8 @@ class _SessionScreenState extends State<SessionScreen> {
     int seconds =
         (timeToRace - days * 24 * 60 * 60 - hours * 60 * 60 - minutes * 60);
 
-    return widget.session.sessionsAbbreviation.startsWith('p') ||
-            widget.session.sessionsAbbreviation.startsWith('Free Practice')
+    return widget.session.sessionAbbreviation.startsWith('p') ||
+            widget.session.sessionAbbreviation.startsWith('Free Practice')
         ? widget.session.startTime.isAfter(DateTime.now())
             ? Scaffold(
                 appBar: AppBar(
@@ -162,7 +162,7 @@ class _SessionScreenState extends State<SessionScreen> {
                                     widget.session.startTime.toLocal().month,
                                     widget.session.startTime.toLocal().day,
                                     widget.session.startTime.toLocal().hour +
-                                        (widget.session.sessionsAbbreviation ==
+                                        (widget.session.sessionAbbreviation ==
                                                 'r'
                                             ? 3
                                             : 1),
@@ -180,7 +180,7 @@ class _SessionScreenState extends State<SessionScreen> {
               )
             : widget.session.startTime.isBefore(DateTime.now()) &&
                         widget.session.endTime.isAfter(DateTime.now()) ||
-                    widget.session.isRunning
+                    widget.session.sessionState == SessionState().RUNNING
                 ? EventTrackerUIProvider().getRaceHubFreePracticesWebview(
                     context,
                     widget.sessionFullName,
@@ -298,8 +298,7 @@ class _SessionScreenState extends State<SessionScreen> {
                                       widget.session.startTime.toLocal().month,
                                       widget.session.startTime.toLocal().day,
                                       widget.session.startTime.toLocal().hour +
-                                          (widget.session
-                                                      .sessionsAbbreviation ==
+                                          (widget.session.sessionAbbreviation ==
                                                   'r'
                                               ? 3
                                               : 1),
@@ -314,11 +313,11 @@ class _SessionScreenState extends State<SessionScreen> {
                           : Container(),
                     ],
                   )
-                : widget.session.state == 'completed' ||
+                : widget.session.sessionState == SessionState().COMPLETED ||
                         widget.session.endTime.isBefore(DateTime.now())
-                    ? widget.session.sessionsAbbreviation == 'r' ||
-                            widget.session.sessionsAbbreviation == 's' ||
-                            widget.session.sessionsAbbreviation == 'Race'
+                    ? widget.session.sessionAbbreviation == 'r' ||
+                            widget.session.sessionAbbreviation == 's' ||
+                            widget.session.sessionAbbreviation == 'Race'
                         ? RaceResultsProvider(
                             raceUrl: EventTrackerFormatProvider()
                                 .formatRaceSessionUrl(

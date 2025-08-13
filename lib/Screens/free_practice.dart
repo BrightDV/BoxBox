@@ -430,8 +430,11 @@ class FreePracticeResultItem extends StatelessWidget {
 class FreePracticeFromMeetingKeyScreen extends StatelessWidget {
   final String meetingKey;
   final int sessionIndex;
-  const FreePracticeFromMeetingKeyScreen(this.meetingKey, this.sessionIndex,
-      {super.key});
+  const FreePracticeFromMeetingKeyScreen(
+    this.meetingKey,
+    this.sessionIndex, {
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -415,14 +415,15 @@ class SessionItem extends StatelessWidget {
                               children: [
                                 Text(
                                   sessionsAbbreviations[
-                                          session.sessionsAbbreviation] ??
-                                      session.sessionsAbbreviation,
+                                          session.sessionAbbreviation] ??
+                                      session.sessionAbbreviation,
                                   style: TextStyle(
                                     fontSize: 20,
                                   ),
                                 ),
                                 session.endTime.isBefore(DateTime.now()) &&
-                                        !session.isRunning
+                                        session.sessionState !=
+                                            SessionState().RUNNING
                                     ? Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
@@ -449,7 +450,8 @@ class SessionItem extends StatelessWidget {
                                       )
                                     : session.startTime
                                                 .isBefore(DateTime.now()) ||
-                                            session.isRunning
+                                            session.sessionState ==
+                                                SessionState().RUNNING
                                         ? Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.center,
@@ -501,8 +503,8 @@ class SessionItem extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                   builder: (context) => SessionScreen(
-                    sessionsAbbreviations[session.sessionsAbbreviation] ??
-                        session.sessionsAbbreviation,
+                    sessionsAbbreviations[session.sessionAbbreviation] ??
+                        session.sessionAbbreviation,
                     session,
                     meetingCountryName,
                     meetingOfficialName,
@@ -559,8 +561,8 @@ class SessionItem extends StatelessWidget {
                     child: Column(
                       children: [
                         Text(
-                          sessionsAbbreviations[session.sessionsAbbreviation] ??
-                              session.sessionsAbbreviation,
+                          sessionsAbbreviations[session.sessionAbbreviation] ??
+                              session.sessionAbbreviation,
                           style: TextStyle(
                             fontSize: 20,
                           ),
@@ -637,8 +639,8 @@ class SessionItem extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                   builder: (context) => SessionScreen(
-                    sessionsAbbreviations[session.sessionsAbbreviation] ??
-                        session.sessionsAbbreviation,
+                    sessionsAbbreviations[session.sessionAbbreviation] ??
+                        session.sessionAbbreviation,
                     session,
                     meetingCountryName,
                     meetingOfficialName,

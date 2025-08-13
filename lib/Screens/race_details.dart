@@ -108,6 +108,7 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
               future: ResultsRequestsProvider().getRaceStandingsFromApi(
                 meetingId: widget.raceId,
                 raceUrl: raceUrl,
+                sessionId: widget.sessionId,
               ),
               builder: (context, snapshot) {
                 if (snapshot.hasError) {

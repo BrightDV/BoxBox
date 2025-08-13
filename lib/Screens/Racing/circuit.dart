@@ -18,7 +18,6 @@
  */
 
 import 'package:boxbox/Screens/Racing/circuit_details.dart';
-import 'package:boxbox/Screens/session_screen.dart';
 import 'package:boxbox/classes/article.dart';
 import 'package:boxbox/classes/driver.dart';
 import 'package:boxbox/classes/event_tracker.dart';
@@ -30,6 +29,7 @@ import 'package:boxbox/helpers/news.dart';
 import 'package:boxbox/helpers/request_error.dart';
 import 'package:boxbox/l10n/app_localizations.dart';
 import 'package:boxbox/providers/circuit/requests.dart';
+import 'package:boxbox/providers/circuit/ui.dart';
 import 'package:boxbox/scraping/formula_one.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -60,14 +60,16 @@ class CircuitScreen extends StatelessWidget {
                   )
             : snapshot.hasData
                 ? CircuitScreenContent(snapshot.data!)
-                : Column(
-                    children: [
-                      AppBar(),
-                      Center(
-                        child: LoadingIndicatorUtil(),
+                : details != null
+                    ? CircuitScreenContent(details)
+                    : Column(
+                        children: [
+                          AppBar(),
+                          Center(
+                            child: LoadingIndicatorUtil(),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
       ),
     );
   }
@@ -247,28 +249,6 @@ class SessionItemForCircuit extends StatelessWidget {
     super.key,
   });
 
-  void tapAction(String linkType, String url, BuildContext context) {
-    if (linkType == 'Article' || linkType == 'LiveBlog') {
-      context.pushNamed(
-        'article',
-        pathParameters: {'id': url.split('.').last},
-        extra: {
-          'isFromLink': true,
-        },
-      );
-    } else if (linkType == 'StartingGrid') {
-      context.pushNamed(
-        'starting-grid',
-        pathParameters: {'meetingId': meetingId},
-      );
-    } else if (linkType == 'SprintGrid') {
-      context.pushNamed(
-        'sprint-shootout',
-        pathParameters: {'meetingId': meetingId},
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     List months = [
@@ -288,56 +268,13 @@ class SessionItemForCircuit extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 5),
       child: InkWell(
-        onTap: () =>
-            session.endTime.isAfter(DateTime.now()) || session.isRunning
-                ? Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => SessionScreen(
-                        session.sessionFullName!,
-                        session,
-                        meetingCountryName,
-                        meetingOfficialName,
-                        meetingId,
-                      ),
-                    ),
-                  )
-                : session.sessionsAbbreviation.startsWith('p')
-                    ? context.pushNamed(
-                        'practice',
-                        pathParameters: {
-                          'meetingId': meetingId,
-                          'sessionIndex':
-                              session.sessionsAbbreviation.substring(1)
-                        },
-                      )
-                    : session.sessionsAbbreviation == 'ss'
-                        ? context.pushNamed(
-                            'sprint-shootout',
-                            pathParameters: {
-                              'meetingId': meetingId,
-                            },
-                          )
-                        : session.sessionsAbbreviation == 's'
-                            ? context.pushNamed(
-                                'sprint',
-                                pathParameters: {
-                                  'meetingId': meetingId,
-                                },
-                              )
-                            : session.sessionsAbbreviation == 'q'
-                                ? context.pushNamed(
-                                    'qualifyings',
-                                    pathParameters: {
-                                      'meetingId': meetingId,
-                                    },
-                                  )
-                                : context.pushNamed(
-                                    'race',
-                                    pathParameters: {
-                                      'meetingId': meetingId,
-                                    },
-                                  ),
+        onTap: () => CircuitUIProvider().onSessionTapAction(
+          session,
+          meetingCountryName,
+          meetingOfficialName,
+          meetingId,
+          context,
+        ),
         borderRadius: BorderRadius.circular(6),
         child: Ink(
           height: 80,
@@ -367,7 +304,7 @@ class SessionItemForCircuit extends StatelessWidget {
               children: [
                 Padding(
                   padding: EdgeInsets.only(right: 10, left: 5),
-                  child: session.isRunning
+                  child: session.sessionState == SessionState().RUNNING
                       ? SizedBox(
                           height: 25,
                           width: 25,
@@ -379,7 +316,7 @@ class SessionItemForCircuit extends StatelessWidget {
                             strokeWidth: 2.0,
                           ),
                         )
-                      : session.state == 'completed'
+                      : session.sessionState == SessionState().COMPLETED
                           ? SizedBox(
                               height: 25,
                               width: 25,
@@ -469,10 +406,12 @@ class SessionItemForCircuit extends StatelessWidget {
                                                   : Icon(
                                                       Icons.article_outlined,
                                                     ),
-                                          onTap: () => tapAction(
+                                          onTap: () =>
+                                              CircuitUIProvider().linkTapAction(
                                             links![index - 1].type,
                                             links![index - 1].url,
                                             context,
+                                            meetingId,
                                           ),
                                         ),
                                 ),
@@ -747,7 +686,7 @@ class Sessions extends StatelessWidget {
                   details.meetingDisplayName,
                   details.meetingCompleteName,
                   details.meetingId,
-                  links: details.sessionsLinks![session.sessionsAbbreviation],
+                  links: details.sessionsLinks?[session.sessionAbbreviation],
                 ),
             ],
           ),

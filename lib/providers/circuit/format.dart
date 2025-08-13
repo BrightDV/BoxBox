@@ -40,20 +40,28 @@ class CircuitFormatProvider {
       // sessions & sessions links
       for (var session
           in details['race']['meetingSessions'].reversed.toList()) {
+        int state = SessionState().UNKNOWN;
+        DateTime startDate =
+            DateTime.parse(session['startTime'] + session['gmtOffset'])
+                .toLocal();
+        DateTime endDate =
+            DateTime.parse(session['endTime'] + session['gmtOffset']).toLocal();
+        if (DateTime.now().isBefore(startDate)) {
+          state = SessionState().SCHEDULED;
+        } else if (DateTime.now().isBefore(endDate) &&
+            DateTime.now().isAfter(startDate)) {
+          state = SessionState().RUNNING;
+        } else if (DateTime.now().isAfter(endDate)) {
+          state = SessionState().COMPLETED;
+        }
         sessions.add(
           Session(
             session['state'],
             session['session'],
-            DateTime.parse(session['endTime'] + session['gmtOffset']).toLocal(),
-            DateTime.parse(session['startTime'] + session['gmtOffset'])
-                .toLocal(),
+            endDate,
+            startDate,
             null,
-            (DateTime.now().isBefore(
-                    DateTime.parse(session['endTime'] + session['gmtOffset'])
-                        .toLocal())) &&
-                (DateTime.now().isAfter(
-                    DateTime.parse(session['startTime'] + session['gmtOffset'])
-                        .toLocal())),
+            state,
             sessionFullName: session['description'],
           ),
         );
@@ -173,15 +181,146 @@ class CircuitFormatProvider {
     } else if (championship == 'Formula E') {
       List<Session> sessions = [];
       List<News> articles = [];
+      Map qualifyingSession = {
+        'state': '',
+        'sessionAbbreviation': '',
+        'endTime': DateTime.now(),
+        'startTime': DateTime.now(),
+        'sessionState': SessionState().UNKNOWN,
+        'sessionFullName': 'Qualifying',
+      };
+      if (details['sessions'] != null) {
+        for (Map session in details['sessions']['sessions'].reversed.toList()) {
+          if (session['sessionName'].toLowerCase().contains('qual')) {
+            if (session['sessionName'] == 'Combined qualifying') {
+              qualifyingSession['sessionAbbreviation'] = session['id'];
+            } else if (session['sessionName'] == 'Qual Group A') {
+              String gmtOffset = session['offsetGMT'];
+              try {
+                int.parse(gmtOffset.substring(0, 1));
+                if (gmtOffset.length < 5) {
+                  gmtOffset = '0' + gmtOffset;
+                }
+                gmtOffset = '+' + gmtOffset;
+              } catch (error) {
+                if (gmtOffset.length < 6) {
+                  gmtOffset =
+                      gmtOffset.substring(0, 1) + '0' + gmtOffset.substring(1);
+                }
+              }
+              DateTime startDate = DateTime.parse(
+                session['sessionDate'] +
+                    'T' +
+                    session['startTime'] +
+                    ':00' +
+                    gmtOffset,
+              );
+              qualifyingSession['startTime'] = startDate;
+            } else if (session['sessionName'] == 'Qual Final') {
+              String gmtOffset = session['offsetGMT'];
+              try {
+                int.parse(gmtOffset.substring(0, 1));
+                if (gmtOffset.length < 5) {
+                  gmtOffset = '0' + gmtOffset;
+                }
+                gmtOffset = '+' + gmtOffset;
+              } catch (error) {
+                if (gmtOffset.length < 6) {
+                  gmtOffset =
+                      gmtOffset.substring(0, 1) + '0' + gmtOffset.substring(1);
+                }
+              }
+              DateTime endDate = DateTime.parse(
+                session['sessionDate'] +
+                    'T' +
+                    session['finishTime'] +
+                    ':00' +
+                    gmtOffset,
+              );
+              qualifyingSession['endTime'] = endDate;
+            }
+          } else {
+            if (session['sessionDate'] != null) {
+              String gmtOffset = session['offsetGMT'];
+              try {
+                int.parse(gmtOffset.substring(0, 1));
+                if (gmtOffset.length < 5) {
+                  gmtOffset = '0' + gmtOffset;
+                }
+                gmtOffset = '+' + gmtOffset;
+              } catch (error) {
+                if (gmtOffset.length < 6) {
+                  gmtOffset =
+                      gmtOffset.substring(0, 1) + '0' + gmtOffset.substring(1);
+                }
+              }
+              DateTime startDate = DateTime.parse(
+                session['sessionDate'] +
+                    'T' +
+                    session['startTime'] +
+                    ':00' +
+                    gmtOffset,
+              );
+              DateTime endDate = DateTime.parse(
+                session['sessionDate'] +
+                    'T' +
+                    session['finishTime'] +
+                    ':00' +
+                    gmtOffset,
+              );
+              int state = SessionState().UNKNOWN;
+              if (DateTime.now().isBefore(startDate)) {
+                state = SessionState().SCHEDULED;
+              } else if (DateTime.now().isBefore(endDate) &&
+                  DateTime.now().isAfter(startDate)) {
+                state = SessionState().RUNNING;
+              } else if (DateTime.now().isAfter(endDate)) {
+                state = SessionState().COMPLETED;
+              }
 
-      // TODO: sessions
+              sessions.add(
+                Session(
+                  session['sessionLiveStatus'] ?? '',
+                  session['id'],
+                  endDate,
+                  startDate,
+                  null,
+                  state,
+                  sessionFullName: session['sessionName'],
+                ),
+              );
+            }
+          }
+        }
+      }
+      int qualiState = SessionState().UNKNOWN;
+      if (DateTime.now().isBefore(qualifyingSession['startTime'])) {
+        qualiState = SessionState().SCHEDULED;
+      } else if (DateTime.now().isBefore(qualifyingSession['endTime']) &&
+          DateTime.now().isAfter(qualifyingSession['startTime'])) {
+        qualiState = SessionState().RUNNING;
+      } else if (DateTime.now().isAfter(qualifyingSession['endTime'])) {
+        qualiState = SessionState().COMPLETED;
+      }
+      sessions.insert(
+        1,
+        Session(
+          qualifyingSession['state'],
+          qualifyingSession['sessionAbbreviation'],
+          qualifyingSession['endTime'],
+          qualifyingSession['startTime'],
+          null,
+          qualiState,
+          sessionFullName: qualifyingSession['sessionFullName'],
+        ),
+      );
 
       // articles
-      for (Map article in details['']) {
+      for (Map article in details['content']) {
         articles.add(
           News(
             article['id'].toString(),
-            '',
+            article['type'],
             '',
             article['title'],
             article['description'] ?? ' ',

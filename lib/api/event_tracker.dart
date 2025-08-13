@@ -179,23 +179,29 @@ class EventTracker {
         'https://www.formula1.com/en/results.html/${DateTime.now().year}/races/${eventAsJson['fomRaceId']}/${eventAsJson['circuitSmallImage']['title'].toLowerCase().replaceAll('.png', '')}/session-type.html';
     List<Session> sessions = [];
     for (var session in eventAsJson[path]['timetables']) {
+      int state = SessionState().UNKNOWN;
+      DateTime startDate = DateTime.parse(
+        session['startTime'] + gmtOffset,
+      ).toLocal();
+      DateTime endDate = DateTime.parse(
+        session['endTime'] + gmtOffset,
+      ).toLocal();
+      if (DateTime.now().isBefore(startDate)) {
+        state = SessionState().SCHEDULED;
+      } else if (DateTime.now().isBefore(endDate) &&
+          DateTime.now().isAfter(startDate)) {
+        state = SessionState().RUNNING;
+      } else if (DateTime.now().isAfter(endDate)) {
+        state = SessionState().COMPLETED;
+      }
       sessions.add(
         Session(
           session['state'],
           session['session'],
-          DateTime.parse(
-            session['endTime'] + gmtOffset,
-          ).toLocal(),
-          DateTime.parse(
-            session['startTime'] + gmtOffset,
-          ).toLocal(),
+          endDate,
+          startDate,
           baseUrl,
-          DateTime.now().isBefore(DateTime.parse(
-                session['endTime'] + gmtOffset,
-              ).toLocal()) &&
-              DateTime.now().isAfter(DateTime.parse(
-                session['startTime'] + gmtOffset,
-              ).toLocal()),
+          state,
         ),
       );
     }
@@ -233,17 +239,27 @@ class EventTracker {
 
       List<Session> sessions = [];
       for (int c = 0; c < eventAsJson['timetables']['sessionIds'].length; c++) {
+        int state = SessionState().UNKNOWN;
+        DateTime startDate =
+            DateTime.parse(eventAsJson['timetables']['sessionDates'][c]);
+        DateTime endDate =
+            DateTime.parse(eventAsJson['timetables']['sessionEndDates'][c]);
+        if (DateTime.now().isBefore(startDate)) {
+          state = SessionState().SCHEDULED;
+        } else if (DateTime.now().isBefore(endDate) &&
+            DateTime.now().isAfter(startDate)) {
+          state = SessionState().RUNNING;
+        } else if (DateTime.now().isAfter(endDate)) {
+          state = SessionState().COMPLETED;
+        }
         sessions.add(
           Session(
             eventAsJson['timetables']['sessionStates'][c],
             eventAsJson['timetables']['sessionNames'][c],
-            DateTime.parse(eventAsJson['timetables']['sessionEndDates'][c]),
-            DateTime.parse(eventAsJson['timetables']['sessionDates'][c]),
+            endDate,
+            startDate,
             eventAsJson['timetables']['sessionIds'][c],
-            DateTime.now().isBefore(DateTime.parse(
-                    eventAsJson['timetables']['sessionEndDates'][c])) &&
-                DateTime.now().isAfter(DateTime.parse(
-                    eventAsJson['timetables']['sessionDates'][c])),
+            state,
           ),
         );
       }

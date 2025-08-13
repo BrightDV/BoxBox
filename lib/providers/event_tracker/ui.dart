@@ -19,7 +19,7 @@
 
 import 'package:boxbox/Screens/SessionWebView/unofficial_webview.dart';
 import 'package:boxbox/Screens/SessionWebView/webview_manager.dart';
-import 'package:boxbox/Screens/free_practice_screen.dart';
+import 'package:boxbox/Screens/free_practice.dart';
 import 'package:boxbox/Screens/race_details.dart';
 import 'package:boxbox/Screens/racehub.dart';
 import 'package:boxbox/classes/event_tracker.dart';
@@ -488,8 +488,8 @@ class EventTrackerUIProvider {
           session,
         ),
         sessionId: meetingId,
-        hasSprint: session.sessionsAbbreviation == 'ss' ? true : false,
-        isSprintQualifying: session.sessionsAbbreviation == 'ss' ? true : false,
+        hasSprint: session.sessionAbbreviation == 'ss' ? true : false,
+        isSprintQualifying: session.sessionAbbreviation == 'ss' ? true : false,
       );
     } else if (championship == 'Formula E') {
       return FreePracticeResultsProvider(

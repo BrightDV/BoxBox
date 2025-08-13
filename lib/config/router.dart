@@ -34,7 +34,7 @@ import 'package:boxbox/Screens/article.dart';
 import 'package:boxbox/Screens/Racing/circuit.dart';
 import 'package:boxbox/Screens/downloads.dart';
 import 'package:boxbox/Screens/driver_details.dart';
-import 'package:boxbox/Screens/free_practice_screen.dart';
+import 'package:boxbox/Screens/free_practice.dart';
 import 'package:boxbox/Screens/hall_of_fame.dart';
 import 'package:boxbox/Screens/history.dart';
 import 'package:boxbox/Screens/race_details.dart';
@@ -420,6 +420,8 @@ class RouterLocalConfig {
                 name: 'race',
                 path: 'race',
                 builder: (context, state) {
+                  Map extras;
+                  extras = state.extra as Map;
                   return Scaffold(
                     appBar: AppBar(
                       title: Text(
@@ -429,6 +431,7 @@ class RouterLocalConfig {
                     ),
                     body: RaceResultsProvider(
                       raceUrl: 'race',
+                      sessionId: extras['sessionId'],
                       raceId: state.pathParameters['meetingId']!,
                     ),
                   );

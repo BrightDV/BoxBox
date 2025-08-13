@@ -44,9 +44,9 @@ class EventTrackerFormatProvider {
     String championship = Hive.box('settings')
         .get('championship', defaultValue: 'Formula 1') as String;
     if (championship == 'Formula 1') {
-      return int.parse(session.sessionsAbbreviation.substring(1));
+      return int.parse(session.sessionAbbreviation.substring(1));
     } else {
-      return int.parse(session.sessionsAbbreviation.split(' ').last);
+      return int.parse(session.sessionAbbreviation.split(' ').last);
     }
   }
 
@@ -56,7 +56,7 @@ class EventTrackerFormatProvider {
     if (championship == 'Formula 1') {
       return session.baseUrl?.replaceAll(
             'session-type',
-            'practice-${session.sessionsAbbreviation.substring(1)}',
+            'practice-${session.sessionAbbreviation.substring(1)}',
           ) ??
           null;
     } else {
@@ -78,7 +78,7 @@ class EventTrackerFormatProvider {
     String championship = Hive.box('settings')
         .get('championship', defaultValue: 'Formula 1') as String;
     if (championship == 'Formula 1') {
-      if (session.sessionsAbbreviation == 'ss') {
+      if (session.sessionAbbreviation == 'ss') {
         return 'sprint-qualifying';
       } else {
         return 'qualifying';
@@ -92,7 +92,7 @@ class EventTrackerFormatProvider {
     String championship = Hive.box('settings')
         .get('championship', defaultValue: 'Formula 1') as String;
     if (championship == 'Formula 1') {
-      if (session.sessionsAbbreviation == 'r') {
+      if (session.sessionAbbreviation == 'r') {
         return 'race';
       } else {
         return 'sprint-results';

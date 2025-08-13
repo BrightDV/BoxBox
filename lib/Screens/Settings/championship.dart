@@ -193,10 +193,13 @@ class _ChampionshipScreenState extends State<ChampionshipScreen> {
           ListTile(
             leading: SizedBox(
               width: 32,
-              child: CachedNetworkImage(
-                imageUrl:
-                    'https://www.fiaformulae.com/resources/v4.32.1/i/elements/favicon-160x160.png',
-                height: 24,
+              child: ClipRRect(
+                borderRadius: const BorderRadius.all(Radius.circular(5)),
+                child: CachedNetworkImage(
+                  imageUrl:
+                      'https://www.fiaformulae.com/resources/v4.32.1/i/elements/favicon-160x160.png',
+                  height: 24,
+                ),
               ),
             ),
             trailing: Radio(
