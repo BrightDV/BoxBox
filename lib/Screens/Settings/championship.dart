@@ -197,8 +197,65 @@ class _ChampionshipScreenState extends State<ChampionshipScreen> {
                 borderRadius: const BorderRadius.all(Radius.circular(7)),
                 child: CachedNetworkImage(
                   imageUrl:
+                      'https://external-content.duckduckgo.com/ip3/www.fiaformula2.com.ico',
+                  height: 36,
+                ),
+              ),
+            ),
+            trailing: Radio(
+              value: 'Formula 2',
+              groupValue: championship,
+              onChanged: (value) => onChanged(value),
+            ),
+            title: Text('Formula 2'),
+          ),
+          ListTile(
+            leading: SizedBox(
+              width: 32,
+              child: ClipRRect(
+                borderRadius: const BorderRadius.all(Radius.circular(7)),
+                child: CachedNetworkImage(
+                  imageUrl:
+                      'https://external-content.duckduckgo.com/ip3/www.fiaformula3.com.ico',
+                  height: 36,
+                ),
+              ),
+            ),
+            trailing: Radio(
+              value: 'Formula 3',
+              groupValue: championship,
+              onChanged: (value) => onChanged(value),
+            ),
+            title: Text('Formula 3'),
+          ),
+          ListTile(
+            leading: SizedBox(
+              width: 32,
+              child: ClipRRect(
+                borderRadius: const BorderRadius.all(Radius.circular(7)),
+                child: CachedNetworkImage(
+                  imageUrl:
+                      'https://external-content.duckduckgo.com/ip3/www.f1academy.com.ico',
+                  height: 36,
+                ),
+              ),
+            ),
+            trailing: Radio(
+              value: 'F1 Academy',
+              groupValue: championship,
+              onChanged: (value) => onChanged(value),
+            ),
+            title: Text('F1 Academy'),
+          ),
+          ListTile(
+            leading: SizedBox(
+              width: 32,
+              child: ClipRRect(
+                borderRadius: const BorderRadius.all(Radius.circular(7)),
+                child: CachedNetworkImage(
+                  imageUrl:
                       'https://www.fiaformulae.com/resources/v4.32.1/i/elements/favicon-160x160.png',
-                  height: 24,
+                  height: 36,
                 ),
               ),
             ),

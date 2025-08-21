@@ -19,8 +19,10 @@
 
 import 'dart:convert';
 
+import 'package:boxbox/classes/video.dart';
 import 'package:boxbox/helpers/constants.dart';
 import 'package:boxbox/helpers/download.dart';
+import 'package:boxbox/providers/videos/requests.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_cache_manager/file.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
@@ -43,26 +45,25 @@ class BrightCove {
       String videoId, String? player, String? articleChampionship) async {
     String championship = Hive.box('settings')
         .get('championship', defaultValue: 'Formula 1') as String;
-    late Map responseAsJson;
-    final String f1BrightCovePlayerId = Constants().F1_BRIGHTCOVE_PLAYER_ID;
-    final String fEBrightCovePlayerId = Constants().FE_BRIGHTCOVE_PLAYER_ID;
+    Map responseAsJson;
+    String playerId;
     if (kIsWeb) {
       late Uri uri;
       if (articleChampionship != null) {
+        playerId = VideosRequestProvider().getBrightCovePlayerId(
+          articleChampionship,
+        );
         uri = Uri.parse(
-          articleChampionship == 'Formula 1'
-              ? 'https://edge.api.brightcove.com/playback/v1/accounts/$f1BrightCovePlayerId/videos/$videoId'
-              : 'https://edge.api.brightcove.com/playback/v1/accounts/$fEBrightCovePlayerId/videos/$videoId',
+          'https://edge.api.brightcove.com/playback/v1/accounts/$playerId/videos/$videoId',
         );
       } else if (player != null) {
         uri = Uri.parse(
           'https://edge.api.brightcove.com/playback/v1/accounts/$player/videos/$videoId',
         );
       } else {
+        playerId = VideosRequestProvider().getBrightCovePlayerId(championship);
         uri = Uri.parse(
-          championship == 'Formula 1'
-              ? 'https://edge.api.brightcove.com/playback/v1/accounts/$f1BrightCovePlayerId/videos/$videoId'
-              : 'https://edge.api.brightcove.com/playback/v1/accounts/$fEBrightCovePlayerId/videos/$videoId',
+          'https://edge.api.brightcove.com/playback/v1/accounts/$playerId/videos/$videoId',
         );
       }
       Response res = await get(
@@ -79,30 +80,28 @@ class BrightCove {
       );
       responseAsJson = jsonDecode(res.body);
     } else {
-      late String url;
-
+      String url;
       if (articleChampionship != null) {
-        url = articleChampionship == 'Formula 1'
-            ? 'https://edge.api.brightcove.com/playback/v1/accounts/$f1BrightCovePlayerId/videos/$videoId'
-            : 'https://edge.api.brightcove.com/playback/v1/accounts/$fEBrightCovePlayerId/videos/$videoId';
+        playerId = VideosRequestProvider().getBrightCovePlayerId(
+          articleChampionship,
+        );
+        url =
+            'https://edge.api.brightcove.com/playback/v1/accounts/$playerId/videos/$videoId';
       } else if (player != null) {
         url =
             'https://edge.api.brightcove.com/playback/v1/accounts/$player/videos/$videoId';
       } else {
-        url = championship == 'Formula 1'
-            ? 'https://edge.api.brightcove.com/playback/v1/accounts/$f1BrightCovePlayerId/videos/$videoId'
-            : 'https://edge.api.brightcove.com/playback/v1/accounts/$fEBrightCovePlayerId/videos/$videoId';
+        playerId = VideosRequestProvider().getBrightCovePlayerId(championship);
+        url =
+            'https://edge.api.brightcove.com/playback/v1/accounts/$playerId/videos/$videoId';
       }
       final Future<File> fileStream = videoCache.getSingleFile(
         url,
         headers: {
           'Accept': articleChampionship != null
-              ? articleChampionship == 'Formula 1'
-                  ? Constants().F1_BRIGHTCOVE_PLAYER_KEY
-                  : Constants().FE_BRIGHTCOVE_PLAYER_KEY
-              : championship == 'Formula 1'
-                  ? Constants().F1_BRIGHTCOVE_PLAYER_KEY
-                  : Constants().FE_BRIGHTCOVE_PLAYER_KEY
+              ? VideosRequestProvider()
+                  .getBrightCovePlayerKey(articleChampionship)
+              : VideosRequestProvider().getBrightCovePlayerKey(championship)
         },
       );
       final response = await fileStream;
@@ -116,7 +115,7 @@ class BrightCove {
     return responseAsJson;
   }
 
-  Future<Map<String, dynamic>> getVideoLinks(String videoId,
+  Future<VideoDetails> getVideoLinks(String videoId,
       {String? player, String? articleChampionship}) async {
     Map? fileData = kIsWeb
         ? null
@@ -124,7 +123,13 @@ class BrightCove {
             .downloadedFilePathAndNameIfExists('video_f1_${videoId}');
 
     if (fileData != null) {
-      return {'file': fileData['file'], 'name': fileData['name']};
+      return VideoDetails(
+        '',
+        fileData['name'],
+        [],
+        '',
+        localFilePath: fileData['file'],
+      );
     } else {
       int playerQuality =
           Hive.box('settings').get('playerQuality', defaultValue: 360) as int;
@@ -159,7 +164,12 @@ class BrightCove {
         streamUrls['videos'].add(streamsData['sources'][0]['src']);
       }
       streamUrls['name'] = streamsData['name'];
-      return streamUrls;
+      return VideoDetails(
+        streamUrls['name'],
+        streamUrls['qualities'],
+        streamUrls['videos'],
+        streamUrls['poster'],
+      );
     }
   }
 }

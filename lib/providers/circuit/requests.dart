@@ -18,8 +18,10 @@
  */
 
 import 'package:boxbox/api/services/formula1.dart';
+import 'package:boxbox/api/services/formula_series.dart';
 import 'package:boxbox/api/services/formulae.dart';
 import 'package:boxbox/classes/race.dart';
+import 'package:boxbox/helpers/constants.dart';
 import 'package:boxbox/providers/circuit/format.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
@@ -43,6 +45,17 @@ class CircuitRequestsProvider {
       if (details.isNotEmpty) {
         return CircuitFormatProvider().formatCircuitData(details);
       }
+    } else if (championship == 'Formula 2' ||
+        championship == 'Formula 3' ||
+        championship == 'F1 Academy') {
+      String championshipId = Constants().FORMULA_SERIES[championship];
+      Map details = Hive.box('requests').get(
+        '${championshipId}CircuitDetails-$meetingId',
+        defaultValue: {},
+      );
+      if (details.isNotEmpty) {
+        return CircuitFormatProvider().formatCircuitData(details);
+      }
     }
     return null;
   }
@@ -54,6 +67,10 @@ class CircuitRequestsProvider {
       return Formula1().getCircuitDetails(meetingId);
     } else if (championship == 'Formula E') {
       return FormulaE().getCircuitDetails(meetingId);
+    } else if (championship == 'Formula 2' ||
+        championship == 'Formula 3' ||
+        championship == 'F1 Academy') {
+      return FormulaSeries().getCircuitDetails(meetingId);
     } else {
       return RaceDetails(
         '',

@@ -165,7 +165,7 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
                 race: race,
               ),
               builder: (context, snapshot) => snapshot.hasError
-                  ? ResultsUIProvider().getRaceResultsWidget(
+                  ? ResultsUIProvider().getSavedRaceResultsWidget(
                       snapshot,
                       context,
                       widget.isFromRaceHub,
@@ -210,7 +210,7 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
                             ],
                           ),
                         )
-                      : ResultsUIProvider().getRaceResultsWidget(
+                      : ResultsUIProvider().getSavedRaceResultsWidget(
                           snapshot,
                           context,
                           widget.isFromRaceHub,

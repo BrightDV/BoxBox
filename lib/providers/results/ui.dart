@@ -31,7 +31,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class ResultsUIProvider {
-  Widget getRaceResultsWidget(
+  Widget getSavedRaceResultsWidget(
     AsyncSnapshot snapshot,
     BuildContext context,
     bool isFromRaceHub,
@@ -135,6 +135,15 @@ class ResultsUIProvider {
         isSprintQualifying,
       );
     } else if (championship == 'Formula E') {
+      return FreePracticeResultsList(
+        snapshot.data!,
+        DateTime.parse(race!.date).year,
+        race.raceName,
+        10,
+      );
+    } else if (championship == 'Formula 2' ||
+        championship == 'Formula 3' ||
+        championship == 'F1 Academy') {
       return FreePracticeResultsList(
         snapshot.data!,
         DateTime.parse(race!.date).year,

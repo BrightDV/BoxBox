@@ -53,6 +53,43 @@ class Constants {
       "IGFwcGxpY2F0aW9uL2pzb247cGs9QkNwa0FEYXdxTTBDWkVsa1Z3ZnM2MnEtSlRPYzRDZVpTTkpSZnhUOTIzcXpiTVNxcDZxbjVWRWdXVjFpYW8xY0VmMnNYWDljZThhY2hUdU9mWUtVdmZjaFNpc19yQjVTeHpfaWg3MEdZTFlkZjhiWmdIaTNZcTFWS182djNtajI5cnh4Y0pqRjNPWDZSaTMy",
     ),
   );
+  final Map FORMULA_SERIES = {
+    'Formula 2': 'f2',
+    'Formula 3': 'f3',
+    'F1 Academy': 'fa',
+  };
+
+  final Map FORMULA_SERIES_APIKEYS = {
+    'Formula 2': utf8
+        .decode(base64Decode('SWo0THdpMHlQUGh1VHN0VzFoaG1tZDludHdUR2hqTmU=')),
+    'Formula 3': utf8.decode(
+      base64Decode('dXd3ZjJUSVBtNWFNUkZJQVVmandGNUhRQk1XQUdTZUU='),
+    ),
+    'F1 Academy': utf8
+        .decode(base64Decode('N1ZYUkRid290c0pQQVlvMjRyQmE2RFFDbEZWR0dZUDc=')),
+  };
+
+  final Map FORMULA_SERIES_BASE_URLS = {
+    'Formula 2':
+        utf8.decode(base64Decode('aHR0cHM6Ly93d3cuZmlhZm9ybXVsYTIuY29t')),
+    'Formula 3': utf8.decode(
+      base64Decode('aHR0cHM6Ly93d3cuZmlhZm9ybXVsYTMuY29t'),
+    ),
+    'F1 Academy':
+        utf8.decode(base64Decode('aHR0cHM6Ly93d3cuZjFhY2FkZW15LmNvbQ==')),
+  };
+
+  final Map FORMULA_SERIES_PLAYER_IDS = {
+    'Formula 2': utf8.decode(base64Decode('')),
+    'Formula 3': utf8.decode(base64Decode('')),
+    'F1 Academy': utf8.decode(base64Decode('')),
+  };
+
+  final Map FORMULA_SERIES_PLAYER_KEYS = {
+    'Formula 2': utf8.decode(base64Decode('')),
+    'Formula 3': utf8.decode(base64Decode('')),
+    'F1 Academy': utf8.decode(base64Decode('')),
+  };
 
   String getOfficialApiKey() {
     String apiKey = Hive.box('settings')

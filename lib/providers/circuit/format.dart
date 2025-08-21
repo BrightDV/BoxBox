@@ -21,6 +21,7 @@ import 'package:boxbox/classes/article.dart';
 import 'package:boxbox/classes/driver.dart';
 import 'package:boxbox/classes/event_tracker.dart';
 import 'package:boxbox/classes/race.dart';
+import 'package:boxbox/helpers/constants.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class CircuitFormatProvider {
@@ -343,6 +344,115 @@ class CircuitFormatProvider {
         false,
         articles: articles,
         raceImageUrl: details['raceImageUrl'],
+      );
+    } else if (championship == 'Formula 2' ||
+        championship == 'Formula 3' ||
+        championship == 'F1 Academy') {
+      List<Session> sessions = [];
+      List<DriverResult> results = [];
+      Map<String, List<Link>> sessionsLinks = {};
+
+      // sessions & sessions links
+      for (var session in details['SessionResults'].reversed.toList()) {
+        int state = SessionState().UNKNOWN;
+        DateTime startDate =
+            DateTime.parse(session['SessionStartTime']).toLocal();
+
+        DateTime endDate;
+        if (session['SessionEndTime'] != null) {
+          endDate = DateTime.parse(session['SessionEndTime']).toLocal();
+        } else {
+          endDate = startDate.add(Duration(hours: 1));
+        }
+        if (DateTime.now().isBefore(startDate)) {
+          state = SessionState().SCHEDULED;
+        } else if (DateTime.now().isBefore(endDate) &&
+            DateTime.now().isAfter(startDate)) {
+          state = SessionState().RUNNING;
+        } else if (DateTime.now().isAfter(endDate)) {
+          state = SessionState().COMPLETED;
+        }
+        sessions.add(
+          Session(
+            '',
+            session['SessionShortName'],
+            endDate,
+            startDate,
+            null,
+            state,
+            sessionFullName: session['SessionName'],
+          ),
+        );
+      }
+
+      if (details['Content']['PRACTICE_reportLink'] != null) {
+        if (sessionsLinks['Prac'] == null) {
+          sessionsLinks['Prac'] = [];
+        }
+        sessionsLinks['Prac']!.add(
+          Link(
+            details['Content']['PRACTICE_reportLink']['title'],
+            'report',
+            Constants().FORMULA_SERIES_BASE_URLS[championship] +
+                details['Content']['PRACTICE_reportLink']['path'],
+          ),
+        );
+      }
+
+      if (details['Content']['QUALIFYING_reportLink'] != null) {
+        if (sessionsLinks['Qual'] == null) {
+          sessionsLinks['Qual'] = [];
+        }
+        sessionsLinks['Qual']!.add(
+          Link(
+            details['Content']['QUALIFYING_reportLink']['title'],
+            'report',
+            Constants().FORMULA_SERIES_BASE_URLS[championship] +
+                details['Content']['QUALIFYING_reportLink']['path'],
+          ),
+        );
+      }
+
+      if (details['Content']['RESULT_FR_reportLink'] != null) {
+        if (sessionsLinks['SR'] == null) {
+          sessionsLinks['SR'] = [];
+        }
+        sessionsLinks['SR']!.add(
+          Link(
+            details['Content']['RESULT_FR_reportLink']['title'],
+            'report',
+            Constants().FORMULA_SERIES_BASE_URLS[championship] +
+                details['Content']['RESULT_FR_reportLink']['path'],
+          ),
+        );
+      }
+
+      if (details['Content']['RESULT_SR_reportLink'] != null) {
+        if (sessionsLinks['FR'] == null) {
+          sessionsLinks['FR'] = [];
+        }
+        sessionsLinks['FR']!.add(
+          Link(
+            details['Content']['RESULT_SR_reportLink']['title'],
+            'report',
+            Constants().FORMULA_SERIES_BASE_URLS[championship] +
+                details['Content']['RESULT_SR_reportLink']['path'],
+          ),
+        );
+      }
+
+      return RaceDetails(
+        details['RaceId'].toString(),
+        details['CountryName'],
+        details['CircuitInformation']['CircuitName'],
+        sessions,
+        false,
+        raceImageUrl: details['Content']['bannerBackgroundImage']['url'],
+        flagImageUrl:
+            'https://res.cloudinary.com/prod-f2f3/ar_16:9,c_fill,dpr_1.0,f_auto,g_auto,h_500/v1/' +
+                details['CountryFlagImagePath'],
+        results: results,
+        sessionsLinks: sessionsLinks,
       );
     } else {
       return RaceDetails(

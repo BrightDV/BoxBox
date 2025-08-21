@@ -30,6 +30,7 @@ class CircuitUIProvider {
     String meetingOfficialName,
     String meetingId,
     BuildContext context,
+    int sessionIndex,
   ) {
     String championship = Hive.box('settings')
         .get('championship', defaultValue: 'Formula 1') as String;
@@ -112,6 +113,35 @@ class CircuitUIProvider {
           },
           extra: {
             'sessionId': session.sessionAbbreviation,
+          },
+        );
+      }
+    } else if (championship == 'Formula 2' ||
+        championship == 'Formula 3' ||
+        championship == 'F1 Academy') {
+      if (session.sessionFullName! == 'Sprint Race') {
+        context.pushNamed(
+          'sprint',
+          pathParameters: {
+            'meetingId': meetingId,
+          },
+        );
+      } else if (session.sessionFullName!.contains('Race')) {
+        context.pushNamed(
+          'race',
+          pathParameters: {
+            'meetingId': meetingId,
+          },
+          extra: {
+            'sessionId': sessionIndex.toString(),
+          },
+        );
+      } else if (session.sessionFullName!.contains('Free Practice')) {
+        context.pushNamed(
+          'practice',
+          pathParameters: {
+            'meetingId': meetingId,
+            'sessionIndex': (sessionIndex + 1).toString(),
           },
         );
       }

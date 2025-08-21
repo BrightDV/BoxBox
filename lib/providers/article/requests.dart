@@ -2,8 +2,10 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:boxbox/api/services/formula1.dart';
+import 'package:boxbox/api/services/formula_series.dart';
 import 'package:boxbox/api/services/formulae.dart';
 import 'package:boxbox/classes/article.dart';
+import 'package:boxbox/helpers/constants.dart';
 import 'package:boxbox/helpers/download.dart';
 import 'package:boxbox/scraping/formulae.dart';
 import 'package:flutter/foundation.dart';
@@ -54,6 +56,15 @@ class ArticleRequestsProvider {
     return article;
   }
 
+  Future<Article> _getArticleFromFormulaSeries(
+    String articleId,
+    Function updateArticleTitle,
+  ) async {
+    Article article = await FormulaSeries().getArticleData(articleId);
+    updateArticleTitle(article.articleName);
+    return article;
+  }
+
   Future<Article> getArticleData(
     String articleId,
     Function updateArticleTitle,
@@ -65,20 +76,30 @@ class ArticleRequestsProvider {
     if (championshipOfArticle != '') {
       if (championshipOfArticle == 'Formula 1') {
         return await _getArticleFromFormula1(articleId, updateArticleTitle);
-      } else {
+      } else if (championshipOfArticle == 'Formula E') {
         return await _getArticleFromFormulaE(
           articleId,
           updateArticleTitle,
           news!,
         );
+      } else {
+        return await _getArticleFromFormulaSeries(
+          articleId,
+          updateArticleTitle,
+        );
       }
     } else if (championship == 'Formula 1') {
       return await _getArticleFromFormula1(articleId, updateArticleTitle);
-    } else {
+    } else if (championship == 'Formula E') {
       return await _getArticleFromFormulaE(
         articleId,
         updateArticleTitle,
         news!,
+      );
+    } else {
+      return await _getArticleFromFormulaSeries(
+        articleId,
+        updateArticleTitle,
       );
     }
   }
@@ -102,6 +123,14 @@ class ArticleRequestsProvider {
         tagId: tagId,
         articleType: articleType,
       );
+    } else if (championship == 'Formula 2' ||
+        championship == 'Formula 3' ||
+        championship == 'F1 Academy') {
+      return await FormulaSeries().getMoreNews(
+        offset,
+        tagId: tagId,
+        articleType: articleType,
+      );
     } else {
       return [];
     }
@@ -114,6 +143,12 @@ class ArticleRequestsProvider {
       return Hive.box('requests').get('f1News', defaultValue: {}) as Map;
     } else if (championship == 'Formula E') {
       return Hive.box('requests').get('feNews', defaultValue: {}) as Map;
+    } else if (championship == 'Formula 2' ||
+        championship == 'Formula 3' ||
+        championship == 'F1 Academy') {
+      return Hive.box('requests').get(
+          '${Constants().FORMULA_SERIES[championship]}News',
+          defaultValue: {}) as Map;
     } else {
       return {};
     }

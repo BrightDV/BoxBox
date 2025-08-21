@@ -19,8 +19,10 @@
 
 import 'package:boxbox/api/ergast.dart';
 import 'package:boxbox/api/services/formula1.dart';
+import 'package:boxbox/api/services/formula_series.dart';
 import 'package:boxbox/api/services/formulae.dart';
 import 'package:boxbox/classes/race.dart';
+import 'package:boxbox/helpers/constants.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class ScheduleRequestsProvider {
@@ -35,8 +37,14 @@ class ScheduleRequestsProvider {
       } else {
         return await ErgastApi().getLastSchedule(toCome);
       }
-    } else {
+    } else if (championship == 'Formula E') {
       return await FormulaE().getLastSchedule(toCome);
+    } else if (championship == 'Formula 2' ||
+        championship == 'Formula 3' ||
+        championship == 'F1 Academy') {
+      return await FormulaSeries().getLastSchedule(toCome);
+    } else {
+      return [];
     }
   }
 
@@ -49,9 +57,17 @@ class ScheduleRequestsProvider {
           Hive.box('requests').get('f1Schedule', defaultValue: {}) as Map;
       result['scheduleLastSavedFormat'] = Hive.box('requests')
           .get('f1ScheduleLastSavedFormat', defaultValue: 'ergast');
-    } else {
+    } else if (championship == 'Formula E') {
       result['schedule'] =
           Hive.box('requests').get('feSchedule', defaultValue: {}) as Map;
+    } else if (championship == 'Formula 2' ||
+        championship == 'Formula 3' ||
+        championship == 'F1 Academy') {
+      String championshipId = Constants().FORMULA_SERIES[championship];
+      result['schedule'] = Hive.box('requests')
+          .get('${championshipId}Schedule', defaultValue: {}) as Map;
+    } else {
+      result['schedule'] = {};
     }
     return result;
   }

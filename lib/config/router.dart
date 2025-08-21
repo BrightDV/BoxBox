@@ -420,21 +420,38 @@ class RouterLocalConfig {
                 name: 'race',
                 path: 'race',
                 builder: (context, state) {
-                  Map extras;
-                  extras = state.extra as Map;
-                  return Scaffold(
-                    appBar: AppBar(
-                      title: Text(
-                        AppLocalizations.of(context)!.race,
+                  Map? extras;
+                  if (state.extra != null) {
+                    extras = state.extra as Map;
+                    return Scaffold(
+                      appBar: AppBar(
+                        title: Text(
+                          AppLocalizations.of(context)!.race,
+                        ),
+                        backgroundColor:
+                            Theme.of(context).colorScheme.onPrimary,
                       ),
-                      backgroundColor: Theme.of(context).colorScheme.onPrimary,
-                    ),
-                    body: RaceResultsProvider(
-                      raceUrl: 'race',
-                      sessionId: extras['sessionId'],
-                      raceId: state.pathParameters['meetingId']!,
-                    ),
-                  );
+                      body: RaceResultsProvider(
+                        raceUrl: 'race',
+                        sessionId: extras['sessionId'],
+                        raceId: state.pathParameters['meetingId']!,
+                      ),
+                    );
+                  } else {
+                    return Scaffold(
+                      appBar: AppBar(
+                        title: Text(
+                          AppLocalizations.of(context)!.race,
+                        ),
+                        backgroundColor:
+                            Theme.of(context).colorScheme.onPrimary,
+                      ),
+                      body: RaceResultsProvider(
+                        raceUrl: 'race',
+                        raceId: state.pathParameters['meetingId']!,
+                      ),
+                    );
+                  }
                 },
               ),
             ],

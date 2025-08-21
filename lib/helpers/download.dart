@@ -251,9 +251,8 @@ class DownloadUtils {
         video = await F1VideosFetcher().getVideoDetails(videoId);
       }
 
-      Map links = await BrightCove().getVideoLinks(videoId);
-      String link =
-          links['videos'][links['qualities'].indexOf('${quality}p') + 1];
+      VideoDetails links = await BrightCove().getVideoLinks(videoId);
+      String link = links.urls[links.qualities.indexOf('${quality}p') + 1];
       // index 0 is preferred quality
 
       Map videoDetails = {

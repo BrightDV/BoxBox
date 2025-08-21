@@ -200,7 +200,7 @@ class DriverResultItem extends StatelessWidget {
                   ),
                 ),
               ),
-              raceResultsLastSavedFormat == 'ergast'
+              item.lapsDone != null
                   ? Expanded(
                       flex: 3,
                       child: Padding(
@@ -245,41 +245,51 @@ class DriverResultItem extends StatelessWidget {
                       ),
                     )
                   : Container(),
-              Expanded(
-                flex: raceResultsLastSavedFormat == 'ergast' ? 3 : 6,
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 5, right: 5),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: item.isFastest
-                          ? const Color(0xffab01ab)
-                          : index % 2 == 1
-                              ? useDarkMode
-                                  ? HSLColor.fromColor(
-                                      Theme.of(context).colorScheme.onSecondary,
-                                    ).withLightness(0.31).toColor()
-                                  : HSLColor.fromColor(
-                                      Theme.of(context).colorScheme.onPrimary,
-                                    ).withLightness(0.84).toColor()
-                              : useDarkMode
-                                  ? HSLColor.fromColor(
-                                      Theme.of(context).colorScheme.onSecondary,
-                                    ).withLightness(0.23).toColor()
-                                  : HSLColor.fromColor(
-                                      Theme.of(context).colorScheme.onPrimary,
-                                    ).withLightness(0.78).toColor(),
-                      borderRadius: BorderRadius.circular(7),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 5, bottom: 5),
-                      child: Text(
-                        item.points!,
-                        textAlign: TextAlign.center,
+              item.points != null
+                  ? Expanded(
+                      flex: raceResultsLastSavedFormat == 'ergast' ? 3 : 6,
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 5, right: 5),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: item.isFastest
+                                ? const Color(0xffab01ab)
+                                : index % 2 == 1
+                                    ? useDarkMode
+                                        ? HSLColor.fromColor(
+                                            Theme.of(context)
+                                                .colorScheme
+                                                .onSecondary,
+                                          ).withLightness(0.31).toColor()
+                                        : HSLColor.fromColor(
+                                            Theme.of(context)
+                                                .colorScheme
+                                                .onPrimary,
+                                          ).withLightness(0.84).toColor()
+                                    : useDarkMode
+                                        ? HSLColor.fromColor(
+                                            Theme.of(context)
+                                                .colorScheme
+                                                .onSecondary,
+                                          ).withLightness(0.23).toColor()
+                                        : HSLColor.fromColor(
+                                            Theme.of(context)
+                                                .colorScheme
+                                                .onPrimary,
+                                          ).withLightness(0.78).toColor(),
+                            borderRadius: BorderRadius.circular(7),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 5, bottom: 5),
+                            child: Text(
+                              item.points!,
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                ),
-              ),
+                    )
+                  : Container(),
             ],
           ),
         ),
@@ -333,7 +343,8 @@ class RaceDriversResultsList extends StatelessWidget {
                         textAlign: TextAlign.center,
                       ),
                     ),
-                    raceResultsLastSavedFormat == 'ergast'
+                    (items.length > 0 && items[0].lapsDone != null) ||
+                            items.length == 0
                         ? Expanded(
                             flex: 3,
                             child: Text(
@@ -342,13 +353,17 @@ class RaceDriversResultsList extends StatelessWidget {
                             ),
                           )
                         : Container(),
-                    Expanded(
-                      flex: raceResultsLastSavedFormat == 'ergast' ? 3 : 6,
-                      child: Text(
-                        AppLocalizations.of(context)!.pointsAbbreviation,
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
+                    (items.length > 0 && items[0].points != null) ||
+                            items.length == 0
+                        ? Expanded(
+                            flex:
+                                raceResultsLastSavedFormat == 'ergast' ? 3 : 6,
+                            child: Text(
+                              AppLocalizations.of(context)!.pointsAbbreviation,
+                              textAlign: TextAlign.center,
+                            ),
+                          )
+                        : Container(),
                   ],
                 ),
               ),

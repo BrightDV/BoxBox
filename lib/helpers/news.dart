@@ -21,8 +21,8 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:background_downloader/background_downloader.dart' as bgdl;
-import 'package:boxbox/api/brightcove.dart';
 import 'package:boxbox/classes/article.dart';
+import 'package:boxbox/classes/video.dart';
 import 'package:boxbox/helpers/custom_player_controls.dart';
 import 'package:boxbox/helpers/download.dart';
 import 'package:boxbox/helpers/hover.dart';
@@ -30,6 +30,7 @@ import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/request_error.dart';
 import 'package:boxbox/providers/article/format.dart';
 import 'package:boxbox/providers/article/requests.dart';
+import 'package:boxbox/providers/videos/requests.dart';
 import 'package:boxbox/providers/videos/ui.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -1993,8 +1994,8 @@ class VideoRenderer extends StatelessWidget {
               )
             ],
           )
-        : FutureBuilder<Map<String, dynamic>>(
-            future: BrightCove().getVideoLinks(
+        : FutureBuilder<VideoDetails>(
+            future: VideosRequestProvider().getVideoLinks(
               videoId,
               player: player,
               articleChampionship: articleChampionship,
@@ -2019,7 +2020,7 @@ class VideoRenderer extends StatelessWidget {
                                   child: InAppWebView(
                                     initialUrlRequest: URLRequest(
                                       url: WebUri(
-                                        snapshot.data!['videos'][0],
+                                        snapshot.data!.urls[0],
                                       ),
                                     ),
                                     initialSettings: InAppWebViewSettings(
@@ -2078,7 +2079,7 @@ class VideoRenderer extends StatelessWidget {
 }
 
 class BetterPlayerVideoPlayer extends StatefulWidget {
-  final Map<String, dynamic> videoUrls;
+  final VideoDetails videoDetails;
   final String videoId;
   final bool autoplay;
   final String heroTag;
@@ -2087,7 +2088,7 @@ class BetterPlayerVideoPlayer extends StatefulWidget {
   final Function? update;
 
   const BetterPlayerVideoPlayer(
-    this.videoUrls,
+    this.videoDetails,
     this.videoId,
     this.autoplay,
     this.heroTag,
@@ -2204,10 +2205,10 @@ class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
   @override
   void initState() {
     super.initState();
-    if (widget.videoUrls['file'] != null) {
+    if (widget.videoDetails.localFilePath != null) {
       BetterPlayerDataSource betterPlayerDataSource = BetterPlayerDataSource(
         BetterPlayerDataSourceType.file,
-        widget.videoUrls['file'],
+        widget.videoDetails.localFilePath!,
       );
 
       BetterPlayerControlsConfiguration controlsConfiguration =
@@ -2233,7 +2234,7 @@ class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
             onControlsVisibilityChanged: onPlayerVisibilityChanged,
             controlsConfiguration: controlsConfiguration,
             isOffline: true,
-            title: widget.videoUrls['name'],
+            title: widget.videoDetails.title,
           ),
           playerTheme: BetterPlayerTheme.custom,
         ),
@@ -2258,13 +2259,13 @@ class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
     } else {
       Map<String, String>? qualities = {};
       int c = 0;
-      for (c; c < widget.videoUrls['qualities'].length; c++) {
-        String quality = widget.videoUrls['qualities'][c];
-        qualities[quality] = widget.videoUrls['videos'][c + 1];
+      for (c; c < widget.videoDetails.qualities.length; c++) {
+        String quality = widget.videoDetails.qualities[c];
+        qualities[quality] = widget.videoDetails.urls[c + 1];
       }
       BetterPlayerDataSource betterPlayerDataSource = BetterPlayerDataSource(
         BetterPlayerDataSourceType.network,
-        widget.videoUrls['videos'][0],
+        widget.videoDetails.urls[0],
         resolutions: qualities,
         bufferingConfiguration: const BetterPlayerBufferingConfiguration(
           maxBufferMs: 1000 * 30,
@@ -2290,8 +2291,8 @@ class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
         overflowMenuCustomItems: VideosUIProvider().getPlayerTopBarActions(
           downloadVideo,
           widget.videoId,
-          widget.videoUrls['name'],
-          widget.videoUrls['poster'],
+          widget.videoDetails.title,
+          widget.videoDetails.thumbnailUrl ?? '',
         ),
       );
 
@@ -2307,7 +2308,7 @@ class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
             onControlsVisibilityChanged: onPlayerVisibilityChanged,
             controlsConfiguration: controlsConfiguration,
             isOffline: false,
-            title: widget.videoUrls['name'],
+            title: widget.videoDetails.title,
           ),
           playerTheme: BetterPlayerTheme.custom,
         ),
@@ -2346,9 +2347,9 @@ class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
                 children: [
                   Align(
                     alignment: Alignment.center,
-                    child: widget.videoUrls['poster'] != null
+                    child: widget.videoDetails.thumbnailUrl != null
                         ? CachedNetworkImage(
-                            imageUrl: widget.videoUrls['poster'],
+                            imageUrl: widget.videoDetails.thumbnailUrl!,
                             placeholder: (context, url) => SizedBox(
                               height:
                                   MediaQuery.of(context).size.width / (16 / 9),

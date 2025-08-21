@@ -19,6 +19,7 @@
 
 import 'package:boxbox/api/ergast.dart';
 import 'package:boxbox/api/services/formula1.dart';
+import 'package:boxbox/api/services/formula_series.dart';
 import 'package:boxbox/api/services/formulae.dart';
 import 'package:boxbox/classes/driver.dart';
 import 'package:boxbox/classes/race.dart';
@@ -85,6 +86,13 @@ class ResultsRequestsProvider {
         meetingId,
         sessionId!,
       );
+    } else if (championship == 'Formula 2' ||
+        championship == 'Formula 3' ||
+        championship == 'F1 Academy') {
+      return FormulaSeries().getSessionResults(
+        meetingId,
+        sessionIndex,
+      );
     } else {
       return [];
     }
@@ -123,6 +131,13 @@ class ResultsRequestsProvider {
       return await FormulaE().getRaceStandings(
         meetingId!,
         sessionId!,
+      );
+    } else if (championship == 'Formula 2' ||
+        championship == 'Formula 3' ||
+        championship == 'F1 Academy') {
+      return FormulaSeries().getSessionResults(
+        meetingId!,
+        int.parse(sessionId!),
       );
     } else {
       return [];

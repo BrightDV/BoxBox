@@ -113,6 +113,9 @@ class CircuitScreenContent extends StatelessWidget {
                     height: MediaQuery.of(context).size.width > 780
                         ? MediaQuery.of(context).size.height
                         : MediaQuery.of(context).size.height * (4 / 9),
+                    width: MediaQuery.of(context).size.width > 780
+                        ? MediaQuery.of(context).size.width
+                        : null,
                   ),
                 ),
               Padding(
@@ -239,12 +242,14 @@ class SessionItemForCircuit extends StatelessWidget {
   final String meetingCountryName;
   final String meetingOfficialName;
   final String meetingId;
+  final int sessionIndex;
   final List<Link>? links;
   const SessionItemForCircuit(
     this.session,
     this.meetingCountryName,
     this.meetingOfficialName,
-    this.meetingId, {
+    this.meetingId,
+    this.sessionIndex, {
     this.links,
     super.key,
   });
@@ -274,6 +279,7 @@ class SessionItemForCircuit extends StatelessWidget {
           meetingOfficialName,
           meetingId,
           context,
+          sessionIndex,
         ),
         borderRadius: BorderRadius.circular(6),
         child: Ink(
@@ -686,6 +692,9 @@ class Sessions extends StatelessWidget {
                   details.meetingDisplayName,
                   details.meetingCompleteName,
                   details.meetingId,
+                  details.sessions.length -
+                      details.sessions.indexOf(session) -
+                      1,
                   links: details.sessionsLinks?[session.sessionAbbreviation],
                 ),
             ],

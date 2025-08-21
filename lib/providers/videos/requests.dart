@@ -17,13 +17,15 @@
  * Copyright (c) 2022-2025, BrightDV
  */
 
+import 'package:boxbox/api/brightcove.dart';
 import 'package:boxbox/api/services/formulae.dart';
 import 'package:boxbox/api/videos.dart';
 import 'package:boxbox/classes/video.dart';
+import 'package:boxbox/helpers/constants.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class VideosRequestProvider {
-  Future<List<Video>> getLatestVideos(int offset, {String tag = ''}) {
+  Future<List<Video>> getLatestVideos(int offset, {String tag = ''}) async {
     String championship = Hive.box('settings')
         .get('championship', defaultValue: 'Formula 1') as String;
     if (championship == 'Formula 1') {
@@ -31,11 +33,67 @@ class VideosRequestProvider {
         24,
         offset,
       );
-    } else {
+    } else if (championship == 'Formula E') {
       return FormulaE().getLatestVideos(
         24,
         offset,
       );
+    } else {
+      return [];
+    }
+  }
+
+  Future<VideoDetails> getVideoLinks(
+    String videoId, {
+    String? player,
+    String? articleChampionship,
+  }) async {
+    String championship = Hive.box('settings')
+        .get('championship', defaultValue: 'Formula 1') as String;
+    if (championship == 'Formula 1' ||
+        championship == 'Formula E' ||
+        championship == 'Formula 2' ||
+        championship == 'Formula 3' ||
+        championship == 'F1 Academy') {
+      return BrightCove().getVideoLinks(
+        videoId,
+        player: player,
+        articleChampionship: articleChampionship,
+      );
+    } else {
+      return VideoDetails('', [], [], '');
+    }
+  }
+
+  String getBrightCovePlayerId(String championship) {
+    if (championship == 'Formula 1') {
+      return Constants().F1_BRIGHTCOVE_PLAYER_ID;
+    } else if (championship == 'Formula E') {
+      return Constants().FE_BRIGHTCOVE_PLAYER_ID;
+    } else if (championship == 'Formula 2') {
+      return Constants().F1_BRIGHTCOVE_PLAYER_ID;
+    } else if (championship == 'Formula 3') {
+      return Constants().F1_BRIGHTCOVE_PLAYER_ID;
+    } else if (championship == 'F1 Academy') {
+      return Constants().F1_BRIGHTCOVE_PLAYER_ID;
+    } else {
+      return '';
+    }
+  }
+
+  String getBrightCovePlayerKey(String championship) {
+    if (championship == 'Formula 1') {
+      return Constants().F1_BRIGHTCOVE_PLAYER_KEY;
+    } else if (championship == 'Formula E') {
+      return Constants().FE_BRIGHTCOVE_PLAYER_KEY;
+    } else if (championship == 'Formula 2') {
+      return Constants().F1_BRIGHTCOVE_PLAYER_KEY;
+    } else if (championship == 'Formula 3') {
+      return Constants().F1_BRIGHTCOVE_PLAYER_KEY;
+    } else if (championship == 'F1 Academy') {
+      return Constants().F1_BRIGHTCOVE_PLAYER_KEY;
+    } else {
+      return '';
     }
   }
 }

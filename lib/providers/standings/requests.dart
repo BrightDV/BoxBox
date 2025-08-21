@@ -19,9 +19,11 @@
 
 import 'package:boxbox/api/ergast.dart';
 import 'package:boxbox/api/services/formula1.dart';
+import 'package:boxbox/api/services/formula_series.dart';
 import 'package:boxbox/api/services/formulae.dart';
 import 'package:boxbox/classes/driver.dart';
 import 'package:boxbox/classes/team.dart';
+import 'package:boxbox/helpers/constants.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class StandingsRequestsProvider {
@@ -36,8 +38,14 @@ class StandingsRequestsProvider {
       } else {
         return await ErgastApi().getLastStandings();
       }
-    } else {
+    } else if (championship == 'Formula E') {
       return await FormulaE().getLastStandings();
+    } else if (championship == 'Formula 2' ||
+        championship == 'Formula 3' ||
+        championship == 'F1 Academy') {
+      return await FormulaSeries().getLastStandings();
+    } else {
+      return [];
     }
   }
 
@@ -52,8 +60,14 @@ class StandingsRequestsProvider {
       } else {
         return await ErgastApi().getLastTeamsStandings();
       }
-    } else {
+    } else if (championship == 'Formula E') {
       return await FormulaE().getLastTeamsStandings();
+    } else if (championship == 'Formula 2' ||
+        championship == 'Formula 3' ||
+        championship == 'F1 Academy') {
+      return await FormulaSeries().getLastTeamsStandings();
+    } else {
+      return [];
     }
   }
 
@@ -66,9 +80,19 @@ class StandingsRequestsProvider {
           .get('f1DriversStandings', defaultValue: {}) as Map;
       standings['driversStandingsLastSavedFormat'] = Hive.box('requests')
           .get('f1DriversStandingsLastSavedFormat', defaultValue: 'ergast');
-    } else {
+    } else if (championship == 'Formula E') {
       standings['driversStandings'] = Hive.box('requests')
           .get('feDriversStandings', defaultValue: {}) as Map;
+      standings['driversStandingsLastSavedFormat'] = '';
+    } else if (championship == 'Formula 2' ||
+        championship == 'Formula 3' ||
+        championship == 'F1 Academy') {
+      String championshipId = Constants().FORMULA_SERIES[championship];
+      standings['driversStandings'] = Hive.box('requests')
+          .get('${championshipId}DriversStandings', defaultValue: {}) as Map;
+      standings['driversStandingsLastSavedFormat'] = '';
+    } else {
+      standings['driversStandings'] = {};
       standings['driversStandingsLastSavedFormat'] = '';
     }
     return standings;
@@ -83,9 +107,19 @@ class StandingsRequestsProvider {
           Hive.box('requests').get('feTeamsStandings', defaultValue: {}) as Map;
       standings['teamsStandingsLastSavedFormat'] = Hive.box('requests')
           .get('feTeamsStandingsLastSavedFormat', defaultValue: 'ergast');
-    } else {
+    } else if (championship == 'Formula E') {
       standings['teamsStandings'] =
           Hive.box('requests').get('feTeamsStandings', defaultValue: {}) as Map;
+      standings['teamsStandingsLastSavedFormat'] = '';
+    } else if (championship == 'Formula 2' ||
+        championship == 'Formula 3' ||
+        championship == 'F1 Academy') {
+      String championshipId = Constants().FORMULA_SERIES[championship];
+      standings['teamsStandings'] = Hive.box('requests')
+          .get('${championshipId}DriversStandings', defaultValue: {}) as Map;
+      standings['teamsStandingsLastSavedFormat'] = '';
+    } else {
+      standings['teamsStandings'] = {};
       standings['teamsStandingsLastSavedFormat'] = '';
     }
     return standings;
