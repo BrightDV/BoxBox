@@ -64,8 +64,6 @@ class RaceListHeaderItem extends StatelessWidget {
       scheduleLastSavedFormat = Hive.box('requests')
           .get('f1ScheduleLastSavedFormat', defaultValue: 'ergast');
     }
-    bool useDarkMode =
-        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     bool shouldUse12HourClock = Hive.box('settings')
         .get('shouldUse12HourClock', defaultValue: false) as bool;
     List months = [
@@ -439,8 +437,9 @@ class RacesList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: check that it is actually activated
-    if (items.isNotEmpty && isUpNext && !isCache) {
+    bool notificationsEnabled = Hive.box('settings')
+        .get('notificationsEnabled', defaultValue: false) as bool;
+    if (items.isNotEmpty && isUpNext && !isCache && notificationsEnabled) {
       scheduledNotification(items[0].meetingId);
     }
     return isUpNext
