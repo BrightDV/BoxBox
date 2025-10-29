@@ -811,17 +811,6 @@ class Formula1 {
           } else if (element['meetingCountryName'] == 'Las Vegas') {
             detailsPath = 'Las_Vegas';
           }
-          String raceCoverUrl = element['thumbnail']['image']['url'];
-          if (element['meetingName'] != 'Pre-Season Testing') {
-            var tmp = element['thumbnail']['image']['url']
-                .replaceAll('race-listing/', '')
-                .split('/');
-            tmp.removeLast();
-            raceCoverUrl = tmp.join('/') +
-                '/' +
-                element['meetingName'].replaceAll(" ", "_") +
-                '.jpg';
-          }
 
           races.add(
             Race(
@@ -836,7 +825,7 @@ class Formula1 {
               element['meetingCountryName'],
               [],
               isFirst: races.isEmpty,
-              raceCoverUrl: raceCoverUrl,
+              raceCoverUrl: element['thumbnail']['image']['url'],
               detailsPath: detailsPath,
               isPreSeasonTesting: element['type'] == 'fom-testing',
             ),

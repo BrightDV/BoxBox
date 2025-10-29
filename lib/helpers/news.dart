@@ -1512,7 +1512,7 @@ class ImageRenderer extends StatelessWidget {
                     ? 800
                     : MediaQuery.of(context).size.width / (16 / 9),
               ),
-              fadeOutDuration: const Duration(milliseconds: 300),
+              fadeOutDuration: const Duration(milliseconds: 100),
               fadeInDuration: const Duration(milliseconds: 300),
               cacheManager: CacheManager(
                 Config(
@@ -1520,6 +1520,8 @@ class ImageRenderer extends StatelessWidget {
                   stalePeriod: const Duration(days: 7),
                 ),
               ),
+              colorBlendMode: BlendMode.darken,
+              color: Colors.black.withValues(alpha: 0.6),
             )
           : kIsWeb
               ? GestureDetector(

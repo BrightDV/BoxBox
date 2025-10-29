@@ -44,18 +44,111 @@ class RaceItem extends StatelessWidget {
         pathParameters: {'meetingId': item.meetingId},
       ),
       child: index == 0 && isUpNext && (item.raceCoverUrl ?? '') != 'none'
-          ? Column(
-              children: [
-                ImageRenderer(
-                  item.raceCoverUrl != null
-                      ? item.raceCoverUrl!
-                      : RaceTracksUrls().getRaceCoverImageUrl(item.circuitId),
-                  inSchedule: true,
-                ),
-                RaceListItem(item, index),
-              ],
-            )
+          ? RaceListHeaderItem(item, index)
           : RaceListItem(item, index),
+    );
+  }
+}
+
+class RaceListHeaderItem extends StatelessWidget {
+  final Race item;
+  final int index;
+  const RaceListHeaderItem(this.item, this.index, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    String championship = Hive.box('settings')
+        .get('championship', defaultValue: 'Formula 1') as String;
+    String scheduleLastSavedFormat = '';
+    if (championship == 'Formula 1') {
+      scheduleLastSavedFormat = Hive.box('requests')
+          .get('f1ScheduleLastSavedFormat', defaultValue: 'ergast');
+    }
+    bool useDarkMode =
+        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
+    bool shouldUse12HourClock = Hive.box('settings')
+        .get('shouldUse12HourClock', defaultValue: false) as bool;
+    List months = [
+      AppLocalizations.of(context)?.monthAbbreviationJanuary,
+      AppLocalizations.of(context)?.monthAbbreviationFebruary,
+      AppLocalizations.of(context)?.monthAbbreviationMarch,
+      AppLocalizations.of(context)?.monthAbbreviationApril,
+      AppLocalizations.of(context)?.monthAbbreviationMay,
+      AppLocalizations.of(context)?.monthAbbreviationJune,
+      AppLocalizations.of(context)?.monthAbbreviationJuly,
+      AppLocalizations.of(context)?.monthAbbreviationAugust,
+      AppLocalizations.of(context)?.monthAbbreviationSeptember,
+      AppLocalizations.of(context)?.monthAbbreviationOctober,
+      AppLocalizations.of(context)?.monthAbbreviationNovember,
+      AppLocalizations.of(context)?.monthAbbreviationDecember,
+    ];
+    int month;
+    String day;
+    DateTime raceDate;
+    String formatedRaceDate;
+
+    if (scheduleLastSavedFormat == 'ergast') {
+      month = int.parse(item.date.split("-")[1]);
+      day = item.date.split("-")[2];
+      raceDate = DateTime.parse('${item.date} ${item.raceHour}').toLocal();
+
+      formatedRaceDate = shouldUse12HourClock
+          ? DateFormat.jm().format(raceDate)
+          : DateFormat.Hm().format(raceDate);
+    } else {
+      raceDate = DateTime.parse(item.date);
+      month = raceDate.month;
+      day = raceDate.day.toString();
+      formatedRaceDate = shouldUse12HourClock
+          ? DateFormat.jm().format(raceDate)
+          : DateFormat.Hm().format(raceDate);
+    }
+
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        ClipRRect(
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(10),
+            topRight: Radius.circular(10),
+          ),
+          child: ImageRenderer(
+            item.raceCoverUrl != null
+                ? item.raceCoverUrl!
+                : RaceTracksUrls().getRaceCoverImageUrl(item.circuitId),
+            inSchedule: true,
+          ),
+        ),
+        Column(
+          children: [
+            Text(
+              item.country,
+              style: TextStyle(
+                fontSize: 50,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(bottom: 15),
+              child: Text(
+                item.circuitName,
+                style: TextStyle(
+                  fontSize: 15,
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+            ),
+            Text(
+              formatedRaceDate +
+                  ' ∙ ' +
+                  day +
+                  ' ' +
+                  months[month - 1].toLowerCase(),
+              style: TextStyle(fontSize: 18),
+            ),
+          ],
+        ),
+      ],
     );
   }
 }
