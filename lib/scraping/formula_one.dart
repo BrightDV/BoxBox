@@ -98,6 +98,7 @@ class FormulaOneScraper {
             result.children[4].text,
           ),
           result.children[6].text,
+          '',
           false,
           '2:00.000',
           '2:00.000',
@@ -280,6 +281,7 @@ class FormulaOneScraper {
               result.children[4].text,
             ),
             result.children[5].text,
+            '',
             false,
             result.children[6].text,
             result.children[6].text,
@@ -290,7 +292,7 @@ class FormulaOneScraper {
       return results;
     } else {
       return [
-        DriverResult('', '', '', '', '', '', '', '', false, '', ''),
+        DriverResult('', '', '', '', '', '', '', '', '', false, '', ''),
       ];
     }
   }

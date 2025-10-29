@@ -17,13 +17,13 @@
  * Copyright (c) 2022-2025, BrightDV
  */
 
-import 'package:boxbox/api/event_tracker.dart';
 import 'package:boxbox/classes/driver.dart';
 import 'package:boxbox/helpers/divider.dart';
 import 'package:boxbox/helpers/request_error.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/providers/results/format.dart';
 import 'package:boxbox/providers/results/requests.dart';
+import 'package:boxbox/providers/results/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:boxbox/l10n/app_localizations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -338,9 +338,9 @@ class FreePracticeResultItem extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.only(top: 5, bottom: 5),
                     child: Text(
-                      result.time == '' ? '--' : result.time,
+                      result.fastestLap == '' ? '--' : result.fastestLap,
                       style: TextStyle(
-                        color: index == 0 || result.time == ''
+                        color: index == 0 || result.fastestLap == ''
                             ? Colors.white
                             : const Color(0xff00ff00),
                       ),
@@ -378,9 +378,9 @@ class FreePracticeResultItem extends StatelessWidget {
                     child: Text(
                       index == 0
                           ? ''
-                          : result.fastestLap == ''
+                          : result.gap == ''
                               ? '--'
-                              : result.fastestLap,
+                              : result.gap,
                       textAlign: TextAlign.center,
                     ),
                   ),
@@ -438,39 +438,10 @@ class FreePracticeFromMeetingKeyScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<String> sessionsTitle = [
-      AppLocalizations.of(context)!.freePracticeOne,
-      AppLocalizations.of(context)!.freePracticeTwo,
-      AppLocalizations.of(context)!.freePracticeThree,
-    ];
-
-    return FutureBuilder(
-      future: EventTracker().getCircuitDetails(
-        meetingKey,
-        isFromRaceHub: true,
-      ),
-      builder: (context, snapshot) => snapshot.hasError
-          ? Scaffold(
-              appBar: AppBar(
-                backgroundColor: Theme.of(context).colorScheme.onPrimary,
-              ),
-              body: RequestErrorWidget(snapshot.error.toString()),
-            )
-          : snapshot.hasData
-              ? FreePracticeScreen(
-                  sessionsTitle[sessionIndex - 1],
-                  sessionIndex,
-                  '',
-                  meetingKey,
-                  int.parse(snapshot.data!['meetingContext']['season']),
-                  snapshot.data!['race']['meetingOfficialName'],
-                )
-              : Scaffold(
-                  appBar: AppBar(
-                    backgroundColor: Theme.of(context).colorScheme.onPrimary,
-                  ),
-                  body: LoadingIndicatorUtil(),
-                ),
+    return ResultsUIProvider().getFreePracticeResultsWithoutKey(
+      meetingKey,
+      sessionIndex,
+      context,
     );
   }
 }

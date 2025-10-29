@@ -138,10 +138,11 @@ class CircuitFormatProvider {
               '',
               driverResults['driverTLA'].toString(),
               '',
+              driverResults['raceTime'] ?? driverResults['positionValue'],
               driverResults['gapToLeader'] != "0.0" &&
                       driverResults['gapToLeader'] != "0"
                   ? '+${driverResults['gapToLeader']}'
-                  : driverResults['raceTime'] ?? driverResults['positionValue'],
+                  : '',
               false,
               '',
               '',

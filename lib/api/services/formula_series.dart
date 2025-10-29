@@ -510,6 +510,11 @@ class FormulaSeries {
   List<DriverResult> formatResults(List res) {
     List<DriverResult> results = [];
     for (Map result in res) {
+      String gap = result['Gap'] ?? '';
+      try {
+        int.parse(gap.substring(0, 1));
+        gap = '+' + gap;
+      } catch (_) {}
       results.add(
         DriverResult(
           result['DriverId'].toString(),
@@ -519,11 +524,13 @@ class FormulaSeries {
           result['DriverSurname'],
           result['TLA'],
           result['TeamName'],
-          result['Best'],
+          result['TimeOrFinishReason'],
+          gap,
           result['Position'] == 1,
           result['Best'] ?? '',
-          result['Gap'] ?? '',
+          result['Best'] ?? '',
           lapsDone: result['LapsCompleted'].toString(),
+          status: result['ResultStatus'],
         ),
       );
     }

@@ -336,6 +336,7 @@ class QualificationResultsProvider extends StatefulWidget {
   final String? raceUrl;
   final bool? hasSprint;
   final bool? isSprintQualifying;
+  final String? meetingId;
   final String? sessionId;
   const QualificationResultsProvider({
     Key? key,
@@ -343,6 +344,7 @@ class QualificationResultsProvider extends StatefulWidget {
     this.raceUrl,
     this.hasSprint,
     this.isSprintQualifying,
+    this.meetingId,
     this.sessionId,
   }) : super(key: key);
 
@@ -378,7 +380,7 @@ class _QualificationResultsProviderState
                     widget.sessionId,
                     meetingId: widget.raceUrl!.startsWith('http')
                         ? widget.raceUrl!.split('/')[7]
-                        : widget.sessionId,
+                        : widget.meetingId,
                   )
                 : ResultsRequestsProvider().getQualificationStandings(
                     widget.hasSprint,

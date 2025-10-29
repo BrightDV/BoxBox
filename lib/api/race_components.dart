@@ -346,6 +346,7 @@ class RacesList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // TODO: check that it is actually activated
     if (items.isNotEmpty && isUpNext && !isCache) {
       scheduledNotification(items[0].meetingId);
     }

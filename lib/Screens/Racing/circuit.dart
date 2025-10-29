@@ -565,7 +565,7 @@ class RaceResults extends StatelessWidget {
                     const Spacer(),
                     Expanded(
                       flex: 6,
-                      child: Text(result.time),
+                      child: Text(result.gap),
                     ),
                   ],
                 ),

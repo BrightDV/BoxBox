@@ -596,24 +596,23 @@ class FormulaE {
     List<DriverResult> formatedRaceStandings = [];
     List jsonResponse = raceStandings['results'];
     for (var element in jsonResponse) {
-      String time = element['delay'];
-      if (time == '-') {
-        time = element['sessionTime'];
+      String time = element['sessionTime'];
+      String delay = element['delay'];
+
+      while (delay.startsWith('0:')) {
+        delay = delay.substring(2);
       }
-      while (time.startsWith('0:')) {
-        time = time.substring(2);
+      if (delay.startsWith('00')) {
+        delay = delay.substring(1);
       }
-      if (time.startsWith('00')) {
-        time = time.substring(1);
-      }
-      if (time == '') {
-        time = 'DNF';
+      if (delay == '') {
+        delay = 'DNF';
       } else if (element['delay'] != '-') {
-        time = '+$time';
+        delay = '+$delay';
       }
 
-      if (time.lastIndexOf(':') != -1) {
-        time = time.replaceFirst(':', '.', time.lastIndexOf(':'));
+      if (delay.lastIndexOf(':') != -1) {
+        delay = delay.replaceFirst(':', '.', delay.lastIndexOf(':'));
       }
 
       formatedRaceStandings.add(
@@ -626,6 +625,7 @@ class FormulaE {
           element['driverTLA'],
           element['team']?['name'] ?? '',
           time,
+          delay,
           element['fastestLap'] ?? false,
           element['bestTime'] ?? '',
           '',
@@ -744,6 +744,7 @@ class FormulaE {
             element['driverTLA'],
             element['team']?['name'] ?? '',
             time,
+            gap,
             element['fastestLap'] ?? false,
             element['bestTime'] ?? '',
             gap,
@@ -813,6 +814,7 @@ class FormulaE {
             element['driverTLA'],
             element['team']?['name'] ?? '',
             time,
+            gap,
             element['fastestLap'] ?? false,
             element['bestTime'] ?? '',
             gap,

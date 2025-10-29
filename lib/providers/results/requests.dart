@@ -147,6 +147,7 @@ class ResultsRequestsProvider {
   Future<List<DriverResult>> getSprintStandings({
     Race? race,
     String? meetingId,
+    String? sessionId,
   }) async {
     String championship = Hive.box('settings')
         .get('championship', defaultValue: 'Formula 1') as String;
@@ -163,6 +164,13 @@ class ResultsRequestsProvider {
       } else {
         return await ErgastApi().getSprintStandings(race!.round);
       }
+    } else if (championship == 'Formula 2' ||
+        championship == 'Formula 3' ||
+        championship == 'F1 Academy') {
+      return await FormulaSeries().getSessionResults(
+        meetingId!,
+        int.parse(sessionId!),
+      );
     } else {
       return [];
     }
@@ -201,11 +209,21 @@ class ResultsRequestsProvider {
           );
         }
       }
+    } else if (championship == 'Formula E') {
+      return await FormulaE().getQualificationStandings(
+        race!.meetingId,
+        sessionId!,
+      );
+    } else if (championship == 'Formula 2' ||
+        championship == 'Formula 3' ||
+        championship == 'F1 Academy') {
+      return await FormulaSeries().getSessionResults(
+        meetingId!,
+        int.parse(sessionId!),
+      );
+    } else {
+      return [];
     }
-    return await FormulaE().getQualificationStandings(
-      race!.meetingId,
-      sessionId!,
-    );
   }
 
   int getRaceSessionIndex(Race race) {

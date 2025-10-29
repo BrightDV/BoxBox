@@ -125,6 +125,9 @@ class CircuitUIProvider {
           pathParameters: {
             'meetingId': meetingId,
           },
+          extra: {
+            'sessionId': sessionIndex.toString(),
+          },
         );
       } else if (session.sessionFullName!.contains('Race')) {
         context.pushNamed(
@@ -142,6 +145,16 @@ class CircuitUIProvider {
           pathParameters: {
             'meetingId': meetingId,
             'sessionIndex': (sessionIndex + 1).toString(),
+          },
+        );
+      } else if (session.sessionFullName!.contains('Qualifying')) {
+        context.pushNamed(
+          'qualifyings',
+          pathParameters: {
+            'meetingId': meetingId,
+          },
+          extra: {
+            'sessionId': sessionIndex.toString(),
           },
         );
       }

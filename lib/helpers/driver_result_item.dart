@@ -136,9 +136,9 @@ class DriverResultItem extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.only(left: 5, right: 5),
                   child: GestureDetector(
-                    onTap: () => (item.time == 'DNF' ||
-                                item.time == 'DNS' ||
-                                item.time == 'DSQ') &&
+                    onTap: () => (item.sessionTime == 'DNF' ||
+                                item.sessionTime == 'DNS' ||
+                                item.sessionTime == 'DSQ') &&
                             item.status != null
                         ? Fluttertoast.showToast(
                             msg: item.status!,
@@ -177,18 +177,18 @@ class DriverResultItem extends StatelessWidget {
                       child: Padding(
                         padding: const EdgeInsets.only(top: 7, bottom: 7),
                         child: Text(
-                          item.time,
+                          item.position == '1' ? item.sessionTime : item.gap,
                           style: TextStyle(
                             color: item.isFastest
                                 ? Colors.white
-                                : item.time == 'DNF' ||
-                                        item.time == 'DNS' ||
-                                        item.time == 'DSQ'
+                                : item.sessionTime == 'DNF' ||
+                                        item.sessionTime == 'DNS' ||
+                                        item.sessionTime == 'DSQ'
                                     ? Colors.yellow
                                     : const Color(0xff00ff00),
-                            decoration: (item.time == 'DNF' ||
-                                        item.time == 'DNS' ||
-                                        item.time == 'DSQ') &&
+                            decoration: (item.sessionTime == 'DNF' ||
+                                        item.sessionTime == 'DNS' ||
+                                        item.sessionTime == 'DSQ') &&
                                     item.status != null
                                 ? TextDecoration.underline
                                 : null,

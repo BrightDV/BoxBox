@@ -285,33 +285,8 @@ class Formula1 {
       if (element['completionStatusCode'] != 'OK') {
         // DNF (maybe DSQ?)
         time = element['completionStatusCode'];
-      } else if (element['positionNumber'] == '1') {
-        time = element['raceTime'];
-      } else if (element['lapsBehindLeader'] != null) {
-        // finished & lapped cars
-        if (element['lapsBehindLeader'] == "0") {
-          time = "+" + element['gapToLeader'];
-          if (time.substring(time.indexOf('.') + 1).length == 2) {
-            time += "0";
-          }
-        } else if (element['lapsBehindLeader'] == "1") {
-          // one
-          time = "+1 Lap";
-        } else {
-          // more laps
-          time = "+${element['lapsBehindLeader']} Laps";
-        }
       } else {
-        // finished & non-lapped cars
-        if (element['positionNumber'] == "1") {
-          //first
-          time = element["raceTime"];
-        } else {
-          time = element["gapToLeader"];
-          if (time.substring(time.indexOf('.') + 1).length == 2) {
-            time += "0";
-          }
-        }
+        time = element['raceTime'];
       }
 
       String fastestLapRank = "0";
@@ -330,6 +305,7 @@ class Formula1 {
           element['driverTLA'],
           Convert().teamsFromFormulaOneApiToErgast(element['teamName']),
           time,
+          element['displayTime'],
           fastestLapRank != '0' ? true : false,
           fastestLapRank != '0' ? fastestLapTime.replaceAll('00:', "") : "",
           "", // data not available
@@ -480,14 +456,6 @@ class Formula1 {
     } else {
       List finalJson = responseAsJson['raceResultsPractice$session']['results'];
       for (var element in finalJson) {
-        String time = "";
-        if (element['gapToLeader'] != null) {
-          time = '+' + element['gapToLeader'];
-          if (time.substring(time.indexOf('.') + 1).length == 2) {
-            time += '0';
-          }
-          time += 's';
-        }
         String classifiedTime = element['classifiedTime'] ?? '';
         if (classifiedTime.startsWith('00:')) {
           classifiedTime = classifiedTime.replaceFirst('00:', '');
@@ -504,9 +472,10 @@ class Formula1 {
             element['driverTLA'],
             Convert().teamsFromFormulaOneApiToErgast(element['teamName']),
             classifiedTime.replaceFirst('0000', ''),
+            element['displayTime'],
             false,
             "",
-            time,
+            element['displayTime'],
             lapsDone: element['lapsCompleted'],
             points: element['racePoints'].toString(),
             status: element['completionStatusCode'],
@@ -643,6 +612,7 @@ class Formula1 {
             element['driverTLA'],
             Convert().teamsFromFormulaOneApiToErgast(element['teamName']),
             time,
+            element['displayTime'],
             false,
             time,
             time,

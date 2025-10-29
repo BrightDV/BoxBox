@@ -55,7 +55,8 @@ class DriverResult {
   final String familyName;
   final String code;
   final String team;
-  final String time;
+  final String sessionTime;
+  final String gap;
   final bool isFastest;
   final String fastestLapTime;
   final String fastestLap;
@@ -74,7 +75,8 @@ class DriverResult {
     this.familyName,
     this.code,
     this.team,
-    this.time,
+    this.sessionTime,
+    this.gap,
     this.isFastest,
     this.fastestLapTime,
     this.fastestLap, {

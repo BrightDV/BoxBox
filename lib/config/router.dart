@@ -366,13 +366,11 @@ class RouterLocalConfig {
                       ),
                       backgroundColor: Theme.of(context).colorScheme.onPrimary,
                     ),
-                    body: SingleChildScrollView(
-                      child: QualificationResultsProvider(
-                        raceUrl: '',
-                        sessionId: state.pathParameters['meetingId']!,
-                        hasSprint: true,
-                        isSprintQualifying: true,
-                      ),
+                    body: QualificationResultsProvider(
+                      raceUrl: '',
+                      sessionId: state.pathParameters['meetingId']!,
+                      hasSprint: true,
+                      isSprintQualifying: true,
                     ),
                   );
                 },
@@ -399,6 +397,12 @@ class RouterLocalConfig {
                 name: 'qualifyings',
                 path: 'qualifyings',
                 builder: (context, state) {
+                  String? sessionId;
+                  Map? extras;
+                  if (state.extra != null) {
+                    extras = state.extra as Map;
+                    sessionId = extras['sessionId'];
+                  }
                   return Scaffold(
                     appBar: AppBar(
                       title: Text(
@@ -406,12 +410,11 @@ class RouterLocalConfig {
                       ),
                       backgroundColor: Theme.of(context).colorScheme.onPrimary,
                     ),
-                    body: SingleChildScrollView(
-                      child: QualificationResultsProvider(
-                        raceUrl: '',
-                        sessionId: state.pathParameters['meetingId']!,
-                        isSprintQualifying: false,
-                      ),
+                    body: QualificationResultsProvider(
+                      raceUrl: '',
+                      meetingId: state.pathParameters['meetingId']!,
+                      isSprintQualifying: false,
+                      sessionId: sessionId,
                     ),
                   );
                 },
