@@ -25,6 +25,7 @@ import 'package:boxbox/classes/race.dart';
 import 'package:boxbox/classes/team.dart';
 import 'package:boxbox/helpers/constants.dart';
 import 'package:boxbox/providers/circuit/format.dart';
+import 'package:boxbox/providers/results/format.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -538,9 +539,10 @@ class FormulaSeries {
   }
 
   Future<List<DriverResult>> getSessionResults(
-    String meetingId,
-    int sessionIndex,
-  ) async {
+    String meetingId, {
+    String? sessionIndex,
+    String? sessionName,
+  }) async {
     String championship = Hive.box('settings')
         .get('championship', defaultValue: 'Formula 1') as String;
     String championshipId = Constants().FORMULA_SERIES[championship];
@@ -592,8 +594,17 @@ class FormulaSeries {
     }
 
     List sessionResults = formatedResponse['SessionResults'];
+    if (sessionIndex == null) {
+      sessionIndex = ResultsFormatProvider()
+          .getSessionIndexForFormulaSeries(
+            sessionResults,
+            sessionName!,
+          )
+          .toString();
+    }
+
     return formatResults(
-      sessionResults[sessionIndex]['Results'],
+      sessionResults[int.parse(sessionIndex)]['Results'],
     );
   }
 }

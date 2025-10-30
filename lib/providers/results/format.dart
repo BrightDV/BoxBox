@@ -67,4 +67,15 @@ class ResultsFormatProvider {
       return Colors.transparent;
     }
   }
+
+  int getSessionIndexForFormulaSeries(List sessions, String search) {
+    int c = 0;
+    for (var session in sessions) {
+      if (session['SessionName'].toLowerCase().contains(search.toLowerCase())) {
+        return c;
+      }
+      c++;
+    }
+    return 0;
+  }
 }

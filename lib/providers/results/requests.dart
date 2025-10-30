@@ -91,7 +91,7 @@ class ResultsRequestsProvider {
         championship == 'F1 Academy') {
       return FormulaSeries().getSessionResults(
         meetingId,
-        sessionIndex,
+        sessionIndex: (sessionIndex - 1).toString(),
       );
     } else {
       return [];
@@ -137,7 +137,8 @@ class ResultsRequestsProvider {
         championship == 'F1 Academy') {
       return FormulaSeries().getSessionResults(
         meetingId!,
-        int.parse(sessionId!),
+        sessionIndex: sessionId,
+        sessionName: 'Race',
       );
     } else {
       return [];
@@ -169,7 +170,8 @@ class ResultsRequestsProvider {
         championship == 'F1 Academy') {
       return await FormulaSeries().getSessionResults(
         meetingId!,
-        int.parse(sessionId!),
+        sessionIndex: sessionId,
+        sessionName: 'Sprint Race',
       );
     } else {
       return [];
@@ -182,6 +184,7 @@ class ResultsRequestsProvider {
     String? sessionId, {
     Race? race,
     String? meetingId,
+    String? sessionName,
   }) async {
     String championship = Hive.box('settings')
         .get('championship', defaultValue: 'Formula 1') as String;
@@ -219,7 +222,8 @@ class ResultsRequestsProvider {
         championship == 'F1 Academy') {
       return await FormulaSeries().getSessionResults(
         meetingId!,
-        int.parse(sessionId!),
+        sessionIndex: sessionId,
+        sessionName: 'Qualifying',
       );
     } else {
       return [];
