@@ -122,27 +122,28 @@ class RaceListHeaderItem extends StatelessWidget {
             Text(
               item.country,
               style: TextStyle(
-                fontSize: 50,
-                fontWeight: FontWeight.bold,
+                fontSize: 80,
+                fontWeight: FontWeight.normal,
+                fontFamily: 'Northwell',
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(bottom: 15),
+              padding: EdgeInsets.only(bottom: 5, top: 15),
               child: Text(
-                item.circuitName,
-                style: TextStyle(
-                  fontSize: 15,
-                  fontStyle: FontStyle.italic,
-                ),
+                formatedRaceDate +
+                    ' ∙ ' +
+                    day +
+                    ' ' +
+                    months[month - 1].toLowerCase(),
+                style: TextStyle(fontSize: 18),
               ),
             ),
             Text(
-              formatedRaceDate +
-                  ' ∙ ' +
-                  day +
-                  ' ' +
-                  months[month - 1].toLowerCase(),
-              style: TextStyle(fontSize: 18),
+              item.circuitName,
+              style: TextStyle(
+                fontSize: 15,
+                fontStyle: FontStyle.italic,
+              ),
             ),
           ],
         ),
