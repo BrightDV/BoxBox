@@ -96,6 +96,9 @@ class AppLocalizationsHi extends AppLocalizations {
   String get crashError => 'त्रुटि:';
 
   @override
+  String get customErgastUrl => 'Ergast Custom URL';
+
+  @override
   String get customFeed => 'तदनुकूल फीड';
 
   @override

@@ -17,6 +17,7 @@
  * Copyright (c) 2022-2025, BrightDV
  */
 
+import 'package:boxbox/helpers/bottom_sheet.dart';
 import 'package:boxbox/helpers/constants.dart';
 import 'package:boxbox/l10n/app_localizations.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -101,77 +102,77 @@ class _ChampionshipScreenState extends State<ChampionshipScreen> {
                         onPressed: () async {
                           final TextEditingController controller =
                               TextEditingController();
-                          await showModalBottomSheet(
-                            context: context,
-                            builder: (context) => BottomSheet(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0),
+                          await showCustomBottomSheet(
+                            context,
+                            SizedBox(
+                              child: Padding(
+                                padding: EdgeInsets.fromLTRB(
+                                  30,
+                                  15,
+                                  30,
+                                  MediaQuery.of(context).viewInsets.bottom,
+                                ),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.only(bottom: 20),
+                                      child: Text(
+                                        AppLocalizations.of(context)!
+                                            .customErgastUrl,
+                                        style: TextStyle(fontSize: 20),
+                                      ),
+                                    ),
+                                    TextField(
+                                      controller: controller,
+                                      decoration: InputDecoration(
+                                        border: OutlineInputBorder(),
+                                        hintText: ergastUrl,
+                                        hintStyle: TextStyle(
+                                          fontWeight: FontWeight.w100,
+                                        ),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding:
+                                          EdgeInsets.only(top: 20, bottom: 7),
+                                      child: Container(
+                                        width: double.infinity,
+                                        height: 50,
+                                        child: FilledButton.tonal(
+                                          onPressed: () {
+                                            Hive.box('settings').put(
+                                              'ergastUrl',
+                                              controller.text,
+                                            );
+                                            Navigator.of(context).pop();
+                                            setState(() {});
+                                          },
+                                          child: Text(
+                                            AppLocalizations.of(context)!.save,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding:
+                                          EdgeInsets.only(top: 7, bottom: 20),
+                                      child: Container(
+                                        width: double.infinity,
+                                        height: 50,
+                                        child: OutlinedButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: Text(
+                                            AppLocalizations.of(context)!.close,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                              onClosing: () {},
-                              builder: (context) {
-                                return SizedBox(
-                                  child: Padding(
-                                    padding: EdgeInsets.fromLTRB(
-                                      30,
-                                      15,
-                                      30,
-                                      MediaQuery.of(context).viewInsets.bottom,
-                                    ),
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        TextField(
-                                          controller: controller,
-                                          decoration: InputDecoration(
-                                            hintText: ergastUrl,
-                                            hintStyle: TextStyle(
-                                              fontWeight: FontWeight.w100,
-                                            ),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.only(
-                                            top: 5,
-                                            bottom: 5,
-                                          ),
-                                          child: Row(
-                                            children: [
-                                              ElevatedButton(
-                                                onPressed: () {
-                                                  Hive.box('settings').put(
-                                                    'ergastUrl',
-                                                    controller.text,
-                                                  );
-                                                  Navigator.of(context).pop();
-                                                  setState(() {});
-                                                },
-                                                child: Text(
-                                                  AppLocalizations.of(context)!
-                                                      .save,
-                                                ),
-                                              ),
-                                              Padding(
-                                                padding:
-                                                    EdgeInsets.only(left: 10),
-                                                child: ElevatedButton(
-                                                  onPressed: () {
-                                                    Navigator.of(context).pop();
-                                                  },
-                                                  child: Text(
-                                                    AppLocalizations.of(
-                                                            context)!
-                                                        .close,
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              },
                             ),
                           );
                         },

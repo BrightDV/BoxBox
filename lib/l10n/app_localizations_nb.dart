@@ -96,6 +96,9 @@ class AppLocalizationsNb extends AppLocalizations {
   String get crashError => 'Feil:';
 
   @override
+  String get customErgastUrl => 'Ergast Custom URL';
+
+  @override
   String get customFeed => 'Custom feed';
 
   @override

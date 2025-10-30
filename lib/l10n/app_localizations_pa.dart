@@ -96,6 +96,9 @@ class AppLocalizationsPa extends AppLocalizations {
   String get crashError => 'ਤਰੁੱਟੀ:';
 
   @override
+  String get customErgastUrl => 'Ergast Custom URL';
+
+  @override
   String get customFeed => 'ਕਸਟਮ ਫੀਡ';
 
   @override

@@ -96,6 +96,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get crashError => 'خطأ:';
 
   @override
+  String get customErgastUrl => 'Ergast Custom URL';
+
+  @override
   String get customFeed => 'الخلاصة المخصصة';
 
   @override

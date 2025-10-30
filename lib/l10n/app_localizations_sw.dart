@@ -96,6 +96,9 @@ class AppLocalizationsSw extends AppLocalizations {
   String get crashError => 'Hitilafu';
 
   @override
+  String get customErgastUrl => 'Ergast Custom URL';
+
+  @override
   String get customFeed => 'Mipasho maalum';
 
   @override

@@ -4,18 +4,18 @@ import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
 
-/// The translations for Hungarian (`hu`).
-class AppLocalizationsHu extends AppLocalizations {
-  AppLocalizationsHu([String locale = 'hu']) : super(locale);
+/// The translations for Old Persian (`peo`).
+class AppLocalizationsPeo extends AppLocalizations {
+  AppLocalizationsPeo([String locale = 'peo']) : super(locale);
 
   @override
-  String get about => 'Az appról';
+  String get about => 'About';
 
   @override
-  String get aboutDescription => 'A Box, Box! egy GPLv3+ copyleft licenc alatt védett szabad szoftver. A Formula 1 eseményeinek követéséhez nyújt lehetőséget, reklámok és nyomkövetők nélkül.';
+  String get aboutDescription => 'Box, Box! is copylefted libre software, licensed under GPLv3+. Its aim is to allow users to follow Formula 1 and Formula E without ads or trackers.';
 
   @override
-  String get aboutBottomLine => '❤️-tel BrightDV-től.';
+  String get aboutBottomLine => 'With ❤ by BrightDV.';
 
   @override
   String get addCustomFeed => 'Add a custom feed';
@@ -39,28 +39,28 @@ class AppLocalizationsHu extends AppLocalizations {
   String get apiKey => 'API Key';
 
   @override
-  String get appearance => 'Megjelenés';
+  String get appearance => 'Appearance';
 
   @override
-  String get apply => 'Alkalmaz';
+  String get apply => 'Apply';
 
   @override
-  String get articleFull => 'Teljes';
+  String get articleFull => 'Full';
 
   @override
   String get articleNotifications => 'New articles notifications';
 
   @override
-  String get articleTitleAndImage => 'Cím és kép';
+  String get articleTitleAndImage => 'Title and Image';
 
   @override
-  String get articleTitleAndDescription => 'Cím és leírás';
+  String get articleTitleAndDescription => 'Title and Description';
 
   @override
-  String get articleTitle => 'Cím';
+  String get articleTitle => 'Title';
 
   @override
-  String get biography => 'Életrajz';
+  String get biography => 'Biography';
 
   @override
   String get cancel => 'Cancel';
@@ -72,13 +72,13 @@ class AppLocalizationsHu extends AppLocalizations {
   String get chassis => 'Chassis';
 
   @override
-  String get checkUpdates => 'Új frissítés keresése';
+  String get checkUpdates => 'Check for a new update';
 
   @override
-  String get circuitLength => 'Versenypálya hossza';
+  String get circuitLength => 'Circuit Length';
 
   @override
-  String get close => 'Bezárás';
+  String get close => 'Close';
 
   @override
   String get copyTitle => 'Copy title';
@@ -90,10 +90,10 @@ class AppLocalizationsHu extends AppLocalizations {
   String get countdown => 'Countdown';
 
   @override
-  String get country => 'Ország';
+  String get country => 'Country';
 
   @override
-  String get crashError => 'Hiba:';
+  String get crashError => 'Error:';
 
   @override
   String get customErgastUrl => 'Ergast Custom URL';
@@ -108,25 +108,25 @@ class AppLocalizationsHu extends AppLocalizations {
   String get customServer => 'Custom server';
 
   @override
-  String get darkMode => 'Sötét';
+  String get darkMode => 'Dark';
 
   @override
-  String get dataNotAvailable => 'Jelen pillanatban az adatok nem elérhetőek.';
+  String get dataNotAvailable => 'Data unavailable at the moment.';
 
   @override
-  String get dataSaverMode => 'Adatforgalom-csökkentő';
+  String get dataSaverMode => 'Data saver';
 
   @override
-  String get dataSaverModeSub => 'Alacsony minőségű képek és videók.';
+  String get dataSaverModeSub => 'Low-quality images and videos.';
 
   @override
-  String get dateOfBirth => 'Születési év';
+  String get dateOfBirth => 'Date of birth';
 
   @override
-  String get dayFirstLetter => 'N';
+  String get dayFirstLetter => 'D';
 
   @override
-  String get defaultValue => 'Alapértelmezett';
+  String get defaultValue => 'Default';
 
   @override
   String get delete => 'Delete';
@@ -165,85 +165,85 @@ class AppLocalizationsHu extends AppLocalizations {
   String get driverAbbreviation => 'DRI';
 
   @override
-  String get drivers => 'VERSENYZŐK';
+  String get drivers => 'DRIVERS';
 
   @override
-  String get edit => 'Szerkesztés';
+  String get edit => 'Edit';
 
   @override
-  String get editOrderDescription => 'Sorrend megváltoztatása egy elem hosszas megnyomásával.';
+  String get editOrderDescription => 'Change order by long-pressing an item.';
 
   @override
   String get enableNotifications => 'Enable notifications';
 
   @override
-  String get errorOccurred => 'Hiba történt';
+  String get errorOccurred => 'Something went wrong';
 
   @override
-  String get errorOccurredDetails => 'Az alkalmazás ismeretlen hibát észlelt.\nKérjük, próbálja meg újra később.';
+  String get errorOccurredDetails => 'The app encountered an unknown error.\nPlease try again later.';
 
   @override
-  String get experimentalFeatures => 'Kísérleti funkciók';
+  String get experimentalFeatures => 'Experimental Features';
 
   @override
   String get fastestLaps => 'Fastest Laps';
 
   @override
-  String get fiaRegulations => 'FIA szabályzat';
+  String get fiaRegulations => 'FIA Regulations';
 
   @override
-  String get filter => 'Szűrők';
+  String get filter => 'Filter';
 
   @override
-  String get firstGrandPrix => 'Első nagydíj';
+  String get firstGrandPrix => 'First Grand Prix';
 
   @override
   String get firstTeamEntry => 'First Team Entry';
 
   @override
-  String get formulaYouSettings => 'Formula You beállítások';
+  String get formulaYouSettings => 'Formula You Settings';
 
   @override
   String get freePracticeFirstLetter => 'FP';
 
   @override
-  String get freePracticeOne => 'Szabad edzés FP1';
+  String get freePracticeOne => 'Free Practice FP1';
 
   @override
-  String get freePracticeTwo => 'Szabad edzés FP2';
+  String get freePracticeTwo => 'Free Practice FP2';
 
   @override
-  String get freePracticeThree => 'Szabad edzés FP3';
+  String get freePracticeThree => 'Free Practice FP3';
 
   @override
-  String get freePracticeShort => 'Szabadedzés';
+  String get freePracticeShort => 'PRACTICE';
 
   @override
-  String get from => 'Ettől ';
+  String get from => 'From ';
 
   @override
-  String get followSystem => 'Rendszertéma követése';
+  String get followSystem => 'Follow system';
 
   @override
-  String get font => 'Betűtípus';
+  String get font => 'Font';
 
   @override
-  String get fontDescription => 'A cikkekben használt betűtípus.';
+  String get fontDescription => 'Font used in the articles.';
 
   @override
   String get fullScreenGestures => 'Enter/exit fullscreen gestures';
 
   @override
-  String get gallery => 'Galéria';
+  String get gallery => 'Gallery';
 
   @override
   String get gap => 'GAP';
 
   @override
-  String get grandsPrix => 'Grands Prix nevezett';
+  String get grandsPrix => 'Grands Prix entered';
 
   @override
-  String get grandPrixMap => 'Nagydíj térkép';
+  String get grandPrixMap => 'Grand Prix Map';
 
   @override
   String get grandPrixNotifications => 'Grand-Prix sessions notifications';
@@ -252,52 +252,52 @@ class AppLocalizationsHu extends AppLocalizations {
   String get grandPrixNotificationsSub => 'You need to go to the schedule screen in order to initialize notifications of the next Grand-Prix.';
 
   @override
-  String get hallOfFame => 'Hírességek csarnoka';
+  String get hallOfFame => 'Hall of Fame';
 
   @override
-  String get highestRaceFinish => 'Legmagasabb célba érés a versenyen';
+  String get highestRaceFinish => 'Highest race finish';
 
   @override
-  String get highestGridPosition => 'Legnagyobb pozíciót elérők';
+  String get highestGridPosition => 'Highest grid position';
 
   @override
-  String get history => 'Előzmény';
+  String get history => 'History';
 
   @override
-  String get hourFirstLetter => 'Ó';
+  String get hourFirstLetter => 'H';
 
   @override
-  String get information => 'Információ';
+  String get information => 'Information';
 
   @override
-  String get lapRecord => 'Legjobb kör';
+  String get lapRecord => 'Lap Record';
 
   @override
-  String get laps => 'KÖRÖK';
+  String get laps => 'LAPS';
 
   @override
-  String get lightMode => 'Világos';
+  String get lightMode => 'Light';
 
   @override
-  String get links => 'Hivatkozások';
+  String get links => 'Links';
 
   @override
   String get listen => 'Listen';
 
   @override
-  String get liveBlog => 'Élő blog';
+  String get liveBlog => 'Live Blog';
 
   @override
   String get loading => 'Loading';
 
   @override
-  String get loadMore => 'Több betöltése';
+  String get loadMore => 'Load More';
 
   @override
-  String get minuteAbbreviation => 'PER';
+  String get minuteAbbreviation => 'MIN';
 
   @override
-  String get modernNewsAppearance => 'Modern megjelenés használata a hírekhez.';
+  String get modernNewsAppearance => 'Use modern appearance for the news.';
 
   @override
   String get monthAbbreviationJanuary => 'JAN';
@@ -306,28 +306,28 @@ class AppLocalizationsHu extends AppLocalizations {
   String get monthAbbreviationFebruary => 'FEB';
 
   @override
-  String get monthAbbreviationMarch => 'MÁR';
+  String get monthAbbreviationMarch => 'MAR';
 
   @override
-  String get monthAbbreviationApril => 'ÁPR';
+  String get monthAbbreviationApril => 'APR';
 
   @override
-  String get monthAbbreviationMay => 'MÁJ';
+  String get monthAbbreviationMay => 'MAY';
 
   @override
-  String get monthAbbreviationJune => 'JÚN';
+  String get monthAbbreviationJune => 'JUN';
 
   @override
-  String get monthAbbreviationJuly => 'JÚL';
+  String get monthAbbreviationJuly => 'JUL';
 
   @override
   String get monthAbbreviationAugust => 'AUG';
 
   @override
-  String get monthAbbreviationSeptember => 'SZE';
+  String get monthAbbreviationSeptember => 'SEP';
 
   @override
-  String get monthAbbreviationOctober => 'OKT';
+  String get monthAbbreviationOctober => 'OCT';
 
   @override
   String get monthAbbreviationNovember => 'NOV';
@@ -339,28 +339,28 @@ class AppLocalizationsHu extends AppLocalizations {
   String get motorsportLocalizeFeeds => 'Motorsport.com\'s localized feeds';
 
   @override
-  String get needsRestart => 'Az alkalmazás újraindítása a módosítások alkalmazásához.';
+  String get needsRestart => 'Restart the app to apply changes.';
 
   @override
-  String get news => 'Hírek';
+  String get news => 'News';
 
   @override
-  String get newsLayout => 'Hírek kinézete';
+  String get newsLayout => 'News Layout';
 
   @override
-  String get newsMix => 'Hírek mix';
+  String get newsMix => 'News Mix';
 
   @override
-  String get newVersionAvailable => 'Egy új verzió elérhető';
+  String get newVersionAvailable => 'A new version is available';
 
   @override
-  String get next => 'KÖVETKEZŐ';
+  String get next => 'NEXT';
 
   @override
-  String get noResults => 'Itt nincs semmi. Lehet hogy túl sok kérést hajtottál végre, és lekorlátoztak egy időre.';
+  String get noResults => 'Nothing to show here. You may be rate limited.';
 
   @override
-  String get nothingHere => 'Itt nincs \nsemmi.';
+  String get nothingHere => 'Nothing to show\nhere.';
 
   @override
   String get notifications => 'Notifications';
@@ -378,13 +378,13 @@ class AppLocalizationsHu extends AppLocalizations {
   String get notifications24hours => '24 hours';
 
   @override
-  String get numberOfLaps => 'Körök száma';
+  String get numberOfLaps => 'Number of Laps';
 
   @override
   String get official => 'Official';
 
   @override
-  String get offline => 'Offline vagy. Az adatok nem feltétlenül naprakészek.';
+  String get offline => 'Offline. The data may not be up to date.';
 
   @override
   String get offtrack => 'You went off-track!';
@@ -393,43 +393,43 @@ class AppLocalizationsHu extends AppLocalizations {
   String get offtrackSub => 'Back on track';
 
   @override
-  String get openInBrowser => 'Megnyitás böngészőben';
+  String get openInBrowser => 'Open in web browser';
 
   @override
-  String get openLiveBlog => 'Nyissa meg az élő blogot';
+  String get openLiveBlog => 'Open live blog';
 
   @override
-  String get openQuiz => 'Nyílt kvíz';
+  String get openQuiz => 'Open quiz';
 
   @override
-  String get openingWithInAppBrowser => 'Megnyitás az alkalmazáson belüli böngészővel';
+  String get openingWithInAppBrowser => 'Opening with the in-app browser';
 
   @override
-  String get other => 'Más';
+  String get other => 'Other';
 
   @override
-  String get placeOfBirth => 'Születés helye';
+  String get placeOfBirth => 'Place of birth';
 
   @override
-  String get player => 'Lejátszó';
+  String get player => 'Player';
 
   @override
-  String get playerQuality => 'Videó minősége';
+  String get playerQuality => 'Video quality';
 
   @override
-  String get playerQualitySub => 'A cikkekben szereplő videókhoz.';
+  String get playerQualitySub => 'For videos in articles.';
 
   @override
   String get pleaseWait => 'Please wait...';
 
   @override
-  String get podiums => 'Helyezések';
+  String get podiums => 'Podiums';
 
   @override
-  String get point => 'Pont';
+  String get point => 'Point';
 
   @override
-  String get points => 'Pontok';
+  String get points => 'Points';
 
   @override
   String get pointsAbbreviation => 'PTS';
@@ -444,34 +444,34 @@ class AppLocalizationsHu extends AppLocalizations {
   String get powerUnit => 'Power Unit';
 
   @override
-  String get previous => 'ELŐZŐ';
+  String get previous => 'PREVIOUS';
 
   @override
-  String get qualifyings => 'Időmérők';
+  String get qualifyings => 'Qualifyings';
 
   @override
-  String get qualifyingsFirstLetter => 'I';
+  String get qualifyingsFirstLetter => 'Q';
 
   @override
-  String get qualifyingsShort => 'IDŐMRK';
+  String get qualifyingsShort => 'QUALIFS';
 
   @override
   String get qualityToDownload => 'Select which quality to download.';
 
   @override
-  String get quiz => 'Kvíz';
+  String get quiz => 'Quiz';
 
   @override
-  String get race => 'Verseny';
+  String get race => 'Race';
 
   @override
-  String get raceDistance => 'Versenytáv';
+  String get raceDistance => 'Race Distance';
 
   @override
-  String get raceFirstLetter => 'V';
+  String get raceFirstLetter => 'R';
 
   @override
-  String get raceStartsIn => 'A verseny kezdődik:';
+  String get raceStartsIn => 'The race starts in:';
 
   @override
   String get raceStartsOn => 'The race starts on:';
@@ -489,13 +489,13 @@ class AppLocalizationsHu extends AppLocalizations {
   String get refreshInterval => 'Refresh interval';
 
   @override
-  String get requestError => 'Nem sikerült az adatok lekérése.';
+  String get requestError => 'Could not fetch data.';
 
   @override
   String get requiredNetworkConnection => 'Required network connection';
 
   @override
-  String get results => 'Eredmények';
+  String get results => 'Results';
 
   @override
   String get running => 'Running';
@@ -504,7 +504,7 @@ class AppLocalizationsHu extends AppLocalizations {
   String get save => 'Save';
 
   @override
-  String get schedule => 'Ütemterv';
+  String get schedule => 'Schedule';
 
   @override
   String get search => 'Search';
@@ -516,49 +516,49 @@ class AppLocalizationsHu extends AppLocalizations {
   String get server => 'Server';
 
   @override
-  String get sessionCompleted => 'Az ülésnek vége.';
+  String get sessionCompleted => 'The session is over.';
 
   @override
-  String get sessionCompletedShort => 'A munkamenet befejeződött';
+  String get sessionCompletedShort => 'Session completed';
 
   @override
-  String get sessionRunning => 'Folyamatban lévő munkamenet';
+  String get sessionRunning => 'Session running';
 
   @override
-  String get sessionStartsIn => 'A munkamenet kezdődik:';
+  String get sessionStartsIn => 'The session starts in:';
 
   @override
   String get sessionStartsOn => 'The session starts on:';
 
   @override
-  String get settings => 'Beállítások';
+  String get settings => 'Settings';
 
   @override
-  String get share => 'Megosztás';
+  String get share => 'Share';
 
   @override
-  String get sprint => 'Gyorsfutam';
+  String get sprint => 'Sprint';
 
   @override
-  String get sprintFirstLetter => 'GY';
+  String get sprintFirstLetter => 'S';
 
   @override
-  String get sprintQualifyings => 'Gyorsfutam Időmérők';
+  String get sprintQualifyings => 'Sprint Qualifyings';
 
   @override
-  String get standings => 'Helyezések';
+  String get standings => 'Standings';
 
   @override
-  String get startingGrid => 'Kezdő rács';
+  String get startingGrid => 'Starting Grid';
 
   @override
-  String get statistics => 'Statisztikák';
+  String get statistics => 'Stats';
 
   @override
-  String get tapToCheckForUpdate => 'Koppints az új frissítések kereséséhez.';
+  String get tapToCheckForUpdate => 'Tap to check for new update.';
 
   @override
-  String get team => 'Csapat';
+  String get team => 'Team';
 
   @override
   String get teamBase => 'Base';
@@ -567,31 +567,31 @@ class AppLocalizationsHu extends AppLocalizations {
   String get teamChief => 'Team Chief';
 
   @override
-  String get teamColors => 'Csapat színei';
+  String get teamColors => 'Team colors';
 
   @override
-  String get teams => 'CSAPATOK';
+  String get teams => 'TEAMS';
 
   @override
   String get technicalChief => 'Technical Chief';
 
   @override
-  String get theme => 'Téma';
+  String get theme => 'Theme';
 
   @override
-  String get time => 'IDŐ';
+  String get time => 'TIME';
 
   @override
-  String get topics => 'Témák';
+  String get topics => 'Topics';
 
   @override
-  String get tryAgain => 'Újrapróbálkozás';
+  String get tryAgain => 'Try Again';
 
   @override
   String get twelveHourClock => 'Use a 12-hour clock';
 
   @override
-  String get unavailableOffline => 'Internet nélkül nem érhető el';
+  String get unavailableOffline => 'Unavailable offline';
 
   @override
   String get updateApiKey => 'Update API Key';
@@ -600,31 +600,31 @@ class AppLocalizationsHu extends AppLocalizations {
   String get updateApiKeySub => 'Update the API key of the official website.\nUpdate this only if you now what you are doing.';
 
   @override
-  String get updates => 'Új verziók';
+  String get updates => 'New versions';
 
   @override
   String get useOfficialWebview => 'Use official Webview for live sessions instead of f1-dash.com';
 
   @override
-  String get victory => 'Győzelem';
+  String get victory => 'Victory';
 
   @override
-  String get victories => 'Győzelmek';
+  String get victories => 'Victories';
 
   @override
-  String get videos => 'Videók';
+  String get videos => 'Videos';
 
   @override
-  String get viewHighlights => 'Kiemelések megtekintése';
+  String get viewHighlights => 'View highlights';
 
   @override
-  String get viewMore => 'TÖBB MEGTEKINTÉSE';
+  String get viewMore => 'VIEW MORE';
 
   @override
-  String get viewResults => 'Eredmények megtekintése';
+  String get viewResults => 'View results';
 
   @override
-  String get watchHighlightsOnYoutube => 'Kiemelések megtekintése YouTube-on';
+  String get watchHighlightsOnYoutube => 'Watch highlights on YouTube';
 
   @override
   String get watchOnYouTube => 'Watch on YouTube';
@@ -633,7 +633,7 @@ class AppLocalizationsHu extends AppLocalizations {
   String get wifi => 'Wi-Fi';
 
   @override
-  String get worldChampionships => 'Világbajnokságok';
+  String get worldChampionships => 'World Championships';
 
   @override
   String get yes => 'Yes';

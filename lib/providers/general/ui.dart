@@ -203,11 +203,7 @@ class UIProvider {
   ) {
     String championship = Hive.box('settings')
         .get('championship', defaultValue: 'Formula 1') as String;
-    if (championship == 'Formula 1' ||
-        championship == 'Formula E' ||
-        championship == 'Formula 2' ||
-        championship == 'Formula 3' ||
-        championship == 'F1 Academy') {
+    if (championship == 'Formula 1' || championship == 'Formula E') {
       return [
         NavigationDestination(
           icon: const Icon(
@@ -226,6 +222,38 @@ class UIProvider {
             Icons.play_circle,
           ),
           label: AppLocalizations.of(context)!.videos,
+        ),
+        NavigationDestination(
+          icon: const Icon(
+            Icons.emoji_events_outlined,
+          ),
+          selectedIcon: const Icon(
+            Icons.emoji_events,
+          ),
+          label: AppLocalizations.of(context)!.standings,
+        ),
+        NavigationDestination(
+          icon: const Icon(
+            Icons.calendar_today_outlined,
+          ),
+          selectedIcon: const Icon(
+            Icons.calendar_today,
+          ),
+          label: AppLocalizations.of(context)!.schedule,
+        ),
+      ];
+    } else if (championship == 'Formula 2' ||
+        championship == 'Formula 3' ||
+        championship == 'F1 Academy') {
+      return [
+        NavigationDestination(
+          icon: const Icon(
+            Icons.feed_outlined,
+          ),
+          selectedIcon: const Icon(
+            Icons.feed,
+          ),
+          label: AppLocalizations.of(context)!.news,
         ),
         NavigationDestination(
           icon: const Icon(

@@ -29,7 +29,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
 
 class _ErgastApiCalls {
-  final String defaultEndpoint = Constants().ERGAST_API_URL;
+  final String defaultEndpoint = Constants().getErgastUrl();
   List<DriverResult> formatRaceStandings(Map raceStandings) {
     List<DriverResult> formatedRaceStandings = [];
     List jsonResponse =

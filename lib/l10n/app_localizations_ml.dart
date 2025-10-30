@@ -12,7 +12,7 @@ class AppLocalizationsMl extends AppLocalizations {
   String get about => 'വിവരങ്ങൾ';
 
   @override
-  String get aboutDescription => 'Box, Box! is copylefted libre software, licensed under GPLv3+. Its aim is to allow users to follow Formula 1 and Formula E without ads or trackers.';
+  String get aboutDescription => 'ബോക്സ്, ബോക്സ്! എന്നത് GPLv3+ പ്രകാരം ലൈസൻസുള്ള, കോപ്പിലെഫ്റ്റ് ചെയ്ത ലിബ്രെ സോഫ്റ്റ്‌വെയറാണ്. പരസ്യങ്ങളോ ട്രാക്കറുകളോ ഇല്ലാതെ ഫോർമുല 1 ഉം ഫോർമുല E ഉം പിന്തുടരാൻ ഉപയോക്താക്കളെ അനുവദിക്കുക എന്നതാണ് ഇതിന്റെ ലക്ഷ്യം.';
 
   @override
   String get aboutBottomLine => 'BrightDV നിന്ന് ❤ത്തോടെ.';
@@ -27,16 +27,16 @@ class AppLocalizationsMl extends AppLocalizations {
   String get addToCalendar => 'കലണ്ടറിലേക്ക് ചേർക്കുക';
 
   @override
-  String get alreadyDownloadedArticle => 'This article has already been downloaded.';
+  String get alreadyDownloadedArticle => 'ഈ ലേഖനം ഇതിനകം ഡൗൺലോഡ് ചെയ്തിട്ടുണ്ട്.';
 
   @override
-  String get alreadyDownloading => 'Already downloading';
+  String get alreadyDownloading => 'ഡൗൺലോഡ് ചെയ്യുന്നു';
 
   @override
-  String get anyNetwork => 'Any network';
+  String get anyNetwork => 'ഏത് നെറ്റ്‌വർക്കും';
 
   @override
-  String get apiKey => 'API Key';
+  String get apiKey => 'API കീ';
 
   @override
   String get appearance => 'രൂപം';
@@ -48,7 +48,7 @@ class AppLocalizationsMl extends AppLocalizations {
   String get articleFull => 'നിറഞ്ഞിരിക്കുന്നു';
 
   @override
-  String get articleNotifications => 'New articles notifications';
+  String get articleNotifications => 'പുതിയ ലേഖന അറിയിപ്പുകൾ';
 
   @override
   String get articleTitleAndImage => 'ശീർഷകവും ചിത്രവും';
@@ -94,6 +94,9 @@ class AppLocalizationsMl extends AppLocalizations {
 
   @override
   String get crashError => 'എറർ:';
+
+  @override
+  String get customErgastUrl => 'Ergast Custom URL';
 
   @override
   String get customFeed => 'കസ്റ്റമ് ഫീഡ്';

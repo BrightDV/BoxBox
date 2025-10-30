@@ -96,4 +96,10 @@ class Constants {
         .get('officialApiKey', defaultValue: F1_API_KEY) as String;
     return apiKey;
   }
+
+  String getErgastUrl() {
+    String ergastUrl = Hive.box('settings')
+        .get('ergastUrl', defaultValue: ERGAST_API_URL) as String;
+    return ergastUrl;
+  }
 }

@@ -96,6 +96,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get crashError => 'Hata:';
 
   @override
+  String get customErgastUrl => 'Ergast Custom URL';
+
+  @override
   String get customFeed => 'Özel akış';
 
   @override

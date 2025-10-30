@@ -33,10 +33,10 @@ class AppLocalizationsBn extends AppLocalizations {
   String get alreadyDownloading => 'ইতিমধ্যেই ডাউনলোড হচ্ছে';
 
   @override
-  String get anyNetwork => 'Any network';
+  String get anyNetwork => 'যেকোনো নেটওয়ার্ক';
 
   @override
-  String get apiKey => 'API Key';
+  String get apiKey => 'এপিআই কী';
 
   @override
   String get appearance => 'উপস্থিতি';
@@ -48,7 +48,7 @@ class AppLocalizationsBn extends AppLocalizations {
   String get articleFull => 'ভর্তি';
 
   @override
-  String get articleNotifications => 'New articles notifications';
+  String get articleNotifications => 'নতুন নিবন্ধের নোটিফিকেশন্স';
 
   @override
   String get articleTitleAndImage => 'শিরোনাম এবং ছবি';
@@ -94,6 +94,9 @@ class AppLocalizationsBn extends AppLocalizations {
 
   @override
   String get crashError => 'ত্রুটি:';
+
+  @override
+  String get customErgastUrl => 'Ergast Custom URL';
 
   @override
   String get customFeed => 'কাস্টম নিউজফিড';
@@ -171,7 +174,7 @@ class AppLocalizationsBn extends AppLocalizations {
   String get editOrderDescription => 'একটি আইটেম দীর্ঘ-টিপে ক্রম পরিবর্তন করুন।';
 
   @override
-  String get enableNotifications => 'Enable notifications';
+  String get enableNotifications => 'নোটিফিকেশন্স চালু করুন';
 
   @override
   String get errorOccurred => 'কিছু একটা সমস্যা হয়েছে';
@@ -228,7 +231,7 @@ class AppLocalizationsBn extends AppLocalizations {
   String get fontDescription => 'নিবন্ধগুলিতে ব্যবহৃত হরফ।';
 
   @override
-  String get fullScreenGestures => 'Enter/exit fullscreen gestures';
+  String get fullScreenGestures => 'ফুলস্ক্রিন জেসচারে প্রবেশ/প্রস্থান করুন';
 
   @override
   String get gallery => 'গ্যালারি';
@@ -243,10 +246,10 @@ class AppLocalizationsBn extends AppLocalizations {
   String get grandPrixMap => 'গ্র্যান্ড প্রিক্স মানচিত্র';
 
   @override
-  String get grandPrixNotifications => 'Grand-Prix sessions notifications';
+  String get grandPrixNotifications => 'গ্র্যান্ড-প্রিক্স সেশনের নোটিফিকেশন';
 
   @override
-  String get grandPrixNotificationsSub => 'You need to go to the schedule screen in order to initialize notifications of the next Grand-Prix.';
+  String get grandPrixNotificationsSub => 'পরবর্তী গ্র্যান্ড-প্রিক্সের নোটিফিকেশন্স শুরু করার জন্য আপনাকে সময়সূচী স্ক্রিনে যেতে হবে।';
 
   @override
   String get hallOfFame => 'হল অফ ফেম';
@@ -360,19 +363,19 @@ class AppLocalizationsBn extends AppLocalizations {
   String get nothingHere => 'দেখানোর কিছু নেই\nএখানে।';
 
   @override
-  String get notifications => 'Notifications';
+  String get notifications => 'নোটিফিকেশন্স';
 
   @override
-  String get notifications2hours => '2 hours';
+  String get notifications2hours => '২ ঘন্টা';
 
   @override
-  String get notifications6hours => '6 hours';
+  String get notifications6hours => '৬ ঘন্টা';
 
   @override
-  String get notifications12hours => '12 hours';
+  String get notifications12hours => '১২ ঘন্টা';
 
   @override
-  String get notifications24hours => '24 hours';
+  String get notifications24hours => '২৪ ঘন্টা';
 
   @override
   String get numberOfLaps => 'ল্যাপের সংখ্যা';
@@ -384,10 +387,10 @@ class AppLocalizationsBn extends AppLocalizations {
   String get offline => 'অফলাইন। তথ্য নতুন নাও হতে পারে।';
 
   @override
-  String get offtrack => 'You went off-track!';
+  String get offtrack => 'পথের বাইরে চলে গেছেন !';
 
   @override
-  String get offtrackSub => 'Back on track';
+  String get offtrackSub => 'আবার সঠিক পথে';
 
   @override
   String get openInBrowser => 'ওয়েব ব্রাউজারে খুলুন';
@@ -483,13 +486,13 @@ class AppLocalizationsBn extends AppLocalizations {
   String get refreshChampionshipDataSub => 'একটি নতুন সিজনের আগে চ্যাম্পিয়নশিপ ডেটা রিফ্রেশ করুন।';
 
   @override
-  String get refreshInterval => 'Refresh interval';
+  String get refreshInterval => 'রিফ্রেশ বিরতি';
 
   @override
   String get requestError => 'ডেটা আনা যায়নি।';
 
   @override
-  String get requiredNetworkConnection => 'Required network connection';
+  String get requiredNetworkConnection => 'নেটওয়ার্ক সংযোগ প্রয়োজনীয়';
 
   @override
   String get results => 'ফলাফল';
@@ -591,16 +594,16 @@ class AppLocalizationsBn extends AppLocalizations {
   String get unavailableOffline => 'অফলাইনে পাওয়া যাচ্ছে না';
 
   @override
-  String get updateApiKey => 'Update API Key';
+  String get updateApiKey => 'এপিআই কী আপডেট করুন';
 
   @override
-  String get updateApiKeySub => 'Update the API key of the official website.\nUpdate this only if you now what you are doing.';
+  String get updateApiKeySub => 'অফিসিয়াল ওয়েবসাইটের এপিআই কী আপডেট করুন।\nআপডেট করুন যদি আপনি জানেন কি করছেন।';
 
   @override
   String get updates => 'নতুন ভার্সন';
 
   @override
-  String get useOfficialWebview => 'লাইভ সেশনের জন্য অফিসিয়াল ওয়েবভিউ ব্যবহার করুন';
+  String get useOfficialWebview => 'লাইভ সেশনের জন্য অফিসিয়াল ওয়েবভিউ ব্যবহার করুন f1-dash.com এর পরিবর্তে';
 
   @override
   String get victory => 'বিজয়';
@@ -624,10 +627,10 @@ class AppLocalizationsBn extends AppLocalizations {
   String get watchHighlightsOnYoutube => 'YouTube এ হাইলাইট দেখুন';
 
   @override
-  String get watchOnYouTube => 'Watch on YouTube';
+  String get watchOnYouTube => 'ইউটিউবে দেখুন';
 
   @override
-  String get wifi => 'Wi-Fi';
+  String get wifi => 'ওয়াইফাই';
 
   @override
   String get worldChampionships => 'বিশ্ব চ্যাম্পিয়নশিপ';

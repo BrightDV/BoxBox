@@ -57,6 +57,8 @@
   "@country": {},
   "crashError": "Error:",
   "@crashError": {},
+  "customErgastUrl": "Ergast Custom URL",
+  "@customErgastUrl": {},
   "customFeed": "Custom feed",
   "@customFeed": {},
   "customHomeFeed": "Custom home feed",

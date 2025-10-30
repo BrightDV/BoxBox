@@ -96,6 +96,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get crashError => 'Erreur :';
 
   @override
+  String get customErgastUrl => 'Ergast URL personnalisée';
+
+  @override
   String get customFeed => 'Flux personnalisé';
 
   @override

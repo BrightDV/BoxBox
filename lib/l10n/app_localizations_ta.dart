@@ -96,6 +96,9 @@ class AppLocalizationsTa extends AppLocalizations {
   String get crashError => 'பிழை:';
 
   @override
+  String get customErgastUrl => 'Ergast Custom URL';
+
+  @override
   String get customFeed => 'தனிப்பயன் ஊட்டம்';
 
   @override
