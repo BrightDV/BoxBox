@@ -123,12 +123,11 @@ class _MainBottomNavigationBarState extends State<MainBottomNavigationBar> {
       ),
       drawer: MainDrawer(_homeSetState),
       drawerEdgeDragWidth: MediaQuery.of(context).size.width / 4,
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        currentIndex: _selectedIndex,
+      bottomNavigationBar: NavigationBar(
+        selectedIndex: _selectedIndex,
         elevation: 10.0,
-        items: UIProvider().getBottomNavigationBarButtons(context),
-        onTap: _onItemTapped,
+        destinations: UIProvider().getBottomNavigationBarButtons(context),
+        onDestinationSelected: _onItemTapped,
       ),
       body: screens.elementAt(_selectedIndex),
     );

@@ -39,197 +39,195 @@ class MainDrawer extends StatelessWidget {
     String championship = Hive.box('settings')
         .get('championship', defaultValue: 'Formula 1') as String;
 
-    return Drawer(
-      child: Column(
-        children: [
-          DrawerHeader(
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.onPrimary,
+    return NavigationDrawer(
+      children: [
+        DrawerHeader(
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.onPrimary,
+          ),
+          child: const Center(
+            child: Text(
+              'Box, Box!',
+              style: TextStyle(
+                fontSize: 28,
+                fontWeight: FontWeight.w700,
+              ),
             ),
-            child: const Center(
-              child: Text(
-                'Box, Box!',
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.w700,
+          ),
+        ),
+        championship == 'Formula 1'
+            ? ListTile(
+                title: Text(
+                  'Formula You',
                 ),
-              ),
-            ),
-          ),
-          championship == 'Formula 1'
-              ? ListTile(
-                  title: Text(
-                    'Formula You',
-                  ),
-                  leading: Icon(
-                    Icons.account_circle_outlined,
-                  ),
-                  onTap: () {
-                    context.pop();
-                    context.pushNamed('formula-you');
-                  },
-                )
-              : Container(),
-          ListTile(
-            title: Text(
-              AppLocalizations.of(context)!.newsMix,
-            ),
-            leading: Icon(
-              Icons.dynamic_feed_outlined,
-            ),
-            onTap: () {
-              context.pop();
-              context.pushNamed('mixed-news');
-            },
-          ),
-          championship == 'Formula 1'
-              ? ListTile(
-                  title: Text(
-                    AppLocalizations.of(context)!.hallOfFame,
-                  ),
-                  leading: Icon(
-                    Icons.emoji_events_outlined,
-                  ),
-                  onTap: () {
-                    context.pop();
-                    context.pushNamed('hall-of-fame');
-                  },
-                )
-              : Container(),
-          ListTile(
-            title: Text(
-              AppLocalizations.of(context)!.history,
-            ),
-            leading: Icon(
-              Icons.history_outlined,
-            ),
-            onTap: () {
-              context.pop();
-              context.pushNamed('history');
-            },
-          ),
-          !kIsWeb
-              ? ListTile(
-                  title: Text(
-                    AppLocalizations.of(context)!.downloads,
-                  ),
-                  leading: Icon(
-                    Icons.save_alt_rounded,
-                  ),
-                  onTap: () {
-                    context.pop();
-                    context.pushNamed('downloads');
-                  },
-                )
-              : Container(),
-          Divider(
-            indent: 15,
-            endIndent: 15,
-          ),
-          ListTile(
-            title: Text(
-              AppLocalizations.of(context)!.settings,
-            ),
-            leading: Icon(
-              Icons.settings_outlined,
-            ),
-            onTap: () {
-              context.pop();
-              context.pushNamed(
-                'settings',
-                extra: {
-                  'update': homeSetState,
+                leading: Icon(
+                  Icons.account_circle_outlined,
+                ),
+                onTap: () {
+                  context.pop();
+                  context.pushNamed('formula-you');
                 },
-              );
-            },
+              )
+            : Container(),
+        ListTile(
+          title: Text(
+            AppLocalizations.of(context)!.newsMix,
           ),
-          ListTile(
-            title: Text(
-              AppLocalizations.of(context)!.about,
-            ),
-            leading: Icon(
-              Icons.info_outlined,
-            ),
-            onTap: () {
-              context.pop();
-              context.pushNamed('about');
-            },
+          leading: Icon(
+            Icons.dynamic_feed_outlined,
           ),
-          enableExperimentalFeatures
-              ? ListTile(
-                  title: Text(
-                    'Live Timing Feed',
-                  ),
-                  leading: Icon(
-                    Icons.settings_outlined,
-                  ),
-                  onTap: () {
-                    Navigator.of(context).pop();
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const ArchiveRacesListScreen(),
+          onTap: () {
+            context.pop();
+            context.pushNamed('mixed-news');
+          },
+        ),
+        championship == 'Formula 1'
+            ? ListTile(
+                title: Text(
+                  AppLocalizations.of(context)!.hallOfFame,
+                ),
+                leading: Icon(
+                  Icons.emoji_events_outlined,
+                ),
+                onTap: () {
+                  context.pop();
+                  context.pushNamed('hall-of-fame');
+                },
+              )
+            : Container(),
+        ListTile(
+          title: Text(
+            AppLocalizations.of(context)!.history,
+          ),
+          leading: Icon(
+            Icons.history_outlined,
+          ),
+          onTap: () {
+            context.pop();
+            context.pushNamed('history');
+          },
+        ),
+        !kIsWeb
+            ? ListTile(
+                title: Text(
+                  AppLocalizations.of(context)!.downloads,
+                ),
+                leading: Icon(
+                  Icons.save_alt_rounded,
+                ),
+                onTap: () {
+                  context.pop();
+                  context.pushNamed('downloads');
+                },
+              )
+            : Container(),
+        Divider(
+          indent: 15,
+          endIndent: 15,
+        ),
+        ListTile(
+          title: Text(
+            AppLocalizations.of(context)!.settings,
+          ),
+          leading: Icon(
+            Icons.settings_outlined,
+          ),
+          onTap: () {
+            context.pop();
+            context.pushNamed(
+              'settings',
+              extra: {
+                'update': homeSetState,
+              },
+            );
+          },
+        ),
+        ListTile(
+          title: Text(
+            AppLocalizations.of(context)!.about,
+          ),
+          leading: Icon(
+            Icons.info_outlined,
+          ),
+          onTap: () {
+            context.pop();
+            context.pushNamed('about');
+          },
+        ),
+        enableExperimentalFeatures
+            ? ListTile(
+                title: Text(
+                  'Live Timing Feed',
+                ),
+                leading: Icon(
+                  Icons.settings_outlined,
+                ),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const ArchiveRacesListScreen(),
+                    ),
+                  );
+                },
+              )
+            : Container(),
+        enableExperimentalFeatures
+            ? ListTile(
+                title: Text(
+                  'Article Test Screen',
+                ),
+                leading: Icon(
+                  Icons.settings_outlined,
+                ),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const TestScreen(),
+                    ),
+                  );
+                },
+              )
+            : Container(),
+        enableExperimentalFeatures
+            ? ListTile(
+                title: Text(
+                  'Compare',
+                ),
+                leading: Icon(
+                  Icons.compare_arrows_outlined,
+                ),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const CompareHomeScreen(),
+                    ),
+                  );
+                },
+              )
+            : Container(),
+        Expanded(
+          child: Align(
+            alignment: Alignment.bottomCenter,
+            child: FutureBuilder<PackageInfo>(
+              future: PackageInfo.fromPlatform(),
+              builder: (context, snapshot) => snapshot.hasData
+                  ? Padding(
+                      padding: const EdgeInsets.only(bottom: 10),
+                      child: Text(
+                        snapshot.data!.version,
                       ),
-                    );
-                  },
-                )
-              : Container(),
-          enableExperimentalFeatures
-              ? ListTile(
-                  title: Text(
-                    'Article Test Screen',
-                  ),
-                  leading: Icon(
-                    Icons.settings_outlined,
-                  ),
-                  onTap: () {
-                    Navigator.of(context).pop();
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const TestScreen(),
-                      ),
-                    );
-                  },
-                )
-              : Container(),
-          enableExperimentalFeatures
-              ? ListTile(
-                  title: Text(
-                    'Compare',
-                  ),
-                  leading: Icon(
-                    Icons.compare_arrows_outlined,
-                  ),
-                  onTap: () {
-                    Navigator.of(context).pop();
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const CompareHomeScreen(),
-                      ),
-                    );
-                  },
-                )
-              : Container(),
-          Expanded(
-            child: Align(
-              alignment: Alignment.bottomCenter,
-              child: FutureBuilder<PackageInfo>(
-                future: PackageInfo.fromPlatform(),
-                builder: (context, snapshot) => snapshot.hasData
-                    ? Padding(
-                        padding: const EdgeInsets.only(bottom: 10),
-                        child: Text(
-                          snapshot.data!.version,
-                        ),
-                      )
-                    : const Text(''),
-              ),
+                    )
+                  : const Text(''),
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

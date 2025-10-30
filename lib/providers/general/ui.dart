@@ -198,7 +198,7 @@ class UIProvider {
     }
   }
 
-  List<BottomNavigationBarItem> getBottomNavigationBarButtons(
+  List<NavigationDestination> getBottomNavigationBarButtons(
     BuildContext context,
   ) {
     String championship = Hive.box('settings')
@@ -209,71 +209,71 @@ class UIProvider {
         championship == 'Formula 3' ||
         championship == 'F1 Academy') {
       return [
-        BottomNavigationBarItem(
+        NavigationDestination(
           icon: const Icon(
             Icons.feed_outlined,
           ),
-          activeIcon: const Icon(
+          selectedIcon: const Icon(
             Icons.feed,
           ),
-          label: AppLocalizations.of(context)?.news,
+          label: AppLocalizations.of(context)!.news,
         ),
-        BottomNavigationBarItem(
+        NavigationDestination(
           icon: const Icon(
             Icons.play_circle_outline,
           ),
-          activeIcon: const Icon(
+          selectedIcon: const Icon(
             Icons.play_circle,
           ),
-          label: AppLocalizations.of(context)?.videos,
+          label: AppLocalizations.of(context)!.videos,
         ),
-        BottomNavigationBarItem(
+        NavigationDestination(
           icon: const Icon(
             Icons.emoji_events_outlined,
           ),
-          activeIcon: const Icon(
+          selectedIcon: const Icon(
             Icons.emoji_events,
           ),
-          label: AppLocalizations.of(context)?.standings,
+          label: AppLocalizations.of(context)!.standings,
         ),
-        BottomNavigationBarItem(
+        NavigationDestination(
           icon: const Icon(
             Icons.calendar_today_outlined,
           ),
-          activeIcon: const Icon(
+          selectedIcon: const Icon(
             Icons.calendar_today,
           ),
-          label: AppLocalizations.of(context)?.schedule,
+          label: AppLocalizations.of(context)!.schedule,
         ),
       ];
     } else {
       return [
-        BottomNavigationBarItem(
+        NavigationDestination(
           icon: const Icon(
             Icons.feed_outlined,
           ),
-          activeIcon: const Icon(
+          selectedIcon: const Icon(
             Icons.feed,
           ),
-          label: AppLocalizations.of(context)?.news,
+          label: AppLocalizations.of(context)!.news,
         ),
-        BottomNavigationBarItem(
+        NavigationDestination(
           icon: const Icon(
             Icons.emoji_events_outlined,
           ),
-          activeIcon: const Icon(
+          selectedIcon: const Icon(
             Icons.emoji_events,
           ),
-          label: AppLocalizations.of(context)?.standings,
+          label: AppLocalizations.of(context)!.standings,
         ),
-        BottomNavigationBarItem(
+        NavigationDestination(
           icon: const Icon(
             Icons.calendar_today_outlined,
           ),
-          activeIcon: const Icon(
+          selectedIcon: const Icon(
             Icons.calendar_today,
           ),
-          label: AppLocalizations.of(context)?.schedule,
+          label: AppLocalizations.of(context)!.schedule,
         ),
       ];
     }
