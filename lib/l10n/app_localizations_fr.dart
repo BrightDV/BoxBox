@@ -96,7 +96,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get crashError => 'Erreur :';
 
   @override
-  String get customErgastUrl => 'Ergast URL personnalisée';
+  String get customErgastUrl => 'URL Ergast personnalisée';
 
   @override
   String get customFeed => 'Flux personnalisé';
@@ -399,7 +399,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get openLiveBlog => 'Ouvrir le blog en direct';
 
   @override
-  String get openQuiz => 'Ouvrir le quiz';
+  String get openPoll => 'Répondre au sondage';
+
+  @override
+  String get openQuiz => 'Jouer au quiz';
 
   @override
   String get openingWithInAppBrowser => 'Ouverture dans le navigateur intégré';
@@ -493,6 +496,9 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get requiredNetworkConnection => 'Connexion réseau nécessaire';
+
+  @override
+  String get reset => 'Réinitialiser';
 
   @override
   String get results => 'Résultats';

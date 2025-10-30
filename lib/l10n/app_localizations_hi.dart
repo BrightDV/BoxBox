@@ -399,6 +399,9 @@ class AppLocalizationsHi extends AppLocalizations {
   String get openLiveBlog => 'लाइव ब्लॉग खोलें';
 
   @override
+  String get openPoll => 'Take the survey';
+
+  @override
   String get openQuiz => 'प्रश्नोत्तरी खोलें';
 
   @override
@@ -493,6 +496,9 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get requiredNetworkConnection => 'Required network connection';
+
+  @override
+  String get reset => 'Reset';
 
   @override
   String get results => 'परिणाम';

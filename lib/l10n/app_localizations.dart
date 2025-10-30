@@ -922,10 +922,16 @@ abstract class AppLocalizations {
   /// **'Open live blog'**
   String get openLiveBlog;
 
+  /// No description provided for @openPoll.
+  ///
+  /// In en, this message translates to:
+  /// **'Take the survey'**
+  String get openPoll;
+
   /// No description provided for @openQuiz.
   ///
   /// In en, this message translates to:
-  /// **'Open quiz'**
+  /// **'Take the quiz'**
   String get openQuiz;
 
   /// No description provided for @openingWithInAppBrowser.
@@ -1113,6 +1119,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Required network connection'**
   String get requiredNetworkConnection;
+
+  /// No description provided for @reset.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset'**
+  String get reset;
 
   /// No description provided for @results.
   ///

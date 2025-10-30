@@ -399,6 +399,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get openLiveBlog => '打开日志';
 
   @override
+  String get openPoll => 'Take the survey';
+
+  @override
   String get openQuiz => '打开测试';
 
   @override
@@ -493,6 +496,9 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get requiredNetworkConnection => '所需的网络连接';
+
+  @override
+  String get reset => 'Reset';
 
   @override
   String get results => '赛季成绩';

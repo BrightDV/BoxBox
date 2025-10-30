@@ -98,85 +98,112 @@ class _ChampionshipScreenState extends State<ChampionshipScreen> {
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      IconButton(
-                        onPressed: () async {
-                          final TextEditingController controller =
-                              TextEditingController();
-                          await showCustomBottomSheet(
-                            context,
-                            SizedBox(
-                              child: Padding(
-                                padding: EdgeInsets.fromLTRB(
-                                  30,
-                                  15,
-                                  30,
-                                  MediaQuery.of(context).viewInsets.bottom,
-                                ),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.only(bottom: 20),
-                                      child: Text(
-                                        AppLocalizations.of(context)!
-                                            .customErgastUrl,
-                                        style: TextStyle(fontSize: 20),
-                                      ),
-                                    ),
-                                    TextField(
-                                      controller: controller,
-                                      decoration: InputDecoration(
-                                        border: OutlineInputBorder(),
-                                        hintText: ergastUrl,
-                                        hintStyle: TextStyle(
-                                          fontWeight: FontWeight.w100,
+                      Padding(
+                        padding: EdgeInsets.only(right: 5),
+                        child: IconButton(
+                          onPressed: () async {
+                            final TextEditingController controller =
+                                TextEditingController();
+                            await showCustomBottomSheet(
+                              context,
+                              SizedBox(
+                                child: Padding(
+                                  padding: EdgeInsets.fromLTRB(
+                                    30,
+                                    15,
+                                    30,
+                                    MediaQuery.of(context).viewInsets.bottom,
+                                  ),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsets.only(bottom: 20),
+                                        child: Text(
+                                          AppLocalizations.of(context)!
+                                              .customErgastUrl,
+                                          style: TextStyle(fontSize: 20),
                                         ),
                                       ),
-                                    ),
-                                    Padding(
-                                      padding:
-                                          EdgeInsets.only(top: 20, bottom: 7),
-                                      child: Container(
-                                        width: double.infinity,
-                                        height: 50,
-                                        child: FilledButton.tonal(
-                                          onPressed: () {
-                                            Hive.box('settings').put(
-                                              'ergastUrl',
-                                              controller.text,
-                                            );
-                                            Navigator.of(context).pop();
-                                            setState(() {});
-                                          },
-                                          child: Text(
-                                            AppLocalizations.of(context)!.save,
+                                      TextField(
+                                        controller: controller,
+                                        decoration: InputDecoration(
+                                          border: OutlineInputBorder(),
+                                          hintText: ergastUrl,
+                                          hintStyle: TextStyle(
+                                            fontWeight: FontWeight.w100,
                                           ),
                                         ),
                                       ),
-                                    ),
-                                    Padding(
-                                      padding:
-                                          EdgeInsets.only(top: 7, bottom: 20),
-                                      child: Container(
-                                        width: double.infinity,
-                                        height: 50,
-                                        child: OutlinedButton(
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                          child: Text(
-                                            AppLocalizations.of(context)!.close,
+                                      Padding(
+                                        padding:
+                                            EdgeInsets.only(top: 20, bottom: 7),
+                                        child: Container(
+                                          width: double.infinity,
+                                          height: 50,
+                                          child: FilledButton.tonal(
+                                            onPressed: () {
+                                              Hive.box('settings').put(
+                                                'ergastUrl',
+                                                controller.text,
+                                              );
+                                              Navigator.of(context).pop();
+                                              setState(() {});
+                                            },
+                                            child: Text(
+                                              AppLocalizations.of(context)!
+                                                  .save,
+                                            ),
                                           ),
                                         ),
                                       ),
-                                    ),
-                                  ],
+                                      Padding(
+                                        padding:
+                                            EdgeInsets.only(top: 7, bottom: 7),
+                                        child: Container(
+                                          width: double.infinity,
+                                          height: 50,
+                                          child: OutlinedButton(
+                                            onPressed: () {
+                                              Hive.box('settings').put(
+                                                'ergastUrl',
+                                                Constants().ERGAST_API_URL,
+                                              );
+                                              Navigator.of(context).pop();
+                                              setState(() {});
+                                            },
+                                            child: Text(
+                                              AppLocalizations.of(context)!
+                                                  .reset,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding:
+                                            EdgeInsets.only(top: 7, bottom: 20),
+                                        child: Container(
+                                          width: double.infinity,
+                                          height: 50,
+                                          child: OutlinedButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: Text(
+                                              AppLocalizations.of(context)!
+                                                  .close,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
-                            ),
-                          );
-                        },
-                        icon: Icon(Icons.settings_outlined),
+                            );
+                          },
+                          icon: Icon(Icons.settings_outlined),
+                        ),
                       ),
                       Radio(
                         value: false,

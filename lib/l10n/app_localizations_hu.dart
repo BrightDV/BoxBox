@@ -399,6 +399,9 @@ class AppLocalizationsHu extends AppLocalizations {
   String get openLiveBlog => 'Nyissa meg az élő blogot';
 
   @override
+  String get openPoll => 'Take the survey';
+
+  @override
   String get openQuiz => 'Nyílt kvíz';
 
   @override
@@ -493,6 +496,9 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get requiredNetworkConnection => 'Required network connection';
+
+  @override
+  String get reset => 'Reset';
 
   @override
   String get results => 'Eredmények';

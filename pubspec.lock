@@ -502,14 +502,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "14.8.1"
-  hidable:
-    dependency: "direct main"
-    description:
-      name: hidable
-      sha256: "72ffcc3dbaa736f072b3530711088e9da5acfda02df275287c76f88ae81877b4"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.6"
   hive:
     dependency: "direct main"
     description:

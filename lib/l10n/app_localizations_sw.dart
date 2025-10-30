@@ -399,6 +399,9 @@ class AppLocalizationsSw extends AppLocalizations {
   String get openLiveBlog => 'Fungua blogi ya moja kwa moja';
 
   @override
+  String get openPoll => 'Take the survey';
+
+  @override
   String get openQuiz => 'Fungua Maswali';
 
   @override
@@ -493,6 +496,9 @@ class AppLocalizationsSw extends AppLocalizations {
 
   @override
   String get requiredNetworkConnection => 'Required network connection';
+
+  @override
+  String get reset => 'Reset';
 
   @override
   String get results => 'Matokeo';

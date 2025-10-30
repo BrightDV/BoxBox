@@ -183,16 +183,24 @@ class AtomInteractiveExperience extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BoxBoxButton(
-      AppLocalizations.of(context)!.openLiveBlog,
+      element['fields']['experienceType'] == 'Quiz'
+          ? AppLocalizations.of(context)!.openQuiz
+          : element['fields']['experienceType'] == 'Poll'
+              ? AppLocalizations.of(context)!.openPoll
+              : AppLocalizations.of(context)!.openLiveBlog,
       SizedBox(
         width: 24.0,
         height: 24.0,
-        child: LoadingIndicator(
-          indicatorType: Indicator.ballScaleMultiple,
-          colors: [
-            Theme.of(context).colorScheme.onPrimary,
-          ],
-        ),
+        child: element['fields']['experienceType'] == 'Quiz'
+            ? Icon(Icons.quiz_outlined)
+            : element['fields']['experienceType'] == 'Poll'
+                ? Icon(Icons.poll_outlined)
+                : LoadingIndicator(
+                    indicatorType: Indicator.ballScaleMultiple,
+                    colors: [
+                      Theme.of(context).colorScheme.onPrimary,
+                    ],
+                  ),
       ),
       isRoute: false,
       widget: Scaffold(

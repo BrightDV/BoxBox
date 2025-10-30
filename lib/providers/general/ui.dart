@@ -18,6 +18,7 @@
  */
 
 import 'package:boxbox/Screens/search.dart';
+import 'package:boxbox/helpers/bottom_sheet.dart';
 import 'package:boxbox/helpers/news_feed_widget.dart';
 import 'package:boxbox/l10n/app_localizations.dart';
 import 'package:flutter/foundation.dart';
@@ -28,8 +29,6 @@ class UIProvider {
   List<Widget> getNewsAppBarActions(BuildContext context) {
     String championship = Hive.box('settings')
         .get('championship', defaultValue: 'Formula 1') as String;
-    bool useDarkMode =
-        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
 
     if (championship == 'Formula 1') {
       return [
@@ -38,7 +37,7 @@ class UIProvider {
                 icon: Icon(
                   Icons.search,
                 ),
-                tooltip: 'Search',
+                tooltip: AppLocalizations.of(context)!.search,
                 onPressed: () => Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -51,7 +50,7 @@ class UIProvider {
           icon: Icon(
             Icons.sort_outlined,
           ),
-          tooltip: 'Filter',
+          tooltip: AppLocalizations.of(context)!.filter,
           onPressed: () {
             List<String> filterItems = [
               'Feature',
@@ -68,30 +67,24 @@ class UIProvider {
             int pressed = 0;
             bool selected = false;
 
-            showDialog(
-              context: context,
-              builder: (context) => StatefulBuilder(
-                builder: (context, setState) => AlertDialog(
-                  title: Text(
-                    AppLocalizations.of(context)!.filter,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.w500,
-                    ),
+            showCustomBottomSheet(
+              context,
+              StatefulBuilder(
+                builder: (context, setState) => Padding(
+                  padding: EdgeInsets.fromLTRB(
+                    30,
+                    15,
+                    30,
+                    MediaQuery.of(context).viewInsets.bottom,
                   ),
-                  content: Column(
+                  child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.all(5),
+                        padding: EdgeInsets.only(bottom: 20),
                         child: Text(
                           AppLocalizations.of(context)!.topics,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w500,
-                          ),
+                          style: TextStyle(fontSize: 20),
                         ),
                       ),
                       Wrap(
@@ -135,7 +128,9 @@ class UIProvider {
                                                 pressed ==
                                                     filterItems
                                                         .indexOf(filterItem)
-                                            ? Colors.white
+                                            ? Theme.of(context)
+                                                .colorScheme
+                                                .onPrimary
                                             : Theme.of(context)
                                                 .colorScheme
                                                 .primary,
@@ -147,46 +142,56 @@ class UIProvider {
                             ),
                         ],
                       ),
-                    ],
-                  ),
-                  actions: [
-                    TextButton(
-                      onPressed: () => Navigator.of(context).pop(0),
-                      child: Text(
-                        AppLocalizations.of(context)!.close,
-                        style: TextStyle(
-                          color: useDarkMode ? Colors.white : Colors.black,
-                        ),
-                      ),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.of(context).pop(0);
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => Scaffold(
-                              appBar: AppBar(
-                                title: Text(
-                                  filterItems[pressed],
+                      Padding(
+                        padding: EdgeInsets.only(top: 20, bottom: 7),
+                        child: Container(
+                          width: double.infinity,
+                          height: 50,
+                          child: FilledButton.tonal(
+                            onPressed: () {
+                              Navigator.of(context).pop(0);
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => Scaffold(
+                                    appBar: AppBar(
+                                      title: Text(
+                                        filterItems[pressed],
+                                      ),
+                                      backgroundColor: Theme.of(context)
+                                          .colorScheme
+                                          .onPrimary,
+                                    ),
+                                    body: NewsFeed(
+                                      articleType: filterItems[pressed],
+                                    ),
+                                  ),
                                 ),
-                                backgroundColor:
-                                    Theme.of(context).colorScheme.onPrimary,
-                              ),
-                              body: NewsFeed(
-                                articleType: filterItems[pressed],
-                              ),
+                              );
+                            },
+                            child: Text(
+                              AppLocalizations.of(context)!.apply,
                             ),
                           ),
-                        );
-                      },
-                      child: Text(
-                        AppLocalizations.of(context)!.apply,
+                        ),
                       ),
-                    ),
-                  ],
-                  actionsAlignment: MainAxisAlignment.center,
-                  elevation: 15.0,
+                      Padding(
+                        padding: EdgeInsets.only(top: 7, bottom: 20),
+                        child: Container(
+                          width: double.infinity,
+                          height: 50,
+                          child: OutlinedButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text(
+                              AppLocalizations.of(context)!.close,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             );

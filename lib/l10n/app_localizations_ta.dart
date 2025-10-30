@@ -399,6 +399,9 @@ class AppLocalizationsTa extends AppLocalizations {
   String get openLiveBlog => 'திறந்த நேரடி வலைப்பதிவைத் திறக்கவும்';
 
   @override
+  String get openPoll => 'Take the survey';
+
+  @override
   String get openQuiz => 'திறந்த நொடி வினா';
 
   @override
@@ -493,6 +496,9 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String get requiredNetworkConnection => 'Required network connection';
+
+  @override
+  String get reset => 'Reset';
 
   @override
   String get results => 'முடிவுகள்';
