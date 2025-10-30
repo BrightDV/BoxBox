@@ -172,30 +172,41 @@ class FormulaSeries {
     List<Driver> drivers = [];
     List finalJson = responseAsJson['Standings'];
     for (var element in finalJson) {
-      String lastName = element['DisplayName'].split('.')[1].substring(1);
-      String firstName = element['FullName'].substring(
-        0,
-        element['FullName'].indexOf(lastName) - 1,
-      );
-      String formatedCarNumber = element['CarNumber'].toString();
-      if (formatedCarNumber.length == 1) {
-        formatedCarNumber = '0' + formatedCarNumber;
+      if (!element['DisplayName'].contains('WCD')) {
+        String lastName = element['DisplayName'].split('.')[1].substring(1);
+        String firstName = element['FullName'].substring(
+          0,
+          element['FullName'].indexOf(lastName) - 1,
+        );
+        String formatedCarNumber = element['CarNumber'].toString();
+        if (formatedCarNumber.length == 1) {
+          formatedCarNumber = '0' + formatedCarNumber;
+        }
+        String driverImage;
+        if (championshipId == 'f2') {
+          driverImage =
+              'https://res.cloudinary.com/prod-f2f3/c_fill,dpr_1.0,f_auto,g_auto,h_65,w_100/v1/$championshipId/global/drivers/${DateTime.now().year}/Official/${formatedCarNumber}_${lastName}';
+        } else if (championshipId == 'fa') {
+          driverImage =
+              'https://res.cloudinary.com/prod-f2f3/image/upload/v1741276107/FA/Global/drivers/${DateTime.now().year}/Cutouts/${firstName}_Cutout.png';
+        } else {
+          driverImage = driverImage =
+              'https://res.cloudinary.com/prod-f2f3/c_fill,dpr_1.0,f_auto,g_auto,h_65,w_100/v1/$championshipId/global/drivers/${DateTime.now().year}/${DateTime.now().year} Driver profiles/${formatedCarNumber}_${lastName}';
+        }
+        drivers.add(
+          Driver(
+            element['DriverID'].toString(),
+            element['Position'].toString(),
+            element['CarNumber'].toString(),
+            firstName,
+            lastName,
+            element['TLA'],
+            element['TeamName'],
+            (element['TotalPoints'] ?? 0).toString(),
+            driverImage: driverImage,
+          ),
+        );
       }
-      String driverImage =
-          'https://res.cloudinary.com/prod-f2f3/c_fill,dpr_1.0,f_auto,g_auto,h_65,w_100/v1/$championshipId/global/drivers/2025/Official/${formatedCarNumber}_${lastName}';
-      drivers.add(
-        Driver(
-          element['DriverID'].toString(),
-          element['Position'].toString(),
-          element['CarNumber'].toString(),
-          firstName,
-          lastName,
-          element['TLA'],
-          element['TeamName'],
-          (element['TotalPoints'] ?? 0).toString(),
-          driverImage: driverImage,
-        ),
-      );
     }
     return drivers;
   }
