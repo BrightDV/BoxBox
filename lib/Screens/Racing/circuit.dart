@@ -22,6 +22,7 @@ import 'package:boxbox/classes/article.dart';
 import 'package:boxbox/classes/driver.dart';
 import 'package:boxbox/classes/event_tracker.dart';
 import 'package:boxbox/classes/race.dart';
+import 'package:boxbox/helpers/bottom_sheet.dart';
 import 'package:boxbox/helpers/buttons.dart';
 import 'package:boxbox/helpers/divider.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
@@ -354,75 +355,74 @@ class SessionItemForCircuit extends StatelessWidget {
                     ? IconButton(
                         icon: Icon(Icons.link_outlined),
                         iconSize: 25,
-                        onPressed: () async => await showModalBottomSheet(
-                          context: context,
-                          isScrollControlled: true,
-                          builder: (context) => BottomSheet(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                            ),
-                            onClosing: () {},
-                            builder: (context) {
-                              return SizedBox(
-                                child: ListView.builder(
-                                  shrinkWrap: true,
-                                  itemCount: links!.length + 1,
-                                  itemBuilder: (context, index) => index == 0
-                                      ? Padding(
-                                          padding: EdgeInsets.only(top: 5),
-                                          child: ListTile(
-                                            title: Text(
-                                              AppLocalizations.of(context)!
-                                                  .links,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .headlineMedium,
-                                            ),
-                                          ),
-                                        )
-                                      : ListTile(
+                        onPressed: () async => await showCustomBottomSheet(
+                          context,
+                          SizedBox(
+                            child: Padding(
+                              padding: EdgeInsets.fromLTRB(
+                                30,
+                                15,
+                                30,
+                                MediaQuery.of(context).viewInsets.bottom,
+                              ),
+                              child: ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: links!.length + 1,
+                                itemBuilder: (context, index) => index == 0
+                                    ? Padding(
+                                        padding: EdgeInsets.only(top: 5),
+                                        child: ListTile(
                                           title: Text(
-                                            links![index - 1].text == 'report'
-                                                ? 'Report'
-                                                : links![index - 1].text ==
-                                                        'highlights'
-                                                    ? 'Highlights'
-                                                    : links![index - 1].text ==
-                                                            'lapByLap'
-                                                        ? 'Lap-by-lap'
-                                                        : links![index - 1]
-                                                                .text
-                                                                .contains(
-                                                                    'Grid')
-                                                            ? AppLocalizations
-                                                                    .of(
-                                                                        context)!
-                                                                .startingGrid
-                                                            : links![index - 1]
-                                                                .text,
-                                          ),
-                                          leading: links![index - 1].text ==
-                                                  'report'
-                                              ? Icon(Icons.analytics_outlined)
-                                              : links![index - 1].text ==
-                                                      'highlights'
-                                                  ? Icon(
-                                                      Icons.play_arrow_outlined,
-                                                    )
-                                                  : Icon(
-                                                      Icons.article_outlined,
-                                                    ),
-                                          onTap: () =>
-                                              CircuitUIProvider().linkTapAction(
-                                            links![index - 1].type,
-                                            links![index - 1].url,
-                                            context,
-                                            meetingId,
+                                            AppLocalizations.of(context)!.links,
+                                            style: TextStyle(fontSize: 20),
                                           ),
                                         ),
-                                ),
-                              );
-                            },
+                                      )
+                                    : ListTile(
+                                        title: Text(
+                                          links![index - 1].text == 'report'
+                                              ? 'Report'
+                                              : links![index - 1].text ==
+                                                      'highlights'
+                                                  ? 'Highlights'
+                                                  : links![index - 1].text ==
+                                                          'lapByLap'
+                                                      ? 'Lap-by-lap'
+                                                      : links![index - 1]
+                                                              .text
+                                                              .contains('Grid')
+                                                          ? AppLocalizations.of(
+                                                                  context)!
+                                                              .startingGrid
+                                                          : links![index - 1]
+                                                                      .text ==
+                                                                  'driverOfTheDay'
+                                                              ? 'Driver of the Day'
+                                                              : links![
+                                                                      index - 1]
+                                                                  .text,
+                                        ),
+                                        leading: links![index - 1].text ==
+                                                'report'
+                                            ? Icon(Icons.analytics_outlined)
+                                            : links![index - 1].text ==
+                                                    'highlights'
+                                                ? Icon(
+                                                    Icons.play_arrow_outlined,
+                                                  )
+                                                : Icon(
+                                                    Icons.article_outlined,
+                                                  ),
+                                        onTap: () =>
+                                            CircuitUIProvider().linkTapAction(
+                                          links![index - 1].type,
+                                          links![index - 1].url,
+                                          context,
+                                          meetingId,
+                                        ),
+                                      ),
+                              ),
+                            ),
                           ),
                         ),
                       )

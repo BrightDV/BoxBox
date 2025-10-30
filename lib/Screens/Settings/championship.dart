@@ -109,9 +109,9 @@ class _ChampionshipScreenState extends State<ChampionshipScreen> {
                               SizedBox(
                                 child: Padding(
                                   padding: EdgeInsets.fromLTRB(
-                                    30,
+                                    20,
                                     15,
-                                    30,
+                                    20,
                                     MediaQuery.of(context).viewInsets.bottom,
                                   ),
                                   child: Column(

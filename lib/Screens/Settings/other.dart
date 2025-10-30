@@ -20,6 +20,7 @@
 import 'dart:math' as math;
 
 import 'package:boxbox/api/services/formulae.dart';
+import 'package:boxbox/helpers/bottom_sheet.dart';
 import 'package:boxbox/helpers/constants.dart';
 import 'package:boxbox/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
@@ -112,56 +113,54 @@ class _OtherSettingsScreenState extends State<OtherSettingsScreen> {
               title: Text(
                 AppLocalizations.of(context)!.apiKey,
               ),
-              onTap: () => showDialog(
-                context: context,
-                builder: (context) {
-                  final TextEditingController controller =
-                      TextEditingController();
-                  return StatefulBuilder(
-                    builder: (context, setState) => AlertDialog(
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(
-                            20.0,
-                          ),
-                        ),
+              onTap: () {
+                final TextEditingController controller =
+                    TextEditingController();
+                showCustomBottomSheet(
+                  context,
+                  StatefulBuilder(
+                    builder: (context, setState) => Padding(
+                      padding: EdgeInsets.fromLTRB(
+                        20,
+                        15,
+                        20,
+                        MediaQuery.of(context).viewInsets.bottom,
                       ),
-                      contentPadding: const EdgeInsets.all(
-                        25.0,
-                      ),
-                      title: Text(
-                        AppLocalizations.of(context)!.updateApiKey,
-                        style: TextStyle(
-                          fontSize: 24.0,
-                        ), // here
-                        textAlign: TextAlign.center,
-                      ),
-                      content: Column(
+                      child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
                           Text(
-                            AppLocalizations.of(context)!.updateApiKeySub,
-                            textAlign: TextAlign.justify,
+                            AppLocalizations.of(context)!.updateApiKey,
+                            style: TextStyle(
+                              fontSize: 20.0,
+                            ), // here
+                            textAlign: TextAlign.center,
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(top: 15, bottom: 10),
+                            child: Text(
+                              AppLocalizations.of(context)!.updateApiKeySub,
+                              textAlign: TextAlign.justify,
+                            ),
                           ),
                           TextField(
                             controller: controller,
                             decoration: InputDecoration(
+                              border: OutlineInputBorder(),
                               hintText: AppLocalizations.of(context)!.apiKey,
                               hintStyle: TextStyle(
                                 fontWeight: FontWeight.w100,
                               ),
                             ),
                           ),
-                        ],
-                      ),
-                      actions: <Widget>[
-                        SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            children: [
-                              ElevatedButton(
+                          Padding(
+                            padding: EdgeInsets.only(top: 20, bottom: 7),
+                            child: Container(
+                              width: double.infinity,
+                              height: 50,
+                              child: FilledButton.tonal(
                                 onPressed: () {
                                   Hive.box('settings').put(
                                     'officialApiKey',
@@ -174,23 +173,34 @@ class _OtherSettingsScreenState extends State<OtherSettingsScreen> {
                                   AppLocalizations.of(context)!.save,
                                 ),
                               ),
-                              Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 5),
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    Hive.box('settings').put(
-                                      'officialApiKey',
-                                      Constants().F1_API_KEY,
-                                    );
-                                    Navigator.of(context).pop();
-                                    setState(() {});
-                                  },
-                                  child: Text(
-                                    AppLocalizations.of(context)!.defaultValue,
-                                  ),
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(top: 7, bottom: 7),
+                            child: Container(
+                              width: double.infinity,
+                              height: 50,
+                              child: OutlinedButton(
+                                onPressed: () {
+                                  Hive.box('settings').put(
+                                    'officialApiKey',
+                                    Constants().F1_API_KEY,
+                                  );
+                                  Navigator.of(context).pop();
+                                  setState(() {});
+                                },
+                                child: Text(
+                                  AppLocalizations.of(context)!.reset,
                                 ),
                               ),
-                              ElevatedButton(
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(top: 7, bottom: 20),
+                            child: Container(
+                              width: double.infinity,
+                              height: 50,
+                              child: OutlinedButton(
                                 onPressed: () {
                                   Navigator.of(context).pop();
                                 },
@@ -198,14 +208,14 @@ class _OtherSettingsScreenState extends State<OtherSettingsScreen> {
                                   AppLocalizations.of(context)!.close,
                                 ),
                               ),
-                            ],
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  );
-                },
-              ),
+                  ),
+                );
+              },
               trailing: Icon(
                 Icons.key_outlined,
               ),

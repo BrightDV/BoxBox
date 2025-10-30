@@ -17,6 +17,7 @@
  * Copyright (c) 2022-2025, BrightDV
  */
 
+import 'package:boxbox/helpers/bottom_sheet.dart';
 import 'package:boxbox/helpers/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:boxbox/l10n/app_localizations.dart';
@@ -71,72 +72,82 @@ class _ServerSettingsScreenState extends State<ServerSettingsScreen> {
             ),
             for (var server in customServers)
               GestureDetector(
-                onLongPress: () => showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(
-                              20.0,
-                            ),
-                          ),
-                        ),
-                        contentPadding: const EdgeInsets.all(
-                          50.0,
-                        ),
-                        title: Text(
+                onLongPress: () => showCustomBottomSheet(
+                  context,
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(
+                      20,
+                      15,
+                      20,
+                      MediaQuery.of(context).viewInsets.bottom,
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Text(
                           AppLocalizations.of(context)!.deleteCustomFeed,
                           style: TextStyle(
-                            fontSize: 24.0,
+                            fontSize: 20.0,
                           ), // here
                           textAlign: TextAlign.center,
                         ),
-                        content: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            Text(
-                              AppLocalizations.of(context)!.deleteUrl,
-                            ),
-                          ],
+                        Padding(
+                          padding: EdgeInsets.only(top: 10),
+                          child: Text(
+                            AppLocalizations.of(context)!.deleteUrl,
+                          ),
                         ),
-                        actions: <Widget>[
-                          ElevatedButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: Text(
-                              AppLocalizations.of(context)!.cancel,
-                            ),
-                          ),
-                          ElevatedButton(
-                            onPressed: () {
-                              customServers.remove(server);
-                              Hive.box('settings').put(
-                                'customServers',
-                                customServers,
-                              );
-                              if (server == savedServer) {
+                        Padding(
+                          padding: EdgeInsets.only(top: 20, bottom: 7),
+                          child: Container(
+                            width: double.infinity,
+                            height: 50,
+                            child: FilledButton.tonal(
+                              onPressed: () {
+                                customServers.remove(server);
                                 Hive.box('settings').put(
-                                  'server',
-                                  officialServer,
+                                  'customServers',
+                                  customServers,
                                 );
-                              }
-                              Navigator.of(context).pop();
-                              _setState();
-                              if (widget.updateParent != null) {
-                                widget.updateParent!();
-                              }
-                            },
-                            child: Text(
-                              AppLocalizations.of(context)!.yes,
+                                if (server == savedServer) {
+                                  Hive.box('settings').put(
+                                    'server',
+                                    officialServer,
+                                  );
+                                }
+                                Navigator.of(context).pop();
+                                _setState();
+                                if (widget.updateParent != null) {
+                                  widget.updateParent!();
+                                }
+                              },
+                              child: Text(
+                                AppLocalizations.of(context)!.yes,
+                              ),
                             ),
                           ),
-                        ],
-                      );
-                    }),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 7, bottom: 20),
+                          child: Container(
+                            width: double.infinity,
+                            height: 50,
+                            child: OutlinedButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Text(
+                                AppLocalizations.of(context)!.close,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
                 child: InkWell(
                   child: RadioListTile(
                     value: server,
@@ -162,81 +173,93 @@ class _ServerSettingsScreenState extends State<ServerSettingsScreen> {
               trailing: Icon(
                 Icons.add_outlined,
               ),
-              onTap: () => showDialog(
-                context: context,
-                builder: (context) {
-                  final TextEditingController controller =
-                      TextEditingController();
-                  return StatefulBuilder(
-                    builder: (context, setState) => AlertDialog(
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(
-                            20.0,
-                          ),
-                        ),
-                      ),
-                      contentPadding: const EdgeInsets.all(
-                        25.0,
-                      ),
-                      title: Text(
-                        AppLocalizations.of(context)!.customServer,
-                        style: TextStyle(
-                          fontSize: 24.0,
-                        ), // here
-                        textAlign: TextAlign.center,
-                      ),
-                      content: Column(
+              onTap: () {
+                final TextEditingController controller =
+                    TextEditingController();
+                showCustomBottomSheet(
+                  context,
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(
+                      20,
+                      15,
+                      20,
+                      MediaQuery.of(context).viewInsets.bottom,
+                    ),
+                    child: StatefulBuilder(
+                      builder: (context, setState) => Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
-                          TextField(
-                            controller: controller,
-                            decoration: InputDecoration(
-                              hintText: 'https://example.com',
-                              hintStyle: TextStyle(
-                                fontWeight: FontWeight.w100,
+                          Text(
+                            AppLocalizations.of(context)!.customServer,
+                            style: TextStyle(
+                              fontSize: 20.0,
+                            ), // here
+                            textAlign: TextAlign.center,
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(top: 15),
+                            child: TextField(
+                              controller: controller,
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(),
+                                hintText: 'https://example.com',
+                                hintStyle: TextStyle(
+                                  fontWeight: FontWeight.w100,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(top: 20, bottom: 7),
+                            child: Container(
+                              width: double.infinity,
+                              height: 50,
+                              child: FilledButton.tonal(
+                                onPressed: () {
+                                  Hive.box('settings').put(
+                                    'server',
+                                    controller.text,
+                                  );
+                                  customServers.add(controller.text);
+                                  Hive.box('settings').put(
+                                    'customServers',
+                                    customServers,
+                                  );
+                                  Navigator.of(context).pop();
+                                  _setState();
+                                  if (widget.updateParent != null) {
+                                    widget.updateParent!();
+                                  }
+                                },
+                                child: Text(
+                                  AppLocalizations.of(context)!.save,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(top: 7, bottom: 20),
+                            child: Container(
+                              width: double.infinity,
+                              height: 50,
+                              child: OutlinedButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text(
+                                  AppLocalizations.of(context)!.close,
+                                ),
                               ),
                             ),
                           ),
                         ],
                       ),
-                      actions: <Widget>[
-                        ElevatedButton(
-                          onPressed: () {
-                            Hive.box('settings').put(
-                              'server',
-                              controller.text,
-                            );
-                            customServers.add(controller.text);
-                            Hive.box('settings').put(
-                              'customServers',
-                              customServers,
-                            );
-                            Navigator.of(context).pop();
-                            _setState();
-                            if (widget.updateParent != null) {
-                              widget.updateParent!();
-                            }
-                          },
-                          child: Text(
-                            AppLocalizations.of(context)!.save,
-                          ),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: Text(
-                            AppLocalizations.of(context)!.close,
-                          ),
-                        ),
-                      ],
                     ),
-                  );
-                },
-              ),
+                  ),
+                );
+              },
             ),
           ],
         ),

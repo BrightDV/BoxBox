@@ -72,9 +72,9 @@ class UIProvider {
               StatefulBuilder(
                 builder: (context, setState) => Padding(
                   padding: EdgeInsets.fromLTRB(
-                    30,
+                    20,
                     15,
-                    30,
+                    20,
                     MediaQuery.of(context).viewInsets.bottom,
                   ),
                   child: Column(
