@@ -31,10 +31,6 @@ class EditOrderScreen extends StatefulWidget {
 }
 
 class _EditOrderScreenState extends State<EditOrderScreen> {
-  void update() {
-    setState(() {});
-  }
-
   @override
   Widget build(BuildContext context) {
     List feedsNames = Hive.box('feeds').get(
@@ -200,7 +196,7 @@ class _EditOrderScreenState extends State<EditOrderScreen> {
                                 Hive.box('feeds')
                                     .put('feedsDetails', feedsDetails);
                                 Navigator.of(context).pop();
-                                update();
+                                setState(() {});
                                 if (widget.updateParent != null) {
                                   widget.updateParent!();
                                 }
@@ -266,63 +262,74 @@ class _EditOrderScreenState extends State<EditOrderScreen> {
               padding: EdgeInsets.only(right: 15),
               onPressed: () => showCustomBottomSheet(
                 context,
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Text(
-                      AppLocalizations.of(context)!.deleteCustomFeed,
-                      style: TextStyle(
-                        fontSize: 20.0,
-                      ), // here
-                      textAlign: TextAlign.center,
+                SizedBox(
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(
+                      20,
+                      15,
+                      20,
+                      15,
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 5, bottom: 5),
-                      child: Text(
-                        AppLocalizations.of(context)!.deleteUrl,
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 20, bottom: 7),
-                      child: Container(
-                        width: double.infinity,
-                        height: 50,
-                        child: FilledButton.tonal(
-                          onPressed: () {
-                            feedsDetails.remove(feedsNames[index]);
-                            Hive.box('feeds').put('feedsDetails', feedsDetails);
-                            feedsNames.remove(feedsNames[index]);
-                            Hive.box('feeds').put('feedsNames', feedsNames);
-                            Navigator.of(context).pop();
-                            setState(() {});
-                            if (widget.updateParent != null) {
-                              widget.updateParent!();
-                            }
-                          },
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Text(
+                          AppLocalizations.of(context)!.deleteCustomFeed,
+                          style: TextStyle(
+                            fontSize: 20.0,
+                          ), // here
+                          textAlign: TextAlign.center,
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 5, bottom: 5),
                           child: Text(
-                            AppLocalizations.of(context)!.yes,
+                            AppLocalizations.of(context)!.deleteUrl,
                           ),
                         ),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 7, bottom: 20),
-                      child: Container(
-                        width: double.infinity,
-                        height: 50,
-                        child: OutlinedButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: Text(
-                            AppLocalizations.of(context)!.close,
+                        Padding(
+                          padding: EdgeInsets.only(top: 20, bottom: 7),
+                          child: Container(
+                            width: double.infinity,
+                            height: 50,
+                            child: FilledButton.tonal(
+                              onPressed: () {
+                                feedsDetails.remove(feedsNames[index]);
+                                Hive.box('feeds')
+                                    .put('feedsDetails', feedsDetails);
+                                feedsNames.remove(feedsNames[index]);
+                                Hive.box('feeds').put('feedsNames', feedsNames);
+                                Navigator.of(context).pop();
+                                setState(() {});
+                                if (widget.updateParent != null) {
+                                  widget.updateParent!();
+                                }
+                              },
+                              child: Text(
+                                AppLocalizations.of(context)!.yes,
+                              ),
+                            ),
                           ),
                         ),
-                      ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 7, bottom: 20),
+                          child: Container(
+                            width: double.infinity,
+                            height: 50,
+                            child: OutlinedButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Text(
+                                AppLocalizations.of(context)!.close,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
               ),
             ),

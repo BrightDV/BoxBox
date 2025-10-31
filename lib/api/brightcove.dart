@@ -124,10 +124,10 @@ class BrightCove {
 
     if (fileData != null) {
       return VideoDetails(
-        '',
         fileData['name'],
         [],
-        '',
+        [],
+        null,
         localFilePath: fileData['file'],
       );
     } else {
