@@ -18,11 +18,7 @@
  */
 
 import 'package:background_downloader/background_downloader.dart';
-import 'package:boxbox/Screens/videos.dart';
 import 'package:boxbox/helpers/drawer.dart';
-import 'package:boxbox/Screens/home.dart';
-import 'package:boxbox/Screens/schedule.dart';
-import 'package:boxbox/Screens/standings.dart';
 import 'package:boxbox/providers/general/ui.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
@@ -99,12 +95,8 @@ class _MainBottomNavigationBarState extends State<MainBottomNavigationBar> {
       );
     }
 
-    List<Widget> screens = [
-      HomeScreen(scrollController),
-      VideosScreen(scrollController),
-      StandingsScreen(scrollController: scrollController),
-      ScheduleScreen(scrollController: scrollController),
-    ];
+    List<Widget> screens =
+        UIProvider().getBottomNavigationBarScreens(scrollController);
     if (_selectedIndex == 0) {
       actions = UIProvider().getNewsAppBarActions(context);
     }

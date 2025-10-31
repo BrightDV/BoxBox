@@ -246,7 +246,7 @@ class _CustomeHomeFeedSettingsScreenState
                         20,
                         15,
                         20,
-                        MediaQuery.of(context).viewInsets.bottom,
+                        15,
                       ),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -264,6 +264,7 @@ class _CustomeHomeFeedSettingsScreenState
                             padding: EdgeInsets.only(top: 5, bottom: 5),
                             child: TextField(
                               controller: controller,
+                              autofocus: true,
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(),
                                 hintText: 'https://example.com',

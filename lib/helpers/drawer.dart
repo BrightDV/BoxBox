@@ -25,7 +25,6 @@ import 'package:flutter/material.dart';
 import 'package:boxbox/l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 
 class MainDrawer extends StatelessWidget {
   final Function homeSetState;
@@ -211,22 +210,6 @@ class MainDrawer extends StatelessWidget {
                 },
               )
             : Container(),
-        Expanded(
-          child: Align(
-            alignment: Alignment.bottomCenter,
-            child: FutureBuilder<PackageInfo>(
-              future: PackageInfo.fromPlatform(),
-              builder: (context, snapshot) => snapshot.hasData
-                  ? Padding(
-                      padding: const EdgeInsets.only(bottom: 10),
-                      child: Text(
-                        snapshot.data!.version,
-                      ),
-                    )
-                  : const Text(''),
-            ),
-          ),
-        ),
       ],
     );
   }

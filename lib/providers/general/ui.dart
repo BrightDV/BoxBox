@@ -17,7 +17,11 @@
  * Copyright (c) 2022-2025, BrightDV
  */
 
+import 'package:boxbox/Screens/home.dart';
+import 'package:boxbox/Screens/schedule.dart';
 import 'package:boxbox/Screens/search.dart';
+import 'package:boxbox/Screens/standings.dart';
+import 'package:boxbox/Screens/videos.dart';
 import 'package:boxbox/helpers/bottom_sheet.dart';
 import 'package:boxbox/helpers/news_feed_widget.dart';
 import 'package:boxbox/l10n/app_localizations.dart';
@@ -309,6 +313,31 @@ class UIProvider {
           label: AppLocalizations.of(context)!.schedule,
         ),
       ];
+    }
+  }
+
+  List<Widget> getBottomNavigationBarScreens(
+    ScrollController scrollController,
+  ) {
+    String championship = Hive.box('settings')
+        .get('championship', defaultValue: 'Formula 1') as String;
+    if (championship == 'Formula 1' || championship == 'Formula E') {
+      return [
+        HomeScreen(scrollController),
+        VideosScreen(scrollController),
+        StandingsScreen(scrollController: scrollController),
+        ScheduleScreen(scrollController: scrollController),
+      ];
+    } else if (championship == 'Formula 2' ||
+        championship == 'Formula 3' ||
+        championship == 'F1 Academy') {
+      return [
+        HomeScreen(scrollController),
+        StandingsScreen(scrollController: scrollController),
+        ScheduleScreen(scrollController: scrollController),
+      ];
+    } else {
+      return [];
     }
   }
 }

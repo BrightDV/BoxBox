@@ -23,6 +23,7 @@ import 'dart:io';
 import 'package:background_downloader/background_downloader.dart';
 import 'package:boxbox/api/article_widgets.dart';
 import 'package:boxbox/classes/article.dart';
+import 'package:boxbox/helpers/bottom_sheet.dart';
 import 'package:boxbox/helpers/download.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/request_error.dart';
@@ -158,10 +159,9 @@ class _ArticleScreenState extends State<ArticleScreen> {
                             fontSize: 16.0,
                           );
                         } else if (downloadingState == "already downloaded") {
-                          showDialog(
-                            context: context,
-                            builder: (context) =>
-                                DownloadUtils().downloadedArticleActionPopup(
+                          showCustomBottomSheet(
+                            context,
+                            DownloadUtils().downloadedArticleBottomSheetContent(
                               'article_f1_${widget.articleId}',
                               widget.articleId,
                               widget.articleName,

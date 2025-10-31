@@ -24,6 +24,7 @@ import 'package:background_downloader/background_downloader.dart';
 import 'package:boxbox/api/brightcove.dart';
 import 'package:boxbox/api/videos.dart';
 import 'package:boxbox/classes/video.dart';
+import 'package:boxbox/helpers/bottom_sheet.dart';
 import 'package:boxbox/helpers/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:boxbox/l10n/app_localizations.dart';
@@ -37,92 +38,106 @@ class DownloadUtils {
   ) async {
     int playerQuality =
         Hive.box('settings').get('playerQuality', defaultValue: 360) as int;
-    String? quality = await showDialog(
-      context: context,
-      builder: (context) {
-        String selectedQuality = playerQuality.toString();
-        return StatefulBuilder(
-          builder: (context, setState) => AlertDialog(
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(
-                Radius.circular(
-                  20.0,
+    String selectedQuality = playerQuality.toString();
+    String? quality = await showCustomBottomSheet(
+      context,
+      StatefulBuilder(
+        builder: (context, setState) => SizedBox(
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(
+              20,
+              15,
+              20,
+              15,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  AppLocalizations.of(context)!.qualityToDownload,
+                  style: TextStyle(
+                    fontSize: 20.0,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-              ),
-            ),
-            contentPadding: const EdgeInsets.all(
-              20.0,
-            ),
-            title: Text(
-              AppLocalizations.of(context)!.qualityToDownload,
-              style: TextStyle(
-                fontSize: 24.0,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            content: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: [
-                  Radio(
-                    value: "180",
-                    groupValue: selectedQuality,
-                    onChanged: (String? value) => setState(() {
-                      selectedQuality = value!;
-                    }),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      Radio(
+                        value: "180",
+                        groupValue: selectedQuality,
+                        onChanged: (String? value) => setState(() {
+                          selectedQuality = value!;
+                        }),
+                      ),
+                      Text(
+                        '180p',
+                      ),
+                      Radio(
+                        value: "360",
+                        groupValue: selectedQuality,
+                        onChanged: (String? value) => setState(() {
+                          selectedQuality = value!;
+                        }),
+                      ),
+                      Text(
+                        '360p',
+                      ),
+                      Radio(
+                        value: "720",
+                        groupValue: selectedQuality,
+                        onChanged: (String? value) => setState(() {
+                          selectedQuality = value!;
+                        }),
+                      ),
+                      Text(
+                        '720p',
+                      ),
+                    ],
                   ),
-                  Text(
-                    '180p',
-                  ),
-                  Radio(
-                    value: "360",
-                    groupValue: selectedQuality,
-                    onChanged: (String? value) => setState(() {
-                      selectedQuality = value!;
-                    }),
-                  ),
-                  Text(
-                    '360p',
-                  ),
-                  Radio(
-                    value: "720",
-                    groupValue: selectedQuality,
-                    onChanged: (String? value) => setState(() {
-                      selectedQuality = value!;
-                    }),
-                  ),
-                  Text(
-                    '720p',
-                  ),
-                ],
-              ),
-            ),
-            actions: <Widget>[
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text(
-                  AppLocalizations.of(context)!.cancel,
                 ),
-              ),
-              TextButton(
-                child: Text(
-                  AppLocalizations.of(context)!.download,
+                Padding(
+                  padding: EdgeInsets.only(top: 20, bottom: 7),
+                  child: Container(
+                    width: double.infinity,
+                    height: 50,
+                    child: FilledButton.tonal(
+                      child: Text(
+                        AppLocalizations.of(context)!.download,
+                      ),
+                      onPressed: () async {
+                        Navigator.of(context).pop(selectedQuality);
+                      },
+                    ),
+                  ),
                 ),
-                onPressed: () async {
-                  Navigator.of(context).pop(selectedQuality);
-                },
-              ),
-            ],
+                Padding(
+                  padding: EdgeInsets.only(top: 7, bottom: 20),
+                  child: Container(
+                    width: double.infinity,
+                    height: 50,
+                    child: OutlinedButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text(
+                        AppLocalizations.of(context)!.close,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
-        );
-      },
+        ),
+      ),
     );
+
     return quality;
   }
 
-  AlertDialog downloadedArticleActionPopup(
+  Widget downloadedArticleBottomSheetContent(
     String taskId,
     String articleId,
     String articleName,
@@ -131,56 +146,80 @@ class DownloadUtils {
     BuildContext context,
     String articleChampionship,
   ) {
-    return AlertDialog(
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(
-          Radius.circular(
-            20.0,
-          ),
+    return SizedBox(
+      child: Padding(
+        padding: EdgeInsets.fromLTRB(
+          20,
+          15,
+          20,
+          15,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              AppLocalizations.of(context)!.alreadyDownloadedArticle,
+              style: TextStyle(
+                fontSize: 20.0,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: 20, bottom: 7),
+              child: Container(
+                width: double.infinity,
+                height: 50,
+                child: FilledButton.tonal(
+                  onPressed: () async {
+                    await DownloadUtils().downloadArticle(
+                      articleId,
+                      articleName,
+                      articleChampionship,
+                      callback: updateArticleWithType,
+                    );
+                    Navigator.of(context).pop();
+                  },
+                  child: Text(
+                    AppLocalizations.of(context)!.refresh,
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: 7, bottom: 7),
+              child: Container(
+                width: double.infinity,
+                height: 50,
+                child: FilledButton.tonal(
+                  onPressed: () async {
+                    await DownloadUtils().deleteFile(taskId);
+                    Navigator.of(context).pop();
+                    update();
+                  },
+                  child: Text(
+                    AppLocalizations.of(context)!.delete,
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: 7, bottom: 20),
+              child: Container(
+                width: double.infinity,
+                height: 50,
+                child: OutlinedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text(
+                    AppLocalizations.of(context)!.cancel,
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
-      contentPadding: const EdgeInsets.all(
-        50.0,
-      ),
-      title: Text(
-        AppLocalizations.of(context)!.alreadyDownloadedArticle,
-        style: TextStyle(
-          fontSize: 24.0,
-        ),
-        textAlign: TextAlign.center,
-      ),
-      actions: <Widget>[
-        ElevatedButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          child: Text(
-            AppLocalizations.of(context)!.cancel,
-          ),
-        ),
-        IconButton(
-          onPressed: () async {
-            await DownloadUtils().deleteFile(taskId);
-            Navigator.of(context).pop();
-            update();
-          },
-          icon: Icon(Icons.delete_outline),
-          tooltip: AppLocalizations.of(context)!.delete,
-        ),
-        IconButton(
-          onPressed: () async {
-            await DownloadUtils().downloadArticle(
-              articleId,
-              articleName,
-              articleChampionship,
-              callback: updateArticleWithType,
-            );
-            Navigator.of(context).pop();
-          },
-          icon: Icon(Icons.refresh),
-          tooltip: AppLocalizations.of(context)!.refresh,
-        ),
-      ],
     );
   }
 

@@ -112,7 +112,7 @@ class _ChampionshipScreenState extends State<ChampionshipScreen> {
                                     20,
                                     15,
                                     20,
-                                    MediaQuery.of(context).viewInsets.bottom,
+                                    15,
                                   ),
                                   child: Column(
                                     mainAxisSize: MainAxisSize.min,
@@ -134,6 +134,7 @@ class _ChampionshipScreenState extends State<ChampionshipScreen> {
                                             fontWeight: FontWeight.w100,
                                           ),
                                         ),
+                                        autofocus: true,
                                       ),
                                       Padding(
                                         padding:

@@ -183,7 +183,7 @@ class _ServerSettingsScreenState extends State<ServerSettingsScreen> {
                       20,
                       15,
                       20,
-                      MediaQuery.of(context).viewInsets.bottom,
+                      15,
                     ),
                     child: StatefulBuilder(
                       builder: (context, setState) => Column(
@@ -202,6 +202,7 @@ class _ServerSettingsScreenState extends State<ServerSettingsScreen> {
                             padding: EdgeInsets.only(top: 15),
                             child: TextField(
                               controller: controller,
+                              autofocus: true,
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(),
                                 hintText: 'https://example.com',

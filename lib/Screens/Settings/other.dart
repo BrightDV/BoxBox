@@ -124,7 +124,7 @@ class _OtherSettingsScreenState extends State<OtherSettingsScreen> {
                         20,
                         15,
                         20,
-                        MediaQuery.of(context).viewInsets.bottom,
+                        15,
                       ),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -147,6 +147,7 @@ class _OtherSettingsScreenState extends State<OtherSettingsScreen> {
                           ),
                           TextField(
                             controller: controller,
+                            autofocus: true,
                             decoration: InputDecoration(
                               border: OutlineInputBorder(),
                               hintText: AppLocalizations.of(context)!.apiKey,

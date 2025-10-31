@@ -19,10 +19,13 @@
 
 import 'package:flutter/material.dart';
 
-Future<void> showCustomBottomSheet(BuildContext context, Widget builder) async {
-  await showModalBottomSheet(
+Future<String?> showCustomBottomSheet(
+    BuildContext context, Widget builder) async {
+  return await showModalBottomSheet(
     context: context,
     builder: (context) => CustomBottomSheet(builder),
+    isScrollControlled: true,
+    useSafeArea: true,
   );
 }
 
@@ -35,12 +38,15 @@ class CustomBottomSheet extends StatelessWidget {
     return BottomSheet(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(10.0),
-          topRight: Radius.circular(10.0),
+          topLeft: Radius.circular(30.0),
+          topRight: Radius.circular(30.0),
         ),
       ),
       onClosing: () {},
-      builder: (context) => builder,
+      builder: (context) => Padding(
+        padding: MediaQuery.of(context).viewInsets,
+        child: builder,
+      ),
     );
   }
 }
