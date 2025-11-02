@@ -82,10 +82,137 @@ class _ChampionshipScreenState extends State<ChampionshipScreen> {
           ),
           championship == 'Formula 1'
               ? ListTile(
-                  trailing: Radio(
-                    value: true,
-                    groupValue: useOfficialDataSoure,
-                    onChanged: (value) => onF1SourceChanged(value),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(right: 5),
+                        child: IconButton(
+                          onPressed: () async {
+                            final TextEditingController controller =
+                                TextEditingController();
+                            showCustomBottomSheet(
+                              context,
+                              StatefulBuilder(
+                                builder: (context, setState) => Padding(
+                                  padding: EdgeInsets.fromLTRB(
+                                    20,
+                                    15,
+                                    20,
+                                    15,
+                                  ),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: <Widget>[
+                                      Text(
+                                        AppLocalizations.of(context)!
+                                            .updateApiKey,
+                                        style: TextStyle(
+                                          fontSize: 20.0,
+                                        ), // here
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(
+                                            top: 15, bottom: 10),
+                                        child: Text(
+                                          AppLocalizations.of(context)!
+                                              .updateApiKeySub,
+                                          textAlign: TextAlign.justify,
+                                        ),
+                                      ),
+                                      TextField(
+                                        controller: controller,
+                                        autofocus: true,
+                                        decoration: InputDecoration(
+                                          border: OutlineInputBorder(),
+                                          hintText:
+                                              AppLocalizations.of(context)!
+                                                  .apiKey,
+                                          hintStyle: TextStyle(
+                                            fontWeight: FontWeight.w100,
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding:
+                                            EdgeInsets.only(top: 20, bottom: 7),
+                                        child: Container(
+                                          width: double.infinity,
+                                          height: 50,
+                                          child: FilledButton.tonal(
+                                            onPressed: () {
+                                              Hive.box('settings').put(
+                                                'officialApiKey',
+                                                controller.text,
+                                              );
+                                              Navigator.of(context).pop();
+                                              setState(() {});
+                                            },
+                                            child: Text(
+                                              AppLocalizations.of(context)!
+                                                  .save,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding:
+                                            EdgeInsets.only(top: 7, bottom: 7),
+                                        child: Container(
+                                          width: double.infinity,
+                                          height: 50,
+                                          child: OutlinedButton(
+                                            onPressed: () {
+                                              Hive.box('settings').put(
+                                                'officialApiKey',
+                                                Constants().F1_API_KEY,
+                                              );
+                                              Navigator.of(context).pop();
+                                              setState(() {});
+                                            },
+                                            child: Text(
+                                              AppLocalizations.of(context)!
+                                                  .reset,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding:
+                                            EdgeInsets.only(top: 7, bottom: 20),
+                                        child: Container(
+                                          width: double.infinity,
+                                          height: 50,
+                                          child: OutlinedButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: Text(
+                                              AppLocalizations.of(context)!
+                                                  .close,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                          icon: Icon(Icons.settings_outlined),
+                        ),
+                      ),
+                      Radio(
+                        value: true,
+                        groupValue: useOfficialDataSoure,
+                        onChanged: (value) => onF1SourceChanged(value),
+                      ),
+                    ],
                   ),
                   title: Padding(
                     padding: EdgeInsets.only(left: 80),
