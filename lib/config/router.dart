@@ -362,13 +362,14 @@ class RouterLocalConfig {
                   return Scaffold(
                     appBar: AppBar(
                       title: Text(
-                        'Sprint Shootout',
+                        AppLocalizations.of(context)!.sprintQualifyings,
                       ),
                       backgroundColor: Theme.of(context).colorScheme.onPrimary,
                     ),
                     body: QualificationResultsProvider(
                       raceUrl: '',
                       sessionId: state.pathParameters['meetingId']!,
+                      meetingId: state.pathParameters['meetingId']!,
                       hasSprint: true,
                       isSprintQualifying: true,
                     ),
