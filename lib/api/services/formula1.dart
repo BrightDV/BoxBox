@@ -683,7 +683,7 @@ class Formula1 {
           .get('server', defaultValue: defaultEndpoint) as String;
       var url = Uri.parse(
         endpoint != defaultEndpoint
-            ? '$endpoint/f1/v2/fom-results/driverstandings/season=${DateTime.now().year}'
+            ? '$endpoint/f1/v2/fom-results/driverstandings/${DateTime.now().year}'
             : '$endpoint/v2/fom-results/driverstandings?season=${DateTime.now().year}',
       );
       var response = await http.get(
