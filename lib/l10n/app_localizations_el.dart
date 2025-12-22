@@ -12,7 +12,8 @@ class AppLocalizationsEl extends AppLocalizations {
   String get about => 'Σχετικά με το';
 
   @override
-  String get aboutDescription => 'Το Box, Box! είναι ελεύθερο λογισμικό με copylefted, με άδεια χρήσης GPLv3+. Στόχος του είναι να επιτρέπει την παρακολούθηση της Formula 1 χωρίς διαφημίσεις ή trackers.';
+  String get aboutDescription =>
+      'Το Box, Box! είναι ελεύθερο λογισμικό με copylefted, με άδεια χρήσης GPLv3+. Στόχος του είναι να επιτρέπει την παρακολούθηση της Formula 1 χωρίς διαφημίσεις ή trackers.';
 
   @override
   String get aboutBottomLine => 'Με ❤ από την BrightDV.';
@@ -27,7 +28,8 @@ class AppLocalizationsEl extends AppLocalizations {
   String get addToCalendar => 'Add to calendar';
 
   @override
-  String get alreadyDownloadedArticle => 'This article has already been downloaded.';
+  String get alreadyDownloadedArticle =>
+      'This article has already been downloaded.';
 
   @override
   String get alreadyDownloading => 'Already downloading';
@@ -180,7 +182,8 @@ class AppLocalizationsEl extends AppLocalizations {
   String get errorOccurred => 'Something went wrong';
 
   @override
-  String get errorOccurredDetails => 'The app encountered an unknown error.\nPlease try again later.';
+  String get errorOccurredDetails =>
+      'The app encountered an unknown error.\nPlease try again later.';
 
   @override
   String get experimentalFeatures => 'Experimental Features';
@@ -249,7 +252,8 @@ class AppLocalizationsEl extends AppLocalizations {
   String get grandPrixNotifications => 'Grand-Prix sessions notifications';
 
   @override
-  String get grandPrixNotificationsSub => 'You need to go to the schedule screen in order to initialize notifications of the next Grand-Prix.';
+  String get grandPrixNotificationsSub =>
+      'You need to go to the schedule screen in order to initialize notifications of the next Grand-Prix.';
 
   @override
   String get hallOfFame => 'Hall of Fame';
@@ -486,7 +490,8 @@ class AppLocalizationsEl extends AppLocalizations {
   String get refreshChampionshipData => 'Refresh championship data';
 
   @override
-  String get refreshChampionshipDataSub => 'Refresh championship data before a new season.';
+  String get refreshChampionshipDataSub =>
+      'Refresh championship data before a new season.';
 
   @override
   String get refreshInterval => 'Refresh interval';
@@ -603,13 +608,15 @@ class AppLocalizationsEl extends AppLocalizations {
   String get updateApiKey => 'Update API Key';
 
   @override
-  String get updateApiKeySub => 'Update the API key of the official website.\nUpdate this only if you now what you are doing.';
+  String get updateApiKeySub =>
+      'Update the API key of the official website.\nUpdate this only if you now what you are doing.';
 
   @override
   String get updates => 'New versions';
 
   @override
-  String get useOfficialWebview => 'Use official Webview for live sessions instead of f1-dash.com';
+  String get useOfficialWebview =>
+      'Use official Webview for live sessions instead of f1-dash.com';
 
   @override
   String get victory => 'Victory';

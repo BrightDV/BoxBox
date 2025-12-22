@@ -12,7 +12,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get about => 'Über';
 
   @override
-  String get aboutDescription => 'Box, Box! ist eine freie, copylefted Software, lizenziert unter GPLv3+. Sie ermöglicht es die Formel 1 ohne Werbung und Tracker zu verfolgen.';
+  String get aboutDescription =>
+      'Box, Box! ist eine freie, copylefted Software, lizenziert unter GPLv3+. Sie ermöglicht es die Formel 1 ohne Werbung und Tracker zu verfolgen.';
 
   @override
   String get aboutBottomLine => 'Mit❤ von BrightDV.';
@@ -27,7 +28,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get addToCalendar => 'Zum Kalender hinzufügen';
 
   @override
-  String get alreadyDownloadedArticle => 'Dieser Artikel ist bereits heruntergeladen worden.';
+  String get alreadyDownloadedArticle =>
+      'Dieser Artikel ist bereits heruntergeladen worden.';
 
   @override
   String get alreadyDownloading => 'Wird bereits heruntergeladen';
@@ -171,7 +173,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get edit => 'Bearbeiten';
 
   @override
-  String get editOrderDescription => 'Reihenfolge durch langes Drücken eines Elements ändern.';
+  String get editOrderDescription =>
+      'Reihenfolge durch langes Drücken eines Elements ändern.';
 
   @override
   String get enableNotifications => 'Enable notifications';
@@ -180,7 +183,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get errorOccurred => 'Etwas ist schiefgelaufen';
 
   @override
-  String get errorOccurredDetails => 'In der App ist ein unbekannter Fehler aufgetreten.\nVersuchen Sie es später erneut.';
+  String get errorOccurredDetails =>
+      'In der App ist ein unbekannter Fehler aufgetreten.\nVersuchen Sie es später erneut.';
 
   @override
   String get experimentalFeatures => 'Experimentelle Funktionen';
@@ -249,7 +253,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get grandPrixNotifications => 'Grand-Prix sessions notifications';
 
   @override
-  String get grandPrixNotificationsSub => 'You need to go to the schedule screen in order to initialize notifications of the next Grand-Prix.';
+  String get grandPrixNotificationsSub =>
+      'You need to go to the schedule screen in order to initialize notifications of the next Grand-Prix.';
 
   @override
   String get hallOfFame => 'Hall of Fame';
@@ -486,7 +491,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get refreshChampionshipData => 'Meisterschaftsdaten auffrischen';
 
   @override
-  String get refreshChampionshipDataSub => 'Meisterschaftsdaten vor einer neuen Saison auffrischen.';
+  String get refreshChampionshipDataSub =>
+      'Meisterschaftsdaten vor einer neuen Saison auffrischen.';
 
   @override
   String get refreshInterval => 'Refresh interval';
@@ -603,13 +609,15 @@ class AppLocalizationsDe extends AppLocalizations {
   String get updateApiKey => 'API-Schlüssel aktualisieren';
 
   @override
-  String get updateApiKeySub => 'Update the API key of the official website.\nUpdate this only if you now what you are doing.';
+  String get updateApiKeySub =>
+      'Update the API key of the official website.\nUpdate this only if you now what you are doing.';
 
   @override
   String get updates => 'Neue Versionen';
 
   @override
-  String get useOfficialWebview => 'Offizielle Webansicht für Live-Sitzungen verwenden';
+  String get useOfficialWebview =>
+      'Offizielle Webansicht für Live-Sitzungen verwenden';
 
   @override
   String get victory => 'Sieg';

@@ -17,7 +17,7 @@
  * Copyright (c) 2022-2025, BrightDV
  */
 
-import 'package:add_2_calendar/add_2_calendar.dart' as a2c;
+import 'package:add_2_calendar_new/add_2_calendar_new.dart' as a2c;
 import 'package:boxbox/classes/driver.dart';
 import 'package:boxbox/classes/race.dart';
 import 'package:boxbox/helpers/divider.dart';

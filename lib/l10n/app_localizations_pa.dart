@@ -12,7 +12,8 @@ class AppLocalizationsPa extends AppLocalizations {
   String get about => 'ਦੇ ਬਾਰੇ';
 
   @override
-  String get aboutDescription => 'ਬਾਕਸ, ਬਾਕਸ! ਕਾਪੀ-ਲਿਫਟਡ ਲੀਬਰ ਸਾਫਟਵੇਅਰ ਹੈ, ਜੋ GPLv3+ ਦੇ ਅਧੀਨ ਲਾਈਸੈਂਸਸ਼ੁਦਾ ਹੈ। ਇਸਦਾ ਉਦੇਸ਼ ਉਪਭੋਗਤਾਵਾਂ ਨੂੰ ਬਿਨਾਂ ਇਸ਼ਤਿਹਾਰਾਂ ਜਾਂ ਟਰੈਕਰਾਂ ਦੇ ਫਾਰਮੂਲਾ 1 ਅਤੇ ਫਾਲਮੂਲਾ ਈ ਦੀ ਪਾਲਣਾ ਕਰਨ ਦੀ ਆਗਿਆ ਦੇਣਾ ਹੈ।';
+  String get aboutDescription =>
+      'ਬਾਕਸ, ਬਾਕਸ! ਕਾਪੀ-ਲਿਫਟਡ ਲੀਬਰ ਸਾਫਟਵੇਅਰ ਹੈ, ਜੋ GPLv3+ ਦੇ ਅਧੀਨ ਲਾਈਸੈਂਸਸ਼ੁਦਾ ਹੈ। ਇਸਦਾ ਉਦੇਸ਼ ਉਪਭੋਗਤਾਵਾਂ ਨੂੰ ਬਿਨਾਂ ਇਸ਼ਤਿਹਾਰਾਂ ਜਾਂ ਟਰੈਕਰਾਂ ਦੇ ਫਾਰਮੂਲਾ 1 ਅਤੇ ਫਾਲਮੂਲਾ ਈ ਦੀ ਪਾਲਣਾ ਕਰਨ ਦੀ ਆਗਿਆ ਦੇਣਾ ਹੈ।';
 
   @override
   String get aboutBottomLine => 'BrightDV ਦੁਆਰਾ ❤ ।';
@@ -27,7 +28,8 @@ class AppLocalizationsPa extends AppLocalizations {
   String get addToCalendar => 'ਕੈਲੰਡਰ ਵਿੱਚ ਸ਼ਾਮਿਲ ਕਰੋ';
 
   @override
-  String get alreadyDownloadedArticle => 'ਇਹ ਲੇਖ ਪਹਿਲਾਂ ਹੀ ਡਾਊਨਲੋਡ ਕੀਤਾ ਜਾ ਚੁੱਕਾ ਹੈ।';
+  String get alreadyDownloadedArticle =>
+      'ਇਹ ਲੇਖ ਪਹਿਲਾਂ ਹੀ ਡਾਊਨਲੋਡ ਕੀਤਾ ਜਾ ਚੁੱਕਾ ਹੈ।';
 
   @override
   String get alreadyDownloading => 'ਪਹਿਲਾਂ ਹੀ ਡਾਊਨਲੋਡ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ';
@@ -180,7 +182,8 @@ class AppLocalizationsPa extends AppLocalizations {
   String get errorOccurred => 'ਕੁਝ ਗਲਤ ਹੋ ਗਿਆ';
 
   @override
-  String get errorOccurredDetails => 'ਐਪ ਵਿੱਚ ਇੱਕ ਅਗਿਆਤ ਤਰੁੱਟੀ ਆਈ ਹੈ।\nਬਾਅਦ ਵਿੱਚ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ ਜੀ।';
+  String get errorOccurredDetails =>
+      'ਐਪ ਵਿੱਚ ਇੱਕ ਅਗਿਆਤ ਤਰੁੱਟੀ ਆਈ ਹੈ।\nਬਾਅਦ ਵਿੱਚ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ ਜੀ।';
 
   @override
   String get experimentalFeatures => 'ਪ੍ਰਯੋਗਾਤਮਕ ਫ਼ੀਚਰ';
@@ -249,7 +252,8 @@ class AppLocalizationsPa extends AppLocalizations {
   String get grandPrixNotifications => 'Grand-Prix sessions notifications';
 
   @override
-  String get grandPrixNotificationsSub => 'You need to go to the schedule screen in order to initialize notifications of the next Grand-Prix.';
+  String get grandPrixNotificationsSub =>
+      'You need to go to the schedule screen in order to initialize notifications of the next Grand-Prix.';
 
   @override
   String get hallOfFame => 'ਹਾਲ ਔਫ ਫੇਮ';
@@ -357,7 +361,8 @@ class AppLocalizationsPa extends AppLocalizations {
   String get next => 'ਅਗਲਾ';
 
   @override
-  String get noResults => 'ਇੱਥੇ ਦਿਖਾਉਣ ਲਈ ਕੁਝ ਨਹੀਂ. ਤੁਸੀਂ ਸੀਮਤ ਰੇਟ ਕੀਤੇ ਹੋ ਸਕਦੇ ਹੋ।';
+  String get noResults =>
+      'ਇੱਥੇ ਦਿਖਾਉਣ ਲਈ ਕੁਝ ਨਹੀਂ. ਤੁਸੀਂ ਸੀਮਤ ਰੇਟ ਕੀਤੇ ਹੋ ਸਕਦੇ ਹੋ।';
 
   @override
   String get nothingHere => 'ਦਿਖਾਉਣ ਲਈ ਕੁਝ ਨਹੀਂ \nਇਥੇ।';
@@ -486,7 +491,8 @@ class AppLocalizationsPa extends AppLocalizations {
   String get refreshChampionshipData => 'ਚੈਂਪੀਅਨਸ਼ਿਪ ਡਾਟਾ ਰਿਫ੍ਰੈਸ਼ ਕਰੋ';
 
   @override
-  String get refreshChampionshipDataSub => 'ਨਵੇਂ ਸੀਜ਼ਨ ਤੋਂ ਪਹਿਲਾਂ ਚੈਂਪੀਅਨਸ਼ਿਪ ਡਾਟਾ ਰਿਫ੍ਰੈਸ਼ ਕਰੋ।';
+  String get refreshChampionshipDataSub =>
+      'ਨਵੇਂ ਸੀਜ਼ਨ ਤੋਂ ਪਹਿਲਾਂ ਚੈਂਪੀਅਨਸ਼ਿਪ ਡਾਟਾ ਰਿਫ੍ਰੈਸ਼ ਕਰੋ।';
 
   @override
   String get refreshInterval => 'Refresh interval';
@@ -603,13 +609,15 @@ class AppLocalizationsPa extends AppLocalizations {
   String get updateApiKey => 'Update API Key';
 
   @override
-  String get updateApiKeySub => 'Update the API key of the official website.\nUpdate this only if you now what you are doing.';
+  String get updateApiKeySub =>
+      'Update the API key of the official website.\nUpdate this only if you now what you are doing.';
 
   @override
   String get updates => 'ਨਵੇਂ ਸੰਸਕਰਣ';
 
   @override
-  String get useOfficialWebview => 'ਲਾਈਵ ਸੈਸ਼ਨਾਂ ਲਈ ਅਧਿਕਾਰਤ ਵੈਬਵਿਊ ਦੀ ਵਰਤੋਂ ਕਰੋ';
+  String get useOfficialWebview =>
+      'ਲਾਈਵ ਸੈਸ਼ਨਾਂ ਲਈ ਅਧਿਕਾਰਤ ਵੈਬਵਿਊ ਦੀ ਵਰਤੋਂ ਕਰੋ';
 
   @override
   String get victory => 'ਜਿੱਤ';

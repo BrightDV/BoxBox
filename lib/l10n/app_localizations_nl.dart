@@ -12,7 +12,8 @@ class AppLocalizationsNl extends AppLocalizations {
   String get about => 'Over';
 
   @override
-  String get aboutDescription => 'Box, Box! is copyleft vrije software onder de licentie GPLv3+ met als doel om Formule 1 en Formule E zonder ads of trackers te kunnen volgen.';
+  String get aboutDescription =>
+      'Box, Box! is copyleft vrije software onder de licentie GPLv3+ met als doel om Formule 1 en Formule E zonder ads of trackers te kunnen volgen.';
 
   @override
   String get aboutBottomLine => 'Gemaakt met ❤ door BrichtDV.';
@@ -171,7 +172,8 @@ class AppLocalizationsNl extends AppLocalizations {
   String get edit => 'Bewerken';
 
   @override
-  String get editOrderDescription => 'Verander de volgorden door lang een op een item te drukken.';
+  String get editOrderDescription =>
+      'Verander de volgorden door lang een op een item te drukken.';
 
   @override
   String get enableNotifications => 'Schakel notificaties in';
@@ -180,7 +182,8 @@ class AppLocalizationsNl extends AppLocalizations {
   String get errorOccurred => 'Er is iets fout gegaan';
 
   @override
-  String get errorOccurredDetails => 'Er is een onbekende fout opgetreden.\nProbeer het later opnieuw.';
+  String get errorOccurredDetails =>
+      'Er is een onbekende fout opgetreden.\nProbeer het later opnieuw.';
 
   @override
   String get experimentalFeatures => 'Experimentele functies';
@@ -249,7 +252,8 @@ class AppLocalizationsNl extends AppLocalizations {
   String get grandPrixNotifications => 'Grand-Prix sessions notifications';
 
   @override
-  String get grandPrixNotificationsSub => 'You need to go to the schedule screen in order to initialize notifications of the next Grand-Prix.';
+  String get grandPrixNotificationsSub =>
+      'You need to go to the schedule screen in order to initialize notifications of the next Grand-Prix.';
 
   @override
   String get hallOfFame => 'Hall of Fame';
@@ -297,7 +301,8 @@ class AppLocalizationsNl extends AppLocalizations {
   String get minuteAbbreviation => 'MIN';
 
   @override
-  String get modernNewsAppearance => 'Gebruik modern uiterlijk voor het nieuws.';
+  String get modernNewsAppearance =>
+      'Gebruik modern uiterlijk voor het nieuws.';
 
   @override
   String get monthAbbreviationJanuary => 'JAN';
@@ -339,7 +344,8 @@ class AppLocalizationsNl extends AppLocalizations {
   String get motorsportLocalizeFeeds => 'Motorsport.com lokale feeds';
 
   @override
-  String get needsRestart => 'Herstart de app om de wijzigingen door te voeren.';
+  String get needsRestart =>
+      'Herstart de app om de wijzigingen door te voeren.';
 
   @override
   String get news => 'Nieuws';
@@ -357,7 +363,8 @@ class AppLocalizationsNl extends AppLocalizations {
   String get next => 'VOLGENDE';
 
   @override
-  String get noResults => 'Hier is niets te zien. Dit kan te maken hebben met rate limits.';
+  String get noResults =>
+      'Hier is niets te zien. Dit kan te maken hebben met rate limits.';
 
   @override
   String get nothingHere => 'Hier is niets\nte zien.';
@@ -486,7 +493,8 @@ class AppLocalizationsNl extends AppLocalizations {
   String get refreshChampionshipData => 'Kampioenschapsgegevens vernieuwen';
 
   @override
-  String get refreshChampionshipDataSub => 'Vooraf aan een nieuw seizoen de kampioenschapsgegevens vernieuwen.';
+  String get refreshChampionshipDataSub =>
+      'Vooraf aan een nieuw seizoen de kampioenschapsgegevens vernieuwen.';
 
   @override
   String get refreshInterval => 'Refresh interval';
@@ -603,13 +611,15 @@ class AppLocalizationsNl extends AppLocalizations {
   String get updateApiKey => 'Update API-sleutel';
 
   @override
-  String get updateApiKeySub => 'Update de API-sleutel op de officiele website.\nUpdate dit alleen als je weet wat je doet.';
+  String get updateApiKeySub =>
+      'Update de API-sleutel op de officiele website.\nUpdate dit alleen als je weet wat je doet.';
 
   @override
   String get updates => 'Nieuwe versies';
 
   @override
-  String get useOfficialWebview => 'Gebruik officiële WebView voor live-sessies in plaats van f1-dash.com';
+  String get useOfficialWebview =>
+      'Gebruik officiële WebView voor live-sessies in plaats van f1-dash.com';
 
   @override
   String get victory => 'Overwinning';

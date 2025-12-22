@@ -12,7 +12,8 @@ class AppLocalizationsHi extends AppLocalizations {
   String get about => 'ऐप के बारे में';
 
   @override
-  String get aboutDescription => 'बॉक्स, बॉक्स! कॉपीलेफ्टेड लिब्रे सॉफ्टवेयर है, जिसे GPLv3+ के तहत लाइसेंस प्राप्त है। इसका उद्देश्य उपयोगकर्ताओं को बिना विज्ञापन या ट्रैकर के फॉर्मूला 1 और फॉर्मूला ई का अनुसरण करने की अनुमति देना है।';
+  String get aboutDescription =>
+      'बॉक्स, बॉक्स! कॉपीलेफ्टेड लिब्रे सॉफ्टवेयर है, जिसे GPLv3+ के तहत लाइसेंस प्राप्त है। इसका उद्देश्य उपयोगकर्ताओं को बिना विज्ञापन या ट्रैकर के फॉर्मूला 1 और फॉर्मूला ई का अनुसरण करने की अनुमति देना है।';
 
   @override
   String get aboutBottomLine => 'BrightDV द्वारा ❤ के साथ।';
@@ -27,7 +28,8 @@ class AppLocalizationsHi extends AppLocalizations {
   String get addToCalendar => 'कैलेंडर में जोड़ें';
 
   @override
-  String get alreadyDownloadedArticle => 'यह आलेख पहले ही डाउनलोड किया जा चुका है।';
+  String get alreadyDownloadedArticle =>
+      'यह आलेख पहले ही डाउनलोड किया जा चुका है।';
 
   @override
   String get alreadyDownloading => 'पहले से डाउनलोड हो रहा है';
@@ -171,7 +173,8 @@ class AppLocalizationsHi extends AppLocalizations {
   String get edit => 'संपादित करें';
 
   @override
-  String get editOrderDescription => 'किसी वस्तु को लंबे समय तक दबाकर क्रम बदलें।';
+  String get editOrderDescription =>
+      'किसी वस्तु को लंबे समय तक दबाकर क्रम बदलें।';
 
   @override
   String get enableNotifications => 'Enable notifications';
@@ -180,7 +183,8 @@ class AppLocalizationsHi extends AppLocalizations {
   String get errorOccurred => 'कुछ त्रुटि हुई है';
 
   @override
-  String get errorOccurredDetails => 'ऐप में एक अज्ञात त्रुटि आई है।\nबाद में पुन: प्रयास करें।';
+  String get errorOccurredDetails =>
+      'ऐप में एक अज्ञात त्रुटि आई है।\nबाद में पुन: प्रयास करें।';
 
   @override
   String get experimentalFeatures => 'प्रायोगिक विशेषताएं';
@@ -249,7 +253,8 @@ class AppLocalizationsHi extends AppLocalizations {
   String get grandPrixNotifications => 'Grand-Prix sessions notifications';
 
   @override
-  String get grandPrixNotificationsSub => 'You need to go to the schedule screen in order to initialize notifications of the next Grand-Prix.';
+  String get grandPrixNotificationsSub =>
+      'You need to go to the schedule screen in order to initialize notifications of the next Grand-Prix.';
 
   @override
   String get hallOfFame => 'हॉल ऑफ फेम';
@@ -297,7 +302,8 @@ class AppLocalizationsHi extends AppLocalizations {
   String get minuteAbbreviation => 'MIN';
 
   @override
-  String get modernNewsAppearance => 'समाचारों के लिए आधुनिक स्वरूप का उपयोग करें।';
+  String get modernNewsAppearance =>
+      'समाचारों के लिए आधुनिक स्वरूप का उपयोग करें।';
 
   @override
   String get monthAbbreviationJanuary => 'जन';
@@ -357,7 +363,8 @@ class AppLocalizationsHi extends AppLocalizations {
   String get next => 'अगला';
 
   @override
-  String get noResults => 'यहां दिखाने के लिए कुछ नहीं है। आपकी नेटवर्क दर सीमित हो सकती है।';
+  String get noResults =>
+      'यहां दिखाने के लिए कुछ नहीं है। आपकी नेटवर्क दर सीमित हो सकती है।';
 
   @override
   String get nothingHere => 'यहां दिखाने के लिए\nकुछ नहीं है।';
@@ -486,7 +493,8 @@ class AppLocalizationsHi extends AppLocalizations {
   String get refreshChampionshipData => 'चैंपियनशिप डेटा ताज़ा करें';
 
   @override
-  String get refreshChampionshipDataSub => 'नये सत्र से पहले चैम्पियनशिप डेटा को ताज़ा करें।';
+  String get refreshChampionshipDataSub =>
+      'नये सत्र से पहले चैम्पियनशिप डेटा को ताज़ा करें।';
 
   @override
   String get refreshInterval => 'Refresh interval';
@@ -603,13 +611,15 @@ class AppLocalizationsHi extends AppLocalizations {
   String get updateApiKey => 'Update API Key';
 
   @override
-  String get updateApiKeySub => 'Update the API key of the official website.\nUpdate this only if you now what you are doing.';
+  String get updateApiKeySub =>
+      'Update the API key of the official website.\nUpdate this only if you now what you are doing.';
 
   @override
   String get updates => 'नए संस्करण';
 
   @override
-  String get useOfficialWebview => 'लाइव सत्रों के लिए आधिकारिक वेबव्यू का उपयोग करें';
+  String get useOfficialWebview =>
+      'लाइव सत्रों के लिए आधिकारिक वेबव्यू का उपयोग करें';
 
   @override
   String get victory => 'जीत';

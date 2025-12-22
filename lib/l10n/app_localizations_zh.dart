@@ -12,7 +12,8 @@ class AppLocalizationsZh extends AppLocalizations {
   String get about => '关于';
 
   @override
-  String get aboutDescription => 'Box, Box! 是一款自由软件，采用 GPLv3+ 许可。目标是让用户在没有广告和追踪器的情况下了解 F1 和 FE 的最新资讯。';
+  String get aboutDescription =>
+      'Box, Box! 是一款自由软件，采用 GPLv3+ 许可。目标是让用户在没有广告和追踪器的情况下了解 F1 和 FE 的最新资讯。';
 
   @override
   String get aboutBottomLine => '由 BrightDV 用 ❤ 制作。';
@@ -647,13 +648,14 @@ class AppLocalizationsZh extends AppLocalizations {
 
 /// The translations for Chinese, using the Han script (`zh_Hant`).
 class AppLocalizationsZhHant extends AppLocalizationsZh {
-  AppLocalizationsZhHant(): super('zh_Hant');
+  AppLocalizationsZhHant() : super('zh_Hant');
 
   @override
   String get about => '關於';
 
   @override
-  String get aboutDescription => 'Box, Box! 是一款有著作權自由軟體，遵循 GPLv3+ 授權。其目標是讓用戶在不受廣告或追蹤器幹擾的情況下專注於一級方程式錦標賽和電動方程式錦標賽。';
+  String get aboutDescription =>
+      'Box, Box! 是一款有著作權自由軟體，遵循 GPLv3+ 授權。其目標是讓用戶在不受廣告或追蹤器幹擾的情況下專注於一級方程式錦標賽和電動方程式錦標賽。';
 
   @override
   String get aboutBottomLine => '由 BrightDV 以 ❤ 為您製作。';

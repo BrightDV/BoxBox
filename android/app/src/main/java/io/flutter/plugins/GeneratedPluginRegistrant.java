@@ -16,9 +16,9 @@ public final class GeneratedPluginRegistrant {
   private static final String TAG = "GeneratedPluginRegistrant";
   public static void registerWith(@NonNull FlutterEngine flutterEngine) {
     try {
-      flutterEngine.getPlugins().add(new com.javih.add_2_calendar.Add2CalendarPlugin());
+      flutterEngine.getPlugins().add(new com.javih.add_2_calendar_new.Add2CalendarPlugin());
     } catch (Exception e) {
-      Log.e(TAG, "Error registering plugin add_2_calendar, com.javih.add_2_calendar.Add2CalendarPlugin", e);
+      Log.e(TAG, "Error registering plugin add_2_calendar_new, com.javih.add_2_calendar_new.Add2CalendarPlugin", e);
     }
     try {
       flutterEngine.getPlugins().add(new me.carda.awesome_notifications.AwesomeNotificationsPlugin());

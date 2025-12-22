@@ -12,7 +12,8 @@ class AppLocalizationsTa extends AppLocalizations {
   String get about => 'பற்றி';
 
   @override
-  String get aboutDescription => 'பெட்டி, பெட்டி! gplv3+இன் கீழ் உரிமம் பெற்ற நகல் லிப்ரே மென்பொருள். விளம்பரங்கள் அல்லது டிராக்கர்கள் இல்லாமல் ஃபார்முலா 1 மற்றும் ஃபார்முலா ஈ ஆகியவற்றைப் பின்பற்ற பயனர்களை அனுமதிப்பதே இதன் நோக்கம்.';
+  String get aboutDescription =>
+      'பெட்டி, பெட்டி! gplv3+இன் கீழ் உரிமம் பெற்ற நகல் லிப்ரே மென்பொருள். விளம்பரங்கள் அல்லது டிராக்கர்கள் இல்லாமல் ஃபார்முலா 1 மற்றும் ஃபார்முலா ஈ ஆகியவற்றைப் பின்பற்ற பயனர்களை அனுமதிப்பதே இதன் நோக்கம்.';
 
   @override
   String get aboutBottomLine => '❤ உடன் ஒளிமிக்கடிவி.';
@@ -27,7 +28,8 @@ class AppLocalizationsTa extends AppLocalizations {
   String get addToCalendar => 'காலெண்டரில் சேர்க்கவும்';
 
   @override
-  String get alreadyDownloadedArticle => 'இந்த கட்டுரை ஏற்கனவே பதிவிறக்கம் செய்யப்பட்டுள்ளது.';
+  String get alreadyDownloadedArticle =>
+      'இந்த கட்டுரை ஏற்கனவே பதிவிறக்கம் செய்யப்பட்டுள்ளது.';
 
   @override
   String get alreadyDownloading => 'ஏற்கனவே பதிவிறக்குகிறது';
@@ -171,7 +173,8 @@ class AppLocalizationsTa extends AppLocalizations {
   String get edit => 'தொகு';
 
   @override
-  String get editOrderDescription => 'ஒரு பொருளை நீண்ட நேரம் அழுத்துவதன் மூலம் வரிசையை மாற்றவும்.';
+  String get editOrderDescription =>
+      'ஒரு பொருளை நீண்ட நேரம் அழுத்துவதன் மூலம் வரிசையை மாற்றவும்.';
 
   @override
   String get enableNotifications => 'Enable notifications';
@@ -180,7 +183,8 @@ class AppLocalizationsTa extends AppLocalizations {
   String get errorOccurred => 'ஏதோ தவறு நடந்தது';
 
   @override
-  String get errorOccurredDetails => 'பயன்பாடு அறியப்படாத பிழையை எதிர்கொண்டது.\n தயவுசெய்து பின்னர் மீண்டும் முயற்சிக்கவும்.';
+  String get errorOccurredDetails =>
+      'பயன்பாடு அறியப்படாத பிழையை எதிர்கொண்டது.\n தயவுசெய்து பின்னர் மீண்டும் முயற்சிக்கவும்.';
 
   @override
   String get experimentalFeatures => 'சோதனை நற்பொருத்தங்கள்';
@@ -249,7 +253,8 @@ class AppLocalizationsTa extends AppLocalizations {
   String get grandPrixNotifications => 'Grand-Prix sessions notifications';
 
   @override
-  String get grandPrixNotificationsSub => 'You need to go to the schedule screen in order to initialize notifications of the next Grand-Prix.';
+  String get grandPrixNotificationsSub =>
+      'You need to go to the schedule screen in order to initialize notifications of the next Grand-Prix.';
 
   @override
   String get hallOfFame => 'ஆல் ஆஃப் ஃபேம்';
@@ -297,7 +302,8 @@ class AppLocalizationsTa extends AppLocalizations {
   String get minuteAbbreviation => 'மணித்துளி';
 
   @override
-  String get modernNewsAppearance => 'செய்திக்கு நவீன தோற்றத்தைப் பயன்படுத்தவும்.';
+  String get modernNewsAppearance =>
+      'செய்திக்கு நவீன தோற்றத்தைப் பயன்படுத்தவும்.';
 
   @override
   String get monthAbbreviationJanuary => 'சனவரி';
@@ -336,10 +342,12 @@ class AppLocalizationsTa extends AppLocalizations {
   String get monthAbbreviationDecember => 'டிசம்பர்';
 
   @override
-  String get motorsportLocalizeFeeds => 'மோட்டார்ச்போர்ட்.காமின் உள்ளூர்மயமாக்கப்பட்ட ஊட்டங்கள்';
+  String get motorsportLocalizeFeeds =>
+      'மோட்டார்ச்போர்ட்.காமின் உள்ளூர்மயமாக்கப்பட்ட ஊட்டங்கள்';
 
   @override
-  String get needsRestart => 'மாற்றங்களைப் பயன்படுத்த பயன்பாட்டை மறுதொடக்கம் செய்யுங்கள்.';
+  String get needsRestart =>
+      'மாற்றங்களைப் பயன்படுத்த பயன்பாட்டை மறுதொடக்கம் செய்யுங்கள்.';
 
   @override
   String get news => 'செய்தி';
@@ -357,7 +365,8 @@ class AppLocalizationsTa extends AppLocalizations {
   String get next => 'அடுத்தது';
 
   @override
-  String get noResults => 'இங்கே காட்ட எதுவும் இல்லை. நீங்கள் வீதம் மட்டுப்படுத்தப்பட்டிருக்கலாம்.';
+  String get noResults =>
+      'இங்கே காட்ட எதுவும் இல்லை. நீங்கள் வீதம் மட்டுப்படுத்தப்பட்டிருக்கலாம்.';
 
   @override
   String get nothingHere => 'காட்ட எதுவும் இல்லை\n இங்கே.';
@@ -459,7 +468,8 @@ class AppLocalizationsTa extends AppLocalizations {
   String get qualifyingsShort => 'தகுதி';
 
   @override
-  String get qualityToDownload => 'எந்த தரத்தை பதிவிறக்கம் செய்ய வேண்டும் என்பதைத் தேர்ந்தெடுக்கவும்.';
+  String get qualityToDownload =>
+      'எந்த தரத்தை பதிவிறக்கம் செய்ய வேண்டும் என்பதைத் தேர்ந்தெடுக்கவும்.';
 
   @override
   String get quiz => 'நொடி வினா';
@@ -486,7 +496,8 @@ class AppLocalizationsTa extends AppLocalizations {
   String get refreshChampionshipData => 'சாம்பியன்சிப் தரவைப் புதுப்பிக்கவும்';
 
   @override
-  String get refreshChampionshipDataSub => 'புதிய பருவத்திற்கு முன் சாம்பியன்சிப் தரவைப் புதுப்பிக்கவும்.';
+  String get refreshChampionshipDataSub =>
+      'புதிய பருவத்திற்கு முன் சாம்பியன்சிப் தரவைப் புதுப்பிக்கவும்.';
 
   @override
   String get refreshInterval => 'Refresh interval';
@@ -603,13 +614,15 @@ class AppLocalizationsTa extends AppLocalizations {
   String get updateApiKey => 'பநிஇ விசையைப் புதுப்பி';
 
   @override
-  String get updateApiKeySub => 'அதிகாரப்பூர்வ வலைத்தளத்தின் API விசையைப் புதுப்பி.\nநீங்கள் இப்போது என்ன செய்கிறீர்கள் என்றால் மட்டுமே இதைப் புதுப்பி.';
+  String get updateApiKeySub =>
+      'அதிகாரப்பூர்வ வலைத்தளத்தின் API விசையைப் புதுப்பி.\nநீங்கள் இப்போது என்ன செய்கிறீர்கள் என்றால் மட்டுமே இதைப் புதுப்பி.';
 
   @override
   String get updates => 'புதிய பதிப்புகள்';
 
   @override
-  String get useOfficialWebview => 'ஃ1-டேசு.காம் க்கு பதிலாக நேரடி அமர்வுகளுக்கு அதிகாரப்பூர்வ வெப்வியூவைப் பயன்படுத்தவும்';
+  String get useOfficialWebview =>
+      'ஃ1-டேசு.காம் க்கு பதிலாக நேரடி அமர்வுகளுக்கு அதிகாரப்பூர்வ வெப்வியூவைப் பயன்படுத்தவும்';
 
   @override
   String get victory => 'வெற்றி';
@@ -630,7 +643,8 @@ class AppLocalizationsTa extends AppLocalizations {
   String get viewResults => 'முடிவுகளைக் காண்க';
 
   @override
-  String get watchHighlightsOnYoutube => 'YouTube இல் சிறப்பம்சங்களைப் பாருங்கள்';
+  String get watchHighlightsOnYoutube =>
+      'YouTube இல் சிறப்பம்சங்களைப் பாருங்கள்';
 
   @override
   String get watchOnYouTube => 'வலைகுழாயில் பாருங்கள்';

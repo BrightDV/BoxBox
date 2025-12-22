@@ -12,7 +12,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get about => 'Acerca de';
 
   @override
-  String get aboutDescription => 'Box, Box! es software libre con copyleft, licenciado bajo GPLv3+. Su objetivo es permitir a los usuarios seguir la Fórmula 1 y la Fórmula E sin anuncios ni trackers.';
+  String get aboutDescription =>
+      'Box, Box! es software libre con copyleft, licenciado bajo GPLv3+. Su objetivo es permitir a los usuarios seguir la Fórmula 1 y la Fórmula E sin anuncios ni trackers.';
 
   @override
   String get aboutBottomLine => 'Con ❤ por BrightDV.';
@@ -171,7 +172,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get edit => 'Editar';
 
   @override
-  String get editOrderDescription => 'Cambia el orden pulsando prolongadamente en un elemento.';
+  String get editOrderDescription =>
+      'Cambia el orden pulsando prolongadamente en un elemento.';
 
   @override
   String get enableNotifications => 'Enable notifications';
@@ -180,7 +182,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get errorOccurred => 'Algo no fue bien';
 
   @override
-  String get errorOccurredDetails => 'La aplicación ha encontrado un error desconocido.\nVuelva a intentarlo más tarde.';
+  String get errorOccurredDetails =>
+      'La aplicación ha encontrado un error desconocido.\nVuelva a intentarlo más tarde.';
 
   @override
   String get experimentalFeatures => 'Funciones Experimentales';
@@ -249,7 +252,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get grandPrixNotifications => 'Grand-Prix sessions notifications';
 
   @override
-  String get grandPrixNotificationsSub => 'You need to go to the schedule screen in order to initialize notifications of the next Grand-Prix.';
+  String get grandPrixNotificationsSub =>
+      'You need to go to the schedule screen in order to initialize notifications of the next Grand-Prix.';
 
   @override
   String get hallOfFame => 'Salón de la Fama';
@@ -297,7 +301,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get minuteAbbreviation => 'MIN';
 
   @override
-  String get modernNewsAppearance => 'Utilice un aspecto moderno para las noticias.';
+  String get modernNewsAppearance =>
+      'Utilice un aspecto moderno para las noticias.';
 
   @override
   String get monthAbbreviationJanuary => 'ENE';
@@ -357,7 +362,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get next => 'SIGUIENTES';
 
   @override
-  String get noResults => 'No hay nada que mostrar aquí. Es posible que tenga una tarifa limitada.';
+  String get noResults =>
+      'No hay nada que mostrar aquí. Es posible que tenga una tarifa limitada.';
 
   @override
   String get nothingHere => 'Nada que mostrar\naquí.';
@@ -384,7 +390,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get official => 'Oficial';
 
   @override
-  String get offline => 'Desconectado. Los datos podrían no estar actualizados.';
+  String get offline =>
+      'Desconectado. Los datos podrían no estar actualizados.';
 
   @override
   String get offtrack => 'You went off-track!';
@@ -405,7 +412,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get openQuiz => 'Abrir cuestionario';
 
   @override
-  String get openingWithInAppBrowser => 'Abrir con el navegador de la aplicación';
+  String get openingWithInAppBrowser =>
+      'Abrir con el navegador de la aplicación';
 
   @override
   String get other => 'Otros';
@@ -486,7 +494,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get refreshChampionshipData => 'Actualizar los datos del campeonato';
 
   @override
-  String get refreshChampionshipDataSub => 'Actualice los datos del campeonato antes de una nueva temporada.';
+  String get refreshChampionshipDataSub =>
+      'Actualice los datos del campeonato antes de una nueva temporada.';
 
   @override
   String get refreshInterval => 'Refresh interval';
@@ -603,13 +612,15 @@ class AppLocalizationsEs extends AppLocalizations {
   String get updateApiKey => 'Update API Key';
 
   @override
-  String get updateApiKeySub => 'Update the API key of the official website.\nUpdate this only if you now what you are doing.';
+  String get updateApiKeySub =>
+      'Update the API key of the official website.\nUpdate this only if you now what you are doing.';
 
   @override
   String get updates => 'Nuevas versiones';
 
   @override
-  String get useOfficialWebview => 'Utilice Webview oficial para las sesiones en directo';
+  String get useOfficialWebview =>
+      'Utilice Webview oficial para las sesiones en directo';
 
   @override
   String get victory => 'Victoria';

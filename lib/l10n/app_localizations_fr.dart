@@ -12,7 +12,8 @@ class AppLocalizationsFr extends AppLocalizations {
   String get about => 'À propos';
 
   @override
-  String get aboutDescription => 'Box, Box! est une application libre, sous licence GPLv3+. Elle vise à permettre de suivre la Formule 1 et la Formule E sans pubs ni traceurs.';
+  String get aboutDescription =>
+      'Box, Box! est une application libre, sous licence GPLv3+. Elle vise à permettre de suivre la Formule 1 et la Formule E sans pubs ni traceurs.';
 
   @override
   String get aboutBottomLine => 'Fait avec ❤ par BrightDV.';
@@ -111,7 +112,8 @@ class AppLocalizationsFr extends AppLocalizations {
   String get darkMode => 'Sombre';
 
   @override
-  String get dataNotAvailable => 'Les données ne sont pas disponibles actuellement.';
+  String get dataNotAvailable =>
+      'Les données ne sont pas disponibles actuellement.';
 
   @override
   String get dataSaverMode => 'Économiseur de données';
@@ -171,7 +173,8 @@ class AppLocalizationsFr extends AppLocalizations {
   String get edit => 'Éditer';
 
   @override
-  String get editOrderDescription => 'Changez l\'ordre en appuyant longtemps sur un élément.';
+  String get editOrderDescription =>
+      'Changez l\'ordre en appuyant longtemps sur un élément.';
 
   @override
   String get enableNotifications => 'Activer les notifications';
@@ -180,7 +183,8 @@ class AppLocalizationsFr extends AppLocalizations {
   String get errorOccurred => 'Une erreur est survenue';
 
   @override
-  String get errorOccurredDetails => 'L\'application a rencontré une erreur inconnue.\nVeuillez réessayer plus tard.';
+  String get errorOccurredDetails =>
+      'L\'application a rencontré une erreur inconnue.\nVeuillez réessayer plus tard.';
 
   @override
   String get experimentalFeatures => 'Fonctionnalités expérimentales';
@@ -228,10 +232,12 @@ class AppLocalizationsFr extends AppLocalizations {
   String get font => 'Police d\'écriture';
 
   @override
-  String get fontDescription => 'Police d\'écriture utilisée dans les articles.';
+  String get fontDescription =>
+      'Police d\'écriture utilisée dans les articles.';
 
   @override
-  String get fullScreenGestures => 'Commandes pour ouvrir/fermer le lecteur plein-écran';
+  String get fullScreenGestures =>
+      'Commandes pour ouvrir/fermer le lecteur plein-écran';
 
   @override
   String get gallery => 'Galerie';
@@ -246,10 +252,12 @@ class AppLocalizationsFr extends AppLocalizations {
   String get grandPrixMap => 'Carte du Grand-Prix';
 
   @override
-  String get grandPrixNotifications => 'Notifications des sessions des Grand-Prix';
+  String get grandPrixNotifications =>
+      'Notifications des sessions des Grand-Prix';
 
   @override
-  String get grandPrixNotificationsSub => 'Vous devez vous rendre sur le calendrier afin d\'initialiser les notifications du prochain Grand-Prix.';
+  String get grandPrixNotificationsSub =>
+      'Vous devez vous rendre sur le calendrier afin d\'initialiser les notifications du prochain Grand-Prix.';
 
   @override
   String get hallOfFame => 'Panthéon';
@@ -297,7 +305,8 @@ class AppLocalizationsFr extends AppLocalizations {
   String get minuteAbbreviation => 'MIN';
 
   @override
-  String get modernNewsAppearance => 'Utiliser une apparence moderne pour les actualités.';
+  String get modernNewsAppearance =>
+      'Utiliser une apparence moderne pour les actualités.';
 
   @override
   String get monthAbbreviationJanuary => 'JANV';
@@ -339,7 +348,8 @@ class AppLocalizationsFr extends AppLocalizations {
   String get motorsportLocalizeFeeds => 'Flux localisés de Motorsport.com';
 
   @override
-  String get needsRestart => 'Redémarrer l\'application pour appliquer les changements.';
+  String get needsRestart =>
+      'Redémarrer l\'application pour appliquer les changements.';
 
   @override
   String get news => 'Actualités';
@@ -486,7 +496,8 @@ class AppLocalizationsFr extends AppLocalizations {
   String get refreshChampionshipData => 'Rafraîchir les données du championnat';
 
   @override
-  String get refreshChampionshipDataSub => 'Rafraîchissez les données du championnat une fois avant une nouvelle saison.';
+  String get refreshChampionshipDataSub =>
+      'Rafraîchissez les données du championnat une fois avant une nouvelle saison.';
 
   @override
   String get refreshInterval => 'Intervalle de rafraîchissement';
@@ -603,13 +614,15 @@ class AppLocalizationsFr extends AppLocalizations {
   String get updateApiKey => 'Mise à jour de la clé API';
 
   @override
-  String get updateApiKeySub => 'Mettre à jour la clé API du site officiel.\nMerci de le faire uniquement si vous savez ce que vous faites.';
+  String get updateApiKeySub =>
+      'Mettre à jour la clé API du site officiel.\nMerci de le faire uniquement si vous savez ce que vous faites.';
 
   @override
   String get updates => 'Mises à jour';
 
   @override
-  String get useOfficialWebview => 'Utiliser la Webview officielle pour les sessions en direct au lieu de f1-dash.com';
+  String get useOfficialWebview =>
+      'Utiliser la Webview officielle pour les sessions en direct au lieu de f1-dash.com';
 
   @override
   String get victory => 'Victoire';

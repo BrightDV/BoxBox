@@ -12,7 +12,8 @@ class AppLocalizationsHu extends AppLocalizations {
   String get about => 'Az appról';
 
   @override
-  String get aboutDescription => 'A Box, Box! egy GPLv3+ copyleft licenc alatt védett szabad szoftver. A Formula 1 eseményeinek követéséhez nyújt lehetőséget, reklámok és nyomkövetők nélkül.';
+  String get aboutDescription =>
+      'A Box, Box! egy GPLv3+ copyleft licenc alatt védett szabad szoftver. A Formula 1 eseményeinek követéséhez nyújt lehetőséget, reklámok és nyomkövetők nélkül.';
 
   @override
   String get aboutBottomLine => '❤️-tel BrightDV-től.';
@@ -27,7 +28,8 @@ class AppLocalizationsHu extends AppLocalizations {
   String get addToCalendar => 'Add to calendar';
 
   @override
-  String get alreadyDownloadedArticle => 'This article has already been downloaded.';
+  String get alreadyDownloadedArticle =>
+      'This article has already been downloaded.';
 
   @override
   String get alreadyDownloading => 'Already downloading';
@@ -171,7 +173,8 @@ class AppLocalizationsHu extends AppLocalizations {
   String get edit => 'Szerkesztés';
 
   @override
-  String get editOrderDescription => 'Sorrend megváltoztatása egy elem hosszas megnyomásával.';
+  String get editOrderDescription =>
+      'Sorrend megváltoztatása egy elem hosszas megnyomásával.';
 
   @override
   String get enableNotifications => 'Enable notifications';
@@ -180,7 +183,8 @@ class AppLocalizationsHu extends AppLocalizations {
   String get errorOccurred => 'Hiba történt';
 
   @override
-  String get errorOccurredDetails => 'Az alkalmazás ismeretlen hibát észlelt.\nKérjük, próbálja meg újra később.';
+  String get errorOccurredDetails =>
+      'Az alkalmazás ismeretlen hibát észlelt.\nKérjük, próbálja meg újra később.';
 
   @override
   String get experimentalFeatures => 'Kísérleti funkciók';
@@ -249,7 +253,8 @@ class AppLocalizationsHu extends AppLocalizations {
   String get grandPrixNotifications => 'Grand-Prix sessions notifications';
 
   @override
-  String get grandPrixNotificationsSub => 'You need to go to the schedule screen in order to initialize notifications of the next Grand-Prix.';
+  String get grandPrixNotificationsSub =>
+      'You need to go to the schedule screen in order to initialize notifications of the next Grand-Prix.';
 
   @override
   String get hallOfFame => 'Hírességek csarnoka';
@@ -339,7 +344,8 @@ class AppLocalizationsHu extends AppLocalizations {
   String get motorsportLocalizeFeeds => 'Motorsport.com\'s localized feeds';
 
   @override
-  String get needsRestart => 'Az alkalmazás újraindítása a módosítások alkalmazásához.';
+  String get needsRestart =>
+      'Az alkalmazás újraindítása a módosítások alkalmazásához.';
 
   @override
   String get news => 'Hírek';
@@ -357,7 +363,8 @@ class AppLocalizationsHu extends AppLocalizations {
   String get next => 'KÖVETKEZŐ';
 
   @override
-  String get noResults => 'Itt nincs semmi. Lehet hogy túl sok kérést hajtottál végre, és lekorlátoztak egy időre.';
+  String get noResults =>
+      'Itt nincs semmi. Lehet hogy túl sok kérést hajtottál végre, és lekorlátoztak egy időre.';
 
   @override
   String get nothingHere => 'Itt nincs \nsemmi.';
@@ -405,7 +412,8 @@ class AppLocalizationsHu extends AppLocalizations {
   String get openQuiz => 'Nyílt kvíz';
 
   @override
-  String get openingWithInAppBrowser => 'Megnyitás az alkalmazáson belüli böngészővel';
+  String get openingWithInAppBrowser =>
+      'Megnyitás az alkalmazáson belüli böngészővel';
 
   @override
   String get other => 'Más';
@@ -486,7 +494,8 @@ class AppLocalizationsHu extends AppLocalizations {
   String get refreshChampionshipData => 'Refresh championship data';
 
   @override
-  String get refreshChampionshipDataSub => 'Refresh championship data before a new season.';
+  String get refreshChampionshipDataSub =>
+      'Refresh championship data before a new season.';
 
   @override
   String get refreshInterval => 'Refresh interval';
@@ -603,13 +612,15 @@ class AppLocalizationsHu extends AppLocalizations {
   String get updateApiKey => 'Update API Key';
 
   @override
-  String get updateApiKeySub => 'Update the API key of the official website.\nUpdate this only if you now what you are doing.';
+  String get updateApiKeySub =>
+      'Update the API key of the official website.\nUpdate this only if you now what you are doing.';
 
   @override
   String get updates => 'Új verziók';
 
   @override
-  String get useOfficialWebview => 'Use official Webview for live sessions instead of f1-dash.com';
+  String get useOfficialWebview =>
+      'Use official Webview for live sessions instead of f1-dash.com';
 
   @override
   String get victory => 'Győzelem';

@@ -17,7 +17,7 @@
  * Copyright (c) 2022-2025, BrightDV
  */
 
-import 'package:add_2_calendar/add_2_calendar.dart' as calendar;
+import 'package:add_2_calendar_new/add_2_calendar_new.dart' as calendar;
 import 'package:boxbox/Screens/free_practice.dart';
 import 'package:boxbox/Screens/race_details.dart';
 import 'package:boxbox/classes/event_tracker.dart';

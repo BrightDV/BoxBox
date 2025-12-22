@@ -12,7 +12,8 @@ class AppLocalizationsBn extends AppLocalizations {
   String get about => 'তথ্য';
 
   @override
-  String get aboutDescription => 'Box, Box! হলো কপিলেফ্ট লিব্রে সফ্টওয়্যার, যা GPLv3+ অধীনে লাইসেন্সপ্রাপ্ত। এটির লক্ষ্য হলো বিজ্ঞাপন বা ট্র্যাকার ছাড়াই ফর্মুলা ১ এবং ফর্মুলা ই অনুসরণ করার সুযোগ দেওয়া।';
+  String get aboutDescription =>
+      'Box, Box! হলো কপিলেফ্ট লিব্রে সফ্টওয়্যার, যা GPLv3+ অধীনে লাইসেন্সপ্রাপ্ত। এটির লক্ষ্য হলো বিজ্ঞাপন বা ট্র্যাকার ছাড়াই ফর্মুলা ১ এবং ফর্মুলা ই অনুসরণ করার সুযোগ দেওয়া।';
 
   @override
   String get aboutBottomLine => 'BrightDV দ্বারা ❤ এর সাথে।';
@@ -171,7 +172,8 @@ class AppLocalizationsBn extends AppLocalizations {
   String get edit => 'পরিবর্তন করুন';
 
   @override
-  String get editOrderDescription => 'একটি আইটেম দীর্ঘ-টিপে ক্রম পরিবর্তন করুন।';
+  String get editOrderDescription =>
+      'একটি আইটেম দীর্ঘ-টিপে ক্রম পরিবর্তন করুন।';
 
   @override
   String get enableNotifications => 'নোটিফিকেশন্স চালু করুন';
@@ -180,7 +182,8 @@ class AppLocalizationsBn extends AppLocalizations {
   String get errorOccurred => 'কিছু একটা সমস্যা হয়েছে';
 
   @override
-  String get errorOccurredDetails => 'অ্যাপটি একটি অজানা ত্রুটির সম্মুখীন হয়েছে ।\nঅনুগ্রহ করে একটু পরে আবার চেষ্টা করুন।';
+  String get errorOccurredDetails =>
+      'অ্যাপটি একটি অজানা ত্রুটির সম্মুখীন হয়েছে ।\nঅনুগ্রহ করে একটু পরে আবার চেষ্টা করুন।';
 
   @override
   String get experimentalFeatures => 'পরীক্ষামূলক ফিচার';
@@ -249,7 +252,8 @@ class AppLocalizationsBn extends AppLocalizations {
   String get grandPrixNotifications => 'গ্র্যান্ড-প্রিক্স সেশনের নোটিফিকেশন';
 
   @override
-  String get grandPrixNotificationsSub => 'পরবর্তী গ্র্যান্ড-প্রিক্সের নোটিফিকেশন্স শুরু করার জন্য আপনাকে সময়সূচী স্ক্রিনে যেতে হবে।';
+  String get grandPrixNotificationsSub =>
+      'পরবর্তী গ্র্যান্ড-প্রিক্সের নোটিফিকেশন্স শুরু করার জন্য আপনাকে সময়সূচী স্ক্রিনে যেতে হবে।';
 
   @override
   String get hallOfFame => 'হল অফ ফেম';
@@ -297,7 +301,8 @@ class AppLocalizationsBn extends AppLocalizations {
   String get minuteAbbreviation => 'মিনিট';
 
   @override
-  String get modernNewsAppearance => 'সংবাদের জন্য আধুনিক উপস্থাপন ব্যবহার করুন।';
+  String get modernNewsAppearance =>
+      'সংবাদের জন্য আধুনিক উপস্থাপন ব্যবহার করুন।';
 
   @override
   String get monthAbbreviationJanuary => 'জান';
@@ -339,7 +344,8 @@ class AppLocalizationsBn extends AppLocalizations {
   String get motorsportLocalizeFeeds => 'Motorsport.com এর স্থানীয় ফিড';
 
   @override
-  String get needsRestart => 'পরিবর্তনগুলি প্রয়োগ করতে অ্যাপটি আবার চালু করুন।';
+  String get needsRestart =>
+      'পরিবর্তনগুলি প্রয়োগ করতে অ্যাপটি আবার চালু করুন।';
 
   @override
   String get news => 'খবর';
@@ -486,7 +492,8 @@ class AppLocalizationsBn extends AppLocalizations {
   String get refreshChampionshipData => 'চ্যাম্পিয়নশিপ ডেটা রিফ্রেশ করুন';
 
   @override
-  String get refreshChampionshipDataSub => 'একটি নতুন সিজনের আগে চ্যাম্পিয়নশিপ ডেটা রিফ্রেশ করুন।';
+  String get refreshChampionshipDataSub =>
+      'একটি নতুন সিজনের আগে চ্যাম্পিয়নশিপ ডেটা রিফ্রেশ করুন।';
 
   @override
   String get refreshInterval => 'রিফ্রেশ বিরতি';
@@ -603,13 +610,15 @@ class AppLocalizationsBn extends AppLocalizations {
   String get updateApiKey => 'এপিআই কী আপডেট করুন';
 
   @override
-  String get updateApiKeySub => 'অফিসিয়াল ওয়েবসাইটের এপিআই কী আপডেট করুন।\nআপডেট করুন যদি আপনি জানেন কি করছেন।';
+  String get updateApiKeySub =>
+      'অফিসিয়াল ওয়েবসাইটের এপিআই কী আপডেট করুন।\nআপডেট করুন যদি আপনি জানেন কি করছেন।';
 
   @override
   String get updates => 'নতুন ভার্সন';
 
   @override
-  String get useOfficialWebview => 'লাইভ সেশনের জন্য অফিসিয়াল ওয়েবভিউ ব্যবহার করুন f1-dash.com এর পরিবর্তে';
+  String get useOfficialWebview =>
+      'লাইভ সেশনের জন্য অফিসিয়াল ওয়েবভিউ ব্যবহার করুন f1-dash.com এর পরিবর্তে';
 
   @override
   String get victory => 'বিজয়';
