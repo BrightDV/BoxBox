@@ -488,6 +488,7 @@ class EventTrackerUIProvider {
           session,
         ),
         sessionId: meetingId,
+        meetingId: meetingId,
         hasSprint: session.sessionAbbreviation == 'ss' ? true : false,
         isSprintQualifying: session.sessionAbbreviation == 'ss' ? true : false,
       );
