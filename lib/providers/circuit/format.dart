@@ -170,7 +170,8 @@ class CircuitFormatProvider {
         true,
         articles: articles,
         raceImageUrl: details['raceImage']['url'],
-        flagImageUrl: details['raceCountryFlag']['url'],
+        flagImageUrl:
+            "https://media.formula1.com/content/dam/fom-website/2018-redesign-assets/Flags%2016x9/${details['race']['meetingIsoCountryName'].toLowerCase().replaceAll(' ', '-')}-flag.png",
         headline: headline,
         highlightsArticleId: highlightsArticleId,
         results: results,
@@ -178,7 +179,7 @@ class CircuitFormatProvider {
         circuitOfficialName: details['race']['circuitOfficialName'],
         circuitMapImageUrl: details['circuitMapImage']['url'],
         circuitDescriptionText: details['circuitDescriptionText'],
-        circuitMapLinks: details['circuitMap']['links'],
+        circuitMapLinks: [], //details['circuitMap']['links'],
       );
     } else if (championship == 'Formula E') {
       List<Session> sessions = [];

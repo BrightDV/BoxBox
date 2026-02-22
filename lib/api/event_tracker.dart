@@ -175,8 +175,8 @@ class EventTracker {
       meetingEndDate,
     );
 
-    String baseUrl =
-        'https://www.formula1.com/en/results.html/${DateTime.now().year}/races/${eventAsJson['fomRaceId']}/${eventAsJson['circuitSmallImage']['title'].toLowerCase().replaceAll('.png', '')}/session-type.html';
+    //String baseUrl =
+    //    'https://www.formula1.com/en/results.html/${DateTime.now().year}/races/${eventAsJson['fomRaceId']}/${eventAsJson['circuitSmallImage']['title'].toLowerCase().replaceAll('.png', '')}/session-type.html';
     List<Session> sessions = [];
     for (var session in eventAsJson[path]['timetables']) {
       int state = SessionState().UNKNOWN;
@@ -200,7 +200,8 @@ class EventTracker {
           session['session'],
           endDate,
           startDate,
-          baseUrl,
+          //baseUrl,
+          '',
           state,
         ),
       );
@@ -221,7 +222,9 @@ class EventTracker {
       eventAsJson[secondPath]['meetingCountryName'],
       meetingStartDate,
       meetingEndDate,
-      eventAsJson['circuitSmallImage']['url'],
+      "https://media.formula1.com/image/upload/c_fit,h_704/q_auto/v1740000000/" +
+          eventAsJson['circuitImage']['public_id'] +
+          ".webp",
       eventAsJson['raceResults'],
       isRunning,
       sessions,

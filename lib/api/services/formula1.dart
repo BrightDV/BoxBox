@@ -825,7 +825,10 @@ class Formula1 {
               element['meetingCountryName'],
               [],
               isFirst: races.isEmpty,
-              raceCoverUrl: element['thumbnail']['image']['url'],
+              raceCoverUrl:
+                  "https://media.formula1.com/image/upload/c_lfill,w_1296/q_auto/v1740000000/" +
+                      element['heroImage']['public_id'] +
+                      ".webp",
               detailsPath: detailsPath,
               isPreSeasonTesting: element['type'] == 'fom-testing',
             ),
