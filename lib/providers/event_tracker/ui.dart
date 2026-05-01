@@ -58,6 +58,8 @@ class EventTrackerUIProvider {
   Widget getEventTrackerContainerCircuitImageWidget(Event event) {
     String championship = Hive.box('settings')
         .get('championship', defaultValue: 'Formula 1') as String;
+    bool useDarkMode =
+        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     if (championship == 'Formula 1') {
       return Padding(
         padding: const EdgeInsets.only(
@@ -69,9 +71,25 @@ class EventTrackerUIProvider {
         child: SizedBox(
           width: 120,
           height: 90,
-          child: Image.network(
-            event.circuitImage,
-          ),
+          // See https://stackoverflow.com/questions/56107197/how-to-invert-image-color-in-flutter
+          // and https://www.burkharts.net/apps/blog/over-the-rainbow-colour-filters/ for the filter values
+          child: useDarkMode
+              ? ColorFiltered(
+                  colorFilter: ColorFilter.matrix(
+                    [
+                      -1, 0, 0, 0, 255, //
+                      0, -1, 0, 0, 255, //
+                      0, 0, -1, 0, 255, //
+                      0, 0, 0, 1, 0, //
+                    ],
+                  ),
+                  child: Image.network(
+                    event.circuitImage,
+                  ),
+                )
+              : Image.network(
+                  event.circuitImage,
+                ),
         ),
       );
     } else {
