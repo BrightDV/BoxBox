@@ -72,6 +72,8 @@ class _AppearanceSettingsScreenState extends State<AppearanceSettingsScreen> {
       'RB',
       'Red Bull',
       'Williams',
+      'Audi',
+      'Cadillac',
     ];
 
     Map teamNameToString = {
@@ -89,6 +91,8 @@ class _AppearanceSettingsScreenState extends State<AppearanceSettingsScreen> {
       "mercedes": 'Mercedes',
       "red_bull": 'Red Bull',
       "williams": 'Williams',
+      "audi": "Audi",
+      "cadillac": "Cadillac",
     };
 
     teamTheme = teamNameToString[teamTheme];
@@ -195,6 +199,8 @@ class _AppearanceSettingsScreenState extends State<AppearanceSettingsScreen> {
                         'Mercedes': 'mercedes',
                         'Red Bull': 'red_bull',
                         'Williams': 'williams',
+                        'Audi': 'audi',
+                        'Cadillac': 'cadillac',
                       };
                       Hive.box('settings').put(
                         'teamTheme',
