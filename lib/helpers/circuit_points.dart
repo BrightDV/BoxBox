@@ -46,7 +46,8 @@ class GetTrackGeoJSONPoints {
     "interlagos": "br-1940",
     "las_vegas": "us-2023",
     "yas_marina": "ae-2009",
-    "shanghai": "cn-2004"
+    "shanghai": "cn-2004",
+    "madring": "es-2026"
   };
   Future<List<List>> getCircuitPoints(String circuitId) async {
     String? encodedCircuitName = circuitIdEncoder[circuitId];
