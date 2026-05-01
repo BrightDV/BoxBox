@@ -17,6 +17,7 @@
  * Copyright (c) 2022-2025, BrightDV
  */
 
+import 'package:boxbox/helpers/bottom_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:boxbox/l10n/app_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -30,10 +31,6 @@ class EditOrderScreen extends StatefulWidget {
 }
 
 class _EditOrderScreenState extends State<EditOrderScreen> {
-  void update() {
-    setState(() {});
-  }
-
   @override
   Widget build(BuildContext context) {
     List feedsNames = Hive.box('feeds').get(
@@ -99,53 +96,57 @@ class _EditOrderScreenState extends State<EditOrderScreen> {
         ),
         actions: [
           IconButton(
-            onPressed: () => showDialog(
-              context: context,
-              builder: (context) {
-                final TextEditingController nameController =
-                    TextEditingController();
-                final TextEditingController urlController =
-                    TextEditingController();
-                String type = "rss";
-                return StatefulBuilder(
-                  builder: (context, setState) => AlertDialog(
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(
-                          20.0,
-                        ),
-                      ),
-                    ),
-                    contentPadding: const EdgeInsets.all(
-                      30.0,
-                    ),
-                    title: Text(
-                      AppLocalizations.of(context)!.customFeed,
-                      style: TextStyle(
-                        fontSize: 24.0,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    content: Column(
+            onPressed: () {
+              final TextEditingController nameController =
+                  TextEditingController();
+              final TextEditingController urlController =
+                  TextEditingController();
+              String type = "rss";
+              showCustomBottomSheet(
+                context,
+                Padding(
+                  padding: EdgeInsets.fromLTRB(
+                    20,
+                    15,
+                    20,
+                    MediaQuery.of(context).viewInsets.bottom,
+                  ),
+                  child: StatefulBuilder(
+                    builder: (context, setState) => Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
-                        TextField(
-                          controller: nameController,
-                          decoration: InputDecoration(
-                            hintText: 'Example',
-                            hintStyle: TextStyle(
-                              fontWeight: FontWeight.w100,
+                        Text(
+                          AppLocalizations.of(context)!.customFeed,
+                          style: TextStyle(
+                            fontSize: 20.0,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 10),
+                          child: TextField(
+                            controller: nameController,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(),
+                              hintText: 'Example',
+                              hintStyle: TextStyle(
+                                fontWeight: FontWeight.w100,
+                              ),
                             ),
                           ),
                         ),
-                        TextField(
-                          controller: urlController,
-                          decoration: InputDecoration(
-                            hintText: 'https://example.com',
-                            hintStyle: TextStyle(
-                              fontWeight: FontWeight.w100,
+                        Padding(
+                          padding: EdgeInsets.only(top: 10, bottom: 5),
+                          child: TextField(
+                            controller: urlController,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(),
+                              hintText: 'https://example.com',
+                              hintStyle: TextStyle(
+                                fontWeight: FontWeight.w100,
+                              ),
                             ),
                           ),
                         ),
@@ -179,41 +180,54 @@ class _EditOrderScreenState extends State<EditOrderScreen> {
                             ],
                           ),
                         ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 20, bottom: 7),
+                          child: Container(
+                            width: double.infinity,
+                            height: 50,
+                            child: FilledButton.tonal(
+                              onPressed: () async {
+                                feedsNames.add(nameController.text);
+                                Hive.box('feeds').put('feedsNames', feedsNames);
+                                feedsDetails[nameController.text] = {
+                                  'url': urlController.text,
+                                  'type': type
+                                };
+                                Hive.box('feeds')
+                                    .put('feedsDetails', feedsDetails);
+                                Navigator.of(context).pop();
+                                setState(() {});
+                                if (widget.updateParent != null) {
+                                  widget.updateParent!();
+                                }
+                              },
+                              child: Text(
+                                AppLocalizations.of(context)!.save,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 7, bottom: 20),
+                          child: Container(
+                            width: double.infinity,
+                            height: 50,
+                            child: OutlinedButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Text(
+                                AppLocalizations.of(context)!.close,
+                              ),
+                            ),
+                          ),
+                        ),
                       ],
                     ),
-                    actions: <Widget>[
-                      TextButton(
-                        onPressed: () async {
-                          feedsNames.add(nameController.text);
-                          Hive.box('feeds').put('feedsNames', feedsNames);
-                          feedsDetails[nameController.text] = {
-                            'url': urlController.text,
-                            'type': type
-                          };
-                          Hive.box('feeds').put('feedsDetails', feedsDetails);
-                          Navigator.of(context).pop();
-                          update();
-                          if (widget.updateParent != null) {
-                            widget.updateParent!();
-                          }
-                        },
-                        child: Text(
-                          AppLocalizations.of(context)!.save,
-                        ),
-                      ),
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: Text(
-                          AppLocalizations.of(context)!.close,
-                        ),
-                      ),
-                    ],
                   ),
-                );
-              },
-            ),
+                ),
+              );
+            },
             icon: Icon(
               Icons.add_outlined,
             ),
@@ -246,65 +260,77 @@ class _EditOrderScreenState extends State<EditOrderScreen> {
             trailing: IconButton(
               icon: Icon(Icons.delete_outline),
               padding: EdgeInsets.only(right: 15),
-              onPressed: () => showDialog(
-                context: context,
-                builder: (context) {
-                  return AlertDialog(
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(
-                          20.0,
-                        ),
-                      ),
+              onPressed: () => showCustomBottomSheet(
+                context,
+                SizedBox(
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(
+                      20,
+                      15,
+                      20,
+                      15,
                     ),
-                    contentPadding: const EdgeInsets.all(
-                      50.0,
-                    ),
-                    title: Text(
-                      AppLocalizations.of(context)!.deleteCustomFeed,
-                      style: TextStyle(
-                        fontSize: 24.0,
-                      ), // here
-                      textAlign: TextAlign.center,
-                    ),
-                    content: Column(
+                    child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
                         Text(
-                          AppLocalizations.of(context)!.deleteUrl,
+                          AppLocalizations.of(context)!.deleteCustomFeed,
+                          style: TextStyle(
+                            fontSize: 20.0,
+                          ), // here
+                          textAlign: TextAlign.center,
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 5, bottom: 5),
+                          child: Text(
+                            AppLocalizations.of(context)!.deleteUrl,
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 20, bottom: 7),
+                          child: Container(
+                            width: double.infinity,
+                            height: 50,
+                            child: FilledButton.tonal(
+                              onPressed: () {
+                                feedsDetails.remove(feedsNames[index]);
+                                Hive.box('feeds')
+                                    .put('feedsDetails', feedsDetails);
+                                feedsNames.remove(feedsNames[index]);
+                                Hive.box('feeds').put('feedsNames', feedsNames);
+                                Navigator.of(context).pop();
+                                setState(() {});
+                                if (widget.updateParent != null) {
+                                  widget.updateParent!();
+                                }
+                              },
+                              child: Text(
+                                AppLocalizations.of(context)!.yes,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 7, bottom: 20),
+                          child: Container(
+                            width: double.infinity,
+                            height: 50,
+                            child: OutlinedButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Text(
+                                AppLocalizations.of(context)!.close,
+                              ),
+                            ),
+                          ),
                         ),
                       ],
                     ),
-                    actions: <Widget>[
-                      TextButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: Text(
-                          AppLocalizations.of(context)!.cancel,
-                        ),
-                      ),
-                      ElevatedButton(
-                        onPressed: () {
-                          feedsDetails.remove(feedsNames[index]);
-                          Hive.box('feeds').put('feedsDetails', feedsDetails);
-                          feedsNames.remove(feedsNames[index]);
-                          Hive.box('feeds').put('feedsNames', feedsNames);
-                          Navigator.of(context).pop();
-                          setState(() {});
-                          if (widget.updateParent != null) {
-                            widget.updateParent!();
-                          }
-                        },
-                        child: Text(
-                          AppLocalizations.of(context)!.yes,
-                        ),
-                      ),
-                    ],
-                  );
-                },
+                  ),
+                ),
               ),
             ),
           ),

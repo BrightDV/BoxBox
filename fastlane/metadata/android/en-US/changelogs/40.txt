@@ -1,0 +1,6 @@
+Warning: this release breaks the home news filter. It will be fixed in the next release.
+
+- BETA: add F2, F3, F1 Academy with a dedicated championship-chooser screen
+- Fix drivers standings
+- Fix schedule image
+- New MD3 bottom navigation bar (not disappearing anymore) and bottom sheets

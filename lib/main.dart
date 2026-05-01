@@ -23,7 +23,7 @@ import 'dart:async';
 
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:background_downloader/background_downloader.dart';
-import 'package:boxbox/api/formula1.dart';
+import 'package:boxbox/api/services/formula1.dart';
 import 'package:boxbox/config/notifications.dart';
 import 'package:boxbox/config/router.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';

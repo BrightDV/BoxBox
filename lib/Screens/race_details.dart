@@ -17,7 +17,7 @@
  * Copyright (c) 2022-2025, BrightDV
  */
 
-import 'package:add_2_calendar/add_2_calendar.dart' as a2c;
+import 'package:add_2_calendar_new/add_2_calendar_new.dart' as a2c;
 import 'package:boxbox/classes/driver.dart';
 import 'package:boxbox/classes/race.dart';
 import 'package:boxbox/helpers/divider.dart';
@@ -108,6 +108,7 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
               future: ResultsRequestsProvider().getRaceStandingsFromApi(
                 meetingId: widget.raceId,
                 raceUrl: raceUrl,
+                sessionId: widget.sessionId,
               ),
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
@@ -164,7 +165,7 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
                 race: race,
               ),
               builder: (context, snapshot) => snapshot.hasError
-                  ? ResultsUIProvider().getRaceResultsWidget(
+                  ? ResultsUIProvider().getSavedRaceResultsWidget(
                       snapshot,
                       context,
                       widget.isFromRaceHub,
@@ -209,7 +210,7 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
                             ],
                           ),
                         )
-                      : ResultsUIProvider().getRaceResultsWidget(
+                      : ResultsUIProvider().getSavedRaceResultsWidget(
                           snapshot,
                           context,
                           widget.isFromRaceHub,
@@ -335,6 +336,7 @@ class QualificationResultsProvider extends StatefulWidget {
   final String? raceUrl;
   final bool? hasSprint;
   final bool? isSprintQualifying;
+  final String? meetingId;
   final String? sessionId;
   const QualificationResultsProvider({
     Key? key,
@@ -342,6 +344,7 @@ class QualificationResultsProvider extends StatefulWidget {
     this.raceUrl,
     this.hasSprint,
     this.isSprintQualifying,
+    this.meetingId,
     this.sessionId,
   }) : super(key: key);
 
@@ -377,7 +380,7 @@ class _QualificationResultsProviderState
                     widget.sessionId,
                     meetingId: widget.raceUrl!.startsWith('http')
                         ? widget.raceUrl!.split('/')[7]
-                        : widget.sessionId,
+                        : widget.meetingId,
                   )
                 : ResultsRequestsProvider().getQualificationStandings(
                     widget.hasSprint,

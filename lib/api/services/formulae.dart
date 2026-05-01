@@ -138,7 +138,7 @@ class FormulaE {
     Map<String, dynamic> responseAsJson =
         json.decode(utf8.decode(response.bodyBytes));
     if (offset == 0 && tagId == null && articleType == null) {
-      Hive.box('requests').put('news', responseAsJson);
+      Hive.box('requests').put('feNews', responseAsJson);
       Hive.box('requests').put('newsLastSavedFormat', 'fe');
     }
     return formatResponse(responseAsJson);
@@ -342,7 +342,7 @@ class FormulaE {
               element['name'],
               element['name'],
               '',
-              element['circuit']['circuitName'],
+              element['city'],
               [],
               isFirst: races.isEmpty,
               raceCoverUrl: 'none',
@@ -424,125 +424,114 @@ class FormulaE {
   }
 
   Future<Map> getSessions(String raceId) async {
-    if (raceId != '') {
-      String endpoint = Hive.box('settings')
-          .get('server', defaultValue: defaultF1Endpoint) as String;
-      Uri url = Uri.parse(
-        endpoint != defaultF1Endpoint
-            ? '$endpoint/fe/formula-e/v1/races/$raceId/sessions'
-            : '$defaultEndpoint/formula-e/v1/races/$raceId/sessions',
-      );
-      var response = await http.get(
-        url,
-        headers: {
-          'Accept': 'application/json',
-          'User-Agent':
-              'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:124.0) Gecko/20100101 Firefox/124.0',
-        },
-      );
-      Map<String, dynamic> responseAsJson = json.decode(
-        utf8.decode(response.bodyBytes),
-      );
-      List<DateTime> sessionDates = [];
-      List<DateTime> sessionEndDates = [];
-      List sessionStates = [];
-      List sessionIds = [];
-      List sessionNames = [];
-      bool hasCombinedQualifs = false;
-      Map qualifFinal = {};
-      for (var session in responseAsJson['sessions']) {
-        if ((session['sessionName'].startsWith('Free Practice') ||
-            (session['sessionName'] == 'Race'))) {
-          if (session['offsetGMT'].startsWith('-')) {
-            if (session['offsetGMT'].length < 6) {
-              session['offsetGMT'] = session['offsetGMT'].substring(0, 1) +
-                  '0' +
-                  session['offsetGMT'].substring(1);
-            }
-          } else {
-            session['offsetGMT'] = '+' + session['offsetGMT'];
+    String endpoint = Hive.box('settings')
+        .get('server', defaultValue: defaultF1Endpoint) as String;
+    Uri url = Uri.parse(
+      endpoint != defaultF1Endpoint
+          ? '$endpoint/fe/formula-e/v1/races/$raceId/sessions'
+          : '$defaultEndpoint/formula-e/v1/races/$raceId/sessions',
+    );
+    var response = await http.get(
+      url,
+      headers: {
+        'Accept': 'application/json',
+        'User-Agent':
+            'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:124.0) Gecko/20100101 Firefox/124.0',
+      },
+    );
+    Map<String, dynamic> responseAsJson = json.decode(
+      utf8.decode(response.bodyBytes),
+    );
+    List<DateTime> sessionDates = [];
+    List<DateTime> sessionEndDates = [];
+    List sessionStates = [];
+    List sessionIds = [];
+    List sessionNames = [];
+    bool hasCombinedQualifs = false;
+    Map qualifFinal = {};
+    for (var session in responseAsJson['sessions']) {
+      if ((session['sessionName'].startsWith('Free Practice') ||
+          (session['sessionName'] == 'Race'))) {
+        if (session['offsetGMT'].startsWith('-')) {
+          if (session['offsetGMT'].length < 6) {
+            session['offsetGMT'] = session['offsetGMT'].substring(0, 1) +
+                '0' +
+                session['offsetGMT'].substring(1);
           }
+        } else {
+          session['offsetGMT'] = '+' + session['offsetGMT'];
+        }
 
-          sessionDates.add(
-            DateTime.parse(
-              session['sessionDate'] +
-                  ' ' +
-                  session['startTime'] +
-                  session['offsetGMT'],
-            ),
-          );
-          sessionEndDates.add(
-            DateTime.parse(
-              session['sessionDate'] +
-                  ' ' +
-                  session['finishTime'] +
-                  session['offsetGMT'],
-            ),
-          );
-          sessionStates.add(session['sessionLiveStatus']);
-          sessionIds.add(session['id']);
-          sessionNames.add(session['sessionName']);
-        } else if (session['sessionName'] == 'Qual Group A') {
-          if (session['offsetGMT'].startsWith('-')) {
-            if (session['offsetGMT'].length < 6) {
-              session['offsetGMT'] = session['offsetGMT'].substring(0, 1) +
-                  '0' +
-                  session['offsetGMT'].substring(1);
-            }
-          } else {
-            session['offsetGMT'] = '+' + session['offsetGMT'];
+        sessionDates.add(
+          DateTime.parse(
+            session['sessionDate'] +
+                ' ' +
+                session['startTime'] +
+                session['offsetGMT'],
+          ),
+        );
+        sessionEndDates.add(
+          DateTime.parse(
+            session['sessionDate'] +
+                ' ' +
+                session['finishTime'] +
+                session['offsetGMT'],
+          ),
+        );
+        sessionStates.add(session['sessionLiveStatus']);
+        sessionIds.add(session['id']);
+        sessionNames.add(session['sessionName']);
+      } else if (session['sessionName'] == 'Qual Group A') {
+        if (session['offsetGMT'].startsWith('-')) {
+          if (session['offsetGMT'].length < 6) {
+            session['offsetGMT'] = session['offsetGMT'].substring(0, 1) +
+                '0' +
+                session['offsetGMT'].substring(1);
           }
+        } else {
+          session['offsetGMT'] = '+' + session['offsetGMT'];
+        }
 
-          sessionDates.add(
-            DateTime.parse(
-              session['sessionDate'] +
-                  ' ' +
-                  session['startTime'] +
-                  session['offsetGMT'],
-            ),
-          );
-        } else if (session['sessionName'] == 'Qual Final') {
-          sessionStates.add(session['sessionLiveStatus']);
-          if (session['offsetGMT'].startsWith('-')) {
-            if (session['offsetGMT'].length < 6) {
-              session['offsetGMT'] = session['offsetGMT'].substring(0, 1) +
-                  '0' +
-                  session['offsetGMT'].substring(1);
-            }
-          } else {
-            session['offsetGMT'] = '+' + session['offsetGMT'];
+        sessionDates.add(
+          DateTime.parse(
+            session['sessionDate'] +
+                ' ' +
+                session['startTime'] +
+                session['offsetGMT'],
+          ),
+        );
+      } else if (session['sessionName'] == 'Qual Final') {
+        sessionStates.add(session['sessionLiveStatus']);
+        if (session['offsetGMT'].startsWith('-')) {
+          if (session['offsetGMT'].length < 6) {
+            session['offsetGMT'] = session['offsetGMT'].substring(0, 1) +
+                '0' +
+                session['offsetGMT'].substring(1);
           }
-          sessionEndDates.add(
-            DateTime.parse(
-              session['sessionDate'] +
-                  ' ' +
-                  session['finishTime'] +
-                  session['offsetGMT'],
-            ),
-          );
-          if (!hasCombinedQualifs) {
-            qualifFinal = session;
-          }
-        } else if (session['sessionName'] == 'Combined qualifying') {
-          hasCombinedQualifs = true;
+        } else {
+          session['offsetGMT'] = '+' + session['offsetGMT'];
+        }
+        sessionEndDates.add(
+          DateTime.parse(
+            session['sessionDate'] +
+                ' ' +
+                session['finishTime'] +
+                session['offsetGMT'],
+          ),
+        );
+        if (!hasCombinedQualifs) {
           qualifFinal = session;
         }
+      } else if (session['sessionName'] == 'Combined qualifying') {
+        hasCombinedQualifs = true;
+        qualifFinal = session;
       }
-
-      sessionIds.insert(sessionIds.length - 1, qualifFinal['id']);
-      sessionNames.insert(sessionNames.length - 1, 'Combined qualifying');
-
-      return {
-        'sessionDates': sessionDates,
-        'sessionEndDates': sessionEndDates,
-        'sessionStates': sessionStates,
-        'sessionIds': sessionIds,
-        'original': responseAsJson,
-        'sessionNames': sessionNames,
-      };
-    } else {
-      return {};
     }
+
+    sessionIds.insert(sessionIds.length - 1, qualifFinal['id']);
+    sessionNames.insert(sessionNames.length - 1, 'Combined qualifying');
+
+    return responseAsJson;
   }
 
   Future<Map> getRaceDetails(String raceId) async {
@@ -550,7 +539,7 @@ class FormulaE {
     //    .get('server', defaultValue: defaultF1Endpoint) as String;
     Uri url = Uri.parse(
       //endpoint != defaultF1Endpoint
-      //? '$endpoint/fe/formula-e/v1/races/championshipId=$championshipId'
+      //? '$endpoint/fe/formula-e/v1/races/raceId=$raceId'
       '$defaultEndpoint/formula-e/v1/races/$raceId',
     );
     var response = await http.get(
@@ -593,7 +582,7 @@ class FormulaE {
     );
 
     Map formatedMap = {
-      'sessionsIds': sessions['sessionIds'],
+      'sessions': sessions,
       'content': responseAsJson['content'],
       'race': race,
       'meetingId': meetingId,
@@ -607,24 +596,23 @@ class FormulaE {
     List<DriverResult> formatedRaceStandings = [];
     List jsonResponse = raceStandings['results'];
     for (var element in jsonResponse) {
-      String time = element['delay'];
-      if (time == '-') {
-        time = element['sessionTime'];
+      String time = element['sessionTime'];
+      String delay = element['delay'];
+
+      while (delay.startsWith('0:')) {
+        delay = delay.substring(2);
       }
-      while (time.startsWith('0:')) {
-        time = time.substring(2);
+      if (delay.startsWith('00')) {
+        delay = delay.substring(1);
       }
-      if (time.startsWith('00')) {
-        time = time.substring(1);
-      }
-      if (time == '') {
-        time = 'DNF';
+      if (delay == '') {
+        delay = 'DNF';
       } else if (element['delay'] != '-') {
-        time = '+$time';
+        delay = '+$delay';
       }
 
-      if (time.lastIndexOf(':') != -1) {
-        time = time.replaceFirst(':', '.', time.lastIndexOf(':'));
+      if (delay.lastIndexOf(':') != -1) {
+        delay = delay.replaceFirst(':', '.', delay.lastIndexOf(':'));
       }
 
       formatedRaceStandings.add(
@@ -637,6 +625,7 @@ class FormulaE {
           element['driverTLA'],
           element['team']?['name'] ?? '',
           time,
+          delay,
           element['fastestLap'] ?? false,
           element['bestTime'] ?? '',
           '',
@@ -755,6 +744,7 @@ class FormulaE {
             element['driverTLA'],
             element['team']?['name'] ?? '',
             time,
+            gap,
             element['fastestLap'] ?? false,
             element['bestTime'] ?? '',
             gap,
@@ -824,6 +814,7 @@ class FormulaE {
             element['driverTLA'],
             element['team']?['name'] ?? '',
             time,
+            gap,
             element['fastestLap'] ?? false,
             element['bestTime'] ?? '',
             gap,

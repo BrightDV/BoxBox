@@ -36,3 +36,19 @@ class Video {
     this.datePosted,
   );
 }
+
+class VideoDetails {
+  final String title;
+  final List qualities;
+  final List urls;
+  final String? thumbnailUrl;
+  final String? localFilePath;
+
+  VideoDetails(
+    this.title,
+    this.qualities,
+    this.urls,
+    this.thumbnailUrl, {
+    this.localFilePath,
+  });
+}

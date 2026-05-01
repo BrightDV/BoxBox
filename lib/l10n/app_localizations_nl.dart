@@ -12,7 +12,8 @@ class AppLocalizationsNl extends AppLocalizations {
   String get about => 'Over';
 
   @override
-  String get aboutDescription => 'Box, Box! is copyleft vrije software onder de licentie GPLv3+ met als doel om Formule 1 en Formule E zonder ads of trackers te kunnen volgen.';
+  String get aboutDescription =>
+      'Box, Box! is copyleft vrije software onder de licentie GPLv3+ met als doel om Formule 1 en Formule E zonder ads of trackers te kunnen volgen.';
 
   @override
   String get aboutBottomLine => 'Gemaakt met ❤ door BrichtDV.';
@@ -33,10 +34,10 @@ class AppLocalizationsNl extends AppLocalizations {
   String get alreadyDownloading => 'Wordt al gedownload';
 
   @override
-  String get anyNetwork => 'Any network';
+  String get anyNetwork => 'Elk netwerk';
 
   @override
-  String get apiKey => 'API Key';
+  String get apiKey => 'API-Sleutel';
 
   @override
   String get appearance => 'Uiterlijk';
@@ -48,7 +49,7 @@ class AppLocalizationsNl extends AppLocalizations {
   String get articleFull => 'Volledig';
 
   @override
-  String get articleNotifications => 'New articles notifications';
+  String get articleNotifications => 'Nieuwe artikelen notificaties';
 
   @override
   String get articleTitleAndImage => 'Titel en afbeelding';
@@ -96,7 +97,10 @@ class AppLocalizationsNl extends AppLocalizations {
   String get crashError => 'Fout:';
 
   @override
-  String get customFeed => 'Eigen feed';
+  String get customErgastUrl => 'Ergast Custom URL';
+
+  @override
+  String get customFeed => 'Aangepaste feed';
 
   @override
   String get customHomeFeed => 'Aangepaste thuisfeed';
@@ -168,16 +172,18 @@ class AppLocalizationsNl extends AppLocalizations {
   String get edit => 'Bewerken';
 
   @override
-  String get editOrderDescription => 'Verander de volgorden door lang een op een item te drukken.';
+  String get editOrderDescription =>
+      'Verander de volgorden door lang een op een item te drukken.';
 
   @override
-  String get enableNotifications => 'Enable notifications';
+  String get enableNotifications => 'Schakel notificaties in';
 
   @override
   String get errorOccurred => 'Er is iets fout gegaan';
 
   @override
-  String get errorOccurredDetails => 'Er is een onbekende fout opgetreden.\nProbeer het later opnieuw.';
+  String get errorOccurredDetails =>
+      'Er is een onbekende fout opgetreden.\nProbeer het later opnieuw.';
 
   @override
   String get experimentalFeatures => 'Experimentele functies';
@@ -225,7 +231,7 @@ class AppLocalizationsNl extends AppLocalizations {
   String get font => 'Lettertype';
 
   @override
-  String get fontDescription => 'Het lettertype voor de artikelen.';
+  String get fontDescription => 'Lettertype in artikelen';
 
   @override
   String get fullScreenGestures => 'Enter/exit fullscreen gestures';
@@ -234,7 +240,7 @@ class AppLocalizationsNl extends AppLocalizations {
   String get gallery => 'Galerij';
 
   @override
-  String get gap => 'VERSCHIL';
+  String get gap => 'GAT';
 
   @override
   String get grandsPrix => 'Ingeschreven Grands Prix';
@@ -246,7 +252,8 @@ class AppLocalizationsNl extends AppLocalizations {
   String get grandPrixNotifications => 'Grand-Prix sessions notifications';
 
   @override
-  String get grandPrixNotificationsSub => 'You need to go to the schedule screen in order to initialize notifications of the next Grand-Prix.';
+  String get grandPrixNotificationsSub =>
+      'You need to go to the schedule screen in order to initialize notifications of the next Grand-Prix.';
 
   @override
   String get hallOfFame => 'Hall of Fame';
@@ -294,7 +301,8 @@ class AppLocalizationsNl extends AppLocalizations {
   String get minuteAbbreviation => 'MIN';
 
   @override
-  String get modernNewsAppearance => 'Gebruik modern uiterlijk voor het nieuws.';
+  String get modernNewsAppearance =>
+      'Gebruik modern uiterlijk voor het nieuws.';
 
   @override
   String get monthAbbreviationJanuary => 'JAN';
@@ -336,7 +344,8 @@ class AppLocalizationsNl extends AppLocalizations {
   String get motorsportLocalizeFeeds => 'Motorsport.com lokale feeds';
 
   @override
-  String get needsRestart => 'Herstart de app om de wijzigingen door te voeren.';
+  String get needsRestart =>
+      'Herstart de app om de wijzigingen door te voeren.';
 
   @override
   String get news => 'Nieuws';
@@ -354,25 +363,26 @@ class AppLocalizationsNl extends AppLocalizations {
   String get next => 'VOLGENDE';
 
   @override
-  String get noResults => 'Hier is niets te zien. Dit kan te maken hebben met rate limits.';
+  String get noResults =>
+      'Hier is niets te zien. Dit kan te maken hebben met rate limits.';
 
   @override
   String get nothingHere => 'Hier is niets\nte zien.';
 
   @override
-  String get notifications => 'Notifications';
+  String get notifications => 'Notificaties';
 
   @override
-  String get notifications2hours => '2 hours';
+  String get notifications2hours => '2 uur';
 
   @override
-  String get notifications6hours => '6 hours';
+  String get notifications6hours => '6 uur';
 
   @override
-  String get notifications12hours => '12 hours';
+  String get notifications12hours => '12 uur';
 
   @override
-  String get notifications24hours => '24 hours';
+  String get notifications24hours => '24 uur';
 
   @override
   String get numberOfLaps => 'Aantal rondes';
@@ -394,6 +404,9 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get openLiveBlog => 'Liveblog openen';
+
+  @override
+  String get openPoll => 'Take the survey';
 
   @override
   String get openQuiz => 'Quiz openen';
@@ -480,7 +493,8 @@ class AppLocalizationsNl extends AppLocalizations {
   String get refreshChampionshipData => 'Kampioenschapsgegevens vernieuwen';
 
   @override
-  String get refreshChampionshipDataSub => 'Vooraf aan een nieuw seizoen de kampioenschapsgegevens vernieuwen.';
+  String get refreshChampionshipDataSub =>
+      'Vooraf aan een nieuw seizoen de kampioenschapsgegevens vernieuwen.';
 
   @override
   String get refreshInterval => 'Refresh interval';
@@ -489,7 +503,10 @@ class AppLocalizationsNl extends AppLocalizations {
   String get requestError => 'Kon geen gegevens ophalen.';
 
   @override
-  String get requiredNetworkConnection => 'Required network connection';
+  String get requiredNetworkConnection => 'Netwerk connectie vereist';
+
+  @override
+  String get reset => 'Reset';
 
   @override
   String get results => 'Resultaten';
@@ -591,16 +608,18 @@ class AppLocalizationsNl extends AppLocalizations {
   String get unavailableOffline => 'Offline niet beschikbaar';
 
   @override
-  String get updateApiKey => 'Update API Key';
+  String get updateApiKey => 'Update API-sleutel';
 
   @override
-  String get updateApiKeySub => 'Update the API key of the official website.\nUpdate this only if you now what you are doing.';
+  String get updateApiKeySub =>
+      'Update de API-sleutel op de officiele website.\nUpdate dit alleen als je weet wat je doet.';
 
   @override
   String get updates => 'Nieuwe versies';
 
   @override
-  String get useOfficialWebview => 'Gebruik onaangepaste WebView voor live-sessies';
+  String get useOfficialWebview =>
+      'Gebruik officiële WebView voor live-sessies in plaats van f1-dash.com';
 
   @override
   String get victory => 'Overwinning';
@@ -624,7 +643,7 @@ class AppLocalizationsNl extends AppLocalizations {
   String get watchHighlightsOnYoutube => 'Hoogtepunten op YouTube';
 
   @override
-  String get watchOnYouTube => 'Watch on YouTube';
+  String get watchOnYouTube => 'Bekijk op YouTube';
 
   @override
   String get wifi => 'Wi-Fi';

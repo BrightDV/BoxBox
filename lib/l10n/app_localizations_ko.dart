@@ -12,7 +12,8 @@ class AppLocalizationsKo extends AppLocalizations {
   String get about => '';
 
   @override
-  String get aboutDescription => 'Box, Box! is copylefted libre software, licensed under GPLv3+. Its aim is to allow users to follow Formula 1 and Formula E without ads or trackers.';
+  String get aboutDescription =>
+      'Box, Box! is copylefted libre software, licensed under GPLv3+. Its aim is to allow users to follow Formula 1 and Formula E without ads or trackers.';
 
   @override
   String get aboutBottomLine => 'With ❤ by BrightDV.';
@@ -27,7 +28,8 @@ class AppLocalizationsKo extends AppLocalizations {
   String get addToCalendar => 'Add to calendar';
 
   @override
-  String get alreadyDownloadedArticle => 'This article has already been downloaded.';
+  String get alreadyDownloadedArticle =>
+      'This article has already been downloaded.';
 
   @override
   String get alreadyDownloading => 'Already downloading';
@@ -94,6 +96,9 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get crashError => 'Error:';
+
+  @override
+  String get customErgastUrl => 'Ergast Custom URL';
 
   @override
   String get customFeed => 'Custom feed';
@@ -177,7 +182,8 @@ class AppLocalizationsKo extends AppLocalizations {
   String get errorOccurred => 'Something went wrong';
 
   @override
-  String get errorOccurredDetails => 'The app encountered an unknown error.\nPlease try again later.';
+  String get errorOccurredDetails =>
+      'The app encountered an unknown error.\nPlease try again later.';
 
   @override
   String get experimentalFeatures => 'Experimental Features';
@@ -246,7 +252,8 @@ class AppLocalizationsKo extends AppLocalizations {
   String get grandPrixNotifications => 'Grand-Prix sessions notifications';
 
   @override
-  String get grandPrixNotificationsSub => 'You need to go to the schedule screen in order to initialize notifications of the next Grand-Prix.';
+  String get grandPrixNotificationsSub =>
+      'You need to go to the schedule screen in order to initialize notifications of the next Grand-Prix.';
 
   @override
   String get hallOfFame => 'Hall of Fame';
@@ -396,7 +403,10 @@ class AppLocalizationsKo extends AppLocalizations {
   String get openLiveBlog => 'Open live blog';
 
   @override
-  String get openQuiz => 'Open quiz';
+  String get openPoll => 'Take the survey';
+
+  @override
+  String get openQuiz => 'Take the quiz';
 
   @override
   String get openingWithInAppBrowser => 'Opening with the in-app browser';
@@ -480,7 +490,8 @@ class AppLocalizationsKo extends AppLocalizations {
   String get refreshChampionshipData => 'Refresh championship data';
 
   @override
-  String get refreshChampionshipDataSub => 'Refresh championship data before a new season.';
+  String get refreshChampionshipDataSub =>
+      'Refresh championship data before a new season.';
 
   @override
   String get refreshInterval => 'Refresh interval';
@@ -490,6 +501,9 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get requiredNetworkConnection => 'Required network connection';
+
+  @override
+  String get reset => 'Reset';
 
   @override
   String get results => 'Results';
@@ -594,13 +608,15 @@ class AppLocalizationsKo extends AppLocalizations {
   String get updateApiKey => 'Update API Key';
 
   @override
-  String get updateApiKeySub => 'Update the API key of the official website.\nUpdate this only if you now what you are doing.';
+  String get updateApiKeySub =>
+      'Update the API key of the official website.\nUpdate this only if you now what you are doing.';
 
   @override
   String get updates => 'New versions';
 
   @override
-  String get useOfficialWebview => 'Use official Webview for live sessions instead of f1-dash.com';
+  String get useOfficialWebview =>
+      'Use official Webview for live sessions instead of f1-dash.com';
 
   @override
   String get victory => 'Victory';

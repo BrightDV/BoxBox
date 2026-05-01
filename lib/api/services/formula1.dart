@@ -122,7 +122,7 @@ class Formula1 {
     Map<String, dynamic> responseAsJson =
         json.decode(utf8.decode(response.bodyBytes));
     if (offset == 0 && tagId == null && articleType == null) {
-      Hive.box('requests').put('news', responseAsJson);
+      Hive.box('requests').put('f1News', responseAsJson);
       Hive.box('requests').put('newsLastSavedFormat', 'f1');
     }
     return responseAsJson;
@@ -285,33 +285,8 @@ class Formula1 {
       if (element['completionStatusCode'] != 'OK') {
         // DNF (maybe DSQ?)
         time = element['completionStatusCode'];
-      } else if (element['positionNumber'] == '1') {
-        time = element['raceTime'];
-      } else if (element['lapsBehindLeader'] != null) {
-        // finished & lapped cars
-        if (element['lapsBehindLeader'] == "0") {
-          time = "+" + element['gapToLeader'];
-          if (time.substring(time.indexOf('.') + 1).length == 2) {
-            time += "0";
-          }
-        } else if (element['lapsBehindLeader'] == "1") {
-          // one
-          time = "+1 Lap";
-        } else {
-          // more laps
-          time = "+${element['lapsBehindLeader']} Laps";
-        }
       } else {
-        // finished & non-lapped cars
-        if (element['positionNumber'] == "1") {
-          //first
-          time = element["raceTime"];
-        } else {
-          time = element["gapToLeader"];
-          if (time.substring(time.indexOf('.') + 1).length == 2) {
-            time += "0";
-          }
-        }
+        time = element['raceTime'];
       }
 
       String fastestLapRank = "0";
@@ -330,6 +305,7 @@ class Formula1 {
           element['driverTLA'],
           Convert().teamsFromFormulaOneApiToErgast(element['teamName']),
           time,
+          element['displayTime'],
           fastestLapRank != '0' ? true : false,
           fastestLapRank != '0' ? fastestLapTime.replaceAll('00:', "") : "",
           "", // data not available
@@ -480,14 +456,6 @@ class Formula1 {
     } else {
       List finalJson = responseAsJson['raceResultsPractice$session']['results'];
       for (var element in finalJson) {
-        String time = "";
-        if (element['gapToLeader'] != null) {
-          time = '+' + element['gapToLeader'];
-          if (time.substring(time.indexOf('.') + 1).length == 2) {
-            time += '0';
-          }
-          time += 's';
-        }
         String classifiedTime = element['classifiedTime'] ?? '';
         if (classifiedTime.startsWith('00:')) {
           classifiedTime = classifiedTime.replaceFirst('00:', '');
@@ -504,9 +472,10 @@ class Formula1 {
             element['driverTLA'],
             Convert().teamsFromFormulaOneApiToErgast(element['teamName']),
             classifiedTime.replaceFirst('0000', ''),
+            element['displayTime'],
             false,
             "",
-            time,
+            element['displayTime'],
             lapsDone: element['lapsCompleted'],
             points: element['racePoints'].toString(),
             status: element['completionStatusCode'],
@@ -643,6 +612,7 @@ class Formula1 {
             element['driverTLA'],
             Convert().teamsFromFormulaOneApiToErgast(element['teamName']),
             time,
+            element['displayTime'],
             false,
             time,
             time,
@@ -713,7 +683,7 @@ class Formula1 {
           .get('server', defaultValue: defaultEndpoint) as String;
       var url = Uri.parse(
         endpoint != defaultEndpoint
-            ? '$endpoint/f1/v2/fom-results/driverstandings/season=${DateTime.now().year}'
+            ? '$endpoint/f1/v2/fom-results/driverstandings/${DateTime.now().year}'
             : '$endpoint/v2/fom-results/driverstandings?season=${DateTime.now().year}',
       );
       var response = await http.get(
@@ -841,17 +811,6 @@ class Formula1 {
           } else if (element['meetingCountryName'] == 'Las Vegas') {
             detailsPath = 'Las_Vegas';
           }
-          String raceCoverUrl = element['thumbnail']['image']['url'];
-          if (element['meetingName'] != 'Pre-Season Testing') {
-            var tmp = element['thumbnail']['image']['url']
-                .replaceAll('race-listing/', '')
-                .split('/');
-            tmp.removeLast();
-            raceCoverUrl = tmp.join('/') +
-                '/' +
-                element['meetingName'].replaceAll(" ", "_") +
-                '.jpg';
-          }
 
           races.add(
             Race(
@@ -866,7 +825,10 @@ class Formula1 {
               element['meetingCountryName'],
               [],
               isFirst: races.isEmpty,
-              raceCoverUrl: raceCoverUrl,
+              raceCoverUrl:
+                  "https://media.formula1.com/image/upload/c_lfill,w_1296/q_auto/v1740000000/" +
+                      element['heroImage']['public_id'] +
+                      ".webp",
               detailsPath: detailsPath,
               isPreSeasonTesting: element['type'] == 'fom-testing',
             ),

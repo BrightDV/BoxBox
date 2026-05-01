@@ -47,20 +47,27 @@ class Event {
 
 class Session {
   final String state;
-  final String sessionsAbbreviation;
+  final String sessionAbbreviation;
   final DateTime endTime;
   final DateTime startTime;
   final String? baseUrl;
-  final bool isRunning;
+  final int sessionState;
   final String? sessionFullName;
 
   const Session(
     this.state,
-    this.sessionsAbbreviation,
+    this.sessionAbbreviation,
     this.endTime,
     this.startTime,
     this.baseUrl,
-    this.isRunning, {
+    this.sessionState, {
     this.sessionFullName,
   });
+}
+
+class SessionState {
+  final SCHEDULED = 0;
+  final RUNNING = 1;
+  final COMPLETED = 2;
+  final UNKNOWN = 3;
 }

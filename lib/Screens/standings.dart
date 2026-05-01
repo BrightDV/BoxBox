@@ -93,27 +93,28 @@ class DriversStandingsWidget extends StatelessWidget {
         standings['driversStandingsLastSavedFormat'] ?? '';
 
     return FutureBuilder<List<Driver>>(
-        future: StandingsRequestsProvider().getDriversStandings(),
-        builder: (context, snapshot) => snapshot.hasError
-            ? StandingsUIProvider().getDriversStandingsWidget(
-                snapshot,
-                driversStandingsLastSavedFormat,
-                driversStandings,
-                scrollController,
-                true,
-              )
-            : snapshot.hasData
-                ? DriversList(
-                    items: snapshot.data!,
-                    scrollController: scrollController,
-                  )
-                : StandingsUIProvider().getDriversStandingsWidget(
-                    snapshot,
-                    driversStandingsLastSavedFormat,
-                    driversStandings,
-                    scrollController,
-                    false,
-                  ));
+      future: StandingsRequestsProvider().getDriversStandings(),
+      builder: (context, snapshot) => snapshot.hasError
+          ? StandingsUIProvider().getDriversStandingsWidget(
+              snapshot,
+              driversStandingsLastSavedFormat,
+              driversStandings,
+              scrollController,
+              true,
+            )
+          : snapshot.hasData
+              ? DriversList(
+                  items: snapshot.data!,
+                  scrollController: scrollController,
+                )
+              : StandingsUIProvider().getDriversStandingsWidget(
+                  snapshot,
+                  driversStandingsLastSavedFormat,
+                  driversStandings,
+                  scrollController,
+                  false,
+                ),
+    );
   }
 }
 

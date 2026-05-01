@@ -21,6 +21,7 @@ import 'package:boxbox/classes/article.dart';
 import 'package:boxbox/classes/driver.dart';
 import 'package:boxbox/classes/event_tracker.dart';
 import 'package:boxbox/classes/race.dart';
+import 'package:boxbox/helpers/constants.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class CircuitFormatProvider {
@@ -40,20 +41,28 @@ class CircuitFormatProvider {
       // sessions & sessions links
       for (var session
           in details['race']['meetingSessions'].reversed.toList()) {
+        int state = SessionState().UNKNOWN;
+        DateTime startDate =
+            DateTime.parse(session['startTime'] + session['gmtOffset'])
+                .toLocal();
+        DateTime endDate =
+            DateTime.parse(session['endTime'] + session['gmtOffset']).toLocal();
+        if (DateTime.now().isBefore(startDate)) {
+          state = SessionState().SCHEDULED;
+        } else if (DateTime.now().isBefore(endDate) &&
+            DateTime.now().isAfter(startDate)) {
+          state = SessionState().RUNNING;
+        } else if (DateTime.now().isAfter(endDate)) {
+          state = SessionState().COMPLETED;
+        }
         sessions.add(
           Session(
             session['state'],
             session['session'],
-            DateTime.parse(session['endTime'] + session['gmtOffset']).toLocal(),
-            DateTime.parse(session['startTime'] + session['gmtOffset'])
-                .toLocal(),
+            endDate,
+            startDate,
             null,
-            (DateTime.now().isBefore(
-                    DateTime.parse(session['endTime'] + session['gmtOffset'])
-                        .toLocal())) &&
-                (DateTime.now().isAfter(
-                    DateTime.parse(session['startTime'] + session['gmtOffset'])
-                        .toLocal())),
+            state,
             sessionFullName: session['description'],
           ),
         );
@@ -129,10 +138,11 @@ class CircuitFormatProvider {
               '',
               driverResults['driverTLA'].toString(),
               '',
+              driverResults['raceTime'] ?? driverResults['positionValue'],
               driverResults['gapToLeader'] != "0.0" &&
                       driverResults['gapToLeader'] != "0"
                   ? '+${driverResults['gapToLeader']}'
-                  : driverResults['raceTime'] ?? driverResults['positionValue'],
+                  : '',
               false,
               '',
               '',
@@ -160,7 +170,8 @@ class CircuitFormatProvider {
         true,
         articles: articles,
         raceImageUrl: details['raceImage']['url'],
-        flagImageUrl: details['raceCountryFlag']['url'],
+        flagImageUrl:
+            "https://media.formula1.com/content/dam/fom-website/2018-redesign-assets/Flags%2016x9/${details['race']['meetingIsoCountryName'].toLowerCase().replaceAll(' ', '-')}-flag.png",
         headline: headline,
         highlightsArticleId: highlightsArticleId,
         results: results,
@@ -168,20 +179,151 @@ class CircuitFormatProvider {
         circuitOfficialName: details['race']['circuitOfficialName'],
         circuitMapImageUrl: details['circuitMapImage']['url'],
         circuitDescriptionText: details['circuitDescriptionText'],
-        circuitMapLinks: details['circuitMap']['links'],
+        circuitMapLinks: [], //details['circuitMap']['links'],
       );
     } else if (championship == 'Formula E') {
       List<Session> sessions = [];
       List<News> articles = [];
+      Map qualifyingSession = {
+        'state': '',
+        'sessionAbbreviation': '',
+        'endTime': DateTime.now(),
+        'startTime': DateTime.now(),
+        'sessionState': SessionState().UNKNOWN,
+        'sessionFullName': 'Qualifying',
+      };
+      if (details['sessions'] != null) {
+        for (Map session in details['sessions']['sessions'].reversed.toList()) {
+          if (session['sessionName'].toLowerCase().contains('qual')) {
+            if (session['sessionName'] == 'Combined qualifying') {
+              qualifyingSession['sessionAbbreviation'] = session['id'];
+            } else if (session['sessionName'] == 'Qual Group A') {
+              String gmtOffset = session['offsetGMT'];
+              try {
+                int.parse(gmtOffset.substring(0, 1));
+                if (gmtOffset.length < 5) {
+                  gmtOffset = '0' + gmtOffset;
+                }
+                gmtOffset = '+' + gmtOffset;
+              } catch (error) {
+                if (gmtOffset.length < 6) {
+                  gmtOffset =
+                      gmtOffset.substring(0, 1) + '0' + gmtOffset.substring(1);
+                }
+              }
+              DateTime startDate = DateTime.parse(
+                session['sessionDate'] +
+                    'T' +
+                    session['startTime'] +
+                    ':00' +
+                    gmtOffset,
+              );
+              qualifyingSession['startTime'] = startDate;
+            } else if (session['sessionName'] == 'Qual Final') {
+              String gmtOffset = session['offsetGMT'];
+              try {
+                int.parse(gmtOffset.substring(0, 1));
+                if (gmtOffset.length < 5) {
+                  gmtOffset = '0' + gmtOffset;
+                }
+                gmtOffset = '+' + gmtOffset;
+              } catch (error) {
+                if (gmtOffset.length < 6) {
+                  gmtOffset =
+                      gmtOffset.substring(0, 1) + '0' + gmtOffset.substring(1);
+                }
+              }
+              DateTime endDate = DateTime.parse(
+                session['sessionDate'] +
+                    'T' +
+                    session['finishTime'] +
+                    ':00' +
+                    gmtOffset,
+              );
+              qualifyingSession['endTime'] = endDate;
+            }
+          } else {
+            if (session['sessionDate'] != null) {
+              String gmtOffset = session['offsetGMT'];
+              try {
+                int.parse(gmtOffset.substring(0, 1));
+                if (gmtOffset.length < 5) {
+                  gmtOffset = '0' + gmtOffset;
+                }
+                gmtOffset = '+' + gmtOffset;
+              } catch (error) {
+                if (gmtOffset.length < 6) {
+                  gmtOffset =
+                      gmtOffset.substring(0, 1) + '0' + gmtOffset.substring(1);
+                }
+              }
+              DateTime startDate = DateTime.parse(
+                session['sessionDate'] +
+                    'T' +
+                    session['startTime'] +
+                    ':00' +
+                    gmtOffset,
+              );
+              DateTime endDate = DateTime.parse(
+                session['sessionDate'] +
+                    'T' +
+                    session['finishTime'] +
+                    ':00' +
+                    gmtOffset,
+              );
+              int state = SessionState().UNKNOWN;
+              if (DateTime.now().isBefore(startDate)) {
+                state = SessionState().SCHEDULED;
+              } else if (DateTime.now().isBefore(endDate) &&
+                  DateTime.now().isAfter(startDate)) {
+                state = SessionState().RUNNING;
+              } else if (DateTime.now().isAfter(endDate)) {
+                state = SessionState().COMPLETED;
+              }
 
-      // TODO: sessions
+              sessions.add(
+                Session(
+                  session['sessionLiveStatus'] ?? '',
+                  session['id'],
+                  endDate,
+                  startDate,
+                  null,
+                  state,
+                  sessionFullName: session['sessionName'],
+                ),
+              );
+            }
+          }
+        }
+      }
+      int qualiState = SessionState().UNKNOWN;
+      if (DateTime.now().isBefore(qualifyingSession['startTime'])) {
+        qualiState = SessionState().SCHEDULED;
+      } else if (DateTime.now().isBefore(qualifyingSession['endTime']) &&
+          DateTime.now().isAfter(qualifyingSession['startTime'])) {
+        qualiState = SessionState().RUNNING;
+      } else if (DateTime.now().isAfter(qualifyingSession['endTime'])) {
+        qualiState = SessionState().COMPLETED;
+      }
+      sessions.insert(
+        1,
+        Session(
+          qualifyingSession['state'],
+          qualifyingSession['sessionAbbreviation'],
+          qualifyingSession['endTime'],
+          qualifyingSession['startTime'],
+          null,
+          qualiState,
+          sessionFullName: qualifyingSession['sessionFullName'],
+        ),
+      );
 
       // articles
-      for (Map article in details['']) {
+      for (Map article in details['content']) {
         articles.add(
           News(
             article['id'].toString(),
-            '',
+            article['type'],
             '',
             article['title'],
             article['description'] ?? ' ',
@@ -204,6 +346,115 @@ class CircuitFormatProvider {
         false,
         articles: articles,
         raceImageUrl: details['raceImageUrl'],
+      );
+    } else if (championship == 'Formula 2' ||
+        championship == 'Formula 3' ||
+        championship == 'F1 Academy') {
+      List<Session> sessions = [];
+      List<DriverResult> results = [];
+      Map<String, List<Link>> sessionsLinks = {};
+
+      // sessions & sessions links
+      for (var session in details['SessionResults'].reversed.toList()) {
+        int state = SessionState().UNKNOWN;
+        DateTime startDate =
+            DateTime.parse(session['SessionStartTime']).toLocal();
+
+        DateTime endDate;
+        if (session['SessionEndTime'] != null) {
+          endDate = DateTime.parse(session['SessionEndTime']).toLocal();
+        } else {
+          endDate = startDate.add(Duration(hours: 1));
+        }
+        if (DateTime.now().isBefore(startDate)) {
+          state = SessionState().SCHEDULED;
+        } else if (DateTime.now().isBefore(endDate) &&
+            DateTime.now().isAfter(startDate)) {
+          state = SessionState().RUNNING;
+        } else if (DateTime.now().isAfter(endDate)) {
+          state = SessionState().COMPLETED;
+        }
+        sessions.add(
+          Session(
+            '',
+            session['SessionShortName'],
+            endDate,
+            startDate,
+            null,
+            state,
+            sessionFullName: session['SessionName'],
+          ),
+        );
+      }
+
+      if (details['Content']['PRACTICE_reportLink'] != null) {
+        if (sessionsLinks['Prac'] == null) {
+          sessionsLinks['Prac'] = [];
+        }
+        sessionsLinks['Prac']!.add(
+          Link(
+            details['Content']['PRACTICE_reportLink']['title'],
+            'report',
+            Constants().FORMULA_SERIES_BASE_URLS[championship] +
+                details['Content']['PRACTICE_reportLink']['path'],
+          ),
+        );
+      }
+
+      if (details['Content']['QUALIFYING_reportLink'] != null) {
+        if (sessionsLinks['Qual'] == null) {
+          sessionsLinks['Qual'] = [];
+        }
+        sessionsLinks['Qual']!.add(
+          Link(
+            details['Content']['QUALIFYING_reportLink']['title'],
+            'report',
+            Constants().FORMULA_SERIES_BASE_URLS[championship] +
+                details['Content']['QUALIFYING_reportLink']['path'],
+          ),
+        );
+      }
+
+      if (details['Content']['RESULT_FR_reportLink'] != null) {
+        if (sessionsLinks['SR'] == null) {
+          sessionsLinks['SR'] = [];
+        }
+        sessionsLinks['SR']!.add(
+          Link(
+            details['Content']['RESULT_FR_reportLink']['title'],
+            'report',
+            Constants().FORMULA_SERIES_BASE_URLS[championship] +
+                details['Content']['RESULT_FR_reportLink']['path'],
+          ),
+        );
+      }
+
+      if (details['Content']['RESULT_SR_reportLink'] != null) {
+        if (sessionsLinks['FR'] == null) {
+          sessionsLinks['FR'] = [];
+        }
+        sessionsLinks['FR']!.add(
+          Link(
+            details['Content']['RESULT_SR_reportLink']['title'],
+            'report',
+            Constants().FORMULA_SERIES_BASE_URLS[championship] +
+                details['Content']['RESULT_SR_reportLink']['path'],
+          ),
+        );
+      }
+
+      return RaceDetails(
+        details['RaceId'].toString(),
+        details['CountryName'],
+        details['CircuitInformation']['CircuitName'],
+        sessions,
+        false,
+        raceImageUrl: details['Content']['bannerBackgroundImage']['url'],
+        flagImageUrl:
+            'https://res.cloudinary.com/prod-f2f3/ar_16:9,c_fill,dpr_1.0,f_auto,g_auto,h_500/v1/' +
+                details['CountryFlagImagePath'],
+        results: results,
+        sessionsLinks: sessionsLinks,
       );
     } else {
       return RaceDetails(

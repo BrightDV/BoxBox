@@ -18,11 +18,11 @@
  */
 
 import 'package:boxbox/Screens/Racing/circuit_details.dart';
-import 'package:boxbox/Screens/session_screen.dart';
 import 'package:boxbox/classes/article.dart';
 import 'package:boxbox/classes/driver.dart';
 import 'package:boxbox/classes/event_tracker.dart';
 import 'package:boxbox/classes/race.dart';
+import 'package:boxbox/helpers/bottom_sheet.dart';
 import 'package:boxbox/helpers/buttons.dart';
 import 'package:boxbox/helpers/divider.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
@@ -30,6 +30,7 @@ import 'package:boxbox/helpers/news.dart';
 import 'package:boxbox/helpers/request_error.dart';
 import 'package:boxbox/l10n/app_localizations.dart';
 import 'package:boxbox/providers/circuit/requests.dart';
+import 'package:boxbox/providers/circuit/ui.dart';
 import 'package:boxbox/scraping/formula_one.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -60,12 +61,16 @@ class CircuitScreen extends StatelessWidget {
                   )
             : snapshot.hasData
                 ? CircuitScreenContent(snapshot.data!)
-                : Column(
-                    children: [
-                      AppBar(),
-                      LoadingIndicatorUtil(),
-                    ],
-                  ),
+                : details != null
+                    ? CircuitScreenContent(details)
+                    : Column(
+                        children: [
+                          AppBar(),
+                          Center(
+                            child: LoadingIndicatorUtil(),
+                          ),
+                        ],
+                      ),
       ),
     );
   }
@@ -101,16 +106,17 @@ class CircuitScreenContent extends StatelessWidget {
                   },
                   blendMode: BlendMode.dstIn,
                   child: CachedNetworkImage(
-                    errorWidget: (context, url, error) => Container(),
                     fadeOutDuration: const Duration(milliseconds: 300),
                     fadeInDuration: const Duration(milliseconds: 300),
                     fit: BoxFit.cover,
                     imageUrl: details.raceImageUrl!,
-                    placeholder: (context, url) => const LoadingIndicatorUtil(),
                     colorBlendMode: BlendMode.darken,
                     height: MediaQuery.of(context).size.width > 780
                         ? MediaQuery.of(context).size.height
                         : MediaQuery.of(context).size.height * (4 / 9),
+                    width: MediaQuery.of(context).size.width > 780
+                        ? MediaQuery.of(context).size.width
+                        : null,
                   ),
                 ),
               Padding(
@@ -237,37 +243,17 @@ class SessionItemForCircuit extends StatelessWidget {
   final String meetingCountryName;
   final String meetingOfficialName;
   final String meetingId;
+  final int sessionIndex;
   final List<Link>? links;
   const SessionItemForCircuit(
     this.session,
     this.meetingCountryName,
     this.meetingOfficialName,
-    this.meetingId, {
+    this.meetingId,
+    this.sessionIndex, {
     this.links,
     super.key,
   });
-
-  void tapAction(String linkType, String url, BuildContext context) {
-    if (linkType == 'Article' || linkType == 'LiveBlog') {
-      context.pushNamed(
-        'article',
-        pathParameters: {'id': url.split('.').last},
-        extra: {
-          'isFromLink': true,
-        },
-      );
-    } else if (linkType == 'StartingGrid') {
-      context.pushNamed(
-        'starting-grid',
-        pathParameters: {'meetingId': meetingId},
-      );
-    } else if (linkType == 'SprintGrid') {
-      context.pushNamed(
-        'sprint-shootout',
-        pathParameters: {'meetingId': meetingId},
-      );
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -288,56 +274,14 @@ class SessionItemForCircuit extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 5),
       child: InkWell(
-        onTap: () =>
-            session.endTime.isAfter(DateTime.now()) || session.isRunning
-                ? Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => SessionScreen(
-                        session.sessionFullName!,
-                        session,
-                        meetingCountryName,
-                        meetingOfficialName,
-                        meetingId,
-                      ),
-                    ),
-                  )
-                : session.sessionsAbbreviation.startsWith('p')
-                    ? context.pushNamed(
-                        'practice',
-                        pathParameters: {
-                          'meetingId': meetingId,
-                          'sessionIndex':
-                              session.sessionsAbbreviation.substring(1)
-                        },
-                      )
-                    : session.sessionsAbbreviation == 'ss'
-                        ? context.pushNamed(
-                            'sprint-shootout',
-                            pathParameters: {
-                              'meetingId': meetingId,
-                            },
-                          )
-                        : session.sessionsAbbreviation == 's'
-                            ? context.pushNamed(
-                                'sprint',
-                                pathParameters: {
-                                  'meetingId': meetingId,
-                                },
-                              )
-                            : session.sessionsAbbreviation == 'q'
-                                ? context.pushNamed(
-                                    'qualifyings',
-                                    pathParameters: {
-                                      'meetingId': meetingId,
-                                    },
-                                  )
-                                : context.pushNamed(
-                                    'race',
-                                    pathParameters: {
-                                      'meetingId': meetingId,
-                                    },
-                                  ),
+        onTap: () => CircuitUIProvider().onSessionTapAction(
+          session,
+          meetingCountryName,
+          meetingOfficialName,
+          meetingId,
+          context,
+          sessionIndex,
+        ),
         borderRadius: BorderRadius.circular(6),
         child: Ink(
           height: 80,
@@ -367,7 +311,7 @@ class SessionItemForCircuit extends StatelessWidget {
               children: [
                 Padding(
                   padding: EdgeInsets.only(right: 10, left: 5),
-                  child: session.isRunning
+                  child: session.sessionState == SessionState().RUNNING
                       ? SizedBox(
                           height: 25,
                           width: 25,
@@ -379,7 +323,7 @@ class SessionItemForCircuit extends StatelessWidget {
                             strokeWidth: 2.0,
                           ),
                         )
-                      : session.state == 'completed'
+                      : session.sessionState == SessionState().COMPLETED
                           ? SizedBox(
                               height: 25,
                               width: 25,
@@ -411,73 +355,74 @@ class SessionItemForCircuit extends StatelessWidget {
                     ? IconButton(
                         icon: Icon(Icons.link_outlined),
                         iconSize: 25,
-                        onPressed: () async => await showModalBottomSheet(
-                          context: context,
-                          isScrollControlled: true,
-                          builder: (context) => BottomSheet(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                            ),
-                            onClosing: () {},
-                            builder: (context) {
-                              return SizedBox(
-                                child: ListView.builder(
-                                  shrinkWrap: true,
-                                  itemCount: links!.length + 1,
-                                  itemBuilder: (context, index) => index == 0
-                                      ? Padding(
-                                          padding: EdgeInsets.only(top: 5),
-                                          child: ListTile(
-                                            title: Text(
-                                              AppLocalizations.of(context)!
-                                                  .links,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .headlineMedium,
-                                            ),
-                                          ),
-                                        )
-                                      : ListTile(
+                        onPressed: () async => await showCustomBottomSheet(
+                          context,
+                          SizedBox(
+                            child: Padding(
+                              padding: EdgeInsets.fromLTRB(
+                                30,
+                                15,
+                                30,
+                                MediaQuery.of(context).viewInsets.bottom,
+                              ),
+                              child: ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: links!.length + 1,
+                                itemBuilder: (context, index) => index == 0
+                                    ? Padding(
+                                        padding: EdgeInsets.only(top: 5),
+                                        child: ListTile(
                                           title: Text(
-                                            links![index - 1].text == 'report'
-                                                ? 'Report'
-                                                : links![index - 1].text ==
-                                                        'highlights'
-                                                    ? 'Highlights'
-                                                    : links![index - 1].text ==
-                                                            'lapByLap'
-                                                        ? 'Lap-by-lap'
-                                                        : links![index - 1]
-                                                                .text
-                                                                .contains(
-                                                                    'Grid')
-                                                            ? AppLocalizations
-                                                                    .of(
-                                                                        context)!
-                                                                .startingGrid
-                                                            : links![index - 1]
-                                                                .text,
-                                          ),
-                                          leading: links![index - 1].text ==
-                                                  'report'
-                                              ? Icon(Icons.analytics_outlined)
-                                              : links![index - 1].text ==
-                                                      'highlights'
-                                                  ? Icon(
-                                                      Icons.play_arrow_outlined,
-                                                    )
-                                                  : Icon(
-                                                      Icons.article_outlined,
-                                                    ),
-                                          onTap: () => tapAction(
-                                            links![index - 1].type,
-                                            links![index - 1].url,
-                                            context,
+                                            AppLocalizations.of(context)!.links,
+                                            style: TextStyle(fontSize: 20),
                                           ),
                                         ),
-                                ),
-                              );
-                            },
+                                      )
+                                    : ListTile(
+                                        title: Text(
+                                          links![index - 1].text == 'report'
+                                              ? 'Report'
+                                              : links![index - 1].text ==
+                                                      'highlights'
+                                                  ? 'Highlights'
+                                                  : links![index - 1].text ==
+                                                          'lapByLap'
+                                                      ? 'Lap-by-lap'
+                                                      : links![index - 1]
+                                                              .text
+                                                              .contains('Grid')
+                                                          ? AppLocalizations.of(
+                                                                  context)!
+                                                              .startingGrid
+                                                          : links![index - 1]
+                                                                      .text ==
+                                                                  'driverOfTheDay'
+                                                              ? 'Driver of the Day'
+                                                              : links![
+                                                                      index - 1]
+                                                                  .text,
+                                        ),
+                                        leading: links![index - 1].text ==
+                                                'report'
+                                            ? Icon(Icons.analytics_outlined)
+                                            : links![index - 1].text ==
+                                                    'highlights'
+                                                ? Icon(
+                                                    Icons.play_arrow_outlined,
+                                                  )
+                                                : Icon(
+                                                    Icons.article_outlined,
+                                                  ),
+                                        onTap: () =>
+                                            CircuitUIProvider().linkTapAction(
+                                          links![index - 1].type,
+                                          links![index - 1].url,
+                                          context,
+                                          meetingId,
+                                        ),
+                                      ),
+                              ),
+                            ),
                           ),
                         ),
                       )
@@ -620,7 +565,7 @@ class RaceResults extends StatelessWidget {
                     const Spacer(),
                     Expanded(
                       flex: 6,
-                      child: Text(result.time),
+                      child: Text(result.gap),
                     ),
                   ],
                 ),
@@ -747,7 +692,10 @@ class Sessions extends StatelessWidget {
                   details.meetingDisplayName,
                   details.meetingCompleteName,
                   details.meetingId,
-                  links: details.sessionsLinks![session.sessionsAbbreviation],
+                  details.sessions.length -
+                      details.sessions.indexOf(session) -
+                      1,
+                  links: details.sessionsLinks?[session.sessionAbbreviation],
                 ),
             ],
           ),

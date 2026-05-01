@@ -12,7 +12,8 @@ class AppLocalizationsTr extends AppLocalizations {
   String get about => 'Hakkında';
 
   @override
-  String get aboutDescription => 'Box, Box! copyleft lisanslı özgür yazılımdır, GPLv3+ altında lisanslanmıştır. Amacı, kullanıcıların Formula 1 ve Formula E\'yi reklamlar veya izleyiciler olmadan takip etmelerini sağlamaktır.';
+  String get aboutDescription =>
+      'Box, Box! copyleft lisanslı özgür yazılımdır, GPLv3+ altında lisanslanmıştır. Amacı, kullanıcıların Formula 1 ve Formula E\'yi reklamlar veya izleyiciler olmadan takip etmelerini sağlamaktır.';
 
   @override
   String get aboutBottomLine => 'BrightDV tarafından ❤ ile.';
@@ -96,6 +97,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get crashError => 'Hata:';
 
   @override
+  String get customErgastUrl => 'Ergast Custom URL';
+
+  @override
   String get customFeed => 'Özel akış';
 
   @override
@@ -168,7 +172,8 @@ class AppLocalizationsTr extends AppLocalizations {
   String get edit => 'Düzenle';
 
   @override
-  String get editOrderDescription => 'Bir öğeye uzun basarak sırayı değiştirin.';
+  String get editOrderDescription =>
+      'Bir öğeye uzun basarak sırayı değiştirin.';
 
   @override
   String get enableNotifications => 'Enable notifications';
@@ -177,7 +182,8 @@ class AppLocalizationsTr extends AppLocalizations {
   String get errorOccurred => 'Bir şeyler ters gitti';
 
   @override
-  String get errorOccurredDetails => 'Uygulama bilinmeyen bir hatayla karşılaştı.\nLütfen daha sonra tekrar deneyin.';
+  String get errorOccurredDetails =>
+      'Uygulama bilinmeyen bir hatayla karşılaştı.\nLütfen daha sonra tekrar deneyin.';
 
   @override
   String get experimentalFeatures => 'Deneysel Özellikler';
@@ -246,7 +252,8 @@ class AppLocalizationsTr extends AppLocalizations {
   String get grandPrixNotifications => 'Grand-Prix sessions notifications';
 
   @override
-  String get grandPrixNotificationsSub => 'You need to go to the schedule screen in order to initialize notifications of the next Grand-Prix.';
+  String get grandPrixNotificationsSub =>
+      'You need to go to the schedule screen in order to initialize notifications of the next Grand-Prix.';
 
   @override
   String get hallOfFame => 'Şöhretler Salonu';
@@ -294,7 +301,8 @@ class AppLocalizationsTr extends AppLocalizations {
   String get minuteAbbreviation => 'DK';
 
   @override
-  String get modernNewsAppearance => 'Haberler için modern bir görünüm kullanın.';
+  String get modernNewsAppearance =>
+      'Haberler için modern bir görünüm kullanın.';
 
   @override
   String get monthAbbreviationJanuary => 'OCA';
@@ -333,10 +341,12 @@ class AppLocalizationsTr extends AppLocalizations {
   String get monthAbbreviationDecember => 'ARA';
 
   @override
-  String get motorsportLocalizeFeeds => 'Yerelleştirilmiş Motorsport.com akışları';
+  String get motorsportLocalizeFeeds =>
+      'Yerelleştirilmiş Motorsport.com akışları';
 
   @override
-  String get needsRestart => 'Değişiklikleri uygulamak için uygulamayı yeniden başlatın.';
+  String get needsRestart =>
+      'Değişiklikleri uygulamak için uygulamayı yeniden başlatın.';
 
   @override
   String get news => 'Haberler';
@@ -354,7 +364,8 @@ class AppLocalizationsTr extends AppLocalizations {
   String get next => 'SONRAKİ';
 
   @override
-  String get noResults => 'Burada gösterilecek bir şey yok. Oranınız sınırlı olabilir.';
+  String get noResults =>
+      'Burada gösterilecek bir şey yok. Oranınız sınırlı olabilir.';
 
   @override
   String get nothingHere => 'Burada gösterilecek\nbir şey yok.';
@@ -394,6 +405,9 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get openLiveBlog => 'Canlı blog\'u açın';
+
+  @override
+  String get openPoll => 'Take the survey';
 
   @override
   String get openQuiz => 'Anketi açın';
@@ -480,7 +494,8 @@ class AppLocalizationsTr extends AppLocalizations {
   String get refreshChampionshipData => 'Şampiyonluk verilerini yenile';
 
   @override
-  String get refreshChampionshipDataSub => 'Yeni sezondan önce şampiyonluk verilerini yenile.';
+  String get refreshChampionshipDataSub =>
+      'Yeni sezondan önce şampiyonluk verilerini yenile.';
 
   @override
   String get refreshInterval => 'Refresh interval';
@@ -490,6 +505,9 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get requiredNetworkConnection => 'Required network connection';
+
+  @override
+  String get reset => 'Reset';
 
   @override
   String get results => 'Sonuçlar';
@@ -552,7 +570,8 @@ class AppLocalizationsTr extends AppLocalizations {
   String get statistics => 'İstatistikler';
 
   @override
-  String get tapToCheckForUpdate => 'Yeni güncellemeyi denetlemek için dokunun.';
+  String get tapToCheckForUpdate =>
+      'Yeni güncellemeyi denetlemek için dokunun.';
 
   @override
   String get team => 'Takım';
@@ -594,13 +613,15 @@ class AppLocalizationsTr extends AppLocalizations {
   String get updateApiKey => 'Update API Key';
 
   @override
-  String get updateApiKeySub => 'Update the API key of the official website.\nUpdate this only if you now what you are doing.';
+  String get updateApiKeySub =>
+      'Update the API key of the official website.\nUpdate this only if you now what you are doing.';
 
   @override
   String get updates => 'Yeni versiyonlar';
 
   @override
-  String get useOfficialWebview => 'Canlı oturumlar için resmi web görünümünü kullan';
+  String get useOfficialWebview =>
+      'Canlı oturumlar için resmi web görünümünü kullan';
 
   @override
   String get victory => 'Zafer';

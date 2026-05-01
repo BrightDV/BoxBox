@@ -4,6 +4,7 @@
 
 list(APPEND FLUTTER_PLUGIN_LIST
   awesome_notifications
+  syncfusion_pdfviewer_linux
   url_launcher_linux
 )
 

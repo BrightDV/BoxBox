@@ -12,7 +12,8 @@ class AppLocalizationsSw extends AppLocalizations {
   String get about => 'Kuhusu';
 
   @override
-  String get aboutDescription => 'Box, Box! ni programu ya bure iliyo na nakala, iliyopewa leseni ya GPLv3+. Inalenga kuruhusu kufuata michezo ya Formula 1 bila matangazo au vifuatiliaji';
+  String get aboutDescription =>
+      'Box, Box! ni programu ya bure iliyo na nakala, iliyopewa leseni ya GPLv3+. Inalenga kuruhusu kufuata michezo ya Formula 1 bila matangazo au vifuatiliaji';
 
   @override
   String get aboutBottomLine => 'Kwa upendo na BrightDV.';
@@ -27,7 +28,8 @@ class AppLocalizationsSw extends AppLocalizations {
   String get addToCalendar => 'Ongeza kwenye kalenda';
 
   @override
-  String get alreadyDownloadedArticle => 'This article has already been downloaded.';
+  String get alreadyDownloadedArticle =>
+      'This article has already been downloaded.';
 
   @override
   String get alreadyDownloading => 'Already downloading';
@@ -94,6 +96,9 @@ class AppLocalizationsSw extends AppLocalizations {
 
   @override
   String get crashError => 'Hitilafu';
+
+  @override
+  String get customErgastUrl => 'Ergast Custom URL';
 
   @override
   String get customFeed => 'Mipasho maalum';
@@ -168,7 +173,8 @@ class AppLocalizationsSw extends AppLocalizations {
   String get edit => 'Hariri';
 
   @override
-  String get editOrderDescription => 'Badilisha mpangilio kwa kubofya kipengee kwa muda mrefu.';
+  String get editOrderDescription =>
+      'Badilisha mpangilio kwa kubofya kipengee kwa muda mrefu.';
 
   @override
   String get enableNotifications => 'Enable notifications';
@@ -177,7 +183,8 @@ class AppLocalizationsSw extends AppLocalizations {
   String get errorOccurred => 'Hitilafu fulani imetokea';
 
   @override
-  String get errorOccurredDetails => 'Programu ilipata hitilafu isiyojulikana.\nTafadhali jaribu tena baadaye';
+  String get errorOccurredDetails =>
+      'Programu ilipata hitilafu isiyojulikana.\nTafadhali jaribu tena baadaye';
 
   @override
   String get experimentalFeatures => 'Vipengele vya Majaribio';
@@ -246,7 +253,8 @@ class AppLocalizationsSw extends AppLocalizations {
   String get grandPrixNotifications => 'Grand-Prix sessions notifications';
 
   @override
-  String get grandPrixNotificationsSub => 'You need to go to the schedule screen in order to initialize notifications of the next Grand-Prix.';
+  String get grandPrixNotificationsSub =>
+      'You need to go to the schedule screen in order to initialize notifications of the next Grand-Prix.';
 
   @override
   String get hallOfFame => 'Ukumbi wa Umaarufu';
@@ -333,7 +341,8 @@ class AppLocalizationsSw extends AppLocalizations {
   String get monthAbbreviationDecember => 'DIS';
 
   @override
-  String get motorsportLocalizeFeeds => 'Lokalaizesheni ya mipasho ya Motorsport.com';
+  String get motorsportLocalizeFeeds =>
+      'Lokalaizesheni ya mipasho ya Motorsport.com';
 
   @override
   String get needsRestart => 'Anzisha tena programu ili kutekeleza mabadiliko.';
@@ -354,7 +363,8 @@ class AppLocalizationsSw extends AppLocalizations {
   String get next => 'INAYOFUATA';
 
   @override
-  String get noResults => 'Hakuna cha kuonyesha hapa. Unaweza kuwa na kiwango kidogo.';
+  String get noResults =>
+      'Hakuna cha kuonyesha hapa. Unaweza kuwa na kiwango kidogo.';
 
   @override
   String get nothingHere => 'Hakuna cha kuonyesha\nhapa.';
@@ -396,10 +406,14 @@ class AppLocalizationsSw extends AppLocalizations {
   String get openLiveBlog => 'Fungua blogi ya moja kwa moja';
 
   @override
+  String get openPoll => 'Take the survey';
+
+  @override
   String get openQuiz => 'Fungua Maswali';
 
   @override
-  String get openingWithInAppBrowser => 'Inafungua kwa kivinjari cha ndani ya programu';
+  String get openingWithInAppBrowser =>
+      'Inafungua kwa kivinjari cha ndani ya programu';
 
   @override
   String get other => 'Nyingine';
@@ -480,7 +494,8 @@ class AppLocalizationsSw extends AppLocalizations {
   String get refreshChampionshipData => 'Refresh championship data';
 
   @override
-  String get refreshChampionshipDataSub => 'Refresh championship data before a new season.';
+  String get refreshChampionshipDataSub =>
+      'Refresh championship data before a new season.';
 
   @override
   String get refreshInterval => 'Refresh interval';
@@ -490,6 +505,9 @@ class AppLocalizationsSw extends AppLocalizations {
 
   @override
   String get requiredNetworkConnection => 'Required network connection';
+
+  @override
+  String get reset => 'Reset';
 
   @override
   String get results => 'Matokeo';
@@ -594,13 +612,15 @@ class AppLocalizationsSw extends AppLocalizations {
   String get updateApiKey => 'Update API Key';
 
   @override
-  String get updateApiKeySub => 'Update the API key of the official website.\nUpdate this only if you now what you are doing.';
+  String get updateApiKeySub =>
+      'Update the API key of the official website.\nUpdate this only if you now what you are doing.';
 
   @override
   String get updates => 'Matoleo mapya';
 
   @override
-  String get useOfficialWebview => 'Use official Webview for live sessions instead of f1-dash.com';
+  String get useOfficialWebview =>
+      'Use official Webview for live sessions instead of f1-dash.com';
 
   @override
   String get victory => 'Ushindi';

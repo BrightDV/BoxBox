@@ -6,10 +6,10 @@
 
 #import "GeneratedPluginRegistrant.h"
 
-#if __has_include(<add_2_calendar/Add2CalendarPlugin.h>)
-#import <add_2_calendar/Add2CalendarPlugin.h>
+#if __has_include(<add_2_calendar_new/Add2CalendarPlugin.h>)
+#import <add_2_calendar_new/Add2CalendarPlugin.h>
 #else
-@import add_2_calendar;
+@import add_2_calendar_new;
 #endif
 
 #if __has_include(<awesome_notifications/AwesomeNotificationsPlugin.h>)

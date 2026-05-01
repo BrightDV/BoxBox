@@ -18,7 +18,7 @@
  */
 
 import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:boxbox/api/formula1.dart';
+import 'package:boxbox/api/services/formula1.dart';
 import 'package:boxbox/classes/race.dart';
 import 'package:boxbox/helpers/news.dart';
 import 'package:boxbox/helpers/racetracks_url.dart';
@@ -44,18 +44,43 @@ class RaceItem extends StatelessWidget {
         pathParameters: {'meetingId': item.meetingId},
       ),
       child: index == 0 && isUpNext && (item.raceCoverUrl ?? '') != 'none'
-          ? Column(
-              children: [
-                ImageRenderer(
-                  item.raceCoverUrl != null
-                      ? item.raceCoverUrl!
-                      : RaceTracksUrls().getRaceCoverImageUrl(item.circuitId),
-                  inSchedule: true,
-                ),
-                RaceListItem(item, index),
-              ],
-            )
+          ? RaceListHeaderItem(item, index)
           : RaceListItem(item, index),
+    );
+  }
+}
+
+class RaceListHeaderItem extends StatelessWidget {
+  final Race item;
+  final int index;
+  const RaceListHeaderItem(this.item, this.index, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Stack(
+          alignment: Alignment.center,
+          children: [
+            ImageRenderer(
+              item.raceCoverUrl != null
+                  ? item.raceCoverUrl!
+                  : RaceTracksUrls().getRaceCoverImageUrl(item.circuitId),
+              inSchedule: true,
+            ),
+            Text(
+              item.country,
+              style: TextStyle(
+                fontSize: 60,
+                fontWeight: FontWeight.w800,
+                color: Colors.white.withAlpha(170),
+              ),
+            ),
+          ],
+        ),
+        RaceListItem(item, index),
+      ],
     );
   }
 }
@@ -324,7 +349,7 @@ class RacesList extends StatelessWidget {
             body: "Be ready! ${session.sessionFullName} is starting soon!",
             payload: {
               'meetingId': meetingId,
-              'session': session.sessionsAbbreviation,
+              'session': session.sessionAbbreviation,
             },
           ),
           schedule: NotificationCalendar(
@@ -346,7 +371,9 @@ class RacesList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (items.isNotEmpty && isUpNext && !isCache) {
+    bool notificationsEnabled = Hive.box('settings')
+        .get('notificationsEnabled', defaultValue: false) as bool;
+    if (items.isNotEmpty && isUpNext && !isCache && notificationsEnabled) {
       scheduledNotification(items[0].meetingId);
     }
     return isUpNext

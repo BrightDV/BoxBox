@@ -19,8 +19,7 @@
 
 import 'dart:math' as math;
 
-import 'package:boxbox/api/formulae.dart';
-import 'package:boxbox/helpers/constants.dart';
+import 'package:boxbox/api/services/formulae.dart';
 import 'package:boxbox/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -107,109 +106,6 @@ class _OtherSettingsScreenState extends State<OtherSettingsScreen> {
               );
             },
           ),
-          if (championship == 'Formula 1')
-            ListTile(
-              title: Text(
-                AppLocalizations.of(context)!.apiKey,
-              ),
-              onTap: () => showDialog(
-                context: context,
-                builder: (context) {
-                  final TextEditingController controller =
-                      TextEditingController();
-                  return StatefulBuilder(
-                    builder: (context, setState) => AlertDialog(
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(
-                            20.0,
-                          ),
-                        ),
-                      ),
-                      contentPadding: const EdgeInsets.all(
-                        25.0,
-                      ),
-                      title: Text(
-                        AppLocalizations.of(context)!.updateApiKey,
-                        style: TextStyle(
-                          fontSize: 24.0,
-                        ), // here
-                        textAlign: TextAlign.center,
-                      ),
-                      content: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          Text(
-                            AppLocalizations.of(context)!.updateApiKeySub,
-                            textAlign: TextAlign.justify,
-                          ),
-                          TextField(
-                            controller: controller,
-                            decoration: InputDecoration(
-                              hintText: AppLocalizations.of(context)!.apiKey,
-                              hintStyle: TextStyle(
-                                fontWeight: FontWeight.w100,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      actions: <Widget>[
-                        SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            children: [
-                              ElevatedButton(
-                                onPressed: () {
-                                  Hive.box('settings').put(
-                                    'officialApiKey',
-                                    controller.text,
-                                  );
-                                  Navigator.of(context).pop();
-                                  setState(() {});
-                                },
-                                child: Text(
-                                  AppLocalizations.of(context)!.save,
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 5),
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    Hive.box('settings').put(
-                                      'officialApiKey',
-                                      Constants().F1_API_KEY,
-                                    );
-                                    Navigator.of(context).pop();
-                                    setState(() {});
-                                  },
-                                  child: Text(
-                                    AppLocalizations.of(context)!.defaultValue,
-                                  ),
-                                ),
-                              ),
-                              ElevatedButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: Text(
-                                  AppLocalizations.of(context)!.close,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              ),
-              trailing: Icon(
-                Icons.key_outlined,
-              ),
-            ),
           if (championship == 'Formula 1')
             ListTile(
               title: Text(

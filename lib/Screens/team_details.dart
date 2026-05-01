@@ -19,7 +19,7 @@
 
 import 'package:boxbox/Screens/race_details.dart';
 import 'package:boxbox/api/ergast.dart';
-import 'package:boxbox/api/formula1.dart';
+import 'package:boxbox/api/services/formula1.dart';
 import 'package:boxbox/classes/article.dart';
 import 'package:boxbox/classes/driver.dart';
 import 'package:boxbox/helpers/convert_ergast_and_formula_one.dart';

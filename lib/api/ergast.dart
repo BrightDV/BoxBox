@@ -29,7 +29,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
 
 class _ErgastApiCalls {
-  final String defaultEndpoint = Constants().ERGAST_API_URL;
+  final String defaultEndpoint = Constants().getErgastUrl();
   List<DriverResult> formatRaceStandings(Map raceStandings) {
     List<DriverResult> formatedRaceStandings = [];
     List jsonResponse =
@@ -58,6 +58,7 @@ class _ErgastApiCalls {
           element['Driver']['familyName'],
           element['Driver']['code'],
           element['Constructor']['constructorId'],
+          time,
           time,
           fastestLapRank != '0'
               ? element['FastestLap']['rank'].toString() == '1'
@@ -149,6 +150,7 @@ class _ErgastApiCalls {
             element['Driver']['familyName'],
             element['Driver']['code'],
             element['Constructor']['constructorId'],
+            time,
             time,
             fastestLapRank != '0'
                 ? element['FastestLap']['rank'].toString() == '1'
@@ -399,6 +401,7 @@ class _ErgastApiCalls {
               ? 'DNF'
               : race['Results'][0]['Time']?['time'] ??
                   race['Results'][0]['status'],
+          '',
           int.parse(race['Results'][0]['FastestLap']?['rank'] ?? '20') == 1
               ? true
               : false,
@@ -439,6 +442,7 @@ class _ErgastApiCalls {
                 ? 'DNF'
                 : race['Results'][0]['Time']?['time'] ??
                     race['Results'][0]['status'],
+            '',
             int.parse(race['Results'][0]['FastestLap']?['rank'] ?? '20') == 1
                 ? true
                 : false,
@@ -463,6 +467,7 @@ class _ErgastApiCalls {
                   ? 'DNF'
                   : race['Results'][1]['Time']?['time'] ??
                       race['Results'][1]['status'],
+              '',
               int.parse(race['Results'][1]['FastestLap']?['rank'] ?? '20') == 1
                   ? true
                   : false,

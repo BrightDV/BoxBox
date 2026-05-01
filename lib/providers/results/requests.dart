@@ -18,8 +18,9 @@
  */
 
 import 'package:boxbox/api/ergast.dart';
-import 'package:boxbox/api/formula1.dart';
-import 'package:boxbox/api/formulae.dart';
+import 'package:boxbox/api/services/formula1.dart';
+import 'package:boxbox/api/services/formula_series.dart';
+import 'package:boxbox/api/services/formulae.dart';
 import 'package:boxbox/classes/driver.dart';
 import 'package:boxbox/classes/race.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -85,6 +86,13 @@ class ResultsRequestsProvider {
         meetingId,
         sessionId!,
       );
+    } else if (championship == 'Formula 2' ||
+        championship == 'Formula 3' ||
+        championship == 'F1 Academy') {
+      return FormulaSeries().getSessionResults(
+        meetingId,
+        sessionIndex: (sessionIndex - 1).toString(),
+      );
     } else {
       return [];
     }
@@ -121,8 +129,16 @@ class ResultsRequestsProvider {
       }
     } else if (championship == 'Formula E') {
       return await FormulaE().getRaceStandings(
-        race!.meetingId,
+        meetingId!,
         sessionId!,
+      );
+    } else if (championship == 'Formula 2' ||
+        championship == 'Formula 3' ||
+        championship == 'F1 Academy') {
+      return FormulaSeries().getSessionResults(
+        meetingId!,
+        sessionIndex: sessionId,
+        sessionName: 'Race',
       );
     } else {
       return [];
@@ -132,6 +148,7 @@ class ResultsRequestsProvider {
   Future<List<DriverResult>> getSprintStandings({
     Race? race,
     String? meetingId,
+    String? sessionId,
   }) async {
     String championship = Hive.box('settings')
         .get('championship', defaultValue: 'Formula 1') as String;
@@ -148,6 +165,14 @@ class ResultsRequestsProvider {
       } else {
         return await ErgastApi().getSprintStandings(race!.round);
       }
+    } else if (championship == 'Formula 2' ||
+        championship == 'Formula 3' ||
+        championship == 'F1 Academy') {
+      return await FormulaSeries().getSessionResults(
+        meetingId!,
+        sessionIndex: sessionId,
+        sessionName: 'Sprint Race',
+      );
     } else {
       return [];
     }
@@ -159,6 +184,7 @@ class ResultsRequestsProvider {
     String? sessionId, {
     Race? race,
     String? meetingId,
+    String? sessionName,
   }) async {
     String championship = Hive.box('settings')
         .get('championship', defaultValue: 'Formula 1') as String;
@@ -186,11 +212,22 @@ class ResultsRequestsProvider {
           );
         }
       }
+    } else if (championship == 'Formula E') {
+      return await FormulaE().getQualificationStandings(
+        race!.meetingId,
+        sessionId!,
+      );
+    } else if (championship == 'Formula 2' ||
+        championship == 'Formula 3' ||
+        championship == 'F1 Academy') {
+      return await FormulaSeries().getSessionResults(
+        meetingId!,
+        sessionIndex: sessionId,
+        sessionName: 'Qualifying',
+      );
+    } else {
+      return [];
     }
-    return await FormulaE().getQualificationStandings(
-      race!.meetingId,
-      sessionId!,
-    );
   }
 
   int getRaceSessionIndex(Race race) {

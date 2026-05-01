@@ -18,17 +18,11 @@
  */
 
 import 'package:background_downloader/background_downloader.dart';
-import 'package:boxbox/Screens/videos.dart';
 import 'package:boxbox/helpers/drawer.dart';
-import 'package:boxbox/Screens/home.dart';
-import 'package:boxbox/Screens/schedule.dart';
-import 'package:boxbox/Screens/standings.dart';
 import 'package:boxbox/providers/general/ui.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:boxbox/l10n/app_localizations.dart';
-import 'package:hidable/hidable.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class MainBottomNavigationBar extends StatefulWidget {
@@ -66,23 +60,6 @@ class _MainBottomNavigationBarState extends State<MainBottomNavigationBar> {
     setState(() {});
   }
 
-  // ref: https://github.com/insolite-dev/hidable/issues/26#issuecomment-1752105018
-  double customHidableVisibility(
-      ScrollPosition position, double currentVisibility) {
-    const double deltaFactor = 0.04;
-
-    // scrolls down
-    if (position.userScrollDirection == ScrollDirection.reverse) {
-      return (currentVisibility - deltaFactor).clamp(0, 1);
-    }
-
-    // scrolls up
-    if (position.userScrollDirection == ScrollDirection.forward) {
-      return (currentVisibility + deltaFactor).clamp(0, 1);
-    }
-    return currentVisibility;
-  }
-
   @override
   Widget build(BuildContext context) {
     int themeMode =
@@ -118,12 +95,8 @@ class _MainBottomNavigationBarState extends State<MainBottomNavigationBar> {
       );
     }
 
-    List<Widget> screens = [
-      HomeScreen(scrollController),
-      VideosScreen(scrollController),
-      StandingsScreen(scrollController: scrollController),
-      ScheduleScreen(scrollController: scrollController),
-    ];
+    List<Widget> screens =
+        UIProvider().getBottomNavigationBarScreens(scrollController);
     if (_selectedIndex == 0) {
       actions = UIProvider().getNewsAppBarActions(context);
     }
@@ -142,30 +115,12 @@ class _MainBottomNavigationBarState extends State<MainBottomNavigationBar> {
       ),
       drawer: MainDrawer(_homeSetState),
       drawerEdgeDragWidth: MediaQuery.of(context).size.width / 4,
-      bottomNavigationBar: kIsWeb
-          ? BottomNavigationBar(
-              type: BottomNavigationBarType.fixed,
-              currentIndex: _selectedIndex,
-              elevation: 10.0,
-              items: UIProvider().getBottomNavigationBarButtons(context),
-              onTap: _onItemTapped,
-            )
-          : Hidable(
-              controller: scrollController,
-              visibility: (position, currentVisibility) =>
-                  customHidableVisibility(
-                position,
-                currentVisibility,
-              ),
-              preferredWidgetSize: Size(double.infinity, 58),
-              child: BottomNavigationBar(
-                type: BottomNavigationBarType.fixed,
-                currentIndex: _selectedIndex,
-                elevation: 10.0,
-                items: UIProvider().getBottomNavigationBarButtons(context),
-                onTap: _onItemTapped,
-              ),
-            ),
+      bottomNavigationBar: NavigationBar(
+        selectedIndex: _selectedIndex,
+        elevation: 10.0,
+        destinations: UIProvider().getBottomNavigationBarButtons(context),
+        onDestinationSelected: _onItemTapped,
+      ),
       body: screens.elementAt(_selectedIndex),
     );
   }

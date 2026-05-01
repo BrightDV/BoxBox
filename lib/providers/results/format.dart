@@ -17,7 +17,7 @@
  * Copyright (c) 2022-2025, BrightDV
  */
 
-import 'package:boxbox/api/formulae.dart';
+import 'package:boxbox/api/services/formulae.dart';
 import 'package:boxbox/classes/driver.dart';
 import 'package:boxbox/classes/race.dart';
 import 'package:boxbox/helpers/team_background_color.dart';
@@ -66,5 +66,16 @@ class ResultsFormatProvider {
     } else {
       return Colors.transparent;
     }
+  }
+
+  int getSessionIndexForFormulaSeries(List sessions, String search) {
+    int c = 0;
+    for (var session in sessions) {
+      if (session['SessionName'].toLowerCase().contains(search.toLowerCase())) {
+        return c;
+      }
+      c++;
+    }
+    return 0;
   }
 }

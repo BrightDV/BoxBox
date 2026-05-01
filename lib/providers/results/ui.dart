@@ -17,10 +17,12 @@
  * Copyright (c) 2022-2025, BrightDV
  */
 
-import 'package:boxbox/Screens/free_practice_screen.dart';
+import 'package:boxbox/Screens/free_practice.dart';
 import 'package:boxbox/api/ergast.dart';
-import 'package:boxbox/api/formula1.dart';
-import 'package:boxbox/api/formulae.dart';
+import 'package:boxbox/api/event_tracker.dart';
+import 'package:boxbox/api/services/formula1.dart';
+import 'package:boxbox/api/services/formula_series.dart';
+import 'package:boxbox/api/services/formulae.dart';
 import 'package:boxbox/classes/race.dart';
 import 'package:boxbox/helpers/driver_result_item.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
@@ -31,7 +33,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class ResultsUIProvider {
-  Widget getRaceResultsWidget(
+  Widget getSavedRaceResultsWidget(
     AsyncSnapshot snapshot,
     BuildContext context,
     bool isFromRaceHub,
@@ -140,6 +142,92 @@ class ResultsUIProvider {
         DateTime.parse(race!.date).year,
         race.raceName,
         10,
+      );
+    } else if (championship == 'Formula 2' ||
+        championship == 'Formula 3' ||
+        championship == 'F1 Academy') {
+      return FreePracticeResultsList(
+        snapshot.data!,
+        DateTime.now().year,
+        race?.raceName ?? '',
+        10,
+      );
+    } else {
+      return Container();
+    }
+  }
+
+  Widget getFreePracticeResultsWithoutKey(
+    String meetingKey,
+    int sessionIndex,
+    BuildContext context,
+  ) {
+    final List<String> sessionsTitle = [
+      AppLocalizations.of(context)!.freePracticeOne,
+      AppLocalizations.of(context)!.freePracticeTwo,
+      AppLocalizations.of(context)!.freePracticeThree,
+    ];
+
+    String championship = Hive.box('settings')
+        .get('championship', defaultValue: 'Formula 1') as String;
+    if (championship == 'Formula 1') {
+      return FutureBuilder(
+        future: EventTracker().getCircuitDetails(
+          meetingKey,
+          isFromRaceHub: true,
+        ),
+        builder: (context, snapshot) => snapshot.hasError
+            ? Scaffold(
+                appBar: AppBar(
+                  backgroundColor: Theme.of(context).colorScheme.onPrimary,
+                ),
+                body: RequestErrorWidget(snapshot.error.toString()),
+              )
+            : snapshot.hasData
+                ? FreePracticeScreen(
+                    sessionsTitle[sessionIndex - 1],
+                    sessionIndex,
+                    '',
+                    meetingKey,
+                    int.parse(snapshot.data!['meetingContext']['season']),
+                    snapshot.data!['race']['meetingOfficialName'],
+                  )
+                : Scaffold(
+                    appBar: AppBar(
+                      backgroundColor: Theme.of(context).colorScheme.onPrimary,
+                    ),
+                    body: LoadingIndicatorUtil(),
+                  ),
+      );
+    } else if (championship == 'Formula 2' ||
+        championship == 'Formula 3' ||
+        championship == 'F1 Academy') {
+      return FutureBuilder(
+        future: FormulaSeries().getCircuitDetails(
+          meetingKey,
+        ),
+        builder: (context, snapshot) => snapshot.hasError
+            ? Scaffold(
+                appBar: AppBar(
+                  backgroundColor: Theme.of(context).colorScheme.onPrimary,
+                ),
+                body: RequestErrorWidget(snapshot.error.toString()),
+              )
+            : snapshot.hasData
+                ? FreePracticeScreen(
+                    sessionsTitle[sessionIndex - 1],
+                    sessionIndex,
+                    '',
+                    meetingKey,
+                    DateTime.now().year,
+                    snapshot.data!.meetingCompleteName,
+                  )
+                : Scaffold(
+                    appBar: AppBar(
+                      backgroundColor: Theme.of(context).colorScheme.onPrimary,
+                    ),
+                    body: LoadingIndicatorUtil(),
+                  ),
       );
     } else {
       return Container();

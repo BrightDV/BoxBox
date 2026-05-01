@@ -17,7 +17,12 @@
  * Copyright (c) 2022-2025, BrightDV
  */
 
+import 'package:boxbox/Screens/home.dart';
+import 'package:boxbox/Screens/schedule.dart';
 import 'package:boxbox/Screens/search.dart';
+import 'package:boxbox/Screens/standings.dart';
+import 'package:boxbox/Screens/videos.dart';
+import 'package:boxbox/helpers/bottom_sheet.dart';
 import 'package:boxbox/helpers/news_feed_widget.dart';
 import 'package:boxbox/l10n/app_localizations.dart';
 import 'package:flutter/foundation.dart';
@@ -28,8 +33,6 @@ class UIProvider {
   List<Widget> getNewsAppBarActions(BuildContext context) {
     String championship = Hive.box('settings')
         .get('championship', defaultValue: 'Formula 1') as String;
-    bool useDarkMode =
-        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
 
     if (championship == 'Formula 1') {
       return [
@@ -38,7 +41,7 @@ class UIProvider {
                 icon: Icon(
                   Icons.search,
                 ),
-                tooltip: 'Search',
+                tooltip: AppLocalizations.of(context)!.search,
                 onPressed: () => Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -51,7 +54,7 @@ class UIProvider {
           icon: Icon(
             Icons.sort_outlined,
           ),
-          tooltip: 'Filter',
+          tooltip: AppLocalizations.of(context)!.filter,
           onPressed: () {
             List<String> filterItems = [
               'Feature',
@@ -68,30 +71,24 @@ class UIProvider {
             int pressed = 0;
             bool selected = false;
 
-            showDialog(
-              context: context,
-              builder: (context) => StatefulBuilder(
-                builder: (context, setState) => AlertDialog(
-                  title: Text(
-                    AppLocalizations.of(context)!.filter,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.w500,
-                    ),
+            showCustomBottomSheet(
+              context,
+              StatefulBuilder(
+                builder: (context, setState) => Padding(
+                  padding: EdgeInsets.fromLTRB(
+                    20,
+                    15,
+                    20,
+                    MediaQuery.of(context).viewInsets.bottom,
                   ),
-                  content: Column(
+                  child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.all(5),
+                        padding: EdgeInsets.only(bottom: 20),
                         child: Text(
                           AppLocalizations.of(context)!.topics,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w500,
-                          ),
+                          style: TextStyle(fontSize: 20),
                         ),
                       ),
                       Wrap(
@@ -135,7 +132,9 @@ class UIProvider {
                                                 pressed ==
                                                     filterItems
                                                         .indexOf(filterItem)
-                                            ? Colors.white
+                                            ? Theme.of(context)
+                                                .colorScheme
+                                                .onPrimary
                                             : Theme.of(context)
                                                 .colorScheme
                                                 .primary,
@@ -147,46 +146,56 @@ class UIProvider {
                             ),
                         ],
                       ),
-                    ],
-                  ),
-                  actions: [
-                    TextButton(
-                      onPressed: () => Navigator.of(context).pop(0),
-                      child: Text(
-                        AppLocalizations.of(context)!.close,
-                        style: TextStyle(
-                          color: useDarkMode ? Colors.white : Colors.black,
-                        ),
-                      ),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.of(context).pop(0);
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => Scaffold(
-                              appBar: AppBar(
-                                title: Text(
-                                  filterItems[pressed],
+                      Padding(
+                        padding: EdgeInsets.only(top: 20, bottom: 7),
+                        child: Container(
+                          width: double.infinity,
+                          height: 50,
+                          child: FilledButton.tonal(
+                            onPressed: () {
+                              Navigator.of(context).pop(0);
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => Scaffold(
+                                    appBar: AppBar(
+                                      title: Text(
+                                        filterItems[pressed],
+                                      ),
+                                      backgroundColor: Theme.of(context)
+                                          .colorScheme
+                                          .onPrimary,
+                                    ),
+                                    body: NewsFeed(
+                                      articleType: filterItems[pressed],
+                                    ),
+                                  ),
                                 ),
-                                backgroundColor:
-                                    Theme.of(context).colorScheme.onPrimary,
-                              ),
-                              body: NewsFeed(
-                                articleType: filterItems[pressed],
-                              ),
+                              );
+                            },
+                            child: Text(
+                              AppLocalizations.of(context)!.apply,
                             ),
                           ),
-                        );
-                      },
-                      child: Text(
-                        AppLocalizations.of(context)!.apply,
+                        ),
                       ),
-                    ),
-                  ],
-                  actionsAlignment: MainAxisAlignment.center,
-                  elevation: 15.0,
+                      Padding(
+                        padding: EdgeInsets.only(top: 7, bottom: 20),
+                        child: Container(
+                          width: double.infinity,
+                          height: 50,
+                          child: OutlinedButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text(
+                              AppLocalizations.of(context)!.close,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             );
@@ -198,49 +207,134 @@ class UIProvider {
     }
   }
 
-  List<BottomNavigationBarItem> getBottomNavigationBarButtons(
+  List<NavigationDestination> getBottomNavigationBarButtons(
     BuildContext context,
   ) {
     String championship = Hive.box('settings')
         .get('championship', defaultValue: 'Formula 1') as String;
     if (championship == 'Formula 1' || championship == 'Formula E') {
       return [
-        BottomNavigationBarItem(
+        NavigationDestination(
           icon: const Icon(
             Icons.feed_outlined,
           ),
-          activeIcon: const Icon(
+          selectedIcon: const Icon(
             Icons.feed,
           ),
-          label: AppLocalizations.of(context)?.news,
+          label: AppLocalizations.of(context)!.news,
         ),
-        BottomNavigationBarItem(
+        NavigationDestination(
           icon: const Icon(
             Icons.play_circle_outline,
           ),
-          activeIcon: const Icon(
+          selectedIcon: const Icon(
             Icons.play_circle,
           ),
-          label: AppLocalizations.of(context)?.videos,
+          label: AppLocalizations.of(context)!.videos,
         ),
-        BottomNavigationBarItem(
+        NavigationDestination(
           icon: const Icon(
             Icons.emoji_events_outlined,
           ),
-          activeIcon: const Icon(
+          selectedIcon: const Icon(
             Icons.emoji_events,
           ),
-          label: AppLocalizations.of(context)?.standings,
+          label: AppLocalizations.of(context)!.standings,
         ),
-        BottomNavigationBarItem(
+        NavigationDestination(
           icon: const Icon(
             Icons.calendar_today_outlined,
           ),
-          activeIcon: const Icon(
+          selectedIcon: const Icon(
             Icons.calendar_today,
           ),
-          label: AppLocalizations.of(context)?.schedule,
+          label: AppLocalizations.of(context)!.schedule,
         ),
+      ];
+    } else if (championship == 'Formula 2' ||
+        championship == 'Formula 3' ||
+        championship == 'F1 Academy') {
+      return [
+        NavigationDestination(
+          icon: const Icon(
+            Icons.feed_outlined,
+          ),
+          selectedIcon: const Icon(
+            Icons.feed,
+          ),
+          label: AppLocalizations.of(context)!.news,
+        ),
+        NavigationDestination(
+          icon: const Icon(
+            Icons.emoji_events_outlined,
+          ),
+          selectedIcon: const Icon(
+            Icons.emoji_events,
+          ),
+          label: AppLocalizations.of(context)!.standings,
+        ),
+        NavigationDestination(
+          icon: const Icon(
+            Icons.calendar_today_outlined,
+          ),
+          selectedIcon: const Icon(
+            Icons.calendar_today,
+          ),
+          label: AppLocalizations.of(context)!.schedule,
+        ),
+      ];
+    } else {
+      return [
+        NavigationDestination(
+          icon: const Icon(
+            Icons.feed_outlined,
+          ),
+          selectedIcon: const Icon(
+            Icons.feed,
+          ),
+          label: AppLocalizations.of(context)!.news,
+        ),
+        NavigationDestination(
+          icon: const Icon(
+            Icons.emoji_events_outlined,
+          ),
+          selectedIcon: const Icon(
+            Icons.emoji_events,
+          ),
+          label: AppLocalizations.of(context)!.standings,
+        ),
+        NavigationDestination(
+          icon: const Icon(
+            Icons.calendar_today_outlined,
+          ),
+          selectedIcon: const Icon(
+            Icons.calendar_today,
+          ),
+          label: AppLocalizations.of(context)!.schedule,
+        ),
+      ];
+    }
+  }
+
+  List<Widget> getBottomNavigationBarScreens(
+    ScrollController scrollController,
+  ) {
+    String championship = Hive.box('settings')
+        .get('championship', defaultValue: 'Formula 1') as String;
+    if (championship == 'Formula 1' || championship == 'Formula E') {
+      return [
+        HomeScreen(scrollController),
+        VideosScreen(scrollController),
+        StandingsScreen(scrollController: scrollController),
+        ScheduleScreen(scrollController: scrollController),
+      ];
+    } else if (championship == 'Formula 2' ||
+        championship == 'Formula 3' ||
+        championship == 'F1 Academy') {
+      return [
+        HomeScreen(scrollController),
+        StandingsScreen(scrollController: scrollController),
+        ScheduleScreen(scrollController: scrollController),
       ];
     } else {
       return [];

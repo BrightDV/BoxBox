@@ -17,7 +17,7 @@
  * Copyright (c) 2022-2025, BrightDV
  */
 
-import 'package:boxbox/api/formulae.dart';
+import 'package:boxbox/api/services/formulae.dart';
 import 'package:boxbox/classes/team.dart';
 import 'package:boxbox/helpers/divider.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
@@ -42,8 +42,10 @@ class TeamItem extends StatelessWidget {
     Color tC;
     if (championship == 'Formula 1') {
       tC = TeamBackgroundColor().getTeamColor(teamId);
-    } else {
+    } else if (championship == 'Formula E') {
       tC = FormulaE().getTeamColor(teamName);
+    } else {
+      tC = Colors.transparent;
     }
     return tC;
   }
@@ -121,7 +123,7 @@ class TeamItem extends StatelessWidget {
                             fontSize: 18,
                           ),
                         ),
-                  item.wins != "NA"
+                  item.wins != "NA" && item.wins != ""
                       ? Padding(
                           padding: const EdgeInsets.only(top: 5),
                           child: int.parse(item.wins) == 1

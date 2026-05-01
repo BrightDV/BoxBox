@@ -19,7 +19,7 @@
 
 import 'dart:convert';
 
-import 'package:boxbox/api/formulae.dart';
+import 'package:boxbox/api/services/formulae.dart';
 import 'package:boxbox/classes/article.dart';
 import 'package:boxbox/helpers/constants.dart';
 import 'package:hive_flutter/hive_flutter.dart';

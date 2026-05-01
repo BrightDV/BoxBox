@@ -34,7 +34,7 @@ import 'package:boxbox/Screens/article.dart';
 import 'package:boxbox/Screens/Racing/circuit.dart';
 import 'package:boxbox/Screens/downloads.dart';
 import 'package:boxbox/Screens/driver_details.dart';
-import 'package:boxbox/Screens/free_practice_screen.dart';
+import 'package:boxbox/Screens/free_practice.dart';
 import 'package:boxbox/Screens/hall_of_fame.dart';
 import 'package:boxbox/Screens/history.dart';
 import 'package:boxbox/Screens/race_details.dart';
@@ -362,17 +362,16 @@ class RouterLocalConfig {
                   return Scaffold(
                     appBar: AppBar(
                       title: Text(
-                        'Sprint Shootout',
+                        AppLocalizations.of(context)!.sprintQualifyings,
                       ),
                       backgroundColor: Theme.of(context).colorScheme.onPrimary,
                     ),
-                    body: SingleChildScrollView(
-                      child: QualificationResultsProvider(
-                        raceUrl: '',
-                        sessionId: state.pathParameters['meetingId']!,
-                        hasSprint: true,
-                        isSprintQualifying: true,
-                      ),
+                    body: QualificationResultsProvider(
+                      raceUrl: '',
+                      sessionId: state.pathParameters['meetingId']!,
+                      meetingId: state.pathParameters['meetingId']!,
+                      hasSprint: true,
+                      isSprintQualifying: true,
                     ),
                   );
                 },
@@ -399,6 +398,12 @@ class RouterLocalConfig {
                 name: 'qualifyings',
                 path: 'qualifyings',
                 builder: (context, state) {
+                  String? sessionId;
+                  Map? extras;
+                  if (state.extra != null) {
+                    extras = state.extra as Map;
+                    sessionId = extras['sessionId'];
+                  }
                   return Scaffold(
                     appBar: AppBar(
                       title: Text(
@@ -406,12 +411,11 @@ class RouterLocalConfig {
                       ),
                       backgroundColor: Theme.of(context).colorScheme.onPrimary,
                     ),
-                    body: SingleChildScrollView(
-                      child: QualificationResultsProvider(
-                        raceUrl: '',
-                        sessionId: state.pathParameters['meetingId']!,
-                        isSprintQualifying: false,
-                      ),
+                    body: QualificationResultsProvider(
+                      raceUrl: '',
+                      meetingId: state.pathParameters['meetingId']!,
+                      isSprintQualifying: false,
+                      sessionId: sessionId,
                     ),
                   );
                 },
@@ -420,18 +424,38 @@ class RouterLocalConfig {
                 name: 'race',
                 path: 'race',
                 builder: (context, state) {
-                  return Scaffold(
-                    appBar: AppBar(
-                      title: Text(
-                        AppLocalizations.of(context)!.race,
+                  Map? extras;
+                  if (state.extra != null) {
+                    extras = state.extra as Map;
+                    return Scaffold(
+                      appBar: AppBar(
+                        title: Text(
+                          AppLocalizations.of(context)!.race,
+                        ),
+                        backgroundColor:
+                            Theme.of(context).colorScheme.onPrimary,
                       ),
-                      backgroundColor: Theme.of(context).colorScheme.onPrimary,
-                    ),
-                    body: RaceResultsProvider(
-                      raceUrl: 'race',
-                      raceId: state.pathParameters['meetingId']!,
-                    ),
-                  );
+                      body: RaceResultsProvider(
+                        raceUrl: 'race',
+                        sessionId: extras['sessionId'],
+                        raceId: state.pathParameters['meetingId']!,
+                      ),
+                    );
+                  } else {
+                    return Scaffold(
+                      appBar: AppBar(
+                        title: Text(
+                          AppLocalizations.of(context)!.race,
+                        ),
+                        backgroundColor:
+                            Theme.of(context).colorScheme.onPrimary,
+                      ),
+                      body: RaceResultsProvider(
+                        raceUrl: 'race',
+                        raceId: state.pathParameters['meetingId']!,
+                      ),
+                    );
+                  }
                 },
               ),
             ],

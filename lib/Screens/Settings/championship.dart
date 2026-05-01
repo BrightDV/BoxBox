@@ -17,6 +17,7 @@
  * Copyright (c) 2022-2025, BrightDV
  */
 
+import 'package:boxbox/helpers/bottom_sheet.dart';
 import 'package:boxbox/helpers/constants.dart';
 import 'package:boxbox/l10n/app_localizations.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -81,10 +82,137 @@ class _ChampionshipScreenState extends State<ChampionshipScreen> {
           ),
           championship == 'Formula 1'
               ? ListTile(
-                  trailing: Radio(
-                    value: true,
-                    groupValue: useOfficialDataSoure,
-                    onChanged: (value) => onF1SourceChanged(value),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(right: 5),
+                        child: IconButton(
+                          onPressed: () async {
+                            final TextEditingController controller =
+                                TextEditingController();
+                            showCustomBottomSheet(
+                              context,
+                              StatefulBuilder(
+                                builder: (context, setState) => Padding(
+                                  padding: EdgeInsets.fromLTRB(
+                                    20,
+                                    15,
+                                    20,
+                                    15,
+                                  ),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: <Widget>[
+                                      Text(
+                                        AppLocalizations.of(context)!
+                                            .updateApiKey,
+                                        style: TextStyle(
+                                          fontSize: 20.0,
+                                        ), // here
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(
+                                            top: 15, bottom: 10),
+                                        child: Text(
+                                          AppLocalizations.of(context)!
+                                              .updateApiKeySub,
+                                          textAlign: TextAlign.justify,
+                                        ),
+                                      ),
+                                      TextField(
+                                        controller: controller,
+                                        autofocus: true,
+                                        decoration: InputDecoration(
+                                          border: OutlineInputBorder(),
+                                          hintText:
+                                              AppLocalizations.of(context)!
+                                                  .apiKey,
+                                          hintStyle: TextStyle(
+                                            fontWeight: FontWeight.w100,
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding:
+                                            EdgeInsets.only(top: 20, bottom: 7),
+                                        child: Container(
+                                          width: double.infinity,
+                                          height: 50,
+                                          child: FilledButton.tonal(
+                                            onPressed: () {
+                                              Hive.box('settings').put(
+                                                'officialApiKey',
+                                                controller.text,
+                                              );
+                                              Navigator.of(context).pop();
+                                              setState(() {});
+                                            },
+                                            child: Text(
+                                              AppLocalizations.of(context)!
+                                                  .save,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding:
+                                            EdgeInsets.only(top: 7, bottom: 7),
+                                        child: Container(
+                                          width: double.infinity,
+                                          height: 50,
+                                          child: OutlinedButton(
+                                            onPressed: () {
+                                              Hive.box('settings').put(
+                                                'officialApiKey',
+                                                Constants().F1_API_KEY,
+                                              );
+                                              Navigator.of(context).pop();
+                                              setState(() {});
+                                            },
+                                            child: Text(
+                                              AppLocalizations.of(context)!
+                                                  .reset,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding:
+                                            EdgeInsets.only(top: 7, bottom: 20),
+                                        child: Container(
+                                          width: double.infinity,
+                                          height: 50,
+                                          child: OutlinedButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: Text(
+                                              AppLocalizations.of(context)!
+                                                  .close,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                          icon: Icon(Icons.settings_outlined),
+                        ),
+                      ),
+                      Radio(
+                        value: true,
+                        groupValue: useOfficialDataSoure,
+                        onChanged: (value) => onF1SourceChanged(value),
+                      ),
+                    ],
                   ),
                   title: Padding(
                     padding: EdgeInsets.only(left: 80),
@@ -97,85 +225,113 @@ class _ChampionshipScreenState extends State<ChampionshipScreen> {
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      IconButton(
-                        onPressed: () async {
-                          final TextEditingController controller =
-                              TextEditingController();
-                          await showModalBottomSheet(
-                            context: context,
-                            builder: (context) => BottomSheet(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                              onClosing: () {},
-                              builder: (context) {
-                                return SizedBox(
-                                  child: Padding(
-                                    padding: EdgeInsets.fromLTRB(
-                                      30,
-                                      15,
-                                      30,
-                                      MediaQuery.of(context).viewInsets.bottom,
-                                    ),
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        TextField(
-                                          controller: controller,
-                                          decoration: InputDecoration(
-                                            hintText: ergastUrl,
-                                            hintStyle: TextStyle(
-                                              fontWeight: FontWeight.w100,
+                      Padding(
+                        padding: EdgeInsets.only(right: 5),
+                        child: IconButton(
+                          onPressed: () async {
+                            final TextEditingController controller =
+                                TextEditingController();
+                            await showCustomBottomSheet(
+                              context,
+                              SizedBox(
+                                child: Padding(
+                                  padding: EdgeInsets.fromLTRB(
+                                    20,
+                                    15,
+                                    20,
+                                    15,
+                                  ),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsets.only(bottom: 20),
+                                        child: Text(
+                                          AppLocalizations.of(context)!
+                                              .customErgastUrl,
+                                          style: TextStyle(fontSize: 20),
+                                        ),
+                                      ),
+                                      TextField(
+                                        controller: controller,
+                                        decoration: InputDecoration(
+                                          border: OutlineInputBorder(),
+                                          hintText: ergastUrl,
+                                          hintStyle: TextStyle(
+                                            fontWeight: FontWeight.w100,
+                                          ),
+                                        ),
+                                        autofocus: true,
+                                      ),
+                                      Padding(
+                                        padding:
+                                            EdgeInsets.only(top: 20, bottom: 7),
+                                        child: Container(
+                                          width: double.infinity,
+                                          height: 50,
+                                          child: FilledButton.tonal(
+                                            onPressed: () {
+                                              Hive.box('settings').put(
+                                                'ergastUrl',
+                                                controller.text,
+                                              );
+                                              Navigator.of(context).pop();
+                                              setState(() {});
+                                            },
+                                            child: Text(
+                                              AppLocalizations.of(context)!
+                                                  .save,
                                             ),
                                           ),
                                         ),
-                                        Padding(
-                                          padding: EdgeInsets.only(
-                                            top: 5,
-                                            bottom: 5,
-                                          ),
-                                          child: Row(
-                                            children: [
-                                              ElevatedButton(
-                                                onPressed: () {
-                                                  Hive.box('settings').put(
-                                                    'ergastUrl',
-                                                    controller.text,
-                                                  );
-                                                  Navigator.of(context).pop();
-                                                  setState(() {});
-                                                },
-                                                child: Text(
-                                                  AppLocalizations.of(context)!
-                                                      .save,
-                                                ),
-                                              ),
-                                              Padding(
-                                                padding:
-                                                    EdgeInsets.only(left: 10),
-                                                child: ElevatedButton(
-                                                  onPressed: () {
-                                                    Navigator.of(context).pop();
-                                                  },
-                                                  child: Text(
-                                                    AppLocalizations.of(
-                                                            context)!
-                                                        .close,
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
+                                      ),
+                                      Padding(
+                                        padding:
+                                            EdgeInsets.only(top: 7, bottom: 7),
+                                        child: Container(
+                                          width: double.infinity,
+                                          height: 50,
+                                          child: OutlinedButton(
+                                            onPressed: () {
+                                              Hive.box('settings').put(
+                                                'ergastUrl',
+                                                Constants().ERGAST_API_URL,
+                                              );
+                                              Navigator.of(context).pop();
+                                              setState(() {});
+                                            },
+                                            child: Text(
+                                              AppLocalizations.of(context)!
+                                                  .reset,
+                                            ),
                                           ),
                                         ),
-                                      ],
-                                    ),
+                                      ),
+                                      Padding(
+                                        padding:
+                                            EdgeInsets.only(top: 7, bottom: 20),
+                                        child: Container(
+                                          width: double.infinity,
+                                          height: 50,
+                                          child: OutlinedButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: Text(
+                                              AppLocalizations.of(context)!
+                                                  .close,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                );
-                              },
-                            ),
-                          );
-                        },
-                        icon: Icon(Icons.settings_outlined),
+                                ),
+                              ),
+                            );
+                          },
+                          icon: Icon(Icons.settings_outlined),
+                        ),
                       ),
                       Radio(
                         value: false,
@@ -193,10 +349,70 @@ class _ChampionshipScreenState extends State<ChampionshipScreen> {
           ListTile(
             leading: SizedBox(
               width: 32,
-              child: CachedNetworkImage(
-                imageUrl:
-                    'https://www.fiaformulae.com/resources/v4.32.1/i/elements/favicon-160x160.png',
-                height: 24,
+              child: ClipRRect(
+                borderRadius: const BorderRadius.all(Radius.circular(7)),
+                child: CachedNetworkImage(
+                  imageUrl:
+                      'https://external-content.duckduckgo.com/ip3/www.fiaformula2.com.ico',
+                  height: 36,
+                ),
+              ),
+            ),
+            trailing: Radio(
+              value: 'Formula 2',
+              groupValue: championship,
+              onChanged: (value) => onChanged(value),
+            ),
+            title: Text('Formula 2'),
+          ),
+          ListTile(
+            leading: SizedBox(
+              width: 32,
+              child: ClipRRect(
+                borderRadius: const BorderRadius.all(Radius.circular(7)),
+                child: CachedNetworkImage(
+                  imageUrl:
+                      'https://external-content.duckduckgo.com/ip3/www.fiaformula3.com.ico',
+                  height: 36,
+                ),
+              ),
+            ),
+            trailing: Radio(
+              value: 'Formula 3',
+              groupValue: championship,
+              onChanged: (value) => onChanged(value),
+            ),
+            title: Text('Formula 3'),
+          ),
+          ListTile(
+            leading: SizedBox(
+              width: 32,
+              child: ClipRRect(
+                borderRadius: const BorderRadius.all(Radius.circular(7)),
+                child: CachedNetworkImage(
+                  imageUrl:
+                      'https://external-content.duckduckgo.com/ip3/www.f1academy.com.ico',
+                  height: 36,
+                ),
+              ),
+            ),
+            trailing: Radio(
+              value: 'F1 Academy',
+              groupValue: championship,
+              onChanged: (value) => onChanged(value),
+            ),
+            title: Text('F1 Academy'),
+          ),
+          ListTile(
+            leading: SizedBox(
+              width: 32,
+              child: ClipRRect(
+                borderRadius: const BorderRadius.all(Radius.circular(7)),
+                child: CachedNetworkImage(
+                  imageUrl:
+                      'https://www.fiaformulae.com/resources/v4.32.1/i/elements/favicon-160x160.png',
+                  height: 36,
+                ),
               ),
             ),
             trailing: Radio(

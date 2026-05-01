@@ -12,7 +12,8 @@ class AppLocalizationsFi extends AppLocalizations {
   String get about => 'Tietoja';
 
   @override
-  String get aboutDescription => 'Box, Box! on GPLv3+-lisenssillä julkaistu avoimen lähdekoodin copyleft-ohjelmisto. Sen avulla käyttäjät voivat seurata Formula 1- ja Formula E -kilpailuja ilman mainoksia ja seurantaa.';
+  String get aboutDescription =>
+      'Box, Box! on GPLv3+-lisenssillä julkaistu avoimen lähdekoodin copyleft-ohjelmisto. Sen avulla käyttäjät voivat seurata Formula 1- ja Formula E -kilpailuja ilman mainoksia ja seurantaa.';
 
   @override
   String get aboutBottomLine => 'Rakkaudella ❤ BrightDV.';
@@ -96,6 +97,9 @@ class AppLocalizationsFi extends AppLocalizations {
   String get crashError => 'Virhe:';
 
   @override
+  String get customErgastUrl => 'Ergast Custom URL';
+
+  @override
   String get customFeed => 'Mukautettu syöte';
 
   @override
@@ -168,7 +172,8 @@ class AppLocalizationsFi extends AppLocalizations {
   String get edit => 'Muokkaa';
 
   @override
-  String get editOrderDescription => 'Muuta järjestystä painamalla kohdetta pitkään.';
+  String get editOrderDescription =>
+      'Muuta järjestystä painamalla kohdetta pitkään.';
 
   @override
   String get enableNotifications => 'Enable notifications';
@@ -177,7 +182,8 @@ class AppLocalizationsFi extends AppLocalizations {
   String get errorOccurred => 'Jokin meni pieleen';
 
   @override
-  String get errorOccurredDetails => 'Sovelluksessa tapahtui tuntematon virhe.\nYritä myöhemmin uudelleen.';
+  String get errorOccurredDetails =>
+      'Sovelluksessa tapahtui tuntematon virhe.\nYritä myöhemmin uudelleen.';
 
   @override
   String get experimentalFeatures => 'Kokeelliset ominaisuudet';
@@ -246,7 +252,8 @@ class AppLocalizationsFi extends AppLocalizations {
   String get grandPrixNotifications => 'Grand-Prix sessions notifications';
 
   @override
-  String get grandPrixNotificationsSub => 'You need to go to the schedule screen in order to initialize notifications of the next Grand-Prix.';
+  String get grandPrixNotificationsSub =>
+      'You need to go to the schedule screen in order to initialize notifications of the next Grand-Prix.';
 
   @override
   String get hallOfFame => 'Kunniagalleria';
@@ -336,7 +343,8 @@ class AppLocalizationsFi extends AppLocalizations {
   String get motorsportLocalizeFeeds => 'Motorsport.comin paikalliset syötteet';
 
   @override
-  String get needsRestart => 'Ota muutokset käyttöön käynnistämällä sovellus uudelleen.';
+  String get needsRestart =>
+      'Ota muutokset käyttöön käynnistämällä sovellus uudelleen.';
 
   @override
   String get news => 'Uutisia';
@@ -354,7 +362,8 @@ class AppLocalizationsFi extends AppLocalizations {
   String get next => 'SEURAAVA';
 
   @override
-  String get noResults => 'Ei tässä mitään näytettävää. Saatat olla rajoitettu.';
+  String get noResults =>
+      'Ei tässä mitään näytettävää. Saatat olla rajoitettu.';
 
   @override
   String get nothingHere => 'Täällä ei ole mitään\nnähtävää.';
@@ -396,10 +405,14 @@ class AppLocalizationsFi extends AppLocalizations {
   String get openLiveBlog => 'Avaa live-blogi';
 
   @override
+  String get openPoll => 'Take the survey';
+
+  @override
   String get openQuiz => 'Avaa tietovisa';
 
   @override
-  String get openingWithInAppBrowser => 'Avataan sovelluksen sisäisessä selaimessa';
+  String get openingWithInAppBrowser =>
+      'Avataan sovelluksen sisäisessä selaimessa';
 
   @override
   String get other => 'Muu';
@@ -480,7 +493,8 @@ class AppLocalizationsFi extends AppLocalizations {
   String get refreshChampionshipData => 'Päivitä mestaruustiedot';
 
   @override
-  String get refreshChampionshipDataSub => 'Päivitä mestaruustiedot ennen uutta kautta.';
+  String get refreshChampionshipDataSub =>
+      'Päivitä mestaruustiedot ennen uutta kautta.';
 
   @override
   String get refreshInterval => 'Refresh interval';
@@ -490,6 +504,9 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get requiredNetworkConnection => 'Required network connection';
+
+  @override
+  String get reset => 'Reset';
 
   @override
   String get results => 'Tulokset';
@@ -594,7 +611,8 @@ class AppLocalizationsFi extends AppLocalizations {
   String get updateApiKey => 'Päivitä API-avain';
 
   @override
-  String get updateApiKeySub => 'Päivitä virallisen verkkosivuston API-avain.\nPäivitä tämä vain, jos olet nyt tekemässä.';
+  String get updateApiKeySub =>
+      'Päivitä virallisen verkkosivuston API-avain.\nPäivitä tämä vain, jos olet nyt tekemässä.';
 
   @override
   String get updates => 'Uudet versiot';
