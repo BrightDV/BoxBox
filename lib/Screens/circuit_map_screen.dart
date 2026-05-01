@@ -149,6 +149,7 @@ class _MarkersPageState extends State<MarkersPage> {
             ),
             RichAttributionWidget(
               animationConfig: const ScaleRAWA(),
+              popupInitialDisplayDuration: Duration(hours: 1),
               attributions: [
                 TextSourceAttribution(
                   'OpenStreetMap contributors',
@@ -157,6 +158,7 @@ class _MarkersPageState extends State<MarkersPage> {
                   ),
                 ),
               ],
+              showFlutterMapAttribution: false,
             ),
           ],
         );
