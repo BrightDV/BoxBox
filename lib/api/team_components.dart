@@ -158,7 +158,7 @@ class TeamItem extends StatelessWidget {
                       padding: const EdgeInsets.only(left: 10),
                       child: TeamCarImageProvider(
                         item.constructorId,
-                        teamCarImageCropped: item.teamCarImageCropped,
+                        teamCarImageCropped: item.teamCarImage,
                       ),
                     ),
                   ),
@@ -210,7 +210,8 @@ class TeamCarImageProvider extends StatelessWidget {
                         ? Alignment.centerRight
                         : Alignment.center
                     : Alignment.centerLeft,
-                scale: championship == 'Formula 1' ? 1.5 : 1.6,
+                scale: championship == 'Formula 1' ? 1.3 : 1.6,
+                origin: Offset(-450, 0),
                 child: Container(
                   alignment: teamCarImageCropped != null
                       ? Alignment.centerRight

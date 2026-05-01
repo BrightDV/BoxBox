@@ -229,6 +229,8 @@ class DriverImageProvider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String championship = Hive.box('settings')
+        .get('championship', defaultValue: 'Formula 1') as String;
     String imageUrl =
         driverImage != null ? driverImage! : getDriverImageUrl(driverId);
     return SizedBox(
@@ -240,17 +242,36 @@ class DriverImageProvider extends StatelessWidget {
                 size: 32,
               ),
             )
-          : CachedNetworkImage(
-              imageUrl: imageUrl,
-              placeholder: (context, url) => const SizedBox(
-                width: 120,
-                child: LoadingIndicatorUtil(),
-              ),
-              errorWidget: (context, url, error) =>
-                  const Icon(Icons.error_outlined),
-              fadeOutDuration: const Duration(milliseconds: 300),
-              fadeInDuration: const Duration(milliseconds: 300),
-            ),
+          : championship == 'Formula 1'
+              ? SizedBox(
+                  height: 105,
+                  child: Transform.scale(
+                    scale: 4,
+                    alignment: Alignment.topCenter,
+                    child: CachedNetworkImage(
+                      imageUrl: imageUrl,
+                      placeholder: (context, url) => const SizedBox(
+                        width: 120,
+                        child: LoadingIndicatorUtil(),
+                      ),
+                      errorWidget: (context, url, error) =>
+                          const Icon(Icons.error_outlined),
+                      fadeOutDuration: const Duration(milliseconds: 300),
+                      fadeInDuration: const Duration(milliseconds: 300),
+                    ),
+                  ),
+                )
+              : CachedNetworkImage(
+                  imageUrl: imageUrl,
+                  placeholder: (context, url) => const SizedBox(
+                    width: 120,
+                    child: LoadingIndicatorUtil(),
+                  ),
+                  errorWidget: (context, url, error) =>
+                      const Icon(Icons.error_outlined),
+                  fadeOutDuration: const Duration(milliseconds: 300),
+                  fadeInDuration: const Duration(milliseconds: 300),
+                ),
     );
   }
 }
