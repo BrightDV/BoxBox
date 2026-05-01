@@ -140,6 +140,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get deleteUrl => 'Voulez-vous vraiment supprimer cette URL?';
 
   @override
+  String get disableBottomNavigationBarLabels =>
+      'Ne pas afficher les titres de la barre de navigation';
+
+  @override
   String get done => 'Terminé';
 
   @override

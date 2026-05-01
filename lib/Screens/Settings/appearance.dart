@@ -34,8 +34,6 @@ class AppearanceSettingsScreen extends StatefulWidget {
 class _AppearanceSettingsScreenState extends State<AppearanceSettingsScreen> {
   @override
   Widget build(BuildContext context) {
-    bool useDarkMode =
-        Hive.box('settings').get('darkMode', defaultValue: true) as bool;
     String newsLayout =
         Hive.box('settings').get('newsLayout', defaultValue: 'big') as String;
     int themeMode =
@@ -44,6 +42,8 @@ class _AppearanceSettingsScreenState extends State<AppearanceSettingsScreen> {
         .get('teamTheme', defaultValue: 'default') as String;
     String fontUsedInArticles = Hive.box('settings')
         .get('fontUsedInArticles', defaultValue: 'Formula1') as String;
+    bool disableBottomNavigationBarLabels = Hive.box('settings')
+        .get('disableBottomNavigationBarLabels', defaultValue: false) as bool;
 
     Map layoutValueToString = {
       'big': AppLocalizations.of(context)?.articleFull,
@@ -143,7 +143,6 @@ class _AppearanceSettingsScreenState extends State<AppearanceSettingsScreen> {
                         Hive.box('settings').put('themeMode', newThemeMode);
 
                         themeMode = newThemeMode;
-                        useDarkMode = newValue;
                       });
                     },
                   );
@@ -298,7 +297,6 @@ class _AppearanceSettingsScreenState extends State<AppearanceSettingsScreen> {
                       value,
                       style: TextStyle(
                         fontSize: 12,
-                        color: useDarkMode ? Colors.white : Colors.black,
                       ),
                     ),
                   );
@@ -352,6 +350,27 @@ class _AppearanceSettingsScreenState extends State<AppearanceSettingsScreen> {
                 },
               ).toList(),
             ),
+          ),
+          SwitchListTile(
+            title: Text(
+              AppLocalizations.of(context)!.disableBottomNavigationBarLabels,
+            ),
+            subtitle: Text(
+              AppLocalizations.of(context)!.needsRestart,
+              style: TextStyle(
+                fontSize: 12,
+              ),
+            ),
+            value: disableBottomNavigationBarLabels,
+            onChanged: (bool value) {
+              setState(
+                () {
+                  disableBottomNavigationBarLabels = value;
+                  Hive.box('settings')
+                      .put('disableBottomNavigationBarLabels', value);
+                },
+              );
+            },
           ),
         ],
       ),

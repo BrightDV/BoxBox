@@ -140,6 +140,10 @@ class AppLocalizationsTa extends AppLocalizations {
   String get deleteUrl => 'இந்த முகவரி ஐ நீக்க விரும்புகிறீர்களா?';
 
   @override
+  String get disableBottomNavigationBarLabels =>
+      'Don\'t show bottom navigation bar labels';
+
+  @override
   String get done => 'முடிந்தது';
 
   @override

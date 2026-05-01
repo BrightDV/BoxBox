@@ -139,6 +139,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get deleteUrl => '你想删除该地址？';
 
   @override
+  String get disableBottomNavigationBarLabels =>
+      'Don\'t show bottom navigation bar labels';
+
+  @override
   String get done => '完成';
 
   @override

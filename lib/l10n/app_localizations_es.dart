@@ -139,6 +139,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get deleteUrl => '¿Deseas eliminar esta URL?';
 
   @override
+  String get disableBottomNavigationBarLabels =>
+      'Don\'t show bottom navigation bar labels';
+
+  @override
   String get done => 'Hecho';
 
   @override

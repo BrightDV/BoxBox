@@ -212,6 +212,8 @@ class UIProvider {
   ) {
     String championship = Hive.box('settings')
         .get('championship', defaultValue: 'Formula 1') as String;
+    bool disableBottomNavigationBarLabels = Hive.box('settings')
+        .get('disableBottomNavigationBarLabels', defaultValue: false) as bool;
     if (championship == 'Formula 1' || championship == 'Formula E') {
       return [
         NavigationDestination(
@@ -221,7 +223,9 @@ class UIProvider {
           selectedIcon: const Icon(
             Icons.feed,
           ),
-          label: AppLocalizations.of(context)!.news,
+          label: !disableBottomNavigationBarLabels
+              ? AppLocalizations.of(context)!.news
+              : "",
         ),
         NavigationDestination(
           icon: const Icon(
@@ -230,7 +234,9 @@ class UIProvider {
           selectedIcon: const Icon(
             Icons.play_circle,
           ),
-          label: AppLocalizations.of(context)!.videos,
+          label: !disableBottomNavigationBarLabels
+              ? AppLocalizations.of(context)!.videos
+              : "",
         ),
         NavigationDestination(
           icon: const Icon(
@@ -239,7 +245,9 @@ class UIProvider {
           selectedIcon: const Icon(
             Icons.emoji_events,
           ),
-          label: AppLocalizations.of(context)!.standings,
+          label: !disableBottomNavigationBarLabels
+              ? AppLocalizations.of(context)!.standings
+              : "",
         ),
         NavigationDestination(
           icon: const Icon(
@@ -248,7 +256,9 @@ class UIProvider {
           selectedIcon: const Icon(
             Icons.calendar_today,
           ),
-          label: AppLocalizations.of(context)!.schedule,
+          label: !disableBottomNavigationBarLabels
+              ? AppLocalizations.of(context)!.schedule
+              : "",
         ),
       ];
     } else if (championship == 'Formula 2' ||

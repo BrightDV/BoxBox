@@ -403,6 +403,12 @@ abstract class AppLocalizations {
   /// **'Do you wish to delete this URL?'**
   String get deleteUrl;
 
+  /// No description provided for @disableBottomNavigationBarLabels.
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t show bottom navigation bar labels'**
+  String get disableBottomNavigationBarLabels;
+
   /// No description provided for @done.
   ///
   /// In en, this message translates to:
