@@ -142,19 +142,23 @@ class _MarkersPageState extends State<MarkersPage> {
             TileLayer(
               urlTemplate: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
               tileProvider: CancellableNetworkTileProvider(),
+              userAgentPackageName: "Box, Box!",
             ),
             PolylineLayer<Object>(
               polylines: snapshot.hasData ? snapshot.data! : [],
             ),
             RichAttributionWidget(
               animationConfig: const ScaleRAWA(),
+              popupInitialDisplayDuration: Duration(hours: 1),
               attributions: [
                 TextSourceAttribution(
                   'OpenStreetMap contributors',
                   onTap: () => launchUrl(
-                      Uri.parse('https://openstreetmap.org/copyright')),
+                    Uri.parse('https://openstreetmap.org/copyright'),
+                  ),
                 ),
               ],
+              showFlutterMapAttribution: false,
             ),
           ],
         );

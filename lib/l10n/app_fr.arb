@@ -85,6 +85,8 @@
   "@deleteCustomFeed": {},
   "deleteUrl": "Voulez-vous vraiment supprimer cette URL?",
   "@deleteUrl": {},
+  "disableBottomNavigationBarLabels": "Ne pas afficher les titres de la barre de navigation",
+  "@disableBottomNavigationBarLabels": {},
   "done": "Terminé",
   "@done": {},
   "download": "Télécharger",

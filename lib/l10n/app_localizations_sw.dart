@@ -140,6 +140,10 @@ class AppLocalizationsSw extends AppLocalizations {
   String get deleteUrl => 'Je, ungependa kufuta URL hii?';
 
   @override
+  String get disableBottomNavigationBarLabels =>
+      'Don\'t show bottom navigation bar labels';
+
+  @override
   String get done => 'Done';
 
   @override

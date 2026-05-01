@@ -85,6 +85,8 @@
   "@deleteCustomFeed": {},
   "deleteUrl": "Do you wish to delete this URL?",
   "@deleteUrl": {},
+  "disableBottomNavigationBarLabels": "Don't show bottom navigation bar labels",
+  "@disableBottomNavigationBarLabels": {},
   "done": "Done",
   "@done": {},
   "download": "Download",

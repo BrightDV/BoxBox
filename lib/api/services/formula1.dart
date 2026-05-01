@@ -645,7 +645,10 @@ class Formula1 {
           element['driverTLA'],
           Convert().teamsFromFormulaOneApiToErgast(element['teamName']),
           (element['championshipPoints'] ?? 0).toString(),
-          driverImage: element['driverImage'],
+          driverImage:
+              "https://media.formula1.com/image/upload/c_lfill,w_440/q_auto/d_common:f1:2026:fallback:driver:2026fallbackdriverright.webp/v1740000001/" +
+                  element['driverAvatarImage']['public_id'] +
+                  '.webp',
           detailsPath: detailsPath,
           teamColor: Color(
             int.parse(
@@ -721,8 +724,10 @@ class Formula1 {
           element['teamName'],
           (element['seasonPoints'] ?? '0').toString(),
           'NA',
-          teamCarImage: element['teamImage'],
-          teamCarImageCropped: element['teamCroppedImage'],
+          teamCarImage:
+              "https://media.formula1.com/image/upload/c_lfill,w_3392/q_auto/v1740000001/" +
+                  element['teamCarLeftImage']?['public_id'] +
+                  '.webp',
           detailsPath: detailsPath,
           teamColor: Color(
             int.parse(

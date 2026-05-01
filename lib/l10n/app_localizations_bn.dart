@@ -139,6 +139,10 @@ class AppLocalizationsBn extends AppLocalizations {
   String get deleteUrl => 'আপনি কি এই URL মুছতে চান?';
 
   @override
+  String get disableBottomNavigationBarLabels =>
+      'Don\'t show bottom navigation bar labels';
+
+  @override
   String get done => 'সম্পন্ন';
 
   @override

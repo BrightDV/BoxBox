@@ -139,6 +139,10 @@ class AppLocalizationsFi extends AppLocalizations {
   String get deleteUrl => 'Haluatko poistaa tämän verkko-osoitteen?';
 
   @override
+  String get disableBottomNavigationBarLabels =>
+      'Don\'t show bottom navigation bar labels';
+
+  @override
   String get done => 'Valmis';
 
   @override

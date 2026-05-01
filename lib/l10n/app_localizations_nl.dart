@@ -139,6 +139,10 @@ class AppLocalizationsNl extends AppLocalizations {
   String get deleteUrl => 'Deze link verwijderen?';
 
   @override
+  String get disableBottomNavigationBarLabels =>
+      'Don\'t show bottom navigation bar labels';
+
+  @override
   String get done => 'Gereed';
 
   @override

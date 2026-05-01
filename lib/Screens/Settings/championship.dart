@@ -21,6 +21,7 @@ import 'package:boxbox/helpers/bottom_sheet.dart';
 import 'package:boxbox/helpers/constants.dart';
 import 'package:boxbox/l10n/app_localizations.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
@@ -61,368 +62,363 @@ class _ChampionshipScreenState extends State<ChampionshipScreen> {
         title: Text(AppLocalizations.of(context)!.championship),
         backgroundColor: Theme.of(context).colorScheme.onPrimary,
       ),
-      body: ListView(
-        shrinkWrap: true,
-        children: [
-          ListTile(
-            leading: SizedBox(
-              width: 32,
-              child: CachedNetworkImage(
-                imageUrl:
-                    'https://www.formula1.com/assets/home/_next/static/media/f1-logo-180.1db9e85b.png',
-                height: 32,
+      body: RadioGroup(
+        groupValue: championship,
+        onChanged: (value) => onChanged(value),
+        child: RadioGroup(
+          groupValue: useOfficialDataSoure,
+          onChanged: (value) => onF1SourceChanged(value),
+          child: ListView(
+            shrinkWrap: true,
+            children: [
+              ListTile(
+                leading: SizedBox(
+                  width: 32,
+                  child: CachedNetworkImage(
+                    imageUrl:
+                        'https://www.formula1.com/assets/home/_next/static/media/f1-logo-180.1db9e85b.png',
+                    height: 32,
+                  ),
+                ),
+                trailing: Radio(
+                  value: 'Formula 1',
+                ),
+                title: Text('Formula 1'),
               ),
-            ),
-            trailing: Radio(
-              value: 'Formula 1',
-              groupValue: championship,
-              onChanged: (value) => onChanged(value),
-            ),
-            title: Text('Formula 1'),
-          ),
-          championship == 'Formula 1'
-              ? ListTile(
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(right: 5),
-                        child: IconButton(
-                          onPressed: () async {
-                            final TextEditingController controller =
-                                TextEditingController();
-                            showCustomBottomSheet(
-                              context,
-                              StatefulBuilder(
-                                builder: (context, setState) => Padding(
-                                  padding: EdgeInsets.fromLTRB(
-                                    20,
-                                    15,
-                                    20,
-                                    15,
-                                  ),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: <Widget>[
-                                      Text(
+              ListTile(
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(right: 5),
+                      child: IconButton(
+                        onPressed: () async {
+                          final TextEditingController controller =
+                              TextEditingController();
+                          showCustomBottomSheet(
+                            context,
+                            StatefulBuilder(
+                              builder: (context, setState) => Padding(
+                                padding: EdgeInsets.fromLTRB(
+                                  20,
+                                  15,
+                                  20,
+                                  15,
+                                ),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    Text(
+                                      AppLocalizations.of(context)!
+                                          .updateApiKey,
+                                      style: TextStyle(
+                                        fontSize: 20.0,
+                                      ), // here
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.only(
+                                        top: 15,
+                                        bottom: 10,
+                                      ),
+                                      child: Text(
                                         AppLocalizations.of(context)!
-                                            .updateApiKey,
-                                        style: TextStyle(
-                                          fontSize: 20.0,
-                                        ), // here
-                                        textAlign: TextAlign.center,
+                                            .updateApiKeySub,
+                                        textAlign: TextAlign.justify,
                                       ),
-                                      Padding(
-                                        padding: EdgeInsets.only(
-                                            top: 15, bottom: 10),
-                                        child: Text(
-                                          AppLocalizations.of(context)!
-                                              .updateApiKeySub,
-                                          textAlign: TextAlign.justify,
+                                    ),
+                                    TextField(
+                                      controller: controller,
+                                      autofocus: true,
+                                      decoration: InputDecoration(
+                                        border: OutlineInputBorder(),
+                                        hintText: AppLocalizations.of(context)!
+                                            .apiKey,
+                                        hintStyle: TextStyle(
+                                          fontWeight: FontWeight.w100,
                                         ),
                                       ),
-                                      TextField(
-                                        controller: controller,
-                                        autofocus: true,
-                                        decoration: InputDecoration(
-                                          border: OutlineInputBorder(),
-                                          hintText:
-                                              AppLocalizations.of(context)!
-                                                  .apiKey,
-                                          hintStyle: TextStyle(
-                                            fontWeight: FontWeight.w100,
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.only(
+                                        top: 20,
+                                        bottom: 7,
+                                      ),
+                                      child: Container(
+                                        width: double.infinity,
+                                        height: 50,
+                                        child: FilledButton.tonal(
+                                          onPressed: () {
+                                            Hive.box('settings').put(
+                                              'officialApiKey',
+                                              controller.text,
+                                            );
+                                            Navigator.of(context).pop();
+                                            setState(() {});
+                                          },
+                                          child: Text(
+                                            AppLocalizations.of(context)!.save,
                                           ),
                                         ),
                                       ),
-                                      Padding(
-                                        padding:
-                                            EdgeInsets.only(top: 20, bottom: 7),
-                                        child: Container(
-                                          width: double.infinity,
-                                          height: 50,
-                                          child: FilledButton.tonal(
-                                            onPressed: () {
-                                              Hive.box('settings').put(
-                                                'officialApiKey',
-                                                controller.text,
-                                              );
-                                              Navigator.of(context).pop();
-                                              setState(() {});
-                                            },
-                                            child: Text(
-                                              AppLocalizations.of(context)!
-                                                  .save,
-                                            ),
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.only(
+                                        top: 7,
+                                        bottom: 7,
+                                      ),
+                                      child: Container(
+                                        width: double.infinity,
+                                        height: 50,
+                                        child: OutlinedButton(
+                                          onPressed: () {
+                                            Hive.box('settings').put(
+                                              'officialApiKey',
+                                              Constants().F1_API_KEY,
+                                            );
+                                            Navigator.of(context).pop();
+                                            setState(() {});
+                                          },
+                                          child: Text(
+                                            AppLocalizations.of(context)!.reset,
                                           ),
                                         ),
                                       ),
-                                      Padding(
-                                        padding:
-                                            EdgeInsets.only(top: 7, bottom: 7),
-                                        child: Container(
-                                          width: double.infinity,
-                                          height: 50,
-                                          child: OutlinedButton(
-                                            onPressed: () {
-                                              Hive.box('settings').put(
-                                                'officialApiKey',
-                                                Constants().F1_API_KEY,
-                                              );
-                                              Navigator.of(context).pop();
-                                              setState(() {});
-                                            },
-                                            child: Text(
-                                              AppLocalizations.of(context)!
-                                                  .reset,
-                                            ),
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.only(
+                                        top: 7,
+                                        bottom: 20,
+                                      ),
+                                      child: Container(
+                                        width: double.infinity,
+                                        height: 50,
+                                        child: OutlinedButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: Text(
+                                            AppLocalizations.of(context)!.close,
                                           ),
                                         ),
                                       ),
-                                      Padding(
-                                        padding:
-                                            EdgeInsets.only(top: 7, bottom: 20),
-                                        child: Container(
-                                          width: double.infinity,
-                                          height: 50,
-                                          child: OutlinedButton(
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                            child: Text(
-                                              AppLocalizations.of(context)!
-                                                  .close,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                            );
-                          },
-                          icon: Icon(Icons.settings_outlined),
-                        ),
+                            ),
+                          );
+                        },
+                        icon: Icon(Icons.settings_outlined),
                       ),
-                      Radio(
-                        value: true,
-                        groupValue: useOfficialDataSoure,
-                        onChanged: (value) => onF1SourceChanged(value),
-                      ),
-                    ],
-                  ),
-                  title: Padding(
-                    padding: EdgeInsets.only(left: 80),
-                    child: Text('Official'),
-                  ),
-                )
-              : Container(),
-          championship == 'Formula 1'
-              ? ListTile(
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(right: 5),
-                        child: IconButton(
-                          onPressed: () async {
-                            final TextEditingController controller =
-                                TextEditingController();
-                            await showCustomBottomSheet(
-                              context,
-                              SizedBox(
-                                child: Padding(
-                                  padding: EdgeInsets.fromLTRB(
-                                    20,
-                                    15,
-                                    20,
-                                    15,
-                                  ),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Padding(
-                                        padding: EdgeInsets.only(bottom: 20),
-                                        child: Text(
-                                          AppLocalizations.of(context)!
-                                              .customErgastUrl,
-                                          style: TextStyle(fontSize: 20),
+                    ),
+                    Radio(
+                      value: true,
+                      enabled: championship == "Formula 1",
+                    ),
+                  ],
+                ),
+                title: Padding(
+                  padding: EdgeInsets.only(left: 80),
+                  child: Text(AppLocalizations.of(context)!.official),
+                ),
+              ),
+              ListTile(
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(right: 5),
+                      child: IconButton(
+                        onPressed: () async {
+                          final TextEditingController controller =
+                              TextEditingController();
+                          await showCustomBottomSheet(
+                            context,
+                            SizedBox(
+                              child: Padding(
+                                padding: EdgeInsets.fromLTRB(
+                                  20,
+                                  15,
+                                  20,
+                                  15,
+                                ),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.only(bottom: 20),
+                                      child: Text(
+                                        AppLocalizations.of(context)!
+                                            .customErgastUrl,
+                                        style: TextStyle(fontSize: 20),
+                                      ),
+                                    ),
+                                    TextField(
+                                      controller: controller,
+                                      decoration: InputDecoration(
+                                        border: OutlineInputBorder(),
+                                        hintText: ergastUrl,
+                                        hintStyle: TextStyle(
+                                          fontWeight: FontWeight.w100,
                                         ),
                                       ),
-                                      TextField(
-                                        controller: controller,
-                                        decoration: InputDecoration(
-                                          border: OutlineInputBorder(),
-                                          hintText: ergastUrl,
-                                          hintStyle: TextStyle(
-                                            fontWeight: FontWeight.w100,
-                                          ),
-                                        ),
-                                        autofocus: true,
-                                      ),
-                                      Padding(
-                                        padding:
-                                            EdgeInsets.only(top: 20, bottom: 7),
-                                        child: Container(
-                                          width: double.infinity,
-                                          height: 50,
-                                          child: FilledButton.tonal(
-                                            onPressed: () {
-                                              Hive.box('settings').put(
-                                                'ergastUrl',
-                                                controller.text,
-                                              );
-                                              Navigator.of(context).pop();
-                                              setState(() {});
-                                            },
-                                            child: Text(
-                                              AppLocalizations.of(context)!
-                                                  .save,
-                                            ),
+                                      autofocus: true,
+                                    ),
+                                    Padding(
+                                      padding:
+                                          EdgeInsets.only(top: 20, bottom: 7),
+                                      child: Container(
+                                        width: double.infinity,
+                                        height: 50,
+                                        child: FilledButton.tonal(
+                                          onPressed: () {
+                                            Hive.box('settings').put(
+                                              'ergastUrl',
+                                              controller.text,
+                                            );
+                                            Navigator.of(context).pop();
+                                            setState(() {});
+                                          },
+                                          child: Text(
+                                            AppLocalizations.of(context)!.save,
                                           ),
                                         ),
                                       ),
-                                      Padding(
-                                        padding:
-                                            EdgeInsets.only(top: 7, bottom: 7),
-                                        child: Container(
-                                          width: double.infinity,
-                                          height: 50,
-                                          child: OutlinedButton(
-                                            onPressed: () {
-                                              Hive.box('settings').put(
-                                                'ergastUrl',
-                                                Constants().ERGAST_API_URL,
-                                              );
-                                              Navigator.of(context).pop();
-                                              setState(() {});
-                                            },
-                                            child: Text(
-                                              AppLocalizations.of(context)!
-                                                  .reset,
-                                            ),
+                                    ),
+                                    Padding(
+                                      padding:
+                                          EdgeInsets.only(top: 7, bottom: 7),
+                                      child: Container(
+                                        width: double.infinity,
+                                        height: 50,
+                                        child: OutlinedButton(
+                                          onPressed: () {
+                                            Hive.box('settings').put(
+                                              'ergastUrl',
+                                              Constants().ERGAST_API_URL,
+                                            );
+                                            Navigator.of(context).pop();
+                                            setState(() {});
+                                          },
+                                          child: Text(
+                                            AppLocalizations.of(context)!.reset,
                                           ),
                                         ),
                                       ),
-                                      Padding(
-                                        padding:
-                                            EdgeInsets.only(top: 7, bottom: 20),
-                                        child: Container(
-                                          width: double.infinity,
-                                          height: 50,
-                                          child: OutlinedButton(
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                            child: Text(
-                                              AppLocalizations.of(context)!
-                                                  .close,
-                                            ),
+                                    ),
+                                    Padding(
+                                      padding:
+                                          EdgeInsets.only(top: 7, bottom: 20),
+                                      child: Container(
+                                        width: double.infinity,
+                                        height: 50,
+                                        child: OutlinedButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: Text(
+                                            AppLocalizations.of(context)!.close,
                                           ),
                                         ),
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                            );
-                          },
-                          icon: Icon(Icons.settings_outlined),
-                        ),
+                            ),
+                          );
+                        },
+                        icon: Icon(Icons.settings_outlined),
                       ),
-                      Radio(
-                        value: false,
-                        groupValue: useOfficialDataSoure,
-                        onChanged: (value) => onF1SourceChanged(value),
-                      ),
-                    ],
+                    ),
+                    Radio(
+                      value: false,
+                      enabled: championship == "Formula 1",
+                    ),
+                  ],
+                ),
+                title: Padding(
+                  padding: EdgeInsets.only(left: 80),
+                  child: Text('Ergast'),
+                ),
+              ),
+              ListTile(
+                leading: SizedBox(
+                  width: 32,
+                  child: ClipRRect(
+                    borderRadius: const BorderRadius.all(Radius.circular(7)),
+                    child: CachedNetworkImage(
+                      imageUrl:
+                          'https://external-content.duckduckgo.com/ip3/www.fiaformula2.com.ico',
+                      height: 36,
+                    ),
                   ),
-                  title: Padding(
-                    padding: EdgeInsets.only(left: 80),
-                    child: Text('Ergast'),
+                ),
+                trailing: Radio(
+                  value: 'Formula 2',
+                  enabled: !kIsWeb,
+                ),
+                title: Text('Formula 2'),
+              ),
+              ListTile(
+                leading: SizedBox(
+                  width: 32,
+                  child: ClipRRect(
+                    borderRadius: const BorderRadius.all(Radius.circular(7)),
+                    child: CachedNetworkImage(
+                      imageUrl:
+                          'https://external-content.duckduckgo.com/ip3/www.fiaformula3.com.ico',
+                      height: 36,
+                    ),
                   ),
-                )
-              : Container(),
-          ListTile(
-            leading: SizedBox(
-              width: 32,
-              child: ClipRRect(
-                borderRadius: const BorderRadius.all(Radius.circular(7)),
-                child: CachedNetworkImage(
-                  imageUrl:
-                      'https://external-content.duckduckgo.com/ip3/www.fiaformula2.com.ico',
-                  height: 36,
                 ),
-              ),
-            ),
-            trailing: Radio(
-              value: 'Formula 2',
-              groupValue: championship,
-              onChanged: (value) => onChanged(value),
-            ),
-            title: Text('Formula 2'),
-          ),
-          ListTile(
-            leading: SizedBox(
-              width: 32,
-              child: ClipRRect(
-                borderRadius: const BorderRadius.all(Radius.circular(7)),
-                child: CachedNetworkImage(
-                  imageUrl:
-                      'https://external-content.duckduckgo.com/ip3/www.fiaformula3.com.ico',
-                  height: 36,
+                trailing: Radio(
+                  value: 'Formula 3',
+                  enabled: !kIsWeb,
                 ),
+                title: Text('Formula 3'),
               ),
-            ),
-            trailing: Radio(
-              value: 'Formula 3',
-              groupValue: championship,
-              onChanged: (value) => onChanged(value),
-            ),
-            title: Text('Formula 3'),
-          ),
-          ListTile(
-            leading: SizedBox(
-              width: 32,
-              child: ClipRRect(
-                borderRadius: const BorderRadius.all(Radius.circular(7)),
-                child: CachedNetworkImage(
-                  imageUrl:
-                      'https://external-content.duckduckgo.com/ip3/www.f1academy.com.ico',
-                  height: 36,
+              ListTile(
+                leading: SizedBox(
+                  width: 32,
+                  child: ClipRRect(
+                    borderRadius: const BorderRadius.all(Radius.circular(7)),
+                    child: CachedNetworkImage(
+                      imageUrl:
+                          'https://external-content.duckduckgo.com/ip3/www.f1academy.com.ico',
+                      height: 36,
+                    ),
+                  ),
                 ),
-              ),
-            ),
-            trailing: Radio(
-              value: 'F1 Academy',
-              groupValue: championship,
-              onChanged: (value) => onChanged(value),
-            ),
-            title: Text('F1 Academy'),
-          ),
-          ListTile(
-            leading: SizedBox(
-              width: 32,
-              child: ClipRRect(
-                borderRadius: const BorderRadius.all(Radius.circular(7)),
-                child: CachedNetworkImage(
-                  imageUrl:
-                      'https://www.fiaformulae.com/resources/v4.32.1/i/elements/favicon-160x160.png',
-                  height: 36,
+                trailing: Radio(
+                  value: 'F1 Academy',
+                  enabled: !kIsWeb,
                 ),
+                title: Text('F1 Academy'),
               ),
-            ),
-            trailing: Radio(
-              value: 'Formula E',
-              groupValue: championship,
-              onChanged: (value) => onChanged(value),
-            ),
-            title: Text('Formula E'),
+              ListTile(
+                leading: SizedBox(
+                  width: 32,
+                  child: ClipRRect(
+                    borderRadius: const BorderRadius.all(Radius.circular(7)),
+                    child: CachedNetworkImage(
+                      imageUrl:
+                          'https://www.fiaformulae.com/resources/v4.32.1/i/elements/favicon-160x160.png',
+                      height: 36,
+                    ),
+                  ),
+                ),
+                trailing: Radio(
+                  value: 'Formula E',
+                ),
+                title: Text('Formula E'),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

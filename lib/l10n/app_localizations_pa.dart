@@ -140,6 +140,10 @@ class AppLocalizationsPa extends AppLocalizations {
   String get deleteUrl => 'ਕੀ ਤੁਸੀਂ ਇਸ URL ਨੂੰ ਮਿਟਾਉਣਾ ਚਾਹੁੰਦੇ ਹੋ?';
 
   @override
+  String get disableBottomNavigationBarLabels =>
+      'Don\'t show bottom navigation bar labels';
+
+  @override
   String get done => 'ਹੋ ਗਿਆ';
 
   @override

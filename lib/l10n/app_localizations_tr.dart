@@ -139,6 +139,10 @@ class AppLocalizationsTr extends AppLocalizations {
   String get deleteUrl => 'Bu URL\'yi silmek istiyor musunuz?';
 
   @override
+  String get disableBottomNavigationBarLabels =>
+      'Don\'t show bottom navigation bar labels';
+
+  @override
   String get done => 'Bitti';
 
   @override
