@@ -393,6 +393,8 @@ class NewsItem extends StatelessWidget {
                                               ),
                                               child: CachedNetworkImage(
                                                 imageUrl: imageUrl,
+                                                disablePlaceholderOnCacheHit:
+                                                    false,
                                                 placeholder: (context, url) =>
                                                     SizedBox(
                                                   height: (width > 500)
@@ -407,7 +409,7 @@ class NewsItem extends StatelessWidget {
                                                     replaceImage: true,
                                                     fullBorderRadius: false,
                                                     height: (width > 500)
-                                                        ? null
+                                                        ? 500
                                                         : (showSmallDescription ??
                                                                 false)
                                                             ? height /
@@ -443,7 +445,7 @@ class NewsItem extends StatelessWidget {
                                                       const Duration(days: 5),
                                                 ),
                                                 memCacheHeight: (width > 500)
-                                                    ? 600
+                                                    ? null
                                                     : ((showSmallDescription ??
                                                                 false)
                                                             ? height / (16 / 9)

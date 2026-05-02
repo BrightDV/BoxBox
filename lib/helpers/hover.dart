@@ -18,6 +18,7 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:vector_math/vector_math_64.dart' as vm;
 
 class Hover extends StatefulWidget {
   final Widget Function(bool isHovered) builder;
@@ -38,7 +39,13 @@ class HoverState extends State<Hover> {
   @override
   Widget build(BuildContext context) {
     final hovered = Matrix4.identity()
-      ..translateByDouble(0, widget.isRaceHubSession ? 0 : -10, 0, 0);
+      ..translateByVector3(
+        vm.Vector3(
+          0,
+          widget.isRaceHubSession ? 0 : -10,
+          0,
+        ),
+      );
     final transform = isHovered ? hovered : Matrix4.identity();
 
     return MouseRegion(
