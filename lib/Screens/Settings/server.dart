@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 /*
  *  This file is part of BoxBox (https://github.com/BrightDV/BoxBox).
  * 

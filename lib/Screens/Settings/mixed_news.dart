@@ -152,32 +152,30 @@ class _EditOrderScreenState extends State<EditOrderScreen> {
                         ),
                         SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Radio(
-                                value: "rss",
-                                groupValue: type,
-                                onChanged: (String? value) => setState(() {
-                                  type = value!;
-                                }),
-                              ),
-                              Text(
-                                'RSS',
-                              ),
-                              Radio(
-                                value: "wp",
-                                groupValue: type,
-                                onChanged: (String? value) => setState(
-                                  () {
-                                    type = value!;
-                                  },
+                          child: RadioGroup(
+                            groupValue: type,
+                            onChanged: (String? value) => setState(
+                              () {
+                                type = value!;
+                              },
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Radio(
+                                  value: "rss",
                                 ),
-                              ),
-                              Text(
-                                'WordPress',
-                              ),
-                            ],
+                                Text(
+                                  'RSS',
+                                ),
+                                Radio(
+                                  value: "wp",
+                                ),
+                                Text(
+                                  'WordPress',
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                         Padding(

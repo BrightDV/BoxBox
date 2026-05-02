@@ -32,7 +32,7 @@ import 'package:boxbox/l10n/app_localizations.dart';
 import 'package:boxbox/providers/circuit/requests.dart';
 import 'package:boxbox/providers/circuit/ui.dart';
 import 'package:boxbox/scraping/formula_one.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cached_network_image_ce/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
@@ -134,7 +134,7 @@ class CircuitScreenContent extends StatelessWidget {
                           ClipRRect(
                             borderRadius: BorderRadius.circular(6.0),
                             child: CachedNetworkImage(
-                              errorWidget: (context, url, error) =>
+                              errorBuilder: (context, url, error) =>
                                   SizedBox(width: 53),
                               fadeOutDuration:
                                   const Duration(milliseconds: 300),

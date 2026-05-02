@@ -31,7 +31,7 @@ import 'package:boxbox/helpers/request_error.dart';
 import 'package:boxbox/l10n/app_localizations.dart';
 import 'package:boxbox/providers/event_tracker/format.dart';
 import 'package:boxbox/scraping/fia.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cached_network_image_ce/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -83,12 +83,14 @@ class EventTrackerUIProvider {
                       0, 0, 0, 1, 0, //
                     ],
                   ),
-                  child: Image.network(
-                    event.circuitImage,
+                  child: CachedNetworkImage(
+                    imageUrl: event.circuitImage,
+                    memCacheWidth: 120,
                   ),
                 )
-              : Image.network(
-                  event.circuitImage,
+              : CachedNetworkImage(
+                  imageUrl: event.circuitImage,
+                  memCacheWidth: 120,
                 ),
         ),
       );
@@ -275,7 +277,7 @@ class EventTrackerUIProvider {
           imageUrl:
               'https://media.formula1.com/image/upload/content/dam/fom-website/2018-redesign-assets/Racehub%20header%20images%2016x9/$meetingName.jpg.transform/fullbleed/image.jpg',
           placeholder: (context, url) => const LoadingIndicatorUtil(),
-          errorWidget: (context, url, error) => const Icon(
+          errorBuilder: (context, url, error) => const Icon(
             Icons.error_outlined,
           ),
           fadeOutDuration: const Duration(milliseconds: 300),
@@ -299,14 +301,14 @@ class EventTrackerUIProvider {
           height: 400,
           child: LoadingIndicatorUtil(),
         ),
-        errorWidget: (context, url, error) => const Icon(
+        errorBuilder: (context, url, error) => const Icon(
           Icons.error_outlined,
         ),
         fadeOutDuration: const Duration(milliseconds: 300),
         fadeInDuration: const Duration(milliseconds: 300),
         fit: BoxFit.cover,
         colorBlendMode: BlendMode.darken,
-        color: Colors.black.withOpacity(0.5),
+        color: Colors.black.withValues(alpha: 0.5),
         width: double.infinity,
       );
     } else {

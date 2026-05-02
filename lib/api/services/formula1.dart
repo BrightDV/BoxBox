@@ -59,6 +59,12 @@ class Formula1 {
           } else {
             imageUrl += '.transform/2col-retina/image.jpg';
           }
+        } else {
+          if (element['thumbnail']['image']['renditions'] != null) {
+            imageUrl = element['thumbnail']['image']['renditions']['6col'];
+          } else {
+            imageUrl += '.transform/6col/image.jpg';
+          }
         }
       }
 

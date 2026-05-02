@@ -16,7 +16,7 @@ class AppLocalizationsZh extends AppLocalizations {
       'Box, Box! 是一款自由软件，采用 GPLv3+ 许可。目标是让用户在没有广告和追踪器的情况下了解 F1 和 FE 的最新资讯。';
 
   @override
-  String get aboutBottomLine => '由 BrightDV 用 ❤ 制作。';
+  String get aboutBottomLine => '由 BrightDV 用❤制作。';
 
   @override
   String get addCustomFeed => '添加自定义订阅源';

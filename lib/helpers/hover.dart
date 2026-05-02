@@ -38,7 +38,7 @@ class HoverState extends State<Hover> {
   @override
   Widget build(BuildContext context) {
     final hovered = Matrix4.identity()
-      ..translate(0, widget.isRaceHubSession ? 0 : -10, 0);
+      ..translateByDouble(0, widget.isRaceHubSession ? 0 : -10, 0, 0);
     final transform = isHovered ? hovered : Matrix4.identity();
 
     return MouseRegion(

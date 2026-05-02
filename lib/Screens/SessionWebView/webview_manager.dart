@@ -42,7 +42,7 @@ class _WebViewManagerScreenState extends State<WebViewManagerScreen> {
         MaterialPageRoute(
           builder: (context) => PopScope(
             canPop: false,
-            onPopInvoked: (didPop) {
+            onPopInvokedWithResult: (didPop, r) {
               if (didPop) return;
               Navigator.of(context).pop();
               Navigator.of(context).pop();

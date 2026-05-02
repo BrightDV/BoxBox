@@ -62,39 +62,33 @@ class DownloadUtils {
                 ),
                 SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: [
-                      Radio(
-                        value: "180",
-                        groupValue: selectedQuality,
-                        onChanged: (String? value) => setState(() {
-                          selectedQuality = value!;
-                        }),
-                      ),
-                      Text(
-                        '180p',
-                      ),
-                      Radio(
-                        value: "360",
-                        groupValue: selectedQuality,
-                        onChanged: (String? value) => setState(() {
-                          selectedQuality = value!;
-                        }),
-                      ),
-                      Text(
-                        '360p',
-                      ),
-                      Radio(
-                        value: "720",
-                        groupValue: selectedQuality,
-                        onChanged: (String? value) => setState(() {
-                          selectedQuality = value!;
-                        }),
-                      ),
-                      Text(
-                        '720p',
-                      ),
-                    ],
+                  child: RadioGroup(
+                    groupValue: selectedQuality,
+                    onChanged: (String? value) => setState(() {
+                      selectedQuality = value!;
+                    }),
+                    child: Row(
+                      children: [
+                        Radio(
+                          value: "180",
+                        ),
+                        Text(
+                          '180p',
+                        ),
+                        Radio(
+                          value: "360",
+                        ),
+                        Text(
+                          '360p',
+                        ),
+                        Radio(
+                          value: "720",
+                        ),
+                        Text(
+                          '720p',
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 Padding(

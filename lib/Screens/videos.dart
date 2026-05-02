@@ -24,7 +24,7 @@ import 'package:boxbox/helpers/hover.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/request_error.dart';
 import 'package:boxbox/providers/videos/requests.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cached_network_image_ce/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:boxbox/l10n/app_localizations.dart';
@@ -264,13 +264,13 @@ class VideoItem extends StatelessWidget {
                               const LoadingIndicatorUtil(
                             replaceImage: true,
                           ),
-                          errorWidget: (context, url, error) => Icon(
+                          errorBuilder: (context, url, error) => Icon(
                             Icons.error_outlined,
                           ),
                           fadeOutDuration: const Duration(milliseconds: 300),
                           fadeInDuration: const Duration(milliseconds: 300),
                           colorBlendMode: BlendMode.darken,
-                          color: Colors.black.withOpacity(0.5),
+                          color: Colors.black.withValues(alpha: 0.5),
                         ),
                       ),
                       Padding(
@@ -361,13 +361,13 @@ class VideoItem extends StatelessWidget {
                             replaceImage: true,
                           ),
                         ),
-                        errorWidget: (context, url, error) => Icon(
+                        errorBuilder: (context, url, error) => Icon(
                           Icons.error_outlined,
                         ),
                         fadeInDuration: const Duration(milliseconds: 300),
                         fadeOutDuration: const Duration(milliseconds: 300),
                         colorBlendMode: BlendMode.darken,
-                        color: Colors.black.withOpacity(0.5),
+                        color: Colors.black.withValues(alpha: 0.5),
                       ),
                     ),
                     Padding(

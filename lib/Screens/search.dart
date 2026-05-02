@@ -66,7 +66,7 @@ class _SearchScreenState extends State<SearchScreen> {
             child: Theme(
               data: Theme.of(context).copyWith(
                 textSelectionTheme: TextSelectionThemeData(
-                  selectionColor: Colors.white.withOpacity(0.35),
+                  selectionColor: Colors.white.withValues(alpha: 0.35),
                 ),
               ),
               child: TextField(

@@ -23,12 +23,14 @@ import 'package:loading_indicator/loading_indicator.dart';
 
 class LoadingIndicatorUtil extends StatelessWidget {
   final double? width;
+  final double? height;
   final bool replaceImage;
   final bool borderRadius;
   final bool fullBorderRadius;
   const LoadingIndicatorUtil({
     Key? key,
     this.width,
+    this.height,
     this.replaceImage = false,
     this.borderRadius = true,
     this.fullBorderRadius = true,
@@ -46,7 +48,16 @@ class LoadingIndicatorUtil extends StatelessWidget {
                     topLeft: Radius.circular(borderRadius ? 16.0 : 0),
                     topRight: Radius.circular(borderRadius ? 16.0 : 0),
                   ),
-            child: Image.asset('assets/images/image_loading_bg.png'),
+            child: Image.asset(
+              'assets/images/image_loading_bg.png',
+              cacheWidth: width != null
+                  ? ((width!) * MediaQuery.of(context).devicePixelRatio).round()
+                  : null,
+              cacheHeight: height != null
+                  ? ((height!) * MediaQuery.of(context).devicePixelRatio)
+                      .round()
+                  : null,
+            ),
           )
         : Padding(
             padding: const EdgeInsets.all(10),

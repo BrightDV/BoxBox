@@ -605,7 +605,7 @@ class RelatedArticles extends StatelessWidget {
                       width: 48,
                       height: 48,
                       decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.75),
+                        color: Colors.black.withValues(alpha: 0.75),
                         shape: BoxShape.circle,
                       ),
                       child: const Icon(
@@ -630,7 +630,7 @@ class RelatedArticles extends StatelessWidget {
                       width: 48,
                       height: 48,
                       decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.75),
+                        color: Colors.black.withValues(alpha: 0.75),
                         shape: BoxShape.circle,
                       ),
                       child: const Icon(

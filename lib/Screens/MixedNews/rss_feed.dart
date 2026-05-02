@@ -21,9 +21,8 @@ import 'package:boxbox/Screens/MixedNews/rss_feed_article.dart';
 import 'package:boxbox/api/rss.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/request_error.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cached_network_image_ce/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:boxbox/l10n/app_localizations.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -216,7 +215,7 @@ class RssFeedItemsList extends StatelessWidget {
                                     replaceImage: true,
                                   ),
                                 ),
-                                errorWidget: (context, url, error) => Icon(
+                                errorBuilder: (context, url, error) => Icon(
                                   Icons.error_outlined,
                                   color:
                                       useDarkMode ? Colors.white : Colors.black,
@@ -227,11 +226,8 @@ class RssFeedItemsList extends StatelessWidget {
                                 fadeInDuration: const Duration(
                                   milliseconds: 300,
                                 ),
-                                cacheManager: CacheManager(
-                                  Config(
-                                    "newsImages",
-                                    stalePeriod: const Duration(days: 7),
-                                  ),
+                                cacheManager: DefaultCacheManager(
+                                  stalePeriod: const Duration(days: 7),
                                 ),
                               )
                             : Image.network(

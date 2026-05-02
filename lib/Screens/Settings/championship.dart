@@ -20,7 +20,7 @@
 import 'package:boxbox/helpers/bottom_sheet.dart';
 import 'package:boxbox/helpers/constants.dart';
 import 'package:boxbox/l10n/app_localizations.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cached_network_image_ce/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';

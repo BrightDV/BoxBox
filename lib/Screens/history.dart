@@ -17,7 +17,7 @@
  * Copyright (c) 2022-2025, BrightDV
  */
 
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cached_network_image_ce/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:boxbox/l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';

@@ -32,10 +32,9 @@ import 'package:boxbox/providers/article/format.dart';
 import 'package:boxbox/providers/article/requests.dart';
 import 'package:boxbox/providers/videos/requests.dart';
 import 'package:boxbox/providers/videos/ui.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cached_network_image_ce/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/services.dart';
 import 'package:boxbox/l10n/app_localizations.dart';
@@ -255,9 +254,10 @@ class NewsItem extends StatelessWidget {
                                         child: LoadingIndicatorUtil(
                                           replaceImage: true,
                                           fullBorderRadius: false,
+                                          width: 300,
                                         ),
                                       ),
-                                      errorWidget: (context, url, error) =>
+                                      errorBuilder: (context, url, error) =>
                                           ImageRequestErrorUtil(
                                         width: 300,
                                       ),
@@ -267,12 +267,10 @@ class NewsItem extends StatelessWidget {
                                       fadeInDuration: const Duration(
                                         milliseconds: 300,
                                       ),
-                                      cacheManager: CacheManager(
-                                        Config(
-                                          "newsImages",
-                                          stalePeriod: const Duration(days: 7),
-                                        ),
+                                      cacheManager: DefaultCacheManager(
+                                        stalePeriod: const Duration(days: 7),
                                       ),
+                                      memCacheWidth: 300,
                                     ),
                                   ),
                                   ListTile(
@@ -307,9 +305,10 @@ class NewsItem extends StatelessWidget {
                                     child: LoadingIndicatorUtil(
                                       replaceImage: true,
                                       fullBorderRadius: false,
+                                      width: 300,
                                     ),
                                   ),
-                                  errorWidget: (context, url, error) =>
+                                  errorBuilder: (context, url, error) =>
                                       ImageRequestErrorUtil(
                                     width: 300,
                                   ),
@@ -319,12 +318,10 @@ class NewsItem extends StatelessWidget {
                                   fadeInDuration: const Duration(
                                     milliseconds: 300,
                                   ),
-                                  cacheManager: CacheManager(
-                                    Config(
-                                      "newsImages",
-                                      stalePeriod: const Duration(days: 7),
-                                    ),
+                                  cacheManager: DefaultCacheManager(
+                                    stalePeriod: const Duration(days: 7),
                                   ),
+                                  memCacheWidth: 300,
                                 ),
                               ),
                               ListTile(
@@ -398,11 +395,7 @@ class NewsItem extends StatelessWidget {
                                                 imageUrl: imageUrl,
                                                 placeholder: (context, url) =>
                                                     SizedBox(
-                                                  height: (MediaQuery.of(
-                                                                  context)
-                                                              .size
-                                                              .width >
-                                                          500)
+                                                  height: (width > 500)
                                                       ? null
                                                       : (showSmallDescription ??
                                                               false)
@@ -410,24 +403,25 @@ class NewsItem extends StatelessWidget {
                                                               58
                                                           : width / (16 / 9) -
                                                               10,
-                                                  child:
-                                                      const LoadingIndicatorUtil(
+                                                  child: LoadingIndicatorUtil(
                                                     replaceImage: true,
                                                     fullBorderRadius: false,
+                                                    height: (width > 500)
+                                                        ? null
+                                                        : (showSmallDescription ??
+                                                                false)
+                                                            ? height /
+                                                                    (16 / 9) -
+                                                                58
+                                                            : width / (16 / 9) -
+                                                                10,
                                                   ),
                                                 ),
-                                                errorWidget:
+                                                errorBuilder:
                                                     (context, url, error) =>
                                                         ImageRequestErrorUtil(
-                                                  height: (MediaQuery.of(
-                                                                  context)
-                                                              .size
-                                                              .width >
-                                                          500)
-                                                      ? (MediaQuery.of(context)
-                                                                      .size
-                                                                      .width /
-                                                                  itemPerRow -
+                                                  height: (width > 500)
+                                                      ? (width / itemPerRow -
                                                               8 * itemPerRow) /
                                                           (16 / 9)
                                                       : (showSmallDescription ??
@@ -443,13 +437,18 @@ class NewsItem extends StatelessWidget {
                                                 fadeInDuration: const Duration(
                                                   milliseconds: 300,
                                                 ),
-                                                cacheManager: CacheManager(
-                                                  Config(
-                                                    "newsImages",
-                                                    stalePeriod:
-                                                        const Duration(days: 5),
-                                                  ),
+                                                cacheManager:
+                                                    DefaultCacheManager(
+                                                  stalePeriod:
+                                                      const Duration(days: 5),
                                                 ),
+                                                memCacheHeight: (width > 500)
+                                                    ? 600
+                                                    : ((showSmallDescription ??
+                                                                false)
+                                                            ? height / (16 / 9)
+                                                            : width / (16 / 9))
+                                                        .round(),
                                               ),
                                             ),
                                             item.newsType != ''
@@ -758,36 +757,32 @@ class NewsItem extends StatelessWidget {
                                             imageUrl: imageUrl,
                                             placeholder: (context, url) =>
                                                 SizedBox(
-                                              height: (MediaQuery.of(context)
-                                                          .size
-                                                          .width >
-                                                      500)
-                                                  ? (MediaQuery.of(context)
-                                                                  .size
-                                                                  .width /
-                                                              itemPerRow -
+                                              height: (width > 500)
+                                                  ? (width / itemPerRow -
                                                           8 * itemPerRow) /
                                                       (16 / 9)
                                                   : (showSmallDescription ??
                                                           false)
                                                       ? height / (16 / 9) - 58
                                                       : width / (16 / 9) - 5,
-                                              child: const LoadingIndicatorUtil(
+                                              child: LoadingIndicatorUtil(
                                                 replaceImage: true,
                                                 fullBorderRadius: false,
+                                                height: (width > 500)
+                                                    ? (width / itemPerRow -
+                                                            8 * itemPerRow) /
+                                                        (16 / 9)
+                                                    : (showSmallDescription ??
+                                                            false)
+                                                        ? height / (16 / 9) - 58
+                                                        : width / (16 / 9) - 5,
                                               ),
                                             ),
-                                            errorWidget:
+                                            errorBuilder:
                                                 (context, url, error) =>
                                                     ImageRequestErrorUtil(
-                                              height: (MediaQuery.of(context)
-                                                          .size
-                                                          .width >
-                                                      500)
-                                                  ? (MediaQuery.of(context)
-                                                                  .size
-                                                                  .width /
-                                                              itemPerRow -
+                                              height: (width > 500)
+                                                  ? (width / itemPerRow -
                                                           8 * itemPerRow) /
                                                       (16 / 9)
                                                   : (showSmallDescription ??
@@ -801,13 +796,22 @@ class NewsItem extends StatelessWidget {
                                             fadeInDuration: const Duration(
                                               milliseconds: 300,
                                             ),
-                                            cacheManager: CacheManager(
-                                              Config(
-                                                "newsImages",
-                                                stalePeriod:
-                                                    const Duration(days: 5),
-                                              ),
+                                            cacheManager: DefaultCacheManager(
+                                              stalePeriod:
+                                                  const Duration(days: 5),
                                             ),
+                                            memCacheHeight: (((width > 500)
+                                                        ? (width / itemPerRow -
+                                                                8 *
+                                                                    itemPerRow) /
+                                                            (16 / 9)
+                                                        : (showSmallDescription ??
+                                                                false)
+                                                            ? height / (16 / 9)
+                                                            : width /
+                                                                (16 / 9)) *
+                                                    1.4)
+                                                .round(),
                                           ),
                                         ),
                                         item.newsType != ''
@@ -1484,12 +1488,12 @@ class ImageRenderer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-    width = width > 1400
+    double deviceWidth = MediaQuery.of(context).size.width;
+    double width = deviceWidth > 1400
         ? 450
-        : width > 1000
+        : deviceWidth > 1000
             ? 500
-            : width;
+            : deviceWidth;
     return Padding(
       padding: EdgeInsets.only(
         bottom: inSchedule != null || isPodcastPreview != null ? 0 : 10,
@@ -1498,30 +1502,26 @@ class ImageRenderer extends StatelessWidget {
           ? CachedNetworkImage(
               imageUrl: imageUrl,
               placeholder: (context, url) => SizedBox(
-                height: MediaQuery.of(context).size.width > 1000
-                    ? 800
-                    : MediaQuery.of(context).size.width / (16 / 9),
-                child: const LoadingIndicatorUtil(
+                height: deviceWidth > 1000 ? 800 : deviceWidth / (16 / 9),
+                child: LoadingIndicatorUtil(
                   replaceImage: true,
                   fullBorderRadius: false,
                   borderRadius: false,
+                  height: deviceWidth > 1000 ? 800 : deviceWidth / (16 / 9),
                 ),
               ),
-              errorWidget: (context, url, error) => ImageRequestErrorUtil(
-                height: MediaQuery.of(context).size.width > 1000
-                    ? 800
-                    : MediaQuery.of(context).size.width / (16 / 9),
+              errorBuilder: (context, url, error) => ImageRequestErrorUtil(
+                height: deviceWidth > 1000 ? 800 : deviceWidth / (16 / 9),
               ),
               fadeOutDuration: const Duration(milliseconds: 100),
               fadeInDuration: const Duration(milliseconds: 300),
-              cacheManager: CacheManager(
-                Config(
-                  "newsImages",
-                  stalePeriod: const Duration(days: 7),
-                ),
+              cacheManager: DefaultCacheManager(
+                stalePeriod: const Duration(days: 7),
               ),
               colorBlendMode: BlendMode.darken,
               color: Colors.black.withValues(alpha: 0.6),
+              memCacheHeight:
+                  (deviceWidth > 1000 ? 800 : deviceWidth / (16 / 9)).round(),
             )
           : kIsWeb
               ? GestureDetector(
@@ -1563,16 +1563,15 @@ class ImageRenderer extends StatelessWidget {
                                                 imageUrl: imageUrl,
                                                 placeholder: (context, url) =>
                                                     SizedBox(
-                                                  height: MediaQuery.of(context)
-                                                          .size
-                                                          .width /
-                                                      (16 / 9),
-                                                  child:
-                                                      const LoadingIndicatorUtil(
+                                                  height:
+                                                      deviceWidth / (16 / 9),
+                                                  child: LoadingIndicatorUtil(
                                                     replaceImage: true,
+                                                    height:
+                                                        deviceWidth / (16 / 9),
                                                   ),
                                                 ),
-                                                errorWidget:
+                                                errorBuilder:
                                                     (context, url, error) =>
                                                         ImageRequestErrorUtil(
                                                   height: MediaQuery.of(context)
@@ -1589,12 +1588,10 @@ class ImageRenderer extends StatelessWidget {
                                                     : const Duration(
                                                         seconds: 1,
                                                       ),
-                                                cacheManager: CacheManager(
-                                                  Config(
-                                                    "newsImages",
-                                                    stalePeriod:
-                                                        const Duration(days: 7),
-                                                  ),
+                                                cacheManager:
+                                                    DefaultCacheManager(
+                                                  stalePeriod:
+                                                      const Duration(days: 7),
                                                 ),
                                               )
                                             : Image(
@@ -1606,15 +1603,16 @@ class ImageRenderer extends StatelessWidget {
                                                     loadingProgress == null
                                                         ? child
                                                         : SizedBox(
-                                                            height: MediaQuery.of(
-                                                                        context)
-                                                                    .size
-                                                                    .width /
-                                                                (16 / 9),
+                                                            height:
+                                                                deviceWidth /
+                                                                    (16 / 9),
                                                             child:
-                                                                const LoadingIndicatorUtil(
+                                                                LoadingIndicatorUtil(
                                                               replaceImage:
                                                                   true,
+                                                              height:
+                                                                  deviceWidth /
+                                                                      (16 / 9),
                                                             ),
                                                           ),
                                                 errorBuilder:
@@ -1653,22 +1651,20 @@ class ImageRenderer extends StatelessWidget {
                               imageUrl: imageUrl,
                               placeholder: (context, url) => SizedBox(
                                 height: width,
-                                child: const LoadingIndicatorUtil(
+                                child: LoadingIndicatorUtil(
                                   replaceImage: true,
                                   borderRadius: false,
+                                  height: width,
                                 ),
                               ),
-                              errorWidget: (context, url, error) =>
+                              errorBuilder: (context, url, error) =>
                                   ImageRequestErrorUtil(),
                               fadeOutDuration: const Duration(
                                 milliseconds: 300,
                               ),
                               fadeInDuration: const Duration(milliseconds: 300),
-                              cacheManager: CacheManager(
-                                Config(
-                                  "newsImages",
-                                  stalePeriod: const Duration(days: 7),
-                                ),
+                              cacheManager: DefaultCacheManager(
+                                stalePeriod: const Duration(days: 7),
                               ),
                             )
                           : Image.network(
@@ -1679,9 +1675,10 @@ class ImageRenderer extends StatelessWidget {
                                           ? child
                                           : SizedBox(
                                               height: width / (16 / 9),
-                                              child: const LoadingIndicatorUtil(
+                                              child: LoadingIndicatorUtil(
                                                 replaceImage: true,
                                                 borderRadius: false,
+                                                height: width / (16 / 9),
                                               ),
                                             ),
                               errorBuilder: (context, url, error) => Icon(
@@ -1695,7 +1692,7 @@ class ImageRenderer extends StatelessWidget {
                             ? Container(
                                 width: double.infinity,
                                 padding: const EdgeInsets.all(4),
-                                color: Colors.black.withOpacity(0.7),
+                                color: Colors.black.withValues(alpha: 0.7),
                                 child: Text(
                                   caption!,
                                   style: const TextStyle(
@@ -1712,7 +1709,7 @@ class ImageRenderer extends StatelessWidget {
               : SizedBox(
                   height: (isPodcastPreview ?? false)
                       ? null
-                      : MediaQuery.of(context).size.width / (16 / 9),
+                      : deviceWidth / (16 / 9),
                   child: GestureDetector(
                     onTap: () {
                       showDialog(
@@ -1741,50 +1738,41 @@ class ImageRenderer extends StatelessWidget {
                                           onTap: () => Navigator.pop(context),
                                         ),
                                         Card(
-                                            elevation: 5.0,
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(5),
+                                          elevation: 5.0,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                          ),
+                                          clipBehavior: Clip.antiAlias,
+                                          child: CachedNetworkImage(
+                                            imageUrl: imageUrl,
+                                            placeholder: (context, url) =>
+                                                SizedBox(
+                                              height: deviceWidth / (16 / 9),
+                                              child: LoadingIndicatorUtil(
+                                                replaceImage: true,
+                                                borderRadius: false,
+                                                height: deviceWidth / (16 / 9),
+                                              ),
                                             ),
-                                            clipBehavior: Clip.antiAlias,
-                                            child: CachedNetworkImage(
-                                              imageUrl: imageUrl,
-                                              placeholder: (context, url) =>
-                                                  SizedBox(
-                                                height: MediaQuery.of(context)
-                                                        .size
-                                                        .width /
-                                                    (16 / 9),
-                                                child:
-                                                    const LoadingIndicatorUtil(
-                                                  replaceImage: true,
-                                                  borderRadius: false,
-                                                ),
+                                            errorBuilder:
+                                                (context, url, error) =>
+                                                    ImageRequestErrorUtil(
+                                              height: deviceWidth / (16 / 9),
+                                            ),
+                                            fadeOutDuration: const Duration(
+                                              milliseconds: 300,
+                                            ),
+                                            fadeInDuration: const Duration(
+                                              milliseconds: 300,
+                                            ),
+                                            cacheManager: DefaultCacheManager(
+                                              stalePeriod: Duration(
+                                                days: isHero ?? false ? 7 : 1,
                                               ),
-                                              errorWidget:
-                                                  (context, url, error) =>
-                                                      ImageRequestErrorUtil(
-                                                height: MediaQuery.of(context)
-                                                        .size
-                                                        .width /
-                                                    (16 / 9),
-                                              ),
-                                              fadeOutDuration: const Duration(
-                                                milliseconds: 300,
-                                              ),
-                                              fadeInDuration: const Duration(
-                                                milliseconds: 300,
-                                              ),
-                                              cacheManager: CacheManager(
-                                                Config(
-                                                  "newsImages",
-                                                  stalePeriod: Duration(
-                                                    days:
-                                                        isHero ?? false ? 7 : 1,
-                                                  ),
-                                                ),
-                                              ),
-                                            )),
+                                            ),
+                                          ),
+                                        ),
                                         Align(
                                           alignment: Alignment.topRight,
                                           child: IconButton(
@@ -1812,28 +1800,24 @@ class ImageRenderer extends StatelessWidget {
                               CachedNetworkImage(
                                 imageUrl: imageUrl,
                                 placeholder: (context, url) => SizedBox(
-                                  height: MediaQuery.of(context).size.width /
-                                      (16 / 9),
-                                  child: const LoadingIndicatorUtil(
+                                  height: deviceWidth / (16 / 9),
+                                  child: LoadingIndicatorUtil(
                                     replaceImage: true,
                                     borderRadius: false,
                                     fullBorderRadius: false,
+                                    height: deviceWidth / (16 / 9),
                                   ),
                                 ),
-                                errorWidget: (context, url, error) =>
+                                errorBuilder: (context, url, error) =>
                                     ImageRequestErrorUtil(
-                                  height: MediaQuery.of(context).size.width /
-                                      (16 / 9),
+                                  height: deviceWidth / (16 / 9),
                                 ),
                                 fadeOutDuration:
                                     const Duration(milliseconds: 300),
                                 fadeInDuration:
                                     const Duration(milliseconds: 300),
-                                cacheManager: CacheManager(
-                                  Config(
-                                    "newsImages",
-                                    stalePeriod: const Duration(days: 1),
-                                  ),
+                                cacheManager: DefaultCacheManager(
+                                  stalePeriod: const Duration(days: 1),
                                 ),
                               ),
                               Container(
@@ -1841,7 +1825,7 @@ class ImageRenderer extends StatelessWidget {
                                 child: Container(
                                   width: double.infinity,
                                   padding: const EdgeInsets.all(4),
-                                  color: Colors.black.withOpacity(0.7),
+                                  color: Colors.black.withValues(alpha: 0.7),
                                   child: Text(
                                     caption!,
                                     style: const TextStyle(
@@ -1862,15 +1846,12 @@ class ImageRenderer extends StatelessWidget {
                                 fullBorderRadius: false,
                               ),
                             ),
-                            errorWidget: (context, url, error) =>
+                            errorBuilder: (context, url, error) =>
                                 ImageRequestErrorUtil(),
                             fadeOutDuration: const Duration(milliseconds: 300),
                             fadeInDuration: const Duration(milliseconds: 300),
-                            cacheManager: CacheManager(
-                              Config(
-                                "newsImages",
-                                stalePeriod: const Duration(days: 1),
-                              ),
+                            cacheManager: DefaultCacheManager(
+                              stalePeriod: const Duration(days: 1),
                             ),
                           ),
                   ),
@@ -1948,10 +1929,10 @@ class VideoRenderer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-    width = width > 1400
+    double deviceWidth = MediaQuery.of(context).size.width;
+    double width = deviceWidth > 1400
         ? 800
-        : width > 1000
+        : deviceWidth > 1000
             ? 500
             : 400;
     return (youtubeId ?? '') != ''
@@ -1960,20 +1941,22 @@ class VideoRenderer extends StatelessWidget {
               CachedNetworkImage(
                 imageUrl: youtubeThumbnail!,
                 placeholder: (context, url) => SizedBox(
-                  height: MediaQuery.of(context).size.width / (16 / 9),
-                  child: const LoadingIndicatorUtil(
+                  height: deviceWidth / (16 / 9),
+                  child: LoadingIndicatorUtil(
                     replaceImage: true,
                     fullBorderRadius: false,
                     borderRadius: false,
+                    height: deviceWidth / (16 / 9),
                   ),
                 ),
-                errorWidget: (context, url, error) => ImageRequestErrorUtil(
-                  height: MediaQuery.of(context).size.width / (16 / 9),
+                errorBuilder: (context, url, error) => ImageRequestErrorUtil(
+                  height: deviceWidth / (16 / 9),
                 ),
                 fadeOutDuration: const Duration(milliseconds: 100),
                 fadeInDuration: const Duration(milliseconds: 100),
                 colorBlendMode: BlendMode.darken,
-                color: Colors.black.withOpacity(0.5),
+                color: Colors.black.withValues(alpha: 0.5),
+                memCacheHeight: (deviceWidth / (16 / 9)).round(),
               ),
               Center(
                 child: ElevatedButton.icon(
@@ -2068,11 +2051,14 @@ class VideoRenderer extends StatelessWidget {
                         height: kIsWeb
                             ? width / (16 / 9)
                             : MediaQuery.of(context).size.width / (16 / 9),
-                        child: const Center(
+                        child: Center(
                           child: LoadingIndicatorUtil(
                             replaceImage: true,
                             fullBorderRadius: false,
                             borderRadius: false,
+                            height: kIsWeb
+                                ? width / (16 / 9)
+                                : MediaQuery.of(context).size.width / (16 / 9),
                           ),
                         ),
                       ),
@@ -2344,6 +2330,7 @@ class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
     return StreamBuilder<bool>(
       stream: _placeholderStreamController.stream,
       builder: (context, snapshot) {
+        double deviceWidth = MediaQuery.of(context).size.width;
         return _showPlaceholder
             ? Stack(
                 children: [
@@ -2353,29 +2340,28 @@ class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
                         ? CachedNetworkImage(
                             imageUrl: widget.videoDetails.thumbnailUrl!,
                             placeholder: (context, url) => SizedBox(
-                              height:
-                                  MediaQuery.of(context).size.width / (16 / 9),
-                              child: const LoadingIndicatorUtil(
+                              height: deviceWidth / (16 / 9),
+                              child: LoadingIndicatorUtil(
                                 replaceImage: true,
                                 fullBorderRadius: false,
                                 borderRadius: false,
+                                height: deviceWidth / (16 / 9),
                               ),
                             ),
-                            errorWidget: (context, url, error) =>
+                            errorBuilder: (context, url, error) =>
                                 ImageRequestErrorUtil(
-                              height:
-                                  MediaQuery.of(context).size.width / (16 / 9),
+                              height: deviceWidth / (16 / 9),
                             ),
                             fadeOutDuration: const Duration(milliseconds: 100),
                             fadeInDuration: const Duration(milliseconds: 100),
                           )
                         : SizedBox(
-                            height:
-                                MediaQuery.of(context).size.width / (16 / 9),
-                            child: const LoadingIndicatorUtil(
+                            height: deviceWidth / (16 / 9),
+                            child: LoadingIndicatorUtil(
                               replaceImage: true,
                               fullBorderRadius: false,
                               borderRadius: false,
+                              height: deviceWidth / (16 / 9),
                             ),
                           ),
                   ),
@@ -2506,8 +2492,10 @@ class _ImageGalleryState extends State<ImageGallery> {
                     const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Theme.of(context).colorScheme.primary.withOpacity(
-                        _current == widget.images.indexOf(image) ? 0.9 : 0.4,
+                  color: Theme.of(context).colorScheme.primary.withValues(
+                        alpha: _current == widget.images.indexOf(image)
+                            ? 0.9
+                            : 0.4,
                       ),
                 ),
               ),

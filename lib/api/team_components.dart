@@ -23,9 +23,8 @@ import 'package:boxbox/helpers/divider.dart';
 import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/team_background_color.dart';
 import 'package:boxbox/helpers/team_car_image.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cached_network_image_ce/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:boxbox/l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -236,15 +235,12 @@ class TeamCarImageProvider extends StatelessWidget {
                 width: 100,
                 child: LoadingIndicatorUtil(),
               ),
-              errorWidget: (context, url, error) =>
+              errorBuilder: (context, url, error) =>
                   const Icon(Icons.error_outlined),
               fadeOutDuration: const Duration(milliseconds: 300),
               fadeInDuration: const Duration(milliseconds: 300),
-              cacheManager: CacheManager(
-                Config(
-                  "teamCarImages",
-                  stalePeriod: const Duration(days: 7),
-                ),
+              cacheManager: DefaultCacheManager(
+                stalePeriod: const Duration(days: 7),
               ),
             ),
     );
