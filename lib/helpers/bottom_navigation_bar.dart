@@ -100,6 +100,8 @@ class _MainBottomNavigationBarState extends State<MainBottomNavigationBar> {
     if (_selectedIndex == 0) {
       actions = UIProvider().getNewsAppBarActions(context);
     }
+    bool disableBottomNavigationBarLabels = Hive.box('settings')
+        .get('disableBottomNavigationBarLabels', defaultValue: false) as bool;
 
     return Scaffold(
       appBar: AppBar(
@@ -120,6 +122,9 @@ class _MainBottomNavigationBarState extends State<MainBottomNavigationBar> {
         elevation: 10.0,
         destinations: UIProvider().getBottomNavigationBarButtons(context),
         onDestinationSelected: _onItemTapped,
+        labelBehavior: disableBottomNavigationBarLabels
+            ? NavigationDestinationLabelBehavior.alwaysHide
+            : NavigationDestinationLabelBehavior.alwaysShow,
       ),
       body: screens.elementAt(_selectedIndex),
     );
