@@ -136,15 +136,16 @@ class _VideosScreenState extends State<VideosScreen> {
             scrollDirection: Axis.vertical,
             shrinkWrap: true,
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: width < 800
+              crossAxisCount: width < 850
                   ? 2
-                  : width < 1200
+                  : width < 1400
                       ? 3
-                      : width < 1400
-                          ? 4
-                          : 5,
+                      : 4,
               crossAxisSpacing: 5.0,
               mainAxisSpacing: 5.0,
+              // image ratio taking into account additional UI padding
+              childAspectRatio:
+                  16 / 9 - 32.7 / MediaQuery.sizeOf(context).width,
             ),
             builderDelegate: PagedChildBuilderDelegate<Video>(
               itemBuilder: (context, video, index) {
