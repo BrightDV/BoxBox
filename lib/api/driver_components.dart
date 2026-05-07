@@ -250,9 +250,16 @@ class DriverImageProvider extends StatelessWidget {
                     alignment: Alignment.topCenter,
                     child: CachedNetworkImage(
                       imageUrl: imageUrl,
-                      placeholder: (context, url) => const SizedBox(
-                        width: 120,
-                        child: LoadingIndicatorUtil(),
+                      placeholder: (context, url) => Transform.scale(
+                        scale: 0.25,
+                        alignment: Alignment.topCenter,
+                        child: SizedBox(
+                          width: 120,
+                          child: Padding(
+                            padding: EdgeInsets.only(right: 20),
+                            child: LoadingIndicatorUtil(),
+                          ),
+                        ),
                       ),
                       errorBuilder: (context, url, error) =>
                           const Icon(Icons.error_outlined),
