@@ -1,7 +1,7 @@
 - Fix standings
 - Fix color of the track in the race hub widget
 - Fix track maps tiles from OSM (no more 403)
-- Notifications should be back again!
+- Notifications are back again!
 - Allow hiding labels of the bottom navigation bar
 - Updated translations from Weblate
 - Show OSM attribution by default on the map viewer
