@@ -1,4 +1,3 @@
-
 /*
  *  This file is part of BoxBox (https://github.com/BrightDV/BoxBox).
  *

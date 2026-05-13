@@ -43,7 +43,7 @@ class Notifications {
     await Workmanager().registerPeriodicTask(
       'newsLoader',
       "Load news in background",
-      existingWorkPolicy: ExistingWorkPolicy.replace,
+      existingWorkPolicy: ExistingPeriodicWorkPolicy.replace,
       frequency: Duration(hours: refreshInterval),
       initialDelay: Duration(hours: refreshInterval),
       constraints: Notifications().getConstraints(),

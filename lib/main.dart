@@ -67,7 +67,7 @@ void callbackDispatcher() {
       await Hive.initFlutter();
       Box hiveBox = await Hive.openBox("requests");
       Box settingsBox = await Hive.openBox("settings");
-      Map cachedNews = hiveBox.get('news', defaultValue: {}) as Map;
+      Map cachedNews = hiveBox.get('f1News', defaultValue: {}) as Map;
       bool useDataSaverMode =
           settingsBox.get('useDataSaverMode', defaultValue: false) as bool;
       try {
@@ -79,14 +79,18 @@ void callbackDispatcher() {
             if (article['id'] == cachedNews['items'][0]['id']) {
               break;
             } else if (article['breaking'] != null && article['breaking']) {
-              Notifications()
-                  .showArticleNotification(article, useDataSaverMode);
+              Notifications().showArticleNotification(
+                article,
+                useDataSaverMode,
+              );
               hasBreaking = true;
             }
           }
           if (!hasBreaking) {
             Notifications().showArticleNotification(
-                fetchedData['items'][0], useDataSaverMode);
+              fetchedData['items'][0],
+              useDataSaverMode,
+            );
           }
 
           hiveBox.put('news', fetchedData);
