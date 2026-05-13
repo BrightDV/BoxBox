@@ -1,3 +1,7 @@
+> [!WARNING]
+> Every time I publish a new release, my account is flagged by GitHub and the repo vanish. Therefore I have to send a reinstatement request, which can take time. (Asked why 4 times and didn't got any precise answer...). I'm thinking of moving the app permanently to Codeberg, as the code is already mirrored there. 
+> So if you want to open an issue, please open it there instead.
+
 <p align="center"><img src="assets/images/icon.png" width="150"></a></p> 
 <h2 align="center"><b>Box, Box!</b></h2>
 <h4 align="center">Unofficial Android and Web app for Formula 1 and Formula E fans!</h4>
