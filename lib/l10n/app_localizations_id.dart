@@ -9,303 +9,303 @@ class AppLocalizationsId extends AppLocalizations {
   AppLocalizationsId([String locale = 'id']) : super(locale);
 
   @override
-  String get about => 'About';
+  String get about => 'Tentang';
 
   @override
   String get aboutDescription =>
-      'Box, Box! is copylefted libre software, licensed under GPLv3+. Its aim is to allow users to follow Formula 1 and Formula E without ads or trackers.';
+      'Box, Box! adalah perangkat lunak bebas berlisensi copyleft, dilisensikan di bawah GPLv3+. Tujuannya adalah memungkinkan pengguna mengikuti Formula 1 dan Formula E tanpa iklan atau pelacak.';
 
   @override
-  String get aboutBottomLine => 'With ❤ by BrightDV.';
+  String get aboutBottomLine => 'Dengan ❤ oleh BrightDV.';
 
   @override
-  String get addCustomFeed => 'Add a custom feed';
+  String get addCustomFeed => 'Tambah umpan kustom';
 
   @override
-  String get addCustomServer => 'Add a custom server';
+  String get addCustomServer => 'Tambah server kustom';
 
   @override
-  String get addToCalendar => 'Add to calendar';
+  String get addToCalendar => 'Tambahkan ke kalender';
 
   @override
-  String get alreadyDownloadedArticle =>
-      'This article has already been downloaded.';
+  String get alreadyDownloadedArticle => 'Artikel ini sudah diunduh.';
 
   @override
-  String get alreadyDownloading => 'Already downloading';
+  String get alreadyDownloading => 'Sedang mengunduh';
 
   @override
-  String get anyNetwork => 'Any network';
+  String get anyNetwork => 'Jaringan apa pun';
 
   @override
-  String get apiKey => 'API Key';
+  String get apiKey => 'Kunci API';
 
   @override
-  String get appearance => 'Appearance';
+  String get appearance => 'Tampilan';
 
   @override
-  String get apply => 'Apply';
+  String get apply => 'Terapkan';
 
   @override
-  String get articleFull => 'Full';
+  String get articleFull => 'Penuh';
 
   @override
-  String get articleNotifications => 'New articles notifications';
+  String get articleNotifications => 'Notifikasi artikel baru';
 
   @override
-  String get articleTitleAndImage => 'Title and Image';
+  String get articleTitleAndImage => 'Judul dan Gambar';
 
   @override
-  String get articleTitleAndDescription => 'Title and Description';
+  String get articleTitleAndDescription => 'Judul dan Deskripsi';
 
   @override
-  String get articleTitle => 'Title';
+  String get articleTitle => 'Judul';
 
   @override
-  String get biography => 'Biography';
+  String get biography => 'Biografi';
 
   @override
-  String get cancel => 'Cancel';
+  String get cancel => 'Batal';
 
   @override
-  String get championship => 'Championship';
+  String get championship => 'Kejuaraan';
 
   @override
-  String get chassis => 'Chassis';
+  String get chassis => 'Sasis';
 
   @override
-  String get checkUpdates => 'Check for a new update';
+  String get checkUpdates => 'Periksa pembaruan baru';
 
   @override
-  String get circuitLength => 'Circuit Length';
+  String get circuitLength => 'Panjang Sirkuit';
 
   @override
-  String get close => 'Close';
+  String get close => 'Tutup';
 
   @override
-  String get copyTitle => 'Copy title';
+  String get copyTitle => 'Salin judul';
 
   @override
-  String get copied => 'Copied';
+  String get copied => 'Disalin';
 
   @override
-  String get countdown => 'Countdown';
+  String get countdown => 'Hitung Mundur';
 
   @override
-  String get country => 'Country';
+  String get country => 'Negara';
 
   @override
-  String get crashError => 'Error:';
+  String get crashError => 'Kesalahan:';
 
   @override
-  String get customErgastUrl => 'Ergast Custom URL';
+  String get customErgastUrl => 'URL Kustom Ergast';
 
   @override
-  String get customFeed => 'Custom feed';
+  String get customFeed => 'Umpan kustom';
 
   @override
-  String get customHomeFeed => 'Custom home feed';
+  String get customHomeFeed => 'Umpan beranda kustom';
 
   @override
-  String get customServer => 'Custom server';
+  String get customServer => 'Server kustom';
 
   @override
-  String get darkMode => 'Dark';
+  String get darkMode => 'Gelap';
 
   @override
-  String get dataNotAvailable => 'Data unavailable at the moment.';
+  String get dataNotAvailable => 'Data tidak tersedia saat ini.';
 
   @override
-  String get dataSaverMode => 'Data saver';
+  String get dataSaverMode => 'Penghemat data';
 
   @override
-  String get dataSaverModeSub => 'Low-quality images and videos.';
+  String get dataSaverModeSub => 'Gambar dan video berkualitas rendah.';
 
   @override
-  String get dateOfBirth => 'Date of birth';
+  String get dateOfBirth => 'Tanggal lahir';
 
   @override
   String get dayFirstLetter => 'D';
 
   @override
-  String get defaultValue => 'Default';
+  String get defaultValue => 'Bawaan';
 
   @override
-  String get delete => 'Delete';
+  String get delete => 'Hapus';
 
   @override
-  String get deleteCustomFeed => 'Delete feed';
+  String get deleteCustomFeed => 'Hapus umpan';
 
   @override
-  String get deleteUrl => 'Do you wish to delete this URL?';
+  String get deleteUrl => 'Apakah Anda ingin menghapus URL ini?';
 
   @override
   String get disableBottomNavigationBarLabels =>
-      'Don\'t show bottom navigation bar labels';
+      'Jangan tampilkan label bilah navigasi bawah';
 
   @override
-  String get done => 'Done';
+  String get done => 'Selesai';
 
   @override
-  String get download => 'Download';
+  String get download => 'Unduh';
 
   @override
-  String get downloading => 'Downloading';
+  String get downloading => 'Mengunduh';
 
   @override
-  String get downloads => 'Downloads';
+  String get downloads => 'Unduhan';
 
   @override
-  String get downloadComplete => 'Download complete';
+  String get downloadComplete => 'Unduhan selesai';
 
   @override
-  String get downloadFailed => 'Download failed';
+  String get downloadFailed => 'Unduhan gagal';
 
   @override
-  String get downloadPaused => 'Download paused';
+  String get downloadPaused => 'Unduhan dijeda';
 
   @override
-  String get downloadRunning => 'Download running';
+  String get downloadRunning => 'Unduhan berjalan';
 
   @override
   String get driverAbbreviation => 'DRI';
 
   @override
-  String get drivers => 'DRIVERS';
+  String get drivers => 'PEMBALAP';
 
   @override
   String get edit => 'Edit';
 
   @override
-  String get editOrderDescription => 'Change order by long-pressing an item.';
+  String get editOrderDescription =>
+      'Ubah urutan dengan menekan lama suatu item.';
 
   @override
-  String get enableNotifications => 'Enable notifications';
+  String get enableNotifications => 'Aktifkan notifikasi';
 
   @override
-  String get errorOccurred => 'Something went wrong';
+  String get errorOccurred => 'Terjadi kesalahan';
 
   @override
   String get errorOccurredDetails =>
-      'The app encountered an unknown error.\nPlease try again later.';
+      'Aplikasi mengalami kesalahan yang tidak diketahui.\nSilakan coba lagi nanti.';
 
   @override
-  String get experimentalFeatures => 'Experimental Features';
+  String get experimentalFeatures => 'Fitur Eksperimental';
 
   @override
-  String get fastestLaps => 'Fastest Laps';
+  String get fastestLaps => 'Lap Tercepat';
 
   @override
-  String get fiaRegulations => 'FIA Regulations';
+  String get fiaRegulations => 'Regulasi FIA';
 
   @override
   String get filter => 'Filter';
 
   @override
-  String get firstGrandPrix => 'First Grand Prix';
+  String get firstGrandPrix => 'Grand Prix Pertama';
 
   @override
-  String get firstTeamEntry => 'First Team Entry';
+  String get firstTeamEntry => 'Keikutsertaan Tim Pertama';
 
   @override
-  String get formulaYouSettings => 'Formula You Settings';
+  String get formulaYouSettings => 'Pengaturan Formula You';
 
   @override
   String get freePracticeFirstLetter => 'FP';
 
   @override
-  String get freePracticeOne => 'Free Practice FP1';
+  String get freePracticeOne => 'Latihan Bebas FP1';
 
   @override
-  String get freePracticeTwo => 'Free Practice FP2';
+  String get freePracticeTwo => 'Latihan Bebas FP2';
 
   @override
-  String get freePracticeThree => 'Free Practice FP3';
+  String get freePracticeThree => 'Latihan Bebas FP3';
 
   @override
-  String get freePracticeShort => 'PRACTICE';
+  String get freePracticeShort => 'LATIHAN';
 
   @override
-  String get from => 'From ';
+  String get from => 'Dari ';
 
   @override
-  String get followSystem => 'Follow system';
+  String get followSystem => 'Ikuti sistem';
 
   @override
-  String get font => 'Font';
+  String get font => 'Fon';
 
   @override
-  String get fontDescription => 'Font used in the articles.';
+  String get fontDescription => 'Fon yang digunakan dalam artikel.';
 
   @override
-  String get fullScreenGestures => 'Enter/exit fullscreen gestures';
+  String get fullScreenGestures => 'Gestur masuk/keluar layar penuh';
 
   @override
-  String get gallery => 'Gallery';
+  String get gallery => 'Galeri';
 
   @override
   String get gap => 'GAP';
 
   @override
-  String get grandsPrix => 'Grands Prix entered';
+  String get grandsPrix => 'Grand Prix yang diikuti';
 
   @override
-  String get grandPrixMap => 'Grand Prix Map';
+  String get grandPrixMap => 'Peta Grand Prix';
 
   @override
-  String get grandPrixNotifications => 'Grand-Prix sessions notifications';
+  String get grandPrixNotifications => 'Notifikasi sesi Grand Prix';
 
   @override
   String get grandPrixNotificationsSub =>
-      'You need to go to the schedule screen in order to initialize notifications of the next Grand-Prix.';
+      'Anda perlu membuka layar jadwal untuk menginisialisasi notifikasi Grand Prix berikutnya.';
 
   @override
   String get hallOfFame => 'Hall of Fame';
 
   @override
-  String get highestRaceFinish => 'Highest race finish';
+  String get highestRaceFinish => 'Finis balapan tertinggi';
 
   @override
-  String get highestGridPosition => 'Highest grid position';
+  String get highestGridPosition => 'Posisi start tertinggi';
 
   @override
-  String get history => 'History';
+  String get history => 'Riwayat';
 
   @override
   String get hourFirstLetter => 'H';
 
   @override
-  String get information => 'Information';
+  String get information => 'Informasi';
 
   @override
-  String get lapRecord => 'Lap Record';
+  String get lapRecord => 'Rekor Lap';
 
   @override
-  String get laps => 'LAPS';
+  String get laps => 'LAP';
 
   @override
-  String get lightMode => 'Light';
+  String get lightMode => 'Terang';
 
   @override
-  String get links => 'Links';
+  String get links => 'Tautan';
 
   @override
-  String get listen => 'Listen';
+  String get listen => 'Dengarkan';
 
   @override
-  String get liveBlog => 'Live Blog';
+  String get liveBlog => 'Blog Langsung';
 
   @override
-  String get loading => 'Loading';
+  String get loading => 'Memuat';
 
   @override
-  String get loadMore => 'Load More';
+  String get loadMore => 'Muat Lebih Banyak';
 
   @override
   String get minuteAbbreviation => 'MIN';
 
   @override
-  String get modernNewsAppearance => 'Use modern appearance for the news.';
+  String get modernNewsAppearance => 'Gunakan tampilan modern untuk berita.';
 
   @override
   String get monthAbbreviationJanuary => 'JAN';
@@ -320,7 +320,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get monthAbbreviationApril => 'APR';
 
   @override
-  String get monthAbbreviationMay => 'MAY';
+  String get monthAbbreviationMay => 'MEI';
 
   @override
   String get monthAbbreviationJune => 'JUN';
@@ -329,227 +329,228 @@ class AppLocalizationsId extends AppLocalizations {
   String get monthAbbreviationJuly => 'JUL';
 
   @override
-  String get monthAbbreviationAugust => 'AUG';
+  String get monthAbbreviationAugust => 'AGS';
 
   @override
   String get monthAbbreviationSeptember => 'SEP';
 
   @override
-  String get monthAbbreviationOctober => 'OCT';
+  String get monthAbbreviationOctober => 'OKT';
 
   @override
   String get monthAbbreviationNovember => 'NOV';
 
   @override
-  String get monthAbbreviationDecember => 'DEC';
+  String get monthAbbreviationDecember => 'DES';
 
   @override
-  String get motorsportLocalizeFeeds => 'Motorsport.com\'s localized feeds';
+  String get motorsportLocalizeFeeds => 'Umpan lokal Motorsport.com';
 
   @override
-  String get needsRestart => 'Restart the app to apply changes.';
+  String get needsRestart => 'Mulai ulang aplikasi untuk menerapkan perubahan.';
 
   @override
-  String get news => 'News';
+  String get news => 'Berita';
 
   @override
-  String get newsLayout => 'News Layout';
+  String get newsLayout => 'Tata Letak Berita';
 
   @override
-  String get newsMix => 'News Mix';
+  String get newsMix => 'Campuran Berita';
 
   @override
-  String get newVersionAvailable => 'A new version is available';
+  String get newVersionAvailable => 'Versi baru tersedia';
 
   @override
-  String get next => 'NEXT';
+  String get next => 'BERIKUTNYA';
 
   @override
-  String get noResults => 'Nothing to show here. You may be rate limited.';
+  String get noResults =>
+      'Tidak ada yang ditampilkan. Anda mungkin terkena batas permintaan.';
 
   @override
-  String get nothingHere => 'Nothing to show\nhere.';
+  String get nothingHere => 'Tidak ada yang\nditampilkan.';
 
   @override
-  String get notifications => 'Notifications';
+  String get notifications => 'Notifikasi';
 
   @override
-  String get notifications2hours => '2 hours';
+  String get notifications2hours => '2 jam';
 
   @override
-  String get notifications6hours => '6 hours';
+  String get notifications6hours => '6 jam';
 
   @override
-  String get notifications12hours => '12 hours';
+  String get notifications12hours => '12 jam';
 
   @override
-  String get notifications24hours => '24 hours';
+  String get notifications24hours => '24 jam';
 
   @override
-  String get numberOfLaps => 'Number of Laps';
+  String get numberOfLaps => 'Jumlah Lap';
 
   @override
-  String get official => 'Official';
+  String get official => 'Resmi';
 
   @override
-  String get offline => 'Offline. The data may not be up to date.';
+  String get offline => 'Luring. Data mungkin tidak terkini.';
 
   @override
-  String get offtrack => 'You went off-track!';
+  String get offtrack => 'Anda keluar jalur!';
 
   @override
-  String get offtrackSub => 'Back on track';
+  String get offtrackSub => 'Kembali ke jalur';
 
   @override
-  String get openInBrowser => 'Open in web browser';
+  String get openInBrowser => 'Buka di browser web';
 
   @override
-  String get openLiveBlog => 'Open live blog';
+  String get openLiveBlog => 'Buka blog langsung';
 
   @override
-  String get openPoll => 'Take the survey';
+  String get openPoll => 'Ikuti survei';
 
   @override
-  String get openQuiz => 'Take the quiz';
+  String get openQuiz => 'Ikuti kuis';
 
   @override
-  String get openingWithInAppBrowser => 'Opening with the in-app browser';
+  String get openingWithInAppBrowser => 'Membuka dengan browser dalam aplikasi';
 
   @override
-  String get other => 'Other';
+  String get other => 'Lainnya';
 
   @override
-  String get placeOfBirth => 'Place of birth';
+  String get placeOfBirth => 'Tempat lahir';
 
   @override
-  String get player => 'Player';
+  String get player => 'Pemutar';
 
   @override
-  String get playerQuality => 'Video quality';
+  String get playerQuality => 'Kualitas video';
 
   @override
-  String get playerQualitySub => 'For videos in articles.';
+  String get playerQualitySub => 'Untuk video dalam artikel.';
 
   @override
-  String get pleaseWait => 'Please wait...';
+  String get pleaseWait => 'Harap tunggu...';
 
   @override
-  String get podiums => 'Podiums';
+  String get podiums => 'Podium';
 
   @override
-  String get point => 'Point';
+  String get point => 'Poin';
 
   @override
-  String get points => 'Points';
+  String get points => 'Poin';
 
   @override
   String get pointsAbbreviation => 'PTS';
 
   @override
-  String get polePositions => 'Pole Positions';
+  String get polePositions => 'Posisi Pole';
 
   @override
   String get positionAbbreviation => 'POS';
 
   @override
-  String get powerUnit => 'Power Unit';
+  String get powerUnit => 'Unit Tenaga';
 
   @override
-  String get previous => 'PREVIOUS';
+  String get previous => 'SEBELUMNYA';
 
   @override
-  String get qualifyings => 'Qualifyings';
+  String get qualifyings => 'Kualifikasi';
 
   @override
   String get qualifyingsFirstLetter => 'Q';
 
   @override
-  String get qualifyingsShort => 'QUALIFS';
+  String get qualifyingsShort => 'KUALIF';
 
   @override
-  String get qualityToDownload => 'Select which quality to download.';
+  String get qualityToDownload => 'Pilih kualitas yang akan diunduh.';
 
   @override
-  String get quiz => 'Quiz';
+  String get quiz => 'Kuis';
 
   @override
-  String get race => 'Race';
+  String get race => 'Balapan';
 
   @override
-  String get raceDistance => 'Race Distance';
+  String get raceDistance => 'Jarak Balapan';
 
   @override
   String get raceFirstLetter => 'R';
 
   @override
-  String get raceStartsIn => 'The race starts in:';
+  String get raceStartsIn => 'Balapan dimulai dalam:';
 
   @override
-  String get raceStartsOn => 'The race starts on:';
+  String get raceStartsOn => 'Balapan dimulai pada:';
 
   @override
-  String get refresh => 'Refresh';
+  String get refresh => 'Segarkan';
 
   @override
-  String get refreshChampionshipData => 'Refresh championship data';
+  String get refreshChampionshipData => 'Segarkan data kejuaraan';
 
   @override
   String get refreshChampionshipDataSub =>
-      'Refresh championship data before a new season.';
+      'Segarkan data kejuaraan sebelum musim baru.';
 
   @override
-  String get refreshInterval => 'Refresh interval';
+  String get refreshInterval => 'Interval penyegaran';
 
   @override
-  String get requestError => 'Could not fetch data.';
+  String get requestError => 'Tidak dapat mengambil data.';
 
   @override
-  String get requiredNetworkConnection => 'Required network connection';
+  String get requiredNetworkConnection => 'Koneksi jaringan yang diperlukan';
 
   @override
-  String get reset => 'Reset';
+  String get reset => 'Atur Ulang';
 
   @override
-  String get results => 'Results';
+  String get results => 'Hasil';
 
   @override
-  String get running => 'Running';
+  String get running => 'Berjalan';
 
   @override
-  String get save => 'Save';
+  String get save => 'Simpan';
 
   @override
-  String get schedule => 'Schedule';
+  String get schedule => 'Jadwal';
 
   @override
-  String get search => 'Search';
+  String get search => 'Cari';
 
   @override
-  String get secondAbbreviation => 'SEC';
+  String get secondAbbreviation => 'DTK';
 
   @override
   String get server => 'Server';
 
   @override
-  String get sessionCompleted => 'The session is over.';
+  String get sessionCompleted => 'Sesi telah berakhir.';
 
   @override
-  String get sessionCompletedShort => 'Session completed';
+  String get sessionCompletedShort => 'Sesi selesai';
 
   @override
-  String get sessionRunning => 'Session running';
+  String get sessionRunning => 'Sesi berjalan';
 
   @override
-  String get sessionStartsIn => 'The session starts in:';
+  String get sessionStartsIn => 'Sesi dimulai dalam:';
 
   @override
-  String get sessionStartsOn => 'The session starts on:';
+  String get sessionStartsOn => 'Sesi dimulai pada:';
 
   @override
-  String get settings => 'Settings';
+  String get settings => 'Pengaturan';
 
   @override
-  String get share => 'Share';
+  String get share => 'Bagikan';
 
   @override
   String get sprint => 'Sprint';
@@ -558,100 +559,100 @@ class AppLocalizationsId extends AppLocalizations {
   String get sprintFirstLetter => 'S';
 
   @override
-  String get sprintQualifyings => 'Sprint Qualifyings';
+  String get sprintQualifyings => 'Kualifikasi Sprint';
 
   @override
-  String get standings => 'Standings';
+  String get standings => 'Klasemen';
 
   @override
-  String get startingGrid => 'Starting Grid';
+  String get startingGrid => 'Grid Start';
 
   @override
-  String get statistics => 'Stats';
+  String get statistics => 'Statistik';
 
   @override
-  String get tapToCheckForUpdate => 'Tap to check for new update.';
+  String get tapToCheckForUpdate => 'Ketuk untuk memeriksa pembaruan baru.';
 
   @override
-  String get team => 'Team';
+  String get team => 'Tim';
 
   @override
-  String get teamBase => 'Base';
+  String get teamBase => 'Markas';
 
   @override
-  String get teamChief => 'Team Chief';
+  String get teamChief => 'Kepala Tim';
 
   @override
-  String get teamColors => 'Team colors';
+  String get teamColors => 'Warna tim';
 
   @override
-  String get teams => 'TEAMS';
+  String get teams => 'TIM';
 
   @override
-  String get technicalChief => 'Technical Chief';
+  String get technicalChief => 'Kepala Teknis';
 
   @override
-  String get theme => 'Theme';
+  String get theme => 'Tema';
 
   @override
-  String get time => 'TIME';
+  String get time => 'WAKTU';
 
   @override
-  String get topics => 'Topics';
+  String get topics => 'Topik';
 
   @override
-  String get tryAgain => 'Try Again';
+  String get tryAgain => 'Coba Lagi';
 
   @override
-  String get twelveHourClock => 'Use a 12-hour clock';
+  String get twelveHourClock => 'Gunakan jam 12 jam';
 
   @override
-  String get unavailableOffline => 'Unavailable offline';
+  String get unavailableOffline => 'Tidak tersedia saat luring';
 
   @override
-  String get updateApiKey => 'Update API Key';
+  String get updateApiKey => 'Perbarui Kunci API';
 
   @override
   String get updateApiKeySub =>
-      'Update the API key of the official website.\nUpdate this only if you now what you are doing.';
+      'Perbarui kunci API situs web resmi.\nPerbarui ini hanya jika Anda tahu apa yang Anda lakukan.';
 
   @override
-  String get updates => 'New versions';
+  String get updates => 'Versi baru';
 
   @override
   String get useOfficialWebview =>
-      'Use official Webview for live sessions instead of f1-dash.com';
+      'Gunakan Webview resmi untuk sesi langsung sebagai ganti f1-dash.com';
 
   @override
-  String get victory => 'Victory';
+  String get victory => 'Kemenangan';
 
   @override
-  String get victories => 'Victories';
+  String get victories => 'Kemenangan';
 
   @override
-  String get videos => 'Videos';
+  String get videos => 'Video';
 
   @override
-  String get viewHighlights => 'View highlights';
+  String get viewHighlights => 'Lihat sorotan';
 
   @override
-  String get viewMore => 'VIEW MORE';
+  String get viewMore => 'LIHAT SELENGKAPNYA';
 
   @override
-  String get viewResults => 'View results';
+  String get viewResults => 'Lihat hasil';
 
   @override
-  String get watchHighlightsOnYoutube => 'Watch highlights on YouTube';
+  String get watchHighlightsOnYoutube => 'Tonton sorotan di YouTube';
 
   @override
-  String get watchOnYouTube => 'Watch on YouTube';
+  String get watchOnYouTube => 'Tonton di YouTube';
 
   @override
   String get wifi => 'Wi-Fi';
 
   @override
-  String get worldChampionships => 'World Championships';
+  String get worldChampionships => 'Kejuaraan Dunia';
 
   @override
-  String get yes => 'Yes';
+  String get yes => 'Ya';
 }
