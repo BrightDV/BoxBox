@@ -76,6 +76,7 @@ class RaceListHeaderItem extends StatelessWidget {
                 fontWeight: FontWeight.w800,
                 color: Colors.white.withAlpha(170),
               ),
+              textAlign: TextAlign.center,
             ),
           ],
         ),
