@@ -28,6 +28,7 @@ dependencies:
   auto_size_text: ^3.0.0
   awesome_notifications: ^0.10.1
   background_downloader: ^8.9.5
+  better_player_plus: 1.2.1
   cached_network_image_ce: 4.6.4
   carousel_slider: ^5.0.0
   connectivity_plus: ^7.0.0
@@ -66,13 +67,13 @@ dependencies:
     git: 
       url: https://github.com/KasemJaffer/receive_sharing_intent
       ref: master
-  river_player: ^0.1.4
+  #river_player: ^0.1.4
   share_plus: ^10.1.4
   # signalr_flutter: ^0.2.0 # uses (non-foss?) .jar
   sliding_up_panel: ^2.0.0+1
   story_view: # Updated packages with custom features. Origninally: https://github.com/blackmann/story_view
     path: ./story_view
-  syncfusion_flutter_pdfviewer: ^32.1.19
+  syncfusion_flutter_pdfviewer: ^33.2.12
   timeago: ^3.5.0
   url_launcher: ^6.1.11
   video_player: ^2.7.2
@@ -80,7 +81,7 @@ dependencies:
     git:
       url: https://github.com/marcjoha/webfeed.git
       ref: master
-  workmanager: ^0.9.0+3
+  workmanager: ^0.7.0
   youtube_explode_dart: ^2.3.9
 
 dev_dependencies:

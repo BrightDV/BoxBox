@@ -26,15 +26,15 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:marquee/marquee.dart';
-import 'package:river_player/src/configuration/better_player_controls_configuration.dart';
-import 'package:river_player/src/controls/better_player_clickable_widget.dart';
-import 'package:river_player/src/controls/better_player_controls_state.dart';
-import 'package:river_player/src/controls/better_player_material_progress_bar.dart';
-import 'package:river_player/src/controls/better_player_multiple_gesture_detector.dart';
-import 'package:river_player/src/controls/better_player_progress_colors.dart';
-import 'package:river_player/src/core/better_player_controller.dart';
-import 'package:river_player/src/core/better_player_utils.dart';
-import 'package:river_player/src/video_player/video_player.dart';
+import 'package:better_player_plus/src/configuration/better_player_controls_configuration.dart';
+import 'package:better_player_plus/src/controls/better_player_clickable_widget.dart';
+import 'package:better_player_plus/src/controls/better_player_controls_state.dart';
+import 'package:better_player_plus/src/controls/better_player_material_progress_bar.dart';
+import 'package:better_player_plus/src/controls/better_player_multiple_gesture_detector.dart';
+import 'package:better_player_plus/src/controls/better_player_progress_colors.dart';
+import 'package:better_player_plus/src/core/better_player_controller.dart';
+import 'package:better_player_plus/src/core/better_player_utils.dart';
+import 'package:better_player_plus/src/video_player/video_player.dart';
 
 class CustomControls extends StatefulWidget {
   ///Callback used to send information if player bar is hidden or not

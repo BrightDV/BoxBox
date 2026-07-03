@@ -24,6 +24,12 @@
 @import background_downloader;
 #endif
 
+#if __has_include(<better_player_plus/BetterPlayerPlugin.h>)
+#import <better_player_plus/BetterPlayerPlugin.h>
+#else
+@import better_player_plus;
+#endif
+
 #if __has_include(<connectivity_plus/ConnectivityPlusPlugin.h>)
 #import <connectivity_plus/ConnectivityPlusPlugin.h>
 #else
@@ -64,12 +70,6 @@
 #import <receive_sharing_intent/ReceiveSharingIntentPlugin.h>
 #else
 @import receive_sharing_intent;
-#endif
-
-#if __has_include(<river_player/RiverPlayerPlugin.h>)
-#import <river_player/RiverPlayerPlugin.h>
-#else
-@import river_player;
 #endif
 
 #if __has_include(<share_plus/FPPSharePlusPlugin.h>)
@@ -114,10 +114,10 @@
 @import wakelock_plus;
 #endif
 
-#if __has_include(<workmanager_apple/WorkmanagerPlugin.h>)
-#import <workmanager_apple/WorkmanagerPlugin.h>
+#if __has_include(<workmanager/WorkmanagerPlugin.h>)
+#import <workmanager/WorkmanagerPlugin.h>
 #else
-@import workmanager_apple;
+@import workmanager;
 #endif
 
 @implementation GeneratedPluginRegistrant
@@ -126,6 +126,7 @@
   [Add2CalendarPlugin registerWithRegistrar:[registry registrarForPlugin:@"Add2CalendarPlugin"]];
   [AwesomeNotificationsPlugin registerWithRegistrar:[registry registrarForPlugin:@"AwesomeNotificationsPlugin"]];
   [BackgroundDownloaderPlugin registerWithRegistrar:[registry registrarForPlugin:@"BackgroundDownloaderPlugin"]];
+  [BetterPlayerPlugin registerWithRegistrar:[registry registrarForPlugin:@"BetterPlayerPlugin"]];
   [ConnectivityPlusPlugin registerWithRegistrar:[registry registrarForPlugin:@"ConnectivityPlusPlugin"]];
   [FPPDeviceInfoPlusPlugin registerWithRegistrar:[registry registrarForPlugin:@"FPPDeviceInfoPlusPlugin"]];
   [InAppWebViewFlutterPlugin registerWithRegistrar:[registry registrarForPlugin:@"InAppWebViewFlutterPlugin"]];
@@ -133,7 +134,6 @@
   [FluttertoastPlugin registerWithRegistrar:[registry registrarForPlugin:@"FluttertoastPlugin"]];
   [FPPPackageInfoPlusPlugin registerWithRegistrar:[registry registrarForPlugin:@"FPPPackageInfoPlusPlugin"]];
   [ReceiveSharingIntentPlugin registerWithRegistrar:[registry registrarForPlugin:@"ReceiveSharingIntentPlugin"]];
-  [RiverPlayerPlugin registerWithRegistrar:[registry registrarForPlugin:@"RiverPlayerPlugin"]];
   [FPPSharePlusPlugin registerWithRegistrar:[registry registrarForPlugin:@"FPPSharePlusPlugin"]];
   [SharedPreferencesPlugin registerWithRegistrar:[registry registrarForPlugin:@"SharedPreferencesPlugin"]];
   [SqflitePlugin registerWithRegistrar:[registry registrarForPlugin:@"SqflitePlugin"]];

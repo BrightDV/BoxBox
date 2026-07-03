@@ -201,9 +201,9 @@ class _ArticleScreenState extends State<ArticleScreen> {
                   valueListenable: articleTitle,
                   builder: (context, value, widget) {
                     return value.toString() == 'Loading...'
-                        ? const Padding(
+                        ? Padding(
                             padding: EdgeInsets.only(top: 15),
-                            child: Text('Loading...'),
+                            child: Text(AppLocalizations.of(context)!.loading),
                           )
                         : width > 1000
                             ? Padding(

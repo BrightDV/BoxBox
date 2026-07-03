@@ -25,7 +25,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:river_player/river_player.dart';
+import 'package:better_player_plus/better_player_plus.dart';
 import 'package:share_plus/share_plus.dart';
 
 class VideosUIProvider {

@@ -45,7 +45,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:loading_indicator/loading_indicator.dart';
-import 'package:river_player/river_player.dart';
+import 'package:better_player_plus/better_player_plus.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:url_launcher/url_launcher.dart';
@@ -2219,7 +2219,7 @@ class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
         autoDetectFullscreenDeviceOrientation: true,
         fit: BoxFit.contain,
         controlsConfiguration: BetterPlayerControlsConfiguration(
-          customControlsBuilder: (controller, onPlayerVisibilityChanged) =>
+          customControlsBuilder: (controller, onPlayerVisibilityChanged, _) =>
               CustomControls(
             onControlsVisibilityChanged: onPlayerVisibilityChanged,
             controlsConfiguration: controlsConfiguration,
@@ -2293,7 +2293,7 @@ class _BetterPlayerVideoPlayerState extends State<BetterPlayerVideoPlayer> {
         autoDetectFullscreenDeviceOrientation: true,
         fit: BoxFit.contain,
         controlsConfiguration: BetterPlayerControlsConfiguration(
-          customControlsBuilder: (controller, onPlayerVisibilityChanged) =>
+          customControlsBuilder: (controller, onPlayerVisibilityChanged, _) =>
               CustomControls(
             onControlsVisibilityChanged: onPlayerVisibilityChanged,
             controlsConfiguration: controlsConfiguration,
