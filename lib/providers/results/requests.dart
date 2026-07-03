@@ -72,9 +72,9 @@ class ResultsRequestsProvider {
         .get('championship', defaultValue: 'Formula 1') as String;
     if (championship == 'Formula 1') {
       return Formula1().getFreePracticeStandings(
-        raceUrl != null ? raceUrl.split('/')[7] : meetingId,
-        raceUrl != null
-            ? int.parse(raceUrl
+        (raceUrl?.isNotEmpty ?? false) ? raceUrl!.split('/')[7] : meetingId,
+        (raceUrl?.isNotEmpty ?? false)
+            ? int.parse(raceUrl!
                 .split('/')[9]
                 .replaceAll('practice', '')
                 .replaceAll('.html', '')
