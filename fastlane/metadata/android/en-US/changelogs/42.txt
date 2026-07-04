@@ -8,3 +8,4 @@
 - Improve championship screen
 - Added & updated team colors
 - Finally fixed the videos layout with multiple columns!!!
+- Other fixes and dependencies updates

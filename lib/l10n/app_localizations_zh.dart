@@ -743,6 +743,9 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
   String get crashError => '錯誤:';
 
   @override
+  String get customErgastUrl => 'Ergast 自訂網址';
+
+  @override
   String get customFeed => '自訂新聞源';
 
   @override
@@ -780,6 +783,9 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get deleteUrl => '你想要刪除這個連結嗎?';
+
+  @override
+  String get disableBottomNavigationBarLabels => '不要顯示底部導覽列標籤';
 
   @override
   String get done => '完成';
@@ -1043,7 +1049,10 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
   String get openLiveBlog => '打開日誌';
 
   @override
-  String get openQuiz => '打開測試';
+  String get openPoll => '參加調查';
+
+  @override
+  String get openQuiz => '參加測試';
 
   @override
   String get openingWithInAppBrowser => '以內建瀏覽器開啟';
@@ -1137,6 +1146,9 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get requiredNetworkConnection => '需要網路連接';
+
+  @override
+  String get reset => '重設';
 
   @override
   String get results => '賽季成績';

@@ -34,10 +34,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get alreadyDownloading => 'Se está descargando';
 
   @override
-  String get anyNetwork => 'Any network';
+  String get anyNetwork => 'Cualquier red';
 
   @override
-  String get apiKey => 'API Key';
+  String get apiKey => 'Llave API';
 
   @override
   String get appearance => 'Apariencia';
@@ -49,7 +49,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get articleFull => 'Completa';
 
   @override
-  String get articleNotifications => 'New articles notifications';
+  String get articleNotifications => 'Notificaciones de artículos nuevos';
 
   @override
   String get articleTitleAndImage => 'Título e imagen';
@@ -97,7 +97,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get crashError => 'Error:';
 
   @override
-  String get customErgastUrl => 'Ergast Custom URL';
+  String get customErgastUrl => 'URL personal de Ergast';
 
   @override
   String get customFeed => 'Feeds personalizados';
@@ -140,7 +140,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get disableBottomNavigationBarLabels =>
-      'Don\'t show bottom navigation bar labels';
+      'No mostrar las etiquetas de la barra de navegación inferior';
 
   @override
   String get done => 'Hecho';
@@ -180,7 +180,7 @@ class AppLocalizationsEs extends AppLocalizations {
       'Cambia el orden pulsando prolongadamente en un elemento.';
 
   @override
-  String get enableNotifications => 'Enable notifications';
+  String get enableNotifications => 'Activar notificaciones';
 
   @override
   String get errorOccurred => 'Algo no fue bien';
@@ -238,7 +238,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get fontDescription => 'Fuente utilizada en los artículos.';
 
   @override
-  String get fullScreenGestures => 'Enter/exit fullscreen gestures';
+  String get fullScreenGestures => 'Entrar/salir gestos a pantalla completa';
 
   @override
   String get gallery => 'Galería';
@@ -253,11 +253,11 @@ class AppLocalizationsEs extends AppLocalizations {
   String get grandPrixMap => 'Mapa del Gran Premio';
 
   @override
-  String get grandPrixNotifications => 'Grand-Prix sessions notifications';
+  String get grandPrixNotifications => 'Notificaciones de sesiones Grand-Prix';
 
   @override
   String get grandPrixNotificationsSub =>
-      'You need to go to the schedule screen in order to initialize notifications of the next Grand-Prix.';
+      'Necesitas ir a la pantalla de planificación para habilitar las notificaciones del siguiente Grand-Prix.';
 
   @override
   String get hallOfFame => 'Salón de la Fama';
@@ -373,19 +373,19 @@ class AppLocalizationsEs extends AppLocalizations {
   String get nothingHere => 'Nada que mostrar\naquí.';
 
   @override
-  String get notifications => 'Notifications';
+  String get notifications => 'Notificaciones';
 
   @override
-  String get notifications2hours => '2 hours';
+  String get notifications2hours => '2 horas';
 
   @override
-  String get notifications6hours => '6 hours';
+  String get notifications6hours => '6 horas';
 
   @override
-  String get notifications12hours => '12 hours';
+  String get notifications12hours => '12 horas';
 
   @override
-  String get notifications24hours => '24 hours';
+  String get notifications24hours => '24 horas';
 
   @override
   String get numberOfLaps => 'Número de vueltas';
@@ -398,10 +398,10 @@ class AppLocalizationsEs extends AppLocalizations {
       'Desconectado. Los datos podrían no estar actualizados.';
 
   @override
-  String get offtrack => 'You went off-track!';
+  String get offtrack => '¡Te fuiste afuera de la pista!';
 
   @override
-  String get offtrackSub => 'Back on track';
+  String get offtrackSub => 'De vuelta en la pista';
 
   @override
   String get openInBrowser => 'Abrir en navegador web';
@@ -410,10 +410,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get openLiveBlog => 'Abrir el blog en directo';
 
   @override
-  String get openPoll => 'Take the survey';
+  String get openPoll => 'Responder la encuesta';
 
   @override
-  String get openQuiz => 'Abrir cuestionario';
+  String get openQuiz => 'Hacer el cuestionario';
 
   @override
   String get openingWithInAppBrowser =>
@@ -502,16 +502,16 @@ class AppLocalizationsEs extends AppLocalizations {
       'Actualice los datos del campeonato antes de una nueva temporada.';
 
   @override
-  String get refreshInterval => 'Refresh interval';
+  String get refreshInterval => 'Intervalo de refresco';
 
   @override
   String get requestError => 'No se pudieron obtener datos.';
 
   @override
-  String get requiredNetworkConnection => 'Required network connection';
+  String get requiredNetworkConnection => 'Conexión de red requerida';
 
   @override
-  String get reset => 'Reset';
+  String get reset => 'Restablecer';
 
   @override
   String get results => 'Resultados';
@@ -613,18 +613,18 @@ class AppLocalizationsEs extends AppLocalizations {
   String get unavailableOffline => 'No disponible sin conexión';
 
   @override
-  String get updateApiKey => 'Update API Key';
+  String get updateApiKey => 'Actualizar Llave API';
 
   @override
   String get updateApiKeySub =>
-      'Update the API key of the official website.\nUpdate this only if you now what you are doing.';
+      'Actualiza la llave API en la web oficial.\nActualiza esto solo si sabes lo que estas haciendo.';
 
   @override
   String get updates => 'Nuevas versiones';
 
   @override
   String get useOfficialWebview =>
-      'Utilice Webview oficial para las sesiones en directo';
+      'Utilice Webview oficial para las sesiones en directo en vez de f1-dash.com';
 
   @override
   String get victory => 'Victoria';
@@ -648,7 +648,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get watchHighlightsOnYoutube => 'Ver los mejores momentos en YouTube';
 
   @override
-  String get watchOnYouTube => 'Watch on YouTube';
+  String get watchOnYouTube => 'Ver en YouTube';
 
   @override
   String get wifi => 'Wi-Fi';

@@ -35,7 +35,7 @@ class AppLocalizationsTa extends AppLocalizations {
   String get alreadyDownloading => 'ஏற்கனவே பதிவிறக்குகிறது';
 
   @override
-  String get anyNetwork => 'Any network';
+  String get anyNetwork => 'எந்த பிணையம்';
 
   @override
   String get apiKey => 'பநிஇ விசை';
@@ -50,7 +50,7 @@ class AppLocalizationsTa extends AppLocalizations {
   String get articleFull => 'முழு';
 
   @override
-  String get articleNotifications => 'New articles notifications';
+  String get articleNotifications => 'புதிய கட்டுரைகள் அறிவிப்புகள்';
 
   @override
   String get articleTitleAndImage => 'தலைப்பு மற்றும் படம்';
@@ -98,7 +98,7 @@ class AppLocalizationsTa extends AppLocalizations {
   String get crashError => 'பிழை:';
 
   @override
-  String get customErgastUrl => 'Ergast Custom URL';
+  String get customErgastUrl => 'எர்காச்ட் தனிப்பயன் முகவரி';
 
   @override
   String get customFeed => 'தனிப்பயன் ஊட்டம்';
@@ -141,7 +141,7 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String get disableBottomNavigationBarLabels =>
-      'Don\'t show bottom navigation bar labels';
+      'கீழே வழிசெலுத்தல் பார் லேபிள்களைக் காட்ட வேண்டாம்';
 
   @override
   String get done => 'முடிந்தது';
@@ -181,7 +181,7 @@ class AppLocalizationsTa extends AppLocalizations {
       'ஒரு பொருளை நீண்ட நேரம் அழுத்துவதன் மூலம் வரிசையை மாற்றவும்.';
 
   @override
-  String get enableNotifications => 'Enable notifications';
+  String get enableNotifications => 'அறிவிப்புகளை இயக்கு';
 
   @override
   String get errorOccurred => 'ஏதோ தவறு நடந்தது';
@@ -254,11 +254,12 @@ class AppLocalizationsTa extends AppLocalizations {
   String get grandPrixMap => 'கிராண்ட் பிரிக்ச் வரைபடம்';
 
   @override
-  String get grandPrixNotifications => 'Grand-Prix sessions notifications';
+  String get grandPrixNotifications =>
+      'கிராண்ட்-பிரிக்ச் அமர்வுகள் அறிவிப்புகள்';
 
   @override
   String get grandPrixNotificationsSub =>
-      'You need to go to the schedule screen in order to initialize notifications of the next Grand-Prix.';
+      'அடுத்த கிராண்ட் பிரிக்சின் அறிவிப்புகளைத் தொடங்க, அட்டவணைத் திரைக்குச் செல்ல வேண்டும்.';
 
   @override
   String get hallOfFame => 'ஆல் ஆஃப் ஃபேம்';
@@ -376,19 +377,19 @@ class AppLocalizationsTa extends AppLocalizations {
   String get nothingHere => 'காட்ட எதுவும் இல்லை\n இங்கே.';
 
   @override
-  String get notifications => 'Notifications';
+  String get notifications => 'அறிவிப்புகள்';
 
   @override
-  String get notifications2hours => '2 hours';
+  String get notifications2hours => '2 மணி நேரம்';
 
   @override
-  String get notifications6hours => '6 hours';
+  String get notifications6hours => '6 மணி நேரம்';
 
   @override
-  String get notifications12hours => '12 hours';
+  String get notifications12hours => '12 மணி நேரம்';
 
   @override
-  String get notifications24hours => '24 hours';
+  String get notifications24hours => '24 மணிநேரம்';
 
   @override
   String get numberOfLaps => 'மடியில் எண்ணிக்கை';
@@ -412,10 +413,10 @@ class AppLocalizationsTa extends AppLocalizations {
   String get openLiveBlog => 'திறந்த நேரடி வலைப்பதிவைத் திறக்கவும்';
 
   @override
-  String get openPoll => 'Take the survey';
+  String get openPoll => 'சர்வே எடுக்கவும்';
 
   @override
-  String get openQuiz => 'திறந்த நொடி வினா';
+  String get openQuiz => 'நொடி வினா எடு';
 
   @override
   String get openingWithInAppBrowser => 'பயன்பாட்டு உலாவியுடன் திறத்தல்';
@@ -485,7 +486,7 @@ class AppLocalizationsTa extends AppLocalizations {
   String get raceDistance => 'பந்தய தூரம்';
 
   @override
-  String get raceFirstLetter => 'R';
+  String get raceFirstLetter => 'ஆர்';
 
   @override
   String get raceStartsIn => 'போட்டி தொடங்குகிறது:';
@@ -504,16 +505,16 @@ class AppLocalizationsTa extends AppLocalizations {
       'புதிய பருவத்திற்கு முன் சாம்பியன்சிப் தரவைப் புதுப்பிக்கவும்.';
 
   @override
-  String get refreshInterval => 'Refresh interval';
+  String get refreshInterval => 'இடைவெளியைப் புதுப்பிக்கவும்';
 
   @override
   String get requestError => 'தரவைப் பெற முடியவில்லை.';
 
   @override
-  String get requiredNetworkConnection => 'Required network connection';
+  String get requiredNetworkConnection => 'தேவையான பிணைய இணைப்பு';
 
   @override
-  String get reset => 'Reset';
+  String get reset => 'மீட்டமை';
 
   @override
   String get results => 'முடிவுகள்';
@@ -654,7 +655,7 @@ class AppLocalizationsTa extends AppLocalizations {
   String get watchOnYouTube => 'வலைகுழாயில் பாருங்கள்';
 
   @override
-  String get wifi => 'Wi-Fi';
+  String get wifi => 'மற்றும் உள்ளே';
 
   @override
   String get worldChampionships => 'உலக சாம்பியன்சிப்புகள்';
