@@ -79,7 +79,7 @@
     "offline": "离线。数据可能不是最新。",
     "openInBrowser": "在浏览器打开",
     "openLiveBlog": "打开日志",
-    "openQuiz": "打开测试",
+    "openQuiz": "接受测试",
     "openingWithInAppBrowser": "在应用内的浏览器打开",
     "podiums": "领奖台",
     "point": "积分",
@@ -214,5 +214,8 @@
     "refreshInterval": "刷新间隔",
     "requiredNetworkConnection": "所需的网络连接",
     "wifi": "Wi-Fi",
-    "disableBottomNavigationBarLabels": "不要展示底部导航栏标签"
+    "disableBottomNavigationBarLabels": "不要展示底部导航栏标签",
+    "customErgastUrl": "Ergast 自定义网址",
+    "openPoll": "接受调查",
+    "reset": "重置"
 }
