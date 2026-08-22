@@ -83,6 +83,8 @@ class CircuitScreenContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
     return SingleChildScrollView(
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -94,7 +96,7 @@ class CircuitScreenContent extends StatelessWidget {
                   shaderCallback: (rect) {
                     return LinearGradient(
                       begin: Alignment.topCenter,
-                      end: MediaQuery.of(context).size.width > 780
+                      end: width > 780
                           ? Alignment(
                               Alignment.bottomCenter.x,
                               Alignment.bottomCenter.y * 0.97,
@@ -112,17 +114,13 @@ class CircuitScreenContent extends StatelessWidget {
                     fit: BoxFit.cover,
                     imageUrl: details.raceImageUrl!,
                     colorBlendMode: BlendMode.darken,
-                    height: MediaQuery.of(context).size.width > 780
-                        ? MediaQuery.of(context).size.height
-                        : MediaQuery.of(context).size.height * (4 / 9),
-                    width: MediaQuery.of(context).size.width > 780
-                        ? MediaQuery.of(context).size.width
-                        : null,
+                    height: width > 780 ? height : height * (4 / 9),
+                    width: width > 780 ? width : null,
                   ),
                 ),
               Padding(
                 padding: EdgeInsets.only(
-                  top: MediaQuery.of(context).size.height * (4 / 9) - 110,
+                  top: height * (4 / 9) - 110,
                 ),
                 child: Column(
                   mainAxisSize: MainAxisSize.max,
@@ -144,32 +142,28 @@ class CircuitScreenContent extends StatelessWidget {
                                   SizedBox(width: 53),
                               fit: BoxFit.cover,
                               imageUrl: details.flagImageUrl!,
-                              height: MediaQuery.of(context).size.width > 780
-                                  ? 60
-                                  : 30,
-                              width: MediaQuery.of(context).size.width > 780
-                                  ? 106
-                                  : 53,
+                              height: width > 780 ? 60 : 30,
+                              width: width > 780 ? 106 : 53,
                             ),
                           ),
                         Padding(
                           padding: EdgeInsets.only(
                             left: details.flagImageUrl != null
-                                ? MediaQuery.of(context).size.width > 780
+                                ? width > 780
                                     ? 20
                                     : 15
                                 : 0,
-                            bottom: MediaQuery.of(context).size.width > 780
-                                ? 10
-                                : 3,
+                            bottom: width > 780 ? 10 : 3,
                           ),
                           child: Text(
                             details.meetingDisplayName,
                             style: TextStyle(
                               fontFamily: 'Northwell',
-                              fontSize: MediaQuery.of(context).size.width > 780
+                              fontSize: width > 780
                                   ? 120
-                                  : 70,
+                                  : width > 450
+                                      ? 70
+                                      : 50,
                             ),
                           ),
                         ),

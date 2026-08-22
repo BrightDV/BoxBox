@@ -57,6 +57,7 @@ class RaceListHeaderItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -72,7 +73,11 @@ class RaceListHeaderItem extends StatelessWidget {
             Text(
               item.country,
               style: TextStyle(
-                fontSize: 60,
+                fontSize: width < 400
+                    ? 40
+                    : width < 600
+                        ? 50
+                        : 60,
                 fontWeight: FontWeight.w800,
                 color: Colors.white.withAlpha(170),
               ),
