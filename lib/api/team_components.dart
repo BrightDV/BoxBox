@@ -193,8 +193,11 @@ class TeamCarImageProvider extends StatelessWidget {
     String teamCarImageUrl = teamCarImageCropped != null
         ? teamCarImageCropped!
         : getTeamCarImageURL(teamId);
+    double width = MediaQuery.of(context).size.width;
+    bool small = width < 600;
     return SizedBox(
       width: 120,
+      height: small ? 100 : 80,
       child: teamCarImageUrl == 'none'
           ? Center(
               child: Icon(
@@ -209,8 +212,14 @@ class TeamCarImageProvider extends StatelessWidget {
                         ? Alignment.centerRight
                         : Alignment.center
                     : Alignment.centerLeft,
-                scale: championship == 'Formula 1' ? 1.3 : 1.6,
-                origin: Offset(-450, 0),
+                scale: championship == 'Formula 1'
+                    ? small
+                        ? 2.3
+                        : 1.3
+                    : 1.6,
+                origin: Offset(
+                    small ? -60 * (1 + width / 300) : 60 * (width - 600) / 300,
+                    0),
                 child: Container(
                   alignment: teamCarImageCropped != null
                       ? Alignment.centerRight
