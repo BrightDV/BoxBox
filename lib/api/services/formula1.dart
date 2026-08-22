@@ -324,8 +324,7 @@ class Formula1 {
     return formatedRaceStandings;
   }
 
-  FutureOr<List<DriverResult>> getRaceStandings(
-      String meetingId, String round) async {
+  FutureOr<Map> getRaceStandings(String meetingId, String round) async {
     Map results = Hive.box('requests').get('f1Race-$round', defaultValue: {});
     DateTime latestQuery = Hive.box('requests').get(
       'f1Race-$round-latestQuery',
@@ -341,7 +340,10 @@ class Formula1 {
             .isAfter(DateTime.now()) &&
         results.isNotEmpty &&
         raceResultsLastSavedFormat == 'f1') {
-      return formatRaceStandings(results);
+      return {
+        'results': formatRaceStandings(results),
+        'footnote': extractFootnote(results),
+      };
     } else {
       String endpoint = Hive.box('settings')
           .get('server', defaultValue: defaultEndpoint) as String;
@@ -371,12 +373,14 @@ class Formula1 {
         DateTime.now(),
       );
 
-      return driversResults;
+      return {
+        'results': driversResults,
+        'footnote': extractFootnote(results),
+      };
     }
   }
 
-  FutureOr<List<DriverQualificationResult>> getQualificationStandings(
-      String meetingId) async {
+  FutureOr<Map> getQualificationStandings(String meetingId) async {
     List<DriverQualificationResult> driversResults = [];
     String endpoint = Hive.box('settings')
         .get('server', defaultValue: defaultEndpoint) as String;
@@ -399,7 +403,7 @@ class Formula1 {
     );
     Map<String, dynamic> responseAsJson = jsonDecode(response.body);
     if (responseAsJson['raceResultsQualifying']['state'] != 'completed') {
-      return [];
+      return {'results': [], 'footnote': null};
     } else {
       List finalJson = responseAsJson['raceResultsQualifying']['results'];
       for (var element in finalJson) {
@@ -430,12 +434,14 @@ class Formula1 {
         );
       }
 
-      return driversResults;
+      return {
+        'results': driversResults,
+        'footnote': extractFootnote(responseAsJson),
+      };
     }
   }
 
-  Future<List<DriverResult>> getFreePracticeStandings(
-      String meetingId, int session) async {
+  Future<Map> getFreePracticeStandings(String meetingId, int session) async {
     List<DriverResult> driversResults = [];
     String endpoint = Hive.box('settings')
         .get('server', defaultValue: defaultEndpoint) as String;
@@ -458,7 +464,7 @@ class Formula1 {
     );
     Map<String, dynamic> responseAsJson = jsonDecode(response.body);
     if (responseAsJson['raceResultsPractice$session']['state'] != 'completed') {
-      return [];
+      return {'results': [], 'footnote': null};
     } else {
       List finalJson = responseAsJson['raceResultsPractice$session']['results'];
       for (var element in finalJson) {
@@ -490,12 +496,14 @@ class Formula1 {
         );
       }
 
-      return driversResults;
+      return {
+        'results': driversResults,
+        'footnote': extractFootnote(responseAsJson),
+      };
     }
   }
 
-  FutureOr<List<DriverQualificationResult>> getSprintQualifyingStandings(
-      String meetingId) async {
+  FutureOr<Map> getSprintQualifyingStandings(String meetingId) async {
     List<DriverQualificationResult> driversResults = [];
     String endpoint = Hive.box('settings')
         .get('server', defaultValue: defaultEndpoint) as String;
@@ -518,7 +526,7 @@ class Formula1 {
     );
     Map<String, dynamic> responseAsJson = jsonDecode(response.body);
     if (responseAsJson['raceResultsSprintShootout']['state'] != 'completed') {
-      return [];
+      return {'results': [], 'footnote': null};
     } else {
       List finalJson = responseAsJson['raceResultsSprintShootout']['results'];
       for (var element in finalJson) {
@@ -549,11 +557,14 @@ class Formula1 {
         );
       }
 
-      return driversResults;
+      return {
+        'results': driversResults,
+        'footnote': extractFootnote(responseAsJson),
+      };
     }
   }
 
-  FutureOr<List<DriverResult>> getSprintStandings(String meetingId) async {
+  FutureOr<Map> getSprintStandings(String meetingId) async {
     List<DriverResult> driversResults = [];
     String time;
     String endpoint = Hive.box('settings')
@@ -577,7 +588,7 @@ class Formula1 {
     );
     Map<String, dynamic> responseAsJson = jsonDecode(response.body);
     if (responseAsJson['raceResultsSprint']['state'] != 'completed') {
-      return [];
+      return {'results': [], 'footnote': null};
     } else {
       List finalJson = responseAsJson['raceResultsSprint']['results'];
       for (var element in finalJson) {
@@ -622,7 +633,7 @@ class Formula1 {
             false,
             time,
             time,
-            lapsDone: "NA",
+            lapsDone: element['lapsCompleted'],
             points: element['sprintQualifyingPoints'].toString(),
             status: element['completionStatusCode'],
             teamColor: element['teamColourCode'],
@@ -630,7 +641,10 @@ class Formula1 {
         );
       }
 
-      return driversResults;
+      return {
+        'results': driversResults,
+        'footnote': extractFootnote(responseAsJson),
+      };
     }
   }
 
@@ -1085,5 +1099,14 @@ class Formula1 {
     formatedResponse['raceCustomBBParameter'] = raceWithSessions; */
 
     return CircuitFormatProvider().formatCircuitData(formatedResponse);
+  }
+
+  String? extractFootnote(Map response) {
+    String? res = response['footnote'];
+    if (res != null) {
+      return res.replaceAll("* ", "");
+    } else {
+      return res;
+    }
   }
 }

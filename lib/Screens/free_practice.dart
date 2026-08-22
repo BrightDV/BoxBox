@@ -26,6 +26,7 @@ import 'package:boxbox/providers/results/requests.dart';
 import 'package:boxbox/providers/results/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:boxbox/l10n/app_localizations.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -97,7 +98,7 @@ class FreePracticeResultsProvider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<DriverResult>>(
+    return FutureBuilder<Map>(
       future: ResultsRequestsProvider().getFreePracticeResults(
         raceUrl,
         meetingId,
@@ -129,10 +130,11 @@ class FreePracticeResultsProvider extends StatelessWidget {
                 )
           : snapshot.hasData
               ? FreePracticeResultsList(
-                  snapshot.data!,
+                  snapshot.data!['results'],
                   raceYear,
                   raceName,
                   sessionIndex,
+                  snapshot.data!['footnote'],
                 )
               : const LoadingIndicatorUtil(),
     );
@@ -144,12 +146,14 @@ class FreePracticeResultsList extends StatelessWidget {
   final int raceYear;
   final String raceName;
   final int sessionIndex;
+  final String? footnote;
 
   const FreePracticeResultsList(
     this.results,
     this.raceYear,
     this.raceName,
-    this.sessionIndex, {
+    this.sessionIndex,
+    this.footnote, {
     Key? key,
   }) : super(key: key);
 
@@ -158,7 +162,7 @@ class FreePracticeResultsList extends StatelessWidget {
     String championship = Hive.box('settings')
         .get('championship', defaultValue: 'Formula 1') as String;
     return ListView.builder(
-      itemCount: results.length + 2,
+      itemCount: results.length + 2 + (footnote != null ? 1 : 0),
       itemBuilder: (context, index) => index == 0
           ? ListTile(
               leading: const FaIcon(
@@ -235,10 +239,15 @@ class FreePracticeResultsList extends StatelessWidget {
                     ),
                   ),
                 )
-              : FreePracticeResultItem(
-                  results[index - 2],
-                  index - 2,
-                ),
+              : index == results.length + 2
+                  ? ListTile(
+                      leading: Icon(Icons.info_outlined),
+                      title: MarkdownBody(data: footnote!),
+                    )
+                  : FreePracticeResultItem(
+                      results[index - 2],
+                      index - 2,
+                    ),
     );
   }
 }

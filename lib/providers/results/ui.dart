@@ -61,6 +61,7 @@ class ResultsUIProvider {
                 ),
                 RaceDriversResultsList(
                   ErgastApi().formatRaceStandings(savedData),
+                  ErgastApi().extractFootnote(savedData),
                 ),
               ],
             ),
@@ -83,6 +84,7 @@ class ResultsUIProvider {
                 ),
                 RaceDriversResultsList(
                   Formula1().formatRaceStandings(savedData),
+                  Formula1().extractFootnote(savedData),
                 ),
               ],
             ),
@@ -106,6 +108,7 @@ class ResultsUIProvider {
               ),
               RaceDriversResultsList(
                 FormulaE().formatRaceStandings(savedData),
+                FormulaE().extractFootnote(savedData),
               ),
             ],
           ),
@@ -131,10 +134,11 @@ class ResultsUIProvider {
         .get('championship', defaultValue: 'Formula 1') as String;
     if (championship == 'Formula 1') {
       return QualificationDriversResultsList(
-        snapshot.data!,
+        snapshot.data!['results'],
         race,
         raceUrl,
         isSprintQualifying,
+        snapshot.data!['footnote'],
       );
     } else if (championship == 'Formula E') {
       return FreePracticeResultsList(
@@ -142,6 +146,7 @@ class ResultsUIProvider {
         DateTime.parse(race!.date).year,
         race.raceName,
         10,
+        snapshot.data!['footnote'],
       );
     } else if (championship == 'Formula 2' ||
         championship == 'Formula 3' ||
@@ -151,6 +156,7 @@ class ResultsUIProvider {
         DateTime.now().year,
         race?.raceName ?? '',
         10,
+        snapshot.data!['footnote'],
       );
     } else {
       return Container();

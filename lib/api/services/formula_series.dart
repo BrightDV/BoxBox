@@ -549,7 +549,7 @@ class FormulaSeries {
     return results;
   }
 
-  Future<List<DriverResult>> getSessionResults(
+  Future<Map> getSessionResults(
     String meetingId, {
     String? sessionIndex,
     String? sessionName,
@@ -614,8 +614,15 @@ class FormulaSeries {
           .toString();
     }
 
-    return formatResults(
-      sessionResults[int.parse(sessionIndex)]['Results'],
-    );
+    return {
+      'results': formatResults(
+        sessionResults[int.parse(sessionIndex)]['Results'],
+      ),
+      'footnote': extractFootnote(formatedResponse),
+    };
+  }
+
+  String? extractFootnote(Map response) {
+    return response['footnote'];
   }
 }

@@ -78,7 +78,7 @@ class _ErgastApiCalls {
     return formatedRaceStandings;
   }
 
-  FutureOr<List<DriverResult>> getRaceStandings(String round) async {
+  FutureOr<Map> getRaceStandings(String round) async {
     Map results = Hive.box('requests').get('f1Race-$round', defaultValue: {});
     DateTime latestQuery = Hive.box('requests').get(
       'f1Race-$round-latestQuery',
@@ -94,7 +94,10 @@ class _ErgastApiCalls {
             .isAfter(DateTime.now()) &&
         results.isNotEmpty &&
         raceResultsLastSavedFormat == 'ergast') {
-      return formatRaceStandings(results);
+      return {
+        'results': formatRaceStandings(results),
+        'footnote': extractFootnote(results),
+      };
     } else {
       var url = Uri.parse(
         '$defaultEndpoint/f1/${DateTime.now().year}/$round/results.json',
@@ -109,11 +112,14 @@ class _ErgastApiCalls {
         'f1Race-$round-latestQuery',
         DateTime.now(),
       );
-      return driversResults;
+      return {
+        'results': driversResults,
+        'footnote': extractFootnote(responseAsJson)
+      };
     }
   }
 
-  FutureOr<List<DriverResult>> getSprintStandings(String round) async {
+  FutureOr<Map> getSprintStandings(String round) async {
     var url = Uri.parse(
         '$defaultEndpoint/f1/${DateTime.now().year}/$round/sprint.json');
     var response = await http.get(url);
@@ -122,7 +128,7 @@ class _ErgastApiCalls {
     if ((responseAsJson['MRData']['RaceTable']['Races'].isEmpty) ||
         (responseAsJson['MRData']['RaceTable']['Races'][0]['SprintResults'] ==
             null)) {
-      return [];
+      return {'results': [], 'footnote': null};
     } else {
       List jsonResponse =
           responseAsJson['MRData']['RaceTable']['Races'][0]['SprintResults'];
@@ -169,12 +175,14 @@ class _ErgastApiCalls {
           ),
         );
       }
-      return formatedRaceStandings;
+      return {
+        'results': formatedRaceStandings,
+        'footnote': extractFootnote(responseAsJson),
+      };
     }
   }
 
-  FutureOr<List<DriverQualificationResult>> getQualificationStandings(
-      String round) async {
+  FutureOr<Map> getQualificationStandings(String round) async {
     List<DriverQualificationResult> driversResults = [];
     var url = Uri.parse(
       '$defaultEndpoint/f1/${DateTime.now().year}/$round/qualifying.json',
@@ -185,7 +193,7 @@ class _ErgastApiCalls {
         (responseAsJson['MRData']['RaceTable']['Races'][0]
                 ['QualifyingResults'] ==
             null)) {
-      return [];
+      return {'results': [], 'footnote': null};
     } else {
       List finalJson = responseAsJson['MRData']['RaceTable']['Races'][0]
           ['QualifyingResults'];
@@ -206,7 +214,10 @@ class _ErgastApiCalls {
         );
       }
 
-      return driversResults;
+      return {
+        'results': driversResults,
+        'footnote': extractFootnote(responseAsJson),
+      };
     }
   }
 
@@ -615,10 +626,14 @@ class _ErgastApiCalls {
       return teams;
     }
   }
+
+  String? extractFootnote(Map response) {
+    return null;
+  }
 }
 
 class ErgastApi {
-  FutureOr<List<DriverResult>> getRaceStandings(String round) async {
+  FutureOr<Map> getRaceStandings(String round) async {
     var data = await _ErgastApiCalls().getRaceStandings(round);
     return data;
   }
@@ -628,15 +643,14 @@ class ErgastApi {
     return data;
   }
 
-  FutureOr<List<DriverResult>> getSprintStandings(String round) async {
+  FutureOr<Map> getSprintStandings(String round) async {
     var data = await _ErgastApiCalls().getSprintStandings(
       round,
     );
     return data;
   }
 
-  FutureOr<List<DriverQualificationResult>> getQualificationStandings(
-      String round) async {
+  FutureOr<Map> getQualificationStandings(String round) async {
     var data = await _ErgastApiCalls().getQualificationStandings(
       round,
     );
@@ -690,5 +704,9 @@ class ErgastApi {
 
   Future<Race> getRaceDetails(String round) async {
     return await _ErgastApiCalls().getRaceDetails(round);
+  }
+
+  String? extractFootnote(Map response) {
+    return _ErgastApiCalls().extractFootnote(response);
   }
 }

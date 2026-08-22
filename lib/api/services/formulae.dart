@@ -671,8 +671,7 @@ class FormulaE {
     return responseAsJson;
   }
 
-  Future<List<DriverResult>> getRaceStandings(
-      String raceId, String sessionId) async {
+  Future<Map> getRaceStandings(String raceId, String sessionId) async {
     Map results = Hive.box('requests').get('feRace-$raceId', defaultValue: {});
     DateTime latestQuery = Hive.box('requests').get(
       'feRace-$raceId-latestQuery',
@@ -685,7 +684,10 @@ class FormulaE {
             )
             .isAfter(DateTime.now()) &&
         results.isNotEmpty) {
-      return formatRaceStandings(results);
+      return {
+        'results': formatRaceStandings(results),
+        'footnote': extractFootnote(results),
+      };
     } else {
       Map<String, dynamic> responseAsJson =
           await _getSessionStandings(raceId, sessionId);
@@ -696,18 +698,20 @@ class FormulaE {
         'feRace-$raceId-latestQuery',
         DateTime.now(),
       );
-      return driversResults;
+      return {
+        'results': driversResults,
+        'footnote': extractFootnote(responseAsJson),
+      };
     }
   }
 
-  Future<List<DriverResult>> getQualificationStandings(
-      String raceId, String sessionId) async {
+  Future<Map> getQualificationStandings(String raceId, String sessionId) async {
     List<DriverResult> driversResults = [];
     Map<String, dynamic> responseAsJson =
         await _getSessionStandings(raceId, sessionId);
 
     if (responseAsJson['results'].isEmpty) {
-      return [];
+      return {'results': [], 'footnote': null};
     } else {
       List finalJson = responseAsJson['results'];
       for (var element in finalJson) {
@@ -765,18 +769,20 @@ class FormulaE {
         );
       }
 
-      return driversResults;
+      return {
+        'results': driversResults,
+        'footnote': extractFootnote(responseAsJson),
+      };
     }
   }
 
-  Future<List<DriverResult>> getFreePracticeStandings(
-      String raceId, String sessionId) async {
+  Future<Map> getFreePracticeStandings(String raceId, String sessionId) async {
     List<DriverResult> driversResults = [];
 
     Map<String, dynamic> responseAsJson =
         await _getSessionStandings(raceId, sessionId);
     if (responseAsJson['results'].isEmpty) {
-      return [];
+      return {'results': [], 'footnote': null};
     } else {
       List finalJson = responseAsJson['results'];
       for (var element in finalJson) {
@@ -835,7 +841,10 @@ class FormulaE {
         );
       }
 
-      return driversResults;
+      return {
+        'results': driversResults,
+        'footnote': extractFootnote(responseAsJson),
+      };
     }
   }
 
@@ -912,5 +921,9 @@ class FormulaE {
   Future<void> updateChampionshipId() async {
     Map latestData = await getLatestChampionship();
     Hive.box('settings').put('feChampionshipId', latestData['id']);
+  }
+
+  String? extractFootnote(Map response) {
+    return null;
   }
 }

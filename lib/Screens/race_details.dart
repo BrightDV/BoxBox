@@ -104,7 +104,7 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
       String raceResultsLastSavedFormat =
           ResultsRequestsProvider().getRaceResultsLastSavedFormat();
       return raceUrl != ''
-          ? FutureBuilder<List<DriverResult>>(
+          ? FutureBuilder<Map>(
               future: ResultsRequestsProvider().getRaceStandingsFromApi(
                 meetingId: widget.raceId,
                 raceUrl: raceUrl,
@@ -154,13 +154,16 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
                               tileColor:
                                   Theme.of(context).colorScheme.onSecondary,
                             ),
-                            RaceDriversResultsList(snapshot.data!),
+                            RaceDriversResultsList(
+                              snapshot.data!['results'],
+                              snapshot.data!['footnote'],
+                            ),
                           ],
                         ),
                       )
                     : const LoadingIndicatorUtil();
               })
-          : FutureBuilder<List<DriverResult>>(
+          : FutureBuilder<Map>(
               future: ResultsRequestsProvider().getRaceStandingsFromApi(
                 race: race,
               ),
@@ -206,7 +209,10 @@ class _RaceResultsProviderState extends State<RaceResultsProvider> {
                                 tileColor:
                                     Theme.of(context).colorScheme.onSecondary,
                               ),
-                              RaceDriversResultsList(snapshot.data!),
+                              RaceDriversResultsList(
+                                snapshot.data!['results'],
+                                snapshot.data!['footnote'],
+                              ),
                             ],
                           ),
                         )
@@ -256,7 +262,7 @@ class _SprintResultsProviderState extends State<SprintResultsProvider> {
               ),
             ),
           )
-        : FutureBuilder<List<DriverResult>>(
+        : FutureBuilder<Map>(
             future: widget.raceUrl != null
                 ? ResultsRequestsProvider().getSprintStandings(
                     meetingId: widget.raceUrl!.split('/')[7],
@@ -321,7 +327,8 @@ class _SprintResultsProviderState extends State<SprintResultsProvider> {
                                   ),
                                 ),
                                 RaceDriversResultsList(
-                                  snapshot.data!,
+                                  snapshot.data!['results'],
+                                  snapshot.data!['footnote'],
                                 ),
                               ],
                             ),
@@ -372,7 +379,7 @@ class _QualificationResultsProviderState
               ),
             ),
           )
-        : FutureBuilder<List>(
+        : FutureBuilder<Map>(
             future: widget.raceUrl != null
                 ? ResultsRequestsProvider().getQualificationStandings(
                     widget.hasSprint,

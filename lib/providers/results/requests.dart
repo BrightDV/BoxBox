@@ -21,7 +21,6 @@ import 'package:boxbox/api/ergast.dart';
 import 'package:boxbox/api/services/formula1.dart';
 import 'package:boxbox/api/services/formula_series.dart';
 import 'package:boxbox/api/services/formulae.dart';
-import 'package:boxbox/classes/driver.dart';
 import 'package:boxbox/classes/race.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
@@ -62,7 +61,7 @@ class ResultsRequestsProvider {
     }
   }
 
-  Future<List<DriverResult>> getFreePracticeResults(
+  Future<Map> getFreePracticeResults(
     String? raceUrl,
     String meetingId,
     int sessionIndex,
@@ -94,11 +93,11 @@ class ResultsRequestsProvider {
         sessionIndex: (sessionIndex - 1).toString(),
       );
     } else {
-      return [];
+      return {'results': [], 'footnote': null};
     }
   }
 
-  Future<List<DriverResult>> getRaceStandingsFromApi({
+  Future<Map> getRaceStandingsFromApi({
     Race? race,
     String? meetingId,
     String? raceUrl,
@@ -141,11 +140,11 @@ class ResultsRequestsProvider {
         sessionName: 'Race',
       );
     } else {
-      return [];
+      return {'results': [], 'footnote': null};
     }
   }
 
-  Future<List<DriverResult>> getSprintStandings({
+  Future<Map> getSprintStandings({
     Race? race,
     String? meetingId,
     String? sessionId,
@@ -174,11 +173,11 @@ class ResultsRequestsProvider {
         sessionName: 'Sprint Race',
       );
     } else {
-      return [];
+      return {'results': [], 'footnote': null};
     }
   }
 
-  Future<List> getQualificationStandings(
+  Future<Map> getQualificationStandings(
     bool? hasSprint,
     bool? isSprintQualifying,
     String? sessionId, {
@@ -226,7 +225,7 @@ class ResultsRequestsProvider {
         sessionName: 'Qualifying',
       );
     } else {
-      return [];
+      return {'results': [], 'footnote': null};
     }
   }
 

@@ -25,6 +25,7 @@ import 'package:boxbox/helpers/divider.dart';
 import 'package:boxbox/helpers/team_background_color.dart';
 import 'package:flutter/material.dart';
 import 'package:boxbox/l10n/app_localizations.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -145,7 +146,7 @@ class DriverResultItem extends StatelessWidget {
                             toastLength: Toast.LENGTH_SHORT,
                             gravity: ToastGravity.BOTTOM,
                             timeInSecForIosWeb: 2,
-                            backgroundColor: Colors.grey.shade500,
+                            backgroundColor: Colors.grey.shade800,
                             fontSize: 16.0,
                           )
                         : null,
@@ -179,19 +180,15 @@ class DriverResultItem extends StatelessWidget {
                         child: Text(
                           item.position == '1' ? item.sessionTime : item.gap,
                           style: TextStyle(
-                            color: item.isFastest
-                                ? Colors.white
-                                : item.sessionTime == 'DNF' ||
-                                        item.sessionTime == 'DNS' ||
-                                        item.sessionTime == 'DSQ'
-                                    ? Colors.yellow
-                                    : const Color(0xff00ff00),
-                            decoration: (item.sessionTime == 'DNF' ||
-                                        item.sessionTime == 'DNS' ||
-                                        item.sessionTime == 'DSQ') &&
-                                    item.status != null
-                                ? TextDecoration.underline
-                                : null,
+                            color: item.gap.contains("lap")
+                                ? null
+                                : item.isFastest
+                                    ? Colors.white
+                                    : item.sessionTime == 'DNF' ||
+                                            item.sessionTime == 'DNS' ||
+                                            item.sessionTime == 'DSQ'
+                                        ? Colors.yellow
+                                        : const Color(0xff00ff00),
                           ),
                           textAlign: TextAlign.center,
                         ),
@@ -300,8 +297,10 @@ class DriverResultItem extends StatelessWidget {
 
 class RaceDriversResultsList extends StatelessWidget {
   final List<DriverResult> items;
+  final String? footnote;
 
-  const RaceDriversResultsList(this.items, {Key? key}) : super(key: key);
+  const RaceDriversResultsList(this.items, this.footnote, {Key? key})
+      : super(key: key);
   @override
   Widget build(BuildContext context) {
     String raceResultsLastSavedFormat = Hive.box('requests')
@@ -309,7 +308,7 @@ class RaceDriversResultsList extends StatelessWidget {
     return ListView.builder(
       scrollDirection: Axis.vertical,
       shrinkWrap: true,
-      itemCount: items.length + 1,
+      itemCount: items.length + 1 + (footnote != null ? 1 : 0),
       physics: const ClampingScrollPhysics(),
       itemBuilder: (context, index) => index == 0
           ? Container(
@@ -368,10 +367,15 @@ class RaceDriversResultsList extends StatelessWidget {
                 ),
               ),
             )
-          : DriverResultItem(
-              items[index - 1],
-              index - 1,
-            ),
+          : index == items.length + 1 && footnote != null
+              ? ListTile(
+                  leading: Icon(Icons.info_outlined),
+                  title: MarkdownBody(data: footnote!),
+                )
+              : DriverResultItem(
+                  items[index - 1],
+                  index - 1,
+                ),
     );
   }
 }
@@ -628,12 +632,14 @@ class QualificationDriversResultsList extends StatelessWidget {
   final Race? race;
   final String? raceUrl;
   final bool? isSprintQualifying;
+  final String? footnote;
 
   const QualificationDriversResultsList(
     this.items,
     this.race,
     this.raceUrl,
-    this.isSprintQualifying, {
+    this.isSprintQualifying,
+    this.footnote, {
     Key? key,
   }) : super(key: key);
   @override
@@ -655,7 +661,7 @@ class QualificationDriversResultsList extends StatelessWidget {
     return ListView.builder(
       scrollDirection: Axis.vertical,
       shrinkWrap: true,
-      itemCount: items.length + 2,
+      itemCount: items.length + 2 + (footnote != null ? 1 : 0),
       physics: const ClampingScrollPhysics(),
       itemBuilder: (context, index) => index == 0
           ? GestureDetector(
@@ -752,12 +758,17 @@ class QualificationDriversResultsList extends StatelessWidget {
                     ),
                   ),
                 )
-              : QualificationResultsItem(
-                  items[index - 2],
-                  index - 2,
-                  resultsQOne.isNotEmpty ? resultsQOne[0] : '--',
-                  resultsQTwo.isNotEmpty ? resultsQTwo[0] : '--',
-                ),
+              : index == items.length + 2 && footnote != null
+                  ? ListTile(
+                      leading: Icon(Icons.info_outlined),
+                      title: Text(footnote!),
+                    )
+                  : QualificationResultsItem(
+                      items[index - 2],
+                      index - 2,
+                      resultsQOne.isNotEmpty ? resultsQOne[0] : '--',
+                      resultsQTwo.isNotEmpty ? resultsQTwo[0] : '--',
+                    ),
     );
   }
 }
