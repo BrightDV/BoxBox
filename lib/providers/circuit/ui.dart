@@ -172,7 +172,12 @@ class CircuitUIProvider {
     String championship = Hive.box('settings')
         .get('championship', defaultValue: 'Formula 1') as String;
     if (championship == 'Formula 1') {
-      if (linkType == 'Article' || linkType == 'LiveBlog') {
+      if (linkType == 'Article' && url.contains('video')) {
+        context.pushNamed(
+          'video',
+          pathParameters: {'id': url.split('.').last},
+        );
+      } else if (linkType == 'Article' || linkType == 'LiveBlog') {
         context.pushNamed(
           'article',
           pathParameters: {'id': url.split('.').last},
