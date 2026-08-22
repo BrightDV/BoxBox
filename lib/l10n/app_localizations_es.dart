@@ -535,6 +535,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get server => 'Servidor';
 
   @override
+  String get sessions => 'Sessions';
+
+  @override
   String get sessionCompleted => 'La sesión ha terminado.';
 
   @override

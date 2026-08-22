@@ -535,6 +535,9 @@ class AppLocalizationsSw extends AppLocalizations {
   String get server => 'Seva';
 
   @override
+  String get sessions => 'Sessions';
+
+  @override
   String get sessionCompleted => 'Kipindi kimeisha';
 
   @override

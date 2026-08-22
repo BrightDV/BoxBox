@@ -532,6 +532,9 @@ class AppLocalizationsPa extends AppLocalizations {
   String get server => 'ਸਰਵਰ';
 
   @override
+  String get sessions => 'Sessions';
+
+  @override
   String get sessionCompleted => 'ਸੈਸ਼ਨ ਪੂਰਾ ਹੋ ਚੁੱਕਿਆ।';
 
   @override

@@ -533,6 +533,9 @@ class AppLocalizationsBn extends AppLocalizations {
   String get server => 'সার্ভার';
 
   @override
+  String get sessions => 'Sessions';
+
+  @override
   String get sessionCompleted => 'সেশন শেষ হয়ে গেছে।';
 
   @override

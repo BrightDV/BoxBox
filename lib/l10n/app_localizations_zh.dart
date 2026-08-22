@@ -527,6 +527,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get server => '服务器';
 
   @override
+  String get sessions => 'Sessions';
+
+  @override
   String get sessionCompleted => '赛程结束。';
 
   @override

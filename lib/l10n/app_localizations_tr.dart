@@ -535,6 +535,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get server => 'Sunucu';
 
   @override
+  String get sessions => 'Sessions';
+
+  @override
   String get sessionCompleted => 'Oturum sona erdi.';
 
   @override

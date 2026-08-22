@@ -532,6 +532,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get server => 'الخادم';
 
   @override
+  String get sessions => 'Sessions';
+
+  @override
   String get sessionCompleted => 'انتهت الجلسة.';
 
   @override

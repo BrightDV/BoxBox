@@ -29,6 +29,7 @@ import 'package:boxbox/helpers/loading_indicator_util.dart';
 import 'package:boxbox/helpers/news.dart';
 import 'package:boxbox/helpers/request_error.dart';
 import 'package:boxbox/l10n/app_localizations.dart';
+import 'package:boxbox/providers/circuit/format.dart';
 import 'package:boxbox/providers/circuit/requests.dart';
 import 'package:boxbox/providers/circuit/ui.dart';
 import 'package:boxbox/scraping/formula_one.dart';
@@ -271,6 +272,7 @@ class SessionItemForCircuit extends StatelessWidget {
       AppLocalizations.of(context)?.monthAbbreviationNovember,
       AppLocalizations.of(context)?.monthAbbreviationDecember,
     ];
+
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 5),
       child: InkWell(
@@ -338,7 +340,11 @@ class SessionItemForCircuit extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      session.sessionFullName!,
+                      CircuitFormatProvider().sessionNames(
+                        context,
+                        session.sessionAbbreviation,
+                        session.sessionFullName!,
+                      ),
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w500,
@@ -679,7 +685,7 @@ class Sessions extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.only(left: 4, bottom: 5),
                 child: Text(
-                  'Sessions',
+                  AppLocalizations.of(context)!.sessions,
                   style: TextStyle(
                     fontWeight: FontWeight.w700,
                     fontSize: 25,

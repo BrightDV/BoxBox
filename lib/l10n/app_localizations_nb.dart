@@ -532,6 +532,9 @@ class AppLocalizationsNb extends AppLocalizations {
   String get server => 'Tjener';
 
   @override
+  String get sessions => 'Sessions';
+
+  @override
   String get sessionCompleted => 'Sesjonen er over.';
 
   @override

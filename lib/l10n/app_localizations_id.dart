@@ -532,6 +532,9 @@ class AppLocalizationsId extends AppLocalizations {
   String get server => 'Server';
 
   @override
+  String get sessions => 'Sessions';
+
+  @override
   String get sessionCompleted => 'Sesi telah berakhir.';
 
   @override

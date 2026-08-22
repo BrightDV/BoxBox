@@ -538,6 +538,9 @@ class AppLocalizationsTa extends AppLocalizations {
   String get server => 'சேவையகம்';
 
   @override
+  String get sessions => 'Sessions';
+
+  @override
   String get sessionCompleted => 'அமர்வு முடிந்துவிட்டது.';
 
   @override

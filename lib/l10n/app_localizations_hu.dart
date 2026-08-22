@@ -535,6 +535,9 @@ class AppLocalizationsHu extends AppLocalizations {
   String get server => 'Server';
 
   @override
+  String get sessions => 'Sessions';
+
+  @override
   String get sessionCompleted => 'Az ülésnek vége.';
 
   @override

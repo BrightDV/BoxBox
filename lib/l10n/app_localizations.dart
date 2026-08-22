@@ -1177,6 +1177,12 @@ abstract class AppLocalizations {
   /// **'Server'**
   String get server;
 
+  /// No description provided for @sessions.
+  ///
+  /// In en, this message translates to:
+  /// **'Sessions'**
+  String get sessions;
+
   /// No description provided for @sessionCompleted.
   ///
   /// In en, this message translates to:

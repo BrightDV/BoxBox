@@ -345,6 +345,8 @@
   "@secondAbbreviation": {},
   "server": "Server",
   "@server": {},
+  "sessions": "Sessions",
+  "@sessions": {},
   "sessionCompleted": "The session is over.",
   "@sessionCompleted": {},
   "sessionCompletedShort": "Session completed",

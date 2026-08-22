@@ -22,6 +22,8 @@ import 'package:boxbox/classes/driver.dart';
 import 'package:boxbox/classes/event_tracker.dart';
 import 'package:boxbox/classes/race.dart';
 import 'package:boxbox/helpers/constants.dart';
+import 'package:boxbox/l10n/app_localizations.dart';
+import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class CircuitFormatProvider {
@@ -465,5 +467,18 @@ class CircuitFormatProvider {
         false,
       );
     }
+  }
+
+  String sessionNames(BuildContext context, String key, String base) {
+    Map dict = {
+      "p1": AppLocalizations.of(context)!.freePracticeOne,
+      "p2": AppLocalizations.of(context)!.freePracticeTwo,
+      "p3": AppLocalizations.of(context)!.freePracticeThree,
+      "ss": AppLocalizations.of(context)!.sprintQualifyings,
+      "q": AppLocalizations.of(context)!.qualifyings,
+      "s": AppLocalizations.of(context)!.sprint,
+      "r": AppLocalizations.of(context)!.race,
+    };
+    return dict[key] ?? base;
   }
 }

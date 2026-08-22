@@ -534,6 +534,9 @@ class AppLocalizationsFi extends AppLocalizations {
   String get server => 'Palvelin';
 
   @override
+  String get sessions => 'Sessions';
+
+  @override
   String get sessionCompleted => 'Istunto on päättynyt.';
 
   @override
