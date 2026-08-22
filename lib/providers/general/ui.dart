@@ -153,7 +153,7 @@ class UIProvider {
                           height: 50,
                           child: FilledButton.tonal(
                             onPressed: () {
-                              Navigator.of(context).pop(0);
+                              Navigator.of(context).pop();
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
