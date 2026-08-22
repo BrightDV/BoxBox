@@ -1340,6 +1340,7 @@ class TextParagraphRenderer extends StatelessWidget {
         selectable: true,
         fitContent: false,
         onTapLink: (text, url, title) {
+          print(url);
           if (url!.startsWith('https://www.formula1.com/en/latest/article.')) {
             String articleId = url.substring(43, url.length - 5).split('.')[1];
             context.pushNamed(
@@ -1376,8 +1377,8 @@ class TextParagraphRenderer extends StatelessWidget {
               pathParameters: {'teamId': teamId},
             );
           } else if (url.startsWith('https://www.formula1.com/en/results')) {
-            String standingsType =
-                url.substring(0, url.length - 5).split('/')[6];
+            print("in!!!");
+            String standingsType = url.split('/').last;
             if (standingsType == "driver-standings" ||
                 standingsType == "drivers") {
               context.pushNamed("standings");
