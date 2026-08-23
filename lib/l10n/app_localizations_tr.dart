@@ -34,10 +34,10 @@ class AppLocalizationsTr extends AppLocalizations {
   String get alreadyDownloading => 'Zaten indiriliyor';
 
   @override
-  String get anyNetwork => 'Any network';
+  String get anyNetwork => 'Herhangi bir ağ';
 
   @override
-  String get apiKey => 'API Key';
+  String get apiKey => 'API Anahtarı';
 
   @override
   String get appearance => 'Görünüm';
@@ -49,7 +49,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get articleFull => 'Tam';
 
   @override
-  String get articleNotifications => 'New articles notifications';
+  String get articleNotifications => 'Yeni makale bildirimleri';
 
   @override
   String get articleTitleAndImage => 'Başlık ve Resim';
@@ -97,7 +97,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get crashError => 'Hata:';
 
   @override
-  String get customErgastUrl => 'Ergast Custom URL';
+  String get customErgastUrl => 'Özel Ergast URL\'si';
 
   @override
   String get customFeed => 'Özel akış';
@@ -140,7 +140,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get disableBottomNavigationBarLabels =>
-      'Don\'t show bottom navigation bar labels';
+      'Alt gezinme çubuğu etiketlerini gösterme';
 
   @override
   String get done => 'Bitti';
@@ -180,7 +180,7 @@ class AppLocalizationsTr extends AppLocalizations {
       'Bir öğeye uzun basarak sırayı değiştirin.';
 
   @override
-  String get enableNotifications => 'Enable notifications';
+  String get enableNotifications => 'Bildirimleri etkinleştir';
 
   @override
   String get errorOccurred => 'Bir şeyler ters gitti';
@@ -238,7 +238,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get fontDescription => 'Makalelerde kullanılan yazı tipi.';
 
   @override
-  String get fullScreenGestures => 'Enter/exit fullscreen gestures';
+  String get fullScreenGestures => 'Tam ekran moduna giriş/çıkış hareketleri';
 
   @override
   String get gallery => 'Galeri';
@@ -253,11 +253,11 @@ class AppLocalizationsTr extends AppLocalizations {
   String get grandPrixMap => 'Grand Prix Haritası';
 
   @override
-  String get grandPrixNotifications => 'Grand-Prix sessions notifications';
+  String get grandPrixNotifications => 'Grand Prix oturumları bildirimleri';
 
   @override
   String get grandPrixNotificationsSub =>
-      'You need to go to the schedule screen in order to initialize notifications of the next Grand-Prix.';
+      'Bir sonraki Grand Prix bildirimlerini etkinleştirmek için takvim ekranına gidin.';
 
   @override
   String get hallOfFame => 'Şöhretler Salonu';
@@ -375,19 +375,19 @@ class AppLocalizationsTr extends AppLocalizations {
   String get nothingHere => 'Burada gösterilecek\nbir şey yok.';
 
   @override
-  String get notifications => 'Notifications';
+  String get notifications => 'Bildirimler';
 
   @override
-  String get notifications2hours => '2 hours';
+  String get notifications2hours => '2 saat';
 
   @override
-  String get notifications6hours => '6 hours';
+  String get notifications6hours => '6 saat';
 
   @override
-  String get notifications12hours => '12 hours';
+  String get notifications12hours => '12 saat';
 
   @override
-  String get notifications24hours => '24 hours';
+  String get notifications24hours => '24 saat';
 
   @override
   String get numberOfLaps => 'Tur Sayısı';
@@ -399,10 +399,10 @@ class AppLocalizationsTr extends AppLocalizations {
   String get offline => 'Çevrimdışı. Veriler güncel olmayabilir.';
 
   @override
-  String get offtrack => 'You went off-track!';
+  String get offtrack => 'Yoldan çıktınız!';
 
   @override
-  String get offtrackSub => 'Back on track';
+  String get offtrackSub => 'Tekrar yola döndünüz';
 
   @override
   String get openInBrowser => 'Web tarayıcısında aç';
@@ -411,10 +411,10 @@ class AppLocalizationsTr extends AppLocalizations {
   String get openLiveBlog => 'Canlı blog\'u açın';
 
   @override
-  String get openPoll => 'Take the survey';
+  String get openPoll => 'Ankete katıl';
 
   @override
-  String get openQuiz => 'Anketi açın';
+  String get openQuiz => 'Testi çöz';
 
   @override
   String get openingWithInAppBrowser => 'Uygulama içi tarayıcı ile açma';
@@ -502,16 +502,16 @@ class AppLocalizationsTr extends AppLocalizations {
       'Yeni sezondan önce şampiyonluk verilerini yenile.';
 
   @override
-  String get refreshInterval => 'Refresh interval';
+  String get refreshInterval => 'Yenileme aralığı';
 
   @override
   String get requestError => 'Veri alınamadı.';
 
   @override
-  String get requiredNetworkConnection => 'Required network connection';
+  String get requiredNetworkConnection => 'Ağ bağlantısı gerekli';
 
   @override
-  String get reset => 'Reset';
+  String get reset => 'Sıfırla';
 
   @override
   String get results => 'Sonuçlar';
@@ -617,18 +617,18 @@ class AppLocalizationsTr extends AppLocalizations {
   String get unavailableOffline => 'Çevrimdışı kullanılamıyor';
 
   @override
-  String get updateApiKey => 'Update API Key';
+  String get updateApiKey => 'API Anahtarını Güncelle';
 
   @override
   String get updateApiKeySub =>
-      'Update the API key of the official website.\nUpdate this only if you now what you are doing.';
+      'Resmi web sitesinin API anahtarını güncelleyin.\nBunu yalnızca ne yaptığınızı biliyorsanız güncelleyin.';
 
   @override
   String get updates => 'Yeni versiyonlar';
 
   @override
   String get useOfficialWebview =>
-      'Canlı oturumlar için resmi web görünümünü kullan';
+      'f1-dash.com yerine canlı oturumlar için resmi web görünümünü kullan';
 
   @override
   String get victory => 'Zafer';
@@ -652,7 +652,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get watchHighlightsOnYoutube => 'Önemli anları YouTube\'dan izleyin';
 
   @override
-  String get watchOnYouTube => 'Watch on YouTube';
+  String get watchOnYouTube => 'YouTube\'da İzle';
 
   @override
   String get wifi => 'Wi-Fi';

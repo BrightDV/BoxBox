@@ -97,7 +97,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get crashError => '错误：';
 
   @override
-  String get customErgastUrl => 'Ergast Custom URL';
+  String get customErgastUrl => 'Ergast 自定义网址';
 
   @override
   String get customFeed => '自定义订阅源';
@@ -139,8 +139,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get deleteUrl => '你想删除该地址？';
 
   @override
-  String get disableBottomNavigationBarLabels =>
-      'Don\'t show bottom navigation bar labels';
+  String get disableBottomNavigationBarLabels => '不要展示底部导航栏标签';
 
   @override
   String get done => '完成';
@@ -404,10 +403,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get openLiveBlog => '打开日志';
 
   @override
-  String get openPoll => 'Take the survey';
+  String get openPoll => '接受调查';
 
   @override
-  String get openQuiz => '打开测试';
+  String get openQuiz => '接受测试';
 
   @override
   String get openingWithInAppBrowser => '在应用内的浏览器打开';
@@ -503,7 +502,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get requiredNetworkConnection => '所需的网络连接';
 
   @override
-  String get reset => 'Reset';
+  String get reset => '重置';
 
   @override
   String get results => '赛季成绩';
