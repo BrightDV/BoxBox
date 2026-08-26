@@ -653,6 +653,9 @@ class Formula1 {
     List finalJson = responseAsJson['driverstandings'];
     int c = 1;
     for (var element in finalJson) {
+      if (element['driverPageUrl'] == null) {
+        element['driverPageUrl'] = "";
+      }
       String detailsPath =
           element['driverPageUrl'].split('/').last.split('.').first;
       drivers.add(
