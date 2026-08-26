@@ -217,5 +217,6 @@
     "updateApiKey": "API Anahtarını Güncelle",
     "updateApiKeySub": "Resmi web sitesinin API anahtarını güncelleyin.\nBunu yalnızca ne yaptığınızı biliyorsanız güncelleyin.",
     "watchOnYouTube": "YouTube'da İzle",
-    "wifi": "Wi-Fi"
+    "wifi": "Wi-Fi",
+    "sessions": "Oturumlar"
 }
